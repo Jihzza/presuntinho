@@ -27,6 +27,8 @@
     type Item
   } from '$lib/biblioteca';
   import { subApps } from '$lib/registry';
+  import EmptyState from '$lib/components/EmptyState.svelte';
+  import Skeleton from '$lib/components/Skeleton.svelte';
   import { showToast } from '$lib/components/events';
 
   let items = $state<Item[]>([]);
@@ -201,25 +203,27 @@
 
   <section class="list" aria-label="Lista de marcadores">
     {#if loading}
-      <p class="empty">A carregar…</p>
+      <Skeleton variant="list" lines={4} label={$t('common.loading')} />
     {:else if error}
       <p class="empty error" role="alert">⚠️ {error}</p>
     {:else if items.length === 0}
-      <div class="empty">
         {#if query || activeTag}
-          <p class="empty-msg">Nenhum marcador corresponde aos filtros.</p>
-          <p class="empty-hint">
-            Tenta limpar os filtros ou <button type="button" class="link-btn" onclick={clearFilters}>mostra tudo</button>.
-          </p>
+          <EmptyState
+            emoji="🔎"
+            title={$t('empty.biblioteca.filter.title')}
+            description={$t('empty.biblioteca.filter.desc')}
+            ctaLabel={$t('actions.cta.showAll')}
+            onCta={clearFilters}
+          />
         {:else}
-          <p class="empty-msg">Ainda não tens marcadores.</p>
-          <p class="empty-hint">
-            Adiciona o primeiro — por exemplo, a documentação de uma tecnologia
-            ou um artigo que queres voltar a ler.
-          </p>
-          <a class="btn-primary" href="/biblioteca/novo/">+ Adicionar marcador</a>
+          <EmptyState
+            emoji="🔖"
+            title={$t('empty.biblioteca.empty.title')}
+            description={$t('empty.biblioteca.empty.desc')}
+            ctaLabel={$t('actions.cta.addBookmark')}
+            ctaHref="/biblioteca/novo/"
+          />
         {/if}
-      </div>
     {:else}
       <ul class="cards">
         {#each items as item (item.id)}
@@ -423,30 +427,6 @@
   .empty.error {
     border-color: var(--error, #ef4444);
     color: var(--error, #ef4444);
-  }
-  .empty-msg {
-    margin: 0 0 0.5rem 0;
-    font-size: 1rem;
-    color: var(--txt, #fff);
-  }
-  .empty-hint {
-    margin: 0 0 1rem 0;
-    font-size: 0.875rem;
-    color: var(--txt3, #94a3b8);
-  }
-  .link-btn {
-    background: none;
-    border: 0;
-    color: var(--accent, #ec4899);
-    cursor: pointer;
-    padding: 0;
-    font: inherit;
-    text-decoration: underline;
-  }
-  .link-btn:hover,
-  .link-btn:focus-visible {
-    color: #d63384;
-    outline: none;
   }
   .cards {
     list-style: none;

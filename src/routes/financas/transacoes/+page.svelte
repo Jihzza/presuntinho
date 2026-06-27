@@ -28,6 +28,8 @@
     type Transacao,
     type CategoriaRow
   } from '$lib/financas';
+  import EmptyState from '$lib/components/EmptyState.svelte';
+  import Skeleton from '$lib/components/Skeleton.svelte';
   import { showToast } from '$lib/components/events';
 
   let transacoes = $state<Transacao[]>([]);
@@ -214,27 +216,27 @@
 
   <section class="list" aria-label="Lista de transações">
     {#if loading}
-      <p class="empty">A carregar…</p>
+      <Skeleton variant="list" lines={5} label={$t('common.loading')} />
     {:else if error}
       <p class="empty error" role="alert">⚠️ {error}</p>
     {:else if grupos.length === 0}
-      <div class="empty">
-        <p class="empty-msg">
-          {categoriaFiltro
-            ? 'Nenhuma transação corresponde aos filtros.'
-            : 'Ainda não tens transações em ' + formatMes(mesFiltro) + '.'}
-        </p>
-        {#if !categoriaFiltro}
-          <p class="empty-hint">
-            Adiciona a primeira — uma despesa do dia-a-dia ou uma receita.
-          </p>
-          <a class="btn-primary" href="/financas/nova/">+ Adicionar transação</a>
+        {#if categoriaFiltro}
+          <EmptyState
+            emoji="🔎"
+            title={$t('empty.financas.filter.title')}
+            description={$t('empty.financas.filter.desc')}
+            ctaLabel={$t('actions.cta.showAll')}
+            onCta={clearFilters}
+          />
         {:else}
-          <button type="button" class="btn-secondary" onclick={clearFilters}>
-            Mostrar tudo
-          </button>
+          <EmptyState
+            emoji="💸"
+            title={$t('empty.financas.empty.title')}
+            description={$t('empty.financas.empty.desc')}
+            ctaLabel={$t('actions.cta.addTransaction')}
+            ctaHref="/financas/nova/"
+          />
         {/if}
-      </div>
     {:else}
       {#each grupos as grupo (grupo.data)}
         <div class="day-group">
@@ -341,22 +343,6 @@
   .btn-primary:focus-visible {
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.4);
   }
-  .btn-secondary {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--txt, #fff);
-    border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
-    padding: 0.625rem 1.25rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .btn-secondary:hover,
-  .btn-secondary:focus-visible {
-    background: rgba(255, 255, 255, 0.12);
-    outline: none;
-  }
   .filters {
     background: var(--card, rgba(255, 255, 255, 0.05));
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
@@ -461,16 +447,6 @@
   .empty.error {
     border-color: var(--error, #ef4444);
     color: var(--error, #ef4444);
-  }
-  .empty-msg {
-    margin: 0 0 0.5rem 0;
-    font-size: 1rem;
-    color: var(--txt, #fff);
-  }
-  .empty-hint {
-    margin: 0 0 1rem 0;
-    font-size: 0.875rem;
-    color: var(--txt3, #94a3b8);
   }
   .day-group {
     margin-bottom: 1.25rem;

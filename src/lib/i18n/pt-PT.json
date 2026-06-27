@@ -104,5 +104,22 @@
   "onboarding.subAppsTitle": "Os teus cantinhos",
   "onboarding.startCta": "Vamos lá! 🐷",
   "secrets.heartTiersTitle": "❤️ Níveis do Coração",
-  "secrets.badgesTitle": "🏷️ Distintivos"
+  "secrets.badgesTitle": "🏷️ Distintivos",
+  "a11y.skipToContent": "Saltar para o conteúdo principal",
+  "actions.cta.showAll": "Mostrar tudo",
+  "actions.cta.addTransaction": "+ Adicionar transação",
+  "actions.cta.addHabit": "+ Criar hábito",
+  "actions.cta.addBookmark": "+ Adicionar marcador",
+  "empty.trabalhos.title": "Ainda não há trabalhos.",
+  "empty.trabalhos.desc": "Quando houver entregas arquivadas, elas aparecem aqui.",
+  "empty.financas.filter.title": "Nenhuma transação corresponde aos filtros.",
+  "empty.financas.filter.desc": "Limpa os filtros para voltares a ver todas as transações do mês.",
+  "empty.financas.empty.title": "Ainda não tens transações neste mês.",
+  "empty.financas.empty.desc": "Adiciona a primeira — uma despesa do dia-a-dia ou uma receita.",
+  "empty.habitos.title": "Ainda não tens hábitos.",
+  "empty.habitos.desc": "Cria o primeiro — por exemplo, «Beber 2L de água» ou «Ler 20 minutos».",
+  "empty.biblioteca.filter.title": "Nenhum marcador corresponde aos filtros.",
+  "empty.biblioteca.filter.desc": "Limpa os filtros ou adiciona um novo marcador.",
+  "empty.biblioteca.empty.title": "Ainda não tens marcadores.",
+  "empty.biblioteca.empty.desc": "Adiciona o primeiro — por exemplo, a documentação de uma tecnologia ou um artigo que queres voltar a ler."
 }

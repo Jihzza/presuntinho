@@ -104,5 +104,22 @@
   "onboarding.subAppsTitle": "Tes coins",
   "onboarding.startCta": "On y va! 🐷",
   "secrets.heartTiersTitle": "❤️ Niveaux du coeur",
-  "secrets.badgesTitle": "🏷️ Badges"
+  "secrets.badgesTitle": "🏷️ Badges",
+  "a11y.skipToContent": "Aller au contenu principal",
+  "actions.cta.showAll": "Afficher tout",
+  "actions.cta.addTransaction": "+ Ajouter transaction",
+  "actions.cta.addHabit": "+ Creer habitude",
+  "actions.cta.addBookmark": "+ Ajouter bookmark",
+  "empty.trabalhos.title": "Pas encore de devoirs.",
+  "empty.trabalhos.desc": "Quand il y a des livraisons archivees, elles apparaissent ici.",
+  "empty.financas.filter.title": "Aucune transaction ne correspond aux filtres.",
+  "empty.financas.filter.desc": "Efface les filtres pour revoir toutes les transactions du mois.",
+  "empty.financas.empty.title": "T'as pas encore de transactions ce mois.",
+  "empty.financas.empty.desc": "Ajoute la premiere - une depense quotidienne ou une source de revenus.",
+  "empty.habitos.title": "T'as pas encore d'habitudes.",
+  "empty.habitos.desc": "Cree la premiere - par exemple, « Boire 2L d'eau » ou « Lire 20 minutes ».",
+  "empty.biblioteca.filter.title": "Aucun bookmark ne correspond aux filtres.",
+  "empty.biblioteca.filter.desc": "Efface les filtres ou ajoute un nouveau bookmark.",
+  "empty.biblioteca.empty.title": "T'as pas encore de bookmarks.",
+  "empty.biblioteca.empty.desc": "Ajoute le premier - par exemple, la doc d'une techno ou un article a relire."
 }

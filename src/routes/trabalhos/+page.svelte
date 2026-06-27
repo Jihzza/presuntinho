@@ -1,5 +1,8 @@
 <script lang="ts">
   import Countdown from '$lib/components/Countdown.svelte';
+  import EmptyState from '$lib/components/EmptyState.svelte';
+  import Skeleton from '$lib/components/Skeleton.svelte';
+  import { t } from 'svelte-i18n';
   import type { SubApp } from '$lib/registry';
   import { subApps } from '$lib/registry';
   import { onMount } from 'svelte';
@@ -146,7 +149,9 @@
   </nav>
 
   <section class="list" aria-label="Lista de trabalhos">
-      {#if !newLoading && newAssignments.length > 0}
+    {#if newLoading}
+      <Skeleton variant="list" lines={4} label={$t('common.loading')} />
+    {:else if newAssignments.length > 0}
         <header class="progress-bar" aria-live="polite">
           <p>
             Progresso geral:
@@ -198,9 +203,13 @@
 
       <h2 class="section-title">📦 Pacote completo (V3 mid-term)</h2>
       {#if assignments.length === 0}
-        <p class="empty">Ainda não há trabalhos. Volta mais tarde.</p>
+        <EmptyState
+          emoji="📭"
+          title={$t('empty.trabalhos.title')}
+          description={$t('empty.trabalhos.desc')}
+        />
       {:else}
-      <ul class="cards">
+        <ul class="cards">
         {#each assignments as a (a.id)}
           <li class="card" data-status={a.status}>
             <div class="card-header">

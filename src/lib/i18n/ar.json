@@ -104,5 +104,22 @@
   "onboarding.subAppsTitle": "زواياك",
   "onboarding.startCta": "🐷 لننطلق!",
   "secrets.heartTiersTitle": "❤️ مستويات القلب",
-  "secrets.badgesTitle": "🏷️ الشارات"
+  "secrets.badgesTitle": "🏷️ الشارات",
+  "a11y.skipToContent": "الانتقال إلى المحتوى الرئيسي",
+  "actions.cta.showAll": "عرض الكل",
+  "actions.cta.addTransaction": "+ إضافة معاملة",
+  "actions.cta.addHabit": "+ إنشاء عادة",
+  "actions.cta.addBookmark": "+ إضافة إشارة مرجعية",
+  "empty.trabalhos.title": "لا توجد واجبات بعد.",
+  "empty.trabalhos.desc": "عندما تكون هناك واجبات مؤرشفة، ستظهر هنا.",
+  "empty.financas.filter.title": "لا توجد معاملات تطابق التصفية.",
+  "empty.financas.filter.desc": "امسح التصفية للعودة لرؤية كل معاملات الشهر.",
+  "empty.financas.empty.title": "لا توجد لديك معاملات في هذا الشهر.",
+  "empty.financas.empty.desc": "أضيفي أول واحدة — مصروف يومي أو مصدر دخل.",
+  "empty.habitos.title": "لا توجد لديك عادات بعد.",
+  "empty.habitos.desc": "أنشئي أول واحدة — على سبيل المثال، «شرب 2 لتر من الماء» أو «القراءة 20 دقيقة».",
+  "empty.biblioteca.filter.title": "لا توجد إشارات مرجعية تطابق التصفية.",
+  "empty.biblioteca.filter.desc": "امسح التصفية أو أضيفي إشارة مرجعية جديدة.",
+  "empty.biblioteca.empty.title": "لا توجد لديك إشارات مرجعية بعد.",
+  "empty.biblioteca.empty.desc": "أضيفي أول واحدة — على سبيل المثال، توثيق تقنية أو مقال تريدين العودة إليه."
 }

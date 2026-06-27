@@ -104,5 +104,22 @@
   "onboarding.subAppsTitle": "Your corners",
   "onboarding.startCta": "Let's go! 🐷",
   "secrets.heartTiersTitle": "❤️ Heart Tiers",
-  "secrets.badgesTitle": "🏷️ Badges"
+  "secrets.badgesTitle": "🏷️ Badges",
+  "a11y.skipToContent": "Skip to main content",
+  "actions.cta.showAll": "Show all",
+  "actions.cta.addTransaction": "+ Add transaction",
+  "actions.cta.addHabit": "+ Create habit",
+  "actions.cta.addBookmark": "+ Add bookmark",
+  "empty.trabalhos.title": "No assignments yet.",
+  "empty.trabalhos.desc": "When there are archived submissions, they'll show up here.",
+  "empty.financas.filter.title": "No transactions match the filters.",
+  "empty.financas.filter.desc": "Clear the filters to see all transactions of the month.",
+  "empty.financas.empty.title": "You don't have any transactions this month.",
+  "empty.financas.empty.desc": "Add the first one — a daily expense or a source of income.",
+  "empty.habitos.title": "You don't have any habits yet.",
+  "empty.habitos.desc": "Create the first one — for example, \"Drink 2L of water\" or \"Read 20 minutes\".",
+  "empty.biblioteca.filter.title": "No bookmarks match the filters.",
+  "empty.biblioteca.filter.desc": "Clear the filters or add a new bookmark.",
+  "empty.biblioteca.empty.title": "You don't have any bookmarks yet.",
+  "empty.biblioteca.empty.desc": "Add the first one — for example, the docs of a technology or an article you want to revisit."
 }

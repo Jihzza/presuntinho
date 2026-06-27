@@ -11,6 +11,7 @@
   import OfflineIndicator from '$lib/components/OfflineIndicator.svelte';
   import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
   import { handleKonamiKey, logoClick, footerClick } from '$lib/easterEggs';
+  import { t } from 'svelte-i18n';
   import { onMount } from 'svelte';
   import { pwaInfo } from 'virtual:pwa-info';
 
@@ -139,10 +140,18 @@
   <SecretModal bind:open={secretRoomOpen} />
   <!-- Phase 15: offline status banner (listens to online/offline events). -->
   <OfflineIndicator />
+  <a class="skip-link" href="#main-content">{$t('a11y.skipToContent')}</a>
   <div class="app">
     <header class="nav">
       <div class="nav-inner">
-        <a href="/" class="logo" aria-label="Presuntinho home">
+        <!--
+          Logo split into two separate interactives so we don't nest
+          <button> inside <a> (invalid HTML / a11y anti-pattern).
+          * `.logo-pig` is the easter-egg button.
+          * The "Presuntinho" text is a plain <a> to the hub.
+          The wrapper keeps them visually grouped via flex.
+        -->
+        <div class="logo">
           <button
             type="button"
             class="logo-pig"
@@ -150,8 +159,8 @@
             aria-label="🐷 easter egg"
             title="🐷 easter egg"
           >🐷</button>
-          <span>Presuntinho</span>
-        </a>
+          <a href="/" class="logo-text" aria-label="Presuntinho — voltar ao hub">Presuntinho</a>
+        </div>
         <div class="nav-actions">
           <LanguageSwitcher />
           <a href="/definicoes" class="icon-btn" aria-label="Definições" title="Definições">
@@ -213,6 +222,26 @@
     display: flex;
     flex-direction: column;
   }
+  /* WCAG 2.4.1 — visible only when focused via keyboard. */
+  .skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0.5rem;
+    background: var(--accent, #ec4899);
+    color: #fff;
+    padding: 0.5rem 0.875rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    z-index: 1000;
+    transition: top 0.15s ease;
+  }
+  .skip-link:focus,
+  .skip-link:focus-visible {
+    top: 0.5rem;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.5);
+  }
   .nav {
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
@@ -231,36 +260,50 @@
     gap: 1rem;
   }
   .logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.125rem;
-  }
-  .logo-pig {
-    font-size: 1.5rem;
-    /* Override <a> link colour so the pig button reads as part of the logo. */
-    color: inherit;
-    /* Reset native button styling. */
-    background: transparent;
-    border: 0;
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    line-height: 1;
-    border-radius: 4px;
-    transition: transform 0.15s ease;
-  }
-  .logo-pig:hover,
-  .logo-pig:focus-visible {
-    transform: scale(1.12);
-    outline: none;
-  }
-  .logo-pig:focus-visible {
-    box-shadow: 0 0 0 2px var(--accent, #ec4899);
-  }
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #fff;
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+    .logo-text {
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      padding: 2px 4px;
+    }
+    .logo-text:hover,
+    .logo-text:focus-visible {
+      text-decoration: underline;
+      outline: none;
+    }
+    .logo-text:focus-visible {
+      box-shadow: 0 0 0 2px var(--accent, #ec4899);
+    }
+    .logo-pig {
+      font-size: 1.5rem;
+      /* The pig is a button, not a link — keep its colour in sync with the
+         surrounding text so it reads as part of the logo. */
+      color: inherit;
+      /* Reset native button styling. */
+      background: transparent;
+      border: 0;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      line-height: 1;
+      border-radius: 4px;
+      transition: transform 0.15s ease;
+    }
+    .logo-pig:hover,
+    .logo-pig:focus-visible {
+      transform: scale(1.12);
+      outline: none;
+    }
+    .logo-pig:focus-visible {
+      box-shadow: 0 0 0 2px var(--accent, #ec4899);
+    }
   .nav-actions {
     display: flex;
     align-items: center;

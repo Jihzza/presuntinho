@@ -19,6 +19,9 @@
     type Habit
   } from '$lib/habitos';
   import { subApps } from '$lib/registry';
+  import EmptyState from '$lib/components/EmptyState.svelte';
+  import Skeleton from '$lib/components/Skeleton.svelte';
+  import { t } from 'svelte-i18n';
   import { showToast } from '$lib/components/events';
 
   let habits = $state<Habit[]>([]);
@@ -103,17 +106,17 @@
 
   <section class="list" aria-label="Lista de hábitos">
     {#if loading}
-      <p class="empty">A carregar…</p>
+      <Skeleton variant="list" lines={4} label={$t('common.loading')} />
     {:else if error}
       <p class="empty error" role="alert">⚠️ {error}</p>
     {:else if habits.length === 0}
-      <div class="empty">
-        <p class="empty-msg">Ainda não tens hábitos.</p>
-        <p class="empty-hint">
-          Cria o primeiro — por exemplo, "Beber 2L de água" ou "Ler 20 minutos".
-        </p>
-        <a class="btn-primary" href="/habitos/novo/">+ Criar hábito</a>
-      </div>
+        <EmptyState
+          emoji="🌱"
+          title={$t('empty.habitos.title')}
+          description={$t('empty.habitos.desc')}
+          ctaLabel={$t('actions.cta.addHabit')}
+          ctaHref="/habitos/novo/"
+        />
     {:else}
       <ul class="cards">
         {#each habits as h (h.id)}
@@ -223,16 +226,6 @@
   .empty.error {
     border-color: var(--error, #ef4444);
     color: var(--error, #ef4444);
-  }
-  .empty-msg {
-    margin: 0 0 0.5rem 0;
-    font-size: 1rem;
-    color: var(--txt, #fff);
-  }
-  .empty-hint {
-    margin: 0 0 1rem 0;
-    font-size: 0.875rem;
-    color: var(--txt3, #94a3b8);
   }
   .cards {
     list-style: none;
