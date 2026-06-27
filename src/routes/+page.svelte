@@ -22,10 +22,11 @@
   import { get } from 'svelte/store';
 
   import HubCard from '$lib/components/HubCard.svelte';
-    import ProgressBar from '$lib/components/ProgressBar.svelte';
-    import BadgeGrid from '$lib/components/BadgeGrid.svelte';
-    import HeartButton from '$lib/components/HeartButton.svelte';
-    import InstallButton from '$lib/components/InstallButton.svelte';
+  import ProgressBar from '$lib/components/ProgressBar.svelte';
+  import BadgeGrid from '$lib/components/BadgeGrid.svelte';
+  import HeartButton from '$lib/components/HeartButton.svelte';
+  import InstallButton from '$lib/components/InstallButton.svelte';
+  import OnboardingModal from '$lib/components/OnboardingModal.svelte';
 
   import { subApps, legacySubApp, v3Content } from '$lib/registry';
   import { db } from '$lib/state/db';
@@ -131,11 +132,39 @@
     document.addEventListener('visibilitychange', onVis);
     return () => document.removeEventListener('visibilitychange', onVis);
   });
+
+  // ---------------------------------------------------------------------------
+  // First-visit onboarding — show the welcome modal once, then never again.
+  // Flag lives in localStorage under `fat-onboarded`. SSR-safe: we only touch
+  // localStorage inside onMount, so the first render is identical on both
+  // server and client (open=false). The flag check runs after hydration.
+  // ---------------------------------------------------------------------------
+  let showOnboarding = $state(false);
+
+  function handleOnboardingClose(): void {
+    try {
+      localStorage.setItem('fat-onboarded', '1');
+    } catch {
+      // localStorage may be unavailable (private mode / quota); silently
+      // ignore — the modal will simply re-appear next visit, which is fine.
+    }
+    showOnboarding = false;
+  }
+
+  onMount(() => {
+    try {
+      showOnboarding = localStorage.getItem('fat-onboarded') === null;
+    } catch {
+      showOnboarding = false;
+    }
+  });
 </script>
 
 <svelte:head>
   <title>Presuntinho — Hub</title>
 </svelte:head>
+
+<OnboardingModal open={showOnboarding} onClose={handleOnboardingClose} />
 
 <div class="hub">
   <header class="hub-hero">
@@ -323,7 +352,7 @@
       grid-template-columns: repeat(2, 1fr);
     }
   }
-    @media (min-width: 1024px) {
+  @media (min-width: 1024px) {
     .hub {
       max-width: 1000px;
       padding: 2rem 1.5rem 3rem;

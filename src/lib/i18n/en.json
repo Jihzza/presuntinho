@@ -86,5 +86,7 @@
   "easter.locked": "🔒 LOCKED",
   "easter.unlocked": "🔓 UNLOCKED",
   "onboarding.welcome": "🐷 Welcome, Fatma! Find the easter eggs 🥚",
-  "onboarding.firstHint": "Try clicking the 🐷 three times..."
+  "onboarding.firstHint": "Try clicking the 🐷 three times...",
+  "onboarding.subAppsTitle": "Your corners",
+  "onboarding.startCta": "Let's go! 🐷"
 }
