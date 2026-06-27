@@ -26,6 +26,7 @@
     "vitest": "^2.0.0"
   },
   "dependencies": {
+    "@netlify/blobs": "^10.7.9",
     "@vite-pwa/sveltekit": "^0.6.0",
     "chart.js": "^4.4.0",
     "date-fns": "^3.6.0",

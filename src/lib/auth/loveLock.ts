@@ -73,7 +73,7 @@ export function detectLoveLock(rawPassword: string): LoveLockKind | null {
   return null;
 }
 
-/** Activate a love lock — POSTs to the function which sets the cookie. */
+/** Activate a love lock — POSTs to the function which sets the blob + rotates the id cookie. */
 export async function activateLoveLock(kind: LoveLockKind): Promise<LoveLockState | null> {
   if (!browser) return null;
   try {
@@ -93,9 +93,13 @@ export async function activateLoveLock(kind: LoveLockKind): Promise<LoveLockStat
       expiresAt: typeof data.expiresAt === 'number' ? data.expiresAt : now + 60 * 60 * 1000,
     };
   } catch {
-    // Network error — fall back to in-memory only (current tab, current session).
-    const now = Date.now();
-    return { kind, startedAt: now, expiresAt: now + 60 * 60 * 1000 };
+    // M2: No local fallback. The server (Netlify Blobs) is the source of
+    // truth — if the POST fails, the lock does NOT exist server-side, so
+    // inventing one in memory would just create a lock only this tab sees,
+    // defeating the whole cross-browser fix. Returning null lets the splash
+    // fall through to the normal error path instead of trapping the user
+    // in a phantom lock.
+    return null;
   }
 }
 

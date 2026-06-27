@@ -63,9 +63,34 @@
           if (!locked.locked && interval) clearInterval(interval);
         }, 500);
       }
+      // M1 — Poll the server every 30 s while a Love Lock is active so that
+      // when the partner taps "I said it again" (or activates one from a
+      // different browser), this client picks it up within ~30 s instead of
+      // waiting until the next page load. Server is the source of truth —
+      // we never invent a lock locally.
+      let lovePoll: ReturnType<typeof setInterval> | undefined;
+      if (loveLockState) {
+        lovePoll = setInterval(async () => {
+          const fresh = await readLoveLock();
+          if (!fresh) {
+            // Server says no lock → drop it locally too.
+            loveLockState = null;
+            if (lovePoll) {
+              clearInterval(lovePoll);
+              lovePoll = undefined;
+            }
+            return;
+          }
+          // If the partner changed kind (sad → love or vice versa), sync.
+          if (!loveLockState || fresh.kind !== loveLockState.kind || fresh.expiresAt !== loveLockState.expiresAt) {
+            loveLockState = fresh;
+          }
+        }, 30_000);
+      }
       return () => {
         unsubLocale();
         if (interval) clearInterval(interval);
+        if (lovePoll) clearInterval(lovePoll);
       };
     });
 
