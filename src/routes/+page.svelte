@@ -25,7 +25,7 @@
   import ProgressBar from '$lib/components/ProgressBar.svelte';
   import BadgeGrid from '$lib/components/BadgeGrid.svelte';
 
-  import { subApps, legacySubApp } from '$lib/registry';
+  import { subApps, legacySubApp, v3Content } from '$lib/registry';
   import { db } from '$lib/state/db';
   import { xp } from '$lib/state/stores';
 
@@ -189,9 +189,21 @@
   </section>
 
   <section class="legacy-section" aria-label="Site V3 preservado">
-    <h2 class="section-title">Site original</h2>
-    <p class="legacy-desc">O site V3 está preservado e reachable. A migração para SvelteKit está em curso.</p>
-    <HubCard app={legacySubApp} />
+    <h2 class="section-title">Site V3 preservado</h2>
+    <p class="legacy-desc">O site V3 original mantém-se reachable como arquivo. A migração para rotas SvelteKit está concluída para os 7 módulos abaixo.</p>
+    <div class="legacy-grid">
+      <HubCard app={legacySubApp} />
+    </div>
+  </section>
+
+  <section class="v3-section" aria-label="Conteúdo V3 migrado">
+    <h2 class="section-title">V3 Content</h2>
+    <p class="v3-desc">As 7 páginas do V3 agora são rotas SvelteKit nativas — sem iframe, navegação rápida, prontas para SEO e PWA.</p>
+    <div class="v3-grid">
+      {#each v3Content as entry (entry.id)}
+        <HubCard app={legacySubApp} v3={entry} />
+      {/each}
+    </div>
   </section>
 </div>
 
@@ -249,7 +261,8 @@
   .apps,
   .progress-section,
   .badges-section,
-  .legacy-section {
+  .legacy-section,
+  .v3-section {
     margin-bottom: 2rem;
   }
   .section-title {
@@ -275,12 +288,27 @@
     color: #94a3b8;
     margin: 0 0 0.75rem 0.25rem;
   }
+  .legacy-grid,
+  .v3-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .v3-desc {
+    font-size: 0.875rem;
+    color: #94a3b8;
+    margin: 0 0 0.75rem 0.25rem;
+  }
   @media (min-width: 640px) {
     .grid {
       grid-template-columns: repeat(2, 1fr);
     }
     .progress-grid {
       grid-template-columns: repeat(3, 1fr);
+    }
+    .legacy-grid,
+    .v3-grid {
+      grid-template-columns: repeat(2, 1fr);
     }
   }
   @media (min-width: 1024px) {
@@ -289,6 +317,10 @@
     }
     .hub-hero h1 {
       font-size: 2.5rem;
+    }
+    .legacy-grid,
+    .v3-grid {
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 </style>

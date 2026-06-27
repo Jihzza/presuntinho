@@ -40,6 +40,13 @@ presuntinho/
 │   │   ├── +page.svelte             ← Hub (greeting + sub-apps + progress + badges)
 │   │   ├── splash/+page.svelte      ← PBKDF2 password gate
 │   │   ├── definicoes/+page.svelte  ← theme, lang, clear/export/import
+│   │   ├── case/+page.svelte        ← V3 pg-case → native Equivalenza deep dive
+│   │   ├── course/+page.svelte      ← V3 pg-course → 4 framework cards (SWOT/TOWS/SCQA/Persona)
+│   │   ├── walk/+page.svelte        ← V3 pg-walk → 5-step walkthrough with 3 audio walkthroughs
+│   │   ├── write/+page.svelte       ← V3 pg-write → 5 anti-AI writing tips (pt-PT)
+│   │   ├── pt/+page.svelte          ← V3 pg-pt → Aulas em PT + mini-curso de Português + ptq CTA
+│   │   ├── dl/+page.svelte          ← V3 pg-dl → 4 download cards (PDF/DOCX/MP3/ZIP)
+│   │   ├── secrets/+page.svelte     ← V3 pg-secrets → 8 secret cards w/ live Dexie counter
 │   │   ├── escola/                  ← 5 lessons + 5 quizzes (JSON-driven)
 │   │   ├── trabalhos/               ← assignments with countdown
 │   │   ├── financas/                ← dashboard, transactions, budget, categories
@@ -108,6 +115,22 @@ The root layout ([`src/routes/+layout.svelte`](../src/routes/+layout.svelte)) is
 [`src/lib/registry.ts`](../src/lib/registry.ts) exports `SubApp` + the `subApps` array. Each entry has `id`, `name`, `icon`, `color`, `description`, `route`, `enabled`, `order`. `legacySubApp` is a separate entry pointing at `/legacy` (V3 iframe) so users can always get back to the original site.
 
 The Hub iterates the registry and feeds each entry to [`HubCard.svelte`](../src/lib/components/HubCard.svelte). See [`docs/adding-a-sub-app.md`](./adding-a-sub-app.md) for the full walkthrough.
+
+### V3 content routes (Phase 12)
+
+The 7 missing V3 content pages (`pg-case`, `pg-course`, `pg-walk`, `pg-write`, `pg-pt`, `pg-dl`, `pg-secrets`) were migrated into **native SvelteKit routes** rather than iframe shells. They are registered in `registry.ts` as a separate `v3Content` array (the shape mirrors what the Hub renders) and are surfaced on the Hub as a "V3 Content" section.
+
+| V3 page | Native route | Notes |
+| --- | --- | --- |
+| `pg-case`     | `/case/`     | Equivalenza deep dive — empresa, declínio, 3 forças, Divain, persona |
+| `pg-course`   | `/course/`   | 4 framework cards linking to `/escola/curso/equivalenza/licao/<slug>/` |
+| `pg-walk`     | `/walk/`     | 5-step walkthrough (20% cada) + 3 áudio walkthroughs (`/legacy/assets/*.mp3`) |
+| `pg-write`    | `/write/`    | 5 tips anti-AI detection em pt-PT |
+| `pg-pt`       | `/pt/`       | Aulas em PT + mini-curso de Português (vogais, palavras, diálogos, verbos) + ptq CTA |
+| `pg-dl`       | `/dl/`       | 4 download cards (PDF / DOCX / 5 MP3 / ZIP) com `download` attribute |
+| `pg-secrets`  | `/secrets/`  | 8 cards com counter live de `b7`-`b15` + heart/logo3/mascot unlocks |
+
+The original V3 HTML at `static/legacy/index.html` stays reachable at `/legacy/` for archival only — there is no more iframe in the Hub pointing at it.
 
 ## State management
 

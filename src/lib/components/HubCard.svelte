@@ -1,17 +1,42 @@
 <script lang="ts">
-  import type { SubApp } from '$lib/registry';
+  import type { SubApp, V3ContentEntry } from '$lib/registry';
 
   interface Props {
     app: SubApp;
+    /** Optional V3 content override (alternative shape used by the 7 native
+     *  content routes — `href`/`title`/`accent`/`description` + `tagline`). */
+    v3?: V3ContentEntry;
+    /** Optional href/title override when not using either registry shape. */
+    href?: string;
+    title?: string;
+    description?: string;
+    tagline?: string;
   }
-  let { app }: Props = $props();
+  let { app, v3, href, title, description, tagline }: Props = $props();
+
+  // Resolve display values: prefer v3 entry, fall back to app, then to props.
+  let resolvedHref = $derived(
+    v3?.href ?? app.route ?? href ?? '#'
+  );
+  let resolvedTitle = $derived(
+    v3?.title ?? app.name ?? title ?? ''
+  );
+  let resolvedDesc = $derived(
+    v3?.description ?? app.description ?? description ?? ''
+  );
+  let resolvedTagline = $derived(v3?.tagline ?? tagline ?? '');
+  let resolvedIcon = $derived(v3?.icon ?? app.icon ?? '🔗');
+  let resolvedAccent = $derived(v3?.accent ?? app.color ?? '#ec4899');
 </script>
 
-<a class="card" href={app.route} style="--accent: {app.color}">
-  <div class="icon">{app.icon}</div>
+<a class="card" href={resolvedHref} style="--accent: {resolvedAccent}">
+  <div class="icon">{resolvedIcon}</div>
   <div class="content">
-    <h2>{app.name}</h2>
-    <p>{app.description}</p>
+    <h2>{resolvedTitle}</h2>
+    {#if resolvedTagline}
+      <p class="tagline">{resolvedTagline}</p>
+    {/if}
+    <p>{resolvedDesc}</p>
   </div>
   <div class="arrow" aria-hidden="true">→</div>
 </a>

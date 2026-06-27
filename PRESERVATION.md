@@ -27,14 +27,16 @@ Status legend: [x] preserved · [ ] pending · [~] in progress · [!] needs atte
 
 ### All 9 HTML pages (each becomes a route in SvelteKit)
 - [x] ✅ Built — Home (`pg-home`) → `src/routes/+page.svelte` (hub dashboard)
-- [x] ✅ Built — The Case (`pg-case`) → served from `static/legacy/index.html#pg-case` (V3 iframe shell; `/v3` redirects here)
-- [x] ✅ Built — Course (`pg-course`) → served from `static/legacy/index.html#pg-course` (V3 iframe shell)
-- [x] ✅ Built — Walkthrough (`pg-walk`) → served from `static/legacy/index.html#pg-walk` (V3 iframe shell)
-- [x] ✅ Built — Secrets (`pg-secrets`) → served from `static/legacy/index.html#pg-secrets` (V3 iframe shell)
+- [x] ✅ Built — The Case (`pg-case`) → `src/routes/case/+page.svelte` (native SvelteKit route)
+- [x] ✅ Built — Course (`pg-course`) → `src/routes/course/+page.svelte` (native SvelteKit route)
+- [x] ✅ Built — Walkthrough (`pg-walk`) → `src/routes/walk/+page.svelte` (native SvelteKit route, with audio)
+- [x] ✅ Built — Secrets (`pg-secrets`) → `src/routes/secrets/+page.svelte` (native SvelteKit route, live Dexie-backed counter)
 - [x] ✅ Built — Quizzes (`pg-quiz`) → SvelteKit routes at `src/routes/escola/quiz/[quizSlug]/+page.svelte` (q1..q4, ptq)
-- [x] ✅ Built — Writing (`pg-write`) → served from `static/legacy/index.html#pg-write` (V3 iframe shell)
-- [x] ✅ Built — PT (`pg-pt`) → SvelteKit PT quiz route (`/escola/quiz/pt/`) + PT flag in nav
-- [x] ✅ Built — Downloads (`pg-dl`) → served from `static/legacy/index.html#pg-dl` (V3 iframe shell)
+- [x] ✅ Built — Writing (`pg-write`) → `src/routes/write/+page.svelte` (native SvelteKit route)
+- [x] ✅ Built — PT (`pg-pt`) → `src/routes/pt/+page.svelte` (native SvelteKit route, pt-PT, mini-curso + quiz CTA) + PT flag in nav
+- [x] ✅ Built — Downloads (`pg-dl`) → `src/routes/dl/+page.svelte` (native SvelteKit route, download cards)
+
+> **Phase 12 note (2026-06-27):** The 7 V3 content pages are now native SvelteKit routes — no iframe, no SPA fallback through `/legacy/`. → Native routes: `/case/`, `/course/`, `/walk/`, `/write/`, `/pt/`, `/dl/`, `/secrets/`. The legacy HTML at `static/legacy/index.html` remains reachable at `/legacy/` for archival only. Registry entries: see `src/lib/registry.ts → v3Content` (rendered on the Hub as a "V3 Content" section).
 
 ## 🎮 Interactivity / state (must keep working)
 
