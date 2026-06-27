@@ -1,0 +1,16 @@
+:root {
+  --bg: #1f2e4a;
+  --txt: #ffffff;
+  --txt2: #cbd5e1;
+  --txt3: #94a3b8;
+  --accent: #ec4899;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --border: rgba(255, 255, 255, 0.1);
+  --card: rgba(255, 255, 255, 0.05);
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+h1 { font-size: 1.875rem; margin: 1rem; }
+p { font-size: 1rem; margin: 1rem; color: var(--txt2); }

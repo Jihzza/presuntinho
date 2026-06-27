@@ -1,23 +1,42 @@
-# Netlify configuration for Presuntinho.
+# Netlify configuration for Presuntinho V4 (SvelteKit + Vite).
 # https://docs.netlify.com/configure-builds/file-based-configuration/
 
 [build]
-  publish = "."
-  command = ""
+  publish = "build"
+  command = "npm run build"
 
 [build.environment]
   NODE_VERSION = "20"
+  NPM_FLAGS = "--legacy-peer-deps"
 
-# Single Page App — fallback to index.html for any unknown route.
-# (Not strictly needed since this is static HTML, but harmless and future-proof.)
+# SPA fallback — SvelteKit adapter-static emits a single index.html fallback,
+# but the wildcard redirect keeps URLs clean and matches Netlify's expected
+# behaviour for client-routed apps.
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Long cache for assets (CSS, JS, MP3, PNG)
+# Long cache for immutable Vite/SvelteKit assets (hashed filenames)
 [[headers]]
-  for = "/assets/*"
+  for = "/_app/immutable/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Long cache for legacy static assets (audio, images, css, js)
+[[headers]]
+  for = "/legacy/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Long cache for legacy documents and zip
+[[headers]]
+  for = "/legacy/docs/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/legacy/*.zip"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
@@ -27,7 +46,18 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
-# Security headers
+# No cache for service worker / manifest — must always revalidate
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Security headers (UNCHANGED from V3 — must persist)
 [[headers]]
   for = "/*"
   [headers.values]
@@ -36,7 +66,7 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
 
-# Pretty URLs
+# Pretty URL aliases (UNCHANGED from V3)
 [[redirects]]
   from = "/home"
   to = "/index.html"
@@ -44,5 +74,11 @@
 
 [[redirects]]
   from = "/downloads"
-  to = "/index.html#pg-dl"
+  to = "/legacy/index.html#pg-dl"
+  status = 301
+
+# Legacy compatibility: old V3 root and page hashes still work
+[[redirects]]
+  from = "/v3"
+  to = "/legacy/index.html"
   status = 301
