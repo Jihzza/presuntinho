@@ -256,7 +256,7 @@
           <div
             class="badge-locked"
             role="group"
-            aria-label={`Conquistivo ${b.label}: bloqueado.`}
+            aria-label={`Conquistado ${b.label}: bloqueado.`}
             aria-disabled="true"
             data-badge-id={b.id}
           >
