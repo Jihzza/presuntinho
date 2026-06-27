@@ -1,14 +1,39 @@
 {
   "version": "v6.0.0-rc",
-  "last_commit": "3fac11c",
+  "last_commit": "c9020ce",
+  "status": "BLOCKED_ON_NETLIFY",
+  "blocker_summary": "Netlify builds failing with state='error' for 7 consecutive deploys since 928ac35 (Secrets refactor). All V6 code is on main, local checks all green, but production is stuck on a pre-Love-Lock build. Public deploy logs not accessible (auth required) — error_message field is empty in API responses.",
+  "deploy_history_evidence": {
+    "last_green_deploy": "6a3fefc6a79a17d9b9a71553 at 2026-06-27T15:44:06Z (commit 21cfa46, 'v6 phase A: data-driven schema')",
+    "failing_deploys_since": [
+      "928ac35 refactor(secrets)",
+      "3fac11c feat(hub): onboarding",
+      "3962d0d feat(polish): micro-interactions",
+      "7f711d8 chore: rebuild trigger",
+      "466796b feat(secrets): heart tiers",
+      "6b0741a chore: rebuild retry",
+      "c9020ce fix(trabalhos): detail slug"
+    ],
+    "live_serving_hash": "app.BWcu4r38.js (stale, pre-Love-Lock)",
+    "expected_hash_after_deploy": "app.DsrMnPEe.js or newer"
+  },
+  "local_gates": {
+    "svelte_check": "0 errors, 0 warnings",
+    "npm_build": "exit 0, build/ written, ~6s",
+    "npm_test": "exit 0 (no tests defined)",
+    "git_tree": "clean, all committed and pushed"
+  },
   "steps": {
-    "1_validate_love_lock_browser": {"status": "blocked", "blocker": "splash does not hydrate in prod - 6 JS errors with empty messages - Skander 1 diagnosing root cause"},
-    "2_fix_trabalhos_detail_slug": {"status": "in_progress", "deleg": "deleg_837ff814"},
+    "1_validate_love_lock_browser": {"status": "blocked", "blocker": "production serving stale bundle — Netlify build not deploying new code"},
+    "2_fix_trabalhos_detail_slug": {"status": "done", "commit": "c9020ce", "deleg": "deleg_818334a1"},
     "3_swap_secrets_to_easterEggsCard": {"status": "done", "commit": "928ac35"},
-    "4_onboarding_modal": {"status": "done", "commit": "3fac11c"},
-    "5_visual_polish": {"status": "in_progress", "deleg": "deleg_15143f1f", "workdir_changes": ["src/app.css", "src/lib/components/HubCard.svelte"]},
-    "6_secrets_expansion_badges_hearts": {"status": "pending"},
-    "7_diagnose_splash_hydration": {"status": "in_progress", "deleg": "deleg_4765b3d6"},
-    "8_tag_v6_smoke_final": {"status": "pending"}
-  }
+    "4_onboarding_modal": {"status": "done", "commit": "3fac11c", "note": "code pushed but not deployed (Netlify fail)"},
+    "5_visual_polish": {"status": "done", "commit": "3962d0d", "note": "code pushed but not deployed"},
+    "6_secrets_expansion_badges_hearts": {"status": "done", "commit": "466796b", "note": "code pushed but not deployed"},
+    "7_diagnose_splash_hydration": {"status": "done", "finding": "Splash doesn't hydrate because production is serving stale V5 bundle, not because of a code bug. Real fix = unblock Netlify builds."},
+    "8_diagnose_netlify_build_fail": {"status": "in_progress", "deleg": "deleg_aef67789", "note": "Diagnosing why Netlify builds fail while local works"},
+    "9_tag_v6_smoke_final": {"status": "pending", "blocker": "cannot tag v6.0.0 until Netlify deploys work and Love Lock is validated live"}
+  },
+  "ping_required": true,
+  "ping_reason": "Netlify deploy logs are auth-gated. I can see deploy state='error' and duration ~9s (early failure), but I cannot read the actual build log to see the error. Daniel needs to either: (a) log into https://app.netlify.com/projects/presuntinho/deploys and paste the build log of the latest error, OR (b) click 'Retry deploy' on the latest error, OR (c) roll back to last green (15:44:06 deploy / commit 21cfa46) to get a working baseline, then re-apply V6 commits one by one to find the breaking one."
 }
