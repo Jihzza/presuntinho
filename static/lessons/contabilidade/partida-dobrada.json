@@ -1,0 +1,64 @@
+{
+  "id": "partida-dobrada",
+  "title": "Sistema de Partida Dobrada",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Sistema de Partida Dobrada"
+    },
+    {
+      "type": "p",
+      "text": "A partida dobrada é o sistema contabilístico usado em todo o mundo: cada operação é registada em duas contas — uma a débito e outra a crédito, pelo mesmo valor."
+    },
+    {
+      "type": "h3",
+      "text": "Regra de ouro"
+    },
+    {
+      "type": "p",
+      "text": "Para cada operação: Débito = Crédito. O total debitado tem de ser sempre igual ao total creditado."
+    },
+    {
+      "type": "h3",
+      "text": "Funcionamento das contas"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Ativos e Despesas: aumentam a DÉBITO (lado esquerdo)",
+        "Passivos, Capital e Receitas: aumentam a CRÉDITO (lado direito)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Exemplo prático"
+    },
+    {
+      "type": "p",
+      "text": "Compra de mercadoria por 1.000€ a dinheiro:"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Débito: Mercadorias (ativo aumenta) 1.000€",
+        "Crédito: Caixa/Dinheiro (ativo diminui) 1.000€"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "✅ Se o balancete não fecha (débito ≠ crédito), há um erro de registo. É o primeiro sinal de alarme numa auditoria."
+    }
+  ],
+  "keyPoints": [
+    "Cada operação tem débito e crédito de valor igual",
+    "Ativos/Despesas aumentam a débito",
+    "Passivos/Capital/Receitas aumentam a crédito",
+    "Balança sempre — se não, há erro"
+  ],
+  "quizSlug": "ctq",
+  "nextLesson": "lancamentos-contabeis",
+  "prevLesson": null
+}

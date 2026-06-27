@@ -48,7 +48,7 @@
   }
 
   function newStatusLabel(s: 'open' | 'in_progress' | 'done'): string {
-    return s === 'done' ? 'Concluído' : s === 'in_progress' ? 'Em curso' : 'Por começar';
+    return s === 'done' ? $t('trabalhos.status.done', { default: 'Concluído' }) : s === 'in_progress' ? $t('trabalhos.status.in_progress', { default: 'Em curso' }) : $t('trabalhos.status.open', { default: 'Por começar' });
   }
 
   interface AssignmentDoc {
@@ -115,11 +115,11 @@
   function statusLabel(status: Assignment['status']): string {
     switch (status) {
       case 'open':
-        return 'Em curso';
+        return $t('trabalhos.status_legacy.open', { default: 'Em curso' });
       case 'submitted':
-        return 'Entregue';
+        return $t('trabalhos.status_legacy.submitted', { default: 'Entregue' });
       case 'late':
-        return 'Atrasado';
+        return $t('trabalhos.status_legacy.late', { default: 'Atrasado' });
       default:
         return status;
     }
@@ -138,30 +138,30 @@
 
 <div class="trabalhos">
   <header class="hero">
-    <h1>📝 Trabalhos</h1>
-    <p class="sub">Trabalhos e entregas com prazos — começa pelo que tem deadline mais próximo.</p>
+    <h1>{$t('trabalhos.hero.title', { default: '📝 Trabalhos' })}</h1>
+    <p class="sub">{$t('trabalhos.hero.sub', { default: 'Trabalhos e entregas com prazos — começa pelo que tem deadline mais próximo.' })}</p>
   </header>
 
-  <nav class="crumbs" aria-label="Caminho de navegação">
-    <a href="/">← Hub</a>
+  <nav class="crumbs" aria-label={$t('trabalhos.crumbs.aria', { default: 'Caminho de navegação' })}>
+    <a href="/">{$t('trabalhos.crumbs.home', { default: '← Hub' })}</a>
     <span aria-hidden="true">/</span>
-    <span aria-current="page">Trabalhos</span>
+    <span aria-current="page">{$t('trabalhos.crumbs.current', { default: 'Trabalhos' })}</span>
   </nav>
 
-  <section class="list" aria-label="Lista de trabalhos">
+  <section class="list" aria-label={$t('trabalhos.list.aria', { default: 'Lista de trabalhos' })}>
     {#if newLoading}
       <Skeleton variant="list" lines={4} label={$t('common.loading')} />
     {:else if newAssignments.length > 0}
         <header class="progress-bar" aria-live="polite">
           <p>
-            Progresso geral:
+            {$t('trabalhos.progress', { default: 'Progresso geral' })}:
             <strong>
               {newAssignments.filter((a) => statuses[a.id] === 'done').length} / {newAssignments.length}
             </strong>
-            concluídos
+            {$t('trabalhos.progress.done', { default: 'concluídos' })}
           </p>
         </header>
-        <h2 class="section-title">📚 Trabalhos do curso (BCOBM311)</h2>
+        <h2 class="section-title">{$t('trabalhos.section.course', { default: '📚 Trabalhos do curso (BCOBM311)' })}</h2>
         <ul class="cards">
           {#each newAssignments as a (a.id)}
             <li class="card" data-status={statuses[a.id] || 'open'}>
@@ -170,17 +170,17 @@
                   <h2>
                     <a href="/trabalhos/assignment/{a.slug}/">{a.title}</a>
                   </h2>
-                  <span class="course-pill" aria-label="Peso">Peso {a.weight}%</span>
+                  <span class="course-pill" aria-label={$t('trabalhos.weight', { default: 'Peso' })}>{$t('trabalhos.weight.short', { default: 'Peso' })} {a.weight}%</span>
                 </div>
                 <span class="status status-{statuses[a.id] || 'open'}">{newStatusLabel(statuses[a.id] || 'open')}</span>
               </div>
-              <p class="description"><strong>O quê:</strong> {a.whatToDo}</p>
-              <p class="description"><strong>Como:</strong> {a.howToDo}</p>
+              <p class="description"><strong>{$t('trabalhos.what', { default: 'O quê' })}:</strong> {a.whatToDo}</p>
+              <p class="description"><strong>{$t('trabalhos.how', { default: 'Como' })}:</strong> {a.howToDo}</p>
               {#if a.hint}
                 <p class="hint"><span aria-hidden="true">💡</span> {a.hint}</p>
               {/if}
               <div class="meta">
-                <span class="meta-label">Prazo:</span>
+                <span class="meta-label">{$t('trabalhos.deadline', { default: 'Prazo' })}:</span>
                 <Countdown deadline={new Date('2026-06-29T14:00:00').toISOString()} />
               </div>
               <div class="footer-row">
@@ -188,12 +188,12 @@
                   type="button"
                   class="status-btn"
                   onclick={() => cycleStatus(a.id)}
-                  aria-label={`Mudar estado de ${a.title}`}
+                  aria-label={$t('trabalhos.change_status.aria', { default: 'Mudar estado' }).replace('{title}', a.title)}
                 >
-                  🔄 Mudar estado
+                  🔄 {$t('trabalhos.change_status', { default: 'Mudar estado' })}
                 </button>
                 <a class="open-link" href="/trabalhos/assignment/{a.slug}/">
-                  Abrir trabalho →
+                  {$t('trabalhos.open', { default: 'Abrir trabalho' })} →
                 </a>
               </div>
             </li>
@@ -201,7 +201,7 @@
         </ul>
       {/if}
 
-      <h2 class="section-title">📦 Pacote completo (V3 mid-term)</h2>
+      <h2 class="section-title">{$t('trabalhos.section.package', { default: '📦 Pacote completo (V3 mid-term)' })}</h2>
       {#if assignments.length === 0}
         <EmptyState
           emoji="📭"
@@ -217,7 +217,7 @@
                 <h2>
                   <a href="/trabalhos/assignment/{a.id}/">{a.title}</a>
                 </h2>
-                <span class="course-pill" aria-label="Curso">{a.course}</span>
+                <span class="course-pill" aria-label={$t('trabalhos.course', { default: 'Curso' })}>{a.course}</span>
               </div>
               <span class="status status-{a.status}">{statusLabel(a.status)}</span>
             </div>
@@ -225,16 +225,16 @@
             <p class="description">{a.description}</p>
 
             <div class="meta">
-              <span class="meta-label">Prazo:</span>
+              <span class="meta-label">{$t('trabalhos.deadline', { default: 'Prazo' })}:</span>
               <Countdown deadline={a.deadline} />
             </div>
 
             <div class="footer-row">
               <span class="doc-count">
-                {a.documents.length} {a.documents.length === 1 ? 'documento' : 'documentos'}
+                {a.documents.length} {a.documents.length === 1 ? $t('trabalhos.doc.singular', { default: 'documento' }) : $t('trabalhos.doc.plural', { default: 'documentos' })}
               </span>
               <a class="open-link" href="/trabalhos/assignment/{a.id}/">
-                Abrir trabalho →
+                {$t('trabalhos.open', { default: 'Abrir trabalho' })} →
               </a>
             </div>
           </li>
@@ -246,7 +246,7 @@
   {#if trabalhosApp}
     <footer class="page-footer" aria-hidden="true">
       <span style="--swatch: {trabalhosApp.color}">{trabalhosApp.icon}</span>
-      <span>Sub-app #{trabalhosApp.order} no hub</span>
+      <span>{$t('trabalhos.footer.subapp', { default: 'Sub-app #{n} no hub' }).replace('{n}', String(trabalhosApp.order))}</span>
     </footer>
   {/if}
 </div>

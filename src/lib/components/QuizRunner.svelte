@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { recordQuizSubmission } from '$lib/easterEggs';
+  import { t } from 'svelte-i18n';
 
   // Match the V3 quiz shape (static/legacy/assets/js/quizzes.js)
   interface Question {
@@ -68,14 +69,14 @@
 </script>
 
 {#if loadError}
-  <p class="error">Erro a carregar quiz: {loadError}</p>
+  <p class="error">{$t('quiz.error.load', { default: 'Erro a carregar quiz' })}: {loadError}</p>
 {:else if !quiz}
-  <p class="loading">A carregar quiz…</p>
+  <p class="loading">{$t('quiz.loading', { default: 'A carregar quiz…' })}</p>
 {:else}
   <article class="quiz">
     <h2>{quiz.title}</h2>
     {#if scoreInfo && !scoreInfo.perfect && scoreInfo.pt}
-      <p class="note">🇵🇹 Progresso PT: {Math.round((scoreInfo.correct / scoreInfo.total) * 100)}%</p>
+      <p class="note">{$t('quiz.pt.progress', { default: '🇵🇹 Progresso PT' })}: {Math.round((scoreInfo.correct / scoreInfo.total) * 100)}%</p>
     {/if}
 
     {#each quiz.questions as item, qIdx (qIdx)}
@@ -107,10 +108,10 @@
         disabled={Object.keys(answers).length !== quiz.questions.length}
         onclick={submit}
       >
-        Submeter
+        {$t('quiz.submit', { default: 'Submeter' })}
       </button>
     {:else}
-      <button class="submit" onclick={reset}>Tentar novamente</button>
+      <button class="submit" onclick={reset}>{$t('quiz.try_again', { default: 'Tentar novamente' })}</button>
     {/if}
   </article>
 {/if}

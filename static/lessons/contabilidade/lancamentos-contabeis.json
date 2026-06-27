@@ -1,0 +1,64 @@
+{
+  "id": "lancamentos-contabeis",
+  "title": "Lançamentos e Diário",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Lançamentos Contabilísticos e Diário"
+    },
+    {
+      "type": "p",
+      "text": "O diário é o livro onde as operações são registadas cronologicamente, dia a dia. Cada lançamento segue um formato estruturado."
+    },
+    {
+      "type": "h3",
+      "text": "Estrutura de um lançamento"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Data da operação",
+        "Conta a débito (com valor)",
+        "Conta a crédito (com valor, indentada)",
+        "Histórico / descrição da operação"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Do Diário ao Razão"
+    },
+    {
+      "type": "p",
+      "text": "Depois do diário, os lançamentos são transferidos para o razão — onde se acumula o movimento de cada conta individualmente. O razão permite saber o saldo de qualquer conta."
+    },
+    {
+      "type": "h3",
+      "text": "Tipos de documentos suporte"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Fatura (compra/venda normal)",
+        "Recibo (pagamento)",
+        "Nota de débito / crédito (ajustes)",
+        "Extracto bancário"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "📝 Sempre há um documento por trás de cada lançamento. Nada entra no diário sem suporte documental."
+    }
+  ],
+  "keyPoints": [
+    "Diário = registo cronológico",
+    "Razão = acumulado por conta",
+    "Cada lançamento tem documento suporte",
+    "Histórico deve ser claro e descritivo"
+  ],
+  "quizSlug": "ctq",
+  "nextLesson": "amortizacoes",
+  "prevLesson": "partida-dobrada"
+}

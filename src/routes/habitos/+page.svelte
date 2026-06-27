@@ -13,6 +13,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
+  import { get } from 'svelte/store';
   import {
     listHabitos,
     deleteHabito,
@@ -57,10 +58,10 @@
     try {
       await deleteHabito(id);
       await refresh();
-      showToast('Hábito removido');
+      showToast(get(t)('habitos.toast.removed', { default: 'Hábito removido' }));
     } catch (e) {
       console.error('[habitos] delete failed', e);
-      showToast('Erro a remover hábito');
+      showToast(get(t)('habitos.toast.delete_failed', { default: 'Erro a remover hábito' }));
     }
   }
 
@@ -90,18 +91,18 @@
 
 <div class="habitos-page">
   <header class="hero">
-    <h1>✅ Hábitos</h1>
-    <p class="sub">Hábitos diários com streaks e mapa de calor.</p>
+    <h1>{$t('habitos.hero.title', { default: '✅ Hábitos' })}</h1>
+    <p class="sub">{$t('habitos.hero.sub', { default: 'Hábitos diários com streaks e mapa de calor.' })}</p>
   </header>
 
-  <nav class="crumbs" aria-label="Caminho de navegação">
-    <a href="/">← Hub</a>
+  <nav class="crumbs" aria-label={$t('habitos.crumbs.aria', { default: 'Caminho de navegação' })}>
+    <a href="/">{$t('habitos.crumbs.home', { default: '← Hub' })}</a>
     <span aria-hidden="true">/</span>
-    <span aria-current="page">Hábitos</span>
+    <span aria-current="page">{$t('habitos.crumbs.current', { default: 'Hábitos' })}</span>
   </nav>
 
-  <section class="actions" aria-label="Ações">
-    <a class="btn-primary" href="/habitos/novo/">+ Novo hábito</a>
+  <section class="actions" aria-label={$t('habitos.actions.aria', { default: 'Ações' })}>
+    <a class="btn-primary" href="/habitos/novo/">{$t('habitos.new', { default: '+ Novo hábito' })}</a>
   </section>
 
   <section class="list" aria-label="Lista de hábitos">
@@ -126,7 +127,7 @@
               <span class="content">
                 <span class="name">{h.name}</span>
                 <span class="meta">
-                  Criado a {formatCreatedAt(h.createdAt)} · {h.cadence === 'daily' ? 'diário' : h.cadence}
+                  {$t('habitos.created', { default: 'Criado a' })} {formatCreatedAt(h.createdAt)} · {h.cadence === 'daily' ? $t('habitos.cadence.daily', { default: 'diário' }) : h.cadence}
                 </span>
               </span>
               <span class="arrow" aria-hidden="true">→</span>
@@ -135,10 +136,10 @@
               type="button"
               class="delete-btn"
               onclick={() => confirmDelete(h.id)}
-              aria-label={confirmingDelete === h.id ? 'Confirmar remoção' : 'Remover hábito'}
+              aria-label={confirmingDelete === h.id ? $t('habitos.delete.confirm', { default: 'Confirmar remoção' }) : $t('habitos.delete.aria', { default: 'Remover hábito' })}
               data-confirming={confirmingDelete === h.id}
             >
-              {confirmingDelete === h.id ? 'Confirmar?' : '🗑️'}
+              {confirmingDelete === h.id ? $t('habitos.delete.confirm_short', { default: 'Confirmar?' }) : '🗑️'}
             </button>
           </li>
         {/each}
@@ -148,9 +149,9 @@
 
   {#if habitosApp}
     <footer class="page-footer" aria-hidden="true">
-      <span style="--swatch: {habitosApp.color}">{habitosApp.icon}</span>
-      <span>Sub-app #{habitosApp.order} no hub</span>
-    </footer>
+        <span style="--swatch: {habitosApp.color}">{habitosApp.icon}</span>
+        <span>{$t('habitos.footer.subapp', { default: 'Sub-app #{n} no hub' }).replace('{n}', String(habitosApp.order))}</span>
+      </footer>
   {/if}
 </div>
 

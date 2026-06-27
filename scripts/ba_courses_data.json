@@ -1,0 +1,522 @@
+[
+  {
+    "slug": "gestao-financeira",
+    "title": "Gestão Financeira",
+    "icon": "💰",
+    "color": "#059669",
+    "lessons": [
+      {
+        "id": "demonstracao-resultados",
+        "title": "Demonstração de Resultados",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Demonstração de Resultados (Income Statement)"},
+          {"type":"p","text":"A demonstração de resultados é o mapa financeiro que mostra se uma empresa teve lucro ou prejuízo num determinado período. Responde à pergunta: 'A empresa ganhou dinheiro?'"},
+          {"type":"h3","text":"Estrutura básica"},
+          {"type":"ul","items":["Receitas (vendas, serviços, outros rendimentos)","Custo das vendas (custos diretos da produção/serviço)","Lucro bruto = Receitas − Custo das vendas","Despesas operacionais (salários, rendas, marketing)","Lucro operacional = Lucro bruto − Despesas operacionais","Lucro líquido = Lucro operacional − Impostos − Juros"]},
+          {"type":"callout","variant":"success","text":"💡 Dica: O lucro bruto diz-te se o preço de venda cobre o custo do produto. O lucro líquido diz-te se a empresa é realmente rentável depois de TUDO."}
+        ],
+        "keyPoints": ["Receitas − Custos = Lucro Bruto","Lucro Bruto − Despesas Operacionais = Lucro Operacional","Lucro Operacional − Impostos/Juros = Lucro Líquido","Margem Líquida = Lucro Líquido ÷ Receitas × 100"],
+        "quizSlug": "gfq",
+        "nextLesson": "balanco",
+        "prevLesson": null
+      },
+      {
+        "id": "balanco",
+        "title": "Balanço Patrimonial",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Balanço Patrimonial (Balance Sheet)"},
+          {"type":"p","text":"O balanço é a fotografia financeira da empresa num momento específico. Mostra o que a empresa possui (Ativo) e como isso foi financiado (Passivo + Capital Próprio)."},
+          {"type":"h3","text":"Equação fundamental"},
+          {"type":"p","text":"Ativo = Passivo + Capital Próprio"},
+          {"type":"h3","text":"Ativo (o que a empresa tem)"},
+          {"type":"ul","items":["Ativo corrente: dinheiro, stocks, contas a receber (≤ 12 meses)","Ativo não corrente: equipamentos, imóveis, patentes (> 12 meses)"]},
+          {"type":"h3","text":"Passivo (o que a empresa deve)"},
+          {"type":"ul","items":["Passivo corrente: dívidas de curto prazo, fornecedores","Passivo não corrente: empréstimos a longo prazo, hipotecas"]},
+          {"type":"h3","text":"Capital Próprio (dos donos)"},
+          {"type":"p","text":"Capital social + Reservas + Lucros acumulados. É o que sobraria se a empresa vendesse tudo e pagasse todas as dívidas."},
+          {"type":"callout","variant":"info","text":"🔑 A equação tem de equilibrar SEMPRE. Se não fecha, há um erro na contabilidade."}
+        ],
+        "keyPoints": ["Ativo = Passivo + Capital Próprio","Ativo corrente vs. não corrente","Liquidez = capacidade de pagar dívidas de curto prazo","Solvabilidade = capacidade de pagar dívidas de longo prazo"],
+        "quizSlug": "gfq",
+        "nextLesson": "racios-financeiros",
+        "prevLesson": "demonstracao-resultados"
+      },
+      {
+        "id": "racios-financeiros",
+        "title": "Rácios Financeiros",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Rácios Financeiros (Financial Ratios)"},
+          {"type":"p","text":"Rácios são fórmulas que transformam números brutos em informações comparáveis. Permitem avaliar a saúde de uma empresa e compará-la com concorrentes ou com períodos anteriores."},
+          {"type":"h3","text":"Rácios de Liquidez"},
+          {"type":"ul","items":["Rácio corrente = Ativo corrente ÷ Passivo corrente (>1 = saudável)","Rácio rápido = (Ativo corrente − Stocks) ÷ Passivo corrente"]},
+          {"type":"h3","text":"Rácios de Rentabilidade"},
+          {"type":"ul","items":["Margem bruta = Lucro bruto ÷ Receitas × 100","ROE (Return on Equity) = Lucro líquido ÷ Capital próprio × 100","ROA (Return on Assets) = Lucro líquido ÷ Ativo total × 100"]},
+          {"type":"h3","text":"Rácios de Endividamento"},
+          {"type":"ul","items":["Debt-to-Equity = Passivo total ÷ Capital próprio","Quanto maior, mais alavancada (e arriscada) a empresa"]},
+          {"type":"callout","variant":"success","text":"📊 Os rácios só são úteis com comparação: histórico da própria empresa, concorrentes do sector, ou benchmarks da indústria."}
+        ],
+        "keyPoints": ["Liquidez mede se paga dívidas de curto prazo","Rentabilidade mede se gera lucro","Endividamento mede o risco financeiro","Comparar sempre com referências do sector"],
+        "quizSlug": "gfq",
+        "nextLesson": "orcamento-empresarial",
+        "prevLesson": "balanco"
+      },
+      {
+        "id": "orcamento-empresarial",
+        "title": "Orçamento e Gestão de Caixa",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Orçamento e Gestão de Caixa (Cash Flow)"},
+          {"type":"p","text":"Uma empresa pode ser lucrativa no papel e falir por falta de caixa. A gestão de tesouraria garante que há dinheiro disponível quando preciso."},
+          {"type":"h3","text":"Fluxo de Caixa (Cash Flow)"},
+          {"type":"ul","items":["Atividades operacionais: dinheiro de vendas, pagamentos a fornecedores","Atividades de investimento: compra/venda de equipamentos, imóveis","Atividades de financiamento: empréstimos, capital de investidores"]},
+          {"type":"h3","text":"Orçamento Empresarial"},
+          {"type":"ul","items":["Previsão de vendas por período","Custos fixos vs. variáveis","Ponto de equilíbrio (break-even) = Custos fixos ÷ Margem de contribuição unitária","Reserva de contingência (3-6 meses de custos fixos)"]},
+          {"type":"callout","variant":"warning","text":"⚠️ Lucro ≠ Caixa. Uma venda a prazo conta como receita mas o dinheiro só chega depois. Por isso é que empresas lucrativas podem ter problemas de tesouraria."}
+        ],
+        "keyPoints": ["Cash flow = dinheiro que entra e sai","Break-even = ponto em que não há lucro nem prejuízo","Diferença entre lucro contabilístico e fluxo de caixa","Reserva de emergência é essencial"],
+        "quizSlug": "gfq",
+        "nextLesson": null,
+        "prevLesson": "racios-financeiros"
+      }
+    ],
+    "quiz": {
+      "id": "gfq",
+      "title": "Quiz: Gestão Financeira",
+      "description": "Testa os conceitos fundamentais de gestão financeira empresarial.",
+      "questions": [
+        {"q":"A equação do balanço patrimonial é:","opts":["Ativo = Passivo − Capital","Ativo = Passivo + Capital Próprio","Ativo + Passivo = Capital","Ativo = Receitas − Despesas"],"a":1},
+        {"q":"O rácio corrente mede:","opts":["Rentabilidade","Liquidez de curto prazo","Endividamento","Crescimento"],"a":1},
+        {"q":"Lucro líquido é:","opts":["Receitas − Custos diretos","Lucro operacional − Impostos − Juros","Receitas totais","Ativo − Passivo"],"a":1},
+        {"q":"O break-even é quando:","opts":["Receitas = Despesas totais","Ativo = Passivo","Lucro é máximo","Não há vendas"],"a":0},
+        {"q":"Uma empresa lucrativa pode falir por:","opts":["Paga pouco imposto","Falta de caixa / tesouraria","Demasiados clientes","ROE muito alto"],"a":1}
+      ]
+    }
+  },
+  {
+    "slug": "contabilidade",
+    "title": "Contabilidade",
+    "icon": "📊",
+    "color": "#2563eb",
+    "lessons": [
+      {
+        "id": "partida-dobrada",
+        "title": "Sistema de Partida Dobrada",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Sistema de Partida Dobrada"},
+          {"type":"p","text":"A partida dobrada é o sistema contabilístico usado em todo o mundo: cada operação é registada em duas contas — uma a débito e outra a crédito, pelo mesmo valor."},
+          {"type":"h3","text":"Regra de ouro"},
+          {"type":"p","text":"Para cada operação: Débito = Crédito. O total debitado tem de ser sempre igual ao total creditado."},
+          {"type":"h3","text":"Funcionamento das contas"},
+          {"type":"ul","items":["Ativos e Despesas: aumentam a DÉBITO (lado esquerdo)","Passivos, Capital e Receitas: aumentam a CRÉDITO (lado direito)"]},
+          {"type":"h3","text":"Exemplo prático"},
+          {"type":"p","text":"Compra de mercadoria por 1.000€ a dinheiro:"},
+          {"type":"ul","items":["Débito: Mercadorias (ativo aumenta) 1.000€","Crédito: Caixa/Dinheiro (ativo diminui) 1.000€"]},
+          {"type":"callout","variant":"success","text":"✅ Se o balancete não fecha (débito ≠ crédito), há um erro de registo. É o primeiro sinal de alarme numa auditoria."}
+        ],
+        "keyPoints": ["Cada operação tem débito e crédito de valor igual","Ativos/Despesas aumentam a débito","Passivos/Capital/Receitas aumentam a crédito","Balança sempre — se não, há erro"],
+        "quizSlug": "ctq",
+        "nextLesson": "lancamentos-contabeis",
+        "prevLesson": null
+      },
+      {
+        "id": "lancamentos-contabeis",
+        "title": "Lançamentos e Diário",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Lançamentos Contabilísticos e Diário"},
+          {"type":"p","text":"O diário é o livro onde as operações são registadas cronologicamente, dia a dia. Cada lançamento segue um formato estruturado."},
+          {"type":"h3","text":"Estrutura de um lançamento"},
+          {"type":"ul","items":["Data da operação","Conta a débito (com valor)","Conta a crédito (com valor, indentada)","Histórico / descrição da operação"]},
+          {"type":"h3","text":"Do Diário ao Razão"},
+          {"type":"p","text":"Depois do diário, os lançamentos são transferidos para o razão — onde se acumula o movimento de cada conta individualmente. O razão permite saber o saldo de qualquer conta."},
+          {"type":"h3","text":"Tipos de documentos suporte"},
+          {"type":"ul","items":["Fatura (compra/venda normal)","Recibo (pagamento)","Nota de débito / crédito (ajustes)","Extracto bancário"]},
+          {"type":"callout","variant":"info","text":"📝 Sempre há um documento por trás de cada lançamento. Nada entra no diário sem suporte documental."}
+        ],
+        "keyPoints": ["Diário = registo cronológico","Razão = acumulado por conta","Cada lançamento tem documento suporte","Histórico deve ser claro e descritivo"],
+        "quizSlug": "ctq",
+        "nextLesson": "amortizacoes",
+        "prevLesson": "partida-dobrada"
+      },
+      {
+        "id": "amortizacoes",
+        "title": "Amortizações e Provisões",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Amortizações e Provisões"},
+          {"type":"p","text":"Os ativos não duram para sempre. A amortização distribui o custo de um bem ao longo da sua vida útil, em vez de o registar todo no momento da compra."},
+          {"type":"h3","text":"Amortização linear (mais simples)"},
+          {"type":"p","text":"(Custo do bem − Valor residual) ÷ Vida útil (anos) = Amortização anual"},
+          {"type":"p","text":"Exemplo: Equipamento de 10.000€, vida útil 5 anos, valor residual 0:"},
+          {"type":"p","text":"Amortização anual = 10.000 ÷ 5 = 2.000€/ano"},
+          {"type":"h3","text":"Provisões"},
+          {"type":"ul","items":["Provisão para devedores duvidosos: antecipa perdas com clientes que podem não pagar","Provisão para riscos: antecipa processos, garantias, etc.","Reconhece-se a despesa antes da perda ser confirmada"]},
+          {"type":"callout","variant":"warning","text":"⚠️ Amortizar não significa pôr dinheiro de lado. É apenas a distribuição contabilística do custo. O dinheiro saiu quando o bem foi comprado."}
+        ],
+        "keyPoints": ["Amortização distribui custo ao longo da vida útil","Método linear é o mais usado","Provisões antecipam perdas prováveis","Valor residual é o valor no fim da vida útil"],
+        "quizSlug": "ctq",
+        "nextLesson": "iva",
+        "prevLesson": "lancamentos-contabeis"
+      },
+      {
+        "id": "iva",
+        "title": "IVA e Impostos",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"IVA — Imposto sobre o Valor Acrescentado"},
+          {"type":"p","text":"O IVA é um imposto sobre o consumo. A empresa atua como intermediária: cobra IVA aos clientes e paga IVA aos fornecedores, entregando a diferença ao Estado."},
+          {"type":"h3","text":"Mecanismo"},
+          {"type":"ul","items":["IVA liquidado = IVA cobrado nas vendas","IVA dedutível = IVA pago nas compras","IVA a pagar = IVA liquidado − IVA dedutível","Se dedutível > liquidado = Estado reembolsa/compensa"]},
+          {"type":"h3","text":"Taxas de IVA (Portugal)"},
+          {"type":"ul","items":["Taxa normal: 23% (maioria dos bens e serviços)","Taxa intermédia: 13% (alimentação, restauração)","Taxa reduzida: 6% (livros, medicamentos, transportes)"]},
+          {"type":"h3","text":"Contabilização"},
+          {"type":"p","text":"O IVA não é despesa nem receita para a empresa (salvo casos de IVA não dedutível). É uma conta de terceiros — o Estado."},
+          {"type":"callout","variant":"success","text":"💡 O IVA é neutro para a empresa: cobra e entrega, não paga do seu bolso (exceto IVA não dedutível)."}
+        ],
+        "keyPoints": ["IVA = imposto sobre consumo pago pelo consumidor final","IVA a pagar = liquidado − dedutível","Taxas: 23%, 13%, 6% (Portugal)","Neutro para a empresa (intermediário)"],
+        "quizSlug": "ctq",
+        "nextLesson": null,
+        "prevLesson": "amortizacoes"
+      }
+    ],
+    "quiz": {
+      "id": "ctq",
+      "title": "Quiz: Contabilidade",
+      "description": "Testa os fundamentos de contabilidade empresarial.",
+      "questions": [
+        {"q":"Na partida dobrada, cada operação tem:","opts":["Apenas débito","Débito = Crédito","Apenas crédito","Triplo débito"],"a":1},
+        {"q":"As contas de Ativo aumentam a:","opts":["Crédito","Débito","Ambos","Nenhum"],"a":1},
+        {"q":"A amortização linear de 8.000€ em 4 anos:","opts":["4.000€/ano","2.000€/ano","1.000€/ano","8.000€/ano"],"a":1},
+        {"q":"IVA a pagar ao Estado é:","opts":["Liquidado + Dedutível","Liquidado − Dedutível","Dedutível − Liquidado","Liquidado × Taxa"],"a":1},
+        {"q":"O diário regista operações:","opts":["Por conta","Cronologicamente","Por valor","Por imposto"],"a":1}
+      ]
+    }
+  },
+  {
+    "slug": "microeconomia",
+    "title": "Microeconomia",
+    "icon": "📉",
+    "color": "#dc2626",
+    "lessons": [
+      {
+        "id": "oferta-procura",
+        "title": "Oferta e Procura",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Lei da Oferta e da Procura"},
+          {"type":"p","text":"O mercado é governado por duas forças fundamentais: a procura (quantos querem comprar) e a oferta (quantos querem vender). O encontro destas duas define o preço de equilíbrio."},
+          {"type":"h3","text":"Curva da Procura"},
+          {"type":"ul","items":["Quanto maior o preço, menor a quantidade procurada","Inclinação negativa (descendente)","Desloca-se com: rendimento, gostos, preço de bens substitutos"]},
+          {"type":"h3","text":"Curva da Oferta"},
+          {"type":"ul","items":["Quanto maior o preço, maior a quantidade oferecida","Inclinação positiva (ascendente)","Desloca-se com: custos de produção, tecnologia, impostos"]},
+          {"type":"h3","text":"Equilíbrio de Mercado"},
+          {"type":"p","text":"O preço de equilíbrio é onde a quantidade oferecida iguala a quantidade procurada. Acima desse preço há excesso de oferta. Abaixo há excesso de procura (escassez)."},
+          {"type":"callout","variant":"success","text":"⚖️ O mercado tende naturalmente para o equilíbrio. Se o preço é demasiado alto, os vendedores baixam. Se é demasiado baixo, os compradores pressionam para cima."}
+        ],
+        "keyPoints": ["Procura: preço ↑ → quantidade ↓","Oferta: preço ↑ → quantidade ↑","Equilíbrio: Qd = Qo","Curvas deslocam com variáveis externas"],
+        "quizSlug": "meq",
+        "nextLesson": "elasticidade",
+        "prevLesson": null
+      },
+      {
+        "id": "elasticidade",
+        "title": "Elasticidade Preço",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Elasticidade Preço da Procura"},
+          {"type":"p","text":"A elasticidade mede o quão sensível é a quantidade procurada a uma mudança no preço. Nem todos os bens reagem igual a mudanças de preço."},
+          {"type":"h3","text":"Fórmula"},
+          {"type":"p","text":"Elasticidade = % variação quantidade ÷ % variação preço"},
+          {"type":"h3","text":"Classificação"},
+          {"type":"ul","items":["|E| > 1: Elástica — bens de luxo","|E| = 1: Elasticidade unitária","|E| < 1: Inelástica — bens essenciais","|E| = 0: Perfeitamente inelástica — medicamentos essenciais"]},
+          {"type":"h3","text":"Por que é que isto importa?"},
+          {"type":"ul","items":["Se a procura é inelástica: subir o preço AUMENTA a receita total","Se a procura é elástica: subir o preço DIMINUI a receita total","Determina a estratégia de preço de qualquer empresa"]},
+          {"type":"callout","variant":"info","text":"🎯 Exemplo: a gasolina é inelástica (precisas dela). Uma marca de luxo é elástica (podes não comprar)."}
+        ],
+        "keyPoints": ["Elasticidade = sensibilidade da procura ao preço","Inelástica: bens essenciais","Elástica: bens substituíveis/luxo","Receita total depende da elasticidade"],
+        "quizSlug": "meq",
+        "nextLesson": "estruturas-mercado",
+        "prevLesson": "oferta-procura"
+      },
+      {
+        "id": "estruturas-mercado",
+        "title": "Estruturas de Mercado",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Estruturas de Mercado"},
+          {"type":"p","text":"Nem todos os mercados funcionam da mesma forma. O número de empresas, a diferenciação do produto e as barreiras à entrada definem diferentes estruturas competitivas."},
+          {"type":"h3","text":"1. Concorrência Perfeita"},
+          {"type":"ul","items":["Muitos compradores e vendedores","Produto homogéneo (idêntico)","Sem barreiras à entrada","Empresa é 'price-taker' (aceita o preço do mercado)"]},
+          {"type":"h3","text":"2. Monopólio"},
+          {"type":"ul","items":["Uma única empresa","Produto sem substitutos próximos","Barreiras à entrada altíssimas","Empresa define o preço"]},
+          {"type":"h3","text":"3. Oligopólio"},
+          {"type":"ul","items":["Poucas empresas dominam (3-5 grandes)","Decisões de uma afetam as outras (interdependência)","Barreiras à entrada moderadas/altas","Exemplo: operadores de telecomunicações"]},
+          {"type":"h3","text":"4. Concorrência Monopolística"},
+          {"type":"ul","items":["Muitas empresas, produto diferenciado","Barreiras à entrada baixas","Exemplo: restaurantes, salões de cabeleireiro"]},
+          {"type":"callout","variant":"warning","text":"🔔 Estrutura de mercado define estratégia: num monopólio controlas o preço; em concorrência perfeita, diferenciar é a única forma de sobreviver."}
+        ],
+        "keyPoints": ["4 estruturas: perfeita, monopolística, oligopólio, monopólio","Barreiras à entrada determinam o poder de mercado","Monopólio = poder total sobre preço","Concorrência perfeita = price-taker"],
+        "quizSlug": "meq",
+        "nextLesson": "custos-producao",
+        "prevLesson": "elasticidade"
+      },
+      {
+        "id": "custos-producao",
+        "title": "Custos de Produção",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Custos de Produção"},
+          {"type":"p","text":"Toda a empresa precisa de entender os seus custos para definir preços e decidir quanto produzir. Há dois tipos fundamentais: custos fixos e variáveis."},
+          {"type":"h3","text":"Custos Fixos (FC)"},
+          {"type":"ul","items":["Não variam com a quantidade produzida","Exemplos: renda, salários administrativos, seguros","Existem mesmo que a produção seja zero"]},
+          {"type":"h3","text":"Custos Variáveis (VC)"},
+          {"type":"ul","items":["Variação diretamente com a produção","Exemplos: matérias-primas, embalagens, comissões","Zero produção = zero custo variável"]},
+          {"type":"h3","text":"Custo Total e Custo Marginal"},
+          {"type":"ul","items":["Custo Total (TC) = Fixos + Variáveis","Custo Marginal (MC) = custo de produzir uma unidade a mais","Custo Médio (AC) = TC ÷ Quantidade"]},
+          {"type":"h3","text":"Economias de Escala"},
+          {"type":"p","text":"Quando a produção aumenta, o custo médio por unidade diminui (porque os custos fixos são distribuídos por mais unidades). É a razão pela qual empresas grandes podem ter preços mais baixos."},
+          {"type":"callout","variant":"success","text":"📈 A regra de ouro: produzir enquanto o Custo Marginal < Receita Marginal. Parar quando se igualam."}
+        ],
+        "keyPoints": ["Custos fixos não dependem da produção","Custos variáveis escalam com quantidade","Custo marginal guia a decisão de produzir mais","Economias de escala baixam o custo unitário"],
+        "quizSlug": "meq",
+        "nextLesson": null,
+        "prevLesson": "estruturas-mercado"
+      }
+    ],
+    "quiz": {
+      "id": "meq",
+      "title": "Quiz: Microeconomia",
+      "description": "Testa os conceitos fundamentais de microeconomia.",
+      "questions": [
+        {"q":"A lei da procura diz que:","opts":["Preço ↑ → Quantidade ↑","Preço ↑ → Quantidade ↓","Preço não afeta quantidade","Preço ↓ → Quantidade ↓"],"a":1},
+        {"q":"Bens essenciais têm procura:","opts":["Elástica","Inelástica","Perfeitamente elástica","Sem elasticidade"],"a":1},
+        {"q":"Uma única empresa no mercado é:","opts":["Monopólio","Oligopólio","Concorrência perfeita","Monopolística"],"a":0},
+        {"q":"A renda de um armazém é custo:","opts":["Variável","Fixo","Marginal","Zero"],"a":1},
+        {"q":"Economias de escala significam:","opts":["Custo médio diminui com produção","Custo fixo aumenta","Produção diminui","Margem aumenta com preço"],"a":0}
+      ]
+    }
+  },
+  {
+    "slug": "recursos-humanos",
+    "title": "Gestão de Recursos Humanos",
+    "icon": "👥",
+    "color": "#7c3aed",
+    "lessons": [
+      {
+        "id": "recrutamento-selecao",
+        "title": "Recrutamento e Seleção",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Recrutamento e Seleção"},
+          {"type":"p","text":"Encontrar as pessoas certas para os cargos certos é uma das funções mais críticas da gestão de recursos humanos. Um mau recrutamento custa caro — em dinheiro e produtividade."},
+          {"type":"h3","text":"Fases do Processo"},
+          {"type":"ul","items":["1. Análise da necessidade: que cargo? que competências?","2. Recrutamento interno vs. externo","3. Triagem de candidaturas (CV, carta)","4. Entrevistas (iniciais, técnicas, finais)","5. Avaliação (testes, casos práticos, referências)","6. Decisão e proposta","7. Integração (onboarding)"]},
+          {"type":"h3","text":"Fontes de Recrutamento"},
+          {"type":"ul","items":["Interno: mais rápido, motiva a equipa, pode estagnar inovação","Externo: traz novas ideias, mais demorado, risco de má adaptação"]},
+          {"type":"callout","variant":"success","text":"💡 Contratar pela atitude, treinar a competência. Competências técnicas ensinam-se; atitude e valores são muito mais difíceis de mudar."}
+        ],
+        "keyPoints": ["Definir o perfil antes de recrutar","Interno vs. externo tem trade-offs","Entrevista estruturada reduz viés","Onboarding é parte crítica do processo"],
+        "quizSlug": "rhq",
+        "nextLesson": "motivacao",
+        "prevLesson": null
+      },
+      {
+        "id": "motivacao",
+        "title": "Teorias de Motivação",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Teorias de Motivação"},
+          {"type":"p","text":"Funcionários motivados produzem mais, inovam mais e ficam mais tempo. Compreender o que motiva as pessoas é fundamental para a gestão."},
+          {"type":"h3","text":"Pirâmide de Maslow"},
+          {"type":"ul","items":["5º: Auto-realização (crescer, criar)","4ª: Estima (reconhecimento, respeito)","3ª: Sociais (pertença, amizade)","2ª: Segurança (emprego, saúde)","1ª: Fisiológicas (comer, dormir, abrigo)"]},
+          {"type":"h3","text":"Teoria dos Dois Fatores (Herzberg)"},
+          {"type":"ul","items":["Fatores higiénicos (evitam insatisfação): salário, condições, segurança","Fatores motivacionais (geram satisfação): reconhecimento, responsabilidade, crescimento","Pagar mais não motiva — apenas remove a insatisfação"]},
+          {"type":"h3","text":"Teoria X e Teoria Y (McGregor)"},
+          {"type":"ul","items":["Teoria X: pessoas são preguiçosas, precisam de controlo","Teoria Y: pessoas querem trabalhar, são autónomas","O estilo de gestão molda o comportamento da equipa"]},
+          {"type":"callout","variant":"info","text":"🧠 Não há teoria perfeita. A melhor gestão combina abordagens: bom salário (higiene) + autonomia + reconhecimento (motivação)."}
+        ],
+        "keyPoints": ["Maslow: necessidades em hierarquia","Herzberg: higiene vs. motivação","McGregor: X (controlo) vs. Y (autonomia)","Dinheiro remove insatisfação, não cria motivação"],
+        "quizSlug": "rhq",
+        "nextLesson": "avaliacao-desempenho",
+        "prevLesson": "recrutamento-selecao"
+      },
+      {
+        "id": "avaliacao-desempenho",
+        "title": "Avaliação de Desempenho",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Avaliação de Desempenho"},
+          {"type":"p","text":"Avaliar o desempenho não é sobre punir — é sobre dar feedback, identificar pontos de melhoria e alinhar objetivos individuais com os da empresa."},
+          {"type":"h3","text":"Métodos de Avaliação"},
+          {"type":"ul","items":["Avaliação 360°: chefia, pares, subordinados e auto-avaliação","Gestão por Objetivos (MBO): definir metas SMART e medir resultados","Avaliação por competências: comparar comportamentos vs. perfil desejado"]},
+          {"type":"h3","text":"Objetivos SMART"},
+          {"type":"ul","items":["S (Specific): específico e claro","M (Measurable): quantificável","A (Achievable): possível de alcançar","R (Relevant): alinhado com a estratégia","T (Time-bound): com prazo definido"]},
+          {"type":"h3","text":"Feedback Eficaz"},
+          {"type":"ul","items":["Específico, não genérico","Oportuno (próximo do evento)","Equilibrado: o que correu bem + o que melhorar","Bidirecional: ouvir também"]},
+          {"type":"callout","variant":"success","text":"🎯 Feedback não é crítica — é investimento no crescimento. Sem feedback, as pessoas não sabem como melhorar."}
+        ],
+        "keyPoints": ["Avaliação 360° dá visão completa","Objetivos SMART orientam o desempenho","Feedback deve ser específico e oportuno","Avaliar para desenvolver, não para punir"],
+        "quizSlug": "rhq",
+        "nextLesson": "cultura-organizacional",
+        "prevLesson": "motivacao"
+      },
+      {
+        "id": "cultura-organizacional",
+        "title": "Cultura Organizacional",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Cultura Organizacional"},
+          {"type":"p","text":"A cultura é 'a forma como fazemos as coisas aqui'. São os valores, crenças, comportamentos e rituais partilhados que definem a identidade de uma organização."},
+          {"type":"h3","text":"Elementos da Cultura"},
+          {"type":"ul","items":["Valores: o que a empresa defende (inovação, qualidade, etc.)","Símbolos: logo, slogan, decoração do espaço","Rituais: reuniões semanais, celebrações, tradições","Heróis: pessoas que personificam os valores","Linguagem: jargão interno, formas de comunicar"]},
+          {"type":"h3","text":"Cultura Forte vs. Fraca"},
+          {"type":"ul","items":["Forte: valores claramente partilhados, coesão, identidade","Fraca: valores vagos, cada um faz a sua, alto 'turnover'","Forte não é sempre bom — pode significar resistência à mudança"]},
+          {"type":"h3","text":"O líder e a cultura"},
+          {"type":"p","text":"Os líderes moldam a cultura através do exemplo. O que é premiado, tolerado ou punido comunica os verdadeiros valores mais do que qualquer manual."},
+          {"type":"callout","variant":"warning","text":"⚠️ Cultura come-se pelo topo. Se a liderança não vive os valores, ninguém mais o fará."}
+        ],
+        "keyPoints": ["Cultura = valores + comportamentos + rituais","Cultura forte aumenta coesão mas pode bloquear mudança","Líderes moldam cultura pelo exemplo","Contratar quem partilha valores preserva a cultura"],
+        "quizSlug": "rhq",
+        "nextLesson": null,
+        "prevLesson": "avaliacao-desempenho"
+      }
+    ],
+    "quiz": {
+      "id": "rhq",
+      "title": "Quiz: Gestão de Recursos Humanos",
+      "description": "Testa os conceitos fundamentais de gestão de pessoas.",
+      "questions": [
+        {"q":"Na teoria de Herzberg, o salário é um fator:","opts":["Motivacional","Higiénico","Irrelevante","De crescimento"],"a":1},
+        {"q":"A base da pirâmide de Maslow é:","opts":["Estima","Auto-realização","Necessidades fisiológicas","Segurança"],"a":2},
+        {"q":"Objetivos SMART devem ser:","opts":["Vagos e flexíveis","Específicos e medíveis","Definidos só pela chefia","Sem prazo"],"a":1},
+        {"q":"A avaliação 360° envolve:","opts":["Apenas o chefe","Chefia + pares + subordinados + auto","Apenas auto-avaliação","Apenas testes"],"a":1},
+        {"q":"A cultura organizacional é moldada por:","opts":["O manual de RH","A liderança pelo exemplo","O sindicato","O cliente"],"a":1}
+      ]
+    }
+  },
+  {
+    "slug": "comportamento-organizacional",
+    "title": "Comportamento Organizacional",
+    "icon": "🧠",
+    "color": "#0891b2",
+    "lessons": [
+      {
+        "id": "lideranca",
+        "title": "Estilos de Liderança",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Estilos de Liderança"},
+          {"type":"p","text":"Liderar não é o mesmo que gerir. Gerir é garantir eficiência; liderar é inspirar pessoas para um objetivo comum. Diferentes situações pedem diferentes estilos."},
+          {"type":"h3","text":"Modelos Clássicos"},
+          {"type":"ul","items":["Autocrático: o líder decide sozinho, impõe diretivas","Democrático: o líder consulta e envolve a equipa","Laissez-faire: o líder delega totalmente, dá autonomia total","Transformacional: inspira com visão, carisma e exemplo","Transacional: troca recompensas por desempenho"]},
+          {"type":"h3","text":"Liderança Situacional (Hersey-Blanchard)"},
+          {"type":"p","text":"Não existe 'melhor' estilo universal. O estilo deve adaptar-se à maturidade da equipa:"},
+          {"type":"ul","items":["Equipas inexperientes: diretivo (dizer o que fazer)","Equipas em desenvolvimento: persuasivo (orientar + explicar)","Equipas competentes: participativo (consultar)","Equipas maduras: delegar (autonomia total)"]},
+          {"type":"callout","variant":"success","text":"⭐ O melhor líder é aquele que se adapta. A mesma pessoa pode precisar de diretiva numa tarefa e autonomia noutra."}
+        ],
+        "keyPoints": ["Gestão ≠ Liderança","5 estilos principais","Liderança situacional adapta-se à equipa","Estilo ideal depende do contexto"],
+        "quizSlug": "coq",
+        "nextLesson": "trabalho-equipa",
+        "prevLesson": null
+      },
+      {
+        "id": "trabalho-equipa",
+        "title": "Dinâmica de Equipas",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Dinâmica e Desenvolvimento de Equipas"},
+          {"type":"p","text":"Uma equipa não é um grupo de pessoas — é um grupo com objetivo comum, papéis definidos e interdependência. As equipas passam por fases previsíveis."},
+          {"type":"h3","text":"Modelo de Tuckman (5 fases)"},
+          {"type":"ul","items":["1. Forming: cortesia, incerteza, a conhecer-se","2. Storming: conflitos, resistência, luta por poder","3. Norming: regras estabelecidas, coesão crescente","4. Performing: alto desempenho, colaboração fluida","5. Adjourning: encerramento, celebração de resultados"]},
+          {"type":"h3","text":"Papéis numa equipa (Belbin)"},
+          {"type":"ul","items":["Criador de ideias: gera soluções inovadoras","Implementador: transforma ideias em ação","Coordenador: facilita e delega","Finalizador: garante qualidade e prazos","Comunicador: constrói relações externas"]},
+          {"type":"h3","text":"Equipas de alto desempenho"},
+          {"type":"ul","items":["Confiança psicológica: errar sem medo","Objetivos claros e partilhados","Comunicação aberta e honesta","Diversidade de competências complementares"]},
+          {"type":"callout","variant":"info","text":"🤝 O conflito (fase Storming) não é mau — é necessário. Equipas que o evitam nunca chegam ao Performing."}
+        ],
+        "keyPoints": ["Tuckman: Forming → Storming → Norming → Performing → Adjourning","Papéis complementares (Belbin)","Conflito inicial é natural","Confiança psicológica é base do alto desempenho"],
+        "quizSlug": "coq",
+        "nextLesson": "comunicacao",
+        "prevLesson": "lideranca"
+      },
+      {
+        "id": "comunicacao",
+        "title": "Comunicação e Negociação",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Comunicação e Negociação"},
+          {"type":"p","text":"A comunicação é a competência transversal mais importante em qualquer organização. Mau entendido = mau resultado. Negociar bem resolve conflitos e cria valor para todos."},
+          {"type":"h3","text":"Modelo de Comunicação"},
+          {"type":"ul","items":["Emissor → Mensagem → Canal → Receptor → Feedback","Ruído: tudo o que interfere (idioma, stress, barulho, preconceitos)","Comunicação eficaz = mensagem recebida = mensagem pretendida"]},
+          {"type":"h3","text":"Escuta Ativa"},
+          {"type":"ul","items":["Ouvir para entender, não para responder","Parafrasear: 'Então o que estás a dizer é...'","Fazer perguntas abertas","Estar presente (sem telemóvel, sem interromper)"]},
+          {"type":"h3","text":"Negociação Win-Win (Harvard)"},
+          {"type":"ul","items":["Separar as pessoas do problema","Focar em interesses, não posições","Gerar opções de benefício mútuo","Usar critérios objetivos para decidir"]},
+          {"type":"h3","text":"BATNA"},
+          {"type":"p","text":"Best Alternative To a Negotiated Agreement — a tua alternativa se a negociação falhar. Quanto melhor o teu BATNA, mais forte negocias."},
+          {"type":"callout","variant":"success","text":"🎯 Nunca negocies sem saber o teu BATNA. É a tua rede de segurança — saber quando sair da mesa."}
+        ],
+        "keyPoints": ["Comunicação = Emissor → Canal → Receptor → Feedback","Escuta ativa: entender antes de responder","Win-Win: interesses > posições","BATNA define a tua força negociadora"],
+        "quizSlug": "coq",
+        "nextLesson": "gestao-mudanca",
+        "prevLesson": "trabalho-equipa"
+      },
+      {
+        "id": "gestao-mudanca",
+        "title": "Gestão da Mudança",
+        "audio": "",
+        "audioLabel": "Leitura guiada (sem áudio ainda)",
+        "sections": [
+          {"type":"h2","text":"Gestão da Mudança"},
+          {"type":"p","text":"Mudar é difícil. As pessoas resistem ao que não conhecem, ao que ameaça o seu conforto ou ao que não entendem. Gerir a mudança é minimizar essa resistência e maximizar a adoção."},
+          {"type":"h3","text":"Modelo Kotter (8 passos)"},
+          {"type":"ul","items":["1. Criar urgência — porque é que mudar AGORA?","2. Formar coligação — juntar líderes influentes","3. Criar visão — descrever o futuro desejado","4. Comunicar a visão — constantemente","5. Remover obstáculos — estruturas, processos, pessoas","6. Criar vitórias rápidas — resultados visíveis cedo","7. Consolidar ganhos — não parar demasiado cedo","8. Ancorar na cultura — tornar 'o novo' em 'o normal'"]},
+          {"type":"h3","text":"Porque é que as pessoas resistem?"},
+          {"type":"ul","items":["Medo do desconhecido","Perda de controlo ou competência","Má comunicação (não sabem o porquê)","Histórico de mudanças falhadas","Falta de confiança na liderança"]},
+          {"type":"h3","text":"Curva da Mudança (Kübler-Ross adaptada)"},
+          {"type":"ul","items":["Choque/Negação → Raiva → Resistência → Aceitação → Exploração → Compromisso","Não se pode saltar etapas — é um processo emocional"]},
+          {"type":"callout","variant":"warning","text":"⚠️ 70% das mudanças organizacionais falham. O problema quase nunca é técnico — é humano. Comunicar e envolver é mais importante que o plano técnico."}
+        ],
+        "keyPoints": ["Kotter: 8 passos para mudança bem-sucedida","Resistência é emocional, não racional","Vitórias rápidas criam momentum","Comunicar o 'porquê' é mais importante que o 'o quê'"],
+        "quizSlug": "coq",
+        "nextLesson": null,
+        "prevLesson": "comunicacao"
+      }
+    ],
+    "quiz": {
+      "id": "coq",
+      "title": "Quiz: Comportamento Organizacional",
+      "description": "Testa os conceitos de liderança, equipas e mudança organizacional.",
+      "questions": [
+        {"q":"Equipa muito experiente precisa de:","opts":["Estilo diretivo","Estilo de delegação","Microgestão","Controlo total"],"a":1},
+        {"q":"Na fase 'Storming' de Tuckman:","opts":["Alto desempenho","Conflitos e resistência","Cortesia inicial","Encerramento"],"a":1},
+        {"q":"BATNA significa:","opts":["Melhor estratégia de venda","Melhor alternativa à negociação","Balanced Analysis","Brand Audit Type"],"a":1},
+        {"q":"O primeiro passo de Kotter é:","opts":["Comunicar visão","Criar urgência","Formar equipa","Ancorar cultura"],"a":1},
+        {"q":"Negociação win-win foca-se em:","opts":["Posições","Interesses","Preço","Poder"],"a":1}
+      ]
+    }
+  }
+]

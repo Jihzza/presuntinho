@@ -19,6 +19,7 @@
 -->
 <script lang="ts">
   import { untrack } from 'svelte';
+  import { get } from 'svelte/store';
   import { t } from 'svelte-i18n';
   import {
     listItems,
@@ -103,10 +104,10 @@
     try {
       await deleteItem(id);
       await refresh();
-      showToast('Marcador removido');
+      showToast(get(t)('biblioteca.toast.removed', { default: 'Marcador removido' }));
     } catch (e) {
       console.error('[biblioteca] delete failed', e);
-      showToast('Erro a remover marcador');
+      showToast(get(t)('biblioteca.toast.delete_failed', { default: 'Erro a remover marcador' }));
     }
   }
 
@@ -146,30 +147,30 @@
 
 <div class="biblioteca-page">
   <header class="hero">
-    <h1>📚 Biblioteca</h1>
-    <p class="sub">Bookmarks, links e referências com tags.</p>
+    <h1>{$t('biblioteca.hero.title', { default: '📚 Biblioteca' })}</h1>
+    <p class="sub">{$t('biblioteca.hero.sub', { default: 'Bookmarks, links e referências com tags.' })}</p>
   </header>
 
-  <nav class="crumbs" aria-label="Caminho de navegação">
-    <a href="/">← Hub</a>
+  <nav class="crumbs" aria-label={$t('biblioteca.crumbs.aria', { default: 'Caminho de navegação' })}>
+    <a href="/">{$t('biblioteca.crumbs.home', { default: '← Hub' })}</a>
     <span aria-hidden="true">/</span>
-    <span aria-current="page">Biblioteca</span>
+    <span aria-current="page">{$t('biblioteca.crumbs.current', { default: 'Biblioteca' })}</span>
   </nav>
 
-  <section class="actions" aria-label="Ações">
-    <a class="btn-primary" href="/biblioteca/novo/">+ Novo marcador</a>
+  <section class="actions" aria-label={$t('biblioteca.actions.aria', { default: 'Ações' })}>
+    <a class="btn-primary" href="/biblioteca/novo/">{$t('biblioteca.new', { default: '+ Novo marcador' })}</a>
   </section>
 
-  <section class="filters" aria-label="Filtros">
+  <section class="filters" aria-label={$t('biblioteca.filters.aria', { default: 'Filtros' })}>
     <div class="search-row">
       <label class="search">
         <span class="search-label">{$t('common.search')}</span>
         <input
           type="search"
           bind:value={query}
-          placeholder="Ex.: Python decorators"
+          placeholder={$t('biblioteca.search.placeholder', { default: 'Ex.: Python decorators' })}
           autocomplete="off"
-          aria-label="Pesquisar marcadores por título"
+          aria-label={$t('biblioteca.search.aria', { default: 'Pesquisar marcadores por título' })}
         />
       </label>
       {#if query || activeTag}
@@ -177,15 +178,15 @@
           type="button"
           class="clear-btn"
           onclick={clearFilters}
-          aria-label="Limpar filtros"
+          aria-label={$t('biblioteca.clear.aria', { default: 'Limpar filtros' })}
         >
-          {$t('common.filter')}: limpar
+          {$t('common.filter')}: {$t('biblioteca.clear', { default: 'limpar' })}
         </button>
       {/if}
     </div>
 
     {#if allTags.length > 0}
-      <div class="tag-chips" role="group" aria-label="Filtrar por tag">
+      <div class="tag-chips" role="group" aria-label={$t('biblioteca.tags.aria', { default: 'Filtrar por tag' })}>
         {#each allTags as tag (tag)}
           <button
             type="button"
@@ -242,7 +243,7 @@
                     {/each}
                   </span>
                 {/if}
-                <span class="meta">Adicionado a {formatCreatedAt(item.createdAt)}</span>
+                <span class="meta">{$t('biblioteca.added', { default: 'Adicionado a' })} {formatCreatedAt(item.createdAt)}</span>
               </span>
               <span class="arrow" aria-hidden="true">→</span>
             </a>
@@ -250,10 +251,10 @@
               type="button"
               class="delete-btn"
               onclick={() => confirmDelete(item.id)}
-              aria-label={confirmingDelete === item.id ? 'Confirmar remoção' : 'Remover marcador'}
+              aria-label={confirmingDelete === item.id ? $t('biblioteca.delete.confirm', { default: 'Confirmar remoção' }) : $t('biblioteca.delete.aria', { default: 'Remover marcador' })}
               data-confirming={confirmingDelete === item.id}
             >
-              {confirmingDelete === item.id ? 'Confirmar?' : '🗑️'}
+              {confirmingDelete === item.id ? $t('biblioteca.delete.confirm_short', { default: 'Confirmar?' }) : '🗑️'}
             </button>
           </li>
         {/each}
@@ -264,7 +265,7 @@
   {#if bibliotecaApp}
     <footer class="page-footer" aria-hidden="true">
       <span style="--swatch: {bibliotecaApp.color}">{bibliotecaApp.icon}</span>
-      <span>Sub-app #{bibliotecaApp.order} no hub</span>
+      <span>{$t('biblioteca.footer.subapp', { default: 'Sub-app #{n} no hub' }).replace('{n}', String(bibliotecaApp.order))}</span>
     </footer>
   {/if}
 </div>

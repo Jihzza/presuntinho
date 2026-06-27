@@ -1,0 +1,63 @@
+{
+  "id": "elasticidade",
+  "title": "Elasticidade Preço",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Elasticidade Preço da Procura"
+    },
+    {
+      "type": "p",
+      "text": "A elasticidade mede o quão sensível é a quantidade procurada a uma mudança no preço. Nem todos os bens reagem igual a mudanças de preço."
+    },
+    {
+      "type": "h3",
+      "text": "Fórmula"
+    },
+    {
+      "type": "p",
+      "text": "Elasticidade = % variação quantidade ÷ % variação preço"
+    },
+    {
+      "type": "h3",
+      "text": "Classificação"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "|E| > 1: Elástica — bens de luxo",
+        "|E| = 1: Elasticidade unitária",
+        "|E| < 1: Inelástica — bens essenciais",
+        "|E| = 0: Perfeitamente inelástica — medicamentos essenciais"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Por que é que isto importa?"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Se a procura é inelástica: subir o preço AUMENTA a receita total",
+        "Se a procura é elástica: subir o preço DIMINUI a receita total",
+        "Determina a estratégia de preço de qualquer empresa"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🎯 Exemplo: a gasolina é inelástica (precisas dela). Uma marca de luxo é elástica (podes não comprar)."
+    }
+  ],
+  "keyPoints": [
+    "Elasticidade = sensibilidade da procura ao preço",
+    "Inelástica: bens essenciais",
+    "Elástica: bens substituíveis/luxo",
+    "Receita total depende da elasticidade"
+  ],
+  "quizSlug": "meq",
+  "nextLesson": "estruturas-mercado",
+  "prevLesson": "oferta-procura"
+}

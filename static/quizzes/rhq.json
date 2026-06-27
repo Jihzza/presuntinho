@@ -1,0 +1,57 @@
+{
+  "id": "rhq",
+  "title": "Quiz: Gestão de Recursos Humanos",
+  "description": "Testa os conceitos fundamentais de gestão de pessoas.",
+  "questions": [
+    {
+      "q": "Na teoria de Herzberg, o salário é um fator:",
+      "opts": [
+        "Motivacional",
+        "Higiénico",
+        "Irrelevante",
+        "De crescimento"
+      ],
+      "a": 1
+    },
+    {
+      "q": "A base da pirâmide de Maslow é:",
+      "opts": [
+        "Estima",
+        "Auto-realização",
+        "Necessidades fisiológicas",
+        "Segurança"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Objetivos SMART devem ser:",
+      "opts": [
+        "Vagos e flexíveis",
+        "Específicos e medíveis",
+        "Definidos só pela chefia",
+        "Sem prazo"
+      ],
+      "a": 1
+    },
+    {
+      "q": "A avaliação 360° envolve:",
+      "opts": [
+        "Apenas o chefe",
+        "Chefia + pares + subordinados + auto",
+        "Apenas auto-avaliação",
+        "Apenas testes"
+      ],
+      "a": 1
+    },
+    {
+      "q": "A cultura organizacional é moldada por:",
+      "opts": [
+        "O manual de RH",
+        "A liderança pelo exemplo",
+        "O sindicato",
+        "O cliente"
+      ],
+      "a": 1
+    }
+  ]
+}

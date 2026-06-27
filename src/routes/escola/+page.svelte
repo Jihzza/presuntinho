@@ -78,6 +78,66 @@
       lessonCount: 4,
       quizCount: 1,
       badge: 'Novo'
+    },
+    {
+      slug: 'gestao-financeira',
+      title: 'Gestão Financeira',
+      tagline: 'Business Administration · Demonstração de resultados, balanço, rácios e caixa',
+      description:
+        'Aprende a ler as contas de uma empresa: demonstração de resultados, balanço patrimonial, rácios financeiros e gestão de caixa. Conteúdo universitário de Business Administration.',
+      icon: '💰',
+      color: '#059669',
+      lessonCount: 4,
+      quizCount: 1,
+      badge: 'Uni'
+    },
+    {
+      slug: 'contabilidade',
+      title: 'Contabilidade',
+      tagline: 'Business Administration · Partida dobrada, diário, amortizações e IVA',
+      description:
+        'Domina os fundamentos da contabilidade: partida dobrada, lançamentos no diário, amortizações e provisões, IVA e impostos. Conceitos essenciais para qualquer gestor.',
+      icon: '📊',
+      color: '#2563eb',
+      lessonCount: 4,
+      quizCount: 1,
+      badge: 'Uni'
+    },
+    {
+      slug: 'microeconomia',
+      title: 'Microeconomia',
+      tagline: 'Business Administration · Oferta, procura, elasticidade e estruturas de mercado',
+      description:
+        'Compreende como os mercados funcionam: oferta e procura, elasticidade-preço, estruturas de mercado (monopólio, oligopólio, concorrência) e custos de produção.',
+      icon: '📉',
+      color: '#dc2626',
+      lessonCount: 4,
+      quizCount: 1,
+      badge: 'Uni'
+    },
+    {
+      slug: 'recursos-humanos',
+      title: 'Gestão de Recursos Humanos',
+      tagline: 'Business Administration · Recrutamento, motivação, avaliação e cultura',
+      description:
+        'Tudo sobre gestão de pessoas: recrutamento e seleção, teorias de motivação (Maslow, Herzberg, McGregor), avaliação de desempenho e cultura organizacional.',
+      icon: '👥',
+      color: '#7c3aed',
+      lessonCount: 4,
+      quizCount: 1,
+      badge: 'Uni'
+    },
+    {
+      slug: 'comportamento-organizacional',
+      title: 'Comportamento Organizacional',
+      tagline: 'Business Administration · Liderança, equipas, comunicação e mudança',
+      description:
+        'Estuda o comportamento nas organizações: estilos de liderança, dinâmica de equipas (Tuckman), comunicação e negociação (BATNA), e gestão da mudança (Kotter).',
+      icon: '🧠',
+      color: '#0891b2',
+      lessonCount: 4,
+      quizCount: 1,
+      badge: 'Uni'
     }
   ];
 </script>

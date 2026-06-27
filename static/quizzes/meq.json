@@ -1,0 +1,57 @@
+{
+  "id": "meq",
+  "title": "Quiz: Microeconomia",
+  "description": "Testa os conceitos fundamentais de microeconomia.",
+  "questions": [
+    {
+      "q": "A lei da procura diz que:",
+      "opts": [
+        "Preço ↑ → Quantidade ↑",
+        "Preço ↑ → Quantidade ↓",
+        "Preço não afeta quantidade",
+        "Preço ↓ → Quantidade ↓"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Bens essenciais têm procura:",
+      "opts": [
+        "Elástica",
+        "Inelástica",
+        "Perfeitamente elástica",
+        "Sem elasticidade"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Uma única empresa no mercado é:",
+      "opts": [
+        "Monopólio",
+        "Oligopólio",
+        "Concorrência perfeita",
+        "Monopolística"
+      ],
+      "a": 0
+    },
+    {
+      "q": "A renda de um armazém é custo:",
+      "opts": [
+        "Variável",
+        "Fixo",
+        "Marginal",
+        "Zero"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Economias de escala significam:",
+      "opts": [
+        "Custo médio diminui com produção",
+        "Custo fixo aumenta",
+        "Produção diminui",
+        "Margem aumenta com preço"
+      ],
+      "a": 0
+    }
+  ]
+}

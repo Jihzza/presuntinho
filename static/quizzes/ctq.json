@@ -1,0 +1,57 @@
+{
+  "id": "ctq",
+  "title": "Quiz: Contabilidade",
+  "description": "Testa os fundamentos de contabilidade empresarial.",
+  "questions": [
+    {
+      "q": "Na partida dobrada, cada operação tem:",
+      "opts": [
+        "Apenas débito",
+        "Débito = Crédito",
+        "Apenas crédito",
+        "Triplo débito"
+      ],
+      "a": 1
+    },
+    {
+      "q": "As contas de Ativo aumentam a:",
+      "opts": [
+        "Crédito",
+        "Débito",
+        "Ambos",
+        "Nenhum"
+      ],
+      "a": 1
+    },
+    {
+      "q": "A amortização linear de 8.000€ em 4 anos:",
+      "opts": [
+        "4.000€/ano",
+        "2.000€/ano",
+        "1.000€/ano",
+        "8.000€/ano"
+      ],
+      "a": 1
+    },
+    {
+      "q": "IVA a pagar ao Estado é:",
+      "opts": [
+        "Liquidado + Dedutível",
+        "Liquidado − Dedutível",
+        "Dedutível − Liquidado",
+        "Liquidado × Taxa"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O diário regista operações:",
+      "opts": [
+        "Por conta",
+        "Cronologicamente",
+        "Por valor",
+        "Por imposto"
+      ],
+      "a": 1
+    }
+  ]
+}

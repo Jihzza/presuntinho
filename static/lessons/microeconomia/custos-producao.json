@@ -1,0 +1,74 @@
+{
+  "id": "custos-producao",
+  "title": "Custos de Produção",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Custos de Produção"
+    },
+    {
+      "type": "p",
+      "text": "Toda a empresa precisa de entender os seus custos para definir preços e decidir quanto produzir. Há dois tipos fundamentais: custos fixos e variáveis."
+    },
+    {
+      "type": "h3",
+      "text": "Custos Fixos (FC)"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Não variam com a quantidade produzida",
+        "Exemplos: renda, salários administrativos, seguros",
+        "Existem mesmo que a produção seja zero"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Custos Variáveis (VC)"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Variação diretamente com a produção",
+        "Exemplos: matérias-primas, embalagens, comissões",
+        "Zero produção = zero custo variável"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Custo Total e Custo Marginal"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Custo Total (TC) = Fixos + Variáveis",
+        "Custo Marginal (MC) = custo de produzir uma unidade a mais",
+        "Custo Médio (AC) = TC ÷ Quantidade"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Economias de Escala"
+    },
+    {
+      "type": "p",
+      "text": "Quando a produção aumenta, o custo médio por unidade diminui (porque os custos fixos são distribuídos por mais unidades). É a razão pela qual empresas grandes podem ter preços mais baixos."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "📈 A regra de ouro: produzir enquanto o Custo Marginal < Receita Marginal. Parar quando se igualam."
+    }
+  ],
+  "keyPoints": [
+    "Custos fixos não dependem da produção",
+    "Custos variáveis escalam com quantidade",
+    "Custo marginal guia a decisão de produzir mais",
+    "Economias de escala baixam o custo unitário"
+  ],
+  "quizSlug": "meq",
+  "nextLesson": null,
+  "prevLesson": "estruturas-mercado"
+}

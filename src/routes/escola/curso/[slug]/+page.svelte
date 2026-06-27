@@ -69,6 +69,76 @@
         { slug: 'execution', title: '4. Execução Estratégica', summary: 'Prioridades, donos, rituais e feedback.', quizSlug: 'esq', quizTitle: 'Quiz: Estratégia', estMinutes: 6 }
       ]
     },
+    'gestao-financeira': {
+      slug: 'gestao-financeira',
+      title: 'Gestão Financeira',
+      tagline: 'Business Administration · Finanças empresariais',
+      description: 'Aprende a ler as contas de uma empresa: demonstração de resultados, balanço, rácios e gestão de caixa.',
+      icon: '💰',
+      color: '#059669',
+      lessons: [
+        { slug: 'demonstracao-resultados', title: '1. Demonstração de Resultados', summary: 'Receitas, custos, lucro bruto, operacional e líquido.', quizSlug: 'gfq', quizTitle: 'Quiz: Gestão Financeira', estMinutes: 7 },
+        { slug: 'balanco', title: '2. Balanço Patrimonial', summary: 'Ativo, Passivo e Capital Próprio — a equação fundamental.', quizSlug: 'gfq', quizTitle: 'Quiz: Gestão Financeira', estMinutes: 7 },
+        { slug: 'racios-financeiros', title: '3. Rácios Financeiros', summary: 'Liquidez, rentabilidade e endividamento.', quizSlug: 'gfq', quizTitle: 'Quiz: Gestão Financeira', estMinutes: 7 },
+        { slug: 'orcamento-empresarial', title: '4. Orçamento e Gestão de Caixa', summary: 'Fluxo de caixa, break-even e reserva de emergência.', quizSlug: 'gfq', quizTitle: 'Quiz: Gestão Financeira', estMinutes: 7 }
+      ]
+    },
+    contabilidade: {
+      slug: 'contabilidade',
+      title: 'Contabilidade',
+      tagline: 'Business Administration · Sistemas contabilísticos',
+      description: 'Partida dobrada, diário, amortizações, provisões e IVA.',
+      icon: '📊',
+      color: '#2563eb',
+      lessons: [
+        { slug: 'partida-dobrada', title: '1. Sistema de Partida Dobrada', summary: 'Débito = Crédito. A base de toda a contabilidade.', quizSlug: 'ctq', quizTitle: 'Quiz: Contabilidade', estMinutes: 7 },
+        { slug: 'lancamentos-contabeis', title: '2. Lançamentos e Diário', summary: 'Do diário ao razão: registar operações.', quizSlug: 'ctq', quizTitle: 'Quiz: Contabilidade', estMinutes: 7 },
+        { slug: 'amortizacoes', title: '3. Amortizações e Provisões', summary: 'Distribuir custos ao longo da vida útil.', quizSlug: 'ctq', quizTitle: 'Quiz: Contabilidade', estMinutes: 7 },
+        { slug: 'iva', title: '4. IVA e Impostos', summary: 'IVA liquidado vs. dedutível, taxas e contabilização.', quizSlug: 'ctq', quizTitle: 'Quiz: Contabilidade', estMinutes: 7 }
+      ]
+    },
+    microeconomia: {
+      slug: 'microeconomia',
+      title: 'Microeconomia',
+      tagline: 'Business Administration · Mercados e preços',
+      description: 'Oferta, procura, elasticidade, estruturas de mercado e custos.',
+      icon: '📉',
+      color: '#dc2626',
+      lessons: [
+        { slug: 'oferta-procura', title: '1. Oferta e Procura', summary: 'A lei fundamental dos mercados.', quizSlug: 'meq', quizTitle: 'Quiz: Microeconomia', estMinutes: 7 },
+        { slug: 'elasticidade', title: '2. Elasticidade Preço', summary: 'Sensibilidade da procura ao preço.', quizSlug: 'meq', quizTitle: 'Quiz: Microeconomia', estMinutes: 7 },
+        { slug: 'estruturas-mercado', title: '3. Estruturas de Mercado', summary: 'Concorrência perfeita, monopolística, oligopólio, monopólio.', quizSlug: 'meq', quizTitle: 'Quiz: Microeconomia', estMinutes: 7 },
+        { slug: 'custos-producao', title: '4. Custos de Produção', summary: 'Fixos, variáveis, marginais e economias de escala.', quizSlug: 'meq', quizTitle: 'Quiz: Microeconomia', estMinutes: 7 }
+      ]
+    },
+    'recursos-humanos': {
+      slug: 'recursos-humanos',
+      title: 'Gestão de Recursos Humanos',
+      tagline: 'Business Administration · Gestão de pessoas',
+      description: 'Recrutamento, motivação, avaliação de desempenho e cultura.',
+      icon: '👥',
+      color: '#7c3aed',
+      lessons: [
+        { slug: 'recrutamento-selecao', title: '1. Recrutamento e Seleção', summary: 'Encontrar as pessoas certas para o cargo.', quizSlug: 'rhq', quizTitle: 'Quiz: Recursos Humanos', estMinutes: 7 },
+        { slug: 'motivacao', title: '2. Teorias de Motivação', summary: 'Maslow, Herzberg e McGregor.', quizSlug: 'rhq', quizTitle: 'Quiz: Recursos Humanos', estMinutes: 7 },
+        { slug: 'avaliacao-desempenho', title: '3. Avaliação de Desempenho', summary: '360°, MBO e objetivos SMART.', quizSlug: 'rhq', quizTitle: 'Quiz: Recursos Humanos', estMinutes: 7 },
+        { slug: 'cultura-organizacional', title: '4. Cultura Organizacional', summary: 'Valores, rituais e liderança pelo exemplo.', quizSlug: 'rhq', quizTitle: 'Quiz: Recursos Humanos', estMinutes: 7 }
+      ]
+    },
+    'comportamento-organizacional': {
+      slug: 'comportamento-organizacional',
+      title: 'Comportamento Organizacional',
+      tagline: 'Business Administration · Comportamento nas organizações',
+      description: 'Liderança, dinâmica de equipas, comunicação e gestão da mudança.',
+      icon: '🧠',
+      color: '#0891b2',
+      lessons: [
+        { slug: 'lideranca', title: '1. Estilos de Liderança', summary: 'Autocrático, democrático, situacional, transformacional.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional', estMinutes: 7 },
+        { slug: 'trabalho-equipa', title: '2. Dinâmica de Equipas', summary: 'Tuckman: Forming → Storming → Norming → Performing.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional', estMinutes: 7 },
+        { slug: 'comunicacao', title: '3. Comunicação e Negociação', summary: 'Escuta ativa, win-win e BATNA.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional', estMinutes: 7 },
+        { slug: 'gestao-mudanca', title: '4. Gestão da Mudança', summary: 'Modelo Kotter (8 passos) e curva da mudança.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional', estMinutes: 7 }
+      ]
+    },
     equivalenza: {
       slug: 'equivalenza',
       title: 'Equivalenza — The Scent of a Second Chance',

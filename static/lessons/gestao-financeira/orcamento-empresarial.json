@@ -1,0 +1,55 @@
+{
+  "id": "orcamento-empresarial",
+  "title": "Orçamento e Gestão de Caixa",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Orçamento e Gestão de Caixa (Cash Flow)"
+    },
+    {
+      "type": "p",
+      "text": "Uma empresa pode ser lucrativa no papel e falir por falta de caixa. A gestão de tesouraria garante que há dinheiro disponível quando preciso."
+    },
+    {
+      "type": "h3",
+      "text": "Fluxo de Caixa (Cash Flow)"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Atividades operacionais: dinheiro de vendas, pagamentos a fornecedores",
+        "Atividades de investimento: compra/venda de equipamentos, imóveis",
+        "Atividades de financiamento: empréstimos, capital de investidores"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Orçamento Empresarial"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Previsão de vendas por período",
+        "Custos fixos vs. variáveis",
+        "Ponto de equilíbrio (break-even) = Custos fixos ÷ Margem de contribuição unitária",
+        "Reserva de contingência (3-6 meses de custos fixos)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "⚠️ Lucro ≠ Caixa. Uma venda a prazo conta como receita mas o dinheiro só chega depois. Por isso é que empresas lucrativas podem ter problemas de tesouraria."
+    }
+  ],
+  "keyPoints": [
+    "Cash flow = dinheiro que entra e sai",
+    "Break-even = ponto em que não há lucro nem prejuízo",
+    "Diferença entre lucro contabilístico e fluxo de caixa",
+    "Reserva de emergência é essencial"
+  ],
+  "quizSlug": "gfq",
+  "nextLesson": null,
+  "prevLesson": "racios-financeiros"
+}

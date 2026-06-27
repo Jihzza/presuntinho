@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { markVisited } from '$lib/state/stores';
+  import { t } from 'svelte-i18n';
 
   // ----- Types --------------------------------------------------------------
 
@@ -96,16 +97,16 @@
 </script>
 
 {#if loadError}
-  <p class="error">Erro a carregar a lição: {loadError}</p>
+  <p class="error">{$t('lesson.error.load', { default: 'Erro a carregar a lição' })}: {loadError}</p>
 {:else if !lesson}
-  <p class="loading">A carregar lição…</p>
+  <p class="loading">{$t('lesson.loading', { default: 'A carregar lição…' })}</p>
 {:else}
   <article class="lesson">
     <header class="lesson-head">
-      <span class="tag">Lição</span>
+      <span class="tag">{$t('lesson.tag', { default: 'Lição' })}</span>
       <h1>{lesson.title}</h1>
       <p class="breadcrumb">
-        <a href="/escola/">Escola</a>
+        <a href="/escola/">{$t('lesson.breadcrumb.escola', { default: 'Escola' })}</a>
         <span class="sep">›</span>
         <a href="/escola/curso/{courseSlug}/">{courseSlug}</a>
         <span class="sep">›</span>
@@ -115,11 +116,11 @@
 
     <!-- Audio player ------------------------------------------------------ -->
     {#if lesson.audio}
-      <section class="audio-card" aria-label="Audio walkthrough">
+      <section class="audio-card" aria-label={$t('lesson.audio.aria', { default: 'Audio walkthrough' })}>
         <div class="audio-row">
           <span class="audio-icon" aria-hidden="true">{audioPlaying ? '🔊' : '🎧'}</span>
           <div class="audio-meta">
-            <strong>{lesson.audioLabel ?? 'Audio walkthrough'}</strong>
+            <strong>{lesson.audioLabel ?? $t('lesson.audio.label', { default: 'Audio walkthrough' })}</strong>
             <div class="audio-bar" aria-hidden="true">
               <div class="audio-fill" style="width: {Math.round(audioProgress * 100)}%"></div>
             </div>
@@ -167,8 +168,8 @@
         {/each}
       </div>
 
-      <aside class="keypoints" aria-label="Pontos-chave">
-        <h2>🔑 Pontos-chave</h2>
+      <aside class="keypoints" aria-label={$t('lesson.keypoints.aria', { default: 'Pontos-chave' })}>
+        <h2>{$t('lesson.keypoints.title', { default: '🔑 Pontos-chave' })}</h2>
         <ol>
           {#each lesson.keyPoints as kp, i (i)}
             <li>{kp}</li>
@@ -176,20 +177,20 @@
         </ol>
         {#if lesson.quizSlug}
           <button type="button" class="quiz-btn" onclick={goQuiz}>
-            Ir para o quiz →
+            {$t('lesson.quiz.cta', { default: 'Ir para o quiz →' })}
           </button>
         {/if}
       </aside>
     </div>
 
     <!-- Nav footer --------------------------------------------------------- -->
-    <nav class="lesson-nav" aria-label="Navegação entre lições">
+    <nav class="lesson-nav" aria-label={$t('lesson.nav.aria', { default: 'Navegação entre lições' })}>
       <button
         type="button"
         class="nav-btn"
         onclick={goPrev}
         disabled={!lesson.prevLesson}
-      >← Anterior</button>
+      >{$t('lesson.nav.prev', { default: '← Anterior' })}</button>
 
       <span class="progress-dots" aria-hidden="true">
         <span class="dot" class:active={lesson.prevLesson === null}></span>
@@ -202,7 +203,7 @@
         class="nav-btn primary"
         onclick={goNext}
         disabled={!lesson.nextLesson}
-      >Próxima →</button>
+      >{$t('lesson.nav.next', { default: 'Próxima →' })}</button>
     </nav>
   </article>
 {/if}

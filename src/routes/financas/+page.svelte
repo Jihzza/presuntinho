@@ -12,6 +12,7 @@
 -->
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  import { t } from 'svelte-i18n';
   import {
     totalMes,
     totaisPorMesUltimos6,
@@ -150,68 +151,68 @@
 
 <div class="financas-page">
   <header class="hero">
-    <h1>💰 Finanças</h1>
-    <p class="sub">Resumo de <strong>{formatMes(mesAtual)}</strong></p>
+    <h1>{$t('financas.hero.title', { default: '💰 Finanças' })}</h1>
+    <p class="sub">{$t('financas.hero.sub', { default: 'Resumo de' })} <strong>{formatMes(mesAtual)}</strong></p>
   </header>
 
-  <nav class="crumbs" aria-label="Caminho de navegação">
-    <a href="/">← Hub</a>
+  <nav class="crumbs" aria-label={$t('financas.crumbs.aria', { default: 'Caminho de navegação' })}>
+    <a href="/">{$t('financas.crumbs.home', { default: '← Hub' })}</a>
     <span aria-hidden="true">/</span>
-    <span aria-current="page">Finanças</span>
+    <span aria-current="page">{$t('financas.crumbs.current', { default: 'Finanças' })}</span>
   </nav>
 
   {#if loading}
-    <p class="empty">A carregar…</p>
+    <p class="empty">{$t('financas.loading', { default: 'A carregar…' })}</p>
   {:else if error}
     <p class="empty error" role="alert">⚠️ {error}</p>
   {:else}
-    <section class="cards" aria-label="Totais do mês">
+    <section class="cards" aria-label={$t('financas.cards.aria', { default: 'Totais do mês' })}>
       <article class="card card-receitas">
-        <span class="card-label">Receitas</span>
+        <span class="card-label">{$t('financas.card.receitas', { default: 'Receitas' })}</span>
         <span class="card-value">{formatValor(totais.receitas)}</span>
-        <span class="card-hint">entradas no mês</span>
+        <span class="card-hint">{$t('financas.card.receitas.hint', { default: 'entradas no mês' })}</span>
       </article>
       <article class="card card-despesas">
-        <span class="card-label">Despesas</span>
+        <span class="card-label">{$t('financas.card.despesas', { default: 'Despesas' })}</span>
         <span class="card-value">{formatValor(totais.despesas)}</span>
-        <span class="card-hint">saídas no mês</span>
+        <span class="card-hint">{$t('financas.card.despesas.hint', { default: 'saídas no mês' })}</span>
       </article>
       <article class="card card-saldo" class:negativo={totais.saldo < 0}>
-        <span class="card-label">Saldo</span>
+        <span class="card-label">{$t('financas.card.saldo', { default: 'Saldo' })}</span>
         <span class="card-value">{formatValor(totais.saldo)}</span>
         <span class="card-hint">
-          {totais.saldo >= 0 ? 'a teu favor' : 'em défice'}
+          {totais.saldo >= 0 ? $t('financas.card.saldo.positive', { default: 'a teu favor' }) : $t('financas.card.saldo.negative', { default: 'em défice' })}
         </span>
       </article>
     </section>
 
-    <section class="chart-section" aria-label="Despesas dos últimos 6 meses">
-      <h2 class="section-title">Despesas — últimos 6 meses</h2>
+    <section class="chart-section" aria-label={$t('financas.chart.aria', { default: 'Despesas dos últimos 6 meses' })}>
+      <h2 class="section-title">{$t('financas.chart.title', { default: 'Despesas — últimos 6 meses' })}</h2>
       <div class="chart-wrap">
-        <canvas bind:this={canvas} aria-label="Gráfico de despesas mensais"></canvas>
+        <canvas bind:this={canvas} aria-label={$t('financas.chart.canvas_aria', { default: 'Gráfico de despesas mensais' })}></canvas>
       </div>
     </section>
 
-    <section class="quick-links" aria-label="Atalhos">
+    <section class="quick-links" aria-label={$t('financas.shortcuts.aria', { default: 'Atalhos' })}>
       <a class="quick" href="/financas/nova/">
         <span class="quick-icon" aria-hidden="true">➕</span>
         <span class="quick-text">
-          <span class="quick-title">Nova transação</span>
-          <span class="quick-sub">Adicionar receita ou despesa</span>
+          <span class="quick-title">{$t('financas.shortcuts.new.title', { default: 'Nova transação' })}</span>
+          <span class="quick-sub">{$t('financas.shortcuts.new.sub', { default: 'Adicionar receita ou despesa' })}</span>
         </span>
       </a>
       <a class="quick" href="/financas/transacoes/">
         <span class="quick-icon" aria-hidden="true">📋</span>
         <span class="quick-text">
-          <span class="quick-title">Ver todas</span>
-          <span class="quick-sub">Histórico completo</span>
+          <span class="quick-title">{$t('financas.shortcuts.all.title', { default: 'Ver todas' })}</span>
+          <span class="quick-sub">{$t('financas.shortcuts.all.sub', { default: 'Histórico completo' })}</span>
         </span>
       </a>
       <a class="quick" href="/financas/orcamento/">
         <span class="quick-icon" aria-hidden="true">📊</span>
         <span class="quick-text">
-          <span class="quick-title">Orçamento</span>
-          <span class="quick-sub">Limites por categoria</span>
+          <span class="quick-title">{$t('financas.shortcuts.budget.title', { default: 'Orçamento' })}</span>
+          <span class="quick-sub">{$t('financas.shortcuts.budget.sub', { default: 'Limites por categoria' })}</span>
         </span>
       </a>
     </section>
@@ -220,7 +221,7 @@
   {#if financasApp}
     <footer class="page-footer" aria-hidden="true">
       <span style="--swatch: {financasApp.color}">{financasApp.icon}</span>
-      <span>Sub-app #{financasApp.order} no hub</span>
+      <span>{$t('financas.footer.subapp', { default: 'Sub-app #{n} no hub' }).replace('{n}', String(financasApp.order))}</span>
     </footer>
   {/if}
 </div>

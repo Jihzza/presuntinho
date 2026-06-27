@@ -1,0 +1,57 @@
+{
+  "id": "recrutamento-selecao",
+  "title": "Recrutamento e Seleção",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Recrutamento e Seleção"
+    },
+    {
+      "type": "p",
+      "text": "Encontrar as pessoas certas para os cargos certos é uma das funções mais críticas da gestão de recursos humanos. Um mau recrutamento custa caro — em dinheiro e produtividade."
+    },
+    {
+      "type": "h3",
+      "text": "Fases do Processo"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "1. Análise da necessidade: que cargo? que competências?",
+        "2. Recrutamento interno vs. externo",
+        "3. Triagem de candidaturas (CV, carta)",
+        "4. Entrevistas (iniciais, técnicas, finais)",
+        "5. Avaliação (testes, casos práticos, referências)",
+        "6. Decisão e proposta",
+        "7. Integração (onboarding)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Fontes de Recrutamento"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Interno: mais rápido, motiva a equipa, pode estagnar inovação",
+        "Externo: traz novas ideias, mais demorado, risco de má adaptação"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "💡 Contratar pela atitude, treinar a competência. Competências técnicas ensinam-se; atitude e valores são muito mais difíceis de mudar."
+    }
+  ],
+  "keyPoints": [
+    "Definir o perfil antes de recrutar",
+    "Interno vs. externo tem trade-offs",
+    "Entrevista estruturada reduz viés",
+    "Onboarding é parte crítica do processo"
+  ],
+  "quizSlug": "rhq",
+  "nextLesson": "motivacao",
+  "prevLesson": null
+}

@@ -1,0 +1,69 @@
+{
+  "id": "avaliacao-desempenho",
+  "title": "Avaliação de Desempenho",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Avaliação de Desempenho"
+    },
+    {
+      "type": "p",
+      "text": "Avaliar o desempenho não é sobre punir — é sobre dar feedback, identificar pontos de melhoria e alinhar objetivos individuais com os da empresa."
+    },
+    {
+      "type": "h3",
+      "text": "Métodos de Avaliação"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Avaliação 360°: chefia, pares, subordinados e auto-avaliação",
+        "Gestão por Objetivos (MBO): definir metas SMART e medir resultados",
+        "Avaliação por competências: comparar comportamentos vs. perfil desejado"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Objetivos SMART"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "S (Specific): específico e claro",
+        "M (Measurable): quantificável",
+        "A (Achievable): possível de alcançar",
+        "R (Relevant): alinhado com a estratégia",
+        "T (Time-bound): com prazo definido"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Feedback Eficaz"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Específico, não genérico",
+        "Oportuno (próximo do evento)",
+        "Equilibrado: o que correu bem + o que melhorar",
+        "Bidirecional: ouvir também"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "🎯 Feedback não é crítica — é investimento no crescimento. Sem feedback, as pessoas não sabem como melhorar."
+    }
+  ],
+  "keyPoints": [
+    "Avaliação 360° dá visão completa",
+    "Objetivos SMART orientam o desempenho",
+    "Feedback deve ser específico e oportuno",
+    "Avaliar para desenvolver, não para punir"
+  ],
+  "quizSlug": "rhq",
+  "nextLesson": "cultura-organizacional",
+  "prevLesson": "motivacao"
+}

@@ -1,0 +1,57 @@
+{
+  "id": "coq",
+  "title": "Quiz: Comportamento Organizacional",
+  "description": "Testa os conceitos de liderança, equipas e mudança organizacional.",
+  "questions": [
+    {
+      "q": "Equipa muito experiente precisa de:",
+      "opts": [
+        "Estilo diretivo",
+        "Estilo de delegação",
+        "Microgestão",
+        "Controlo total"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Na fase 'Storming' de Tuckman:",
+      "opts": [
+        "Alto desempenho",
+        "Conflitos e resistência",
+        "Cortesia inicial",
+        "Encerramento"
+      ],
+      "a": 1
+    },
+    {
+      "q": "BATNA significa:",
+      "opts": [
+        "Melhor estratégia de venda",
+        "Melhor alternativa à negociação",
+        "Balanced Analysis",
+        "Brand Audit Type"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O primeiro passo de Kotter é:",
+      "opts": [
+        "Comunicar visão",
+        "Criar urgência",
+        "Formar equipa",
+        "Ancorar cultura"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Negociação win-win foca-se em:",
+      "opts": [
+        "Posições",
+        "Interesses",
+        "Preço",
+        "Poder"
+      ],
+      "a": 1
+    }
+  ]
+}

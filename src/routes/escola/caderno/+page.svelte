@@ -8,7 +8,9 @@
 
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
+  import { get } from 'svelte/store';
   import { db } from '$lib/state/db';
+  import { t } from 'svelte-i18n';
 
   interface Note {
     id?: number;
@@ -31,12 +33,12 @@
   let audioChunks: Blob[] = [];
   let recordingStart = 0;
 
-  const CATEGORIES: { key: Note['category']; label: string; icon: string }[] = [
-    { key: 'escola', label: 'Escola', icon: '📚' },
-    { key: 'habitos', label: 'Hábitos', icon: '🌱' },
-    { key: 'financas', label: 'Finanças', icon: '💰' },
-    { key: 'geral', label: 'Geral', icon: '📝' }
-  ];
+  const CATEGORIES = $derived<{ key: Note['category']; label: string; icon: string }[]>([
+    { key: 'escola', label: $t('caderno.filter.escola', { default: 'Escola' }), icon: '📚' },
+    { key: 'habitos', label: $t('caderno.filter.habitos', { default: 'Hábitos' }), icon: '🌱' },
+    { key: 'financas', label: $t('caderno.filter.financas', { default: 'Finanças' }), icon: '💰' },
+    { key: 'geral', label: $t('caderno.filter.geral', { default: 'Geral' }), icon: '📝' }
+  ]);
 
   onMount(async () => {
     if (browser) await refresh();
@@ -50,7 +52,7 @@
     if (!newTitle.trim() && !newBody.trim()) return;
     await db().notes.add({
       kind: 'text',
-      title: newTitle.trim() || 'Nota',
+      title: newTitle.trim() || get(t)('caderno.note.default_title', { default: 'Nota' }),
       body: newBody.trim(),
       category: newCategory,
       createdAt: Date.now()
@@ -106,7 +108,7 @@
         const seconds = Math.round((Date.now() - recordingStart) / 1000);
         await db().notes.add({
           kind: 'audio',
-          title: `Áudio (${seconds}s)`,
+          title: get(t)('caderno.note.audio_title', { default: 'Áudio ({n}s)' }).replace('{n}', String(seconds)),
           body: '',
           category: newCategory,
           createdAt: Date.now(),
@@ -119,7 +121,7 @@
       recordingStart = Date.now();
       isRecording = true;
     } catch (err) {
-      alert('Não consegui aceder ao microfone. Permite o acesso nas definições do browser.');
+      alert(get(t)('caderno.audio.permission_denied', { default: 'Não consegui aceder ao microfone. Permite o acesso nas definições do browser.' }));
       console.error(err);
     }
   }
@@ -132,7 +134,7 @@
   }
 
   async function deleteNote(id: number) {
-    if (!confirm('Apagar esta nota?')) return;
+    if (!confirm(get(t)('caderno.confirm.delete', { default: 'Apagar esta nota?' }))) return;
     await db().notes.delete(id);
     await refresh();
   }
@@ -170,28 +172,28 @@
 
 <div class="caderno">
   <header class="hero">
-    <span class="hero-tag">📓 Meu Caderno</span>
-    <h1>O teu caderno pessoal</h1>
-    <p class="sub">Anota tudo o que vais aprendendo. Texto, voz, imagens, ficheiros.</p>
+    <span class="hero-tag">{$t('caderno.hero.tag', { default: '📓 Meu Caderno' })}</span>
+    <h1>{$t('caderno.hero.title', { default: 'O teu caderno pessoal' })}</h1>
+    <p class="sub">{$t('caderno.hero.sub', { default: 'Anota tudo o que vais aprendendo. Texto, voz, imagens, ficheiros.' })}</p>
   </header>
 
-  <section class="composer" aria-label="Nova nota">
+  <section class="composer" aria-label={$t('caderno.composer.aria', { default: 'Nova nota' })}>
     <input
       type="text"
       class="title-input"
-      placeholder="Título (opcional)"
+      placeholder={$t('caderno.placeholder.title', { default: 'Título (opcional)' })}
       bind:value={newTitle}
     />
     <textarea
       class="body-input"
-      placeholder="Escreve aqui a tua nota…"
+      placeholder={$t('caderno.placeholder.body', { default: 'Escreve aqui a tua nota…' })}
       rows="3"
       bind:value={newBody}
     ></textarea>
 
     <div class="composer-row">
       <label class="cat-label">
-        Categoria:
+        {$t('caderno.label.category', { default: 'Categoria:' })}
         <select bind:value={newCategory}>
           {#each CATEGORIES as cat (cat.key)}
             <option value={cat.key}>{cat.icon} {cat.label}</option>
@@ -201,37 +203,37 @@
 
       <div class="composer-actions">
         <button type="button" class="btn btn-primary" onclick={addTextNote}>
-          💾 Guardar nota
+          {$t('caderno.btn.save', { default: '💾 Guardar nota' })}
         </button>
 
         {#if isRecording}
           <button type="button" class="btn btn-recording" onclick={stopRecording}>
-            ⏹ Parar gravação
+            {$t('caderno.btn.stop_recording', { default: '⏹ Parar gravação' })}
           </button>
         {:else}
           <button type="button" class="btn btn-audio" onclick={startRecording}>
-            🎤 Gravar áudio
+            {$t('caderno.btn.record', { default: '🎤 Gravar áudio' })}
           </button>
         {/if}
 
         <label class="btn btn-image">
-          📸 Imagem
+          {$t('caderno.btn.image', { default: '📸 Imagem' })}
           <input type="file" accept="image/*" onchange={addImageNote} hidden />
         </label>
 
         <label class="btn btn-file">
-          📎 Ficheiro
+          {$t('caderno.btn.file', { default: '📎 Ficheiro' })}
           <input type="file" onchange={addFileNote} hidden />
         </label>
       </div>
     </div>
   </section>
 
-  <section class="filters" aria-label="Filtros">
+  <section class="filters" aria-label={$t('caderno.filters.aria', { default: 'Filtros' })}>
     <input
       type="search"
       class="search"
-      placeholder="🔍 Procurar nas notas…"
+      placeholder={$t('caderno.search.placeholder', { default: '🔍 Procurar nas notas…' })}
       bind:value={searchTerm}
     />
     <div class="cat-chips">
@@ -241,7 +243,7 @@
         class:chip-active={selectedCategory === 'all'}
         onclick={() => (selectedCategory = 'all')}
       >
-        Todas
+        {$t('caderno.filter.all', { default: 'Todas' })}
       </button>
       {#each CATEGORIES as cat (cat.key)}
         <button
@@ -256,12 +258,12 @@
     </div>
   </section>
 
-  <section class="notes-list" aria-label="As minhas notas">
+  <section class="notes-list" aria-label={$t('caderno.notes.aria', { default: 'As minhas notas' })}>
     {#if filtered.length === 0}
       <p class="empty">
         {notes.length === 0
-          ? 'Ainda não tens notas. Começa por escrever ou gravar algo em cima. ✨'
-          : 'Nenhuma nota corresponde aos filtros atuais.'}
+          ? $t('caderno.empty.start', { default: 'Ainda não tens notas. Começa por escrever ou gravar algo em cima. ✨' })
+          : $t('caderno.empty.filtered', { default: 'Nenhuma nota corresponde aos filtros atuais.' })}
       </p>
     {:else}
       {#each filtered as note (note.id)}
@@ -283,7 +285,7 @@
               type="button"
               class="note-delete"
               onclick={() => note.id !== undefined && deleteNote(note.id)}
-              aria-label="Apagar nota"
+              aria-label={$t('caderno.note.delete_aria', { default: 'Apagar nota' })}
             >🗑</button>
           </header>
 
@@ -295,7 +297,7 @@
             <img class="note-image" src={objectUrlFor(note.blob) ?? ''} alt={note.title} />
           {:else if note.kind === 'file' && note.blob}
             <a class="note-file" href={objectUrlFor(note.blob) ?? ''} download={note.title}>
-              📥 Descarregar {note.title}
+              {$t('caderno.note.download', { default: '📥 Descarregar' })} {note.title}
             </a>
           {/if}
         </article>

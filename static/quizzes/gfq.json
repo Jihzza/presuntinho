@@ -1,0 +1,57 @@
+{
+  "id": "gfq",
+  "title": "Quiz: Gestão Financeira",
+  "description": "Testa os conceitos fundamentais de gestão financeira empresarial.",
+  "questions": [
+    {
+      "q": "A equação do balanço patrimonial é:",
+      "opts": [
+        "Ativo = Passivo − Capital",
+        "Ativo = Passivo + Capital Próprio",
+        "Ativo + Passivo = Capital",
+        "Ativo = Receitas − Despesas"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O rácio corrente mede:",
+      "opts": [
+        "Rentabilidade",
+        "Liquidez de curto prazo",
+        "Endividamento",
+        "Crescimento"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Lucro líquido é:",
+      "opts": [
+        "Receitas − Custos diretos",
+        "Lucro operacional − Impostos − Juros",
+        "Receitas totais",
+        "Ativo − Passivo"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O break-even é quando:",
+      "opts": [
+        "Receitas = Despesas totais",
+        "Ativo = Passivo",
+        "Lucro é máximo",
+        "Não há vendas"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Uma empresa lucrativa pode falir por:",
+      "opts": [
+        "Paga pouco imposto",
+        "Falta de caixa / tesouraria",
+        "Demasiados clientes",
+        "ROE muito alto"
+      ],
+      "a": 1
+    }
+  ]
+}

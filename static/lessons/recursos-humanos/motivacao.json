@@ -1,0 +1,68 @@
+{
+  "id": "motivacao",
+  "title": "Teorias de Motivação",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Teorias de Motivação"
+    },
+    {
+      "type": "p",
+      "text": "Funcionários motivados produzem mais, inovam mais e ficam mais tempo. Compreender o que motiva as pessoas é fundamental para a gestão."
+    },
+    {
+      "type": "h3",
+      "text": "Pirâmide de Maslow"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "5º: Auto-realização (crescer, criar)",
+        "4ª: Estima (reconhecimento, respeito)",
+        "3ª: Sociais (pertença, amizade)",
+        "2ª: Segurança (emprego, saúde)",
+        "1ª: Fisiológicas (comer, dormir, abrigo)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Teoria dos Dois Fatores (Herzberg)"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Fatores higiénicos (evitam insatisfação): salário, condições, segurança",
+        "Fatores motivacionais (geram satisfação): reconhecimento, responsabilidade, crescimento",
+        "Pagar mais não motiva — apenas remove a insatisfação"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Teoria X e Teoria Y (McGregor)"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Teoria X: pessoas são preguiçosas, precisam de controlo",
+        "Teoria Y: pessoas querem trabalhar, são autónomas",
+        "O estilo de gestão molda o comportamento da equipa"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🧠 Não há teoria perfeita. A melhor gestão combina abordagens: bom salário (higiene) + autonomia + reconhecimento (motivação)."
+    }
+  ],
+  "keyPoints": [
+    "Maslow: necessidades em hierarquia",
+    "Herzberg: higiene vs. motivação",
+    "McGregor: X (controlo) vs. Y (autonomia)",
+    "Dinheiro remove insatisfação, não cria motivação"
+  ],
+  "quizSlug": "rhq",
+  "nextLesson": "avaliacao-desempenho",
+  "prevLesson": "recrutamento-selecao"
+}

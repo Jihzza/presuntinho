@@ -7,6 +7,8 @@
    * are detected through display-mode and iOS Safari's `navigator.standalone`.
    */
   import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
+  import { t } from 'svelte-i18n';
   import { TOAST_EVENT } from './events';
 
   interface BeforeInstallPromptEvent extends Event {
@@ -55,7 +57,7 @@
       installed = true;
       visible = false;
       deferredPrompt = null;
-      toast('App instalada — abre-a a partir do ecrã principal.');
+      toast(get(t)('install.toast.installed', { default: 'App instalada — abre-a a partir do ecrã principal.' }));
     };
 
     window.addEventListener('beforeinstallprompt', onBeforeInstall);
@@ -83,7 +85,7 @@
       }
     } catch (e) {
       console.error('[install-button] prompt failed', e);
-      toast('Não foi possível abrir o prompt de instalação.');
+      toast(get(t)('install.toast.failed', { default: 'Não foi possível abrir o prompt de instalação.' }));
     } finally {
       deferredPrompt = null;
       prompting = false;
@@ -97,12 +99,12 @@
     type="button"
     class="install-btn"
     onclick={install}
-    aria-label="Instalar Presuntinho como aplicação"
-    title="Instalar Presuntinho como aplicação"
+    aria-label={$t('install.aria', { default: 'Instalar Presuntinho como aplicação' })}
+    title={$t('install.aria', { default: 'Instalar Presuntinho como aplicação' })}
     disabled={prompting}
   >
     <span class="icon" aria-hidden="true">📲</span>
-    <span class="label">{prompting ? 'A abrir…' : 'Instalar app'}</span>
+    <span class="label">{prompting ? $t('install.opening', { default: 'A abrir…' }) : $t('install.button', { default: 'Instalar app' })}</span>
   </button>
 {/if}
 

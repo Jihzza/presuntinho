@@ -1,0 +1,45 @@
+{
+  "id": "demonstracao-resultados",
+  "title": "Demonstração de Resultados",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Demonstração de Resultados (Income Statement)"
+    },
+    {
+      "type": "p",
+      "text": "A demonstração de resultados é o mapa financeiro que mostra se uma empresa teve lucro ou prejuízo num determinado período. Responde à pergunta: 'A empresa ganhou dinheiro?'"
+    },
+    {
+      "type": "h3",
+      "text": "Estrutura básica"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Receitas (vendas, serviços, outros rendimentos)",
+        "Custo das vendas (custos diretos da produção/serviço)",
+        "Lucro bruto = Receitas − Custo das vendas",
+        "Despesas operacionais (salários, rendas, marketing)",
+        "Lucro operacional = Lucro bruto − Despesas operacionais",
+        "Lucro líquido = Lucro operacional − Impostos − Juros"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "💡 Dica: O lucro bruto diz-te se o preço de venda cobre o custo do produto. O lucro líquido diz-te se a empresa é realmente rentável depois de TUDO."
+    }
+  ],
+  "keyPoints": [
+    "Receitas − Custos = Lucro Bruto",
+    "Lucro Bruto − Despesas Operacionais = Lucro Operacional",
+    "Lucro Operacional − Impostos/Juros = Lucro Líquido",
+    "Margem Líquida = Lucro Líquido ÷ Receitas × 100"
+  ],
+  "quizSlug": "gfq",
+  "nextLesson": "balanco",
+  "prevLesson": null
+}

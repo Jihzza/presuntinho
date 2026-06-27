@@ -1,0 +1,63 @@
+{
+  "id": "iva",
+  "title": "IVA e Impostos",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "IVA — Imposto sobre o Valor Acrescentado"
+    },
+    {
+      "type": "p",
+      "text": "O IVA é um imposto sobre o consumo. A empresa atua como intermediária: cobra IVA aos clientes e paga IVA aos fornecedores, entregando a diferença ao Estado."
+    },
+    {
+      "type": "h3",
+      "text": "Mecanismo"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "IVA liquidado = IVA cobrado nas vendas",
+        "IVA dedutível = IVA pago nas compras",
+        "IVA a pagar = IVA liquidado − IVA dedutível",
+        "Se dedutível > liquidado = Estado reembolsa/compensa"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Taxas de IVA (Portugal)"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Taxa normal: 23% (maioria dos bens e serviços)",
+        "Taxa intermédia: 13% (alimentação, restauração)",
+        "Taxa reduzida: 6% (livros, medicamentos, transportes)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Contabilização"
+    },
+    {
+      "type": "p",
+      "text": "O IVA não é despesa nem receita para a empresa (salvo casos de IVA não dedutível). É uma conta de terceiros — o Estado."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "💡 O IVA é neutro para a empresa: cobra e entrega, não paga do seu bolso (exceto IVA não dedutível)."
+    }
+  ],
+  "keyPoints": [
+    "IVA = imposto sobre consumo pago pelo consumidor final",
+    "IVA a pagar = liquidado − dedutível",
+    "Taxas: 23%, 13%, 6% (Portugal)",
+    "Neutro para a empresa (intermediário)"
+  ],
+  "quizSlug": "ctq",
+  "nextLesson": null,
+  "prevLesson": "amortizacoes"
+}

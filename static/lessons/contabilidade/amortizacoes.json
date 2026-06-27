@@ -1,0 +1,58 @@
+{
+  "id": "amortizacoes",
+  "title": "Amortizações e Provisões",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Amortizações e Provisões"
+    },
+    {
+      "type": "p",
+      "text": "Os ativos não duram para sempre. A amortização distribui o custo de um bem ao longo da sua vida útil, em vez de o registar todo no momento da compra."
+    },
+    {
+      "type": "h3",
+      "text": "Amortização linear (mais simples)"
+    },
+    {
+      "type": "p",
+      "text": "(Custo do bem − Valor residual) ÷ Vida útil (anos) = Amortização anual"
+    },
+    {
+      "type": "p",
+      "text": "Exemplo: Equipamento de 10.000€, vida útil 5 anos, valor residual 0:"
+    },
+    {
+      "type": "p",
+      "text": "Amortização anual = 10.000 ÷ 5 = 2.000€/ano"
+    },
+    {
+      "type": "h3",
+      "text": "Provisões"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Provisão para devedores duvidosos: antecipa perdas com clientes que podem não pagar",
+        "Provisão para riscos: antecipa processos, garantias, etc.",
+        "Reconhece-se a despesa antes da perda ser confirmada"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "⚠️ Amortizar não significa pôr dinheiro de lado. É apenas a distribuição contabilística do custo. O dinheiro saiu quando o bem foi comprado."
+    }
+  ],
+  "keyPoints": [
+    "Amortização distribui custo ao longo da vida útil",
+    "Método linear é o mais usado",
+    "Provisões antecipam perdas prováveis",
+    "Valor residual é o valor no fim da vida útil"
+  ],
+  "quizSlug": "ctq",
+  "nextLesson": "iva",
+  "prevLesson": "lancamentos-contabeis"
+}

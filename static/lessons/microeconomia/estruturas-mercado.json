@@ -1,0 +1,81 @@
+{
+  "id": "estruturas-mercado",
+  "title": "Estruturas de Mercado",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Estruturas de Mercado"
+    },
+    {
+      "type": "p",
+      "text": "Nem todos os mercados funcionam da mesma forma. O número de empresas, a diferenciação do produto e as barreiras à entrada definem diferentes estruturas competitivas."
+    },
+    {
+      "type": "h3",
+      "text": "1. Concorrência Perfeita"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Muitos compradores e vendedores",
+        "Produto homogéneo (idêntico)",
+        "Sem barreiras à entrada",
+        "Empresa é 'price-taker' (aceita o preço do mercado)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "2. Monopólio"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Uma única empresa",
+        "Produto sem substitutos próximos",
+        "Barreiras à entrada altíssimas",
+        "Empresa define o preço"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "3. Oligopólio"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Poucas empresas dominam (3-5 grandes)",
+        "Decisões de uma afetam as outras (interdependência)",
+        "Barreiras à entrada moderadas/altas",
+        "Exemplo: operadores de telecomunicações"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "4. Concorrência Monopolística"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Muitas empresas, produto diferenciado",
+        "Barreiras à entrada baixas",
+        "Exemplo: restaurantes, salões de cabeleireiro"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "🔔 Estrutura de mercado define estratégia: num monopólio controlas o preço; em concorrência perfeita, diferenciar é a única forma de sobreviver."
+    }
+  ],
+  "keyPoints": [
+    "4 estruturas: perfeita, monopolística, oligopólio, monopólio",
+    "Barreiras à entrada determinam o poder de mercado",
+    "Monopólio = poder total sobre preço",
+    "Concorrência perfeita = price-taker"
+  ],
+  "quizSlug": "meq",
+  "nextLesson": "custos-producao",
+  "prevLesson": "elasticidade"
+}

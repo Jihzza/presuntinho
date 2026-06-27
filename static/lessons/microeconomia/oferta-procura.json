@@ -1,0 +1,62 @@
+{
+  "id": "oferta-procura",
+  "title": "Oferta e Procura",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Lei da Oferta e da Procura"
+    },
+    {
+      "type": "p",
+      "text": "O mercado é governado por duas forças fundamentais: a procura (quantos querem comprar) e a oferta (quantos querem vender). O encontro destas duas define o preço de equilíbrio."
+    },
+    {
+      "type": "h3",
+      "text": "Curva da Procura"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Quanto maior o preço, menor a quantidade procurada",
+        "Inclinação negativa (descendente)",
+        "Desloca-se com: rendimento, gostos, preço de bens substitutos"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Curva da Oferta"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Quanto maior o preço, maior a quantidade oferecida",
+        "Inclinação positiva (ascendente)",
+        "Desloca-se com: custos de produção, tecnologia, impostos"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Equilíbrio de Mercado"
+    },
+    {
+      "type": "p",
+      "text": "O preço de equilíbrio é onde a quantidade oferecida iguala a quantidade procurada. Acima desse preço há excesso de oferta. Abaixo há excesso de procura (escassez)."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "⚖️ O mercado tende naturalmente para o equilíbrio. Se o preço é demasiado alto, os vendedores baixam. Se é demasiado baixo, os compradores pressionam para cima."
+    }
+  ],
+  "keyPoints": [
+    "Procura: preço ↑ → quantidade ↓",
+    "Oferta: preço ↑ → quantidade ↑",
+    "Equilíbrio: Qd = Qo",
+    "Curvas deslocam com variáveis externas"
+  ],
+  "quizSlug": "meq",
+  "nextLesson": "elasticidade",
+  "prevLesson": null
+}

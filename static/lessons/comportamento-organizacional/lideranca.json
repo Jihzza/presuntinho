@@ -1,0 +1,61 @@
+{
+  "id": "lideranca",
+  "title": "Estilos de Liderança",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Estilos de Liderança"
+    },
+    {
+      "type": "p",
+      "text": "Liderar não é o mesmo que gerir. Gerir é garantir eficiência; liderar é inspirar pessoas para um objetivo comum. Diferentes situações pedem diferentes estilos."
+    },
+    {
+      "type": "h3",
+      "text": "Modelos Clássicos"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Autocrático: o líder decide sozinho, impõe diretivas",
+        "Democrático: o líder consulta e envolve a equipa",
+        "Laissez-faire: o líder delega totalmente, dá autonomia total",
+        "Transformacional: inspira com visão, carisma e exemplo",
+        "Transacional: troca recompensas por desempenho"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Liderança Situacional (Hersey-Blanchard)"
+    },
+    {
+      "type": "p",
+      "text": "Não existe 'melhor' estilo universal. O estilo deve adaptar-se à maturidade da equipa:"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Equipas inexperientes: diretivo (dizer o que fazer)",
+        "Equipas em desenvolvimento: persuasivo (orientar + explicar)",
+        "Equipas competentes: participativo (consultar)",
+        "Equipas maduras: delegar (autonomia total)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "⭐ O melhor líder é aquele que se adapta. A mesma pessoa pode precisar de diretiva numa tarefa e autonomia noutra."
+    }
+  ],
+  "keyPoints": [
+    "Gestão ≠ Liderança",
+    "5 estilos principais",
+    "Liderança situacional adapta-se à equipa",
+    "Estilo ideal depende do contexto"
+  ],
+  "quizSlug": "coq",
+  "nextLesson": "trabalho-equipa",
+  "prevLesson": null
+}

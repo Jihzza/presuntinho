@@ -11,6 +11,7 @@
 
   import { onMount } from 'svelte';
   import { closeSRoom } from '$lib/easterEggs';
+  import { t } from 'svelte-i18n';
 
   interface Props {
     open: boolean;
@@ -67,18 +68,18 @@
       aria-modal="true"
       aria-labelledby="secret-title"
     >
-      <button class="close" type="button" onclick={handleClose} aria-label="Fechar">×</button>
-      <h2 id="secret-title">🚪 Secret Room</h2>
+      <button class="close" type="button" onclick={handleClose} aria-label={$t('common.close', { default: 'Fechar' })}>×</button>
+      <h2 id="secret-title">{$t('secret.title', { default: '🚪 Secret Room' })}</h2>
       <p class="lead">
-        Bem-vinda! Aqui ficam 5 factos sobre perfume — desbloqueados pelo teu ❤️ + 🐷.
+        {$t('secret.lead', { default: 'Bem-vinda! Aqui ficam 5 factos sobre perfume — desbloqueados pelo teu ❤️ + 🐷.' })}
       </p>
-      <ol class="facts" aria-label="Factos sobre perfume">
+      <ol class="facts" aria-label={$t('secret.facts.aria', { default: 'Factos sobre perfume' })}>
         {#each PERFUME_FACTS as fact, i (i)}
           <li>{fact}</li>
         {/each}
       </ol>
       <div class="actions">
-        <button type="button" class="cta" onclick={handleClose}>Fechar</button>
+        <button type="button" class="cta" onclick={handleClose}>{$t('common.close', { default: 'Fechar' })}</button>
       </div>
     </div>
   </div>

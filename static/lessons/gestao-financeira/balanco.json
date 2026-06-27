@@ -1,0 +1,68 @@
+{
+  "id": "balanco",
+  "title": "Balanço Patrimonial",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Balanço Patrimonial (Balance Sheet)"
+    },
+    {
+      "type": "p",
+      "text": "O balanço é a fotografia financeira da empresa num momento específico. Mostra o que a empresa possui (Ativo) e como isso foi financiado (Passivo + Capital Próprio)."
+    },
+    {
+      "type": "h3",
+      "text": "Equação fundamental"
+    },
+    {
+      "type": "p",
+      "text": "Ativo = Passivo + Capital Próprio"
+    },
+    {
+      "type": "h3",
+      "text": "Ativo (o que a empresa tem)"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Ativo corrente: dinheiro, stocks, contas a receber (≤ 12 meses)",
+        "Ativo não corrente: equipamentos, imóveis, patentes (> 12 meses)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Passivo (o que a empresa deve)"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Passivo corrente: dívidas de curto prazo, fornecedores",
+        "Passivo não corrente: empréstimos a longo prazo, hipotecas"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Capital Próprio (dos donos)"
+    },
+    {
+      "type": "p",
+      "text": "Capital social + Reservas + Lucros acumulados. É o que sobraria se a empresa vendesse tudo e pagasse todas as dívidas."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🔑 A equação tem de equilibrar SEMPRE. Se não fecha, há um erro na contabilidade."
+    }
+  ],
+  "keyPoints": [
+    "Ativo = Passivo + Capital Próprio",
+    "Ativo corrente vs. não corrente",
+    "Liquidez = capacidade de pagar dívidas de curto prazo",
+    "Solvabilidade = capacidade de pagar dívidas de longo prazo"
+  ],
+  "quizSlug": "gfq",
+  "nextLesson": "racios-financeiros",
+  "prevLesson": "demonstracao-resultados"
+}

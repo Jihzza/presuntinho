@@ -1,0 +1,64 @@
+{
+  "id": "cultura-organizacional",
+  "title": "Cultura Organizacional",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Cultura Organizacional"
+    },
+    {
+      "type": "p",
+      "text": "A cultura é 'a forma como fazemos as coisas aqui'. São os valores, crenças, comportamentos e rituais partilhados que definem a identidade de uma organização."
+    },
+    {
+      "type": "h3",
+      "text": "Elementos da Cultura"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Valores: o que a empresa defende (inovação, qualidade, etc.)",
+        "Símbolos: logo, slogan, decoração do espaço",
+        "Rituais: reuniões semanais, celebrações, tradições",
+        "Heróis: pessoas que personificam os valores",
+        "Linguagem: jargão interno, formas de comunicar"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Cultura Forte vs. Fraca"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Forte: valores claramente partilhados, coesão, identidade",
+        "Fraca: valores vagos, cada um faz a sua, alto 'turnover'",
+        "Forte não é sempre bom — pode significar resistência à mudança"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "O líder e a cultura"
+    },
+    {
+      "type": "p",
+      "text": "Os líderes moldam a cultura através do exemplo. O que é premiado, tolerado ou punido comunica os verdadeiros valores mais do que qualquer manual."
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "⚠️ Cultura come-se pelo topo. Se a liderança não vive os valores, ninguém mais o fará."
+    }
+  ],
+  "keyPoints": [
+    "Cultura = valores + comportamentos + rituais",
+    "Cultura forte aumenta coesão mas pode bloquear mudança",
+    "Líderes moldam cultura pelo exemplo",
+    "Contratar quem partilha valores preserva a cultura"
+  ],
+  "quizSlug": "rhq",
+  "nextLesson": null,
+  "prevLesson": "avaliacao-desempenho"
+}

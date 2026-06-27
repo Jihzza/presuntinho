@@ -1,0 +1,64 @@
+{
+  "id": "racios-financeiros",
+  "title": "Rácios Financeiros",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Rácios Financeiros (Financial Ratios)"
+    },
+    {
+      "type": "p",
+      "text": "Rácios são fórmulas que transformam números brutos em informações comparáveis. Permitem avaliar a saúde de uma empresa e compará-la com concorrentes ou com períodos anteriores."
+    },
+    {
+      "type": "h3",
+      "text": "Rácios de Liquidez"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Rácio corrente = Ativo corrente ÷ Passivo corrente (>1 = saudável)",
+        "Rácio rápido = (Ativo corrente − Stocks) ÷ Passivo corrente"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Rácios de Rentabilidade"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Margem bruta = Lucro bruto ÷ Receitas × 100",
+        "ROE (Return on Equity) = Lucro líquido ÷ Capital próprio × 100",
+        "ROA (Return on Assets) = Lucro líquido ÷ Ativo total × 100"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Rácios de Endividamento"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Debt-to-Equity = Passivo total ÷ Capital próprio",
+        "Quanto maior, mais alavancada (e arriscada) a empresa"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "📊 Os rácios só são úteis com comparação: histórico da própria empresa, concorrentes do sector, ou benchmarks da indústria."
+    }
+  ],
+  "keyPoints": [
+    "Liquidez mede se paga dívidas de curto prazo",
+    "Rentabilidade mede se gera lucro",
+    "Endividamento mede o risco financeiro",
+    "Comparar sempre com referências do sector"
+  ],
+  "quizSlug": "gfq",
+  "nextLesson": "orcamento-empresarial",
+  "prevLesson": "balanco"
+}
