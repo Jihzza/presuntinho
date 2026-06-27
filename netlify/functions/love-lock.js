@@ -19,21 +19,34 @@
 // the splash page). The function trusts the kind passed in but does a tiny
 // shape check to avoid storing nonsense.
 
-import { getStore, setEnvironmentContext } from '@netlify/blobs';
+import { getStore } from '@netlify/blobs';
 import crypto from 'crypto';
 
-// Wire the Blobs client to the current Netlify deploy context. The runtime
-// injects a base64-encoded JSON blob in NETLIFY_BLOBS_CONTEXT. We decode it
-// once at module load and pass it to setEnvironmentContext so getStore(name)
-// auto-binds. Without this, getStore throws "The environment has not been
-// configured to use Netlify Blobs" (verified live on 2026-06-27).
-if (process.env.NETLIFY_BLOBS_CONTEXT) {
+// Wire the Blobs client. Two paths, both work in Netlify Functions v2:
+//   (a) @netlify/blobs auto-reads NETLIFY_BLOBS_CONTEXT via @netlify/runtime-utils
+//   (b) we explicitly set globalThis.netlifyBlobsContext to a base64-encoded JSON
+//
+// We try (b) first because (a) was returning an empty context in production on
+// 2026-06-27 (verified via the debug leak: "The environment has not been
+// configured to use Netlify Blobs"). The base64-encoded JSON in
+// NETLIFY_BLOBS_CONTEXT is decoded once and re-exposed to the package via
+// globalThis, which the package's getEnvironmentContext() reads first.
+let _cachedCtx = null;
+function blobsContext() {
+  if (_cachedCtx) return _cachedCtx;
+  const raw = process.env.NETLIFY_BLOBS_CONTEXT;
+  if (!raw) return null;
   try {
-    const decoded = Buffer.from(process.env.NETLIFY_BLOBS_CONTEXT, 'base64').toString('utf8');
-    const ctx = JSON.parse(decoded);
-    setEnvironmentContext(ctx);
+    const decoded = Buffer.from(raw, 'base64').toString('utf8');
+    _cachedCtx = JSON.parse(decoded);
+    // Set both the env var (already there) and globalThis (the package reads this first)
+    if (typeof globalThis !== 'undefined') {
+      globalThis.netlifyBlobsContext = raw;
+    }
+    return _cachedCtx;
   } catch (e) {
     console.error('[love-lock] failed to parse NETLIFY_BLOBS_CONTEXT', e);
+    return null;
   }
 }
 
@@ -172,14 +185,17 @@ function buildCookieClear(event) {
 
 function blobStore() {
   const storeName = process.env.LOVE_LOCK_BLOB_STORE || 'lovelock';
-  // Use the string form: `getStore(name)` — the @netlify/blobs v10.x
-  // signature accepts either a name string or a GetStoreOptions object, but
-  // the object form requires explicit `siteID` + `token` unless the runtime
-  // context is already wired up via setEnvironmentContext. Passing
-  // `{ name, consistency: 'eventual' }` without those fields caused POST
-  // to 500 in production (server_misconfigured) on 2026-06-27. The string
-  // form auto-binds to the deploy's site context (default 'strong'
-  // consistency), which is what we want for the cross-browser lock.
+  // Explicit siteID+token from NETLIFY_BLOBS_CONTEXT (decoded by blobsContext()).
+  // We tried getStore(name) (string form) and setEnvironmentContext() first —
+  // both failed in production on 2026-06-27 with "environment not configured".
+  // Passing the object form with explicit siteID+token is the only path that's
+  // guaranteed to work because the package's getEnvironmentContext() couldn't
+  // read NETLIFY_BLOBS_CONTEXT in this specific Function runtime.
+  const ctx = blobsContext();
+  if (ctx && ctx.siteID && ctx.token) {
+    return getStore({ name: storeName, siteID: ctx.siteID, token: ctx.token });
+  }
+  // Fallback to string form — works in netlify dev / local node tests.
   return getStore(storeName);
 }
 
@@ -263,8 +279,7 @@ export const handler = async (event) => {
       await blobStore().setJSON(BLOB_KEY, state);
     } catch (e) {
       console.error('[love-lock] blob write failed', e);
-      // TEMP DEBUG 2026-06-27: leak error.message to find why setJSON 500s in prod
-      return buildResponse(500, { error: 'server_misconfigured', debug: String(e?.message || e) + ' | stack: ' + String(e?.stack || '').slice(0, 500) });
+      return buildResponse(500, { error: 'server_misconfigured' });
     }
 
     let cookie;
