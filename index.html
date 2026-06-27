@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Presuntinho — Equivalenza Study Hub</title>
+<meta name="description" content="Interactive study hub for Fatma's BCOBM311 Mid-Term on Equivalenza. Quizzes, lessons, audio, and a few surprises.">
+<meta name="theme-color" content="#1f2e4a">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐷</text></svg>">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<!-- =========================================================
+     NAVIGATION (persistent)
+     ========================================================= -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo" onclick="logoClick()" title="Click me 3 times...">
+      <span class="logo-pig">🐷</span>
+      <span>Presuntinho</span>
+    </div>
+    <button class="burger" id="burgerBtn" aria-label="Open menu">☰</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a onclick="navGo('home')" id="nl-home" class="active">Home</a></li>
+      <li><a onclick="navGo('case')" id="nl-case">The Case</a></li>
+      <li><a onclick="navGo('course')" id="nl-course">Course</a></li>
+      <li><a onclick="navGo('walk')" id="nl-walk">Walkthrough</a></li>
+      <li><a onclick="navGo('secrets')" id="nl-secrets">🔐 Secrets</a></li>
+      <li><a onclick="navGo('quiz')" id="nl-quiz">Quizzes</a></li>
+      <li><a onclick="navGo('write')" id="nl-write">Writing</a></li>
+      <li><a onclick="navGo('pt')" id="nl-pt">🇵🇹 PT</a></li>
+      <li><a onclick="navGo('dl')" id="nl-dl">Downloads</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+
+<!-- =========================================================
+     PAGE: HOME
+     ========================================================= -->
+<div class="page active" id="pg-home">
+  <div class="hero">
+    <h1>🐷 Presuntinho</h1>
+    <p class="sub">Equivalenza: The Scent of a Second Chance — BCOBM311 Mid-Term Hub</p>
+    <p class="meta">Deadline: Monday June 29, 2:00 PM · Moodle / Turnitin</p>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <h2>📊 Module Progress</h2>
+      <p style="font-size:0.85rem;color:var(--txt3)">You vs the assignment</p>
+      <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-top:0.8rem"><span>Read</span><span id="prog-read">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="pf-read" style="width:0%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-top:0.4rem"><span>Quizzes</span><span id="prog-quiz">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="pf-quiz" style="width:0%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-top:0.4rem"><span>Writing</span><span id="prog-write">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="pf-write" style="width:0%"></div></div>
+    </div>
+
+    <div class="card">
+      <h2>🏆 Badges <span class="xp-display"><span id="xpNum">0</span> XP</span></h2>
+      <p style="font-size:0.85rem;color:var(--txt3)">Find all 10 hidden achievements</p>
+      <div class="badge-grid" id="badgeGrid"></div>
+    </div>
+  </div>
+
+  <div class="card mt-1">
+    <h2>🚀 Get Started</h2>
+    <p>Take the deep-dive into the case, then test yourself with 4 quizzes. Find all 10 easter eggs for bonus XP.</p>
+    <div class="mt-1">
+      <button class="btn" onclick="navGo('case')">Start →</button>
+      <button class="btn ghost" onclick="navGo('quiz')">Skip to Quizzes</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>💡 Motivation</h2>
+    <p style="font-style:italic;color:var(--txt2)">"The brand has no clear, emotionally resonant identity. This ambiguity is fatal in a market where competitors above are becoming more affordable and those below more aspirational."</p>
+    <p style="font-size:0.82rem;color:var(--txt3);margin-top:0.4rem">— Elson (2024), paraphrasing Miguel Costa</p>
+  </div>
+</div>
+
+<!-- =========================================================
+     PAGE: THE CASE
+     ========================================================= -->
+<div class="page" id="pg-case">
+  <span class="tag">Module 1</span>
+  <h1 style="font-size:2rem;color:var(--navy);margin-bottom:0.3rem">Equivalenza: Deep Dive</h1>
+  <p class="sub" style="color:var(--txt2);margin-bottom:1rem">Everything you need to know about the company, market, and competition.</p>
+
+  <div class="card">
+    <h2>📋 Company Overview</h2>
+    <table style="width:100%;font-size:0.92rem;border-collapse:collapse">
+      <tr><td style="padding:0.35rem 0;color:var(--gold-dark);font-weight:600;width:40%">Company</td><td>Equivalenza S.L.</td></tr>
+      <tr><td style="padding:0.35rem 0;color:var(--gold-dark);font-weight:600">Founded</td><td>Barcelona, Spain, 2011</td></tr>
+      <tr><td style="padding:0.35rem 0;color:var(--gold-dark);font-weight:600">Category</td><td>Affordable fragrance dupes / perfume retail</td></tr>
+      <tr><td style="padding:0.35rem 0;color:var(--gold-dark);font-weight:600">Model</td><td>Franchise network + e-commerce</td></tr>
+      <tr><td style="padding:0.35rem 0;color:var(--gold-dark);font-weight:600">CEO</td><td>Juan Franco (appointed 2023)</td></tr>
+      <tr><td style="padding:0.35rem 0;color:var(--gold-dark);font-weight:600">EBITDA 2023</td><td>€2M → Target €8M</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📉 The Decline</h2>
+    <div class="grid grid-3 mt-1">
+      <div style="text-align:center;padding:1rem;background:var(--cream-dark);border-radius:var(--radius-sm)">
+        <div style="font-size:1.8rem;font-weight:700;color:var(--gold-dark)">€60M</div>
+        <div style="font-size:0.78rem;color:var(--txt3)">2015 Sales Peak</div>
+      </div>
+      <div style="text-align:center;padding:1rem;background:var(--cream-dark);border-radius:var(--radius-sm)">
+        <div style="font-size:1.8rem;font-weight:700;color:var(--gold-dark)">810</div>
+        <div style="font-size:0.78rem;color:var(--txt3)">Stores at Peak</div>
+      </div>
+      <div style="text-align:center;padding:1rem;background:#f8d7da;border-radius:var(--radius-sm)">
+        <div style="font-size:1.8rem;font-weight:700;color:#721c24">−35%</div>
+        <div style="font-size:0.78rem;color:var(--txt3)">Stores Lost by 2023</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 The Three Forces</h2>
+    <h3>1. Dupe Collapse</h3>
+    <p>The Spanish dupe segment contracted from 37% to 13% of consumers between 2018 and 2023 — a 65% drop in Equivalenza's core market.</p>
+    <h3>2. The Sandwich Effect</h3>
+    <p>Premium brands discounting from above (more accessible). Zara and Mercadona improving from below (more aspirational). Equivalenza squeezed.</p>
+    <h3>3. Digital Native Competitors</h3>
+    <p>Divain, Dossier, Adopt — operating without physical overhead, investing more in marketing per euro of revenue.</p>
+  </div>
+
+  <div class="card">
+    <h2>🏢 Competitor: Divain</h2>
+    <p><strong>Why them:</strong> Most direct structural threat. Same price point (€15-30). Digital-first model.</p>
+    <h3>Strengths</h3>
+    <ul><li>No physical retail overhead → lower costs, higher marketing investment per €</li><li>Clean contemporary visual identity appeals to younger consumers</li><li>Strong Instagram/TikTok influencer marketing</li><li>Agile product launches unconstrained by franchise alignment</li></ul>
+    <h3>Weaknesses</h3>
+    <ul><li>No physical store presence — eliminates the sensory experience</li><li>No refill model — missing recurring revenue mechanism</li><li>Customer acquisition heavily dependent on paid social (rising costs)</li></ul>
+  </div>
+
+  <div class="card">
+    <h2>👤 The Discerning Explorer</h2>
+    <p><strong>Marta, 27.</strong> Madrid-based creative professional. Moderate-to-good income. University-educated, urban, socially active.</p>
+    <p style="font-style:italic;color:var(--txt2);margin-top:0.5rem">"Fragrance is personal self-expression, not luxury or gift."</p>
+    <p style="font-size:0.82rem;color:var(--txt3)">— Elson (2024)</p>
+    <h3>What she values</h3>
+    <ul><li>Discovery and rotation by mood/occasion/season</li><li>Aesthetics — packaging, store design, visual identity</li><li>Being ahead of trends</li><li>€20-40 for something special (not designer prices)</li></ul>
+  </div>
+
+  <div class="text-center mt-2">
+    <button class="btn" onclick="navGo('course')">Next: Course Theory →</button>
+  </div>
+</div>
+
+<!-- =========================================================
+     PAGE: COURSE
+     ========================================================= -->
+<div class="page" id="pg-course">
+  <span class="tag">Module 2</span>
+  <h1 style="font-size:2rem;color:var(--navy);margin-bottom:0.3rem">Course Theory</h1>
+  <p class="sub" style="color:var(--txt2);margin-bottom:1rem">SWOT, TOWS, SCQA, Buyer Persona — the frameworks you need.</p>
+
+  <div class="card">
+    <h2>🔍 SWOT Analysis</h2>
+    <p>Internal + external factors. Two-by-two: helpful vs harmful, internal vs external.</p>
+    <div class="grid grid-2 mt-1">
+      <div style="background:#d4edda;padding:0.9rem;border-radius:var(--radius-sm)">
+        <strong style="color:#155724">S — Strengths (Internal, Helpful)</strong>
+        <p style="font-size:0.88rem">528 stores, 2/3 margin, Les Secrets, refill model, Italy diversification</p>
+      </div>
+      <div style="background:#f8d7da;padding:0.9rem;border-radius:var(--radius-sm)">
+        <strong style="color:#721c24">W — Weaknesses (Internal, Harmful)</strong>
+        <p style="font-size:0.88rem">30% awareness, 1% e-commerce, NPS 17, inconsistent franchise quality</p>
+      </div>
+      <div style="background:#d1ecf1;padding:0.9rem;border-radius:var(--radius-sm)">
+        <strong style="color:#0c5460">O — Opportunities (External, Helpful)</strong>
+        <p style="font-size:0.88rem">Gen Z growth, Spanish category +10%/yr, sustainability trend, Les Secrets upmarket</p>
+      </div>
+      <div style="background:#fff3cd;padding:0.9rem;border-radius:var(--radius-sm)">
+        <strong style="color:#856404">T — Threats (External, Harmful)</strong>
+        <p style="font-size:0.88rem">Dupe segment −65%, sandwich effect, digital-native competitors</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 TOWS Matrix</h2>
+    <p>SWOT × strategic action. Four quadrants, four strategic alternatives.</p>
+    <table style="width:100%;font-size:0.88rem;border-collapse:collapse;margin-top:0.6rem">
+      <tr><th></th><th style="background:#d1ecf1;padding:0.5rem">Opportunities</th><th style="background:#fff3cd;padding:0.5rem">Threats</th></tr>
+      <tr>
+        <th style="background:#d4edda;padding:0.5rem">Strengths</th>
+        <td style="padding:0.6rem;background:#d4edda;font-weight:600">SO — Offensive<br><span style="font-weight:400;font-size:0.82rem">Leverage stores + Les Secrets for craft experience</span></td>
+        <td style="padding:0.6rem;background:#fff3cd">ST — Defensive-Offensive<br><span style="font-size:0.82rem">Use stores as moat against digital natives</span></td>
+      </tr>
+      <tr>
+        <th style="background:#f8d7da;padding:0.5rem">Weaknesses</th>
+        <td style="padding:0.6rem;background:#d1ecf1">WO — Corrective<br><span style="font-size:0.82rem">Build e-commerce to capture Gen Z</span></td>
+        <td style="padding:0.6rem;background:#f5c6cb">WT — Defensive<br><span style="font-size:0.82rem">Minimise exposure, close worst stores</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>❓ SCQA Framework</h2>
+    <p>Structure for framing a marketing problem.</p>
+    <ul>
+      <li><strong>S — Situation:</strong> the stable context (what's true today)</li>
+      <li><strong>C — Complication:</strong> the disruption or tension</li>
+      <li><strong>Q — Question:</strong> the strategic question it raises</li>
+      <li><strong>A — Answer:</strong> the marketing problem statement</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>👥 Buyer Persona</h2>
+    <p>A research-based archetype. Three layers:</p>
+    <ul>
+      <li><strong>Demographics:</strong> age, location, income, education</li>
+      <li><strong>Psychographics:</strong> values, attitudes, lifestyle, identity</li>
+      <li><strong>Behavioural:</strong> discovery channels, purchase process, frustrations, loyalty drivers</li>
+    </ul>
+    <p style="margin-top:0.6rem"><em>Pro tip:</em> psychographics beats demographics in fragrance. Marta doesn't buy by age — she buys by mood and identity.</p>
+  </div>
+
+  <div class="text-center mt-2">
+    <button class="btn" onclick="navGo('walk')">Next: Assignment Walkthrough →</button>
+  </div>
+</div>
+
+<!-- =========================================================
+     PAGE: WALKTHROUGH
+     ========================================================= -->
+<div class="page" id="pg-walk">
+  <span class="tag">Module 3</span>
+  <h1 style="font-size:2rem;color:var(--navy);margin-bottom:0.3rem">Assignment Walkthrough</h1>
+  <p class="sub" style="color:var(--txt2);margin-bottom:1rem">What the professor wants in each section.</p>
+
+  <div class="card">
+    <h2>1️⃣ SWOT Analysis <span style="font-size:0.8rem;color:var(--gold-dark);font-weight:500">(20%)</span></h2>
+    <p><strong>What to do:</strong> SWOT for Equivalenza + 1 competitor (Divain).</p>
+    <p><strong>How:</strong> 4-5 bullets per quadrant. Cite the case study (Elson, 2024). Be specific with numbers.</p>
+    <p style="font-style:italic;color:var(--gold-dark);font-size:0.88rem">Hint: NPS 17 vs Druni 56 is a weakness that doubles as the bridge to your Marketing Problem.</p>
+  </div>
+
+  <div class="card">
+    <h2>2️⃣ Buyer Persona <span style="font-size:0.8rem;color:var(--gold-dark);font-weight:500">(20%)</span></h2>
+    <p><strong>What to do:</strong> One primary persona with demographics, psychographics, behavioural, frustrations.</p>
+    <p><strong>How:</strong> Anchor in case-study research. Add a "Strategic Importance" paragraph explaining why this persona matters.</p>
+  </div>
+
+  <div class="card">
+    <h2>3️⃣ Marketing Problem <span style="font-size:0.8rem;color:var(--gold-dark);font-weight:500">(20%)</span></h2>
+    <p><strong>What to do:</strong> Frame the most urgent problem using SCQA.</p>
+    <p><strong>How:</strong> Show your reasoning. End with a clear problem statement (1-2 sentences) that your recommendation will solve.</p>
+  </div>
+
+  <div class="card">
+    <h2>4️⃣ TOWS Matrix <span style="font-size:0.8rem;color:var(--gold-dark);font-weight:500">(20%)</span></h2>
+    <p><strong>What to do:</strong> 2x2 matrix. 4 strategic alternatives. Brief evaluation of each.</p>
+    <p><strong>How:</strong> Each cell = 1 strategy in 1 line. Then a paragraph explaining why SO wins (or whichever you pick).</p>
+  </div>
+
+  <div class="card">
+    <h2>5️⃣ Strategic Recommendation <span style="font-size:0.8rem;color:var(--gold-dark);font-weight:500">(20%)</span></h2>
+    <p><strong>What to do:</strong> Pick one TOWS strategy and defend it.</p>
+    <p><strong>How:</strong> Why this one (not the others). Feasibility check. Implementation plan with leadership, resources, timeline.</p>
+  </div>
+
+  <div class="text-center mt-2">
+    <button class="btn" onclick="navGo('quiz')">Test Yourself →</button>
+  </div>
+</div>
+
+<!-- =========================================================
+     PAGE: SECRETS (hint map, progressive unlock)
+     ========================================================= -->
+<div class="page" id="pg-secrets">
+  <span class="tag">Hidden</span>
+  <h1 style="font-size:2rem;color:var(--navy);margin-bottom:0.3rem">🔐 Secrets <span id="secretsHeader" style="font-size:1rem;color:var(--gold-dark);font-weight:600">0 / 8 discovered</span></h1>
+  <p class="sub" style="color:var(--txt2);margin-bottom:1rem">Hints are always visible. Rewards unlock as you discover each easter egg.</p>
+
+  <div class="card">
+    <h2>🗝️ Find them all</h2>
+    <p style="color:var(--txt2)">Click, type, and explore. Some secrets reward you instantly; others reveal themselves when you dig deeper. Every find is saved in your browser — close the page and your progress persists.</p>
+    <div class="secrets-grid" id="secretsGrid"></div>
+  </div>
+</div>
+
+<!-- =========================================================
+     PAGE: QUIZZES
+     ========================================================= -->
+<div class="page" id="pg-quiz">
+  <span class="tag">Module 4</span>
+  <h1 style="font-size:2rem;color:var(--navy);margin-bottom:0.3rem">Interactive Quizzes</h1>
+  <p class="sub" style="color:var(--txt2);margin-bottom:1rem">4 quizzes. Real answer-checking. XP per correct answer.</p>
+
+  <div class="card">
+    <h2>📊 Quiz 1: SWOT Categorization</h2>
+    <div id="q1"></div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Quiz 2: TOWS Quadrants</h2>
+    <div id="q2"></div>
+  </div>
+
+  <div class="card">
+    <h2>📋 Quiz 3: Case Knowledge</h2>
+    <div id="q3"></div>
+  </div>
+
+  <div class="card">
+    <h2>🎭 Quiz 4: Buyer Persona</h2>
+    <div id="q4"></div>
+  </div>
+
+  <div class="text-center mt-2">
+    <button class="btn" onclick="navGo('write')">Next: Writing Tips →</button>
+  </div>
+</div>
+
+<!-- =========================================================
+     PAGE: WRITING
+     ========================================================= -->
+<div class="page" id="pg-write">
+  <span class="tag">Module 5</span>
+  <h1 style="font-size:2rem;color:var(--navy);margin-bottom:0.3rem">Writing Tips & Anti-AI Detection</h1>
+  <p class="sub" style="color:var(--txt2);margin-bottom:1rem">How to write Q3-Q5 that sound like you, not a bot.</p>
+
+  <div class="card">
+    <h2>✍️ Sentence Variation</h2>
+    <p><strong>The problem:</strong> AI text tends to have uniform sentence length and predictable transitions ("Moreover," "Furthermore," "Additionally").</p>
+    <p><strong>The fix:</strong></p>
+    <ul>
+      <li>Alternate lengths: short punchy sentences. Then longer ones with subordination. Then medium.</li>
+      <li>Start differently: sometimes with "I," sometimes with a question, sometimes with a clause.</li>
+      <li>Avoid stacking 3+ "Moreover-Furthermore-Additionally" in a paragraph.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🗣️ Personal Voice</h2>
+    <ul>
+      <li>Use contractions: don't, won't, it's, we're</li>
+      <li>Have opinions: "I find this striking," "What stood out to me is..."</li>
+      <li>Add your reading: "This suggests..." or "The implication seems to be..."</li>
+      <li>Use first person where appropriate: "I would recommend..."</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🚫 Buzzwords to Avoid</h2>
+    <p>AI loves these. Humans use them sparingly:</p>
+    <ul>
+      <li>"delve into," "tapestry," "vibrant," "robust," "leverage" (use "use")</li>
+      <li>"in conclusion," "in summary," "to summarize"</li>
+      <li>"It is important to note that..."</li>
+      <li>"navigate the complexities," "in today's fast-paced world"</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>💎 Specific Examples</h2>
+    <p>Replace generic claims with specific case details:</p>
+    <ul>
+      <li>❌ "The brand has lost market share."</li>
+      <li>✅ "Spanish retail sales dropped from €22M to €14M between 2018 and 2023."</li>
+      <li>❌ "Customer satisfaction is low."</li>
+      <li>✅ "An NPS of 17 places Equivalenza well below Druni (56) and Primor (46)."</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🤔 Hedging</h2>
+    <p>Strategic uncertainty makes text feel human:</p>
+    <ul>
+      <li>"It seems that..."</li>
+      <li>"This might suggest..."</li>
+      <li>"One could argue..."</li>
+      <li>"Perhaps the most important factor is..."</li>
+    </ul>
+  </div>
+
+  <div class="text-center mt-2">
+    <button class="btn" onclick="navGo('pt')">Next: Lições em PT →</button>
+  </div>
+</div>
+
+<!-- =========================================================
+     PAGE: PT (Lições em Português)
+     ========================================================= -->
+<div class="page" id="pg-pt">
+  <span class="tag">🇵🇹 Lições em Português</span>
+  <h1 style="font-size:2rem;color:var(--navy);margin-bottom:0.3rem">Aulas de Marketing — em PT</h1>
+  <p class="sub" style="color:var(--txt2);margin-bottom:1rem">Para estudares na tua língua materna.</p>
+
+  <div class="card">
+    <h2>📚 O que é um SWOT?</h2>
+    <p><strong>Análise SWOT</strong> é uma ferramenta de diagnóstico estratégico. Divide em 4 quadrantes:</p>
+    <ul>
+      <li><strong>S — Strengths (Forças):</strong> o que a empresa faz BEM internamente</li>
+      <li><strong>W — Weaknesses (Fraquezas):</strong> o que faz MAL internamente</li>
+      <li><strong>O — Opportunities (Oportunidades):</strong> tendências externas POSITIVAS</li>
+      <li><strong>T — Threats (Ameaças):</strong> tendências externas NEGATIVAS</li>
+    </ul>
+    <p style="margin-top:0.5rem"><em>Exemplo Equivalenza:</em> Forças = 528 lojas; Fraquezas = NPS 17; Oportunidades = crescimento Gen Z; Ameaças = colapso do segmento dupe.</p>
+  </div>
+
+  <div class="card">
+    <h2>🎯 O que é TOWS?</h2>
+    <p>TOWS é a evolução do SWOT — cruza os quadrantes para gerar 4 TIPOS de estratégia:</p>
+    <ul>
+      <li><strong>SO (Ofensiva):</strong> usa Forças para Aproveitar Oportunidades → crescimento</li>
+      <li><strong>WO (Corretiva):</strong> ultrapassa Fraquezas para Aproveitar Oportunidades → melhoria</li>
+      <li><strong>ST (Defensiva-Ofensiva):</strong> usa Forças para Neutralizar Ameaças → proteção</li>
+      <li><strong>WT (Defensiva):</strong> minimiza Fraquezas e evita Ameaças → contenção</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>❓ O que é SCQA?</h2>
+    <p>Framework para enquadrar um problema de marketing de forma lógica:</p>
+    <ul>
+      <li><strong>S — Situation (Situação):</strong> o contexto estável atual</li>
+      <li><strong>C — Complication (Complicação):</strong> o que mudou, a tensão</li>
+      <li><strong>Q — Question (Questão):</strong> a pergunta estratégica</li>
+      <li><strong>A — Answer (Resposta):</strong> a formulação do problema</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>👤 O que é uma Buyer Persona?</h2>
+    <p>Uma personagem semi-ficcional baseada em investigação real que representa o teu cliente ideal. Três camadas:</p>
+    <ul>
+      <li><strong>Demografia:</strong> idade, localização, rendimento, educação</li>
+      <li><strong>Psicografia:</strong> valores, atitudes, estilo de vida, identidade</li>
+      <li><strong>Comportamental:</strong> como descobre, avalia, compra, mantém lealdade</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>💡 Dica final para escrever</h2>
+    <p>Quando reescreveres o assignment na tua voz, lembra-te:</p>
+    <ul>
+      <li>Usa contrações: não, é, estou, vamos</li>
+      <li>Opiniões pessoais: "eu recomendaria", "na minha leitura"</li>
+      <li>Hedging: "parece-me", "sugere que", "talvez"</li>
+      <li>Exemplos específicos do caso (não generalidades)</li>
+      <li>Varia o comprimento das frases</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🇵🇹 Mini-Curso de Português (side quest!)</h2>
+    <p style="color:var(--txt2);margin-bottom:0.6rem">Já que falas Tunisio + Inglês + Francês, e o Português está próximo do Francês, esta secção é um bónus. Não é matéria do trabalho — é um extra para te ajudar a comunicar com colegas brasileiros e portugueses na EU Business School.</p>
+    <div id="pt-progress" style="font-size:0.85rem;color:var(--gold-dark);margin-bottom:0.5rem">Progresso: <span id="pt-pct">0</span>%</div>
+    <div class="progress-bar"><div class="progress-fill" id="pf-pt" style="width:0%"></div></div>
+  </div>
+
+  <div class="card">
+    <h2>🗣️ As 5 vogais + pronúncia essencial</h2>
+    <p style="color:var(--txt2)">O Português tem 5 vogais orais (mais nasais, mas vamos com o básico):</p>
+    <table style="width:100%;border-collapse:collapse;margin-top:0.5rem">
+      <tr style="background:var(--cream-dark)"><th style="padding:6px;text-align:left">Vogal</th><th style="padding:6px;text-align:left">Som (IPA)</th><th style="padding:6px;text-align:left">Truque mnemónico</th></tr>
+      <tr><td style="padding:6px"><b>A</b></td><td style="padding:6px">/a/</td><td style="padding:6px">Como em <em>pá</em> (não como em <em>café</em>)</td></tr>
+      <tr><td style="padding:6px"><b>E</b></td><td style="padding:6px">/e/ ou /ɨ/</td><td style="padding:6px"><em>É</em> fechado se terminar em -e: <em>café</em>. Aberto se dentro: <em>casa</em></td></tr>
+      <tr><td style="padding:6px"><b>I</b></td><td style="padding:6px">/i/</td><td style="padding:6px">Como em <em>sim</em></td></tr>
+      <tr><td style="padding:6px"><b>O</b></td><td style="padding:6px">/o/ ou /u/</td><td style="padding:6px"><em>Ó</em> fechado no fim: <em>pôr</em>. <em>Ó</em> aberto dentro: <em>bola</em></td></tr>
+      <tr><td style="padding:6px"><b>U</b></td><td style="padding:6px">/u/</td><td style="padding:6px">Como em <em>luna</em></td></tr>
+    </table>
+    <p style="margin-top:0.5rem;color:var(--txt3);font-size:0.88rem"><b>Para ti (Tunisian):</b> o Português é mais fonético que o Inglês. O <b>rr</b> é como um roncar (tremido); o <b>lh</b> é como <em>million</em>; o <b>nh</b> é como <em>onion</em>. Tudo se lê.</p>
+  </div>
+
+  <div class="card">
+    <h2>📖 Primeiras 50 palavras — com tradução Tunisiana</h2>
+    <p style="color:var(--txt2);margin-bottom:0.5rem">Em 7 categorias:</p>
+    <details open>
+      <summary style="cursor:pointer;font-weight:600;color:var(--navy)">Cumprimentos</summary>
+      <table style="width:100%;border-collapse:collapse;margin-top:0.4rem">
+        <tr><td style="padding:3px"><b>Olá</b></td><td>Hello</td><td dir="rtl">مرحبا</td></tr>
+        <tr><td style="padding:3px"><b>Bom dia</b></td><td>Good morning</td><td dir="rtl">صباح الخير</td></tr>
+        <tr><td style="padding:3px"><b>Boa tarde</b></td><td>Good afternoon</td><td dir="rtl">مساء الخير</td></tr>
+        <tr><td style="padding:3px"><b>Boa noite</b></td><td>Good night</td><td dir="rtl">تصبح على خير</td></tr>
+        <tr><td style="padding:3px"><b>Tchau / Adeus</b></td><td>Bye</td><td dir="rtl">وداعا</td></tr>
+        <tr><td style="padding:3px"><b>Por favor</b></td><td>Please</td><td dir="rtl">من فضلك</td></tr>
+        <tr><td style="padding:3px"><b>Obrigado/a</b></td><td>Thanks</td><td dir="rtl">شكرا</td></tr>
+      </table>
+    </details>
+    <details><summary style="cursor:pointer;font-weight:600;color:var(--navy);margin-top:0.4rem">Números 1-10</summary>
+      <table style="width:100%;border-collapse:collapse;margin-top:0.4rem">
+        <tr><td>1 um</td><td>2 dois</td><td>3 três</td><td>4 quatro</td><td>5 cinco</td></tr>
+        <tr><td>6 seis</td><td>7 sete</td><td>8 oito</td><td>9 nove</td><td>10 dez</td></tr>
+      </table>
+    </details>
+    <details><summary style="cursor:pointer;font-weight:600;color:var(--navy);margin-top:0.4rem">Família</summary>
+      <table style="width:100%;border-collapse:collapse;margin-top:0.4rem">
+        <tr><td><b>mãe</b> (mother)</td><td><b>pai</b> (father)</td><td><b>irmão/irmã</b> (sibling)</td></tr>
+        <tr><td><b>filho/filha</b> (son/daughter)</td><td><b>avô/avó</b> (grandparent)</td><td><b>amigo/amiga</b> (friend)</td></tr>
+      </table>
+    </details>
+    <details><summary style="cursor:pointer;font-weight:600;color:var(--navy);margin-top:0.4rem">Cores</summary>
+      <p style="margin-top:0.3rem">vermelho (red) · azul (blue) · verde (green) · amarelo (yellow) · preto (black) · branco (white) · rosa (pink) · dourado (gold)</p>
+    </details>
+    <details><summary style="cursor:pointer;font-weight:600;color:var(--navy);margin-top:0.4rem">Comida</summary>
+      <p style="margin-top:0.3rem">água (water) · pão (bread) · café (coffee) · vinho (wine) · queijo (cheese) · peixe (fish) · carne (meat) · fruta (fruit)</p>
+    </details>
+    <details><summary style="cursor:pointer;font-weight:600;color:var(--navy);margin-top:0.4rem">Negócio (relevante para o assignment)</summary>
+      <p style="margin-top:0.3rem">empresa (company) · cliente (client) · mercado (market) · marca (brand) · estratégia (strategy) · preço (price) · loja (store) · venda (sale) · lucro (profit) · crescimento (growth)</p>
+    </details>
+    <details><summary style="cursor:pointer;font-weight:600;color:var(--navy);margin-top:0.4rem">Frases úteis</summary>
+      <p style="margin-top:0.3rem"><b>Como se diz...?</b> — How do you say…?<br><b>Não percebo</b> — I don't understand<br><b>Pode repetir?</b> — Can you repeat?<br><b>Quanto custa?</b> — How much is it?<br><b>Onde fica...?</b> — Where is…?</p>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>💬 Mini-diálogos</h2>
+    <details><summary style="cursor:pointer;font-weight:600;color:var(--navy)">1. A conhecer um colega</summary>
+      <p style="margin-top:0.4rem"><b>A:</b> Olá! Eu sou a Fatma. E tu?<br><b>B:</b> Olá Fatma! Eu sou o Lucas. Muito prazer.<br><b>A:</b> De onde és?<br><b>B:</b> Sou do Brasil. E tu?<br><b>A:</b> Sou da Tunísia.<br><b>B:</b> Que legal! Bem-vinda à EU Business School.</p>
+      <p style="color:var(--txt3);font-size:0.85rem;margin-top:0.3rem"><b>EN:</b> Hi! I'm Fatma. And you? / Hi Fatma! I'm Lucas. Nice to meet you. / Where are you from? / I'm from Brazil. And you? / I'm from Tunisia. / Cool! Welcome to EU Business School.</p>
+    </details>
+    <details><summary style="cursor:pointer;font-weight:600;color:var(--navy);margin-top:0.4rem">2. A pedir um café</summary>
+      <p style="margin-top:0.4rem"><b>A:</b> Bom dia! Um café, por favor.<br><b>B:</b> Curto ou longo?<br><b>A:</b> Curto, por favor. Quanto custa?<br><b>B:</b> Um euro.<br><b>A:</b> Aqui tem. Obrigada!</p>
+    </details>
+    <details><summary style="cursor:pointer;font-weight:600;color:var(--navy);margin-top:0.4rem">3. A pedir indicações</summary>
+      <p style="margin-top:0.4rem"><b>A:</b> Com licença, onde fica a biblioteca?<br><b>B:</b> Vai em frente, depois vira à direita. É o segundo edifício.<br><b>A:</b> Muito obrigada!</p>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>📝 5 verbos essenciais (presente)</h2>
+    <table style="width:100%;border-collapse:collapse;font-size:0.9rem">
+      <tr style="background:var(--cream-dark)"><th style="padding:5px">Verbo</th><th style="padding:5px">eu</th><th style="padding:5px">tu</th><th style="padding:5px">ele/ela</th><th style="padding:5px">nós</th><th style="padding:5px">eles/elas</th></tr>
+      <tr><td style="padding:5px"><b>ser</b> (to be, permanent)</td><td>sou</td><td>és</td><td>é</td><td>somos</td><td>são</td></tr>
+      <tr><td style="padding:5px"><b>estar</b> (to be, temporary)</td><td>estou</td><td>estás</td><td>está</td><td>estamos</td><td>estão</td></tr>
+      <tr><td style="padding:5px"><b>ter</b> (to have)</td><td>tenho</td><td>tens</td><td>tem</td><td>temos</td><td>têm</td></tr>
+      <tr><td style="padding:5px"><b>ir</b> (to go)</td><td>vou</td><td>vais</td><td>vai</td><td>vamos</td><td>vão</td></tr>
+      <tr><td style="padding:5px"><b>fazer</b> (to do/make)</td><td>faço</td><td>fazes</td><td>faz</td><td>fazemos</td><td>fazem</td></tr>
+    </table>
+    <p style="margin-top:0.4rem;color:var(--txt3);font-size:0.85rem"><b>Exemplos:</b> <i>Eu sou a Fatma</i> (I am Fatma). <i>Estou a estudar</i> (I am studying). <i>Tenho 22 anos</i> (I am 22). <i>Vou à biblioteca</i> (I'm going to the library). <i>Faço o trabalho amanhã</i> (I'll do the assignment tomorrow).</p>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Quiz rápido — ganhas badge 🇵🇹!</h2>
+    <div id="pt-quiz"></div>
+  </div>
+
+  <div class="text-center mt-2">
+    <button class="btn" onclick="navGo('dl')">Next: Downloads →</button>
+  </div>
+</div>
+
+<!-- =========================================================
+     PAGE: DOWNLOADS
+     ========================================================= -->
+<div class="page" id="pg-dl">
+  <span class="tag">Module 6</span>
+  <h1 style="font-size:2rem;color:var(--navy);margin-bottom:0.3rem">Download Center</h1>
+  <p class="sub" style="color:var(--txt2);margin-bottom:1rem">Assignment files and study materials.</p>
+
+  <div class="card" style="border-left:4px solid var(--gold)">
+    <h2>📄 Assignment PDF</h2>
+    <p>The complete mid-term — 13 pages, ~2000 words, Harvard refs, cover page, TOC, TOWS matrix with color coding, appendix with key data table + buyer persona visual.</p>
+    <p><a href="docs/Equivalenza_Mid_Term_Fatma.pdf" download class="btn" style="margin-top:0.5rem">⬇ Download PDF</a></p>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--purple)">
+    <h2>📝 Editable Word Version</h2>
+    <p>Same content as PDF, editable. Use this to rewrite in your own voice before submission.</p>
+    <p><a href="docs/Equivalenza_Mid_Term_Fatma.docx" download class="btn" style="margin-top:0.5rem;background:var(--purple)">⬇ Download .docx</a></p>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--teal)">
+    <h2>🎙️ Audio Walkthroughs (3 MP3s)</h2>
+    <p>Listen while you revise. English voice.</p>
+    <p><a href="assets/intro_swot.mp3" download style="color:var(--teal);font-weight:600">⬇ Sections 1+2 (SWOT + Persona)</a></p>
+    <p><a href="assets/persona_problem.mp3" download style="color:var(--teal);font-weight:600">⬇ Sections 2+3 (Persona + Marketing Problem)</a></p>
+    <p><a href="assets/tows_recommendation.mp3" download style="color:var(--teal);font-weight:600">⬇ Sections 4+5 (TOWS + Recommendation)</a></p>
+  </div>
+
+  <div class="card" style="border-left:4px solid var(--rose)">
+    <h2>💡 How to Use the Assignment</h2>
+    <p><strong>Do NOT submit exactly as-is.</strong> The goal is for you to read, understand the analysis, and rewrite in your own voice. Change examples, reorder paragraphs, add your perspective.</p>
+    <p>This ensures: (1) the text sounds like you, (2) passes Turnitin, (3) you can defend every point orally.</p>
+  </div>
+
+  <div class="card">
+    <h2>⚠️ Important Reminder</h2>
+    <p>Q3 (Marketing Problem), Q4 (TOWS), Q5 (Recommendation) cannot use AI directly. These sections must be entirely yours. Use this guide to <strong>understand the methodology</strong>, then write on your own.</p>
+  </div>
+
+  <p class="text-center mt-2" style="color:var(--txt3);font-size:0.82rem;cursor:pointer;user-select:none" onclick="footerClick()">Made with ❤️ for Fatma · Click me 5 times</p>
+</div>
+
+</main>
+
+<!-- =========================================================
+     PERSISTENT EASTER EGG ELEMENTS (outside pages)
+     ========================================================= -->
+<button class="heart-btn" onclick="heartClick()" title="Click me!">❤️</button>
+<div class="confetti-layer" id="confettiLayer"></div>
+<div class="toast" id="toast" onclick="this.classList.remove('show')"></div>
+<div class="mascot" id="mascot" onclick="mascotClick()">🧴</div>
+
+<div class="secret-room" id="sroom" onclick="closeSRoom(event)">
+  <div class="secret-room-content">
+    <h1>🌸 Secret Room 🌸</h1>
+    <p>You found the hidden room!</p>
+    <div style="text-align:left;margin-top:1.5rem;font-size:0.95rem;line-height:1.8">
+      <p>🌿 "Perfume" comes from Latin <em>per fumum</em> — "through smoke" — because the first perfumes were incense.</p>
+      <p>🌹 A fine fragrance can contain 50–250 different ingredients.</p>
+      <p>💎 The global fragrance market is worth over $50 billion.</p>
+      <p>🧴 Equivalenza's refill model reduces packaging by ~70% per repeat purchase.</p>
+      <p style="margin-top:1.5rem;color:var(--gold-light);text-align:center"><strong>+100 XP bonus for finding this!</strong></p>
+    </div>
+    <button class="btn mt-1" onclick="closeSRoom()">Close</button>
+  </div>
+</div>
+
+<footer onclick="footerClick()">
+  <p>🐷 Presuntinho — Built with ❤️ for Fatma</p>
+  <p style="margin-top:0.3rem;font-size:0.75rem">BCOBM311 · Summer 2026 · Prof. Cristina Elson</p>
+</footer>
+
+<!-- =========================================================
+     JAVASCRIPT — All inline, persistent shell
+     ========================================================= -->
+
+<!-- Modular scripts — order matters -->
+<script src="assets/js/state.js"></script>
+<script src="assets/js/easter-eggs.js"></script>
+<script src="assets/js/quizzes.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Build artifacts
+node_modules/
+dist/
+*.log
+
+# Private drafts (kept out of public repo)
+*_draft.*
+*_private.*
+
+# Hermes internal helpers (kept at root for re-extraction)
+extract.py
