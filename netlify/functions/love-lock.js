@@ -19,8 +19,23 @@
 // the splash page). The function trusts the kind passed in but does a tiny
 // shape check to avoid storing nonsense.
 
-import { getStore } from '@netlify/blobs';
+import { getStore, setEnvironmentContext } from '@netlify/blobs';
 import crypto from 'crypto';
+
+// Wire the Blobs client to the current Netlify deploy context. The runtime
+// injects a base64-encoded JSON blob in NETLIFY_BLOBS_CONTEXT. We decode it
+// once at module load and pass it to setEnvironmentContext so getStore(name)
+// auto-binds. Without this, getStore throws "The environment has not been
+// configured to use Netlify Blobs" (verified live on 2026-06-27).
+if (process.env.NETLIFY_BLOBS_CONTEXT) {
+  try {
+    const decoded = Buffer.from(process.env.NETLIFY_BLOBS_CONTEXT, 'base64').toString('utf8');
+    const ctx = JSON.parse(decoded);
+    setEnvironmentContext(ctx);
+  } catch (e) {
+    console.error('[love-lock] failed to parse NETLIFY_BLOBS_CONTEXT', e);
+  }
+}
 
 const COOKIE_NAME = 'lovelock_id';
 const BLOB_KEY = 'love-lock:current';
@@ -248,8 +263,7 @@ export const handler = async (event) => {
       await blobStore().setJSON(BLOB_KEY, state);
     } catch (e) {
       console.error('[love-lock] blob write failed', e);
-      // TEMP DEBUG 2026-06-27: leak error.message to find why setJSON 500s in prod
-      return buildResponse(500, { error: 'server_misconfigured', debug: String(e?.message || e) });
+      return buildResponse(500, { error: 'server_misconfigured' });
     }
 
     let cookie;
