@@ -31,7 +31,17 @@ function parseCookies(header) {
   return out;
 }
 
-function serializeCookie(value, maxAgeSeconds) {
+function isHttps(event) {
+  // Netlify sets x-forwarded-proto on every request. Origin URL is the
+  // authoritative check; fall back to env for unit tests / netlify dev.
+  const fwd = event?.headers?.['x-forwarded-proto'] || event?.headers?.['X-Forwarded-Proto'];
+  if (fwd) return String(fwd).toLowerCase() === 'https';
+  if (event?.headers?.['x-nf-ssl'] === 'on') return true;
+  const context = process.env.CONTEXT || '';
+  return context === 'production' || context === 'deploy-preview' || context === 'branch-deploy';
+}
+
+function serializeCookie(value, maxAgeSeconds, event) {
   const attrs = [
     `${COOKIE_NAME}=${encodeURIComponent(value)}`,
     'Path=/',
@@ -39,7 +49,7 @@ function serializeCookie(value, maxAgeSeconds) {
     'HttpOnly',
     'SameSite=Lax',
   ];
-  if (process.env.CONTEXT === 'production') attrs.push('Secure');
+  if (isHttps(event)) attrs.push('Secure');
   return attrs.join('; ');
 }
 
@@ -100,7 +110,7 @@ exports.handler = async (event) => {
     }
     const now = Date.now();
     const state = { kind, startedAt: now, expiresAt: now + ONE_HOUR_MS };
-    const cookie = serializeCookie(JSON.stringify(state), 3600);
+    const cookie = serializeCookie(JSON.stringify(state), 3600, event);
     return buildResponse(
       200,
       { active: true, kind, expiresAt: state.expiresAt },
