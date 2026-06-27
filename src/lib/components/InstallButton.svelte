@@ -1,24 +1,14 @@
 <script lang="ts">
   /**
-   * InstallButton — PWA "Add to Home Screen" prompt (Phase 15 #5).
+   * InstallButton — PWA install prompt.
    *
-   * Lifecycle:
-   *   1. Browser fires `beforeinstallprompt` (only on installable PWAs).
-   *      We capture it instead of letting the browser show its mini-bar.
-   *   2. On click, we call `prompt()` which shows the OS install dialog.
-   *      We track `outcome` (accepted/dismissed) so we can show a toast.
-   *   3. When the app is already installed (display-mode === 'standalone')
-   *      or running on iOS Safari (no support) we stay hidden.
-   *
-   * Touch target: 44×44 (WCAG 2.5.5 / Apple HIG).
-   * ARIA: role=button is on the <button>; the label is exposed as the
-   * visible text. We listen for `appinstalled` to dismiss ourselves once
-   * the install completes.
+   * Browser support is intentionally conservative: the button only renders
+   * after Chromium-style browsers emit `beforeinstallprompt`. Installed PWAs
+   * are detected through display-mode and iOS Safari's `navigator.standalone`.
    */
   import { onMount } from 'svelte';
   import { TOAST_EVENT } from './events';
 
-  // Minimal typings — `BeforeInstallPromptEvent` isn't in the lib yet.
   interface BeforeInstallPromptEvent extends Event {
     readonly platforms: string[];
     readonly userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
@@ -28,117 +18,173 @@
   let visible = $state(false);
   let installed = $state(false);
   let deferredPrompt: BeforeInstallPromptEvent | null = null;
+  let prompting = $state(false);
+
+  function isStandalone(): boolean {
+    if (typeof window === 'undefined') return false;
+    const displayModeStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    const displayModeFullscreen = window.matchMedia('(display-mode: fullscreen)').matches;
+    const iosStandalone = 'standalone' in navigator && Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
+    return displayModeStandalone || displayModeFullscreen || iosStandalone;
+  }
+
+  function syncVisibility(): void {
+    installed = isStandalone();
+    visible = Boolean(deferredPrompt && !installed);
+  }
+
+  function toast(msg: string): void {
+    window.dispatchEvent(new CustomEvent(TOAST_EVENT, { detail: { msg } }));
+  }
 
   onMount(() => {
-    // iOS Safari fires no `beforeinstallprompt` — show nothing there.
-    // Already-installed PWAs expose display-mode === 'standalone'.
-    const standalone =
-      typeof window !== 'undefined' &&
-      (window.matchMedia('(display-mode: standalone)').matches ||
-        // iOS uses navigator.standalone as its own flag.
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (navigator as any).standalone === true);
-    installed = standalone;
+    const standaloneMql = window.matchMedia('(display-mode: standalone)');
+    const fullscreenMql = window.matchMedia('(display-mode: fullscreen)');
+
+    syncVisibility();
+
+    const onDisplayModeChange = () => syncVisibility();
 
     const onBeforeInstall = (e: Event) => {
-      e.preventDefault(); // suppress the browser mini-bar
+      e.preventDefault();
       deferredPrompt = e as BeforeInstallPromptEvent;
-      if (!installed) visible = true;
+      syncVisibility();
     };
 
     const onAppInstalled = () => {
       installed = true;
       visible = false;
       deferredPrompt = null;
-      window.dispatchEvent(
-        new CustomEvent(TOAST_EVENT, {
-          detail: { msg: 'App instalado — abre-o a partir do ecrã principal.' }
-        })
-      );
+      toast('App instalada — abre-a a partir do ecrã principal.');
     };
 
     window.addEventListener('beforeinstallprompt', onBeforeInstall);
     window.addEventListener('appinstalled', onAppInstalled);
+    standaloneMql.addEventListener('change', onDisplayModeChange);
+    fullscreenMql.addEventListener('change', onDisplayModeChange);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', onBeforeInstall);
       window.removeEventListener('appinstalled', onAppInstalled);
+      standaloneMql.removeEventListener('change', onDisplayModeChange);
+      fullscreenMql.removeEventListener('change', onDisplayModeChange);
     };
   });
 
   async function install(): Promise<void> {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt || installed || prompting) return;
+    prompting = true;
     try {
-      await deferredPrompt.prompt();
-      const choice = await deferredPrompt.userChoice;
+      const promptEvent = deferredPrompt;
+      await promptEvent.prompt();
+      const choice = await promptEvent.userChoice;
       if (choice.outcome === 'accepted') {
         visible = false;
       }
     } catch (e) {
       console.error('[install-button] prompt failed', e);
+      toast('Não foi possível abrir o prompt de instalação.');
     } finally {
       deferredPrompt = null;
+      prompting = false;
+      syncVisibility();
     }
   }
 </script>
 
-{#if visible}
+{#if visible && !installed}
   <button
     type="button"
     class="install-btn"
     onclick={install}
-    aria-label="Instalar Presuntinho como aplicação no dispositivo"
+    aria-label="Instalar Presuntinho como aplicação"
+    title="Instalar Presuntinho como aplicação"
+    disabled={prompting}
   >
     <span class="icon" aria-hidden="true">📲</span>
-    <span class="label">Instalar app</span>
+    <span class="label">{prompting ? 'A abrir…' : 'Instalar app'}</span>
   </button>
 {/if}
 
 <style>
   .install-btn {
-    /* Touch target ≥ 44×44 (WCAG 2.5.5). */
+    position: fixed;
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: calc(5.25rem + env(safe-area-inset-bottom));
+    z-index: 90;
+
     min-height: 44px;
     min-width: 44px;
-    padding: 0.65rem 1.1rem;
+    padding: 0.65rem 1.05rem;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
 
-    /* Secondary btn: surface-tinted, accent border on hover. */
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--txt, #fff);
-    border: 1px solid rgba(236, 72, 153, 0.35);
-    border-radius: var(--radius-md, 0.5rem);
-    font-size: 0.95rem;
-    font-weight: 600;
+    background: rgba(236, 72, 153, 0.95);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32);
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease,
-      transform 0.15s ease;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
   }
-  .install-btn:hover,
+
+  .install-btn:hover:not(:disabled),
   .install-btn:focus-visible {
-    background: rgba(236, 72, 153, 0.12);
-    border-color: var(--accent, #ec4899);
+    background: #db2777;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.38);
     outline: none;
   }
+
   .install-btn:focus-visible {
-    box-shadow: 0 0 0 2px var(--accent, #ec4899);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.55), 0 12px 32px rgba(0, 0, 0, 0.38);
   }
-  .install-btn:active {
-    transform: translateY(1px);
+
+  .install-btn:active:not(:disabled) {
+    transform: translateY(1px) scale(0.99);
   }
+
+  .install-btn:disabled {
+    opacity: 0.72;
+    cursor: wait;
+  }
+
   .icon {
     font-size: 1.1rem;
     line-height: 1;
   }
+
   .label {
     line-height: 1;
+    white-space: nowrap;
   }
+
+  @media (min-width: 760px) {
+    .install-btn {
+      bottom: calc(1.25rem + env(safe-area-inset-bottom));
+      right: max(1.25rem, env(safe-area-inset-right));
+    }
+  }
+
+  @media (max-width: 420px) {
+    .install-btn {
+      padding: 0.65rem 0.85rem;
+      font-size: 0.88rem;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .install-btn {
       transition: none;
     }
-    .install-btn:active {
+
+    .install-btn:active:not(:disabled) {
       transform: none;
     }
   }
