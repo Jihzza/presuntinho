@@ -15,15 +15,26 @@
   let newLoading = $state(true);
   let statuses = $state<Record<string, 'open' | 'in_progress' | 'done'>>({});
 
-  onMount(async () => {
-    statuses = getAllAssignmentStatuses();
-    const pack = await loadAssignments('equivalenza');
-    if (pack) newAssignments = pack.assignments;
-    newLoading = false;
-    window.addEventListener('presuntinho:assignment-status', (e: Event) => {
+  onMount(() => {
+    let mounted = true;
+    const onAssignmentStatus = (e: Event) => {
       const detail = (e as CustomEvent).detail as { assignmentId: string; status: 'open' | 'in_progress' | 'done' };
       statuses = { ...statuses, [detail.assignmentId]: detail.status };
+    };
+
+    statuses = getAllAssignmentStatuses();
+    window.addEventListener('presuntinho:assignment-status', onAssignmentStatus);
+
+    void loadAssignments('equivalenza').then((pack) => {
+      if (!mounted) return;
+      if (pack) newAssignments = pack.assignments;
+      newLoading = false;
     });
+
+    return () => {
+      mounted = false;
+      window.removeEventListener('presuntinho:assignment-status', onAssignmentStatus);
+    };
   });
 
   function cycleStatus(id: string) {

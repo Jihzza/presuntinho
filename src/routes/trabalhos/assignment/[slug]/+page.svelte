@@ -36,8 +36,12 @@
     error = null;
     assignment = null;
     pack = null;
+    const controller = new AbortController();
 
-    fetch('/data/assignments/equivalenza.json', { cache: 'no-store' })
+    fetch('/data/assignments/equivalenza.json', {
+      cache: 'no-store',
+      signal: controller.signal
+    })
       .then(async (res) => {
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}`);
@@ -57,12 +61,15 @@
         loading = false;
       })
       .catch((e: unknown) => {
+        if (e instanceof DOMException && e.name === 'AbortError') return;
         error =
           e instanceof Error
             ? `Não foi possível carregar o pack: ${e.message}`
             : 'Não foi possível carregar o pack de trabalhos.';
         loading = false;
       });
+
+    return () => controller.abort();
   });
 
   // Combined description: what + how + hint, so the detail page gives
