@@ -11,6 +11,15 @@ All notable changes to Presuntinho are documented in this file.
 - **Trabalhos status workflow (Phase 19)** — assignments hub now supports status toggle (open → in_progress → done) with localStorage persistence. Custom event dispatch for cross-component updates. 5 real Equivalenza assignments (SWOT, Persona, Problem, TOWS, Recommendation) loaded from `static/data/assignments/equivalenza.json`.
 - **Easter eggs data-driven loader (Phase 23)** — `easterEggsConfig.ts` loads 12 secrets + 15 badges + 11 heart tiers + 10 mascot tips from `static/data/easter-eggs.json`. `EasterEggsCard.svelte` renders any secret with the appropriate template (link, code, image, story, etc).
 - **Deep lesson expansion (Phase 17)** — 5 lessons expanded from ~300 words each to 700-850 words with real Equivalenza context, tables, matrices, quotes, callouts.
+- **Onboarding modal (Phase 24)** — first-visit welcome tour on the Hub. Dismissible, persists state via Dexie `preferences` store so it only shows once. 5-step walkthrough of the sub-apps.
+- **Secrets page expansion (Phase 22)** — new heart-tiers timeline section + badges-grid section alongside the existing EasterEggsCard list. `easter-eggs.json` schema now includes `tier` and `badgeCount` fields.
+- **Visual polish (Phase 25)** — hover/focus micro-interactions on all interactive elements (logo, nav buttons, footer, easter eggs, hub cards). `prefers-reduced-motion` guards in `app.css` + each component.
+
+### Fixed
+- **Love Lock ordering** (`8ace130`) — PBKDF2 password check now runs FIRST so a real password containing the words "love" or "sad" (e.g. `LoveFofinho2026!`) authenticates normally instead of being intercepted as a love-lock trigger.
+- **Trabalhos detail page** (`c9020ce`) — V6 cards linking to `/trabalhos/assignment/<slug>/` (slug = `swot`, `persona`, etc.) were 404'ing. Detail page now resolves the slug from the single `equivalenza.json` pack instead of expecting per-slug JSON files. All 5 V6 detail routes return 200 OK in production.
+- **Secrets template** (`928ac35`) — `src/routes/secrets/+page.svelte` refactored to consume `EasterEggsCard` component instead of hand-rolled markup. Data-driven from `easter-eggs.json`.
+- **Netlify auto-deploy regression** (`28dbd39`) — 9 consecutive deploys were failing in ~9s with `Build script returned non-zero exit code: 2`. Root cause: Workbox warning `prerendered/**/*.{html,json} matches no files` is non-fatal locally but treated as fatal in Netlify's build container. Fix: `maximumFileSizeToCacheInBytes 2 MiB → 5 MiB` + `globIgnores: ['prerendered/**/*']` in `vite.config.ts`. After the fix, `netlify deploy --prod --build` succeeds in 13.1s.
 
 ## [5.0.0] - 2026-06-27
 
