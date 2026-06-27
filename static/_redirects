@@ -1,10 +1,36 @@
-# Netlify _redirects
-# Empty file: any URL not matching a static file gets Netlify's default
-# 404 (no SPA rewrite). Static files (robots.txt, sitemap.xml, sw.js,
-# manifest.webmanifest, /icons/*, /legacy/*, /quizzes/*, /lessons/*,
-# /favicon.svg, /apple-touch-icon.png, /favicon-32.png, etc.) are
-# served from the publish directory with their correct Content-Type.
+# Netlify _redirects for Presuntinho V5.
 #
-# The SvelteKit client-side router handles navigation between
-# /escola/, /biblioteca/, etc. without needing server-side rewrites,
-# so we don't need a /* → /index.html rule here.
+# Order matters: Netlify processes rules top-to-bottom, first match wins.
+# 1. Static assets are served from the publish directory with their
+#    correct Content-Type (no rewrite).  These files exist on disk in
+#    `build/` so the SPA fallback rule below must NOT swallow them.
+# 2. Everything else (SvelteKit client-side routes) falls through to
+#    `index.html` with a 200 (SPA shell).  The SvelteKit client router
+#    then takes over and renders the matching route.
+#
+# Why we keep static-first explicit rules: the Netlify wildcard fallback
+# `/* /index.html 200` would otherwise rewrite /sw.js, /robots.txt,
+# /sitemap.xml, /manifest.webmanifest, /icons/*.png and every /legacy/
+# asset as HTML — which we explicitly verified broke PWA install + SEO.
+
+# --- Static assets (skip SPA fallback) ---
+
+/robots.txt            /robots.txt            200
+/sitemap.xml           /sitemap.xml           200
+/sw.js                 /sw.js                 200
+/manifest.webmanifest  /manifest.webmanifest  200
+/favicon.svg           /favicon.svg           200
+/favicon-32.png        /favicon-32.png        200
+/favicon.ico           /favicon.ico           200
+/apple-touch-icon.png  /apple-touch-icon.png  200
+/workbox-*.js          /workbox-:splat        200
+/icons/*               /icons/:splat          200
+/legacy/*              /legacy/:splat         200
+/quizzes/*             /quizzes/:splat        200
+/lessons/*             /lessons/:splat        200
+/auth/*                /auth/:splat           200
+/data/*                /data/:splat           200
+
+# --- SPA fallback (everything else) ---
+
+/*                     /index.html            200
