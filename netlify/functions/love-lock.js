@@ -157,7 +157,13 @@ function buildCookieClear(event) {
 
 function blobStore() {
   const storeName = process.env.LOVE_LOCK_BLOB_STORE || 'lovelock';
-  return getStore({ name: storeName, consistency: 'strong' });
+  // Use 'eventual' consistency (the v10.x default). 'strong' requires the
+  // Netlify runtime to expose `uncachedEdgeURL` in the Blobs context, which
+  // it doesn't always do — that mismatch caused POST to 500 with
+  // server_misconfigured while GET appeared to succeed via the soft-fail
+  // catch. Eventual consistency is fine here: the client polls GET every
+  // 30s on the splash page, so partner unlocks propagate within ~30s.
+  return getStore({ name: storeName, consistency: 'eventual' });
 }
 
 export const handler = async (event) => {
