@@ -113,7 +113,7 @@ function createSettingsStore<K extends keyof Omit<typeof DEFAULT_SETTINGS, 'id' 
 }
 
 export const theme = createSettingsStore('theme', DEFAULT_SETTINGS.theme) as Writable<'light' | 'dark' | 'auto'>;
-export const lang = createSettingsStore('lang', DEFAULT_SETTINGS.lang) as Writable<'pt-PT' | 'en'>;
+export const lang = createSettingsStore('lang', DEFAULT_SETTINGS.lang) as Writable<'pt-PT' | 'en' | 'tn' | 'fr' | 'ar'>;
 export const funMode = createSettingsStore('funMode', DEFAULT_SETTINGS.funMode) as Writable<boolean>;
 
 // ============================================================================

@@ -21,7 +21,7 @@
   import { db, DEFAULT_SETTINGS } from '$lib/state/db';
   import { theme as themeStore, lang as langStore, funMode as funModeStore } from '$lib/state/stores';
   import { locale, waitLocale } from 'svelte-i18n';
-  import { setLocale } from '$lib/i18n';
+  import { setLocale, LOCALES, LOCALE_META, type Locale } from '$lib/i18n';
   import Sun from 'lucide-svelte/icons/sun';
   import Moon from 'lucide-svelte/icons/moon';
   import Monitor from 'lucide-svelte/icons/monitor';
@@ -117,15 +117,19 @@
   });
 
   // ----- Language -----
-  let currentLang: 'pt-PT' | 'en' = $state('pt-PT');
+  // `lang` covers all 5 UI locales.  The store in stores.ts is typed with
+  // the same union; we keep this state variable loose and cast on hydrate.
+  let currentLang: Locale = $state('pt-PT');
   onMount(() => {
     const unsub = langStore.subscribe((v) => {
-      currentLang = (v ?? 'pt-PT') as 'pt-PT' | 'en';
+      if (typeof v === 'string' && (LOCALES as string[]).includes(v)) {
+        currentLang = v as Locale;
+      }
     });
     return unsub;
   });
 
-  async function pickLang(loc: 'pt-PT' | 'en'): Promise<void> {
+  async function pickLang(loc: Locale): Promise<void> {
     currentLang = loc;
     setLocale(loc);          // updates svelte-i18n + persists localStorage
     langStore.set(loc);      // mirrors into Dexie `settings.lang`
@@ -387,32 +391,27 @@
   </section>
 
   <!-- ============ Language ============ -->
-  <section class="card" aria-labelledby="lang-h">
-    <div class="card-head">
-      <span class="icon-wrap"><Languages size={18} /></span>
-      <h2 id="lang-h">{$t('settings.lang')}</h2>
-    </div>
-    <div class="seg" role="radiogroup" aria-label={$t('settings.lang')}>
-      <button
-        type="button"
-        role="radio"
-        aria-checked={currentLang === 'pt-PT'}
-        class:active={currentLang === 'pt-PT'}
-        onclick={() => pickLang('pt-PT')}
-      >
-        🇵🇹 {$t('settings.lang.pt')}
-      </button>
-      <button
-        type="button"
-        role="radio"
-        aria-checked={currentLang === 'en'}
-        class:active={currentLang === 'en'}
-        onclick={() => pickLang('en')}
-      >
-        🇬🇧 {$t('settings.lang.en')}
-      </button>
-    </div>
-  </section>
+    <section class="card" aria-labelledby="lang-h">
+      <div class="card-head">
+        <span class="icon-wrap"><Languages size={18} /></span>
+        <h2 id="lang-h">{$t('settings.lang')}</h2>
+      </div>
+      <div class="seg seg-lang" role="radiogroup" aria-label={$t('settings.lang')}>
+        {#each LOCALES as loc (loc)}
+          <button
+            type="button"
+            role="radio"
+            aria-checked={currentLang === loc}
+            class:active={currentLang === loc}
+            onclick={() => pickLang(loc)}
+            title={LOCALE_META[loc].native}
+          >
+            <span class="lang-flag" aria-hidden="true">{LOCALE_META[loc].flag}</span>
+            <span class="lang-native">{LOCALE_META[loc].native}</span>
+          </button>
+        {/each}
+      </div>
+    </section>
 
   <!-- ============ Account / Password ============ -->
   <section class="card" aria-labelledby="acct-h">
@@ -601,10 +600,35 @@
     outline: none;
   }
   .seg button.active {
-    background: rgba(236, 72, 153, 0.18);
-    border-color: #ec4899;
-    color: #fff;
-  }
+      background: rgba(236, 72, 153, 0.18);
+      border-color: #ec4899;
+      color: #fff;
+    }
+    /* Language switcher: 5 buttons laid out as a wrapping grid so they
+       stay touch-friendly on narrow phones without overflowing. */
+    .seg-lang {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.5rem;
+    }
+    .seg-lang button {
+      flex: initial;            /* override .seg button flex: 1 1 auto */
+      justify-content: flex-start;
+      gap: 0.55rem;
+      padding: 0.65rem 0.8rem;
+      font-weight: 500;
+    }
+    .lang-flag {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+    .lang-native {
+      font-size: 0.92rem;
+      /* Allow the native label to truncate gracefully on tiny viewports. */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   .btn {
     display: inline-flex;
     align-items: center;

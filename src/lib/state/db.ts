@@ -118,7 +118,7 @@ export interface SecretRow {
 export interface SettingsRow {
   id: 'main';
   theme: 'light' | 'dark' | 'auto';
-  lang: 'pt-PT' | 'en';
+  lang: 'pt-PT' | 'en' | 'tn' | 'fr' | 'ar';
   funMode: boolean;   // controls confetti + easter eggs
   updatedAt: number;
 }
