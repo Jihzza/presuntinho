@@ -22,6 +22,14 @@ export default defineConfig({
         globPatterns: [
           'client/**/*.{js,css,ico,png,svg,webp,woff,woff2,mp3,json,webmanifest}'
         ],
+        // Tame Workbox warnings on Netlify: (a) raise the precache size limit
+        // to fit large bundled audio/quiz assets, (b) silence the empty
+        // `prerendered/**/*.{html,json}` glob warning because we ship a pure
+        // SPA (ssr=false + prerender=false → no prerendered HTML exists).
+        // Skander 1 diagnosis (deleg_aef67789, 2026-06-27) pinpointed the
+        // regression to commit 53c842f which first added @vite-pwa/sveltekit.
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB
+        globIgnores: ['prerendered/**/*'],
         navigateFallback: '/',
         navigateFallbackDenylist: [/^\/api/, /^\/legacy/, /\.html$/],
         cleanupOutdatedCaches: true,
