@@ -17,8 +17,9 @@
 //   - Phase 6 / Finanças:   transacoes, orcamentos, categorias (added in v2)
 //   - Phase 7 / Hábitos:    habitos, habit_logs                  (added in v3)
 //   - Phase 8 / Biblioteca: biblioteca                          (added in v4)
+//   - Phase 10 / Caderno:    notes                               (added in v5)
 //
-// Dexie version: 4.  When the schema changes again, bump to 5 and add a
+// Dexie version: 5.  When the schema changes again, bump to 6 and add a
 // `.upgrade()` block.  Versions are additive — older versions stay in
 // place so existing IndexedDB databases still open cleanly on first
 // load after the deploy.
@@ -222,6 +223,30 @@ export interface BibliotecaRow {
   createdAt: number;      // Date.now() at insert
 }
 
+/**
+ * Phase 10 — Meu Caderno (Escola sub-app).
+ *
+ * One row per note the user creates in the caderno UI.  Notes can be
+ * plain text, an audio recording (audio/webm blob), an image, or a
+ * generic file attachment.  `category` is a coarse tag so the user
+ * can group notes by where they belong (escola / hábitos /
+ * finanças / geral) without spinning up a separate "tag" table.
+ *
+ * `blob` is OPTIONAL — only set for audio / image / file notes.  We
+ * store it directly in IndexedDB (Dexie supports Blobs natively) so
+ * the caderno works fully offline without any blob storage layer.
+ * The `createdAt` index makes "newest first" the cheapest query.
+ */
+export interface NoteRow {
+  id?: number;            // auto-incremented by Dexie (++)
+  kind: 'text' | 'audio' | 'image' | 'file';
+  title: string;
+  body: string;
+  category: 'escola' | 'habitos' | 'financas' | 'geral';
+  createdAt: number;
+  blob?: Blob;
+}
+
 // ---------------------------------------------------------------------------
 // Database class
 // ---------------------------------------------------------------------------
@@ -261,6 +286,12 @@ class PresuntinhoDB extends Dexie {
     //               `createdAt` is a secondary index so the list view
     //               can sort newest-first without a table scan.
     biblioteca!: Table<BibliotecaRow, number>;
+    // Phase 10 / Meu Caderno — added in v5.
+    //   notes: auto-increment PK; `category` index supports the
+    //          "show me escola notes only" filter; `createdAt` is the
+    //          hot-path secondary index used by the caderno list view
+    //          to sort newest-first.
+    notes!: Table<NoteRow, number>;
 
     constructor() {
       super('presuntinho');
@@ -324,6 +355,27 @@ class PresuntinhoDB extends Dexie {
         habitos:     '++id, createdAt',
         habit_logs:  '++id, [habitId+date], habitId, date, createdAt',
         biblioteca:  '++id, *tags, createdAt'
+      });
+      // v5: Phase 10 / Meu Caderno (Escola sub-app).  Brand-new table,
+      // no upgrade body needed — Dexie creates the empty table on the
+      // first open after deploy.  `category` is the secondary index the
+      // caderno's filter chips use; `createdAt` powers the
+      // `orderBy('createdAt').reverse()` list query (the caderno
+      // renders newest-first).
+      this.version(5).stores({
+        state:       'id',
+        badges:      'id',
+        visited:     'id',
+        quizScores:  'id',
+        secrets:     'id',
+        settings:    'id',
+        transacoes:  '++id, tipo, data, [tipo+data], categoria',
+        orcamentos:  'id, mes',
+        categorias:  'id, tipo',
+        habitos:     '++id, createdAt',
+        habit_logs:  '++id, [habitId+date], habitId, date, createdAt',
+        biblioteca:  '++id, *tags, createdAt',
+        notes:       '++id, category, createdAt'
       });
     }
   }

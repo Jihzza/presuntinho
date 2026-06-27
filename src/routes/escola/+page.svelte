@@ -88,10 +88,37 @@
             <span class="open">Abrir curso →</span>
           </div>
         </a>
-      {/each}
-    </div>
-  </section>
-</div>
+              {/each}
+            </div>
+          </section>
+
+          <section class="sections" aria-label="Secções da escola">
+            <h2 class="section-title">Ferramentas</h2>
+            <div class="grid sections-grid">
+              <a class="section-card" href="/trabalhos/" style="--sc: #f59e0b;">
+                <span class="sc-icon" aria-hidden="true">📝</span>
+                <div class="sc-body">
+                  <h3>Trabalhos</h3>
+                  <p>SWOT, Buyer Persona, TOWS, assignments da escola.</p>
+                </div>
+              </a>
+              <a class="section-card" href="/biblioteca/" style="--sc: #8b5cf6;">
+                <span class="sc-icon" aria-hidden="true">📚</span>
+                <div class="sc-body">
+                  <h3>Biblioteca</h3>
+                  <p>Materiais, downloads e recursos para estudar.</p>
+                </div>
+              </a>
+              <a class="section-card" href="/escola/caderno/" style="--sc: #10b981;">
+                <span class="sc-icon" aria-hidden="true">📓</span>
+                <div class="sc-body">
+                  <h3>Meu Caderno</h3>
+                  <p>As tuas notas, áudios, textos e imagens.</p>
+                </div>
+              </a>
+            </div>
+          </section>
+        </div>
 
 <style>
   .escola {
@@ -200,8 +227,36 @@
     border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
   .open {
-    margin-left: auto;
-    color: var(--course-color, #ec4899);
-    font-weight: 600;
-  }
-</style>
+      margin-left: auto;
+      color: var(--course-color, #ec4899);
+      font-weight: 600;
+    }
+    .sections { margin-top: 2rem; }
+    .sections-grid {
+      grid-template-columns: 1fr;
+    }
+    .section-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.1rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-left: 4px solid var(--sc, #ec4899);
+      border-radius: 0.75rem;
+      color: #fff;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .section-card:hover, .section-card:focus-visible {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-1px);
+      outline: none;
+    }
+    .sc-icon { font-size: 1.75rem; line-height: 1; flex-shrink: 0; }
+    .sc-body h3 { margin: 0 0 0.15rem; font-size: 1rem; color: #fff; }
+    .sc-body p { margin: 0; font-size: 0.85rem; color: var(--txt2, #cbd5e1); line-height: 1.4; }
+    @media (min-width: 600px) {
+      .sections-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
