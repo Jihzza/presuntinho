@@ -2,6 +2,40 @@
   import Countdown from '$lib/components/Countdown.svelte';
   import type { SubApp } from '$lib/registry';
   import { subApps } from '$lib/registry';
+  import { onMount } from 'svelte';
+  import {
+    loadAssignments,
+    setAssignmentStatus,
+    getAllAssignmentStatuses,
+    type Assignment as NewAssignment,
+  } from '$lib/assignments';
+
+  // New: dynamically-loaded assignments (V6 / Phase A)
+  let newAssignments = $state<NewAssignment[]>([]);
+  let newLoading = $state(true);
+  let statuses = $state<Record<string, 'open' | 'in_progress' | 'done'>>({});
+
+  onMount(async () => {
+    statuses = getAllAssignmentStatuses();
+    const pack = await loadAssignments('equivalenza');
+    if (pack) newAssignments = pack.assignments;
+    newLoading = false;
+    window.addEventListener('presuntinho:assignment-status', (e: Event) => {
+      const detail = (e as CustomEvent).detail as { assignmentId: string; status: 'open' | 'in_progress' | 'done' };
+      statuses = { ...statuses, [detail.assignmentId]: detail.status };
+    });
+  });
+
+  function cycleStatus(id: string) {
+    const cur = statuses[id] || 'open';
+    const next = cur === 'open' ? 'in_progress' : cur === 'in_progress' ? 'done' : 'open';
+    setAssignmentStatus(id, next);
+    statuses = { ...statuses, [id]: next };
+  }
+
+  function newStatusLabel(s: 'open' | 'in_progress' | 'done'): string {
+    return s === 'done' ? 'Concluído' : s === 'in_progress' ? 'Em curso' : 'Por começar';
+  }
 
   interface AssignmentDoc {
     name: string;
@@ -101,9 +135,60 @@
   </nav>
 
   <section class="list" aria-label="Lista de trabalhos">
-    {#if assignments.length === 0}
-      <p class="empty">Ainda não há trabalhos. Volta mais tarde.</p>
-    {:else}
+      {#if !newLoading && newAssignments.length > 0}
+        <header class="progress-bar" aria-live="polite">
+          <p>
+            Progresso geral:
+            <strong>
+              {newAssignments.filter((a) => statuses[a.id] === 'done').length} / {newAssignments.length}
+            </strong>
+            concluídos
+          </p>
+        </header>
+        <h2 class="section-title">📚 Trabalhos do curso (BCOBM311)</h2>
+        <ul class="cards">
+          {#each newAssignments as a (a.id)}
+            <li class="card" data-status={statuses[a.id] || 'open'}>
+              <div class="card-header">
+                <div class="title-row">
+                  <h2>
+                    <a href="/trabalhos/assignment/{a.slug}/">{a.title}</a>
+                  </h2>
+                  <span class="course-pill" aria-label="Peso">Peso {a.weight}%</span>
+                </div>
+                <span class="status status-{statuses[a.id] || 'open'}">{newStatusLabel(statuses[a.id] || 'open')}</span>
+              </div>
+              <p class="description"><strong>O quê:</strong> {a.whatToDo}</p>
+              <p class="description"><strong>Como:</strong> {a.howToDo}</p>
+              {#if a.hint}
+                <p class="hint"><span aria-hidden="true">💡</span> {a.hint}</p>
+              {/if}
+              <div class="meta">
+                <span class="meta-label">Prazo:</span>
+                <Countdown deadline={new Date('2026-06-29T14:00:00').toISOString()} />
+              </div>
+              <div class="footer-row">
+                <button
+                  type="button"
+                  class="status-btn"
+                  onclick={() => cycleStatus(a.id)}
+                  aria-label={`Mudar estado de ${a.title}`}
+                >
+                  🔄 Mudar estado
+                </button>
+                <a class="open-link" href="/trabalhos/assignment/{a.slug}/">
+                  Abrir trabalho →
+                </a>
+              </div>
+            </li>
+          {/each}
+        </ul>
+      {/if}
+
+      <h2 class="section-title">📦 Pacote completo (V3 mid-term)</h2>
+      {#if assignments.length === 0}
+        <p class="empty">Ainda não há trabalhos. Volta mais tarde.</p>
+      {:else}
       <ul class="cards">
         {#each assignments as a (a.id)}
           <li class="card" data-status={a.status}>

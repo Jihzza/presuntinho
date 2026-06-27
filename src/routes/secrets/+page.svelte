@@ -1,12 +1,13 @@
 <script lang="ts">
-  // Secrets — Easter-egg hub (V4 port of V3 #pg-secrets).
-  // Renders the 8 secret definitions (b7-b15) read from Dexie:
-  //   - `secrets` table → whether each secret id was discovered
-  //   - `badges` table  → whether each badge id (b7..b15) was unlocked
-  // Hints are always visible; rewards unlock as the user discovers them.
+  // Secrets — Easter-egg hub (V6 port of V3 #pg-secrets).
+  // Renders 12 secret definitions from /config/easterEggs.json (single source
+  // of truth). Falls back to inline V3 SECRET_DEFS if the JSON can't be
+  // fetched (offline / pre-install).
 
   import { onMount } from 'svelte';
   import { db } from '$lib/state/db';
+  import { getSecrets, getBadges, isSecretUnlocked, getSecretDiscoveredAt, type Secret as ConfigSecret } from '$lib/easterEggsConfig';
+  import EasterEggsCard from '$lib/components/EasterEggsCard.svelte';
 
   interface SecretDef {
     id: string;
@@ -14,9 +15,9 @@
     name: string;
     hint: string;
     reward: string;
-    badge: string | null;        // V4 badge id (b7-b15) that proves unlock, or null
-    badgeName?: string;          // human label of the badge
-    nonBadgeCheck?: 'heart' | 'logo3' | 'mascot'; // ids that don't depend on a badge
+    badge: string | null;
+    badgeName?: string;
+    nonBadgeCheck?: 'heart' | 'logo3' | 'mascot';
   }
 
   // 8 secrets from V3 (static/legacy/assets/js/easter-eggs.js SECRET_DEFS).

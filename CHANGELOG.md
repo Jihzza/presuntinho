@@ -2,6 +2,16 @@
 
 All notable changes to Presuntinho are documented in this file.
 
+## [6.0.0] - 2026-06-27
+
+### Added
+- **Love Lock (Phase 26)** — emotional password gate. Typing `Sad` or `I love you` (case-insensitive, flexible) on the splash screen blocks the app behind a full-screen Fofinho message until the user clicks the confirmation button. Bilingual copy (en + pt-PT). 1h TTL in localStorage, persists across reload. 2 hand-painted SVG mascots (sad Fofinho with tear drop animation, heart-shaped love Fofinho with floating hearts). Localized via existing `locale` store. Source: `src/lib/auth/loveLock.ts` + `src/lib/components/LoveLock.svelte`. PRESERVATION #14.
+- **PT course sub-app (Phase 18)** — native SvelteKit port of the Portuguese language course. 7 section types (intro, words, dialogue, verb, exercise, grammar, summary). Quiz route at `/escola/curso/portugues/quiz/`. 50+ words with EN/AR/FR/PT translations, 3 dialogues, 5 verb conjugation tables. JSON-driven from `static/courses/portugues.json`.
+- **Walkthrough route (Phase 21)** — `/escola/walkthrough/[lessonSlug]/` renders audio player + transcript + jump-to-section for any of the 5 lessons.
+- **Trabalhos status workflow (Phase 19)** — assignments hub now supports status toggle (open → in_progress → done) with localStorage persistence. Custom event dispatch for cross-component updates. 5 real Equivalenza assignments (SWOT, Persona, Problem, TOWS, Recommendation) loaded from `static/data/assignments/equivalenza.json`.
+- **Easter eggs data-driven loader (Phase 23)** — `easterEggsConfig.ts` loads 12 secrets + 15 badges + 11 heart tiers + 10 mascot tips from `static/data/easter-eggs.json`. `EasterEggsCard.svelte` renders any secret with the appropriate template (link, code, image, story, etc).
+- **Deep lesson expansion (Phase 17)** — 5 lessons expanded from ~300 words each to 700-850 words with real Equivalenza context, tables, matrices, quotes, callouts.
+
 ## [5.0.0] - 2026-06-27
 
 ### Added

@@ -4,6 +4,15 @@
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
   import { t, waitLocale } from 'svelte-i18n';
+  import { locale as localeStore } from '$lib/i18n';
+  import LoveLock from '$lib/components/LoveLock.svelte';
+  import {
+    detectLoveLock,
+    activateLoveLock,
+    readLoveLock,
+    clearLoveLock,
+    type LoveLockState,
+  } from '$lib/auth/loveLock';
   // svelte-i18n 4 ships `$t` as the message-formatter store.  In a
   // <script lang="ts"> block we call it as `$t(...)` via Svelte's
   // store auto-subscription — `t(...)` would try to call the store
@@ -15,22 +24,46 @@
   let shake = $state(false);
   let locked = $state({ locked: false, remainingMs: 0 });
   let loading = $state(false);
+  // Love Lock state — when non-null the splash card is replaced by the
+  // LoveLock full-screen modal until the user clicks the confirmation.
+  let loveLockState = $state<LoveLockState | null>(null);
+  // Locale reactive — used by LoveLock to pick the right copy. Defaults to
+  // 'en' until svelte-i18n has hydrated (LoveLock falls back to en anyway).
+  let currentLocale = $state<string>('en');
 
   onMount(() => {
     // Ensure translations are ready before first paint.
     void waitLocale();
+    // Track the active locale so LoveLock copy follows the user's preference.
+    const unsubLocale = localeStore.subscribe((v) => {
+      if (typeof v === 'string') currentLocale = v;
+    });
     // If already unlocked, skip splash
     if (getSession()) {
+      unsubLocale();
       goto('/');
       return;
     }
+    // If a Love Lock is active (persisted from a previous tab or refresh),
+    // surface it before the lockout-counter logic.
+    const existingLock = readLoveLock();
+    if (existingLock) {
+      loveLockState = existingLock;
+      // Don't return — still wire up the lockout counter underneath for the
+      // case where the user lets the love-lock TTL expire mid-session.
+    }
     locked = isLockedOut();
+    let interval: ReturnType<typeof setInterval> | undefined;
     if (locked.locked) {
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         locked = isLockedOut();
-        if (!locked.locked) clearInterval(interval);
+        if (!locked.locked && interval) clearInterval(interval);
       }, 500);
     }
+    return () => {
+      unsubLocale();
+      if (interval) clearInterval(interval);
+    };
   });
 
   async function handleSubmit(e: Event) {
@@ -45,6 +78,19 @@
     loading = true;
     error = '';
     try {
+      // ── Love Lock check FIRST ──
+      // An emotional password (Sad / I love you) should never fall through to
+      // the real PBKDF2 verifier — we don't want a typo of "i love you" to
+      // burn a failed-attempt counter or shake the card. If it matches a
+      // trigger, drop the user into the love-lock screen and bail.
+      const loveKind = detectLoveLock(password);
+      if (loveKind) {
+        loveLockState = activateLoveLock(loveKind);
+        password = '';
+        loading = false;
+        return;
+      }
+
       const method = await verifyAgainstHashes(password);
       if (method) {
         setSession(method);
@@ -68,6 +114,16 @@
     }
   }
 
+  function handleLoveUnlock() {
+    clearLoveLock();
+    loveLockState = null;
+    // The user did the emotional work — drop them at the hub without forcing
+    // them to type their real password a second time. (They still have to
+    // authenticate normally on the next cold-load because the session is
+    // separate from the love-lock state.)
+    void goto('/');
+  }
+
   function formatRemaining(ms: number): string {
     return Math.ceil(ms / 1000).toString();
   }
@@ -79,6 +135,13 @@
 </svelte:head>
 
 <main class="splash">
+  {#if loveLockState}
+    <LoveLock
+      lockState={loveLockState}
+      locale={currentLocale}
+      onUnlock={handleLoveUnlock}
+    />
+  {:else}
   <div class="card" class:shake>
     <div class="mascot">🐷</div>
     <h1>{$t('splash.title')}</h1>
@@ -110,6 +173,7 @@
 
     <p class="credit">{$t('splash.credit')}</p>
   </div>
+  {/if}
 </main>
 
 <style>

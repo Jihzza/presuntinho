@@ -96,6 +96,7 @@ Status legend: [x] preserved · [ ] pending · [~] in progress · [!] needs atte
 - [x] Viewport meta with `viewport-fit=cover` → keep on every page
 - [x] `presuntinho.netlify.app` URL must keep working throughout migration
 - [x] Existing redirects: `/home` → `/`, `/downloads` → `/#pg-dl`
+- [x] ✅ Built — **Love Lock (Phase 26)**: emotional password gate — typing `Sad` or `I love you` on splash blocks the app behind a cute Fofinho message until the user clicks the confirmation button. 1h TTL in localStorage, persists across reload, bilíngue (en + pt-PT), bypassable by clearing localStorage (intentional — it's emotional, not technical). Does NOT bypass the real PBKDF2 auth — normal passwords still go through `verifyAgainstHashes`. Source: `src/lib/auth/loveLock.ts` + `src/lib/components/LoveLock.svelte`.
 
 ## 🔍 Phase 0 Recon — Completed
 - [x] ✅ Built — Repo inventoried (15 files in `src/`, 5 audio mp3, 2 docs, 1 zip, 1 PNG)
