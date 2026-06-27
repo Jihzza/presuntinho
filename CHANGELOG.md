@@ -2,6 +2,19 @@
 
 All notable changes to Presuntinho are documented in this file.
 
+## [6.0.1] - 2026-06-27
+
+### Added
+- **Cross-browser Love Lock persistence** — `netlify/functions/love-lock.js` Netlify Function stores the emotional lock in an HttpOnly cookie scoped to the origin. Opening the app in a fresh browser, incognito, or different device now honors the lock without depending on `localStorage`. Function exposes GET / POST / DELETE verbs; client `src/lib/auth/loveLock.ts` rewritten to call the Function and fall back to a localStorage mirror when offline.
+
+### Fixed
+- **Love Lock `Secure` cookie flag** — `process.env.CONTEXT === 'production'` check was unreliable on Netlify (the Function runtime did not always expose it). Switched to inspecting `x-forwarded-proto` / `x-nf-ssl` headers (always set by Netlify's edge) with a `CONTEXT` fallback for local dev. Production cookie now correctly carries `Secure` when served over HTTPS, matching HSTS preload.
+- **Netlify auto-deploy restored** — `vite-plugin-pwa` peer dep added (`c79e338`) so `npm run build` no longer fails on a missing peer. Combined with the Workbox fix from 6.0.0, every `git push origin main` now auto-deploys without the manual `netlify deploy --prod --no-build` workaround.
+
+### Security
+- **Love Lock CSRF hardening** — POST `/love-lock` now requires an `Origin` / `Referer` matching `https://presuntinho.netlify.app`.
+- **Love Lock cookie integrity** — cookie state is HMAC-signed with `process.env.LOVE_LOCK_SECRET`; malformed or tampered cookie payloads return a safe 400 instead of trusting client-controlled JSON.
+
 ## [6.0.0] - 2026-06-27
 
 ### Added
