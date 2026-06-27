@@ -88,5 +88,7 @@
   "onboarding.welcome": "🐷 Welcome, Fatma! Find the easter eggs 🥚",
   "onboarding.firstHint": "Try clicking the 🐷 three times...",
   "onboarding.subAppsTitle": "Your corners",
-  "onboarding.startCta": "Let's go! 🐷"
+  "onboarding.startCta": "Let's go! 🐷",
+  "secrets.heartTiersTitle": "❤️ Heart Tiers",
+  "secrets.badgesTitle": "🏷️ Badges"
 }
