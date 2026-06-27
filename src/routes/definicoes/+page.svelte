@@ -22,6 +22,13 @@
   import { theme as themeStore, lang as langStore, funMode as funModeStore } from '$lib/state/stores';
   import { locale, waitLocale } from 'svelte-i18n';
   import { setLocale, LOCALES, LOCALE_META, type Locale } from '$lib/i18n';
+  import {
+    exportData as backupExport,
+    parseBackup,
+    payloadToBlob,
+    suggestedFilename,
+    type BackupPayload
+  } from '$lib/backup';
   import Sun from 'lucide-svelte/icons/sun';
   import Moon from 'lucide-svelte/icons/moon';
   import Monitor from 'lucide-svelte/icons/monitor';
@@ -201,33 +208,19 @@
   }
 
   // ----- Export JSON -----
+  // Delegates the actual snapshot to $lib/backup so the same logic is
+  // reusable from any future 'share backup' / Drive-upload flow.
   let exporting = $state(false);
   async function exportData(): Promise<void> {
     if (exporting) return;
     exporting = true;
     try {
-      const d = db();
-      const data = {
-        version: 4,
-        exportedAt: new Date().toISOString(),
-        transacoes: await d.transacoes.toArray(),
-        orcamentos: await d.orcamentos.toArray(),
-        categorias: await d.categorias.toArray(),
-        habitos: await d.habitos.toArray(),
-        habit_logs: await d.habit_logs.toArray(),
-        biblioteca: await d.biblioteca.toArray(),
-        badges: await d.badges.toArray(),
-        visited: await d.visited.toArray(),
-        quizScores: await d.quizScores.toArray(),
-        secrets: await d.secrets.toArray(),
-        state: await d.state.toArray(),
-        settings: await d.settings.toArray()
-      };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const payload = await backupExport();
+      const blob = payloadToBlob(payload);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `presuntinho-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = suggestedFilename();
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -240,13 +233,25 @@
   }
 
   // ----- Import JSON -----
+  // Two-step flow: file select parses + validates, then a confirmation
+  // modal shows the user what's about to be overwritten.  The actual
+  // destructive write only runs when they click 'Substituir'.
   let importing = $state(false);
   let importMessage = $state<{ kind: 'success' | 'error'; text: string } | null>(null);
   let fileInput: HTMLInputElement | null = $state(null);
 
+  // Stash the parsed payload between file-select and modal confirmation.
+  // Lives only in memory; reload clears it.
+  let pendingPayload: BackupPayload | null = $state(null);
+  let pendingFileName: string = $state('');
+  let pendingFileDate: string = $state('');
+
   function triggerImport(): void {
     if (importing) return;
     importMessage = null;
+    pendingPayload = null;
+    pendingFileName = '';
+    pendingFileDate = '';
     fileInput?.click();
   }
 
@@ -254,57 +259,48 @@
     const target = ev.target as HTMLInputElement;
     const file = target.files?.[0];
     if (!file) return;
-    importing = true;
     importMessage = null;
     try {
       const text = await file.text();
-      const parsed = JSON.parse(text);
-      if (typeof parsed !== 'object' || parsed === null) {
-        throw new Error('not a JSON object');
-      }
-      if (typeof parsed.version !== 'number') {
-        throw new Error('missing `version` field');
-      }
-      // Version check — be permissive: accept 3+ so V3 exports also
-      // import cleanly into V4.
-      if (parsed.version < 3) {
-        throw new Error(`unsupported version ${parsed.version}`);
-      }
+      // parseBackup throws on invalid JSON or schema violations; we
+      // surface the reason in the error hint and abort (no modal).
+      const payload = parseBackup(text);
+      pendingPayload = payload;
+      pendingFileName = file.name;
+      pendingFileDate = (payload.exportedAt ?? '').slice(0, 10);
+    } catch (e) {
+      console.error('[definicoes] import parse failed', e);
+      const msg = e instanceof Error ? e.message : String(e);
+      importMessage = {
+        kind: 'error',
+        text: $t('settings.import.error', { values: { msg } })
+      };
+    } finally {
+      // Allow re-selecting the same file.
+      if (target) target.value = '';
+    }
+  }
 
-      const d = db();
+  function cancelImport(): void {
+    if (importing) return;
+    pendingPayload = null;
+    pendingFileName = '';
+    pendingFileDate = '';
+  }
 
-      // Helper: bulkPut only if the key exists and is an array.
-      async function restore(
-        key: keyof PresuntinhoDBSnapshot,
-        table: 'transacoes' | 'orcamentos' | 'categorias' | 'habitos' | 'habit_logs' | 'biblioteca' | 'badges' | 'visited' | 'quizScores' | 'secrets' | 'state' | 'settings'
-      ): Promise<void> {
-        const arr = (parsed as Record<string, unknown>)[key];
-        if (!Array.isArray(arr) || arr.length === 0) return;
-        // @ts-ignore — Dexie typings vary by table; trust the local JSON contract.
-        await d[table].clear();
-        // @ts-ignore — see above.
-        await d[table].bulkPut(arr);
-      }
-
-      await Promise.all([
-        restore('transacoes', 'transacoes'),
-        restore('orcamentos', 'orcamentos'),
-        restore('categorias', 'categorias'),
-        restore('habitos', 'habitos'),
-        restore('habit_logs', 'habit_logs'),
-        restore('biblioteca', 'biblioteca'),
-        restore('badges', 'badges'),
-        restore('visited', 'visited'),
-        restore('quizScores', 'quizScores'),
-        restore('secrets', 'secrets'),
-        restore('state', 'state'),
-        restore('settings', 'settings')
-      ]);
-
+  async function confirmImport(): Promise<void> {
+    if (!pendingPayload || importing) return;
+    importing = true;
+    try {
+      // Lazy-import so the import-only code path doesn't pull
+      // $lib/state/db into the module-init graph of this page.
+      const mod = await import('$lib/backup');
+      await mod.importData(pendingPayload);
       importMessage = {
         kind: 'success',
         text: $t('settings.import.success')
       };
+      pendingPayload = null;
       // Reload so every store re-hydrates from the freshly-imported data.
       setTimeout(() => location.reload(), 600);
     } catch (e) {
@@ -316,26 +312,8 @@
       };
     } finally {
       importing = false;
-      // Allow re-selecting the same file.
-      if (target) target.value = '';
     }
   }
-
-  // Just a local type alias to satisfy the generic in `restore`.
-  type PresuntinhoDBSnapshot = {
-    transacoes: unknown[];
-    orcamentos: unknown[];
-    categorias: unknown[];
-    habitos: unknown[];
-    habit_logs: unknown[];
-    biblioteca: unknown[];
-    badges: unknown[];
-    visited: unknown[];
-    quizScores: unknown[];
-    secrets: unknown[];
-    state: unknown[];
-    settings: unknown[];
-  };
 
   // Misc
   const today = new Date().toISOString().slice(0, 10);
@@ -435,7 +413,7 @@
   <section class="card" aria-labelledby="data-h">
     <div class="card-head">
       <span class="icon-wrap"><Database size={18} /></span>
-      <h2 id="data-h">{$t('settings.clear_data')}</h2>
+      <h2 id="data-h">{$t('settings.data')}</h2>
     </div>
 
     <div class="data-actions">
@@ -499,6 +477,43 @@
     </ul>
   </section>
 </div>
+
+<!-- ============ Import confirmation modal ============ -->
+{#if pendingPayload}
+  <div
+    class="modal-backdrop"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="import-h"
+    tabindex="-1"
+  >
+    <button
+      type="button"
+      class="modal-backdrop-btn"
+      aria-label="Fechar"
+      onclick={cancelImport}
+      disabled={importing}
+    ></button>
+    <div class="modal" role="document">
+      <h2 id="import-h">{$t('settings.import.confirm_title')}</h2>
+      <p class="muted">
+        {$t('settings.import.confirm', { values: { file: pendingFileName } })}
+      </p>
+      {#if pendingFileDate}
+        <p class="hint">{$t('settings.import.exported_at', { values: { date: pendingFileDate } })}</p>
+      {/if}
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick={cancelImport} disabled={importing}>
+          {$t('settings.cancel')}
+        </button>
+        <button type="button" class="btn btn-danger" onclick={confirmImport} disabled={importing}>
+          <Upload size={14} aria-hidden="true" />
+          {importing ? '…' : $t('settings.import.confirm_button')}
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}
 
 <!-- ============ Confirm modal ============ -->
 {#if confirmOpen}
