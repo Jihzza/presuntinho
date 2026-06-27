@@ -157,13 +157,15 @@ function buildCookieClear(event) {
 
 function blobStore() {
   const storeName = process.env.LOVE_LOCK_BLOB_STORE || 'lovelock';
-  // Use 'eventual' consistency (the v10.x default). 'strong' requires the
-  // Netlify runtime to expose `uncachedEdgeURL` in the Blobs context, which
-  // it doesn't always do — that mismatch caused POST to 500 with
-  // server_misconfigured while GET appeared to succeed via the soft-fail
-  // catch. Eventual consistency is fine here: the client polls GET every
-  // 30s on the splash page, so partner unlocks propagate within ~30s.
-  return getStore({ name: storeName, consistency: 'eventual' });
+  // Use the string form: `getStore(name)` — the @netlify/blobs v10.x
+  // signature accepts either a name string or a GetStoreOptions object, but
+  // the object form requires explicit `siteID` + `token` unless the runtime
+  // context is already wired up via setEnvironmentContext. Passing
+  // `{ name, consistency: 'eventual' }` without those fields caused POST
+  // to 500 in production (server_misconfigured) on 2026-06-27. The string
+  // form auto-binds to the deploy's site context (default 'strong'
+  // consistency), which is what we want for the cross-browser lock.
+  return getStore(storeName);
 }
 
 export const handler = async (event) => {
