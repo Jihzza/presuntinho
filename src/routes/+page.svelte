@@ -1,48 +1,87 @@
 <script lang="ts">
-  import '../app.css';
-  let iframeLoaded = $state(false);
+  import HubCard from '$lib/components/HubCard.svelte';
+  import { subApps, legacySubApp } from '$lib/registry';
 </script>
 
 <svelte:head>
-  <title>Presuntinho — Equivalenza Study Hub</title>
-  <meta name="description" content="Interactive study hub for Fatma's BCOBM311 Mid-Term on Equivalenza. Quizzes, lessons, audio, and a few surprises.">
+  <title>Presuntinho — Hub</title>
 </svelte:head>
 
-<div class="legacy-frame">
-  {#if !iframeLoaded}
-    <div class="loading">🐷 Loading Presuntinho…</div>
-  {/if}
-  <iframe
-    src="/legacy/index.html"
-    title="Presuntinho V3 — legacy site"
-    onload={() => iframeLoaded = true}
-    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-  ></iframe>
+<div class="hub">
+  <header class="hub-hero">
+    <h1>🐷 Olá, Fatma</h1>
+    <p class="sub">Equivalenza Study Hub — escolhe por onde começar</p>
+  </header>
+
+  <section class="apps" aria-label="Sub-apps">
+    <h2 class="section-title">Apps</h2>
+    <div class="grid">
+      {#each subApps as app (app.id)}
+        <HubCard {app} />
+      {/each}
+    </div>
+  </section>
+
+  <section class="legacy-section" aria-label="Site V3 preservado">
+    <h2 class="section-title">Site original</h2>
+    <p class="legacy-desc">O site V3 está preservado e reachable. A migração para SvelteKit está em curso.</p>
+    <HubCard app={legacySubApp} />
+  </section>
 </div>
 
 <style>
-  .legacy-frame {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    background: var(--bg, #1f2e4a);
+  .hub {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 2rem;
   }
-  .legacy-frame iframe {
-    width: 100%;
-    height: 100%;
-    border: 0;
-    display: block;
+  .hub-hero {
+    margin-bottom: 2rem;
+    text-align: center;
   }
-  .loading {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--txt2, #cbd5e1);
-    font-size: 1.25rem;
-    z-index: 1;
-    pointer-events: none;
+  .hub-hero h1 {
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+  }
+  .sub {
+    color: #cbd5e1;
+    margin: 0;
+    font-size: 1rem;
+  }
+  .apps,
+  .legacy-section {
+    margin-bottom: 2rem;
+  }
+  .section-title {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+    margin: 0 0 0.75rem 0.25rem;
+    font-weight: 600;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .legacy-desc {
+    font-size: 0.875rem;
+    color: #94a3b8;
+    margin: 0 0 0.75rem 0.25rem;
+  }
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .hub {
+      padding: 2rem 1.5rem 3rem;
+    }
+    .hub-hero h1 {
+      font-size: 2.5rem;
+    }
   }
 </style>
