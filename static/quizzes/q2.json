@@ -1,0 +1,67 @@
+{
+  "id": "q2",
+  "title": "Q2 — TOWS (Combinações)",
+  "description": "Escolhe a combinação TOWS correcta para cada estratégia.",
+  "questions": [
+    {
+      "q": "Use 528 stores + Les Secrets to capture Gen Z",
+      "opts": [
+        "SO",
+        "WO",
+        "ST",
+        "WT"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Build e-commerce to fix the digital gap",
+      "opts": [
+        "SO",
+        "WO",
+        "ST",
+        "WT"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Make refill a ritual that Divain can't replicate",
+      "opts": [
+        "SO",
+        "WO",
+        "ST",
+        "WT"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Consolidate underperformers + rebrand with Morillas",
+      "opts": [
+        "SO",
+        "WO",
+        "ST",
+        "WT"
+      ],
+      "a": 3
+    },
+    {
+      "q": "Use franchise network as advantage digital competitors lack",
+      "opts": [
+        "SO",
+        "WO",
+        "ST",
+        "WT"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Expand Les Secrets to capture mid-priced migrants",
+      "opts": [
+        "SO",
+        "WO",
+        "ST",
+        "WT"
+      ],
+      "a": 0
+    }
+  ]
+}

@@ -3,17 +3,46 @@
   import { page } from '$app/state';
   import { goto } from '$app/navigation';
   import { getSession, clearSession } from '$lib/auth/session';
+  import { initStores } from '$lib/state/stores';
+  import Confetti from '$lib/components/Confetti.svelte';
+  import Toast from '$lib/components/Toast.svelte';
+  import { handleKonamiKey } from '$lib/easterEggs';
   import { onMount } from 'svelte';
 
   let { children } = $props();
   let session = $state(getSession());
+  let storesReady = $state(false);
 
   onMount(() => {
-    // Redirect to splash if not authenticated (and not already on /splash/)
-    // Note: trailingSlash='always' in +layout.ts forces /splash → /splash/ at runtime.
-    if (!session && page.url.pathname !== '/splash/') {
-      goto('/splash/');
-    }
+    let unbindKey: (() => void) | null = null;
+
+    void (async () => {
+      // Initialise Dexie-backed stores + run migration (Phase 3 #17)
+      try {
+        await initStores();
+        storesReady = true;
+      } catch (e) {
+        console.error('[presuntinho] initStores failed:', e);
+        // Continue rendering; stores will fall back to defaults
+      }
+
+      // Redirect to splash if not authenticated (and not already on /splash/)
+      // Note: trailingSlash='always' in +layout.ts forces /splash → /splash/ at runtime.
+      if (!session && page.url.pathname !== '/splash/') {
+        goto('/splash/');
+      }
+
+      // Global key handler — drives Konami code + keyword detector
+      function onKey(e: KeyboardEvent) {
+        void handleKonamiKey(e.key, e.keyCode);
+      }
+      window.addEventListener('keydown', onKey);
+      unbindKey = () => window.removeEventListener('keydown', onKey);
+    })();
+
+    return () => {
+      if (unbindKey) unbindKey();
+    };
   });
 
   function logout() {
@@ -26,6 +55,8 @@
 {#if page.url.pathname === '/splash/'}
   {@render children?.()}
 {:else}
+  <Confetti />
+  <Toast />
   <div class="app">
     <header class="nav">
       <div class="nav-inner">

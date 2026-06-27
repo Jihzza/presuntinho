@@ -1,0 +1,57 @@
+{
+  "id": "ptq",
+  "title": "🇵🇹 Quiz de Português",
+  "description": "Perguntas básicas de português europeu.",
+  "questions": [
+    {
+      "q": "How do you say \"Hello\" in Portuguese?",
+      "opts": [
+        "Olá",
+        "Bom dia",
+        "Tchau",
+        "Adeus"
+      ],
+      "a": 0
+    },
+    {
+      "q": "What is \"obrigado\"?",
+      "opts": [
+        "Please",
+        "Thanks",
+        "Sorry",
+        "You're welcome"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Which verb means \"to be (permanent)\"?",
+      "opts": [
+        "estar",
+        "ser",
+        "ter",
+        "ir"
+      ],
+      "a": 1
+    },
+    {
+      "q": "\"Onde fica a biblioteca?\" means...",
+      "opts": [
+        "How much is the library?",
+        "Where is the library?",
+        "When does the library open?",
+        "Is the library nice?"
+      ],
+      "a": 1
+    },
+    {
+      "q": "\"Eu ___ a Fatma\" — fill the blank",
+      "opts": [
+        "estou",
+        "tenho",
+        "sou",
+        "vou"
+      ],
+      "a": 2
+    }
+  ]
+}

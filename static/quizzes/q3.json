@@ -1,0 +1,67 @@
+{
+  "id": "q3",
+  "title": "Q3 — Equivalenza: Factos",
+  "description": "Perguntas directas sobre factos da empresa.",
+  "questions": [
+    {
+      "q": "In what year was Equivalenza founded?",
+      "opts": [
+        "2009",
+        "2011",
+        "2013",
+        "2015"
+      ],
+      "a": 1
+    },
+    {
+      "q": "What was the 2023 EBITDA?",
+      "opts": [
+        "€1M",
+        "€2M",
+        "€4M",
+        "€8M"
+      ],
+      "a": 1
+    },
+    {
+      "q": "What is Equivalenza's NPS?",
+      "opts": [
+        "17",
+        "46",
+        "56",
+        "72"
+      ],
+      "a": 0
+    },
+    {
+      "q": "What happened in 2016?",
+      "opts": [
+        "Expansion to Italy",
+        "Les Secrets launch",
+        "Lawsuit prohibiting brand references",
+        "Franco became CEO"
+      ],
+      "a": 2
+    },
+    {
+      "q": "What is the average Les Secrets price?",
+      "opts": [
+        "€10",
+        "€15",
+        "€20",
+        "€25"
+      ],
+      "a": 3
+    },
+    {
+      "q": "How many stores did Equivalenza have at its 2015 peak?",
+      "opts": [
+        "528",
+        "680",
+        "810",
+        "1000"
+      ],
+      "a": 2
+    }
+  ]
+}

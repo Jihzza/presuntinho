@@ -1,0 +1,107 @@
+{
+  "id": "q1",
+  "title": "Q1 — SWOT (Verdadeiro/Falso)",
+  "description": "Identifica se cada afirmação sobre o SWOT da Equivalenza é verdadeira ou falsa.",
+  "questions": [
+    {
+      "q": "Equivalenza has 528 physical stores in 19 countries",
+      "opts": [
+        "S",
+        "W",
+        "O",
+        "T"
+      ],
+      "a": 0
+    },
+    {
+      "q": "The dupe segment collapsed from 37% to 13% of consumers",
+      "opts": [
+        "S",
+        "W",
+        "O",
+        "T"
+      ],
+      "a": 3
+    },
+    {
+      "q": "Brand awareness among non-customers is only 30%",
+      "opts": [
+        "S",
+        "W",
+        "O",
+        "T"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Gen Z shows the highest fragrance usage growth",
+      "opts": [
+        "S",
+        "W",
+        "O",
+        "T"
+      ],
+      "a": 2
+    },
+    {
+      "q": "NPS of 17 (vs Druni 56)",
+      "opts": [
+        "S",
+        "W",
+        "O",
+        "T"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Les Secrets is a growing premium line",
+      "opts": [
+        "S",
+        "W",
+        "O",
+        "T"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Zara developed high-quality fragrance lines",
+      "opts": [
+        "S",
+        "W",
+        "O",
+        "T"
+      ],
+      "a": 3
+    },
+    {
+      "q": "The refill model creates recurring revenue",
+      "opts": [
+        "S",
+        "W",
+        "O",
+        "T"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Online sales are only 1% vs market average of 12%",
+      "opts": [
+        "S",
+        "W",
+        "O",
+        "T"
+      ],
+      "a": 1
+    },
+    {
+      "q": "The Spanish perfume category grows ~10% annually",
+      "opts": [
+        "S",
+        "W",
+        "O",
+        "T"
+      ],
+      "a": 2
+    }
+  ]
+}

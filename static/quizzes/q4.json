@@ -1,0 +1,57 @@
+{
+  "id": "q4",
+  "title": "Q4 — Persona Marta",
+  "description": "Sobre a buyer persona Marta.",
+  "questions": [
+    {
+      "q": "Marta sees fragrance primarily as...",
+      "opts": [
+        "A luxury",
+        "A gift",
+        "Personal self-expression",
+        "A daily necessity"
+      ],
+      "a": 2
+    },
+    {
+      "q": "How does she discover new fragrances?",
+      "opts": [
+        "TV",
+        "Instagram, TikTok, influencers",
+        "Magazines",
+        "Physical stores only"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Her main frustration with Equivalenza is...",
+      "opts": [
+        "High prices",
+        "Inconsistent store experience",
+        "Lack of options",
+        "Slow delivery"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Buying dupes matters to Marta because...",
+      "opts": [
+        "It is cheaper",
+        "It confirms she knows value vs. price",
+        "It is sustainable",
+        "It is faster"
+      ],
+      "a": 1
+    },
+    {
+      "q": "What would make her choose Equivalenza over a competitor?",
+      "opts": [
+        "Lower price",
+        "An emotionally resonant experience",
+        "More stores",
+        "Better website"
+      ],
+      "a": 1
+    }
+  ]
+}
