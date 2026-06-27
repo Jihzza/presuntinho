@@ -114,27 +114,29 @@
     </header>
 
     <!-- Audio player ------------------------------------------------------ -->
-    <section class="audio-card" aria-label="Audio walkthrough">
-      <div class="audio-row">
-        <span class="audio-icon" aria-hidden="true">{audioPlaying ? '🔊' : '🎧'}</span>
-        <div class="audio-meta">
-          <strong>{lesson.audioLabel ?? 'Audio walkthrough'}</strong>
-          <div class="audio-bar" aria-hidden="true">
-            <div class="audio-fill" style="width: {Math.round(audioProgress * 100)}%"></div>
+    {#if lesson.audio}
+      <section class="audio-card" aria-label="Audio walkthrough">
+        <div class="audio-row">
+          <span class="audio-icon" aria-hidden="true">{audioPlaying ? '🔊' : '🎧'}</span>
+          <div class="audio-meta">
+            <strong>{lesson.audioLabel ?? 'Audio walkthrough'}</strong>
+            <div class="audio-bar" aria-hidden="true">
+              <div class="audio-fill" style="width: {Math.round(audioProgress * 100)}%"></div>
+            </div>
           </div>
+          <audio
+            bind:this={audioEl}
+            controls
+            preload="metadata"
+            src={lesson.audio}
+            onplay={onAudioPlay}
+            onpause={onAudioPause}
+            ontimeupdate={onAudioTimeUpdate}
+            onended={onAudioEnded}
+          ></audio>
         </div>
-        <audio
-          bind:this={audioEl}
-          controls
-          preload="metadata"
-          src={lesson.audio}
-          onplay={onAudioPlay}
-          onpause={onAudioPause}
-          ontimeupdate={onAudioTimeUpdate}
-          onended={onAudioEnded}
-        ></audio>
-      </div>
-    </section>
+      </section>
+    {/if}
 
     <!-- Body + Key points sidebar ---------------------------------------- -->
     <div class="lesson-grid">
