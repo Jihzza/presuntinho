@@ -279,7 +279,14 @@ export const handler = async (event) => {
       await blobStore().setJSON(BLOB_KEY, state);
     } catch (e) {
       console.error('[love-lock] blob write failed', e);
-      return buildResponse(500, { error: 'server_misconfigured' });
+      // TEMP DEBUG 2026-06-27: leak everything to diagnose
+      return buildResponse(500, {
+        error: 'server_misconfigured',
+        debug: String(e?.message || e),
+        envHasContext: typeof process.env.NETLIFY_BLOBS_CONTEXT === 'string',
+        envContextLen: (process.env.NETLIFY_BLOBS_CONTEXT || '').length,
+        globalCtx: typeof globalThis.netlifyBlobsContext,
+      });
     }
 
     let cookie;
