@@ -5,40 +5,98 @@
   "audio": "/legacy/assets/intro_swot.mp3",
   "audioLabel": "Audio walkthrough (PT)",
   "sections": [
-    { "type": "p", "text": "A análise SWOT é uma ferramenta de diagnóstico estratégico. Divide os fatores em quatro quadrantes, cruzando interno vs. externo com útil vs. prejudicial." },
-    { "type": "h2", "text": "Strengths (Forças) — interno, útil" },
-    { "type": "ul", "items": [
-      "528 lojas físicas em 19 países",
-      "Margem de ~2/3 nos produtos",
-      "Les Secrets — linha premium em crescimento",
-      "Modelo de refill (recheio) gera receita recorrente",
-      "Diversificação geográfica (Espanha, Itália, Portugal…)"
-    ]},
-    { "type": "h2", "text": "Weaknesses (Fraquezas) — interno, prejudicial" },
-    { "type": "ul", "items": [
-      "Notoriedade de marca de apenas 30% (entre não-clientes)",
-      "Vendas online de 1% vs. média do mercado de 12%",
-      "NPS de 17 — bem abaixo de Druni (56) e Primor (46)",
-      "Qualidade inconsistente entre franquias",
-      "Identidade de marca pouco clara / sem ressonância emocional"
-    ]},
-    { "type": "h2", "text": "Opportunities (Oportunidades) — externo, útil" },
-    { "type": "ul", "items": [
-      "Crescimento do consumo de fragrância na Gen Z",
-      "Mercado espanhol de perfumaria a crescer ~10%/ano",
-      "Tendência de sustentabilidade reforça o modelo refill",
-      "Les Secrets permite subir de preço sem alienar a base",
-      "Espaço para marketing digital mais sofisticado"
-    ]},
-    { "type": "h2", "text": "Threats (Ameaças) — externo, prejudicial" },
-    { "type": "ul", "items": [
-      "Colapso do segmento dupe: de 37% para 13% de consumidores (2018–2023)",
-      "Sandwich effect: marcas premium a descontar por cima; Zara e Mercadona a melhorar por baixo",
-      "Concorrentes nativos digitais (Divain, Dossier, Adopt) sem custos de loja física",
-      "Custos de aquisição digital em subida",
-      "Pressão sobre EBITDA (€2M em 2023 → meta de €8M)"
-    ]},
-    { "type": "callout", "variant": "info", "text": "Pista para o trabalho: o NPS 17 (vs Druni 56) é uma fraqueza que também funciona como ponte direta para o teu Marketing Problem. Mostra que tens olho para o detalhe." }
+    {
+      "type": "text",
+      "title": "O que é a análise SWOT",
+      "content": "A análise SWOT é uma ferramenta clássica de diagnóstico estratégico. Divide os fatores em quatro quadrantes, cruzando duas dimensões: interno vs. externo, e útil vs. prejudicial. Cada quadrante dá-te um ângulo diferente sobre a mesma realidade: Forças (Strengths) e Fraquezas (Weaknesses) olham para DENTRO da empresa; Oportunidades (Opportunities) e Ameaças (Threats) olham para FORA. Útil vs. prejudicial separa o que ajuda o negócio do que o prejudica. É simples, é visual, e — quando bem feita — diz-te em 60 segundos onde está o teu jogo."
+    },
+    {
+      "type": "callout",
+      "title": "Lembra-te",
+      "content": "SWOT não é uma lista de desejos. Cada item deve ser específico e citável. 'Somos inovadores' é fraco. 'Lançámos 12 SKUs em 2023 com Les Secrets como linha premium' é forte. Cita números ou factos — caso contrário, é opinião.",
+      "variant": "info"
+    },
+    {
+      "type": "h2_intro",
+      "title": "Os quatro quadrantes",
+      "content": "Cada SWOT forte tem 4–6 bullets densos por quadrante. Não enchas de generalidades. Cada bullet tem de servir a tua história: 'esta força é o que me deixa defender X mais à frente no TOWS.'"
+    },
+    {
+      "type": "list",
+      "title": "S — Strengths (Forças, interno, útil)",
+      "items": [
+        "528 lojas físicas em 19 países — uma pegada retalhista massiva e cara de replicar",
+        "Margem operacional de aproximadamente 2/3 nos produtos — modelo de dupes permite pricing power sem perder volume",
+        "Les Secrets — linha premium em crescimento, permite subir de ticket sem alienar a base",
+        "Modelo de refill (recheio) gera receita recorrente e fideliza cliente habitué",
+        "Diversificação geográfica — presente em Espanha, Itália, Portugal, Polónia, etc.",
+        "Know-how operacional consolidado em franchise retail desde 2011"
+      ]
+    },
+    {
+      "type": "list",
+      "title": "W — Weaknesses (Fraquezas, interno, prejudicial)",
+      "items": [
+        "Notoriedade de marca de apenas 30% entre não-clientes (case study Elson, 2024)",
+        "Vendas online de apenas 1% vs. média do mercado de 12% — irrelevância digital",
+        "NPS de 17 — bem abaixo de Druni (56) e Primor (46), sinaliza fricção na experiência",
+        "Qualidade inconsistente entre franquias — dependência de operadores locais",
+        "Identidade de marca pouco clara / sem ressonância emocional ('marca de dupes acessíveis')",
+        "Falta de investimento em marketing digital — orgânico estagnado, paid sob pressão"
+      ]
+    },
+    {
+      "type": "list",
+      "title": "O — Opportunities (Oportunidades, externo, útil)",
+      "items": [
+        "Crescimento do consumo de fragrância na Gen Z — público novo a entrar na categoria",
+        "Mercado espanhol de perfumaria a crescer ~10%/ano (case study Elson, 2024)",
+        "Tendência de sustentabilidade reforça o modelo refill — alinhamento cultural",
+        "Les Secrets permite subir de preço sem alienar a base — upsell estruturado",
+        "Espaço para marketing digital mais sofisticado (TikTok, Instagram Reels, creators)",
+        "Saturação do segmento premium — consumidores procuram alternativa entre Zara e Dior"
+      ]
+    },
+    {
+      "type": "list",
+      "title": "T — Threats (Ameaças, externo, prejudicial)",
+      "items": [
+        "Colapso do segmento dupe: de 37% para 13% de consumidores (2018–2023) = queda de 65%",
+        "Sandwich effect: marcas premium a descontar por cima (mais acessíveis); Zara e Mercadona a melhorar por baixo (mais aspiracionais)",
+        "Concorrentes nativos digitais (Divain, Dossier, Adopt) sem custos de loja física — operam com outro custo-base",
+        "Custos de aquisição digital em subida (iOS privacy, fadiga de ads)",
+        "Pressão sobre EBITDA — €2M em 2023 vs meta de €8M",
+        "Inflação e custo de vida comprimem o consumidor 'affordable' — exatamente o core da Equivalenza"
+      ]
+    },
+    {
+      "type": "callout",
+      "title": "Pista para o trabalho",
+      "content": "O NPS 17 (vs Druni 56) é uma fraqueza que também funciona como ponte direta para o teu Marketing Problem. Cita este número duas vezes: em Weaknesses e no Problem Statement. Mostra que tens olho para o detalhe.",
+      "variant": "warning"
+    },
+    {
+      "type": "table",
+      "title": "Resumo visual — SWOT num relance",
+      "headers": ["Quadrante", "Item-âncora", "Número"],
+      "rows": [
+        ["S", "528 lojas em 19 países", "528"],
+        ["W", "NPS abaixo dos concorrentes diretos", "17 vs 56 (Druni)"],
+        ["O", "Crescimento do mercado de fragrância", "+10%/ano"],
+        ["T", "Colapso do segmento dupe", "−65% (2018–2023)"]
+      ]
+    },
+    {
+      "type": "text",
+      "title": "Como escrever bem esta secção",
+      "content": "4–5 bullets por quadrante, densos, com números. Cita sempre o case study (Elson, 2024). Cada bullet é uma frase — não um parágrafo. Termina com uma callout curta a ligar o quadrante mais forte (S ou O) à direção estratégica que vais defender em TOWS. É a primeira impressão do teu trabalho: se o SWOT for fraco, o resto cai."
+    },
+    {
+      "type": "callout",
+      "title": "Anti-AI check",
+      "content": "NÃO escrevas 'A empresa tem diversas forças, incluindo...' — é voz de bot. Começa direto: '528 lojas físicas em 19 países são a maior força operacional da Equivalenza.' Varia o comprimento das frases. Opinião > descrição.",
+      "variant": "success"
+    }
   ],
   "keyPoints": [
     "528 lojas + Les Secrets + refill = o lado forte da operação",

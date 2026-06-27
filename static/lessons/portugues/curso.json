@@ -1,0 +1,219 @@
+{
+  "id": "portugues",
+  "title": "Português de Portugal",
+  "subtitle": "Para a Fatma — Tunisiana, fala Árabe + Francês + Inglês",
+  "icon": "🇵🇹",
+  "color": "#10b981",
+  "estimatedMinutes": 90,
+  "sections": [
+    {
+      "type": "intro",
+      "title": "Boas-vindas",
+      "body": "Mini-curso de Português de Portugal desenhado para a Fatma. Comparações com Árabe Tunisiano + Francês + Inglês. Não é matéria da escola — é uma ferramenta para comunicar com colegas portugueses e brasileiros."
+    },
+    {
+      "type": "vowels",
+      "title": "As 5 vogais + pronúncia essencial",
+      "data": {
+        "rows": [
+          {"vogal": "A", "ipa": "/a/", "truque": "Como em 'pá' (não como em 'café')", "ar": "ا", "fr": "a"},
+          {"vogal": "E", "ipa": "/e/ ou /ɨ/", "truque": "Fechado se terminar em -e: café. Aberto se dentro: casa", "ar": "ي", "fr": "é/è"},
+          {"vogal": "I", "ipa": "/i/", "truque": "Como em 'sim'", "ar": "ي", "fr": "i"},
+          {"vogal": "O", "ipa": "/o/ ou /u/", "truque": "Fechado no fim: pôr. Aberto dentro: bola", "ar": "و", "fr": "o/ou"},
+          {"vogal": "U", "ipa": "/u/", "truque": "Como em 'lua'", "ar": "و", "fr": "ou"}
+        ],
+        "tunisianNotes": "O Português é mais fonético que o Inglês. O rr é como um roncar (tremido). O lh é como 'million'. O nh é como 'onion'. Tudo se lê."
+      }
+    },
+    {
+      "type": "vocab",
+      "title": "Primeiras 50 palavras — com tradução Árabe + Francês",
+      "data": {
+        "categories": [
+          {
+            "name": "Cumprimentos",
+            "words": [
+              {"pt": "Olá", "en": "Hello", "ar": "مرحبا", "fr": "Salut"},
+              {"pt": "Bom dia", "en": "Good morning", "ar": "صباح الخير", "fr": "Bonjour"},
+              {"pt": "Boa tarde", "en": "Good afternoon", "ar": "مساء الخير", "fr": "Bon après-midi"},
+              {"pt": "Boa noite", "en": "Good night", "ar": "تصبح على خير", "fr": "Bonne nuit"},
+              {"pt": "Tchau", "en": "Bye", "ar": "وداعا", "fr": "Au revoir"},
+              {"pt": "Por favor", "en": "Please", "ar": "من فضلك", "fr": "S'il vous plaît"},
+              {"pt": "Obrigado/a", "en": "Thanks", "ar": "شكرا", "fr": "Merci"}
+            ]
+          },
+          {
+            "name": "Números 1-10",
+            "words": [
+              {"pt": "um", "en": "one", "ar": "واحد", "fr": "un"},
+              {"pt": "dois", "en": "two", "ar": "اثنان", "fr": "deux"},
+              {"pt": "três", "en": "three", "ar": "ثلاثة", "fr": "trois"},
+              {"pt": "quatro", "en": "four", "ar": "أربعة", "fr": "quatre"},
+              {"pt": "cinco", "en": "five", "ar": "خمسة", "fr": "cinq"},
+              {"pt": "seis", "en": "six", "ar": "ستة", "fr": "six"},
+              {"pt": "sete", "en": "seven", "ar": "سبعة", "fr": "sept"},
+              {"pt": "oito", "en": "eight", "ar": "ثمانية", "fr": "huit"},
+              {"pt": "nove", "en": "nine", "ar": "تسعة", "fr": "neuf"},
+              {"pt": "dez", "en": "ten", "ar": "عشرة", "fr": "dix"}
+            ]
+          },
+          {
+            "name": "Família",
+            "words": [
+              {"pt": "mãe", "en": "mother", "ar": "أم", "fr": "mère"},
+              {"pt": "pai", "en": "father", "ar": "أب", "fr": "père"},
+              {"pt": "irmão/irmã", "en": "sibling", "ar": "أخ/أخت", "fr": "frère/sœur"},
+              {"pt": "filho/filha", "en": "son/daughter", "ar": "ابن/ابنة", "fr": "fils/fille"},
+              {"pt": "avô/avó", "en": "grandparent", "ar": "جد/جدة", "fr": "grand-père/mère"},
+              {"pt": "amigo/amiga", "en": "friend", "ar": "صديق", "fr": "ami/e"}
+            ]
+          },
+          {
+            "name": "Cores",
+            "words": [
+              {"pt": "vermelho", "en": "red", "ar": "أحمر", "fr": "rouge"},
+              {"pt": "azul", "en": "blue", "ar": "أزرق", "fr": "bleu"},
+              {"pt": "verde", "en": "green", "ar": "أخضر", "fr": "vert"},
+              {"pt": "amarelo", "en": "yellow", "ar": "أصفر", "fr": "jaune"},
+              {"pt": "preto", "en": "black", "ar": "أسود", "fr": "noir"},
+              {"pt": "branco", "en": "white", "ar": "أبيض", "fr": "blanc"},
+              {"pt": "rosa", "en": "pink", "ar": "وردي", "fr": "rose"},
+              {"pt": "dourado", "en": "gold", "ar": "ذهبي", "fr": "doré"}
+            ]
+          },
+          {
+            "name": "Comida",
+            "words": [
+              {"pt": "água", "en": "water", "ar": "ماء", "fr": "eau"},
+              {"pt": "pão", "en": "bread", "ar": "خبز", "fr": "pain"},
+              {"pt": "café", "en": "coffee", "ar": "قهوة", "fr": "café"},
+              {"pt": "vinho", "en": "wine", "ar": "نبيذ", "fr": "vin"},
+              {"pt": "queijo", "en": "cheese", "ar": "جبن", "fr": "fromage"},
+              {"pt": "peixe", "en": "fish", "ar": "سمك", "fr": "poisson"},
+              {"pt": "carne", "en": "meat", "ar": "لحم", "fr": "viande"},
+              {"pt": "fruta", "en": "fruit", "ar": "فاكهة", "fr": "fruit"}
+            ]
+          },
+          {
+            "name": "Negócio",
+            "words": [
+              {"pt": "empresa", "en": "company", "ar": "شركة", "fr": "entreprise"},
+              {"pt": "cliente", "en": "client", "ar": "عميل", "fr": "client"},
+              {"pt": "mercado", "en": "market", "ar": "سوق", "fr": "marché"},
+              {"pt": "marca", "en": "brand", "ar": "علامة تجارية", "fr": "marque"},
+              {"pt": "estratégia", "en": "strategy", "ar": "استراتيجية", "fr": "stratégie"},
+              {"pt": "preço", "en": "price", "ar": "سعر", "fr": "prix"},
+              {"pt": "loja", "en": "store", "ar": "متجر", "fr": "magasin"},
+              {"pt": "venda", "en": "sale", "ar": "بيع", "fr": "vente"},
+              {"pt": "lucro", "en": "profit", "ar": "ربح", "fr": "profit"},
+              {"pt": "crescimento", "en": "growth", "ar": "نمو", "fr": "croissance"}
+            ]
+          },
+          {
+            "name": "Frases úteis",
+            "phrases": [
+              {"pt": "Como se diz...?", "en": "How do you say...?", "ar": "كيف نقول...؟", "fr": "Comment dit-on...?"},
+              {"pt": "Não percebo", "en": "I don't understand", "ar": "لا أفهم", "fr": "Je ne comprends pas"},
+              {"pt": "Pode repetir?", "en": "Can you repeat?", "ar": "هل يمكنك الإعادة؟", "fr": "Pouvez-vous répéter?"},
+              {"pt": "Quanto custa?", "en": "How much is it?", "ar": "كم سعره؟", "fr": "Combien ça coûte?"},
+              {"pt": "Onde fica...?", "en": "Where is...?", "ar": "أين يوجد...؟", "fr": "Où est...?"}
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "dialogues",
+      "title": "Mini-diálogos",
+      "data": {
+        "items": [
+          {
+            "title": "1. A conhecer um colega",
+            "lines": [
+              {"speaker": "A", "pt": "Olá! Eu sou a Fatma. E tu?", "en": "Hi! I'm Fatma. And you?"},
+              {"speaker": "B", "pt": "Olá Fatma! Eu sou o Lucas. Muito prazer.", "en": "Hi Fatma! I'm Lucas. Nice to meet you."},
+              {"speaker": "A", "pt": "De onde és?", "en": "Where are you from?"},
+              {"speaker": "B", "pt": "Sou do Brasil. E tu?", "en": "I'm from Brazil. And you?"},
+              {"speaker": "A", "pt": "Sou da Tunísia.", "en": "I'm from Tunisia."},
+              {"speaker": "B", "pt": "Que legal! Bem-vinda à EU Business School.", "en": "Cool! Welcome to EU Business School."}
+            ]
+          },
+          {
+            "title": "2. A pedir um café",
+            "lines": [
+              {"speaker": "A", "pt": "Bom dia! Um café, por favor.", "en": "Good morning! A coffee, please."},
+              {"speaker": "B", "pt": "Curto ou longo?", "en": "Short or long?"},
+              {"speaker": "A", "pt": "Curto, por favor. Quanto custa?", "en": "Short, please. How much is it?"},
+              {"speaker": "B", "pt": "Um euro.", "en": "One euro."},
+              {"speaker": "A", "pt": "Aqui tem. Obrigada!", "en": "Here you go. Thanks!"}
+            ]
+          },
+          {
+            "title": "3. A pedir indicações",
+            "lines": [
+              {"speaker": "A", "pt": "Com licença, onde fica a biblioteca?", "en": "Excuse me, where is the library?"},
+              {"speaker": "B", "pt": "Vai em frente, depois vira à direita. É o segundo edifício.", "en": "Go straight, then turn right. It's the second building."},
+              {"speaker": "A", "pt": "Muito obrigada!", "en": "Thank you very much!"}
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "verbs",
+      "title": "5 verbos essenciais (presente)",
+      "data": {
+        "items": [
+          {
+            "infinitive": "ser",
+            "translation": "to be (permanent)",
+            "ar": "كان (دائم)",
+            "conjugations": {"eu": "sou", "tu": "és", "ele": "é", "nos": "somos", "eles": "são"}
+          },
+          {
+            "infinitive": "estar",
+            "translation": "to be (temporary)",
+            "ar": "كان (مؤقت)",
+            "conjugations": {"eu": "estou", "tu": "estás", "ele": "está", "nos": "estamos", "eles": "estão"}
+          },
+          {
+            "infinitive": "ter",
+            "translation": "to have",
+            "ar": "يملك",
+            "conjugations": {"eu": "tenho", "tu": "tens", "ele": "tem", "nos": "temos", "eles": "têm"}
+          },
+          {
+            "infinitive": "ir",
+            "translation": "to go",
+            "ar": "يذهب",
+            "conjugations": {"eu": "vou", "tu": "vais", "ele": "vai", "nos": "vamos", "eles": "vão"}
+          },
+          {
+            "infinitive": "fazer",
+            "translation": "to do/make",
+            "ar": "يفعل",
+            "conjugations": {"eu": "faço", "tu": "fazes", "ele": "faz", "nos": "fazemos", "eles": "fazem"}
+          }
+        ],
+        "examples": [
+          {"pt": "Eu sou a Fatma", "en": "I am Fatma"},
+          {"pt": "Estou a estudar", "en": "I am studying"},
+          {"pt": "Tenho 22 anos", "en": "I am 22 years old"},
+          {"pt": "Vou à biblioteca", "en": "I'm going to the library"},
+          {"pt": "Faço o trabalho amanhã", "en": "I'll do the assignment tomorrow"}
+        ]
+      }
+    },
+    {
+      "type": "final_tips",
+      "title": "Dicas finais",
+      "body": "Quando estiveres a praticar com falantes nativos, lembra-te: o Português de Portugal é mais fechado (vogais mais curtas, 's' com som de 'sh' no fim) e o Brasileiro é mais aberto e musical. Ambos são válidos. A tua vantagem: conheces Francês, que partilha 70% do vocabulário Português. Confia nessa ponte."
+    },
+    {
+      "type": "quiz_intro",
+      "title": "Quiz rápido",
+      "body": "Ganha a badge 🇵🇹 Lusófono! Se acertares as 5 perguntas.",
+      "quizSlug": "ptq"
+    }
+  ]
+}

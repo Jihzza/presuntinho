@@ -1,31 +1,68 @@
 {
-  "id": "equivalenza-midterm",
-  "title": "Equivalenza — Mid-Term BCOBM311",
-  "course": "BCOBM311",
-  "description": "Trabalho de meio-período sobre a Equivalenza — análise estratégica, persona, e TOWS. Inclui análise SWOT, buyer persona, problema de marketing, TOWS, e recomendação final.",
-  "deadline": "2026-06-29T14:00:00+01:00",
-  "status": "open",
-  "documents": [
+  "courseSlug": "equivalenza",
+  "title": "Equivalenza Mid-Term — BCOBM311",
+  "deadline": "2026-06-29T14:00:00",
+  "weight": "20% each section, 100% total",
+  "assignments": [
     {
-      "name": "Equivalenza_Mid_Term_Fatma.pdf",
-      "description": "Versão final em PDF",
-      "path": "/legacy/docs/Equivalenza_Mid_Term_Fatma.pdf",
-      "size": 161,
-      "type": "pdf"
+      "id": "swot",
+      "slug": "swot",
+      "title": "1. Análise SWOT",
+      "weight": 20,
+      "lessonSlug": "swot",
+      "audioSlug": "intro_swot",
+      "whatToDo": "SWOT para a Equivalenza + 1 concorrente (Divain).",
+      "howToDo": "4-5 bullets por quadrante. Cita o case study (Elson, 2024). Sê específica com números (528 lojas, NPS 17 vs Druni 56).",
+      "hint": "NPS 17 vs Druni 56 é uma fraqueza que também serve de ponte para o Marketing Problem.",
+      "estimatedMinutes": 60
     },
     {
-      "name": "Equivalenza_Mid_Term_Fatma.docx",
-      "description": "Versão editável em Word",
-      "path": "/legacy/docs/Equivalenza_Mid_Term_Fatma.docx",
-      "size": 2248,
-      "type": "docx"
+      "id": "persona",
+      "slug": "persona",
+      "title": "2. Buyer Persona",
+      "weight": 20,
+      "lessonSlug": "persona",
+      "audioSlug": "persona_problem",
+      "whatToDo": "Uma persona primária com demographics, psychographics, behavioural, frustrations.",
+      "howToDo": "Ancora a pesquisa no case study. Adiciona um parágrafo 'Strategic Importance' explicando porque é que esta persona importa.",
+      "hint": "Marta (27, Madrid) é a tua persona primária. A psicografia vence a demografia em fragrâncias.",
+      "estimatedMinutes": 60
     },
     {
-      "name": "equivalenza-midterm-deliverables-V3.zip",
-      "description": "Pacote completo (PDF + DOCX + anexos)",
-      "path": "/legacy/equivalenza-midterm-deliverables-V3.zip",
-      "size": 1709,
-      "type": "zip"
+      "id": "problem",
+      "slug": "problem",
+      "title": "3. Marketing Problem (SCQA)",
+      "weight": 20,
+      "lessonSlug": "problem",
+      "audioSlug": "persona_problem",
+      "whatToDo": "Enquadra o problema mais urgente com SCQA.",
+      "howToDo": "Mostra o teu raciocínio. Termina com um problem statement claro (1-2 frases) que a tua recomendação vai resolver.",
+      "hint": "Não inventes factos. Usa os números do case study (€22M → €14M, NPS 17, etc.).",
+      "estimatedMinutes": 60
+    },
+    {
+      "id": "tows",
+      "slug": "tows",
+      "title": "4. TOWS Matrix",
+      "weight": 20,
+      "lessonSlug": "tows",
+      "audioSlug": "tows_recommendation",
+      "whatToDo": "Matriz 2×2. 4 alternativas estratégicas. Breve avaliação de cada.",
+      "howToDo": "Cada célula = 1 estratégia em 1 linha. Depois um parágrafo a explicar porque é que SO ganha (ou qualquer outra que escolhas).",
+      "hint": "SO (Ofensiva) tende a ganhar: alavanca 528 lojas + Les Secrets para capturar Gen Z.",
+      "estimatedMinutes": 60
+    },
+    {
+      "id": "recommendation",
+      "slug": "recommendation",
+      "title": "5. Strategic Recommendation",
+      "weight": 20,
+      "lessonSlug": "recommendation",
+      "audioSlug": "tows_recommendation",
+      "whatToDo": "Escolhe uma estratégia TOWS e defende-a.",
+      "howToDo": "Porque é que esta (e não as outras). Feasibility check. Implementation plan com leadership, resources, timeline.",
+      "hint": "Defende cada ponto oralmente. Se não consegues, não está acabado.",
+      "estimatedMinutes": 60
     }
   ]
 }

@@ -5,28 +5,76 @@
   "audio": "/legacy/assets/persona_problem.mp3",
   "audioLabel": "Audio walkthrough (PT)",
   "sections": [
-    { "type": "p", "text": "O Problema de Marketing é a peça que liga a análise à recomendação. Estrutura-o com SCQA — Situation, Complication, Question, Answer — para mostrar raciocínio, não apenas intuição." },
-    { "type": "h2", "text": "S — Situation (Situação)" },
-    { "type": "p", "text": "A Equivalenza é uma cadeia espanhola de fragrâncias affordable, com 528 lojas em 19 países, um modelo de refill diferenciador e a linha premium Les Secrets em crescimento. Tem uma base sólida de produto e operação." },
-    { "type": "h2", "text": "C — Complication (Complicação)" },
-    { "type": "ul", "items": [
-      "O segmento dupe — o coração histórico da proposta de valor — colapsou de 37% para 13% (2018–2023)",
-      "O sandwich effect esmaga a marca: premium a descontar por cima, Zara e Mercadona a melhorar por baixo",
-      "Concorrentes nativos digitais (Divain, Dossier, Adopt) atacam sem custos de retalho físico",
-      "Notoriedade de marca de apenas 30% e NPS de 17 (vs Druni 56, Primor 46)",
-      "Vendas online em 1% — irrelevantes face à média do mercado de 12%"
-    ]},
-    { "type": "h2", "text": "Q — Question (Questão)" },
-    { "type": "p", "text": "Como é que a Equivalenza pode reposicionar-se para crescer margem sem perder volume, num mercado onde a sua proposta histórica (dupe acessível) já não é a que mais ressoa com o consumidor que está a chegar (Gen Z, criativo, com €20–40 para gastar)?" },
-    { "type": "h2", "text": "A — Answer (Resposta) → Problema de Marketing" },
-    { "type": "callout", "variant": "highlight", "text": "A Equivalenza precisa de reposicionar-se de \"marca de dupes acessíveis\" para \"marca de descoberta e expressão pessoal em fragrância\", aproveitando a Les Secrets e o modelo de refill para subir de preço sem alienar a base — antes que os nativos digitais consolidem o território." },
-    { "type": "h2", "text": "Como escrever bem esta secção" },
-    { "type": "ul", "items": [
-      "Mostra o raciocínio passo-a-passo, não só a conclusão",
-      "Termina com 1–2 frases de problema claro — é o que a tua recomendação vai resolver",
-      "Cita o case study (Elson, 2024) sempre que tragas um número",
-      "Liga o problema à persona (Marta) para fechar o arco analítico"
-    ]}
+    {
+      "type": "text",
+      "title": "O papel do Problema de Marketing",
+      "content": "O Problema de Marketing é a peça que liga a análise à recomendação. Sem ele, o SWOT é uma lista e o TOWS é um exercício académico. Com ele, tens um arco: análise → insight → problema → solução. Estrutura-o com SCQA — Situation, Complication, Question, Answer — para mostrar raciocínio, não apenas intuição. SCQA foi popularizado por Barbara Minto (consultora da McKinsey) e é a forma como profissionais de estratégia comunicam quando têm 90 segundos para explicar um problema."
+    },
+    {
+      "type": "callout",
+      "title": "Lembra-te",
+      "content": "O Problem Statement NÃO é a tua solução. É o problema que a tua solução vai resolver. Se confundires os dois, o professor nota — e penaliza. Mantém o Problem Statement focado no gap entre 'o que é' e 'o que deveria ser'.",
+      "variant": "warning"
+    },
+    {
+      "type": "h2_intro",
+      "title": "Os quatro blocos do SCQA",
+      "content": "Cada bloco tem uma função diferente: S ancora a realidade, C introduz a tensão, Q formula a pergunta estratégica, A entrega o problema (não a solução)."
+    },
+    {
+      "type": "text",
+      "title": "S — Situation (Situação)",
+      "content": "A Equivalenza é uma cadeia espanhola de fragrâncias affordable, fundada em Barcelona em 2011, com 528 lojas em 19 países, um modelo de refill diferenciador, e a linha premium Les Secrets em crescimento. Opera num modelo de franchise + e-commerce, com CEO Juan Franco nomeado em 2023 e mandato claro para reposicionar a marca. Tem uma base sólida de produto, operação e presença geográfica. Em 2015 atingiu o pico de vendas (€60M) com 810 lojas. Esse é o ponto de referência que a operação actual ainda procura replicar."
+    },
+    {
+      "type": "text",
+      "title": "C — Complication (Complicação)",
+      "content": "Três forças convergentes esmagam o modelo histórico. Primeira: o segmento dupe — o coração da proposta de valor — colapsou de 37% para 13% de consumidores entre 2018 e 2023. Uma queda de 65% no público-alvo central. Segunda: o sandwich effect sufoca a marca por ambos os lados — premium a descontar por cima (mais acessíveis), Zara e Mercadona a melhorar por baixo (mais aspiracionais). Terceira: nativos digitais (Divain, Dossier, Adopt) atacam o segmento digital-first sem o overhead de 528 lojas físicas, conseguindo investir mais em marketing por euro de receita. A Equivalenza está presa no meio, com notoriedade de 30% e NPS de 17 (vs Druni 56)."
+    },
+    {
+      "type": "table",
+      "title": "The Decline — números que tens de saber",
+      "headers": ["Métrica", "Pico (2015)", "Hoje (2023)", "Variação"],
+      "rows": [
+        ["Vendas", "€60M", "~€22M (alvo 2024)", "−63%"],
+        ["Lojas", "810", "~528", "−35%"],
+        ["Quota dupe", "37% dos consumidores", "13% dos consumidores", "−65%"],
+        ["NPS", "—", "17 (vs Druni 56)", "−39 pts"],
+        ["E-commerce", "—", "1% (vs 12% mercado)", "−11 pts"]
+      ]
+    },
+    {
+      "type": "text",
+      "title": "Q — Question (Questão)",
+      "content": "Como é que a Equivalenza pode reposicionar-se para crescer margem sem perder volume, num mercado onde a sua proposta histórica (dupe acessível) já não é a que mais ressoa com o consumidor que está a chegar (Gen Z, criativo, com €20–40 para gastar)?"
+    },
+    {
+      "type": "text",
+      "title": "A — Answer (Resposta → Problema de Marketing)",
+      "content": "A Equivalenza precisa de reposicionar-se de 'marca de dupes acessíveis' para 'marca de descoberta e expressão pessoal em fragrância', aproveitando a Les Secrets e o modelo de refill para subir de preço sem alienar a base — antes que os nativos digitais consolidem o território. O problema central: sem reposicionamento nos próximos 18–24 meses, a marca perde a janela competitiva com a Gen Z e arrisca um ciclo de declínio estrutural (mais lojas fechadas, menor rentabilidade por loja, menor capacidade de investimento em marketing)."
+    },
+    {
+      "type": "callout",
+      "title": "Problem Statement final (a frase que vai guiar tudo)",
+      "content": "Como reposicionar a Equivalenza de fornecedor de dupes acessíveis para marca de descoberta e craft em fragrância — alavancando as 528 lojas, a Les Secrets e o modelo refill para capturar Gen Z — antes que Divain, Dossier e Adopt consolidem o segmento digital-first?",
+      "variant": "info"
+    },
+    {
+      "type": "text",
+      "title": "Como escrever bem esta secção",
+      "content": "Mostra o raciocínio passo-a-passo, não só a conclusão. Termina com 1–2 frases de problema claro — é o que a tua recomendação vai resolver. Cita o case study (Elson, 2024) sempre que tragas um número. Liga o problema à persona (Marta) para fechar o arco analítico. E evita: 'A empresa enfrenta desafios significativos no mercado actual.' Isso é voz de bot e o professor detecta em 3 segundos."
+    },
+    {
+      "type": "callout",
+      "title": "Anti-AI check",
+      "content": "Varia o comprimento das frases (uma curta, duas médias, uma longa). Tem opinião: 'O que me parece mais crítico é...', 'A complicação central não é X, é Y.' Cita números com unidades. Se um professor lê a tua secção e não sabe se foi humano ou IA, falhaste.",
+      "variant": "success"
+    },
+    {
+      "type": "text",
+      "title": "Ligação com a persona",
+      "content": "O Problema de Marketing não vive sozinho — vive da persona. A Marta (27, criativa, urbana, €20–40) é exactamente o consumidor que está a sair do segmento dupe e a procurar algo diferente. Quando fechares o SCQA, conecta com a persona: 'Este problema é urgente porque a Marta e o segmento que ela representa já estão a comprar noutro lugar.'"
+    }
   ],
   "keyPoints": [
     "SCQA = Situation, Complication, Question, Answer",

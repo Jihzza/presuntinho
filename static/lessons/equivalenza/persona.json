@@ -5,28 +5,82 @@
   "audio": "/legacy/assets/persona_problem.mp3",
   "audioLabel": "Audio walkthrough (PT)",
   "sections": [
-    { "type": "p", "text": "A Buyer Persona é uma personagem semi-ficcional baseada em investigação real que representa o teu cliente ideal. Combina três camadas: demografia, psicografia e comportamento." },
-    { "type": "h2", "text": "Marta — The Discerning Explorer" },
-    { "type": "p", "text": "27 anos. Profisional criativa em Madrid. Rendimento moderado-a-bom. Universitária, urbana, socialmente ativa." },
-    { "type": "p", "text": "\"Fragrance is personal self-expression, not luxury or gift.\" — Elson (2024)" },
-    { "type": "h2", "text": "As três camadas" },
-    { "type": "ul", "items": [
-      "Demografia: idade, localização, rendimento, educação",
-      "Psicografia: valores, atitudes, estilo de vida, identidade",
-      "Comportamental: como descobre, avalia, compra, mantém lealdade"
-    ]},
-    { "type": "h2", "text": "O que a Marta valoriza" },
-    { "type": "ul", "items": [
-      "Descoberta e rotação por humor, ocasião ou estação",
-      "Estética — embalagem, design da loja, identidade visual",
-      "Estar à frente das tendências",
-      "Gastar €20–40 em algo especial (sem preços de designer)"
-    ]},
-    { "type": "h2", "text": "Template visual" },
-    { "type": "img", "src": "/legacy/assets/buyer-persona-template-v3.png", "alt": "Template visual de Buyer Persona usado no case study V3", "caption": "Template V3 (referência visual do case study Elson, 2024)" },
-    { "type": "h2", "text": "Importância estratégica" },
-    { "type": "p", "text": "A Marta não compra por idade — compra por humor e identidade. Em fragrância, a psicografia bate a demografia. Por isso é a persona âncora: o seu comportamento mostra onde a Equivalenza pode subir de preço sem perder volume." },
-    { "type": "callout", "variant": "info", "text": "Para o trabalho: ancora a persona na investigação do case study e termina com um parágrafo curto de \"Strategic Importance\" a explicar porque é que esta persona é a que mais importa para a Equivalenza." }
+    {
+      "type": "text",
+      "title": "O que é uma Buyer Persona",
+      "content": "A Buyer Persona é uma personagem semi-ficcional baseada em investigação real que representa o teu cliente ideal. Não é 'um cliente qualquer' — é UMA pessoa, com nome, idade, hábitos, frustrações. Combina três camadas: demografia (quem é), psicografia (como pensa e o que valoriza) e comportamental (como descobre, avalia, compra, mantém lealdade). Quando bem feita, a persona transforma dados de mercado numa pessoa com quem a tua equipa consegue empatizar — e empatia vende."
+    },
+    {
+      "type": "text",
+      "title": "Marta — The Discerning Explorer",
+      "content": "Marta tem 27 anos. É profissional criativa em Madrid — designer, ilustradora, talvez trabalho em comunicação ou moda. Tem rendimento moderado-a-bom: não é rica, mas pode gastar €20–40 sem pestanejar quando algo lhe interessa. É universitária, urbana, socialmente ativa. Vive em zonas com cafés, livrarias independentes e concept stores. O seu feed de Instagram é uma curadoria visual: prefere perfis com identidade clara a grandes marcas genéricas. Compra em pop-ups e marketplaces locais. Está à frente das tendências — não segue, lidera dentro do seu círculo."
+    },
+    {
+      "type": "callout",
+      "title": "Citação-âncora",
+      "content": "\"Fragrance is personal self-expression, not luxury or gift.\" — Elson (2024)",
+      "variant": "info"
+    },
+    {
+      "type": "list",
+      "title": "As três camadas — aplicadas à Marta",
+      "items": [
+        "Demografia: 27 anos, Madrid, rendimento moderado-a-bom, formação superior, urbana",
+        "Psicografia: valoriza autenticidade, descoberta, estética, expressão pessoal, identidade própria",
+        "Comportamental: descobre por Instagram/TikTok e amigas; avalia por visual e review; compra online e em concept stores; troca fragrância por humor/ocasião/estação"
+      ]
+    },
+    {
+      "type": "list",
+      "title": "O que a Marta valoriza",
+      "items": [
+        "Descoberta e rotação por humor, ocasião ou estação — não fideliza uma fragrância",
+        "Estética — embalagem, design da loja, identidade visual contam tanto como o cheiro",
+        "Estar à frente das tendências — se toda a gente já usa, já não é para ela",
+        "Gastar €20–40 em algo especial (sem preços de designer como Chanel ou Tom Ford)",
+        "História por trás do produto: porque foi feito, por quem, com que ingredientes",
+        "Experiência: pop-ups, workshops olfativos, refill ritual — não só comprar, vivenciar"
+      ]
+    },
+    {
+      "type": "list",
+      "title": "Onde a Marta frustra",
+      "items": [
+        "Falta de diferenciação entre marcas — 'todos os perfumes parecem-me iguais'",
+        "Lojas físicas com experiência genérica (luz fluorescente, vendedora a pressionar)",
+        "Marcas que assumem que ela quer 'presentear' alguém — ela compra para si",
+        "E-commerce sem curadoria — catálogos com 500 SKUs sem filtro",
+        "Dificuldade em testar antes de comprar — precisa de discovery, não de adivinhar"
+      ]
+    },
+    {
+      "type": "text",
+      "title": "Template visual",
+      "content": "O case study Elson (2024) usa um template V3 de persona visual com colunas para demographics, psychographics, behavioural e frustrations. Não precisas de replicar o template ao pixel — usa-o como checklist. Se a tua persona responde a todas as quatro caixas com 3+ bullets concretos cada, está pronta para defender."
+    },
+    {
+      "type": "img",
+      "title": "Template V3 (referência visual)",
+      "src": "/legacy/assets/buyer-persona-template-v3.png",
+      "alt": "Template visual de Buyer Persona usado no case study V3",
+      "caption": "Template V3 (referência visual do case study Elson, 2024)"
+    },
+    {
+      "type": "text",
+      "title": "Porque é que a psicografia vence a demografia em fragrância",
+      "content": "Em categorias utilitárias (detergente, papel higiénico), a demografia basta: o cliente quer eficiência ao melhor preço. Em fragrância, não. Uma mulher de 27 e uma de 57 podem comprar exactamente o mesmo perfume — mas uma compra por mood de sexta-feira à noite e a outra por memória de uma viagem a Marraquexe. A psicografia captura o 'porquê' que a demografia ignora. Por isso a Marta não é 'mulher, 25-35, classe média' — é uma pessoa que compra expressão, não cheiro."
+    },
+    {
+      "type": "text",
+      "title": "Importância estratégica (o parágrafo que fecha)",
+      "content": "A Marta é a tua persona-âncora porque o seu comportamento mostra exatamente onde a Equivalenza pode crescer sem perder volume. Se a marca reposicionar para 'craft + descoberta + refill ritual', a Marta troca €20 por €35 sem reclamar — porque está a comprar experiência, não litros. Isto alarga margem sem alienar a base price-sensitive (que continua a comprar os dupes clássicos). Duas audiências, dois tickets médios, uma operação. É a tese central da tua recomendação."
+    },
+    {
+      "type": "callout",
+      "title": "Para o trabalho",
+      "content": "Ancora a persona na investigação do case study (não inventes factos). Termina sempre com um parágrafo curto de 'Strategic Importance' a explicar porque é que esta persona é a que mais importa para a Equivalenza. Sem esse parágrafo, o professor vê uma ficha de personagem, não uma análise de marketing.",
+      "variant": "success"
+    }
   ],
   "keyPoints": [
     "Persona âncora: Marta, 27, criativa, urbana, €20–40 por fragrância",

@@ -28,6 +28,18 @@
       lessonCount: 5,
       quizCount: 4,
       badge: 'Atual'
+    },
+    {
+      slug: 'portugues',
+      title: 'Português de Portugal 🇵🇹',
+      tagline: 'Mini-curso desenhado para Tunisianos',
+      description:
+        'Aprende Português de Portugal com comparações ao Árabe Tunisiano + Francês + Inglês. Vogais, vocabulário, diálogos, verbos essenciais e quiz rápido.',
+      icon: '🇵🇹',
+      color: '#10b981',
+      lessonCount: 1,
+      quizCount: 1,
+      badge: 'Novo'
     }
   ];
 </script>

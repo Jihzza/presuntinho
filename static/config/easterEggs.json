@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "secrets": [
+    {"id": "heart", "icon": "❤️", "name": "The Loving Heart", "hint": "Click the heart button. A lot.", "reward": "+20 XP + confetti at click 1, escalating rewards up to 1000 clicks", "badge": "b10", "trigger": "heartClick"},
+    {"id": "logo3", "icon": "🐷", "name": "Pig Triple-Click", "hint": "Click the 🐷 logo 3 times within 3 seconds.", "reward": "+30 XP + confetti + unlocks Pig Hunter mode", "badge": null, "trigger": "logoClick:3"},
+    {"id": "logo7", "icon": "🧴", "name": "The Secret Room", "hint": "Click the 🐷 logo 6–8 times within 3 seconds.", "reward": "+100 XP + Secret Room opens + 5 perfume facts", "badge": "b14", "trigger": "logoClick:6-8"},
+    {"id": "konami", "icon": "🎮", "name": "Konami Code", "hint": "Press ↑ ↑ ↓ ↓ ← → ← → B A anywhere.", "reward": "+100 XP + Konami Master badge + confetti", "badge": "b8", "trigger": "keydown:konami"},
+    {"id": "perfume", "icon": "🌸", "name": "Scent Discovery", "hint": "Type the word 'perfume' anywhere.", "reward": "+50 XP + Scent Discovery badge + confetti", "badge": "b7", "trigger": "keybuf:perfume"},
+    {"id": "behi", "icon": "🇹🇳", "name": "Tunisian Greeting", "hint": "Type the Tunisian word 'behi' (means 'beautiful').", "reward": "+50 XP + Tunisian Secret badge + confetti", "badge": "b9", "trigger": "keybuf:behi"},
+    {"id": "help", "icon": "💡", "name": "Need Help?", "hint": "Type 'help' anywhere.", "reward": "Hint toast listing all secrets", "badge": null, "trigger": "keybuf:help"},
+    {"id": "mascot", "icon": "🧴", "name": "Mascot Pro-Tips", "hint": "Click the 🧴 mascot (appears after first navigation).", "reward": "Random writing pro-tips + +5 XP per click", "badge": null, "trigger": "mascotClick"},
+    {"id": "footer", "icon": "👣", "name": "Footer Detective", "hint": "Click the footer text 5 times.", "reward": "Hint toast + Footer Detective badge", "badge": "b15", "trigger": "footerClick:5"},
+    {"id": "firstlesson", "icon": "📖", "name": "First Lesson", "hint": "Complete your first lesson.", "reward": "+20 XP + Scholar badge", "badge": "b2", "trigger": "lessonComplete:1"},
+    {"id": "perfectquiz", "icon": "🏆", "name": "Perfect Score", "hint": "Get 100% on any quiz.", "reward": "+50 XP + Quiz Whiz badge", "badge": "b3", "trigger": "quizScore:100"},
+    {"id": "lusofono", "icon": "🇵🇹", "name": "Lusófono", "hint": "Get 100% on the Portuguese quiz.", "reward": "+100 XP + Lusófono badge", "badge": "b11", "trigger": "quizScore:100:ptq"}
+  ],
+  "badges": [
+    {"id": "b1", "icon": "🎯", "label": "First Steps"},
+    {"id": "b2", "icon": "📚", "label": "Scholar"},
+    {"id": "b3", "icon": "✅", "label": "Quiz Whiz"},
+    {"id": "b4", "icon": "🌟", "label": "Perfect Score"},
+    {"id": "b5", "icon": "✍️", "label": "Wordsmith"},
+    {"id": "b6", "icon": "🧭", "label": "Explorer"},
+    {"id": "b7", "icon": "🌸", "label": "Scent Discovery"},
+    {"id": "b8", "icon": "🎮", "label": "Konami Master"},
+    {"id": "b9", "icon": "🇹🇳", "label": "Tunisian Secret"},
+    {"id": "b10", "icon": "🔐", "label": "Hidden Room"},
+    {"id": "b11", "icon": "🇵🇹", "label": "Lusófono"},
+    {"id": "b12", "icon": "🌟", "label": "Heart Legend"},
+    {"id": "b13", "icon": "💯", "label": "Heart Centurion"},
+    {"id": "b14", "icon": "🧴", "label": "Secret Keeper"},
+    {"id": "b15", "icon": "👣", "label": "Footer Detective"}
+  ],
+  "heartTiers": [
+    {"at": 1, "msg": "❤️ Amo-te, presuntinho!", "xp": 20, "conf": 6, "emoji": "❤️"},
+    {"at": 3, "msg": "💕 Sabes que mais?", "xp": 5, "conf": 0, "emoji": "💕"},
+    {"at": 5, "msg": "😘 Já sei que me amas — agora estuda!", "xp": 10, "conf": 0, "emoji": "💕"},
+    {"at": 10, "msg": "🏆 Presuntinho obsessive detected!", "xp": 50, "conf": 30, "emoji": "💖"},
+    {"at": 25, "msg": "💀 Ok, agora PARE. Vai estudar.", "xp": 25, "conf": 0, "emoji": "💝"},
+    {"at": 50, "msg": "⭐ 50! Half-century of love.", "xp": 50, "conf": 40, "emoji": "🌹"},
+    {"at": 100, "msg": "💯 100 cliques! Centenário do amor.", "xp": 100, "conf": 60, "emoji": "🐷💕"},
+    {"at": 200, "msg": "🌈 200! Rainbow mode activating...", "xp": 100, "conf": 80, "emoji": "🌈"},
+    {"at": 500, "msg": "👑 500! HALF A THOUSAND. Hall of fame.", "xp": 200, "conf": 100, "emoji": "👑"},
+    {"at": 1000, "msg": "🎉 1000! LEGENDARY. Heart transformed.", "xp": 500, "conf": 200, "emoji": "🌟"},
+    {"at": 5000, "msg": "🌌 You have transcended clicking.", "xp": 1000, "conf": 300, "emoji": "🌌"}
+  ],
+  "mascotTips": [
+    "🧴 Pro tip: varia o comprimento das frases!",
+    "🧴 Pro tip: cita números específicos do case!",
+    "🧴 Pro tip: SCQA > introdução genérica",
+    "🧴 Pro tip: TOWS sem ação = desperdício",
+    "🧴 Pro tip: 528 lojas é a tua maior força",
+    "🧴 Pro tip: NPS 17 vs Druni 56 é a tua maior fraqueza",
+    "🧴 Pro tip: Les Secrets pode ser a tua mina de ouro",
+    "🧴 Pro tip: o segmento dupe caiu 65% — pivota!",
+    "🧴 You've got this, Fatma! 💪",
+    "🧴 Don't give up — Marta (a persona) acredita em ti!"
+  ]
+}

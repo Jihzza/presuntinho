@@ -5,30 +5,85 @@
   "audio": "/legacy/assets/tows_recommendation.mp3",
   "audioLabel": "Audio walkthrough (PT)",
   "sections": [
-    { "type": "p", "text": "A recomendação é onde tudo se decide. Pegas na estratégia TOWS que escolheste, defendes porque é a melhor (e não as outras), validas a viabilidade e desenhas um plano de implementação com liderança, recursos e timeline." },
-    { "type": "h2", "text": "Recomendação sugerida: SO — Craft Experience Around Les Secrets" },
-    { "type": "p", "text": "Reposicionar a Equivalenza de \"marca de dupes acessíveis\" para \"marca de descoberta e craft em fragrância\", ancorada na linha Les Secrets e na experiência da loja física. Complementar com WO corretiva (e-commerce) e ST protetiva (refill como assinatura)." },
-    { "type": "h2", "text": "Porque é que esta (e não as outras)" },
-    { "type": "ul", "items": [
-      "SO é a única que CRESCE — WO e ST defendem, WT contém",
-      "Aproveita o ativo mais difícil de copiar: 528 lojas + experiência sensorial + refill",
-      "Alinha-se com a tendência (Gen Z, sustentabilidade, craft) em vez de a combater",
-      "Permite subir o ticket médio via Les Secrets sem alienar a base price-sensitive"
-    ]},
-    { "type": "h2", "text": "Viabilidade" },
-    { "type": "ul", "items": [
-      "Liderança: CEO Juan Franco (nomeado 2023) tem mandato claro para reposicionar",
-      "Recursos: a Les Secrets já existe e já cresce — não é greenfield",
-      "Operação: as 528 lojas são o ativo; o plano opera sobre elas, não contra elas",
-      "Risco: a queda de €60M para os valores atuais mostra que inação também é um risco"
-    ]},
-    { "type": "h2", "text": "Plano de implementação" },
-    { "type": "ul", "items": [
-      "Curto prazo (0–6 meses): refresh visual das lojas flagship + campanha digital Les Secrets",
-      "Médio prazo (6–18 meses): e-commerce robusto + programa de refill nacional + formação de franquia",
-      "Longo prazo (18–36 meses): Les Secrets em todos os mercados + parcerias com criativos locais"
-    ]},
-    { "type": "callout", "variant": "highlight", "text": "Lembra-te: Q3, Q4 e Q5 NÃO podem usar IA diretamente. Estas secções têm de ser escritas por ti, na tua voz. O guia serve para perceberes a metodologia — depois escreves sozinha." }
+    {
+      "type": "text",
+      "title": "O papel da recomendação",
+      "content": "A recomendação é onde tudo se decide. Pegas na estratégia TOWS que escolheste, defendes porque é a melhor (e não as outras), validas a viabilidade e desenhas um plano de implementação com liderança, recursos e timeline. Esta é a secção onde o professor avalia se passas de 'analista' a 'decisor'. Analistas descrevem problemas; decisores propõem acções com consequências. Mostra que és decisora."
+    },
+    {
+      "type": "callout",
+      "title": "Atenção",
+      "content": "Q3 (Marketing Problem), Q4 (TOWS) e Q5 (Recommendation) NÃO podem usar IA directamente. Estas secções têm de ser escritas por ti, na tua voz. O guia serve para perceberes a metodologia — depois escreves sozinha.",
+      "variant": "warning"
+    },
+    {
+      "type": "text",
+      "title": "Recomendação sugerida: SO — Craft Experience Around Les Secrets",
+      "content": "Reposicionar a Equivalenza de 'marca de dupes acessíveis' para 'marca de descoberta e craft em fragrância', ancorada na linha Les Secrets e na experiência da loja física. Complementar com WO corretiva (e-commerce robusto) e ST protetiva (refill como assinatura). WT fica como ferramenta táctica — fechar 2–3 piores franquias para libertar capital, mas não como pilar estratégico."
+    },
+    {
+      "type": "list",
+      "title": "Porque é que esta (e não as outras)",
+      "items": [
+        "SO é a única que CRESCE — WO e ST defendem, WT contém",
+        "Aproveita o activo mais difícil de copiar: 528 lojas + experiência sensorial + refill",
+        "Alinha-se com a tendência (Gen Z, sustentabilidade, craft) em vez de a combater",
+        "Permite subir o ticket médio via Les Secrets sem alienar a base price-sensitive",
+        "Dá à Marta exactamente o que ela procura: descoberta, estética, identidade",
+        "Cria uma narrativa de marca clara (resolve o 'sem ressonância emocional' do SWOT)"
+      ]
+    },
+    {
+      "type": "text",
+      "title": "Viabilidade — os quatro cheques",
+      "content": "Antes de defenderes uma recomendação, tens de passar por quatro cheques: liderança (quem manda e o que quer?), recursos (quanto custa?), operação (consegue a equipa executar?), e risco (o que acontece se não fizer nada?). Se algum cheque falhar, a recomendação é papel molhado."
+    },
+    {
+      "type": "list",
+      "title": "Os quatro cheques da viabilidade",
+      "items": [
+        "Liderança: CEO Juan Franco (nomeado 2023) tem mandato claro para reposicionar a marca — alinhamento no topo",
+        "Recursos: a Les Secrets já existe e já cresce — não é greenfield, é amplificar",
+        "Operação: as 528 lojas são o activo; o plano opera sobre elas, não contra elas",
+        "Risco: a queda de €60M para os valores atuais mostra que inação também é um risco (risco de não-actuar é maior que o de actuar)"
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Plano de implementação — três horizontes",
+      "headers": ["Horizonte", "Prazo", "Acções principais", "Métrica de sucesso"],
+      "rows": [
+        ["Curto prazo", "0–6 meses", "Refresh visual de 20 lojas flagship + campanha Les Secrets em Instagram/TikTok", "NPS sobe de 17 para 22; awareness sobe de 30% para 35%"],
+        ["Médio prazo", "6–18 meses", "E-commerce robusto (entrega em 24h, sample try-on) + programa refill nacional + formação de franquia", "E-commerce passa de 1% para 5%; NPS sobe para 30"],
+        ["Longo prazo", "18–36 meses", "Les Secrets em todos os 19 mercados + parcerias com criativos locais + loja-conceito flagship em Madrid", "E-commerce a 12%; Les Secrets a 30% do revenue; EBITDA a €8M"]
+      ]
+    },
+    {
+      "type": "text",
+      "title": "Defesa contra as outras três estratégias",
+      "content": "Porque não WO isolado? Porque e-commerce sem reposicionamento de marca continua a vender dupes — não resolve o problema central. Porque não ST? Porque defender sem crescer leva à estagnação (Druni não está a perder quota por acaso). Porque não WT? Porque fechar lojas é táctica, não estratégia — não dá futuro. SO é a única que CRESCE, e é por isso que ganha."
+    },
+    {
+      "type": "list",
+      "title": "Riscos e mitigações",
+      "items": [
+        "Risco: franchisees resistem ao refresh visual → Mitigação: pilotar em 5 lojas e mostrar resultados antes de escalar",
+        "Risco: Les Secrets canibaliza o core dupe → Mitigação: Les Secrets em loja separada dentro do mesmo espaço, com identidade visual distinta",
+        "Risco: investimento em marketing digital não converte → Mitigação: começar com creator partnerships (micro-influencers) antes de paid media",
+        "Risco: timing de mercado (recessão comprime o consumidor) → Mitigação: Les Secrets a €35–45 é ticket médio, não luxo — resiliente"
+      ]
+    },
+    {
+      "type": "text",
+      "title": "Frase de fecho — a liga entre tudo",
+      "content": "A Equivalenza tem nas mãos os ingredientes certos (528 lojas, Les Secrets, refill, presença ibérica) e o problema certo (segmento dupe a colapsar, nativos digitais a crescer). A escolha é clara: usar esses ingredientes para reposicionar a marca como destino de descoberta e craft em fragrância, capturando a Marta e a Gen Z antes que a janela feche. WO e ST são complemento. WT é ferramenta. SO é a tese. E é essa a defesa."
+    },
+    {
+      "type": "callout",
+      "title": "Anti-AI check",
+      "content": "Lembra-te: a recomendação é onde o professor avalia se tens voz própria. Tem opinião ('acredito que...'), cita a tua leitura do case, defende cada ponto como se fosse oralmente. Se não consegues defender cada bullet em voz alta, não está acabado.",
+      "variant": "success"
+    }
   ],
   "keyPoints": [
     "Pega na TOWS escolhida e defende-a contra as outras três (curto)",

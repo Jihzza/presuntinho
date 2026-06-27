@@ -5,28 +5,86 @@
   "audio": "/legacy/assets/tows_recommendation.mp3",
   "audioLabel": "Audio walkthrough (PT)",
   "sections": [
-    { "type": "p", "text": "TOWS é a evolução do SWOT. Em vez de listar quadrantes, cruza Forças e Fraquezas com Oportunidades e Ameaças para gerar quatro TIPOS de estratégia: ofensiva, corretiva, defensiva-ofensiva e defensiva." },
-    { "type": "h2", "text": "As quatro estratégias" },
-    { "type": "h3", "text": "SO — Ofensiva (Strengths × Opportunities)" },
-    { "type": "p", "text": "Usar Forças para Aproveitar Oportunidades → crescimento." },
-    { "type": "p", "text": "Exemplo Equivalenza: usar as 528 lojas + a Les Secrets para criar uma experiência de craft fragrance, capturando o crescimento do mercado espanhol (+10%/ano) e da Gen Z." },
-    { "type": "h3", "text": "WO — Corretiva (Weaknesses × Opportunities)" },
-    { "type": "p", "text": "Ultrapassar Fraquezas para Aproveitar Oportunidades → melhoria." },
-    { "type": "p", "text": "Exemplo Equivalenza: construir uma plataforma de e-commerce robusta para capturar Gen Z fora das lojas físicas. Corrige a fraqueza de 1% online e entra no canal onde a Marta já compra." },
-    { "type": "h3", "text": "ST — Defensiva-Ofensiva (Strengths × Threats)" },
-    { "type": "p", "text": "Usar Forças para Neutralizar Ameaças → proteção." },
-    { "type": "p", "text": "Exemplo Equivalenza: usar a rede de lojas físicas como moat contra Divain e Dossier — a experiência sensorial e o refill não são replicáveis digitalmente." },
-    { "type": "h3", "text": "WT — Defensiva (Weaknesses × Threats)" },
-    { "type": "p", "text": "Minimizar Fraquezas e evitar Ameaças → contenção." },
-    { "type": "p", "text": "Exemplo Equivalenza: fechar as piores franquias, cortar despesas discricionárias, suspender expansão em mercados saturados. Contém danos enquanto se prepara a ofensiva." },
-    { "type": "h2", "text": "Como apresentar a matriz" },
-    { "type": "ul", "items": [
-      "Tabela 2×2 com cabeçalhos coloridos (verde = strengths, vermelho = weaknesses, azul = opportunities, amarelo = threats)",
-      "Cada célula = 1 estratégia em 1 linha",
-      "Acompanha com um parágrafo a explicar qual estratégia escolhes e porquê",
-      "Defende a escolha contra as outras três (curto, não exaustivo)"
-    ]},
-    { "type": "callout", "variant": "info", "text": "Para o trabalho: cada célula em 1 linha. Não escrevas ensaios aqui — esta é uma matriz de leitura rápida. O raciocínio vai no parágrafo de justificação." }
+    {
+      "type": "text",
+      "title": "TOWS: SWOT com estratégia",
+      "content": "TOWS é a evolução do SWOT. Em vez de listar quadrantes, cruza Forças e Fraquezas com Oportunidades e Ameaças para gerar quatro TIPOS de estratégia: ofensiva (SO), corretiva (WO), defensiva-ofensiva (ST) e defensiva (WT). Cada célula é uma pergunta: 'O que faço com esta força contra esta oportunidade?' A resposta é uma estratégia. TOWS obriga-te a passar da análise à acção — sem isso, SWOT é só diagnóstico."
+    },
+    {
+      "type": "callout",
+      "title": "Lembra-te",
+      "content": "Cada célula da matriz = 1 estratégia em 1 linha. Não escrevas ensaios aqui. Esta é uma matriz de leitura rápida. O raciocínio detalhado vai no parágrafo de justificação a seguir.",
+      "variant": "info"
+    },
+    {
+      "type": "h2_intro",
+      "title": "As quatro estratégias — definidas",
+      "content": "SO, WO, ST, WT não são siglas vazias — cada uma representa um movimento estratégico diferente. Conhecer o que cada uma significa é meio caminho para defender a tua escolha."
+    },
+    {
+      "type": "text",
+      "title": "SO — Ofensiva (Strengths × Opportunities)",
+      "content": "Usar Forças para Aproveitar Oportunidades → crescimento. É a estratégia mais ambiciosa. Só funciona quando tens uma força clara que se alinha com uma oportunidade clara. Exemplo Equivalenza: usar as 528 lojas + a Les Secrets para criar uma experiência de craft fragrance em loja, capturando o crescimento do mercado espanhol (+10%/ano) e da Gen Z. É construir algo novo sobre o que já tens."
+    },
+    {
+      "type": "text",
+      "title": "WO — Corretiva (Weaknesses × Opportunities)",
+      "content": "Ultrapassar Fraquezas para Aproveitar Oportunidades → melhoria. É a estratégia de 'enquanto construo o novo, conserto o que está partido'. Exemplo Equivalenza: construir uma plataforma de e-commerce robusta para capturar Gen Z fora das lojas físicas. Corrige a fraqueza de 1% online e entra no canal onde a Marta já compra. Mais modesta que SO, mas necessária como complemento."
+    },
+    {
+      "type": "text",
+      "title": "ST — Defensiva-Ofensiva (Strengths × Threats)",
+      "content": "Usar Forças para Neutralizar Ameaças → protecção. É a estratégia de 'uso o meu activo para travar o avanço do concorrente'. Exemplo Equivalenza: usar a rede de lojas físicas como moat contra Divain e Dossier — a experiência sensorial e o refill não são replicáveis digitalmente. Não cresce tanto, mas defende o que tens."
+    },
+    {
+      "type": "text",
+      "title": "WT — Defensiva (Weaknesses × Threats)",
+      "content": "Minimizar Fraquezas e evitar Ameaças → contenção. É a estratégia de quem espera. Exemplo Equivalenza: fechar as piores franquias, cortar despesas discricionárias, suspender expansão em mercados saturados. Contém danos enquanto se prepara a ofensiva. Funciona a curto prazo mas não constrói futuro — se ficar mais de 12–18 meses, vira estagnação."
+    },
+    {
+      "type": "table",
+      "title": "Matriz TOWS — Equivalenza 2024",
+      "headers": ["", "Opportunities (Gen Z, +10%/ano, refill trend)", "Threats (dupe −65%, sandwich, digitais)"],
+      "rows": [
+        [
+          "Strengths (528 lojas, Les Secrets, refill)",
+          "SO — OFENSIVA: Craft Experience Around Les Secrets",
+          "ST — DEFENSIVA-OFENSIVA: Lojas como moat contra digitais"
+        ],
+        [
+          "Weaknesses (1% e-com, NPS 17, 30% awareness)",
+          "WO — CORRETIVA: E-commerce robusto para Gen Z",
+          "WT — DEFENSIVA: Fechar piores franquias, cortar despesas"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "title": "Porque é que SO tende a ganhar",
+      "content": "SO é a única das quatro que CRESCE. WO melhora o que existe, ST defende o que existe, WT contém danos. Nenhuma das três últimas cria futuro — e a Equivalenza precisa de futuro. Além disso, SO alinha-se com a tendência: Gen Z procura experiência, não produto; sustentabilidade, não fast-fashion; identidade, não conformidade. Craft + Les Secrets + refill é o combo certo para o momento certo. WO e ST são complementos valiosos (não os rejeites no plano), mas a peça central é SO."
+    },
+    {
+      "type": "list",
+      "title": "Critérios para defender a tua escolha",
+      "items": [
+        "Qual cresce mais? (SO > WO > ST > WT, em regra)",
+        "Qual alinha-se com a tendência? (não contra ela)",
+        "Qual usa activos difíceis de copiar? (528 lojas, Les Secrets, refill)",
+        "Qual permite subir ticket médio sem alienar a base?",
+        "Qual dá um plano de implementação claro com timeline?"
+      ]
+    },
+    {
+      "type": "text",
+      "title": "Como apresentar a matriz",
+      "content": "Tabela 2×2 com cabeçalhos coloridos (verde = strengths, vermelho = weaknesses, azul = opportunities, amarelo = threats). Cada célula = 1 estratégia em 1 linha. Acompanha com um parágrafo a explicar qual estratégia escolhes e porquê. Defende a escolha contra as outras três (curto, não exaustivo). O professor quer ver raciocínio, não exaustividade — 1 parágrafo de defesa vale mais que 4 páginas de justificação."
+    },
+    {
+      "type": "callout",
+      "title": "Anti-AI check",
+      "content": "Não escrevas 'A estratégia SO oferece diversas vantagens...' — é o vício de IA mais óbvio. Começa com a tese: 'SO ganha porque é a única que constrói futuro.' Opinião > descrição. E varia: 'A WO não é fraca — é complementar.' Esse tipo de nuance mostra pensamento crítico.",
+      "variant": "success"
+    }
   ],
   "keyPoints": [
     "SO = Forças × Oportunidades → crescimento (ofensiva)",
