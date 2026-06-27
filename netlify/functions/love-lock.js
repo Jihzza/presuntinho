@@ -255,7 +255,11 @@ export const handler = async (event) => {
       await blobStore(event).setJSON(BLOB_KEY, state);
     } catch (e) {
       console.error('[love-lock] blob write failed', e);
+<<<<<<< HEAD
       return buildResponse(500, { error: 'server_misconfigured' });
+=======
+      return buildResponse(500, { error: "server_misconfigured", debug: String(e?.message || e) });
+>>>>>>> parent of 5006a58 (fix(love-lock): re-leak e.message + stack trace to find setEnvironmentContext failure)
     }
 
     let cookie;

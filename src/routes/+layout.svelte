@@ -173,14 +173,33 @@
       {@render children?.()}
     </main>
 
-    <footer class="footer">
-      <button
-        type="button"
-        class="footer-btn"
-        onclick={() => footerClick()}
-        aria-label="© 2026 Presuntinho — easter egg"
-      >© 2026 Presuntinho — para Fatma 🐷</button>
-    </footer>
+    <nav class="bottom-nav" aria-label="Navegação principal">
+          <a href="/" class="nav-btn" aria-label="Home — dashboard principal" data-sveltekit-preload-data>
+            <span class="nav-icon" aria-hidden="true">🏠</span>
+            <span class="nav-label">Home</span>
+          </a>
+          <a href="/escola" class="nav-btn" aria-label="Escola — cursos e lições" data-sveltekit-preload-data>
+            <span class="nav-icon" aria-hidden="true">📚</span>
+            <span class="nav-label">Escola</span>
+          </a>
+          <a href="/financas" class="nav-btn" aria-label="Finanças — despesas e contas" data-sveltekit-preload-data>
+            <span class="nav-icon" aria-hidden="true">💰</span>
+            <span class="nav-label">Finanças</span>
+          </a>
+          <a href="/habitos" class="nav-btn" aria-label="Hábitos — tracking diário" data-sveltekit-preload-data>
+            <span class="nav-icon" aria-hidden="true">🌱</span>
+            <span class="nav-label">Hábitos</span>
+          </a>
+          <button
+            type="button"
+            class="nav-btn nav-btn-secret"
+            onclick={() => footerClick()}
+            aria-label="© 2026 Presuntinho — easter egg"
+          >
+            <span class="nav-icon" aria-hidden="true">🐷</span>
+            <span class="nav-label">©</span>
+          </button>
+        </nav>
   </div>
 {/if}
 
@@ -272,32 +291,76 @@
     flex: 1;
     width: 100%;
   }
-  .footer {
-    padding: 1rem;
-    text-align: center;
-    opacity: 0.6;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    margin-top: 2rem;
-  }
-  .footer-btn {
-    background: transparent;
-    border: 0;
-    color: inherit;
-    font: inherit;
-    cursor: pointer;
-    padding: 0.5rem 0.75rem;
-    min-height: 44px;
-    min-width: 44px;
-    border-radius: 0.375rem;
-    opacity: inherit;
-  }
-  .footer-btn:hover,
-  .footer-btn:focus-visible {
-    opacity: 1;
-    background: rgba(255, 255, 255, 0.04);
-    outline: none;
-  }
-  .footer-btn:focus-visible {
-    box-shadow: 0 0 0 2px var(--accent, #ec4899);
-  }
+  .bottom-nav {
+      position: sticky;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.4rem 0.25rem calc(0.4rem + env(safe-area-inset-bottom));
+      z-index: 50;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
+    }
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      background: transparent;
+      border: 0;
+      color: rgba(255, 255, 255, 0.78);
+      text-decoration: none;
+      font: inherit;
+      cursor: pointer;
+      padding: 0.45rem 0.25rem;
+      min-height: 56px;
+      min-width: 44px;
+      border-radius: 0.5rem;
+      transition: background 120ms ease, color 120ms ease, transform 120ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .nav-btn:hover,
+    .nav-btn:focus-visible {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+      outline: none;
+    }
+    .nav-btn:active {
+      transform: scale(0.96);
+    }
+    .nav-btn:focus-visible {
+      box-shadow: 0 0 0 2px var(--accent, #ec4899);
+    }
+    .nav-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .nav-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .nav-btn-secret {
+      opacity: 0.75;
+    }
+    .nav-btn-secret:hover,
+    .nav-btn-secret:focus-visible {
+      opacity: 1;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .nav-btn {
+        transition: none;
+      }
+      .nav-btn:active {
+        transform: none;
+      }
+    }
 </style>
