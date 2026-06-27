@@ -58,14 +58,28 @@ export function detectLoveLock(rawPassword: string): LoveLockKind | null {
   // LOVE triggers — "i love you" with optional trailing object
   // (e.g. "i love you fofinho" still counts as a love declaration)
   if (
+    // English: "I love you" (canonical) — and any phrase that starts with it
     cleaned === 'i love you' ||
     cleaned.startsWith('i love you ') ||
+    // Shorter English phrases Fatma might type when upset / making up
+    cleaned === 'i love him' ||
+    cleaned === 'i love her' ||
+    cleaned === 'i love fofinho' ||
+    cleaned === 'love you' ||
+    cleaned === 'love' ||
+    // Portuguese
     cleaned === 'amo-te' ||
     cleaned.startsWith('amo-te ') ||
     cleaned === 'amo voce' ||
     cleaned === 'amo você' ||
     cleaned.startsWith('amo voce ') ||
-    cleaned.startsWith('amo você ')
+    cleaned.startsWith('amo você ') ||
+    cleaned === 'te amo' ||
+    cleaned === 'eu amo-te' ||
+    cleaned === 'eu te amo' ||
+    cleaned === 'amor' ||
+    cleaned === 'saudade' ||
+    cleaned === 'saudades'
   ) {
     return 'love';
   }

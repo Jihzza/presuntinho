@@ -76,43 +76,51 @@
       return;
     }
     loading = true;
-    error = '';
-    try {
-      // ── Love Lock check FIRST ──
-      // An emotional password (Sad / I love you) should never fall through to
-      // the real PBKDF2 verifier — we don't want a typo of "i love you" to
-      // burn a failed-attempt counter or shake the card. If it matches a
-      // trigger, drop the user into the love-lock screen and bail.
-      const loveKind = detectLoveLock(password);
-      if (loveKind) {
-        loveLockState = activateLoveLock(loveKind);
-        password = '';
-        loading = false;
-        return;
-      }
+        error = '';
+        try {
+          // ── PBKDF2 check FIRST ──
+          // Critical ordering: if Fatma's real password happens to contain the
+          // words "love" or "sad" (e.g. "LoveFofinho2026!"), we must NOT intercept
+          // it as a love-lock trigger. Only if PBKDF2 rejects do we check the
+          // emotional phrase — at which point we know the user typed it on purpose
+          // and the real password isn't it.
+          const method = await verifyAgainstHashes(password);
+          if (method) {
+            setSession(method);
+            resetAttempts();
+            await goto('/');
+            return;
+          }
 
-      const method = await verifyAgainstHashes(password);
-      if (method) {
-        setSession(method);
-        resetAttempts();
-        await goto('/');
-      } else {
-        const result = recordFailedAttempt();
-        error = $t('splash.error.wrong', { values: { n: result.attempts } });
-        password = '';
-        shake = true;
-        setTimeout(() => (shake = false), 500);
-        if (result.locked) {
-          locked = { locked: true, remainingMs: result.remainingMs };
+          // ── Love Lock check SECOND ──
+          // Only fires when the password was wrong AND looks like an emotional
+          // declaration. "love" alone, "sad" alone, "i love you", "amo-te" — all
+          // trigger here. We DO NOT burn a failed-attempt counter (this is
+          // emotional, not adversarial).
+          const loveKind = detectLoveLock(password);
+          if (loveKind) {
+            loveLockState = activateLoveLock(loveKind);
+            password = '';
+            loading = false;
+            return;
+          }
+
+          // Real auth failure — record attempt, show error, shake.
+          const result = recordFailedAttempt();
+          error = $t('splash.error.wrong', { values: { n: result.attempts } });
+          password = '';
+          shake = true;
+          setTimeout(() => (shake = false), 500);
+          if (result.locked) {
+            locked = { locked: true, remainingMs: result.remainingMs };
+          }
+        } catch (e) {
+          const msg = e instanceof Error ? e.message : String(e);
+          error = $t('splash.error.generic', { values: { msg } });
+        } finally {
+          loading = false;
         }
       }
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      error = $t('splash.error.generic', { values: { msg } });
-    } finally {
-      loading = false;
-    }
-  }
 
   function handleLoveUnlock() {
     clearLoveLock();
