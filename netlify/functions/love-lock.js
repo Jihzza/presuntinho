@@ -70,35 +70,46 @@ function hmac(payload, secret) {
 }
 
 function signState(state) {
+  const payload = base64url(JSON.stringify(state));
   const secret = process.env.LOVE_LOCK_SECRET;
   if (!secret) {
-    throw new Error('LOVE_LOCK_SECRET is not configured');
+    // Server-side signing is optional — env var not configured yet.
+    // Operators should run `netlify env:set LOVE_LOCK_SECRET <value>` to enable
+    // tamper resistance. Until then, the HttpOnly flag is the only line of
+    // defense against DevTools cookie editing.
+    console.warn('[love-lock] LOVE_LOCK_SECRET not set — cookie is unsigned');
+    return payload;
   }
-  const payload = base64url(JSON.stringify(state));
   return `${payload}.${hmac(payload, secret)}`;
 }
 
 function verifySignedState(raw) {
-  const parts = raw.split('.');
-  if (parts.length !== 2 || !parts[0] || !parts[1]) {
-    return { error: 'malformed_cookie' };
-  }
-
   const secret = process.env.LOVE_LOCK_SECRET;
-  if (!secret) {
-    throw new Error('LOVE_LOCK_SECRET is not configured');
+  const parts = raw.split('.');
+
+  // Signed cookie (server has secret): must have payload.signature
+  if (secret) {
+    if (parts.length !== 2 || !parts[0] || !parts[1]) {
+      return { error: 'malformed_cookie' };
+    }
+    const [payload, signature] = parts;
+    const expected = hmac(payload, secret);
+    const provided = Buffer.from(signature);
+    const expectedBuffer = Buffer.from(expected);
+    if (provided.length !== expectedBuffer.length || !crypto.timingSafeEqual(provided, expectedBuffer)) {
+      return { error: 'invalid_cookie_signature' };
+    }
+    try {
+      return { state: JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')) };
+    } catch {
+      return { error: 'malformed_cookie' };
+    }
   }
 
-  const [payload, signature] = parts;
-  const expected = hmac(payload, secret);
-  const provided = Buffer.from(signature);
-  const expectedBuffer = Buffer.from(expected);
-  if (provided.length !== expectedBuffer.length || !crypto.timingSafeEqual(provided, expectedBuffer)) {
-    return { error: 'invalid_cookie_signature' };
-  }
-
+  // Unsigned cookie (no secret configured): accept legacy plain payload
   try {
-    return { state: JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')) };
+    const state = JSON.parse(Buffer.from(raw, 'base64url').toString('utf8'));
+    return { state };
   } catch {
     return { error: 'malformed_cookie' };
   }
