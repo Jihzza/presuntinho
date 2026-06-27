@@ -1,0 +1,14 @@
+{
+  "version": "v6.0.0-rc",
+  "last_commit": "3fac11c",
+  "steps": {
+    "1_validate_love_lock_browser": {"status": "blocked", "blocker": "splash does not hydrate in prod - 6 JS errors with empty messages - Skander 1 diagnosing root cause"},
+    "2_fix_trabalhos_detail_slug": {"status": "in_progress", "deleg": "deleg_837ff814"},
+    "3_swap_secrets_to_easterEggsCard": {"status": "done", "commit": "928ac35"},
+    "4_onboarding_modal": {"status": "done", "commit": "3fac11c"},
+    "5_visual_polish": {"status": "in_progress", "deleg": "deleg_15143f1f", "workdir_changes": ["src/app.css", "src/lib/components/HubCard.svelte"]},
+    "6_secrets_expansion_badges_hearts": {"status": "pending"},
+    "7_diagnose_splash_hydration": {"status": "in_progress", "deleg": "deleg_4765b3d6"},
+    "8_tag_v6_smoke_final": {"status": "pending"}
+  }
+}
