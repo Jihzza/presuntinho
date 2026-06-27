@@ -31,6 +31,8 @@
   import { subApps, legacySubApp, v3Content } from '$lib/registry';
   import { db } from '$lib/state/db';
   import { xp, initStores } from '$lib/state/stores';
+  import { getSession } from '$lib/auth/session';
+  import { t } from 'svelte-i18n';
 
   // ---------------------------------------------------------------------------
   // XP — direct subscription to the exported writable store.  We `await
@@ -39,7 +41,12 @@
   // default 0 (which was the source of the "XP volta a 0 ao refresh" bug).
   // ---------------------------------------------------------------------------
   let currentXp = $state(0);
+  // Active profile — drives the personalised greeting on the hub.
+  // Read once on mount from sessionStorage; updated if the user logs
+  // out and back in via another tab (storage event).
+  let activeProfile = $state<'fatma' | 'daniel' | null>(null);
   onMount(() => {
+    activeProfile = getSession()?.profile ?? null;
     void (async () => {
       await initStores();
       xp.subscribe((v) => (currentXp = v));
@@ -189,7 +196,11 @@
 <div class="hub">
   <header class="hub-hero" class:hero-in={heroIn}>
     <h1>
-      <span class="greeting">🐷 Olá, Fatma</span>
+      <span class="greeting">
+        🐷 {activeProfile === 'daniel'
+          ? $t('hub.greeting.daniel', { default: 'Olá, Daniel' })
+          : $t('hub.greeting.fatma', { default: 'Olá, Fatma' })}
+      </span>
     </h1>
     <div class="hero-actions">
       <span class="xp" aria-label="Pontos de experiência: {xpLabel}">
