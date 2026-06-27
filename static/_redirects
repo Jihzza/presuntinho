@@ -1,0 +1,10 @@
+# Netlify _redirects
+# Empty file: any URL not matching a static file gets Netlify's default
+# 404 (no SPA rewrite). Static files (robots.txt, sitemap.xml, sw.js,
+# manifest.webmanifest, /icons/*, /legacy/*, /quizzes/*, /lessons/*,
+# /favicon.svg, /apple-touch-icon.png, /favicon-32.png, etc.) are
+# served from the publish directory with their correct Content-Type.
+#
+# The SvelteKit client-side router handles navigation between
+# /escola/, /biblioteca/, etc. without needing server-side rewrites,
+# so we don't need a /* → /index.html rule here.
