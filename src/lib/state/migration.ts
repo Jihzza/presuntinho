@@ -178,7 +178,7 @@ export async function migrateFromLocalStorage(): Promise<MigrationResult> {
     localStorage.setItem(MIGRATION_FLAG_KEY, 'done');
     result.migrated = true;
 
-    console.log('[presuntinho] Migration complete:', result);
+    if (import.meta.env.DEV) console.log('[presuntinho] Migration complete:', result);
   } catch (e) {
     result.errors.push(`Migration failed: ${e instanceof Error ? e.message : String(e)}`);
     console.error('[presuntinho] Migration error:', e);

@@ -1,5 +1,5 @@
 // Sub-app plugin registry. Adding a 6th sub-app = add an entry here + create
-// the route folder. See docs/adding-a-sub-app.md (TODO: write in Phase 10).
+// the route folder. See docs/adding-a-sub-app.md.
 
 export interface SubApp {
   id: string;

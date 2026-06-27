@@ -14,7 +14,7 @@ All notable changes to Presuntinho are documented in this file.
 - Library sub-app improvements: multi-tag search + tag chips + bookmark CRUD
 - Splash auth: PBKDF2 600k iterations + 3-strike lockout + clear-error UX
 - Settings page (definicoes): theme, language, funMode, clear data, export, import
-- i18n: pt-PT primary, English fallback, 61 keys (common + nav + splash + app)
+- i18n: pt-PT primary, English fallback, 60 keys (common + nav + splash + app)
 - A11y: skip-link, :focus-visible ring, prefers-reduced-motion, 44×44 touch targets
 - docs/architecture.md + docs/adding-a-sub-app.md + CHANGELOG.md
 - PRESERVATION.md: 13/13 contract items verified and ticked

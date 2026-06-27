@@ -35,7 +35,7 @@
           registerSW({
             immediate: true,
             onRegisteredSW(swUrl: string) {
-              console.debug('[presuntinho] SW registado:', swUrl);
+              if (import.meta.env.DEV) console.debug('[presuntinho] SW registado:', swUrl);
             },
             onNeedRefresh() {
               // Dispara evento para o sistema de toasts mostrar
