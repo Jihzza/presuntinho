@@ -4,6 +4,8 @@
   // shown here. New courses = add an entry to COURSES + create the lesson
   // JSONs under static/lessons/<slug>/.
 
+  import { t } from 'svelte-i18n';
+
   interface Course {
     slug: string;
     title: string;
@@ -56,15 +58,15 @@
 
 <div class="escola">
   <header class="hero">
-    <span class="hero-tag">🎓 Escola</span>
-    <h1>Cursos, lições e quizzes</h1>
+    <span class="hero-tag">{$t('escola.hero.tag', { default: '🎓 Escola' })}</span>
+    <h1>{$t('escola.hero.title', { default: 'Cursos, lições e quizzes' })}</h1>
     <p class="sub">
-      Aprende ao teu ritmo. Marca progresso. Faz quizzes para validar o que sabes.
+      {$t('escola.hero.sub', { default: 'Aprende ao teu ritmo. Marca progresso. Faz quizzes para validar o que sabes.' })}
     </p>
   </header>
 
-  <section class="courses" aria-label="Cursos disponíveis">
-    <h2 class="section-title">Cursos disponíveis</h2>
+  <section class="courses" aria-label={$t('escola.section.courses.aria', { default: 'Cursos disponíveis' })}>
+    <h2 class="section-title">{$t('escola.section.courses', { default: 'Cursos disponíveis' })}</h2>
 
     <div class="grid">
       {#each COURSES as course (course.slug)}
@@ -83,42 +85,42 @@
           <p class="tagline">{course.tagline}</p>
           <p class="desc">{course.description}</p>
           <div class="meta">
-            <span>📚 {course.lessonCount} lições</span>
-            <span>📝 {course.quizCount} quizzes</span>
-            <span class="open">Abrir curso →</span>
+            <span>{$t('escola.card.lessons', { default: '📚 {n} lições' }).replace('{n}', String(course.lessonCount))}</span>
+            <span>{$t('escola.card.quizzes', { default: '📝 {n} quizzes' }).replace('{n}', String(course.quizCount))}</span>
+            <span class="open">{$t('escola.card.open', { default: 'Abrir curso →' })}</span>
           </div>
         </a>
-              {/each}
-            </div>
-          </section>
+      {/each}
+    </div>
+  </section>
 
-          <section class="sections" aria-label="Secções da escola">
-            <h2 class="section-title">Ferramentas</h2>
-            <div class="grid sections-grid">
-              <a class="section-card" href="/trabalhos/" style="--sc: #f59e0b;">
-                <span class="sc-icon" aria-hidden="true">📝</span>
-                <div class="sc-body">
-                  <h3>Trabalhos</h3>
-                  <p>SWOT, Buyer Persona, TOWS, assignments da escola.</p>
-                </div>
-              </a>
-              <a class="section-card" href="/biblioteca/" style="--sc: #8b5cf6;">
-                <span class="sc-icon" aria-hidden="true">📚</span>
-                <div class="sc-body">
-                  <h3>Biblioteca</h3>
-                  <p>Materiais, downloads e recursos para estudar.</p>
-                </div>
-              </a>
-              <a class="section-card" href="/escola/caderno/" style="--sc: #10b981;">
-                <span class="sc-icon" aria-hidden="true">📓</span>
-                <div class="sc-body">
-                  <h3>Meu Caderno</h3>
-                  <p>As tuas notas, áudios, textos e imagens.</p>
-                </div>
-              </a>
-            </div>
-          </section>
+  <section class="sections" aria-label={$t('escola.section.tools.aria', { default: 'Secções da escola' })}>
+    <h2 class="section-title">{$t('escola.section.tools', { default: 'Ferramentas' })}</h2>
+    <div class="grid sections-grid">
+      <a class="section-card" href="/trabalhos/" style="--sc: #f59e0b;">
+        <span class="sc-icon" aria-hidden="true">📝</span>
+        <div class="sc-body">
+          <h3>{$t('escola.tool.trabalhos', { default: 'Trabalhos' })}</h3>
+          <p>{$t('escola.tool.trabalhos.desc', { default: 'SWOT, Buyer Persona, TOWS, assignments da escola.' })}</p>
         </div>
+      </a>
+      <a class="section-card" href="/biblioteca/" style="--sc: #8b5cf6;">
+        <span class="sc-icon" aria-hidden="true">📚</span>
+        <div class="sc-body">
+          <h3>{$t('escola.tool.biblioteca', { default: 'Biblioteca' })}</h3>
+          <p>{$t('escola.tool.biblioteca.desc', { default: 'Materiais, downloads e recursos para estudar.' })}</p>
+        </div>
+      </a>
+      <a class="section-card" href="/escola/caderno/" style="--sc: #10b981;">
+        <span class="sc-icon" aria-hidden="true">📓</span>
+        <div class="sc-body">
+          <h3>{$t('escola.tool.caderno', { default: 'Meu Caderno' })}</h3>
+          <p>{$t('escola.tool.caderno.desc', { default: 'As tuas notas, áudios, textos e imagens.' })}</p>
+        </div>
+      </a>
+    </div>
+  </section>
+</div>
 
 <style>
   .escola {
@@ -227,36 +229,36 @@
     border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
   .open {
-      margin-left: auto;
-      color: var(--course-color, #ec4899);
-      font-weight: 600;
-    }
-    .sections { margin-top: 2rem; }
-    .sections-grid {
-      grid-template-columns: 1fr;
-    }
-    .section-card {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 1rem 1.1rem;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-left: 4px solid var(--sc, #ec4899);
-      border-radius: 0.75rem;
-      color: #fff;
-      text-decoration: none;
-      transition: background 0.15s, transform 0.15s;
-    }
-    .section-card:hover, .section-card:focus-visible {
-      background: rgba(255, 255, 255, 0.08);
-      transform: translateY(-1px);
-      outline: none;
-    }
-    .sc-icon { font-size: 1.75rem; line-height: 1; flex-shrink: 0; }
-    .sc-body h3 { margin: 0 0 0.15rem; font-size: 1rem; color: #fff; }
-    .sc-body p { margin: 0; font-size: 0.85rem; color: var(--txt2, #cbd5e1); line-height: 1.4; }
-    @media (min-width: 600px) {
-      .sections-grid { grid-template-columns: 1fr 1fr; }
-    }
-  </style>
+    margin-left: auto;
+    color: var(--course-color, #ec4899);
+    font-weight: 600;
+  }
+  .sections { margin-top: 2rem; }
+  .sections-grid {
+    grid-template-columns: 1fr;
+  }
+  .section-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 4px solid var(--sc, #ec4899);
+    border-radius: 0.75rem;
+    color: #fff;
+    text-decoration: none;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .section-card:hover, .section-card:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
+    outline: none;
+  }
+  .sc-icon { font-size: 1.75rem; line-height: 1; flex-shrink: 0; }
+  .sc-body h3 { margin: 0 0 0.15rem; font-size: 1rem; color: #fff; }
+  .sc-body p { margin: 0; font-size: 0.85rem; color: var(--txt2, #cbd5e1); line-height: 1.4; }
+  @media (min-width: 600px) {
+    .sections-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>

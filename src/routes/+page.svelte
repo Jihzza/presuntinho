@@ -203,17 +203,17 @@
       </span>
     </h1>
     <div class="hero-actions">
-      <span class="xp" aria-label="Pontos de experiência: {xpLabel}">
+      <span class="xp" aria-label={$t('a11y.xp_label', { default: 'Pontos de experiência: {n}' }).replace('{n}', xpLabel)}>
         <span class="xp-dot" aria-hidden="true"></span>
         {xpLabel}
       </span>
       <HeartButton />
     </div>
-    <p class="sub">Equivalenza Study Hub — escolhe por onde começar</p>
+    <p class="sub">{$t('hub.subtitle', { default: 'Equivalenza Study Hub — escolhe por onde começar' })}</p>
   </header>
 
-  <section class="apps" aria-label="Sub-apps">
-    <h2 class="section-title">Apps</h2>
+  <section class="apps" aria-label={$t('hub.section.apps.aria', { default: 'Sub-apps' })}>
+    <h2 class="section-title">{$t('hub.section.apps', { default: 'Apps' })}</h2>
     <div class="grid">
       {#each subApps as app (app.id)}
         <HubCard {app} />
@@ -221,25 +221,25 @@
     </div>
   </section>
 
-  <section class="progress-section" aria-label="Progresso dos módulos">
-    <h2 class="section-title">Progresso</h2>
+  <section class="progress-section" aria-label={$t('hub.section.progress.aria', { default: 'Progresso dos módulos' })}>
+    <h2 class="section-title">{$t('hub.section.progress', { default: 'Progresso' })}</h2>
     <div class="progress-grid">
       <ProgressBar
-        label="Leituras"
+        label={$t('hub.progress.lessons', { default: 'Leituras' })}
         icon="📖"
         accent="#3b82f6"
         current={lessonsVisited}
         total={TOTAL_LESSONS}
       />
       <ProgressBar
-        label="Quizzes"
+        label={$t('hub.progress.quizzes', { default: 'Quizzes' })}
         icon="❓"
         accent="#f59e0b"
         current={quizzesAnswered}
         total={TOTAL_QUIZZES}
       />
       <ProgressBar
-        label="Escrita"
+        label={$t('hub.progress.writing', { default: 'Escrita' })}
         icon="✍️"
         accent="#10b981"
         current={assignmentsDone}
@@ -248,22 +248,22 @@
     </div>
   </section>
 
-  <section class="badges-section" aria-label="Conquistas">
-    <h2 class="section-title">Conquistas</h2>
+  <section class="badges-section" aria-label={$t('hub.section.badges.aria', { default: 'Conquistas' })}>
+    <h2 class="section-title">{$t('hub.section.badges', { default: 'Conquistas' })}</h2>
     <BadgeGrid badges={badgesMap} />
   </section>
 
-  <section class="legacy-section" aria-label="Site V3 preservado">
-    <h2 class="section-title">Site V3 preservado</h2>
-    <p class="legacy-desc">O site V3 original mantém-se reachable como arquivo. A migração para rotas SvelteKit está concluída para os 7 módulos abaixo.</p>
+  <section class="legacy-section" aria-label={$t('hub.section.legacy.aria', { default: 'Site V3 preservado' })}>
+    <h2 class="section-title">{$t('hub.section.legacy', { default: 'Site V3 preservado' })}</h2>
+    <p class="legacy-desc">{$t('hub.legacy.desc', { default: 'O site V3 original mantém-se reachable como arquivo. A migração para rotas SvelteKit está concluída para os 7 módulos abaixo.' })}</p>
     <div class="legacy-grid">
       <HubCard app={legacySubApp} />
     </div>
   </section>
 
-  <section class="v3-section" aria-label="Conteúdo V3 migrado">
-    <h2 class="section-title">V3 Content</h2>
-    <p class="v3-desc">As 7 páginas do V3 agora são rotas SvelteKit nativas — sem iframe, navegação rápida, prontas para SEO e PWA.</p>
+  <section class="v3-section" aria-label={$t('hub.section.v3.aria', { default: 'Conteúdo V3 migrado' })}>
+    <h2 class="section-title">{$t('hub.section.v3', { default: 'V3 Content' })}</h2>
+    <p class="v3-desc">{$t('hub.v3.desc', { default: 'As 7 páginas do V3 agora são rotas SvelteKit nativas — sem iframe, navegação rápida, prontas para SEO e PWA.' })}</p>
     <div class="v3-grid">
       {#each v3Content as entry (entry.id)}
         <HubCard app={legacySubApp} v3={entry} />

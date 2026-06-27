@@ -152,65 +152,65 @@
           The wrapper keeps them visually grouped via flex.
         -->
         <div class="logo">
-          <button
-            type="button"
-            class="logo-pig"
-            onclick={() => logoClick()}
-            aria-label="🐷 easter egg"
-            title="🐷 easter egg"
-          >🐷</button>
-          <a href="/" class="logo-text" aria-label="Presuntinho — voltar ao hub">Presuntinho</a>
-        </div>
-        <div class="nav-actions">
-          <LanguageSwitcher />
-          <a href="/definicoes" class="icon-btn" aria-label="Definições" title="Definições">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="3"/>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-            </svg>
-          </a>
-          <button type="button" class="icon-btn" onclick={logout} aria-label="Sair" title="Sair">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-              <polyline points="16 17 21 12 16 7"/>
-              <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </header>
+                  <button
+                    type="button"
+                    class="logo-pig"
+                    onclick={() => logoClick()}
+                    aria-label={$t('a11y.logo.pig', { default: '🐷 easter egg' })}
+                    title={$t('a11y.logo.pig', { default: '🐷 easter egg' })}
+                  >🐷</button>
+                  <a href="/" class="logo-text" aria-label={$t('a11y.logo.brand', { default: 'Presuntinho — voltar ao hub' })}>Presuntinho</a>
+                </div>
+                <div class="nav-actions">
+                  <LanguageSwitcher />
+                  <a href="/definicoes" class="icon-btn" aria-label={$t('a11y.settings', { default: 'Definições' })} title={$t('a11y.settings', { default: 'Definições' })}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="12" cy="12" r="3"/>
+                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                  </a>
+                  <button type="button" class="icon-btn" onclick={logout} aria-label={$t('a11y.logout', { default: 'Sair' })} title={$t('a11y.logout', { default: 'Sair' })}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                      <polyline points="16 17 21 12 16 7"/>
+                      <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </header>
 
-    <main id="main-content" class="content" tabindex="-1">
-      {@render children?.()}
-    </main>
+            <main id="main-content" class="content" tabindex="-1">
+              {@render children?.()}
+            </main>
 
-    <nav class="bottom-nav" aria-label="Navegação principal">
-          <a href="/" class="nav-btn" aria-label="Home — dashboard principal" data-sveltekit-preload-data>
-            <span class="nav-icon" aria-hidden="true">🏠</span>
-            <span class="nav-label">Home</span>
-          </a>
-          <a href="/escola" class="nav-btn" aria-label="Escola — cursos e lições" data-sveltekit-preload-data>
-            <span class="nav-icon" aria-hidden="true">📚</span>
-            <span class="nav-label">Escola</span>
-          </a>
-          <a href="/financas" class="nav-btn" aria-label="Finanças — despesas e contas" data-sveltekit-preload-data>
-            <span class="nav-icon" aria-hidden="true">💰</span>
-            <span class="nav-label">Finanças</span>
-          </a>
-          <a href="/habitos" class="nav-btn" aria-label="Hábitos — tracking diário" data-sveltekit-preload-data>
-            <span class="nav-icon" aria-hidden="true">🌱</span>
-            <span class="nav-label">Hábitos</span>
-          </a>
-          <button
-            type="button"
-            class="nav-btn nav-btn-secret"
-            onclick={() => footerClick()}
-            aria-label="© 2026 Presuntinho — easter egg"
-          >
-            <span class="nav-icon" aria-hidden="true">🐷</span>
-            <span class="nav-label">©</span>
-          </button>
-        </nav>
+            <nav class="bottom-nav" aria-label={$t('nav.bottom.aria', { default: 'Navegação principal' })}>
+                  <a href="/" class="nav-btn" aria-label={$t('nav.home.aria', { default: 'Home — dashboard principal' })} data-sveltekit-preload-data>
+                    <span class="nav-icon" aria-hidden="true">🏠</span>
+                    <span class="nav-label">{$t('nav.home', { default: 'Home' })}</span>
+                  </a>
+                  <a href="/escola" class="nav-btn" aria-label={$t('nav.escola.aria', { default: 'Escola — cursos e lições' })} data-sveltekit-preload-data>
+                    <span class="nav-icon" aria-hidden="true">📚</span>
+                    <span class="nav-label">{$t('nav.escola', { default: 'Escola' })}</span>
+                  </a>
+                  <a href="/financas" class="nav-btn" aria-label={$t('nav.financas.aria', { default: 'Finanças — despesas e contas' })} data-sveltekit-preload-data>
+                    <span class="nav-icon" aria-hidden="true">💰</span>
+                    <span class="nav-label">{$t('nav.financas', { default: 'Finanças' })}</span>
+                  </a>
+                  <a href="/habitos" class="nav-btn" aria-label={$t('nav.habitos.aria', { default: 'Hábitos — tracking diário' })} data-sveltekit-preload-data>
+                    <span class="nav-icon" aria-hidden="true">🌱</span>
+                    <span class="nav-label">{$t('nav.habitos', { default: 'Hábitos' })}</span>
+                  </a>
+                  <button
+                    type="button"
+                    class="nav-btn nav-btn-secret"
+                    onclick={() => footerClick()}
+                    aria-label={$t('nav.bottom.copyright.aria', { default: '© 2026 Presuntinho — easter egg' })}
+                  >
+                    <span class="nav-icon" aria-hidden="true">🐷</span>
+                    <span class="nav-label">{$t('nav.bottom.copyright.label', { default: '©' })}</span>
+                  </button>
+                </nav>
   </div>
 {/if}
 
