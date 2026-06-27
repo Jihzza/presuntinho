@@ -17,8 +17,16 @@
 // the splash page). The function trusts the kind passed in but does a tiny
 // shape check to avoid storing nonsense.
 
+import crypto from 'crypto';
+
 const COOKIE_NAME = 'lovelock';
 const ONE_HOUR_MS = 60 * 60 * 1000;
+const ALLOWED_ORIGIN = 'https://presuntinho.netlify.app';
+
+function getHeader(headers, name) {
+  if (!headers) return undefined;
+  return headers[name] || headers[name.toLowerCase()] || headers[name.toUpperCase()];
+}
 
 function parseCookies(header) {
   const out = {};
@@ -34,9 +42,9 @@ function parseCookies(header) {
 function isHttps(event) {
   // Netlify sets x-forwarded-proto on every request. Origin URL is the
   // authoritative check; fall back to env for unit tests / netlify dev.
-  const fwd = event?.headers?.['x-forwarded-proto'] || event?.headers?.['X-Forwarded-Proto'];
+  const fwd = getHeader(event?.headers, 'x-forwarded-proto');
   if (fwd) return String(fwd).toLowerCase() === 'https';
-  if (event?.headers?.['x-nf-ssl'] === 'on') return true;
+  if (getHeader(event?.headers, 'x-nf-ssl') === 'on') return true;
   const context = process.env.CONTEXT || '';
   return context === 'production' || context === 'deploy-preview' || context === 'branch-deploy';
 }
@@ -53,19 +61,86 @@ function serializeCookie(value, maxAgeSeconds, event) {
   return attrs.join('; ');
 }
 
-function readState(cookieHeader) {
-  const cookies = parseCookies(cookieHeader);
-  const raw = cookies[COOKIE_NAME];
-  if (!raw) return null;
+function base64url(input) {
+  return Buffer.from(input).toString('base64url');
+}
+
+function hmac(payload, secret) {
+  return crypto.createHmac('sha256', secret).update(payload).digest('base64url');
+}
+
+function signState(state) {
+  const secret = process.env.LOVE_LOCK_SECRET;
+  if (!secret) {
+    throw new Error('LOVE_LOCK_SECRET is not configured');
+  }
+  const payload = base64url(JSON.stringify(state));
+  return `${payload}.${hmac(payload, secret)}`;
+}
+
+function verifySignedState(raw) {
+  const secret = process.env.LOVE_LOCK_SECRET;
+  if (!secret) {
+    throw new Error('LOVE_LOCK_SECRET is not configured');
+  }
+
+  const parts = raw.split('.');
+  if (parts.length !== 2 || !parts[0] || !parts[1]) {
+    return { error: 'malformed_cookie' };
+  }
+
+  const [payload, signature] = parts;
+  const expected = hmac(payload, secret);
+  const provided = Buffer.from(signature);
+  const expectedBuffer = Buffer.from(expected);
+  if (provided.length !== expectedBuffer.length || !crypto.timingSafeEqual(provided, expectedBuffer)) {
+    return { error: 'invalid_cookie_signature' };
+  }
+
   try {
-    const parsed = JSON.parse(raw);
-    if (typeof parsed.expiresAt !== 'number') return null;
-    if (Date.now() > parsed.expiresAt) return null;
-    if (parsed.kind !== 'sad' && parsed.kind !== 'love') return null;
-    return parsed;
+    return { state: JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')) };
+  } catch {
+    return { error: 'malformed_cookie' };
+  }
+}
+
+function readState(cookieHeader) {
+  let cookies;
+  try {
+    cookies = parseCookies(cookieHeader);
+  } catch {
+    return { error: 'malformed_cookie' };
+  }
+
+  const raw = cookies[COOKIE_NAME];
+  if (!raw) return { state: null };
+
+  const verified = verifySignedState(raw);
+  if (verified.error) return verified;
+
+  const parsed = verified.state;
+  if (typeof parsed.expiresAt !== 'number') return { error: 'malformed_cookie' };
+  if (Date.now() > parsed.expiresAt) return { state: null };
+  if (parsed.kind !== 'sad' && parsed.kind !== 'love') return { error: 'malformed_cookie' };
+  return { state: parsed };
+}
+
+function requestOrigin(event) {
+  const origin = getHeader(event?.headers, 'origin');
+  if (origin) return origin;
+
+  const referer = getHeader(event?.headers, 'referer');
+  if (!referer) return null;
+
+  try {
+    return new URL(referer).origin;
   } catch {
     return null;
   }
+}
+
+function isAllowedPostOrigin(event) {
+  return requestOrigin(event) === ALLOWED_ORIGIN;
 }
 
 function buildResponse(statusCode, body, headers = {}) {
@@ -80,24 +155,42 @@ function buildResponse(statusCode, body, headers = {}) {
   };
 }
 
-exports.handler = async (event) => {
+function buildCookieClear(event) {
+  return serializeCookie('', 0, event);
+}
+
+export const handler = async (event) => {
   const method = event.httpMethod || 'GET';
 
   // ── GET ── read current state ──
   if (method === 'GET') {
-    const state = readState(event.headers.cookie);
-    if (!state) {
+    let result;
+    try {
+      result = readState(getHeader(event.headers, 'cookie'));
+    } catch (e) {
+      console.error('[love-lock] read failed', e);
+      return buildResponse(500, { error: 'server_misconfigured' });
+    }
+
+    if (result.error) {
+      return buildResponse(400, { error: result.error });
+    }
+    if (!result.state) {
       return buildResponse(200, { active: false, kind: null, expiresAt: null });
     }
     return buildResponse(200, {
       active: true,
-      kind: state.kind,
-      expiresAt: state.expiresAt,
+      kind: result.state.kind,
+      expiresAt: result.state.expiresAt,
     });
   }
 
   // ── POST ── activate a lock ──
   if (method === 'POST') {
+    if (!isAllowedPostOrigin(event)) {
+      return buildResponse(403, { error: 'forbidden_origin' });
+    }
+
     let payload;
     try {
       payload = JSON.parse(event.body || '{}');
@@ -110,7 +203,13 @@ exports.handler = async (event) => {
     }
     const now = Date.now();
     const state = { kind, startedAt: now, expiresAt: now + ONE_HOUR_MS };
-    const cookie = serializeCookie(JSON.stringify(state), 3600, event);
+    let cookie;
+    try {
+      cookie = serializeCookie(signState(state), 3600, event);
+    } catch (e) {
+      console.error('[love-lock] signing failed', e);
+      return buildResponse(500, { error: 'server_misconfigured' });
+    }
     return buildResponse(
       200,
       { active: true, kind, expiresAt: state.expiresAt },
@@ -120,17 +219,10 @@ exports.handler = async (event) => {
 
   // ── DELETE ── clear the lock ──
   if (method === 'DELETE') {
-    const expiredCookie = [
-      `${COOKIE_NAME}=`,
-      'Path=/',
-      'Max-Age=0',
-      'HttpOnly',
-      'SameSite=Lax',
-    ].join('; ');
     return buildResponse(
       200,
       { active: false, kind: null, expiresAt: null },
-      { 'Set-Cookie': expiredCookie }
+      { 'Set-Cookie': buildCookieClear(event) }
     );
   }
 
