@@ -1,5 +1,9 @@
 /goal I'm Daniel/Skander, working with Fatma. We're rebuilding **Presuntinho** from a single static HTML page into a real **personal study & life hub PWA**. Site is LIVE at https://presuntinho.netlify.app/ — you must not break it during the refactor; Netlify auto-deploys from `main`.
 
+**You are the principal orchestrator.** Do NOT implement directly. Delegate to **Skander 1** (reasoning/review), **Skander 2** (mechanical implementation), and **Piccolo** (tiny tasks) via `delegate_task`. See "Orchestration model" in EXECUTION PLAN below.
+
+> **v4.1 — Orchestrated plan (2026-06-27).** Replaces v4.0's "you do everything" plan with a 3-agent orchestration model for speed + quality.
+
 # MISSION
 
 Transform the existing repo at `C:\Users\rafaa\Documents\GitHub\presuntinho` (currently HTML+JS+CSS vanilla) into a properly architected **SvelteKit + Vite PWA** with a **plugin-style sub-app registry** that can host many future "apps" (school, work, finances, habits, library, etc.). Mobile-first, but must look and feel premium on PC, TV, tablet, and phone. Add password-gated login.
@@ -344,98 +348,166 @@ All current ones preserved. Plus add these subtle ones:
 
 # EXECUTION PLAN — SMALL, VERIFIABLE TASKS
 
-Do **not** try to do this in one giant rewrite. Break it into **tasks of 30–90 minutes each**, each ending with a deployable, testable state on Netlify.
+# EXECUTION PLAN — ORCHESTRATED 3-AGENT (Skander 1 / Skander 2 / Piccolo)
 
-## Phase 0 — Recon (DO THIS FIRST, before any code)
+## Orchestration model — READ FIRST
+
+You (this agent, the principal) **DO NOT IMPLEMENT**. You **ORCHESTRATE**. You have three sub-agents available:
+
+- **Skander 1** — senior reasoning agent. Use for: architecture decisions, code review, debugging, design trade-offs, refactor planning, accessibility audits, performance analysis. **Reasoning-heavy work.**
+- **Skander 2** — mechanical implementation agent. Use for: extracting files, writing repetitive code from a spec, generating JSON datasets, running scripts, generating boilerplate, file moves, git operations, dep installs, builds, tests. **Mechanical work with clear spec.**
+- **Piccolo** — fast execution agent. Use for: small one-shot tasks (single function write, single config edit, single file read+verify, single git push). **Sub-30-second tasks.**
+
+**You** = orchestrator. Your job is to:
+1. Read context, plan the phase
+2. Decompose each phase into discrete tasks with clear deliverables
+3. **Dispatch the right agent to each task** via `delegate_task`
+4. **Verify the result** (browser-test, build-test, smoke-test) — never trust a sub-agent's self-report without verification
+5. **Catch integration issues** between sub-agent outputs
+6. **Coordinate git commits** — each phase ends with one commit + push to `main`
+7. **Gate between phases** — do NOT proceed to phase N+1 until phase N has a green Netlify deploy
+
+**Sub-agent rules:**
+- Skander 1 / Skander 2 run via `delegate_task` (background, return when done)
+- Each delegated task MUST be self-contained: include file paths, expected output, exact constraints
+- Each delegated task MUST return a verifiable handle (file path, commit SHA, HTTP status, test output)
+- **You verify every handle yourself** before marking the task done — sub-agent self-reports are NOT proof
+- Piccolo is for tiny things you can do in 1-2 tool calls; do not over-use him for real work
+- Maximum 3 sub-agents running in parallel (system limit). Do not exceed.
+- Sub-agents cannot call you back. If a sub-agent gets stuck, dispatch a follow-up task with the additional context.
+
+**Anti-patterns to avoid:**
+- ❌ Doing implementation work yourself when a sub-agent could do it faster
+- ❌ Dispatching huge "build me the whole V4" tasks — split into ≤90-min pieces
+- ❌ Trusting sub-agent claims without verifying the artifact
+- ❌ Skipping phase gates ("deploy first, then next phase")
+- ❌ Letting sub-agents make architecture decisions (those are yours / Skander 1's job)
+
+## Phase 0 — Recon (you, principal, do this directly)
+
+**No delegation. This is judgment work.**
 
 1. Read every file in current repo. List each file, its purpose, what to preserve.
-2. Write `/PRESERVATION.md` with the inventory of items 1–13 from the "CRITICAL" section above. **Commit this.**
-3. Test current deployed site manually: open https://presuntinho.netlify.app/, click every nav link, click the heart, click the logo 3×, try Konami, open DevTools and dump `localStorage` keys. Confirm what works.
-4. Check Node/npm versions available. Confirm SvelteKit 2 + Svelte 5 will work in this env.
+2. Write `/PRESERVATION.md` with the 13-item inventory. Commit.
+3. Test deployed site manually (browser_navigate https://presuntinho.netlify.app/, click every link, click heart 5×, try Konami, dump localStorage).
+4. Check Node/npm versions (`node -v`, `npm -v`).
+5. Check if `delegate_task` works by dispatching a trivial Piccolo test (e.g. "echo the SHA of HEAD").
+6. **Gate:** do not proceed until you have the inventory committed and confirmed working.
 
-## Phase 1 — Bootstrap (preserve current, don't break)
+## Phase 1 — Bootstrap (split: Piccolo + Skander 2 + Skander 1 review)
 
-5. Add `package.json`, `svelte.config.js`, `vite.config.ts`, `tsconfig.json` for SvelteKit. Install deps: `@sveltejs/kit`, `svelte`, `vite`, `typescript`, `dexie`, `@vite-pwa/sveltekit`, `chart.js`, `date-fns`, `lucide-svelte`, `svelte-i18n`, `vitest`, `@playwright/test`.
-6. Move current HTML/JS/CSS into `/static/legacy/` (do not delete).
-7. Set `netlify.toml` build command to `npm run build`, publish to `build/`.
-8. Create minimal SvelteKit app that **serves the current HTML inside a `<iframe>`** at `/` — yes, ugly, but proves the deploy pipeline works without losing the current site. Commit. Push. Verify Netlify serves it.
-9. **Do not proceed until step 8 deploys successfully and the legacy iframe is visible at https://presuntinho.netlify.app/.**
+7. **Piccolo** (≤2 min): create `package.json` with the dep list. Verify `npm install` succeeds.
+8. **Skander 2** (≤15 min): scaffold SvelteKit project (`npx sv create .` non-interactive flags OR manual `svelte.config.js` + `vite.config.ts` + `tsconfig.json` + `src/app.html`). Add `dexie`, `@vite-pwa/sveltekit`, `chart.js`, `date-fns`, `lucide-svelte`, `svelte-i18n`, `vitest`, `@playwright/test`. Verify `npm run build` produces a `build/` directory.
+9. **Skander 2** (≤10 min): move current HTML/JS/CSS into `/static/legacy/`. Set `netlify.toml` build = `npm run build`, publish = `build/`. Create minimal `src/routes/+page.svelte` that serves the legacy index.html inside an `<iframe>`.
+10. **Skander 1** (≤10 min): **review the bootstrap** — verify the legacy iframe hack actually works (open `/` in browser, see current site), verify build pipeline, verify Netlify deploy config is correct. Report any blocking issues. **Do NOT skip this review.**
+11. **You (principal)**: commit + push. Verify Netlify deploys. **Gate:** site must look identical to current at https://presuntinho.netlify.app/.
 
-## Phase 2 — Auth + layout shell
+## Phase 2 — Auth + layout shell (Skander 2 builds, Skander 1 reviews)
 
-10. Build `/splash` password gate with both passwords hashed.
-11. Build `+layout.svelte` with nav, theme toggle, settings cog.
-12. Build hub dashboard at `/` with empty sub-app cards.
-13. Build `+layout.ts` to gate all routes behind auth (redirect to `/splash` if no session).
-14. Deploy. Verify splash + login work on Netlify.
+12. **Skander 2** (≤20 min): build `/splash` password gate. Web Crypto scrypt hash both passwords at build time via `scripts/hash-passwords.mjs`. Commit hashes to `/static/auth/hashes.json`. Splash UI: large mascot, password input, "Enter" button, ❤️ "Made for Fatma" footer. 3-strike lockout with localStorage timer. Wrong-password shake animation.
+13. **Skander 2** (≤20 min): build `+layout.svelte` with top nav (logo + theme toggle + settings cog). Build `+layout.ts` to redirect to `/splash` if no valid session in sessionStorage. Build `+page.svelte` (hub) with placeholder cards for all 5 sub-apps from `src/lib/registry.ts`.
+14. **Skander 1** (≤15 min): **security review** — verify the scrypt hash comparison is constant-time-ish, verify sessionStorage gating covers all routes, verify no password plaintext leaks in source. **Blocker if security issues.**
+15. **You**: commit + push. Browser-test splash → hub flow on Netlify. **Gate:** both passwords work, both lock out at 3 strikes, hub renders empty cards.
 
-## Phase 3 — Migration + state
+## Phase 3 — Migration + state (Skander 2 implements, Skander 1 reviews)
 
-15. Write Dexie schema in `src/lib/state/db.ts`.
-16. Write migration script that reads localStorage and writes to Dexie on first run.
-17. Move all `state.js` functionality into Svelte stores.
-18. Move all `easter-eggs.js` functionality into a store + components.
-19. Move all `quizzes.js` into data-driven `QuizRunner.svelte`.
-20. Deploy. Verify XP, badges, heartClicks survive a page reload.
+16. **Skander 2** (≤20 min): write Dexie schema in `src/lib/state/db.ts` mirroring all 11 current state keys (`xp`, `badges`, `visited`, `heartClicks`, `logoClicks`, `logoTimer`, `konamiProg`, `keyBuf`, `footerClicks`, `quizScore`, `quizAnswered`, `secretDiscovered`). Add indexes on `visited` and `secretDiscovered`.
+17. **Skander 2** (≤15 min): write `src/lib/state/migration.ts` — on first run, read current `localStorage.presuntinho` key, parse, write to Dexie. Keep localStorage key for one rollback cycle. Log migration success/failure to console.
+18. **Skander 2** (≤30 min): port `state.js` logic into Svelte stores (`src/lib/state/stores/{user,progress,easterEggs,settings}.ts`). Port `easter-eggs.js` into a single `src/lib/easterEggs/index.ts` module + a Svelte component `Confetti.svelte` + a `<SecretModal>` component. Port `quizzes.js` into a data-driven `QuizRunner.svelte` that reads from `/static/quizzes/*.json`.
+19. **Skander 1** (≤20 min): **data-migration review** — open the deployed site, do all easter eggs, refresh page, verify XP/badges/clicks survived. Specifically test: heart 5×, logo 3×, type "perfume", complete one quiz, refresh, check `db.xp.toArray()` in DevTools.
+20. **You**: commit + push. **Gate:** every current state key survives refresh via Dexie.
 
-## Phase 4 — Escola sub-app (the hardest)
+## Phase 4 — Escola sub-app (Skander 2 builds lessons, Skander 1 reviews pedagogy)
 
-21. Extract current course content into structured lesson JSONs (5 lessons: SWOT, Persona, Problem, TOWS, Recommendation).
-22. Build `LessonRunner.svelte` that renders a lesson from JSON.
-23. Build `/escola/curso/equivalenza`, `/escola/curso/portugues` course pages.
-24. Build `/escola/licao/[courseSlug]/[lessonSlug]` per-lesson pages.
-25. Split the existing combined Quizzes page into `/escola/quiz/[q1|q2|q3|q4|pt]`.
-26. Move Portuguese section from legacy `/pt` to `/escola/curso/portugues`.
-27. Deploy. Verify each lesson + quiz URL works.
+21. **Skander 2** (≤30 min): read current `index.html` lines covering SWOT/Persona/Problem/TOWS/Recommendation. Extract into 5 structured lesson JSONs in `/static/lessons/equivalenza/{swot,persona,problem,tows,recommendation}.json`. Each has: id, title, audio path, sections array (h2/p/ul/callout), quizSlug, keyPoints.
+22. **Skander 2** (≤30 min): extract 5 quizzes into `/static/quizzes/{q1,q2,q3,q4,pt}.json` with proper schema (id, courseId, questions[{prompt, choices, correctIndex, explanation}]).
+23. **Skander 2** (≤45 min): build `LessonRunner.svelte` (renders sections from JSON, plays audio, shows key points, next/prev nav, progress dots). Build `QuizRunner.svelte` (one question at a time, immediate feedback, score persistence). Wire routes: `/escola`, `/escola/curso/[slug]`, `/escola/licao/[courseSlug]/[lessonSlug]`, `/escola/quiz/[quizSlug]`.
+24. **Skander 1** (≤15 min): **content review** — verify the lesson JSONs preserve all original educational content (no paragraphs dropped, all key insights intact, audio references correct, quiz explanations make pedagogical sense).
+25. **You**: commit + push. Browser-test every lesson URL + every quiz URL on Netlify. **Gate:** all 5 lessons + all 5 quizzes reachable, audio plays, quiz answers persist.
 
-## Phase 5 — Trabalhos sub-app
+## Phase 5 — Trabalhos (Skander 2, fast)
 
-28. Build `/trabalhos` list, `/trabalhos/assignment/equivalenza` hub.
-29. Move PDFs, DOCX, ZIP downloads here from legacy `/dl`.
-30. Deploy.
+26. **Skander 2** (≤20 min): build `/trabalhos` list page + `/trabalhos/assignment/equivalenza` hub. Move PDFs, DOCX, ZIP from legacy `/dl` to this hub. Add deadline countdown widget.
+27. **You**: commit + push. **Gate:** all 3 documents downloadable from the new route.
 
-## Phase 6 — Finanças MVP
+## Phase 6 — Finanças MVP (Skander 2 builds, Skander 1 reviews)
 
-31. Build Dexie tables for `transacoes`, `orcamentos`, `categorias`.
-32. Build `/financas` dashboard with totals + simple chart.
-33. Build `/financas/transacoes` list with filters.
-34. Build `/financas/orcamento` monthly tracker.
-35. Build `/financas/nova` add-transaction form.
-36. Deploy.
+28. **Skander 2** (≤30 min): Dexie tables `transacoes`, `orcamentos`, `categorias`. Seed 10 categories (Alimentação, Transporte, etc) on first run. Build `/financas` dashboard with totals + a single bar chart (chart.js, monthly spending).
+29. **Skander 2** (≤45 min): `/financas/transacoes` (list with month/category filters), `/financas/orcamento` (set per-category monthly limits, show progress bar), `/financas/nova` (add-transaction form with category dropdown, type toggle, amount input, date picker).
+30. **Skander 1** (≤15 min): **UX review** — test the add-transaction flow, verify data persists across reloads, verify chart re-renders on data change, verify decimal/currency formatting works for pt-PT (comma as decimal sep).
+31. **You**: commit + push. **Gate:** can add a transaction, see it on dashboard, persists after refresh.
 
-## Phase 7 — Hábitos MVP
+## Phase 7 — Hábitos MVP (Skander 2, Skander 1 reviews)
 
-37. Build Dexie tables for `habitos`, `habit_logs`.
-38. Build list page, detail page with calendar heatmap (SVG, no heavy lib).
-39. Build add-habit form.
-40. Deploy.
+32. **Skander 2** (≤30 min): Dexie tables `habitos` (id, name, icon, color, cadence) + `habit_logs` (id, habitId, date, done). Build `/habitos` list with streak counter (current streak = consecutive days with log=true).
+33. **Skander 2** (≤30 min): `/habitos/habit/[slug]` detail with SVG calendar heatmap (last 90 days), log-today button. `/habitos/novo` add-habit form.
+34. **Skander 1** (≤10 min): verify heatmap SVG renders correctly, streak logic handles DST/timezone, missing days don't break streak.
+35. **You**: commit + push. **Gate:** create habit, log it, refresh, streak still shows.
 
-## Phase 8 — Biblioteca MVP
+## Phase 8 — Biblioteca MVP (Skander 2, quick)
 
-41. Build Dexie table for `biblioteca`.
-42. Build list + add + detail.
-43. Deploy.
+36. **Skander 2** (≤30 min): Dexie `biblioteca` table (id, title, url, tags[], description, createdAt). Build `/biblioteca` list (search by title/tag), `/biblioteca/novo` form, `/biblioteca/item/[id]` detail.
+37. **You**: commit + push. **Gate:** add bookmark, search, refresh, still there.
 
-## Phase 9 — Settings + i18n
+## Phase 9 — Settings + i18n (Skander 2 builds, Skander 1 reviews)
 
-44. Build `/definicoes` settings page (theme, language, reset, export, import).
-45. Wire svelte-i18n with pt-PT + en.
-46. Build `/splash` localized too.
-47. Deploy.
+38. **Skander 2** (≤30 min): `/definicoes` settings page — theme toggle (light/dark/auto, persisted to Dexie `settings.theme`), language toggle (pt-PT/en, persisted), reset-password (re-prompts for current password), clear-data (modal confirm, clears all Dexie tables except auth), export-JSON, import-JSON.
+39. **Skander 2** (≤30 min): wire `svelte-i18n`. Externalize all UI strings to `/src/lib/i18n/{pt-PT,en}.json`. Replace hard-coded strings in every component. Localize `/splash` too. Default locale: pt-PT (read from `localStorage.fat-pref-lang`, fallback to pt-PT).
+40. **Skander 1** (≤15 min): **i18n review** — grep for hard-coded English strings still in components, verify pt-PT copy is natural Portuguese (not Brazilian), verify all UI surfaces have translations.
+41. **You**: commit + push. Toggle language on Netlify, verify all labels change. **Gate:** zero hard-coded user-facing strings remain.
 
-## Phase 10 — Polish + accessibility
+## Phase 10 — Polish + a11y (Skander 1 leads)
 
-48. Add ARIA labels to every interactive element.
-49. Add focus-visible styles globally.
-50. Add `prefers-reduced-motion` checks.
-51. Lighthouse audit: target 95+ perf, 100 accessibility, 100 best practices, 100 SEO on mobile preset.
-52. Test on real device sizes via Chrome DevTools + BrowserStack if available.
-53. Update `README.md` with full v4 architecture, how to add a sub-app, how to deploy.
-54. Delete legacy iframe and `/static/legacy/` only when everything in Phases 1–9 is verified.
+42. **Skander 1** (≤30 min): **full a11y audit** — every interactive element has ARIA label or accessible name, every form has labels not placeholders, focus rings visible on all focusable elements, `tabindex` correct, skip-to-content link present, heading hierarchy correct (no h1→h3 skips), color contrast ≥ 4.5:1 for normal text, ≥ 3:1 for large.
+43. **Skander 1** (≤20 min): **motion audit** — every animation wrapped in `if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches)`. Confetti, mascot bounce, card hover effects all gated.
+44. **Skander 2** (≤20 min): **Lighthouse** — run `npx lighthouse https://presuntinho.netlify.app/ --preset=mobile --output=json --output-path=./lh.json`. Target ≥ 95 on perf, a11y, best-practices, SEO. Fix any < 90 score blocker.
+45. **Skander 2** (≤20 min): **responsive test** — Chrome DevTools device emulation at 360×640, 768×1024, 1280×800, 1920×1080, 3840×2160. Fix any layout break.
+46. **Skander 1** (≤15 min): **final code review** — TypeScript strict mode clean, no `any` without justification, no console warnings, bundle size < 150 KB gz initial.
+47. **You**: rewrite `/README.md` with v4 architecture, how to add a sub-app, deploy instructions. Commit.
 
-## Phase 11 — Final commit
+## Phase 11 — Final cleanup + tag
 
-55. Tag `v4.0.0`. Push to main. Netlify auto-deploys.
+48. **Skander 2** (≤10 min): delete `/static/legacy/` only after Skander 1 confirms every legacy URL has a redirect in `+page.ts` or has been replaced.
+49. **You**: tag `v4.0.0`. `git tag -a v4.0.0 -m "V4: SvelteKit PWA hub with escola/trabalhos/finanças/hábitos/biblioteca sub-apps"`. Push tag. Verify Netlify deploys final build.
+50. **You**: post final summary to user with deploy URL, live sub-apps list, preserved features verified, test results, deferred v5 items.
+
+## Orchestration cadence (how to actually run this)
+
+Each phase takes ~2 hours wall-clock with 3-agent orchestration. Total: ~22 hours of agent work but with parallel delegation you'll finish in **3–5 days** of real session time.
+
+**Your daily rhythm:**
+1. Start of session: `git pull`, run `git log --oneline -5`, check `PRESERVATION.md` for current state.
+2. Pick the next phase. Read its steps.
+3. Dispatch Phase N's tasks. While waiting, do your own recon for Phase N+1.
+4. As sub-agents return, verify each artifact. Catch integration bugs early.
+5. Commit + push at end of each phase.
+6. End of session: write a status note (what's done, what's next, blockers) into `/STATUS.md` so the next session's principal can resume without re-reading everything.
+
+**When to NOT delegate and do it yourself:**
+- Reading context (always you)
+- Architecture decisions (always you, possibly with Skander 1 input)
+- Final verification of any sub-agent output (always you)
+- Writing the principal-level `PRESERVATION.md` / `STATUS.md` (always you)
+
+**When to use Skander 1:**
+- "What's the right way to split this content into lessons?" — design question
+- "Review this code for security issues" — review
+- "Review this i18n for natural pt-PT" — language/cultural review
+- "Why is Lighthouse perf 78?" — debugging
+- "Audit accessibility of this whole page" — full audit
+
+**When to use Skander 2:**
+- "Generate these 5 JSON lesson files from this HTML" — mechanical extraction
+- "Wire Dexie tables for these 3 entities" — boilerplate
+- "Run npm install and verify build succeeds" — scripted task
+- "Move all these files into /static/legacy/" — mechanical
+
+**When to use Piccolo:**
+- "Echo the current SHA of HEAD" — 1-line query
+- "Update the version string in package.json" — single edit
+- "Confirm this file exists at that path" — single check
+
+**Maximum parallelism rule:** never run more than 3 sub-agents at once. If a phase has 5 tasks, batch them: 3 in parallel, then the remaining 2 when one returns.
 
 # QUALITY BAR
 
@@ -474,7 +546,8 @@ When you're done:
 6. Update `/PRESERVATION.md` checking off every preserved item.
 7. Write `/docs/architecture.md` explaining the sub-app registry pattern.
 8. Write `/docs/adding-a-sub-app.md` — a developer guide showing how to add a 6th sub-app in <30 min.
-9. Print a final summary message to the user with: deploy URL, list of sub-apps live, list of preserved features verified, test results, and any deferred items for v5.
+9. Write `/STATUS.md` for the next session's principal — what's done, what's next, any blockers.
+10. Print a final summary message to the user with: deploy URL, list of sub-apps live, list of preserved features verified, test results, and any deferred items for v5.
 
 # FINAL WORD
 
