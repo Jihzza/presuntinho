@@ -79,14 +79,14 @@ function signState(state) {
 }
 
 function verifySignedState(raw) {
-  const secret = process.env.LOVE_LOCK_SECRET;
-  if (!secret) {
-    throw new Error('LOVE_LOCK_SECRET is not configured');
-  }
-
   const parts = raw.split('.');
   if (parts.length !== 2 || !parts[0] || !parts[1]) {
     return { error: 'malformed_cookie' };
+  }
+
+  const secret = process.env.LOVE_LOCK_SECRET;
+  if (!secret) {
+    throw new Error('LOVE_LOCK_SECRET is not configured');
   }
 
   const [payload, signature] = parts;
