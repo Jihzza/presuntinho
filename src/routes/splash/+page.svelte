@@ -32,39 +32,42 @@
   let currentLocale = $state<string>('en');
 
   onMount(() => {
-    // Ensure translations are ready before first paint.
-    void waitLocale();
-    // Track the active locale so LoveLock copy follows the user's preference.
-    const unsubLocale = localeStore.subscribe((v) => {
-      if (typeof v === 'string') currentLocale = v;
-    });
-    // If already unlocked, skip splash
-    if (getSession()) {
-      unsubLocale();
-      goto('/');
-      return;
-    }
-    // If a Love Lock is active (persisted from a previous tab or refresh),
-    // surface it before the lockout-counter logic.
-    const existingLock = readLoveLock();
-    if (existingLock) {
-      loveLockState = existingLock;
-      // Don't return — still wire up the lockout counter underneath for the
-      // case where the user lets the love-lock TTL expire mid-session.
-    }
-    locked = isLockedOut();
-    let interval: ReturnType<typeof setInterval> | undefined;
-    if (locked.locked) {
-      interval = setInterval(() => {
+      // Ensure translations are ready before first paint.
+      void waitLocale();
+      // Track the active locale so LoveLock copy follows the user's preference.
+      const unsubLocale = localeStore.subscribe((v) => {
+        if (typeof v === 'string') currentLocale = v;
+      });
+      // If already unlocked, skip splash
+      if (getSession()) {
+        unsubLocale();
+        goto('/');
+        return;
+      }
+      // Async love-lock fetch — onMount itself isn't async so we void the promise.
+      void (async () => {
+        // If a Love Lock is active (persisted from a previous tab or refresh),
+        // surface it before the lockout-counter logic.
+        const existingLock = await readLoveLock();
+        if (existingLock) {
+          loveLockState = existingLock;
+          // Don't return — still wire up the lockout counter underneath for the
+          // case where the user lets the love-lock TTL expire mid-session.
+        }
         locked = isLockedOut();
-        if (!locked.locked && interval) clearInterval(interval);
-      }, 500);
-    }
-    return () => {
-      unsubLocale();
-      if (interval) clearInterval(interval);
-    };
-  });
+      })();
+      let interval: ReturnType<typeof setInterval> | undefined;
+      if (locked.locked) {
+        interval = setInterval(() => {
+          locked = isLockedOut();
+          if (!locked.locked && interval) clearInterval(interval);
+        }, 500);
+      }
+      return () => {
+        unsubLocale();
+        if (interval) clearInterval(interval);
+      };
+    });
 
   async function handleSubmit(e: Event) {
     e.preventDefault();
@@ -98,12 +101,13 @@
           // trigger here. We DO NOT burn a failed-attempt counter (this is
           // emotional, not adversarial).
           const loveKind = detectLoveLock(password);
-          if (loveKind) {
-            loveLockState = activateLoveLock(loveKind);
-            password = '';
-            loading = false;
-            return;
-          }
+                    if (loveKind) {
+                      const newLock = await activateLoveLock(loveKind);
+                      if (newLock) loveLockState = newLock;
+                      password = '';
+                      loading = false;
+                      return;
+                    }
 
           // Real auth failure — record attempt, show error, shake.
           const result = recordFailedAttempt();
@@ -122,15 +126,15 @@
         }
       }
 
-  function handleLoveUnlock() {
-    clearLoveLock();
-    loveLockState = null;
-    // The user did the emotional work — drop them at the hub without forcing
-    // them to type their real password a second time. (They still have to
-    // authenticate normally on the next cold-load because the session is
-    // separate from the love-lock state.)
-    void goto('/');
-  }
+  async function handleLoveUnlock() {
+      await clearLoveLock();
+      loveLockState = null;
+      // The user did the emotional work — drop them at the hub without forcing
+      // them to type their real password a second time. (They still have to
+      // authenticate normally on the next cold-load because the session is
+      // separate from the love-lock state.)
+      void goto('/');
+    }
 
   function formatRemaining(ms: number): string {
     return Math.ceil(ms / 1000).toString();
