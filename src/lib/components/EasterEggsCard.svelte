@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Secret } from '$lib/easterEggsConfig';
+  import { t } from 'svelte-i18n';
 
   export let secret: Secret;
   export let unlocked: boolean = false;
@@ -14,20 +15,20 @@
   class="secret-card"
   class:unlocked
   class:locked={!unlocked}
-  aria-label={unlocked ? 'Segredo descoberto' : 'Segredo por descobrir'}
+  aria-label={unlocked ? $t('easter.secret.discovered_aria') : $t('easter.secret.locked_aria')}
 >
   <header>
     <span class="icon" aria-hidden="true">{secret.icon}</span>
-    <span class="status">{unlocked ? '🔓 UNLOCKED' : '🔒 LOCKED'}</span>
+    <span class="status">{unlocked ? $t('easter.unlocked') : $t('easter.locked')}</span>
   </header>
   <h3>{secret.name}</h3>
   <p class="hint">💡 {secret.hint}</p>
-  <p class="reward">{unlocked ? secret.reward : 'Reward: ████████ (locked)'}</p>
+  <p class="reward">{unlocked ? secret.reward : $t('easter.reward_locked')}</p>
   {#if discoveredAt}
-    <p class="discovered">📅 Descoberto: {formatDate(discoveredAt)}</p>
+    <p class="discovered">{$t('easter.discovered_at', { values: { date: formatDate(discoveredAt) } })}</p>
   {/if}
   {#if secret.badge}
-    <p class="badge-line">🏷️ Badge: <code>{secret.badge}</code></p>
+    <p class="badge-line">{$t('easter.badge_label')} <code>{secret.badge}</code></p>
   {/if}
 </article>
 

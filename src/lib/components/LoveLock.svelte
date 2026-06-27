@@ -19,6 +19,7 @@
     isLockStale,
     loveLockMessage,
   } from '$lib/auth/loveLock';
+  import { t } from 'svelte-i18n';
 
   type Props = {
     lockState: LoveLockState;
@@ -158,9 +159,9 @@
 
     <p class="hint">
       {#if lockState.kind === 'sad'}
-        ✨ {locale === 'pt-PT' ? 'Fofinho perdoa tudo.' : 'Fofinho forgives everything.'}
+        ✨ {$t('lovelock.hint.sad')}
       {:else}
-        ✨ {locale === 'pt-PT' ? 'Fofinho acredita em ti.' : 'Fofinho believes you.'}
+        ✨ {$t('lovelock.hint.love')}
       {/if}
     </p>
   </div>

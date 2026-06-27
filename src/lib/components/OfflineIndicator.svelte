@@ -8,6 +8,7 @@
    * route; when online it dismisses the transient banner.
    */
   import { onMount } from 'svelte';
+  import { t } from 'svelte-i18n';
 
   type BannerState = 'hidden' | 'offline' | 'online';
 
@@ -82,15 +83,15 @@
     aria-live="polite"
   >
     <span class="icon" aria-hidden="true">{state === 'offline' ? '📡' : '✓'}</span>
-    <span class="text">{state === 'offline' ? 'Estás offline 🐷' : 'Volta a estar online! ✓'}</span>
+    <span class="text">{state === 'offline' ? $t('offline.offline') : $t('offline.online')}</span>
     {#if state === 'offline'}
       <button
         type="button"
         class="retry-btn"
         onclick={retry}
-        aria-label="Tentar novamente"
+        aria-label={$t('offline.retry_aria')}
       >
-        Retry
+        {$t('offline.retry')}
       </button>
     {/if}
   </div>

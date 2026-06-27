@@ -11,6 +11,7 @@
 
   import { onMount } from 'svelte';
   import { closeSRoom } from '$lib/easterEggs';
+  import { t } from 'svelte-i18n';
 
   interface Props {
     open: boolean;
@@ -19,13 +20,7 @@
   let { open = $bindable(false), onClose }: Props = $props();
 
   // 5 perfume facts (V3 hand-curated, preserved here). pt-PT.
-  const PERFUME_FACTS: string[] = [
-    '🧴 A indústria do perfume moderna nasceu em França no século XIV — o termo "perfume" vem do latim "per fumum" (através do fumo).',
-    '🌸 A nota de topo é o que se sente nos primeiros 15 minutos; a nota de coração dura 3–4 horas; a nota de fundo fica na pele até 24 h.',
-    '💎 Chanel N°5 (1921) foi o primeiro perfume abstracto — Coco Chanel escolheu-o porque era o 5.º frasco que Ernest Beaux lhe apresentou.',
-    '🧪 Marketing de perfume vive de storytelling: 80 % do preço vai para embalagem, marca e distribuição — o líquido é uma fração do custo.',
-    '🇹🇳 A Tunísia tem uma tradição ancestral em perfumaria — a cidade de Kairouan é conhecida como a "cidade das mil fontes" e o perfume de jasmim local.'
-  ];
+  const PERFUME_FACT_KEYS = ['secret.fact.1', 'secret.fact.2', 'secret.fact.3', 'secret.fact.4', 'secret.fact.5'];
 
   function handleClose(): void {
     open = false;
@@ -67,18 +62,18 @@
       aria-modal="true"
       aria-labelledby="secret-title"
     >
-      <button class="close" type="button" onclick={handleClose} aria-label="Fechar">×</button>
-      <h2 id="secret-title">🚪 Secret Room</h2>
+      <button class="close" type="button" onclick={handleClose} aria-label={$t('secret.close')}>×</button>
+      <h2 id="secret-title">{$t('secret.title')}</h2>
       <p class="lead">
-        Bem-vinda! Aqui ficam 5 factos sobre perfume — desbloqueados pelo teu ❤️ + 🐷.
+        {$t('secret.lead')}
       </p>
-      <ol class="facts" aria-label="Factos sobre perfume">
-        {#each PERFUME_FACTS as fact, i (i)}
-          <li>{fact}</li>
+      <ol class="facts" aria-label={$t('secret.facts_aria')}>
+        {#each PERFUME_FACT_KEYS as factKey, i (i)}
+          <li>{$t(factKey)}</li>
         {/each}
       </ol>
       <div class="actions">
-        <button type="button" class="cta" onclick={handleClose}>Fechar</button>
+        <button type="button" class="cta" onclick={handleClose}>{$t('secret.close')}</button>
       </div>
     </div>
   </div>

@@ -8,6 +8,8 @@
    */
   import { onMount } from 'svelte';
   import { TOAST_EVENT } from './events';
+  import { t } from 'svelte-i18n';
+  import { get } from 'svelte/store';
 
   interface BeforeInstallPromptEvent extends Event {
     readonly platforms: string[];
@@ -55,7 +57,7 @@
       installed = true;
       visible = false;
       deferredPrompt = null;
-      toast('App instalada — abre-a a partir do ecrã principal.');
+      toast(get(t)('install.installed_toast'));
     };
 
     window.addEventListener('beforeinstallprompt', onBeforeInstall);
@@ -83,7 +85,7 @@
       }
     } catch (e) {
       console.error('[install-button] prompt failed', e);
-      toast('Não foi possível abrir o prompt de instalação.');
+      toast(get(t)('install.error_toast'));
     } finally {
       deferredPrompt = null;
       prompting = false;
@@ -97,12 +99,12 @@
     type="button"
     class="install-btn"
     onclick={install}
-    aria-label="Instalar Presuntinho como aplicação"
-    title="Instalar Presuntinho como aplicação"
+    aria-label={$t('install.aria')}
+    title={$t('install.aria')}
     disabled={prompting}
   >
     <span class="icon" aria-hidden="true">📲</span>
-    <span class="label">{prompting ? 'A abrir…' : 'Instalar app'}</span>
+    <span class="label">{prompting ? $t('install.opening') : $t('install.label')}</span>
   </button>
 {/if}
 
