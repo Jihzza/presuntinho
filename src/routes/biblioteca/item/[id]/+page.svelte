@@ -25,6 +25,7 @@
 -->
 <script lang="ts">
   import { untrack } from 'svelte';
+  import { t } from 'svelte-i18n';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
   import { getItem, deleteItem, type Item } from '$lib/biblioteca';
@@ -156,7 +157,7 @@
     <p class="empty error" role="alert">
       ⚠️ {error ?? 'Marcador não encontrado.'}
     </p>
-    <p class="back-row"><a href="/biblioteca/">← Voltar à biblioteca</a></p>
+    <p class="back-row"><a href="/biblioteca/">← {$t('common.back')}</a></p>
   {:else}
     <header class="hero">
       <h1>{item.title}</h1>
@@ -226,7 +227,7 @@
         aria-label={confirmingDelete ? 'Confirmar remoção' : 'Apagar marcador'}
         data-confirming={confirmingDelete}
       >
-        {confirmingDelete ? 'Confirmar apagar?' : deleting ? 'A apagar…' : '🗑️ Apagar'}
+        {confirmingDelete ? 'Confirmar apagar?' : deleting ? 'A apagar…' : '🗑️ ' + $t('common.delete')}
       </button>
     </section>
   {/if}

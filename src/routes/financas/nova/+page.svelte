@@ -14,6 +14,7 @@
 -->
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { t } from 'svelte-i18n';
   import { goto } from '$app/navigation';
   import {
     listCategorias,

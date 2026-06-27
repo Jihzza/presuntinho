@@ -19,6 +19,7 @@
 -->
 <script lang="ts">
   import { untrack } from 'svelte';
+  import { t } from 'svelte-i18n';
   import {
     listItems,
     listTags,
@@ -160,7 +161,7 @@
   <section class="filters" aria-label="Filtros">
     <div class="search-row">
       <label class="search">
-        <span class="search-label">Pesquisar por título</span>
+        <span class="search-label">{$t('common.search')}</span>
         <input
           type="search"
           bind:value={query}
@@ -176,7 +177,7 @@
           onclick={clearFilters}
           aria-label="Limpar filtros"
         >
-          Limpar filtros
+          {$t('common.filter')}: limpar
         </button>
       {/if}
     </div>

@@ -15,6 +15,7 @@
 -->
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { t } from 'svelte-i18n';
   import {
     listCategorias,
     listTransacoesMes,
@@ -193,7 +194,7 @@
           onclick={clearFilters}
           aria-label="Limpar filtros"
         >
-          Limpar
+          {$t('common.filter')}: limpar
         </button>
       {/if}
     </div>

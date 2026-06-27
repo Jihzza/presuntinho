@@ -47,5 +47,16 @@
   "settings.about": "About",
   "settings.version": "Presuntinho V4",
   "settings.about.legacy": "V3 site preserved at /legacy",
-  "settings.about.repo": "Repository"
+  "settings.about.repo": "Repository",
+  "common.search": "Search",
+  "common.filter": "Filter",
+  "common.cancel": "Cancel",
+  "common.save": "Save",
+  "common.delete": "Delete",
+  "common.edit": "Edit",
+  "common.back": "Back",
+  "common.close": "Close",
+  "common.confirm": "Confirm",
+  "common.loading": "Loading…",
+  "common.empty": "No results"
 }

@@ -258,7 +258,11 @@
     background: var(--accent, #ec4899);
     transition: width 0.2s linear;
   }
-  .audio-card audio { height: 32px; max-width: 260px; }
+  .audio-card audio { height: 44px; max-width: 260px; }
+  /* Touch-target bump: ensure the native <audio> element + any
+     custom control wrappers meet the 44×44 px minimum from the
+     Presuntinho a11y contract (tappable on mobile, keyboard reachable). */
+  .audio-card audio { min-height: 44px; min-width: 44px; }
 
   /* Grid layout: body + sidebar */
   .lesson-grid {

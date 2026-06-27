@@ -84,10 +84,26 @@
   onMount(() => {
     if (!course) loadError = `Curso "${courseSlug}" não encontrado.`;
   });
+
+  // SEO — used by <svelte:head> below.  The catalogue is hardcoded so
+  // the title is stable per slug; falls back to a generic literal
+  // until the catalogue loads.
+  let pageTitle = $derived(
+    course ? `${course.title} · Curso · Escola` : 'Curso · Escola'
+  );
+  let description = $derived(
+    course?.description?.slice(0, 160) || 'Curso e lições'
+  );
 </script>
 
 <svelte:head>
-  <title>{course?.title ?? 'Curso'} · Escola · Presuntinho</title>
+  <title>{pageTitle} · Presuntinho</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content="https://presuntinho.netlify.app/escola/curso/" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={description} />
 </svelte:head>
 
 {#if loadError}

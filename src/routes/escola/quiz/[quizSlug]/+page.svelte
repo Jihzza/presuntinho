@@ -7,10 +7,20 @@
 
   let quizSlug = $derived(page.params.quizSlug ?? '');
   let jsonPath = $derived(`/quizzes/${quizSlug}.json`);
+
+  // SEO — used by <svelte:head> below.
+  let pageTitle = $derived(`${quizSlug.toUpperCase()} · Quiz · Escola`);
+  let description = $derived('Quiz interativo');
 </script>
 
 <svelte:head>
-  <title>Quiz {quizSlug} · Escola</title>
+  <title>{pageTitle} · Presuntinho</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content="https://presuntinho.netlify.app/escola/quiz/" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={description} />
 </svelte:head>
 
 <div class="quiz-page">
