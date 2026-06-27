@@ -1,0 +1,483 @@
+/goal I'm Daniel/Skander, working with Fatma. We're rebuilding **Presuntinho** from a single static HTML page into a real **personal study & life hub PWA**. Site is LIVE at https://presuntinho.netlify.app/ — you must not break it during the refactor; Netlify auto-deploys from `main`.
+
+# MISSION
+
+Transform the existing repo at `C:\Users\rafaa\Documents\GitHub\presuntinho` (currently HTML+JS+CSS vanilla) into a properly architected **SvelteKit + Vite PWA** with a **plugin-style sub-app registry** that can host many future "apps" (school, work, finances, habits, library, etc.). Mobile-first, but must look and feel premium on PC, TV, tablet, and phone. Add password-gated login.
+
+# CRITICAL — DO NOT LOSE OR BREAK ANY OF THIS
+
+The current site has real content, real interactivity, and real deliverables. **Every single one of these must be preserved and work after the rebuild.** Before touching anything, read each file in the repo and enumerate what you will preserve. Then commit a `PRESERVATION.md` checklist to the repo root, and check off items as you rebuild.
+
+## Content / files (must remain reachable in the new app)
+
+1. **All 5 audio files** in `/assets/` (move to `/static/audio/` in SvelteKit):
+   - `audio_intro_en.mp3` (1361 KB) — English walkthrough
+   - `audio_intro_pt-PT.mp3` (351 KB) — Portuguese walkthrough
+   - `intro_swot.mp3` (664 KB)
+   - `persona_problem.mp3` (858 KB)
+   - `tows_recommendation.mp3` (782 KB)
+   - `/assets/buyer-persona-template-v3.png` (the persona visual)
+2. **Documents in `/docs/`** — keep, link from a "Downloads" page:
+   - `Equivalenza_Mid_Term_Fatma.pdf` (161 KB)
+   - `Equivalenza_Mid_Term_Fatma.docx` (2248 KB)
+3. **The ZIP `equivalenza-midterm-deliverables-V3.zip`** — keep, link from Downloads.
+4. **All 9 HTML pages** that currently exist (Home, The Case, Course, Walkthrough, Secrets, Quizzes, Writing, PT, Downloads). Each becomes a route in SvelteKit. **Do not merge pages.** Each gets its own URL.
+
+## Interactivity / state (must keep working)
+
+5. **Easter eggs — every single one**:
+   - ❤️ **Heart button** (`heartClick` in `assets/js/easter-eggs.js:42`) — 5 tiers, XP rewards, speed bonus, confetti, mascot messages
+   - 🐷 **Logo click** (`logoClick`) — 3-click secret, mascot easter egg (`mascotClick`), unlock bonus
+   - 🎮 **Konami code** — `↑↑↓↓←→←→BA`, unlocks secret + badge
+   - ⌨️ **Keyword detector** (`keyBuf`) — typing `perfume`, `behi`, `fatma` triggers effects
+   - 👟 **Footer click** (`footerClick`) — counter easter egg
+   - 🔐 **Secret Room modal** (`closeSRoom`)
+   - 8+ **secret definitions** in `SECRET_DEFS` array — each unlockable via different trigger
+6. **State** (currently in `state.js`, schema in `state_keys`): `xp`, `badges` (8 badge IDs: b7, b8, b9, b10, b12, b13, b14, b15), `visited`, `heartClicks`, `logoClicks`, `logoTimer`, `konamiProg`, `keyBuf`, `footerClicks`, `quizScore`, `quizAnswered`, `secretDiscovered`. **Persist across reloads.** Migrate from localStorage → Dexie/IndexedDB (same data shape, no breaking change for users).
+7. **Confetti** (`fireConfetti` in `state.js`) — keep animation identical.
+8. **Toast notifications** (`showToast`) — keep.
+9. **Navigation** (`navGo`, `navLink`) — keep; refactor to SvelteKit router but expose same function names where possible.
+10. **Module Progress bar** (`updateProgress`, `pg`, `pct`) — Read/Quizzes/Writing percentage cards. **Must still render on home.**
+11. **Badge grid** (`renderBadges`, `BADGES`, `awardBadge`) — 10+ badge cards with unlock animation.
+12. **4 quizzes** (q1, q2, q3, q4) plus Portuguese quiz (`ptq` / `pt-quiz`) — each is its own page, NOT one page with all 5.
+13. **Portuguese section** — keep `🇵🇹 PT` tab with the Portuguese quiz and audio walkthrough.
+
+## Constraints from previous work (must respect)
+
+- **NO build step that breaks Netlify deploy.** Netlify must still auto-deploy `main`. Verify `netlify.toml` builds with the new toolchain before pushing.
+- **Netlify config must include** cache headers + security headers (already there) — keep them.
+- **HTTPS only**, `strict-origin-when-cross-origin`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff` — all must persist in `[[headers]]`.
+- **`<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">`** — must be present for mobile.
+
+# REQUIRED NEW FEATURES
+
+## 1. Password-gated login
+
+- **Splash screen first** (before any content). Two password fields:
+  - Primary: `I have the best boyfriend in the world`
+  - Secret/easter-egg shorter: `Fofinho`
+- Both unlock the app. Both stored as **scrypt-hashed** in `/static/auth/hashes.json` (use Web Crypto API at build time, or commit pre-hashed values).
+- Wrong password → shake animation + try again. 3 wrong attempts → 30s lockout (local).
+- After unlock: persist session in `sessionStorage` (auto-lock on tab close) **or** give a "Remember me" toggle that uses localStorage.
+- Passwords are **case-sensitive** with leading/trailing whitespace trimmed.
+- Display a small ❤️ "Made for Fatma" credit on the splash.
+
+## 2. Hub / dashboard with sub-app registry
+
+The home page becomes a **central hub**. Layout:
+
+```
+┌─────────────────────────────────────────────┐
+│  🐷 Presuntinho Hub     [XP] [Badges] [⚙]   │
+├─────────────────────────────────────────────┤
+│  ┌────────┐  ┌────────┐  ┌────────┐         │
+│  │ 📚     │  │ 💼     │  │ 💰     │         │
+│  │ Escola │  │Trabalhos│  │Finanças│        │
+│  └────────┘  └────────┘  └────────┘         │
+│  ┌────────┐  ┌────────┐  ┌────────┐         │
+│  │ 🧘     │  │ 📖     │  │ ⚙     │         │
+│  │Hábitos │  │Bibliot.│  │ Defs  │         │
+│  └────────┘  └────────┘  └────────┘         │
+├─────────────────────────────────────────────┤
+│  Recent activity / streak / motivation      │
+└─────────────────────────────────────────────┘
+```
+
+**Plugin registry** (`src/lib/registry.ts`):
+```ts
+export interface SubApp {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  description: string;
+  route: string;        // /escola, /trabalhos, etc
+  enabled: boolean;
+  order: number;
+}
+export const subApps: SubApp[] = [
+  { id: 'escola', name: 'Escola', icon: '📚', ... },
+  { id: 'trabalhos', name: 'Trabalhos', icon: '💼', ... },
+  { id: 'financas', name: 'Finanças', icon: '💰', ... },
+  { id: 'habitos', name: 'Hábitos', icon: '🧘', ... },
+  { id: 'biblioteca', name: 'Biblioteca', icon: '📖', ... },
+];
+```
+
+To add a future sub-app: create folder, add one entry to this array. Dashboard re-renders automatically.
+
+## 3. Escola sub-app (courses / lessons)
+
+Routes:
+- `/escola` — list of courses (currently 2: Equivalenza course, Portuguese course)
+- `/escola/curso/[slug]` — single course, list of lessons
+- `/escola/licao/[courseSlug]/[lessonSlug]` — single lesson page (text + audio + key points + "next" button)
+- `/escola/quiz/[quizSlug]` — single quiz page (one quiz per page, not 5 on one page)
+
+**Lesson data structure** (`src/lib/data/lessons/equivalenza/swot.json`):
+```json
+{
+  "id": "swot",
+  "courseId": "equivalenza",
+  "title": "SWOT Analysis",
+  "order": 1,
+  "audio": "/audio/intro_swot.mp3",
+  "duration": "~6 min",
+  "sections": [
+    { "type": "h2", "text": "Strengths" },
+    { "type": "p", "text": "..." },
+    { "type": "ul", "items": ["...", "..."] },
+    { "type": "callout", "variant": "insight", "text": "..." }
+  ],
+  "quiz": "q1",
+  "keyPoints": ["...", "..."]
+}
+```
+
+Extract the existing course content (SWOT, persona, problem, TOWS, recommendation) into **structured lesson JSONs**. Each becomes its own page. Currently the content is all on one big page — split it.
+
+## 4. Trabalhos sub-app (assignments)
+
+Routes:
+- `/trabalhos` — list of assignments
+- `/trabalhos/assignment/[slug]` — single assignment hub (deadline, deliverables, downloads)
+
+Currently 1: Equivalenza mid-term. Move it here. Keep all docs/ + ZIP download links inside.
+
+## 5. Finanças sub-app (MVP for v4 — small but real)
+
+Routes:
+- `/financas` — dashboard (total balance, monthly spend chart, top categories)
+- `/financas/transacoes` — list of transactions with filters
+- `/financas/orcamento` — monthly budget tracker
+- `/financas/nova` — add transaction form
+
+Data model (Dexie):
+```ts
+db.transacoes: { id, date, amount, category, description, type: 'income'|'expense' }
+db.orcamentos: { id, month: 'YYYY-MM', category, limit, spent }
+db.categorias: { id, name, icon, color }
+```
+
+Categories seed: Alimentação, Transporte, Habitação, Saúde, Educação, Lazer, Roupa, Beleza, Presentes, Outros.
+
+## 6. Hábitos sub-app (MVP)
+
+Routes:
+- `/habitos` — list of habits with current streak
+- `/habitos/habit/[slug]` — habit detail, calendar heatmap, log button
+- `/habitos/novo` — add habit
+
+Data model: `habitos` table + `habit_logs` (date, habitId, done).
+
+## 7. Biblioteca sub-app (MVP)
+
+Just a bookmark manager for now: title, url, tags, description. Routes: `/biblioteca`, `/biblioteca/novo`, `/biblioteca/item/[id]`.
+
+## 8. Settings (`/definicoes`)
+
+- Reset password
+- Clear local data (with confirmation modal)
+- Theme: light / dark / auto
+- Language: pt-PT / en (i18n via svelte-i18n)
+- Export all data as JSON
+- Import JSON backup
+
+# ARCHITECTURE DECISIONS (validate, don't blindly trust)
+
+## Stack
+
+- **Framework: SvelteKit 2 + Svelte 5** (runes). Why: smallest bundle (~28 KB gz), best mobile perf, file-based routing matches the multi-sub-app architecture.
+- **Build: Vite 5/6** (default with SvelteKit).
+- **Storage: Dexie.js 4** (IndexedDB wrapper). Replace current localStorage. Migration must preserve existing user state (read old `localStorage` key on first run, copy to Dexie, then keep both during transition).
+- **PWA: `@vite-pwa/sveltekit`** — auto-generates manifest.json + service worker. **Add to home screen** prompt. Offline-first.
+- **Auth: client-side only**. Web Crypto API scrypt. Hash both passwords at build time (Node script), commit JSON. Client compares hash, never stores plaintext.
+- **CSS: Svelte scoped styles + global CSS variables for design tokens** (colors, spacing, type scale, shadows). No Tailwind for v4 (overkill, slower cold start on mobile). Revisit later if needed.
+- **TypeScript** throughout. Strict mode.
+- **Charts (finanças):** lightweight — `chart.js` or pure SVG. No heavy lib.
+- **Date handling:** `date-fns` tree-shaken.
+- **Icons:** emoji + selective `lucide-svelte` for UI controls (settings cog, close x, etc).
+- **i18n:** `svelte-i18n`. PT-PT primary (Fatma is Portuguese), EN secondary. All UI strings externalized from day one.
+- **No backend** for v4. All data lives client-side (Dexie). Note this as a future v5 decision.
+
+## Folder structure
+
+```
+presuntinho/
+├── src/
+│   ├── app.html
+│   ├── app.css                    # design tokens, resets
+│   ├── lib/
+│   │   ├── registry.ts            # sub-app plugin registry
+│   │   ├── components/
+│   │   │   ├── HubCard.svelte
+│   │   │   ├── LessonRunner.svelte
+│   │   │   ├── QuizRunner.svelte
+│   │   │   ├── ProgressBar.svelte
+│   │   │   ├── Badge.svelte
+│   │   │   ├── Toast.svelte
+│   │   │   ├── Confetti.svelte
+│   │   │   ├── SecretModal.svelte
+│   │   │   └── ...
+│   │   ├── state/
+│   │   │   ├── db.ts              # Dexie schema
+│   │   │   ├── stores/
+│   │   │   │   ├── user.ts
+│   │   │   │   ├── progress.ts
+│   │   │   │   ├── easterEggs.ts
+│   │   │   │   └── settings.ts
+│   │   │   └── migration.ts       # localStorage → Dexie
+│   │   ├── data/
+│   │   │   ├── lessons/
+│   │   │   │   ├── equivalenza/
+│   │   │   │   │   ├── swot.json
+│   │   │   │   │   ├── persona.json
+│   │   │   │   │   ├── problem.json
+│   │   │   │   │   ├── tows.json
+│   │   │   │   │   └── recommendation.json
+│   │   │   │   └── portugues/
+│   │   │   │       ├── ...
+│   │   │   ├── quizzes/
+│   │   │   │   ├── q1.json
+│   │   │   │   ├── q2.json
+│   │   │   │   ├── q3.json
+│   │   │   │   ├── q4.json
+│   │   │   │   └── pt.json
+│   │   │   ├── secrets.json       # 8+ secret definitions
+│   │   │   └── easter-eggs.json   # konami, keywords, triggers
+│   │   ├── auth/
+│   │   │   ├── hash.ts            # scrypt
+│   │   │   ├── session.ts         # sessionStorage mgmt
+│   │   │   └── splash.ts
+│   │   └── i18n/
+│   │       ├── index.ts
+│   │       ├── pt-PT.json
+│   │       └── en.json
+│   └── routes/
+│       ├── +layout.svelte         # nav, login gate, theme
+│       ├── +layout.ts             # load session, init db
+│       ├── +page.svelte           # hub dashboard
+│       ├── splash/
+│       │   └── +page.svelte       # password gate (NO nav here)
+│       ├── escola/
+│       │   ├── +page.svelte
+│       │   ├── curso/[slug]/+page.svelte
+│       │   ├── licao/[courseSlug]/[lessonSlug]/+page.svelte
+│       │   └── quiz/[quizSlug]/+page.svelte
+│       ├── trabalhos/
+│       │   ├── +page.svelte
+│       │   └── assignment/[slug]/+page.svelte
+│       ├── financas/
+│       │   ├── +page.svelte
+│       │   ├── transacoes/+page.svelte
+│       │   ├── orcamento/+page.svelte
+│       │   └── nova/+page.svelte
+│       ├── habitos/
+│       │   ├── +page.svelte
+│       │   ├── habit/[slug]/+page.svelte
+│       │   └── novo/+page.svelte
+│       ├── biblioteca/
+│       │   ├── +page.svelte
+│       │   ├── novo/+page.svelte
+│       │   └── item/[id]/+page.svelte
+│       ├── definicoes/+page.svelte
+│       └── (legacy)/              # preserve existing 9 pages temporarily
+│           ├── case/+page.svelte
+│           ├── course/+page.svelte
+│           ├── walk/+page.svelte
+│           ├── secrets/+page.svelte
+│           ├── quiz/+page.svelte
+│           ├── write/+page.svelte
+│           ├── pt/+page.svelte
+│           └── dl/+page.svelte
+├── static/
+│   ├── audio/                     # all 5 mp3s
+│   ├── images/
+│   ├── docs/                      # pdf + docx
+│   ├── auth/hashes.json
+│   ├── manifest.webmanifest       # generated by vite-pwa
+│   └── favicon.svg
+├── scripts/
+│   ├── hash-passwords.mjs         # build-time scrypt hash
+│   └── migrate.mjs                # one-shot localStorage → Dexie
+├── tests/
+│   ├── unit/                      # vitest
+│   └── e2e/                       # playwright
+├── .gitignore
+├── package.json
+├── svelte.config.js
+├── vite.config.ts
+├── tsconfig.json
+├── netlify.toml                   # updated for npm build
+├── README.md                      # full rewrite
+├── PRESERVATION.md                # checklist of all preserved items
+└── docs/
+    ├── architecture.md
+    ├── adding-a-sub-app.md
+    └── deployment.md
+```
+
+## Design system
+
+- **Mobile-first**, breakpoints: `sm 640`, `md 768`, `lg 1024`, `xl 1280`, `2xl 1536`. Must look great at 360px width (smallest realistic phone) and 4K TV.
+- **Typography scale:** 12 / 14 / 16 / 18 / 20 / 24 / 30 / 36 / 48 (Tailwind-like modular scale, base 16).
+- **Spacing:** 4px grid (4, 8, 12, 16, 24, 32, 48, 64).
+- **Colors:** primary `#1f2e4a` (current navy), accent pink `#ec4899`, success green `#10b981`, warning amber, error red. All as CSS custom properties so dark mode is a one-line `:root.dark` override.
+- **Dark mode:** `prefers-color-scheme` default + manual toggle in settings. All components must support both from day one.
+- **Accessibility:** keyboard nav, focus rings, ARIA labels, `prefers-reduced-motion` to disable confetti and animations, color contrast ≥ WCAG AA.
+- **Motion:** respect `prefers-reduced-motion`. Default subtle (200ms ease-out). Confetti + easter eggs gated behind the user explicitly enabling "fun mode" in settings.
+
+## Easter eggs in the new app
+
+All current ones preserved. Plus add these subtle ones:
+- Type `presuntinho` anywhere → unlocks "Mascot Master" badge
+- Type `fatma` → unlocks "For Fatma" badge
+- Type `love` → unlocks "Made with ❤️" badge
+- Triple-click the hub logo (now bigger) → secret room with all easter egg lore
+- Hold `?` for 3 seconds → keyboard shortcut overlay
+
+## Routing & data
+
+- **Client-side routing only** (SPA mode via SvelteKit's `adapter-static`). No SSR — keeps Netlify config trivial, all data is local.
+- **First-load:** splash → enter passwords → hub dashboard → user clicks sub-app → that sub-app's data hydrates from Dexie on demand (lazy load).
+- **State shape preserved exactly** so existing user progress (XP, badges, quiz scores, secret discoveries, heartClicks, etc.) survives the migration. The migration script reads current localStorage, writes to Dexie, never deletes the localStorage key until user explicitly clears data in settings.
+
+# EXECUTION PLAN — SMALL, VERIFIABLE TASKS
+
+Do **not** try to do this in one giant rewrite. Break it into **tasks of 30–90 minutes each**, each ending with a deployable, testable state on Netlify.
+
+## Phase 0 — Recon (DO THIS FIRST, before any code)
+
+1. Read every file in current repo. List each file, its purpose, what to preserve.
+2. Write `/PRESERVATION.md` with the inventory of items 1–13 from the "CRITICAL" section above. **Commit this.**
+3. Test current deployed site manually: open https://presuntinho.netlify.app/, click every nav link, click the heart, click the logo 3×, try Konami, open DevTools and dump `localStorage` keys. Confirm what works.
+4. Check Node/npm versions available. Confirm SvelteKit 2 + Svelte 5 will work in this env.
+
+## Phase 1 — Bootstrap (preserve current, don't break)
+
+5. Add `package.json`, `svelte.config.js`, `vite.config.ts`, `tsconfig.json` for SvelteKit. Install deps: `@sveltejs/kit`, `svelte`, `vite`, `typescript`, `dexie`, `@vite-pwa/sveltekit`, `chart.js`, `date-fns`, `lucide-svelte`, `svelte-i18n`, `vitest`, `@playwright/test`.
+6. Move current HTML/JS/CSS into `/static/legacy/` (do not delete).
+7. Set `netlify.toml` build command to `npm run build`, publish to `build/`.
+8. Create minimal SvelteKit app that **serves the current HTML inside a `<iframe>`** at `/` — yes, ugly, but proves the deploy pipeline works without losing the current site. Commit. Push. Verify Netlify serves it.
+9. **Do not proceed until step 8 deploys successfully and the legacy iframe is visible at https://presuntinho.netlify.app/.**
+
+## Phase 2 — Auth + layout shell
+
+10. Build `/splash` password gate with both passwords hashed.
+11. Build `+layout.svelte` with nav, theme toggle, settings cog.
+12. Build hub dashboard at `/` with empty sub-app cards.
+13. Build `+layout.ts` to gate all routes behind auth (redirect to `/splash` if no session).
+14. Deploy. Verify splash + login work on Netlify.
+
+## Phase 3 — Migration + state
+
+15. Write Dexie schema in `src/lib/state/db.ts`.
+16. Write migration script that reads localStorage and writes to Dexie on first run.
+17. Move all `state.js` functionality into Svelte stores.
+18. Move all `easter-eggs.js` functionality into a store + components.
+19. Move all `quizzes.js` into data-driven `QuizRunner.svelte`.
+20. Deploy. Verify XP, badges, heartClicks survive a page reload.
+
+## Phase 4 — Escola sub-app (the hardest)
+
+21. Extract current course content into structured lesson JSONs (5 lessons: SWOT, Persona, Problem, TOWS, Recommendation).
+22. Build `LessonRunner.svelte` that renders a lesson from JSON.
+23. Build `/escola/curso/equivalenza`, `/escola/curso/portugues` course pages.
+24. Build `/escola/licao/[courseSlug]/[lessonSlug]` per-lesson pages.
+25. Split the existing combined Quizzes page into `/escola/quiz/[q1|q2|q3|q4|pt]`.
+26. Move Portuguese section from legacy `/pt` to `/escola/curso/portugues`.
+27. Deploy. Verify each lesson + quiz URL works.
+
+## Phase 5 — Trabalhos sub-app
+
+28. Build `/trabalhos` list, `/trabalhos/assignment/equivalenza` hub.
+29. Move PDFs, DOCX, ZIP downloads here from legacy `/dl`.
+30. Deploy.
+
+## Phase 6 — Finanças MVP
+
+31. Build Dexie tables for `transacoes`, `orcamentos`, `categorias`.
+32. Build `/financas` dashboard with totals + simple chart.
+33. Build `/financas/transacoes` list with filters.
+34. Build `/financas/orcamento` monthly tracker.
+35. Build `/financas/nova` add-transaction form.
+36. Deploy.
+
+## Phase 7 — Hábitos MVP
+
+37. Build Dexie tables for `habitos`, `habit_logs`.
+38. Build list page, detail page with calendar heatmap (SVG, no heavy lib).
+39. Build add-habit form.
+40. Deploy.
+
+## Phase 8 — Biblioteca MVP
+
+41. Build Dexie table for `biblioteca`.
+42. Build list + add + detail.
+43. Deploy.
+
+## Phase 9 — Settings + i18n
+
+44. Build `/definicoes` settings page (theme, language, reset, export, import).
+45. Wire svelte-i18n with pt-PT + en.
+46. Build `/splash` localized too.
+47. Deploy.
+
+## Phase 10 — Polish + accessibility
+
+48. Add ARIA labels to every interactive element.
+49. Add focus-visible styles globally.
+50. Add `prefers-reduced-motion` checks.
+51. Lighthouse audit: target 95+ perf, 100 accessibility, 100 best practices, 100 SEO on mobile preset.
+52. Test on real device sizes via Chrome DevTools + BrowserStack if available.
+53. Update `README.md` with full v4 architecture, how to add a sub-app, how to deploy.
+54. Delete legacy iframe and `/static/legacy/` only when everything in Phases 1–9 is verified.
+
+## Phase 11 — Final commit
+
+55. Tag `v4.0.0`. Push to main. Netlify auto-deploys.
+
+# QUALITY BAR
+
+- **TypeScript strict mode.** No `any` unless absolutely necessary.
+- **Every component tested** with vitest unit + at least one Playwright e2e.
+- **No console errors** in production build.
+- **No console warnings** (Svelte a11y warnings must be 0).
+- **Lighthouse mobile score ≥ 95** on home + escola hub + finanças dashboard.
+- **Bundle size**: initial route < 150 KB gz, total app < 500 KB gz.
+- **Works offline** after first visit (PWA service worker).
+- **Installable** to home screen on iOS Safari + Android Chrome.
+- **All current content reachable**: every existing page has a corresponding new URL.
+- **All current easter eggs still triggerable**: heart, logo, konami, keywords, footer, secret room.
+- **All current state preserved**: XP, badges, quiz scores, heartClicks etc. survive migration.
+- **No emoji character entity references** like `&#x1F3E0;` — use real emoji in source.
+
+# ABSOLUTELY DO NOT
+
+- ❌ Do not delete or rewrite any file without first preserving it in `/static/legacy/` or in the new repo.
+- ❌ Do not change Netlify's auto-deploy URL — `presuntinho.netlify.app` must keep working throughout the migration.
+- ❌ Do not introduce a backend or database service. V4 is fully client-side.
+- ❌ Do not skip the verification step at the end of each phase. **Each phase ends with a successful Netlify deploy of that phase's work.**
+- ❌ Do not commit `.env`, `node_modules`, `build/`, `.svelte-kit/`, or any secrets.
+- ❌ Do not use placeholder lorem ipsum in production UI strings. Real pt-PT copy throughout.
+- ❌ Do not merge unrelated PRs / work into one commit. One logical change per commit.
+- ❌ Do not remove the `🇵🇹 PT` tab or the Portuguese quiz. Fatma's primary language is Portuguese.
+
+# DELIVERABLES
+
+When you're done:
+1. Push to `main` branch. Netlify auto-deploys.
+2. Verify https://presuntinho.netlify.app/ works end-to-end manually.
+3. Run `npm run build` — must exit 0.
+4. Run `npm run test` — must exit 0 (all tests pass).
+5. Run `npx playwright test` — must exit 0 (e2e flows pass).
+6. Update `/PRESERVATION.md` checking off every preserved item.
+7. Write `/docs/architecture.md` explaining the sub-app registry pattern.
+8. Write `/docs/adding-a-sub-app.md` — a developer guide showing how to add a 6th sub-app in <30 min.
+9. Print a final summary message to the user with: deploy URL, list of sub-apps live, list of preserved features verified, test results, and any deferred items for v5.
+
+# FINAL WORD
+
+This is a real, personal app for a real person (Fatma). Treat her data with care, her language with respect, and her time with urgency. The current site is already deployed and live — your job is to make it **structurally better** without making it **functionally worse** at any step. Commit often, deploy often, verify after every phase. If you hit a blocker you cannot resolve, stop and ask the user — do not invent workarounds that look correct but aren't.
+
+Begin.
