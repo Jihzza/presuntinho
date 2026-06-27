@@ -1,0 +1,37 @@
+{
+  "id": "esq",
+  "title": "Quiz: Estratégia",
+  "description": "Mini-quiz para consolidar os conceitos do curso.",
+  "questions": [
+    {
+      "q": "Blue Ocean procura:",
+      "opts": [
+        "Competir igual",
+        "Criar espaço novo",
+        "Cortar tudo",
+        "Copiar benchmark"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Um Key Result deve ser:",
+      "opts": [
+        "Vago",
+        "Inspirador mas sem número",
+        "Mensurável",
+        "Secreto"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Execução estratégica precisa de:",
+      "opts": [
+        "Dono, ritmo e feedback",
+        "Só visão",
+        "Mais slides",
+        "Menos métricas"
+      ],
+      "a": 0
+    }
+  ]
+}

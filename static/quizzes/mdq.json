@@ -1,0 +1,37 @@
+{
+  "id": "mdq",
+  "title": "Quiz: Marketing Digital",
+  "description": "Mini-quiz para consolidar os conceitos do curso.",
+  "questions": [
+    {
+      "q": "Inbound Marketing começa por:",
+      "opts": [
+        "Interromper com anúncios",
+        "Atrair com valor",
+        "Baixar preços",
+        "Copiar concorrentes"
+      ],
+      "a": 1
+    },
+    {
+      "q": "A melhor métrica entre estas é:",
+      "opts": [
+        "Likes",
+        "Visualizações",
+        "Taxa de conversão",
+        "Impressões"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Num funil, o fundo serve para:",
+      "opts": [
+        "Gerar curiosidade",
+        "Remover risco e fechar decisão",
+        "Entreter",
+        "Aumentar alcance"
+      ],
+      "a": 1
+    }
+  ]
+}

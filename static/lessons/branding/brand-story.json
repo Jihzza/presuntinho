@@ -1,0 +1,48 @@
+{
+  "id": "brand-story",
+  "courseSlug": "branding",
+  "title": "Brand Story",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Brand Story"
+    },
+    {
+      "type": "p",
+      "text": "A narrativa que explica por que a marca existe, que tensão resolve e que futuro promete."
+    },
+    {
+      "type": "h3",
+      "text": "Como aplicar"
+    },
+    {
+      "type": "p",
+      "text": "Usa esta lição como um mini-framework: lê o conceito, identifica um exemplo real, escreve uma frase com a tua própria voz e liga a ideia ao trabalho ou ao teu dia-a-dia."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "História cria ligação emocional",
+        "Conflito torna a narrativa memorável",
+        "O cliente deve ser o herói",
+        "A marca é guia, não protagonista"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Dica para a Fatma: se conseguires explicar isto em 30 segundos a alguém, já percebeste o essencial."
+    }
+  ],
+  "keyPoints": [
+    "História cria ligação emocional",
+    "Conflito torna a narrativa memorável",
+    "O cliente deve ser o herói",
+    "A marca é guia, não protagonista"
+  ],
+  "quizSlug": "brq",
+  "nextLesson": null,
+  "prevLesson": "tom-de-voz"
+}

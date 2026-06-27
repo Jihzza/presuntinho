@@ -1,0 +1,48 @@
+{
+  "id": "growth",
+  "courseSlug": "estrategia",
+  "title": "Growth Strategy",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Growth Strategy"
+    },
+    {
+      "type": "p",
+      "text": "Crescer com hipóteses testáveis, ciclos curtos e aprendizagem acumulada."
+    },
+    {
+      "type": "h3",
+      "text": "Como aplicar"
+    },
+    {
+      "type": "p",
+      "text": "Usa esta lição como um mini-framework: lê o conceito, identifica um exemplo real, escreve uma frase com a tua própria voz e liga a ideia ao trabalho ou ao teu dia-a-dia."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Growth é método, não truque",
+        "Hipóteses devem ser mensuráveis",
+        "Retenção vem antes de escala",
+        "Experimentos pequenos reduzem risco"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Dica para a Fatma: se conseguires explicar isto em 30 segundos a alguém, já percebeste o essencial."
+    }
+  ],
+  "keyPoints": [
+    "Growth é método, não truque",
+    "Hipóteses devem ser mensuráveis",
+    "Retenção vem antes de escala",
+    "Experimentos pequenos reduzem risco"
+  ],
+  "quizSlug": "esq",
+  "nextLesson": "okrs",
+  "prevLesson": "blue-ocean"
+}

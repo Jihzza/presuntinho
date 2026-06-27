@@ -1,0 +1,48 @@
+{
+  "id": "execution",
+  "courseSlug": "estrategia",
+  "title": "Execução Estratégica",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Execução Estratégica"
+    },
+    {
+      "type": "p",
+      "text": "Fazer a estratégia acontecer: prioridades, rituais, donos e feedback."
+    },
+    {
+      "type": "h3",
+      "text": "Como aplicar"
+    },
+    {
+      "type": "p",
+      "text": "Usa esta lição como um mini-framework: lê o conceito, identifica um exemplo real, escreve uma frase com a tua própria voz e liga a ideia ao trabalho ou ao teu dia-a-dia."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Estratégia sem execução é desejo",
+        "Cada iniciativa precisa de dono",
+        "Ritmo semanal evita deriva",
+        "Feedback transforma plano em aprendizagem"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Dica para a Fatma: se conseguires explicar isto em 30 segundos a alguém, já percebeste o essencial."
+    }
+  ],
+  "keyPoints": [
+    "Estratégia sem execução é desejo",
+    "Cada iniciativa precisa de dono",
+    "Ritmo semanal evita deriva",
+    "Feedback transforma plano em aprendizagem"
+  ],
+  "quizSlug": "esq",
+  "nextLesson": null,
+  "prevLesson": "okrs"
+}

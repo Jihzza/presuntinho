@@ -1,0 +1,48 @@
+{
+  "id": "posicionamento",
+  "courseSlug": "branding",
+  "title": "Posicionamento",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Posicionamento"
+    },
+    {
+      "type": "p",
+      "text": "Decidir o espaço mental que a marca quer ocupar na cabeça do cliente."
+    },
+    {
+      "type": "h3",
+      "text": "Como aplicar"
+    },
+    {
+      "type": "p",
+      "text": "Usa esta lição como um mini-framework: lê o conceito, identifica um exemplo real, escreve uma frase com a tua própria voz e liga a ideia ao trabalho ou ao teu dia-a-dia."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Posicionamento é escolha",
+        "Não dá para ser tudo para todos",
+        "Diferenciação precisa de prova",
+        "Concorrente define contexto"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Dica para a Fatma: se conseguires explicar isto em 30 segundos a alguém, já percebeste o essencial."
+    }
+  ],
+  "keyPoints": [
+    "Posicionamento é escolha",
+    "Não dá para ser tudo para todos",
+    "Diferenciação precisa de prova",
+    "Concorrente define contexto"
+  ],
+  "quizSlug": "brq",
+  "nextLesson": "tom-de-voz",
+  "prevLesson": "brand-identity"
+}

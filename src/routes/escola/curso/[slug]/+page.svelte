@@ -26,6 +26,49 @@
 
   // Hardcoded catalogue for Phase 4 (matches static/lessons/equivalenza/*.json).
   const CATALOGUE: Record<string, CourseDetail> = {
+
+    'marketing-digital': {
+      slug: 'marketing-digital',
+      title: 'Marketing Digital',
+      tagline: 'Inbound, conteúdo, funis e métricas',
+      description: 'Quatro lições práticas para perceber como atrair, converter e medir clientes online.',
+      icon: '📱',
+      color: '#06b6d4',
+      lessons: [
+        { slug: 'inbound', title: '1. Inbound Marketing', summary: 'Atrair clientes com conteúdo útil em vez de interromper.', quizSlug: 'mdq', quizTitle: 'Quiz: Marketing Digital', estMinutes: 6 },
+        { slug: 'conteudo', title: '2. Marketing de Conteúdo', summary: 'Criar conteúdo útil, consistente e mensurável.', quizSlug: 'mdq', quizTitle: 'Quiz: Marketing Digital', estMinutes: 6 },
+        { slug: 'funis', title: '3. Funis de Conversão', summary: 'Transformar atenção em relação e decisão.', quizSlug: 'mdq', quizTitle: 'Quiz: Marketing Digital', estMinutes: 6 },
+        { slug: 'metricas', title: '4. Métricas Digitais', summary: 'Escolher números que orientam decisões reais.', quizSlug: 'mdq', quizTitle: 'Quiz: Marketing Digital', estMinutes: 6 }
+      ]
+    },
+    branding: {
+      slug: 'branding',
+      title: 'Branding',
+      tagline: 'Identidade, posicionamento e voz da marca',
+      description: 'Quatro lições para construir uma marca clara, memorável e coerente.',
+      icon: '✨',
+      color: '#a855f7',
+      lessons: [
+        { slug: 'brand-identity', title: '1. Identidade de Marca', summary: 'Sinais que tornam uma marca reconhecível.', quizSlug: 'brq', quizTitle: 'Quiz: Branding', estMinutes: 6 },
+        { slug: 'posicionamento', title: '2. Posicionamento', summary: 'O espaço mental que a marca quer ocupar.', quizSlug: 'brq', quizTitle: 'Quiz: Branding', estMinutes: 6 },
+        { slug: 'tom-de-voz', title: '3. Tom de Voz', summary: 'Como a marca fala e se comporta.', quizSlug: 'brq', quizTitle: 'Quiz: Branding', estMinutes: 6 },
+        { slug: 'brand-story', title: '4. Brand Story', summary: 'A narrativa emocional que liga marca e cliente.', quizSlug: 'brq', quizTitle: 'Quiz: Branding', estMinutes: 6 }
+      ]
+    },
+    estrategia: {
+      slug: 'estrategia',
+      title: 'Estratégia',
+      tagline: 'Blue Ocean, growth, OKRs e execução',
+      description: 'Quatro lições para transformar ideias em escolhas, métricas e execução.',
+      icon: '🧭',
+      color: '#f97316',
+      lessons: [
+        { slug: 'blue-ocean', title: '1. Blue Ocean Strategy', summary: 'Criar espaço novo em vez de competir igual.', quizSlug: 'esq', quizTitle: 'Quiz: Estratégia', estMinutes: 6 },
+        { slug: 'growth', title: '2. Growth Strategy', summary: 'Crescer com hipóteses e ciclos curtos.', quizSlug: 'esq', quizTitle: 'Quiz: Estratégia', estMinutes: 6 },
+        { slug: 'okrs', title: '3. OKRs', summary: 'Objectivos inspiradores e resultados mensuráveis.', quizSlug: 'esq', quizTitle: 'Quiz: Estratégia', estMinutes: 6 },
+        { slug: 'execution', title: '4. Execução Estratégica', summary: 'Prioridades, donos, rituais e feedback.', quizSlug: 'esq', quizTitle: 'Quiz: Estratégia', estMinutes: 6 }
+      ]
+    },
     equivalenza: {
       slug: 'equivalenza',
       title: 'Equivalenza — The Scent of a Second Chance',

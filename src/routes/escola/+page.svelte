@@ -42,6 +42,42 @@
       lessonCount: 1,
       quizCount: 1,
       badge: 'Novo'
+    },
+    {
+      slug: 'marketing-digital',
+      title: 'Marketing Digital',
+      tagline: 'Inbound, conteúdo, funis e métricas',
+      description:
+        'Quatro lições práticas para perceber como atrair, converter e medir clientes online com linguagem simples e exemplos aplicáveis.',
+      icon: '📱',
+      color: '#06b6d4',
+      lessonCount: 4,
+      quizCount: 1,
+      badge: 'Novo'
+    },
+    {
+      slug: 'branding',
+      title: 'Branding',
+      tagline: 'Identidade, posicionamento e voz da marca',
+      description:
+        'Aprende a construir uma marca reconhecível: sinais visuais, posicionamento, tom de voz e brand story.',
+      icon: '✨',
+      color: '#a855f7',
+      lessonCount: 4,
+      quizCount: 1,
+      badge: 'Novo'
+    },
+    {
+      slug: 'estrategia',
+      title: 'Estratégia',
+      tagline: 'Blue Ocean, growth, OKRs e execução',
+      description:
+        'Um mini-curso para transformar ideias em prioridades, métricas e execução semanal.',
+      icon: '🧭',
+      color: '#f97316',
+      lessonCount: 4,
+      quizCount: 1,
+      badge: 'Novo'
     }
   ];
 </script>

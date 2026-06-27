@@ -1,0 +1,37 @@
+{
+  "id": "brq",
+  "title": "Quiz: Branding",
+  "description": "Mini-quiz para consolidar os conceitos do curso.",
+  "questions": [
+    {
+      "q": "Identidade de marca é:",
+      "opts": [
+        "Só logótipo",
+        "Conjunto de sinais e comportamentos",
+        "A cor principal",
+        "Uma campanha"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Posicionamento obriga a:",
+      "opts": [
+        "Escolher espaço mental",
+        "Falar com todos",
+        "Evitar concorrentes",
+        "Mudar nome"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Na brand story, o cliente deve ser:",
+      "opts": [
+        "O herói",
+        "O vilão",
+        "O produto",
+        "O slogan"
+      ],
+      "a": 0
+    }
+  ]
+}
