@@ -132,10 +132,21 @@
 
   // Helper não-reactivo usado no template (não é estado).
   const _todayHint = getHojeISO;
+
+  // SEO — used by <svelte:head> below.  Static literal because this
+  // route has many rows but a single, stable identity for crawlers.
+  let pageTitle = $derived('Transações · Finanças');
+  let description = $derived('Todas as transações');
 </script>
 
 <svelte:head>
-  <title>Transações — Presuntinho</title>
+  <title>{pageTitle} · Presuntinho</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content="https://presuntinho.netlify.app/financas/transacoes/" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={description} />
 </svelte:head>
 
 <div class="transacoes-page">

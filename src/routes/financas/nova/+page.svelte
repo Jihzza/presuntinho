@@ -119,10 +119,20 @@
       submitting = false;
     }
   }
+
+  // SEO — used by <svelte:head> below.
+  let pageTitle = $derived('Nova Transação · Finanças');
+  let description = $derived('Adicionar transação');
 </script>
 
 <svelte:head>
-  <title>Nova transação — Presuntinho</title>
+  <title>{pageTitle} · Presuntinho</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content="https://presuntinho.netlify.app/financas/nova/" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={description} />
 </svelte:head>
 
 <div class="nova-page">

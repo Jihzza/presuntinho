@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /splash/
+Disallow: /legacy/
+Sitemap: https://presuntinho.netlify.app/sitemap.xml

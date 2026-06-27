@@ -1,4 +1,14 @@
 <script lang="ts">
+  /**
+   * SecretModal — appears when the user opens the Secret Room via the
+   * easter egg pipeline (logoClick 6–8, perfume keyword, etc.).
+   *
+   * V3 had a hand-curated list of 5 perfume facts that surfaced inside
+   * the modal — preserving that here so the room actually has content.
+   * Closing dispatches `presuntinho:close-secret-room` and runs
+   * `closeSRoom()` so the persistent `sroomOpened` flag flips back.
+   */
+
   import { onMount } from 'svelte';
   import { closeSRoom } from '$lib/easterEggs';
 
@@ -8,18 +18,27 @@
   }
   let { open = $bindable(false), onClose }: Props = $props();
 
-  function handleClose() {
+  // 5 perfume facts (V3 hand-curated, preserved here). pt-PT.
+  const PERFUME_FACTS: string[] = [
+    '🧴 A indústria do perfume moderna nasceu em França no século XIV — o termo "perfume" vem do latim "per fumum" (através do fumo).',
+    '🌸 A nota de topo é o que se sente nos primeiros 15 minutos; a nota de coração dura 3–4 horas; a nota de fundo fica na pele até 24 h.',
+    '💎 Chanel N°5 (1921) foi o primeiro perfume abstracto — Coco Chanel escolheu-o porque era o 5.º frasco que Ernest Beaux lhe apresentou.',
+    '🧪 Marketing de perfume vive de storytelling: 80 % do preço vai para embalagem, marca e distribuição — o líquido é uma fração do custo.',
+    '🇹🇳 A Tunísia tem uma tradição ancestral em perfumaria — a cidade de Kairouan é conhecida como a "cidade das mil fontes" e o perfume de jasmim local.'
+  ];
+
+  function handleClose(): void {
     open = false;
+    void closeSRoom();
     onClose?.();
   }
 
-  function onKey(e: KeyboardEvent) {
+  function onKey(e: KeyboardEvent): void {
     if (e.key === 'Escape' && open) handleClose();
   }
 
-  // Close via Secret Room closed event (easterEggs.ts closeSRoom)
   onMount(() => {
-    function onCloseEvent() {
+    function onCloseEvent(): void {
       open = false;
       onClose?.();
     }
@@ -28,22 +47,17 @@
       window.removeEventListener('presuntinho:close-secret-room', onCloseEvent);
     };
   });
-
-  // Award badge + secret when modal opens (V3 awardBadge('b10') + discoverSecret('hidden-room'))
-  $effect(() => {
-    if (open) {
-      void closeSRoom().then(() => {
-        // closeSRoom closes it, so immediately reopen if we just opened it
-        open = true;
-      });
-    }
-  });
 </script>
 
-<svelte:window on:keydown={onKey} />
+<svelte:window onkeydown={onKey} />
 
 {#if open}
-  <div class="overlay" onclick={handleClose} onkeydown={onKey} role="presentation">
+  <div
+    class="overlay"
+    onclick={handleClose}
+    onkeydown={onKey}
+    role="presentation"
+  >
     <div
       class="modal"
       onclick={(e) => e.stopPropagation()}
@@ -53,10 +67,19 @@
       aria-modal="true"
       aria-labelledby="secret-title"
     >
-      <button class="close" onclick={handleClose} aria-label="Fechar">×</button>
+      <button class="close" type="button" onclick={handleClose} aria-label="Fechar">×</button>
       <h2 id="secret-title">🚪 Secret Room</h2>
-      <p>Bem-vinda! Aqui ficarão os segredos desbloqueados. (Em construção — Phase 4+)</p>
-      <button class="cta" onclick={handleClose}>Fechar</button>
+      <p class="lead">
+        Bem-vinda! Aqui ficam 5 factos sobre perfume — desbloqueados pelo teu ❤️ + 🐷.
+      </p>
+      <ol class="facts" aria-label="Factos sobre perfume">
+        {#each PERFUME_FACTS as fact, i (i)}
+          <li>{fact}</li>
+        {/each}
+      </ol>
+      <div class="actions">
+        <button type="button" class="cta" onclick={handleClose}>Fechar</button>
+      </div>
     </div>
   </div>
 {/if}
@@ -71,17 +94,20 @@
     justify-content: center;
     z-index: 9000;
     padding: 1rem;
+    animation: overlay-in 0.18s ease;
   }
   .modal {
-    background: linear-gradient(135deg, #1f2e4a 0%, #2d4373 100%);
+    background: linear-gradient(135deg, var(--bg, #1f2e4a) 0%, #2d4373 100%);
     border: 1px solid rgba(236, 72, 153, 0.4);
     border-radius: 1rem;
     padding: 2rem;
     max-width: 480px;
     width: 100%;
     position: relative;
-    color: #fff;
+    color: var(--txt, #fff);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    max-height: 90vh;
+    overflow-y: auto;
   }
   .close {
     position: absolute;
@@ -93,19 +119,68 @@
     font-size: 1.5rem;
     cursor: pointer;
     line-height: 1;
-    padding: 0.25rem 0.5rem;
+    padding: 0.5rem 0.65rem;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 0.375rem;
   }
-  .close:hover { color: #ec4899; }
-  h2 { margin: 0 0 1rem 0; }
+  .close:hover,
+  .close:focus-visible {
+    color: var(--accent, #ec4899);
+    background: rgba(255, 255, 255, 0.06);
+    outline: none;
+  }
+  .close:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent, #ec4899);
+  }
+  h2 { margin: 0 0 1rem 0; color: var(--txt, #fff); }
+  .lead {
+    color: var(--txt2, #cbd5e1);
+    margin: 0 0 1rem 0;
+    font-size: 0.95rem;
+  }
+  .facts {
+    margin: 0 0 1.25rem 0;
+    padding-left: 1.25rem;
+    color: var(--txt, #fff);
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .facts li {
+    font-size: 0.95rem;
+    line-height: 1.45;
+    color: var(--txt, #fff);
+  }
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+  }
   .cta {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    background: #ec4899;
+    padding: 0.65rem 1.1rem;
+    background: var(--accent, #ec4899);
     color: #fff;
     border: 0;
     border-radius: 0.5rem;
     cursor: pointer;
     font-weight: 600;
+    min-height: 44px;
+    min-width: 44px;
+    transition: background 0.2s ease;
   }
-  .cta:hover { background: #d63780; }
+  .cta:hover,
+  .cta:focus-visible {
+    background: var(--accent-hover, #db2777);
+    outline: none;
+  }
+  .cta:focus-visible {
+    box-shadow: 0 0 0 2px #fff;
+  }
+  @keyframes overlay-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .overlay { animation: none; }
+  }
 </style>

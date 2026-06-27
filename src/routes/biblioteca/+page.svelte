@@ -132,7 +132,13 @@
 </script>
 
 <svelte:head>
-  <title>Biblioteca — Presuntinho</title>
+  <title>Biblioteca · Bookmarks · Presuntinho</title>
+  <meta name="description" content="Bookmarks, links e referências" />
+  <meta property="og:title" content="Biblioteca · Bookmarks" />
+  <meta property="og:description" content="Bookmarks, links e referências" />
+  <meta property="og:url" content="https://presuntinho.netlify.app/biblioteca/" />
+  <meta name="twitter:title" content="Biblioteca · Bookmarks" />
+  <meta name="twitter:description" content="Bookmarks, links e referências" />
 </svelte:head>
 
 <div class="biblioteca-page">

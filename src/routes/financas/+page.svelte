@@ -139,7 +139,13 @@
 </script>
 
 <svelte:head>
-  <title>Finanças — Presuntinho</title>
+  <title>Finanças · Dashboard · Presuntinho</title>
+  <meta name="description" content="Transações, orçamento e categorias" />
+  <meta property="og:title" content="Finanças · Dashboard" />
+  <meta property="og:description" content="Transações, orçamento e categorias" />
+  <meta property="og:url" content="https://presuntinho.netlify.app/financas/" />
+  <meta name="twitter:title" content="Finanças · Dashboard" />
+  <meta name="twitter:description" content="Transações, orçamento e categorias" />
 </svelte:head>
 
 <div class="financas-page">

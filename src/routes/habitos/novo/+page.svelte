@@ -80,10 +80,20 @@
     const el = document.getElementById('habit-name') as HTMLInputElement | null;
     el?.focus();
   });
+
+  // SEO — used by <svelte:head> below.
+  let pageTitle = $derived('Novo Hábito · Hábitos');
+  let description = $derived('Criar hábito diário');
 </script>
 
 <svelte:head>
-  <title>Novo hábito — Presuntinho</title>
+  <title>{pageTitle} · Presuntinho</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content="https://presuntinho.netlify.app/habitos/novo/" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={description} />
 </svelte:head>
 
 <div class="novo">

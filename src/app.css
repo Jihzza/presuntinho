@@ -68,6 +68,37 @@
   --card-hover: rgba(15, 23, 42, 0.06);
 }
 
+/* Legacy `.theme-light` / `.theme-dark` class hook (Phase 9 Definições).
+   Kept for compatibility with the settings page, which toggles these
+   classes alongside the data-theme attribute. */
+.theme-light {
+  --bg: #f8fafc;
+  --bg-elev: #ffffff;
+  --txt: #0f172a;
+  --txt2: #334155;
+  --txt3: #64748b;
+  --accent: #db2777;
+  --accent-hover: #be185d;
+  --border: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.18);
+  --card: rgba(15, 23, 42, 0.03);
+  --card-hover: rgba(15, 23, 42, 0.06);
+}
+.theme-dark {
+  /* Explicit dark tokens (same as :root). Kept for symmetry. */
+  --bg: #1f2e4a;
+  --bg-elev: #2d4373;
+  --txt: #ffffff;
+  --txt2: #cbd5e1;
+  --txt3: #94a3b8;
+  --accent: #ec4899;
+  --accent-hover: #db2777;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --card: rgba(255, 255, 255, 0.05);
+  --card-hover: rgba(255, 255, 255, 0.08);
+}
+
 * { box-sizing: border-box; }
 
 html {

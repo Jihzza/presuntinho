@@ -129,10 +129,23 @@
     if (s === 1) return '1 dia seguido. Continua!';
     return `${s} dias seguidos.`;
   }
+
+  // SEO — used by <svelte:head> below.  We build the title from the
+  // loaded habit name when available, falling back to a literal.
+  let pageTitle = $derived(
+    habit ? `${habit.name} · Hábitos` : 'Hábito · Hábitos'
+  );
+  let description = $derived('Detalhe do hábito');
 </script>
 
 <svelte:head>
-  <title>{habit ? `${habit.name} — Hábitos` : 'Hábito — Presuntinho'}</title>
+  <title>{pageTitle} · Presuntinho</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content="https://presuntinho.netlify.app/habitos/habit/" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={description} />
 </svelte:head>
 
 <div class="detail">

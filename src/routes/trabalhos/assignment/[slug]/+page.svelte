@@ -91,10 +91,24 @@
         return '📎';
     }
   }
+
+  // SEO — used by <svelte:head> below.
+  let pageTitle = $derived(
+    assignment ? `${assignment.title} · Trabalhos` : 'Trabalho · Trabalhos'
+  );
+  let description = $derived(
+    assignment?.description?.slice(0, 160) || 'Detalhe do trabalho'
+  );
 </script>
 
 <svelte:head>
-  <title>{assignment ? assignment.title : 'Trabalho'} — Presuntinho</title>
+  <title>{pageTitle} · Presuntinho</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content="https://presuntinho.netlify.app/trabalhos/assignment/" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={description} />
 </svelte:head>
 
 <div class="detail">

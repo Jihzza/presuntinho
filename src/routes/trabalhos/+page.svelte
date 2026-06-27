@@ -79,7 +79,13 @@
 </script>
 
 <svelte:head>
-  <title>Trabalhos — Presuntinho</title>
+  <title>Trabalhos · Entregas e Prazos · Presuntinho</title>
+  <meta name="description" content="Trabalhos e entregas com prazos" />
+  <meta property="og:title" content="Trabalhos · Entregas e Prazos" />
+  <meta property="og:description" content="Trabalhos e entregas com prazos" />
+  <meta property="og:url" content="https://presuntinho.netlify.app/trabalhos/" />
+  <meta name="twitter:title" content="Trabalhos · Entregas e Prazos" />
+  <meta name="twitter:description" content="Trabalhos e entregas com prazos" />
 </svelte:head>
 
 <div class="trabalhos">

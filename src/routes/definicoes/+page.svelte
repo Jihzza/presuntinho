@@ -57,6 +57,17 @@
   // Hydrate from Dexie once stores are ready (the store factory also
   // hydrates asynchronously; we wait for it).
   onMount(() => {
+    // Prefer localStorage 'fat-theme' if set (Phase 13 contract) so
+    // the choice survives a Dexie wipe via Definições → Limpar dados.
+    try {
+      const ls = localStorage.getItem('fat-theme') as ThemeChoice | null;
+      if (ls === 'light' || ls === 'dark' || ls === 'auto') {
+        currentTheme = ls;
+        themeStore.set(ls);
+      }
+    } catch {
+      // localStorage may be unavailable (private mode, SSR).
+    }
     const unsub = themeStore.subscribe((v) => {
       currentTheme = (v ?? 'auto') as ThemeChoice;
     });
@@ -64,32 +75,39 @@
   });
 
   /**
-   * Apply the chosen theme to documentElement by toggling a `theme-...`
-   * class.  CSS variables in `src/app.css` switch on these classes.
-   * For `auto` we follow the OS preference.
+   * Apply the chosen theme to documentElement. Uses BOTH the legacy
+   * `theme-light` / `theme-dark` classes (already styled) AND the
+   * `data-theme` attribute (CSS-variable override hook). For `auto`
+   * we follow the OS preference.
    */
   function applyTheme(t: ThemeChoice): void {
     if (typeof document === 'undefined') return;
     const root = document.documentElement;
     root.classList.remove('theme-light', 'theme-dark');
+    root.removeAttribute('data-theme');
     if (t === 'light') {
       root.classList.add('theme-light');
+      root.setAttribute('data-theme', 'light');
     } else if (t === 'dark') {
       root.classList.add('theme-dark');
+      root.setAttribute('data-theme', 'dark');
     } else {
-      // auto: respect OS preference via media query (no class needed;
-      // CSS can branch on @media (prefers-color-scheme: dark)).
-      // We don't add any class; the `auto` value is also persisted so
-      // a future layout pass can read it.
+      // auto: respect OS preference.
       const mql = window.matchMedia('(prefers-color-scheme: dark)');
-      if (mql.matches) root.classList.add('theme-dark');
-      else root.classList.add('theme-light');
+      const resolved: 'light' | 'dark' = mql.matches ? 'dark' : 'light';
+      root.classList.add(resolved === 'dark' ? 'theme-dark' : 'theme-light');
+      root.setAttribute('data-theme', resolved);
     }
   }
 
   function pickTheme(t: ThemeChoice): void {
     currentTheme = t;
     themeStore.set(t);
+    try {
+      localStorage.setItem('fat-theme', t);
+    } catch {
+      // Ignore — localStorage unavailable.
+    }
     applyTheme(t);
   }
 
@@ -153,6 +171,19 @@
         d.state.clear(),
         d.settings.clear()
       ]);
+      // Wipe localStorage too — prefs + theme + session.
+      try {
+        const ls = window.localStorage;
+        const toKeep: string[] = [];
+        // Optional: keep an allowlist of keys that are device-scoped,
+        // not user-scoped. Currently none — we wipe everything.
+        for (let i = ls.length - 1; i >= 0; i--) {
+          const key = ls.key(i);
+          if (key && !toKeep.includes(key)) ls.removeItem(key);
+        }
+      } catch {
+        // localStorage may be unavailable.
+      }
       // Re-seed default settings so the rest of the app keeps working
       // after the reload.
       await d.settings.put({ ...DEFAULT_SETTINGS, updatedAt: Date.now() });

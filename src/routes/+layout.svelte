@@ -3,16 +3,20 @@
   import { page } from '$app/state';
   import { goto } from '$app/navigation';
   import { getSession, clearSession } from '$lib/auth/session';
-  import { initStores } from '$lib/state/stores';
+  import { initStores, markVisited } from '$lib/state/stores';
   import Confetti from '$lib/components/Confetti.svelte';
   import Toast from '$lib/components/Toast.svelte';
-  import { handleKonamiKey } from '$lib/easterEggs';
+  import Mascot from '$lib/components/Mascot.svelte';
+  import SecretModal from '$lib/components/SecretModal.svelte';
+  import OfflineIndicator from '$lib/components/OfflineIndicator.svelte';
+  import { handleKonamiKey, logoClick, footerClick } from '$lib/easterEggs';
   import { onMount } from 'svelte';
   import { pwaInfo } from 'virtual:pwa-info';
 
   let { children } = $props();
   let session = $state(getSession());
   let storesReady = $state(false);
+  let secretRoomOpen = $state(false);
 
   // Tag <link rel="manifest"> gerada pelo plugin (caso o PWA esteja ativo).
   // O fallback manual já vive em src/app.html, por isso esta tag é só aditiva.
@@ -20,6 +24,7 @@
 
   onMount(() => {
     let unbindKey: (() => void) | null = null;
+    let unbindExtra: (() => void) | null = null;
 
     // PWA: regista o service worker gerado pelo @vite-pwa/sveltekit.
     // Em dev (devOptions.enabled = false) o módulo virtual:pwa-register não
@@ -65,7 +70,33 @@
         // Continue rendering; stores will fall back to defaults
       }
 
-      // Redirect to splash if not authenticated (and not already on /splash/)
+      // Visit tracking (Phase 13). Normalise the pathname so "/foo/"
+      // and "/foo" both map to "foo" — matches V3's visited keys.
+      try {
+        const path = page.url.pathname.replace(/\/+$/, '') || '/';
+        const pageId = path === '/' ? 'home' : path.replace(/^\//, '');
+        await markVisited(pageId);
+      } catch (e) {
+        console.error('[presuntinho] markVisited failed:', e);
+      }
+
+      // Secret Room: when easterEggs.ts opens the room we mirror the
+      // state here so SecretModal renders. The modal emits a close
+      // event back into easterEggs via SecretModal itself.
+      function onOpenSRoom() {
+        secretRoomOpen = true;
+      }
+      function onCloseSRoom() {
+        secretRoomOpen = false;
+      }
+      window.addEventListener('presuntinho:open-secret-room', onOpenSRoom);
+      window.addEventListener('presuntinho:close-secret-room', onCloseSRoom);
+      unbindExtra = () => {
+        window.removeEventListener('presuntinho:open-secret-room', onOpenSRoom);
+        window.removeEventListener('presuntinho:close-secret-room', onCloseSRoom);
+      };
+
+      // Redirect to splash if not authenticated (and not already on /splash/')
       // Note: trailingSlash='always' in +layout.ts forces /splash → /splash/ at runtime.
       if (!session && page.url.pathname !== '/splash/') {
         goto('/splash/');
@@ -81,6 +112,7 @@
 
     return () => {
       if (unbindKey) unbindKey();
+      if (unbindExtra) unbindExtra();
     };
   });
 
@@ -102,11 +134,21 @@
 {:else}
   <Confetti />
   <Toast />
+  <Mascot />
+  <SecretModal bind:open={secretRoomOpen} />
+  <!-- Phase 15: offline status banner (listens to online/offline events). -->
+  <OfflineIndicator />
   <div class="app">
     <header class="nav">
       <div class="nav-inner">
         <a href="/" class="logo" aria-label="Presuntinho home">
-          <span class="logo-pig" aria-hidden="true">🐷</span>
+          <button
+            type="button"
+            class="logo-pig"
+            onclick={() => logoClick()}
+            aria-label="🐷 easter egg"
+            title="🐷 easter egg"
+          >🐷</button>
           <span>Presuntinho</span>
         </a>
         <div class="nav-actions">
@@ -130,6 +172,15 @@
     <main id="main-content" class="content" tabindex="-1">
       {@render children?.()}
     </main>
+
+    <footer class="footer">
+      <button
+        type="button"
+        class="footer-btn"
+        onclick={() => footerClick()}
+        aria-label="© 2026 Presuntinho — easter egg"
+      >© 2026 Presuntinho — para Fatma 🐷</button>
+    </footer>
   </div>
 {/if}
 
@@ -169,6 +220,25 @@
   }
   .logo-pig {
     font-size: 1.5rem;
+    /* Override <a> link colour so the pig button reads as part of the logo. */
+    color: inherit;
+    /* Reset native button styling. */
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    line-height: 1;
+    border-radius: 4px;
+    transition: transform 0.15s ease;
+  }
+  .logo-pig:hover,
+  .logo-pig:focus-visible {
+    transform: scale(1.12);
+    outline: none;
+  }
+  .logo-pig:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent, #ec4899);
   }
   .nav-actions {
     display: flex;
@@ -201,5 +271,33 @@
   .content {
     flex: 1;
     width: 100%;
+  }
+  .footer {
+    padding: 1rem;
+    text-align: center;
+    opacity: 0.6;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 2rem;
+  }
+  .footer-btn {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    min-height: 44px;
+    min-width: 44px;
+    border-radius: 0.375rem;
+    opacity: inherit;
+  }
+  .footer-btn:hover,
+  .footer-btn:focus-visible {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.04);
+    outline: none;
+  }
+  .footer-btn:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent, #ec4899);
   }
 </style>

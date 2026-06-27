@@ -33,7 +33,13 @@
 </script>
 
 <svelte:head>
-  <title>Escola · Presuntinho</title>
+  <title>Escola · Cursos e Quizzes · Presuntinho</title>
+  <meta name="description" content="Cursos, lições e quizzes da Fatma" />
+  <meta property="og:title" content="Escola · Cursos e Quizzes" />
+  <meta property="og:description" content="Cursos, lições e quizzes da Fatma" />
+  <meta property="og:url" content="https://presuntinho.netlify.app/escola/" />
+  <meta name="twitter:title" content="Escola · Cursos e Quizzes" />
+  <meta name="twitter:description" content="Cursos, lições e quizzes da Fatma" />
 </svelte:head>
 
 <div class="escola">

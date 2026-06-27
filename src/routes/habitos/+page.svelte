@@ -76,7 +76,13 @@
 </script>
 
 <svelte:head>
-  <title>Hábitos — Presuntinho</title>
+  <title>Hábitos · Daily Check-in · Presuntinho</title>
+  <meta name="description" content="Hábitos diários com streaks" />
+  <meta property="og:title" content="Hábitos · Daily Check-in" />
+  <meta property="og:description" content="Hábitos diários com streaks" />
+  <meta property="og:url" content="https://presuntinho.netlify.app/habitos/" />
+  <meta name="twitter:title" content="Hábitos · Daily Check-in" />
+  <meta name="twitter:description" content="Hábitos diários com streaks" />
 </svelte:head>
 
 <div class="habitos-page">

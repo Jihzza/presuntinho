@@ -117,10 +117,28 @@
     // its filter from the URL on first render.
     void goto(`/biblioteca/?tag=${encodeURIComponent(tag)}`);
   }
+
+  // SEO — used by <svelte:head> below.
+  // The title grows with the actual bookmark title once it loads, so
+  // we use a $derived so that the meta tags update reactively after
+  // `item` resolves.  Falling back to a static literal keeps the
+  // initial render SEO-safe.
+  let pageTitle = $derived(
+    item?.title ? `${item.title} · Marcador · Biblioteca` : 'Marcador · Biblioteca'
+  );
+  let description = $derived(
+    item?.description?.slice(0, 160) || 'Detalhe do marcador'
+  );
 </script>
 
 <svelte:head>
-  <title>{item ? `${item.title} — Biblioteca` : 'Marcador — Presuntinho'}</title>
+  <title>{pageTitle} · Presuntinho</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={`https://presuntinho.netlify.app/biblioteca/item/${page.params.id ?? ''}/`} />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={description} />
 </svelte:head>
 
 <div class="detail">

@@ -22,8 +22,10 @@
   import { get } from 'svelte/store';
 
   import HubCard from '$lib/components/HubCard.svelte';
-  import ProgressBar from '$lib/components/ProgressBar.svelte';
-  import BadgeGrid from '$lib/components/BadgeGrid.svelte';
+    import ProgressBar from '$lib/components/ProgressBar.svelte';
+    import BadgeGrid from '$lib/components/BadgeGrid.svelte';
+    import HeartButton from '$lib/components/HeartButton.svelte';
+    import InstallButton from '$lib/components/InstallButton.svelte';
 
   import { subApps, legacySubApp, v3Content } from '$lib/registry';
   import { db } from '$lib/state/db';
@@ -139,11 +141,14 @@
   <header class="hub-hero">
     <h1>
       <span class="greeting">🐷 Olá, Fatma</span>
+    </h1>
+    <div class="hero-actions">
       <span class="xp" aria-label="Pontos de experiência: {xpLabel}">
         <span class="xp-dot" aria-hidden="true"></span>
         {xpLabel}
       </span>
-    </h1>
+      <HeartButton />
+    </div>
     <p class="sub">Equivalenza Study Hub — escolhe por onde começar</p>
   </header>
 
@@ -231,6 +236,13 @@
   .greeting {
     display: inline-block;
   }
+  .hero-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 0.5rem 0 0.25rem 0;
+  }
   .xp {
     display: inline-flex;
     align-items: center;
@@ -311,15 +323,34 @@
       grid-template-columns: repeat(2, 1fr);
     }
   }
-  @media (min-width: 1024px) {
+    @media (min-width: 1024px) {
     .hub {
+      max-width: 1000px;
       padding: 2rem 1.5rem 3rem;
     }
     .hub-hero h1 {
       font-size: 2.5rem;
     }
+    /* .grid (apps) becomes 2-cols on 1024-1440 viewports — see 1440
+       breakpoint below for the 3-col upgrade. */
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .progress-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
     .legacy-grid,
     .v3-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Large / 4K-friendly layout (Phase 15 #4). */
+  @media (min-width: 1440px) {
+    .hub {
+      max-width: 1200px;
+    }
+    .grid {
       grid-template-columns: repeat(3, 1fr);
     }
   }

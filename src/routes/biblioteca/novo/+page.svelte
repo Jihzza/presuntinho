@@ -90,7 +90,13 @@
 </script>
 
 <svelte:head>
-  <title>Novo marcador — Presuntinho</title>
+  <title>Novo Marcador · Biblioteca · Presuntinho</title>
+  <meta name="description" content="Adicionar novo marcador" />
+  <meta property="og:title" content="Novo Marcador · Biblioteca" />
+  <meta property="og:description" content="Adicionar novo marcador" />
+  <meta property="og:url" content="https://presuntinho.netlify.app/biblioteca/novo/" />
+  <meta name="twitter:title" content="Novo Marcador · Biblioteca" />
+  <meta name="twitter:description" content="Adicionar novo marcador" />
 </svelte:head>
 
 <div class="novo">

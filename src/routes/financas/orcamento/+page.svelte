@@ -138,10 +138,20 @@
   let totalGasto = $derived(
     categoriasDespesa.reduce((s, c) => s + (gastosMes[c.id] || 0), 0)
   );
+
+  // SEO — used by <svelte:head> below.
+  let pageTitle = $derived('Orçamento · Finanças');
+  let description = $derived('Limites por categoria');
 </script>
 
 <svelte:head>
-  <title>Orçamento — Presuntinho</title>
+  <title>{pageTitle} · Presuntinho</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content="https://presuntinho.netlify.app/financas/orcamento/" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={description} />
 </svelte:head>
 
 <div class="orcamento-page">
