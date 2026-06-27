@@ -12,10 +12,41 @@
 # SPA fallback — SvelteKit adapter-static emits a single index.html fallback,
 # but the wildcard redirect keeps URLs clean and matches Netlify's expected
 # behaviour for client-routed apps.
+# `force = false` lets static files (robots.txt, sitemap.xml, sw.js, icons,
+# legacy/, audio, PDFs, JSON, etc.) win over the rewrite so they are served
+# with their proper Content-Type. Without it, the wildcard serves the SPA
+# shell for every URL and PWA + SEO are broken.
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false
+
+# Explicit exceptions for files that Netlify's static-serve should handle
+# even if a wildcard is matched.
+[[redirects]]
+  from = "/sw.js"
+  to = "/sw.js"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/manifest.webmanifest"
+  to = "/manifest.webmanifest"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/robots.txt"
+  to = "/robots.txt"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/sitemap.xml"
+  status = 200
+  force = false
 
 # Long cache for immutable Vite/SvelteKit assets (hashed filenames)
 [[headers]]
