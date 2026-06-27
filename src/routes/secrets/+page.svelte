@@ -1,104 +1,15 @@
 <script lang="ts">
   // Secrets — Easter-egg hub (V6 port of V3 #pg-secrets).
   // Renders 12 secret definitions from /config/easterEggs.json (single source
-  // of truth). Falls back to inline V3 SECRET_DEFS if the JSON can't be
-  // fetched (offline / pre-install).
+  // of truth) using the shared <EasterEggsCard /> component.
 
   import { onMount } from 'svelte';
   import { db } from '$lib/state/db';
-  import { getSecrets, getBadges, isSecretUnlocked, getSecretDiscoveredAt, type Secret as ConfigSecret } from '$lib/easterEggsConfig';
+  import { getSecrets, type Secret } from '$lib/easterEggsConfig';
   import EasterEggsCard from '$lib/components/EasterEggsCard.svelte';
 
-  interface SecretDef {
-    id: string;
-    icon: string;
-    name: string;
-    hint: string;
-    reward: string;
-    badge: string | null;
-    badgeName?: string;
-    nonBadgeCheck?: 'heart' | 'logo3' | 'mascot';
-  }
-
-  // 8 secrets from V3 (static/legacy/assets/js/easter-eggs.js SECRET_DEFS).
-  // Ported inline because easterEggs.ts doesn't export SECRET_DEFS today.
-  const SECRET_DEFS: SecretDef[] = [
-    {
-      id: 'heart',
-      icon: '❤️',
-      name: 'The Loving Heart',
-      hint: 'Clica no botão do coração. Muito.',
-      reward: '+20 XP + confetti no clique 1, recompensas até 1000 cliques',
-      badge: 'b10',
-      badgeName: 'Hidden Room',
-      nonBadgeCheck: 'heart'
-    },
-    {
-      id: 'logo3',
-      icon: '🐷',
-      name: 'Pig Triple-Click',
-      hint: 'Clica no 🐷 logo 3 vezes em 3 segundos.',
-      reward: '+30 XP + confetti + Pig Hunter mode',
-      badge: null,
-      nonBadgeCheck: 'logo3'
-    },
-    {
-      id: 'logo7',
-      icon: '🧴',
-      name: 'The Secret Room',
-      hint: 'Clica no 🐷 logo 6-8 vezes em 3 segundos. (Tolerância: 6, 7 ou 8!)',
-      reward: '+100 XP + Secret Room abre + 5 factos sobre perfume',
-      badge: 'b14',
-      badgeName: 'Secret Keeper'
-    },
-    {
-      id: 'konami',
-      icon: '🎮',
-      name: 'Konami Code',
-      hint: 'Carrega ↑ ↑ ↓ ↓ ← → ← → B A em qualquer lado da página.',
-      reward: '+100 XP + Konami Master badge + confetti',
-      badge: 'b8',
-      badgeName: 'Konami Master'
-    },
-    {
-      id: 'perfume',
-      icon: '🌸',
-      name: 'Scent Discovery',
-      hint: 'Escreve a palavra "perfume" em qualquer lado.',
-      reward: '+50 XP + Scent Discovery badge + confetti',
-      badge: 'b7',
-      badgeName: 'Scent Discovery'
-    },
-    {
-      id: 'behi',
-      icon: '🇹🇳',
-      name: 'Tunisian Greeting',
-      hint: 'Escreve a palavra Tunisiana "behi" (significa "lindíssimo/a") em qualquer lado.',
-      reward: '+50 XP + Tunisian Secret badge + confetti',
-      badge: 'b9',
-      badgeName: 'Tunisian Secret'
-    },
-    {
-      id: 'mascot',
-      icon: '🧴',
-      name: 'Mascot Pro-Tips',
-      hint: 'Clica no 🧴 mascot (aparece depois da primeira navegação).',
-      reward: 'Pro-tips aleatórios de escrita + +5 XP por clique',
-      badge: null,
-      nonBadgeCheck: 'mascot'
-    },
-    {
-      id: 'footer',
-      icon: '👣',
-      name: 'Footer Detective',
-      hint: 'Clica no texto do footer 5 vezes.',
-      reward: 'Toast com dica sobre perfume/behi + Footer Detective badge',
-      badge: 'b15',
-      badgeName: 'Footer Detective'
-    }
-  ];
-
   // Reactive state
+  let secrets = $state<Secret[]>([]);
   let discovered = $state<Record<string, boolean>>({});
   let discoveredAt = $state<Record<string, number>>({});
   let badges = $state<Record<string, boolean>>({});
@@ -149,19 +60,30 @@
    *   - 'logo3' unlocks at logoClicks >= 3.
    *   - 'mascot' unlocks after 4 visited pages.
    */
-  function isUnlocked(s: SecretDef): boolean {
+  function isUnlocked(s: Secret): boolean {
     if (s.badge && badges[s.badge]) return true;
-    if (s.nonBadgeCheck === 'heart')  return heartClicks >= 1;
-    if (s.nonBadgeCheck === 'logo3')  return logoClicks >= 3;
-    if (s.nonBadgeCheck === 'mascot') return visitedCount >= 4;
+    if (s.id === 'heart')  return heartClicks >= 1;
+    if (s.id === 'logo3')  return logoClicks >= 3;
+    if (s.id === 'mascot') return visitedCount >= 4;
     return false;
   }
 
   let discoveredCount = $derived(
-    SECRET_DEFS.reduce((acc, s) => acc + (isUnlocked(s) ? 1 : 0), 0)
+    secrets.reduce((acc, s) => acc + (isUnlocked(s) ? 1 : 0), 0)
   );
 
   onMount(() => {
+    // Load secrets from /config/easterEggs.json (async, doesn't block mount).
+    getSecrets()
+      .then((s) => {
+        secrets = s;
+      })
+      .catch((e) => {
+        console.error('[secrets] getSecrets failed', e);
+        loadError = e instanceof Error ? e.message : String(e);
+        secrets = [];
+      });
+
     void refresh();
     const onVis = () => {
       if (document.visibilityState === 'visible') void refresh();
@@ -169,18 +91,6 @@
     document.addEventListener('visibilitychange', onVis);
     return () => document.removeEventListener('visibilitychange', onVis);
   });
-
-  function fmtDate(ts: number): string {
-    if (!ts) return '';
-    try {
-      return new Intl.DateTimeFormat('pt-PT', {
-        dateStyle: 'short',
-        timeStyle: 'short'
-      }).format(new Date(ts));
-    } catch {
-      return new Date(ts).toLocaleString();
-    }
-  }
 </script>
 
 <svelte:head>
@@ -198,7 +108,7 @@
     <h1>
       🔐 Secrets
       <span class="counter" aria-live="polite">
-        {discoveredCount} / {SECRET_DEFS.length} discovered
+        {discoveredCount} / {secrets.length} discovered
       </span>
     </h1>
     <p class="sub">As dicas estão sempre visíveis. As recompensas desbloqueiam à medida que descobres cada easter egg.</p>
@@ -218,35 +128,12 @@
   </article>
 
   <section class="grid" aria-label="Segredos">
-    {#each SECRET_DEFS as s (s.id)}
-      {@const unlocked = isUnlocked(s)}
-      {@const wasDiscovered = Boolean(discovered[s.id])}
-      <article class="secret-card" class:locked={!unlocked} class:unlocked>
-        <div class="status-row">
-          <span class="status-badge" class:on={unlocked}>
-            {unlocked ? 'UNLOCKED' : 'LOCKED'}
-          </span>
-          {#if wasDiscovered && discoveredAt[s.id]}
-            <span class="discovered-at">📅 {fmtDate(discoveredAt[s.id])}</span>
-          {/if}
-        </div>
-        <h3>
-          <span class="icon">{unlocked ? s.icon : '❓'}</span>
-          {unlocked ? s.name : '???'}
-        </h3>
-        <p class="hint">💡 <strong>Dica:</strong> {s.hint}</p>
-        <p class="reward">
-          <strong>Recompensa:</strong>
-          {#if unlocked}
-            {s.reward}
-            {#if s.badgeName}
-              <span class="badge-tag">🏅 {s.badgeName}</span>
-            {/if}
-          {:else}
-            <span class="redacted">████████ (locked)</span>
-          {/if}
-        </p>
-      </article>
+    {#each secrets as s (s.id)}
+      <EasterEggsCard
+        secret={s}
+        unlocked={isUnlocked(s)}
+        discoveredAt={discoveredAt[s.id] || null}
+      />
     {/each}
   </section>
 </div>
@@ -331,75 +218,7 @@
   @media (min-width: 720px) {
     .grid { grid-template-columns: repeat(2, 1fr); }
   }
-  .secret-card {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.75rem;
-    padding: 1rem 1.15rem;
-    transition: border-color 0.2s, background 0.2s;
-  }
-  .secret-card.unlocked {
-    border-color: rgba(16, 185, 129, 0.4);
-    background: rgba(16, 185, 129, 0.06);
-  }
-  .secret-card.locked {
-    opacity: 0.85;
-  }
-  .status-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-  }
-  .status-badge {
-    display: inline-block;
-    padding: 0.1rem 0.5rem;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: var(--txt3, #94a3b8);
-    border-radius: 999px;
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-weight: 700;
-  }
-  .status-badge.on {
-    background: rgba(16, 185, 129, 0.18);
-    border-color: rgba(16, 185, 129, 0.5);
-    color: #6ee7b7;
-  }
-  .discovered-at {
-    color: var(--txt3, #94a3b8);
-    font-size: 0.72rem;
-  }
-  .secret-card h3 {
-    color: #fff;
-    font-size: 1.05rem;
-    margin: 0 0 0.4rem;
-  }
-  .icon { margin-right: 0.25rem; }
-  .hint, .reward {
-    color: var(--txt2, #cbd5e1);
-    font-size: 0.88rem;
-    line-height: 1.5;
-    margin: 0.3rem 0;
-  }
-  .redacted {
-    color: var(--txt3, #94a3b8);
-    font-family: ui-monospace, 'SF Mono', Consolas, monospace;
-    letter-spacing: 0.04em;
-  }
-  .badge-tag {
-    display: inline-block;
-    margin-left: 0.5rem;
-    padding: 0.05rem 0.4rem;
-    background: rgba(168, 85, 247, 0.18);
-    border: 1px solid rgba(168, 85, 247, 0.4);
-    color: #e9d5ff;
-    border-radius: 999px;
-    font-size: 0.72rem;
-    font-weight: 600;
-  }
+
   .error {
     color: #ff8888;
     padding: 0.75rem 1rem;
