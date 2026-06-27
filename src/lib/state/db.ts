@@ -406,10 +406,13 @@ export const DEFAULT_CATEGORIAS: CategoriaRow[] = [
  * category seed rows exist in the DB.
  *
  * Idempotent — safe to call on every app boot:
- *   - `state` and `settings` are `put()` so they're always written with
- *     a fresh `updatedAt`.  The V3-migration code in Phase 3 #17 runs
- *     after this and overwrites them with the user's real values if
- *     localStorage.presuntinho had any.
+ *   - `state` and `settings` are only `put()` when the row does NOT
+ *     yet exist.  This is critical: an unconditional `put()` would
+ *     overwrite the user's real XP / heartClicks / badge progress
+ *     back to the defaults on every boot, which is exactly the bug
+ *     Daniel reported (XP and badges "voltam a 0 ao refresh").
+ *     The V3-migration code in Phase 3 #17 runs AFTER this and still
+ *     overwrites them on the very first boot from localStorage.
  *   - `categorias` is `bulkPut()` but only when the table is empty, so
  *     users who have already added / edited categories won't see their
  *     custom rows stomped by the seed list.
@@ -420,8 +423,17 @@ export const DEFAULT_CATEGORIAS: CategoriaRow[] = [
 export async function ensureDefaults(): Promise<void> {
   const d = db();
   const now = Date.now();
-  await d.state.put({ ...DEFAULT_STATE, updatedAt: now });
-  await d.settings.put({ ...DEFAULT_SETTINGS, updatedAt: now });
+  // Singleton state — only seed if it doesn't exist yet.  Once the
+  // user has any XP / clicks / badges, their values must NOT be
+  // clobbered back to 0 by a fresh `put`.
+  const existingState = await d.state.get('main');
+  if (!existingState) {
+    await d.state.put({ ...DEFAULT_STATE, updatedAt: now });
+  }
+  const existingSettings = await d.settings.get('main');
+  if (!existingSettings) {
+    await d.settings.put({ ...DEFAULT_SETTINGS, updatedAt: now });
+  }
   // Seed default categories only on a fresh DB (table count === 0).
   // We use count() — not a per-id bulkPut() — so the operation stays
   // O(1) on the categories PK index and never silently overwrites a

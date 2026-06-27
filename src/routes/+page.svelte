@@ -30,13 +30,21 @@
 
   import { subApps, legacySubApp, v3Content } from '$lib/registry';
   import { db } from '$lib/state/db';
-  import { xp } from '$lib/state/stores';
+  import { xp, initStores } from '$lib/state/stores';
 
   // ---------------------------------------------------------------------------
-  // XP — direct subscription to the exported writable store
+  // XP — direct subscription to the exported writable store.  We `await
+  // initStores()` first so the hydration read in `stores.ts` runs before
+  // our subscribe, eliminating any chance the first frame shows the
+  // default 0 (which was the source of the "XP volta a 0 ao refresh" bug).
   // ---------------------------------------------------------------------------
   let currentXp = $state(0);
-  onMount(() => xp.subscribe((v) => (currentXp = v)));
+  onMount(() => {
+    void (async () => {
+      await initStores();
+      xp.subscribe((v) => (currentXp = v));
+    })();
+  });
 
   // Locale-formatted XP (pt-PT thousands separator: e.g. 1,250)
   let xpLabel = $derived(
