@@ -19,36 +19,8 @@
 // the splash page). The function trusts the kind passed in but does a tiny
 // shape check to avoid storing nonsense.
 
-import { getStore } from '@netlify/blobs';
+import { connectLambda, getStore } from '@netlify/blobs';
 import crypto from 'crypto';
-
-// Wire the Blobs client. Two paths, both work in Netlify Functions v2:
-//   (a) @netlify/blobs auto-reads NETLIFY_BLOBS_CONTEXT via @netlify/runtime-utils
-//   (b) we explicitly set globalThis.netlifyBlobsContext to a base64-encoded JSON
-//
-// We try (b) first because (a) was returning an empty context in production on
-// 2026-06-27 (verified via the debug leak: "The environment has not been
-// configured to use Netlify Blobs"). The base64-encoded JSON in
-// NETLIFY_BLOBS_CONTEXT is decoded once and re-exposed to the package via
-// globalThis, which the package's getEnvironmentContext() reads first.
-let _cachedCtx = null;
-function blobsContext() {
-  if (_cachedCtx) return _cachedCtx;
-  const raw = process.env.NETLIFY_BLOBS_CONTEXT;
-  if (!raw) return null;
-  try {
-    const decoded = Buffer.from(raw, 'base64').toString('utf8');
-    _cachedCtx = JSON.parse(decoded);
-    // Set both the env var (already there) and globalThis (the package reads this first)
-    if (typeof globalThis !== 'undefined') {
-      globalThis.netlifyBlobsContext = raw;
-    }
-    return _cachedCtx;
-  } catch (e) {
-    console.error('[love-lock] failed to parse NETLIFY_BLOBS_CONTEXT', e);
-    return null;
-  }
-}
 
 const COOKIE_NAME = 'lovelock_id';
 const BLOB_KEY = 'love-lock:current';
@@ -183,19 +155,23 @@ function buildCookieClear(event) {
   return serializeIdCookie('', 0, event);
 }
 
-function blobStore() {
+function blobStore(event) {
+  // Lambda-compat bootstrap: the Netlify Functions runtime injects the blobs
+  // configuration in the Lambda event (`event.blobs` is a base64 JSON blob
+  // containing `{ url, token }`, plus `x-nf-site-id` / `x-nf-deploy-id`
+  // headers). We MUST call connectLambda(event) before every getStore(), per
+  // the @netlify/blobs docs:
+  // https://github.com/netlify/blobs#lambda-compatibility-mode
+  //
+  // Why per-request: connectLambda is idempotent and cheap, and re-binding on
+  // every invocation guarantees we pick up the right per-request token (tokens
+  // can rotate). NETLIFY_BLOBS_CONTEXT is NOT auto-injected in Lambda-compat
+  // mode (verified 2026-06-27: runtime did not populate it; only the Lambda
+  // event carries the blobs config). Earlier attempts to call
+  // setEnvironmentContext(process.env.NETLIFY_BLOBS_CONTEXT) at module load
+  // silently failed because the env var was empty.
+  connectLambda(event);
   const storeName = process.env.LOVE_LOCK_BLOB_STORE || 'lovelock';
-  // Explicit siteID+token from NETLIFY_BLOBS_CONTEXT (decoded by blobsContext()).
-  // We tried getStore(name) (string form) and setEnvironmentContext() first —
-  // both failed in production on 2026-06-27 with "environment not configured".
-  // Passing the object form with explicit siteID+token is the only path that's
-  // guaranteed to work because the package's getEnvironmentContext() couldn't
-  // read NETLIFY_BLOBS_CONTEXT in this specific Function runtime.
-  const ctx = blobsContext();
-  if (ctx && ctx.siteID && ctx.token) {
-    return getStore({ name: storeName, siteID: ctx.siteID, token: ctx.token });
-  }
-  // Fallback to string form — works in netlify dev / local node tests.
   return getStore(storeName);
 }
 
@@ -213,7 +189,7 @@ export const handler = async (event) => {
 
     let blob;
     try {
-      blob = await blobStore().get(BLOB_KEY, { type: 'json' });
+      blob = await blobStore(event).get(BLOB_KEY, { type: 'json' });
     } catch (e) {
       console.error('[love-lock] blob read failed', e);
       // Lock invisible to client, NOT a 500. The client will see no lock.
@@ -229,7 +205,7 @@ export const handler = async (event) => {
       // Lazy GC — fire-and-forget delete so the blob doesn't accumulate.
       // Failures here are non-fatal; the next GET will try again.
       try {
-        blobStore().delete(BLOB_KEY).catch((e) => {
+        blobStore(event).delete(BLOB_KEY).catch((e) => {
           console.warn('[love-lock] lazy gc delete failed', e?.message || e);
         });
       } catch {
@@ -241,7 +217,7 @@ export const handler = async (event) => {
     if (blob.kind !== 'sad' && blob.kind !== 'love') {
       // Blob is corrupt (shape mismatch). Treat as expired + try to clear it.
       try {
-        blobStore().delete(BLOB_KEY).catch(() => {});
+        blobStore(event).delete(BLOB_KEY).catch(() => {});
       } catch {
         /* swallow */
       }
@@ -276,17 +252,10 @@ export const handler = async (event) => {
     const state = { kind, startedAt: now, expiresAt: now + ONE_HOUR_MS };
 
     try {
-      await blobStore().setJSON(BLOB_KEY, state);
+      await blobStore(event).setJSON(BLOB_KEY, state);
     } catch (e) {
       console.error('[love-lock] blob write failed', e);
-      // TEMP DEBUG 2026-06-27: leak everything to diagnose
-      return buildResponse(500, {
-        error: 'server_misconfigured',
-        debug: String(e?.message || e),
-        envHasContext: typeof process.env.NETLIFY_BLOBS_CONTEXT === 'string',
-        envContextLen: (process.env.NETLIFY_BLOBS_CONTEXT || '').length,
-        globalCtx: typeof globalThis.netlifyBlobsContext,
-      });
+      return buildResponse(500, { error: 'server_misconfigured' });
     }
 
     let cookie;
@@ -298,7 +267,7 @@ export const handler = async (event) => {
       // Blob is already set — try to roll it back so we don't strand a lock
       // with no cookie. If rollback fails too, surface server_misconfigured.
       try {
-        await blobStore().delete(BLOB_KEY);
+        await blobStore(event).delete(BLOB_KEY);
       } catch (cleanupErr) {
         console.error('[love-lock] rollback failed', cleanupErr);
       }
@@ -315,7 +284,7 @@ export const handler = async (event) => {
   // ── DELETE ── clear the lock (blob + cookie) ──
   if (method === 'DELETE') {
     try {
-      await blobStore().delete(BLOB_KEY);
+      await blobStore(event).delete(BLOB_KEY);
     } catch (e) {
       console.error('[love-lock] blob delete failed', e);
       // Still clear the cookie — the GET will eventually see an absent blob
