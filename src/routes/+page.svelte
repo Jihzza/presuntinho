@@ -158,6 +158,18 @@
       showOnboarding = false;
     }
   });
+
+  // ---------------------------------------------------------------------------
+  // Phase 25: hero greeting entry animation — fade-in + 8 px slide-up, runs
+  // once on mount. Flag starts false so SSR markup has no transform; the
+  // flag flips true on mount and a CSS class drives the keyframes. Reduced-
+  // motion users get no animation (the class still toggles but the
+  // keyframes duration is set to 0.001ms by the global reduced-motion rule).
+  // ---------------------------------------------------------------------------
+  let heroIn = $state(false);
+  onMount(() => {
+    heroIn = true;
+  });
 </script>
 
 <svelte:head>
@@ -167,7 +179,7 @@
 <OnboardingModal open={showOnboarding} onClose={handleOnboardingClose} />
 
 <div class="hub">
-  <header class="hub-hero">
+  <header class="hub-hero" class:hero-in={heroIn}>
     <h1>
       <span class="greeting">🐷 Olá, Fatma</span>
     </h1>
@@ -250,6 +262,29 @@
   .hub-hero {
     margin-bottom: 2rem;
     text-align: center;
+  }
+  /* Phase 25: hero entry animation — fade + 8px slide-up, runs once on mount.
+     The .hero-in class is only added client-side after hydration (the
+     `heroIn` flag starts false during SSR), so server markup matches
+     initial client render. Reduced-motion users get the final state
+     immediately because the global * selector collapses animation-duration
+     to 0.001ms under @media (prefers-reduced-motion: reduce). */
+  .hub-hero {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .hub-hero.hero-in {
+    animation: hub-hero-in 360ms ease-out forwards;
+  }
+  @keyframes hub-hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   .hub-hero h1 {
     font-size: 2rem;

@@ -123,7 +123,10 @@
     background: linear-gradient(135deg, #ec4899 0%, #f59e0b 100%);
     box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.6), 0 6px 18px rgba(236, 72, 153, 0.45);
   }
-  /* 300 ms pulse — emitted every click past 100 (V3 behaviour). */
+  /* 300 ms pulse — emitted every click past 100 (V3 behaviour).
+     Phase 25 audit: pulse already present + prefers-reduced-motion guard
+     already present (see both @media block below and the
+     prefersReducedMotion() runtime check in the script). No change needed. */
   .heart-btn.pulse {
     animation: heart-pulse 0.3s ease;
   }
