@@ -1,0 +1,41 @@
+{
+  "id": "persona",
+  "courseSlug": "equivalenza",
+  "title": "Buyer Persona",
+  "audio": "/legacy/assets/persona_problem.mp3",
+  "audioLabel": "Audio walkthrough (PT)",
+  "sections": [
+    { "type": "p", "text": "A Buyer Persona é uma personagem semi-ficcional baseada em investigação real que representa o teu cliente ideal. Combina três camadas: demografia, psicografia e comportamento." },
+    { "type": "h2", "text": "Marta — The Discerning Explorer" },
+    { "type": "p", "text": "27 anos. Profisional criativa em Madrid. Rendimento moderado-a-bom. Universitária, urbana, socialmente ativa." },
+    { "type": "p", "text": "\"Fragrance is personal self-expression, not luxury or gift.\" — Elson (2024)" },
+    { "type": "h2", "text": "As três camadas" },
+    { "type": "ul", "items": [
+      "Demografia: idade, localização, rendimento, educação",
+      "Psicografia: valores, atitudes, estilo de vida, identidade",
+      "Comportamental: como descobre, avalia, compra, mantém lealdade"
+    ]},
+    { "type": "h2", "text": "O que a Marta valoriza" },
+    { "type": "ul", "items": [
+      "Descoberta e rotação por humor, ocasião ou estação",
+      "Estética — embalagem, design da loja, identidade visual",
+      "Estar à frente das tendências",
+      "Gastar €20–40 em algo especial (sem preços de designer)"
+    ]},
+    { "type": "h2", "text": "Template visual" },
+    { "type": "img", "src": "/legacy/assets/buyer-persona-template-v3.png", "alt": "Template visual de Buyer Persona usado no case study V3", "caption": "Template V3 (referência visual do case study Elson, 2024)" },
+    { "type": "h2", "text": "Importância estratégica" },
+    { "type": "p", "text": "A Marta não compra por idade — compra por humor e identidade. Em fragrância, a psicografia bate a demografia. Por isso é a persona âncora: o seu comportamento mostra onde a Equivalenza pode subir de preço sem perder volume." },
+    { "type": "callout", "variant": "info", "text": "Para o trabalho: ancora a persona na investigação do case study e termina com um parágrafo curto de \"Strategic Importance\" a explicar porque é que esta persona é a que mais importa para a Equivalenza." }
+  ],
+  "keyPoints": [
+    "Persona âncora: Marta, 27, criativa, urbana, €20–40 por fragrância",
+    "Três camadas: demografia, psicografia, comportamental",
+    "Psicografia > demografia em fragrância (humor e identidade mandam)",
+    "A persona liga-se à Les Secrets (permite subir de preço sem alienar a base)",
+    "Termina sempre com um parágrafo de Strategic Importance"
+  ],
+  "quizSlug": "q4",
+  "nextLesson": "problem",
+  "prevLesson": "swot"
+}

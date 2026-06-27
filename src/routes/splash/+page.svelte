@@ -3,6 +3,12 @@
   import { setSession, isLockedOut, recordFailedAttempt, resetAttempts, getSession } from '$lib/auth/session';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
+  import { t, waitLocale } from 'svelte-i18n';
+  // svelte-i18n 4 ships `$t` as the message-formatter store.  In a
+  // <script lang="ts"> block we call it as `$t(...)` via Svelte's
+  // store auto-subscription — `t(...)` would try to call the store
+  // itself which isn't callable.  Match the pattern in
+  // src/routes/definicoes/+page.svelte.
 
   let password = $state('');
   let error = $state('');
@@ -11,6 +17,8 @@
   let loading = $state(false);
 
   onMount(() => {
+    // Ensure translations are ready before first paint.
+    void waitLocale();
     // If already unlocked, skip splash
     if (getSession()) {
       goto('/');
@@ -29,7 +37,7 @@
     e.preventDefault();
     if (locked.locked || loading) return;
     if (!password.trim()) {
-      error = 'Please enter a password';
+      error = $t('splash.error.empty');
       shake = true;
       setTimeout(() => (shake = false), 500);
       return;
@@ -44,7 +52,7 @@
         await goto('/');
       } else {
         const result = recordFailedAttempt();
-        error = `Wrong password (${result.attempts}/3)`;
+        error = $t('splash.error.wrong', { values: { n: result.attempts } });
         password = '';
         shake = true;
         setTimeout(() => (shake = false), 500);
@@ -53,7 +61,8 @@
         }
       }
     } catch (e) {
-      error = 'Error: ' + (e instanceof Error ? e.message : String(e));
+      const msg = e instanceof Error ? e.message : String(e);
+      error = $t('splash.error.generic', { values: { msg } });
     } finally {
       loading = false;
     }
@@ -65,24 +74,25 @@
 </script>
 
 <svelte:head>
-  <title>Presuntinho — Login</title>
+  <title>{$t('splash.title')} — Presuntinho</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 </svelte:head>
 
 <main class="splash">
   <div class="card" class:shake>
     <div class="mascot">🐷</div>
-    <h1>Presuntinho</h1>
-    <p class="sub">Equivalenza Study Hub</p>
+    <h1>{$t('splash.title')}</h1>
+    <p class="sub">{$t('splash.subtitle')}</p>
 
     {#if locked.locked}
-      <p class="lockout">🔒 Too many attempts. Try again in <strong>{formatRemaining(locked.remainingMs)}s</strong>.</p>
+      <p class="lockout">{$t('splash.lockout', { values: { n: formatRemaining(locked.remainingMs) } })}</p>
     {:else}
       <form onsubmit={handleSubmit}>
         <input
           type="password"
           bind:value={password}
-          placeholder="Enter password"
+          placeholder={$t('splash.placeholder')}
+          aria-label={$t('splash.password.label')}
           disabled={loading}
           autocomplete="off"
           autocapitalize="off"
@@ -90,7 +100,7 @@
           spellcheck="false"
         />
         <button type="submit" disabled={loading}>
-          {loading ? 'Checking…' : 'Enter 🐷'}
+          {loading ? $t('splash.checking') : $t('splash.submit')}
         </button>
         {#if error}
           <p class="error">{error}</p>
@@ -98,7 +108,7 @@
       </form>
     {/if}
 
-    <p class="credit">❤️ Made for Fatma</p>
+    <p class="credit">{$t('splash.credit')}</p>
   </div>
 </main>
 

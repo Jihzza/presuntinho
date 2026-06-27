@@ -1,0 +1,41 @@
+{
+  "id": "problem",
+  "courseSlug": "equivalenza",
+  "title": "Problema de Marketing (SCQA)",
+  "audio": "/legacy/assets/persona_problem.mp3",
+  "audioLabel": "Audio walkthrough (PT)",
+  "sections": [
+    { "type": "p", "text": "O Problema de Marketing é a peça que liga a análise à recomendação. Estrutura-o com SCQA — Situation, Complication, Question, Answer — para mostrar raciocínio, não apenas intuição." },
+    { "type": "h2", "text": "S — Situation (Situação)" },
+    { "type": "p", "text": "A Equivalenza é uma cadeia espanhola de fragrâncias affordable, com 528 lojas em 19 países, um modelo de refill diferenciador e a linha premium Les Secrets em crescimento. Tem uma base sólida de produto e operação." },
+    { "type": "h2", "text": "C — Complication (Complicação)" },
+    { "type": "ul", "items": [
+      "O segmento dupe — o coração histórico da proposta de valor — colapsou de 37% para 13% (2018–2023)",
+      "O sandwich effect esmaga a marca: premium a descontar por cima, Zara e Mercadona a melhorar por baixo",
+      "Concorrentes nativos digitais (Divain, Dossier, Adopt) atacam sem custos de retalho físico",
+      "Notoriedade de marca de apenas 30% e NPS de 17 (vs Druni 56, Primor 46)",
+      "Vendas online em 1% — irrelevantes face à média do mercado de 12%"
+    ]},
+    { "type": "h2", "text": "Q — Question (Questão)" },
+    { "type": "p", "text": "Como é que a Equivalenza pode reposicionar-se para crescer margem sem perder volume, num mercado onde a sua proposta histórica (dupe acessível) já não é a que mais ressoa com o consumidor que está a chegar (Gen Z, criativo, com €20–40 para gastar)?" },
+    { "type": "h2", "text": "A — Answer (Resposta) → Problema de Marketing" },
+    { "type": "callout", "variant": "highlight", "text": "A Equivalenza precisa de reposicionar-se de \"marca de dupes acessíveis\" para \"marca de descoberta e expressão pessoal em fragrância\", aproveitando a Les Secrets e o modelo de refill para subir de preço sem alienar a base — antes que os nativos digitais consolidem o território." },
+    { "type": "h2", "text": "Como escrever bem esta secção" },
+    { "type": "ul", "items": [
+      "Mostra o raciocínio passo-a-passo, não só a conclusão",
+      "Termina com 1–2 frases de problema claro — é o que a tua recomendação vai resolver",
+      "Cita o case study (Elson, 2024) sempre que tragas um número",
+      "Liga o problema à persona (Marta) para fechar o arco analítico"
+    ]}
+  ],
+  "keyPoints": [
+    "SCQA = Situation, Complication, Question, Answer",
+    "O colapso do segmento dupe é a complicação central",
+    "O problema aponta para a recomendação — não é standalone",
+    "Sempre termina com 1–2 frases de problem statement claro",
+    "Liga o problema à persona para fechar o arco de análise"
+  ],
+  "quizSlug": "q3",
+  "nextLesson": "tows",
+  "prevLesson": "persona"
+}

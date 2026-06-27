@@ -8,13 +8,52 @@
   import Toast from '$lib/components/Toast.svelte';
   import { handleKonamiKey } from '$lib/easterEggs';
   import { onMount } from 'svelte';
+  import { pwaInfo } from 'virtual:pwa-info';
 
   let { children } = $props();
   let session = $state(getSession());
   let storesReady = $state(false);
 
+  // Tag <link rel="manifest"> gerada pelo plugin (caso o PWA esteja ativo).
+  // O fallback manual já vive em src/app.html, por isso esta tag é só aditiva.
+  const webManifestLink = $derived(pwaInfo ? pwaInfo.webManifest.linkTag : '');
+
   onMount(() => {
     let unbindKey: (() => void) | null = null;
+
+    // PWA: regista o service worker gerado pelo @vite-pwa/sveltekit.
+    // Em dev (devOptions.enabled = false) o módulo virtual:pwa-register não
+    // existe, por isso o .catch() mantém a app silenciosamente funcional.
+    if ('serviceWorker' in navigator) {
+      import('virtual:pwa-register')
+        .then(({ registerSW }) => {
+          registerSW({
+            immediate: true,
+            onRegisteredSW(swUrl: string) {
+              console.debug('[presuntinho] SW registado:', swUrl);
+            },
+            onNeedRefresh() {
+              // Dispara evento para o sistema de toasts mostrar
+              // "Atualização disponível".
+              window.dispatchEvent(
+                new CustomEvent('presuntinho:pwa-update', {
+                  detail: { type: 'needRefresh' }
+                })
+              );
+            },
+            onOfflineReady() {
+              window.dispatchEvent(
+                new CustomEvent('presuntinho:pwa-update', {
+                  detail: { type: 'offlineReady' }
+                })
+              );
+            }
+          });
+        })
+        .catch(() => {
+          // Plugin inativo (modo dev ou build sem PWA) — silencioso.
+        });
+    }
 
     void (async () => {
       // Initialise Dexie-backed stores + run migration (Phase 3 #17)
@@ -52,6 +91,12 @@
   }
 </script>
 
+<svelte:head>
+  {#if webManifestLink}
+    {@html webManifestLink}
+  {/if}
+</svelte:head>
+
 {#if page.url.pathname === '/splash/'}
   {@render children?.()}
 {:else}
@@ -82,7 +127,7 @@
       </div>
     </header>
 
-    <main class="content">
+    <main id="main-content" class="content" tabindex="-1">
       {@render children?.()}
     </main>
   </div>
@@ -134,9 +179,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 0.5rem;
+    width: 44px; /* WCAG 2.5.5 / Apple HIG touch target */
+    height: 44px;
+    border-radius: var(--radius-md);
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: #fff;

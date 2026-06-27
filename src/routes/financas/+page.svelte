@@ -1,0 +1,418 @@
+<!--
+  /financas — Dashboard do sub-app Finanças (Phase 6).
+
+  Mostra:
+    * Hero 💰 Finanças + saudação ao mês corrente.
+    * 3 cartões com os totais do mês (receitas / despesas / saldo).
+    * Gráfico de barras (chart.js) com despesas dos últimos 6 meses.
+    * Atalhos rápidos: Nova transação / Ver todas / Orçamento.
+
+  Carrega os totais via `totalMes()` + `totaisPorMesUltimos6()` no
+  `onMount` (não no SSR — IndexedDB não existe em Node).
+-->
+<script lang="ts">
+  import { onMount, onDestroy } from 'svelte';
+  import {
+    totalMes,
+    totaisPorMesUltimos6,
+    formatMes,
+    formatMesCurto,
+    formatValor,
+    getMesAtual,
+    type TotaisMes,
+    type PontoMensal
+  } from '$lib/financas';
+  import { subApps } from '$lib/registry';
+
+  // chart.js/auto regista todos os controllers + scales + elements
+  // automaticamente.  Importado dinamicamente em onMount para evitar
+  // SSR (chart.js acede a `document`/`window` na construção).
+  let Chart: typeof import('chart.js/auto').Chart | null = $state(null);
+
+  let totais = $state<TotaisMes>({ receitas: 0, despesas: 0, saldo: 0 });
+  let pontos = $state<PontoMensal[]>([]);
+  let loading = $state(true);
+  let error = $state<string | null>(null);
+  let canvas: HTMLCanvasElement | undefined = $state();
+  let chartInstance: import('chart.js/auto').Chart | null = null;
+
+  const financasApp = subApps.find((a) => a.id === 'financas');
+  const mesAtual = getMesAtual();
+
+  onMount(() => {
+    void (async () => {
+      try {
+        // Carrega chart.js só no browser (módulo pesado, depende de DOM).
+        const mod = await import('chart.js/auto');
+        Chart = mod.Chart;
+
+        const [t, p] = await Promise.all([totalMes(mesAtual), totaisPorMesUltimos6()]);
+        totais = t;
+        pontos = p;
+        loading = false;
+
+        // Render do gráfico acontece depois do `loading = false` para
+        // o canvas já estar no DOM.  Usamos `tick()` (via await) para
+        // garantir.
+        await Promise.resolve();
+        renderChart();
+      } catch (e) {
+        console.error('[financas] dashboard load failed', e);
+        error = e instanceof Error ? e.message : 'Erro a carregar finanças';
+        loading = false;
+      }
+    })();
+  });
+
+  onDestroy(() => {
+    if (chartInstance) {
+      chartInstance.destroy();
+      chartInstance = null;
+    }
+  });
+
+  function renderChart(): void {
+    if (!canvas || !Chart) return;
+    if (chartInstance) {
+      chartInstance.destroy();
+      chartInstance = null;
+    }
+    chartInstance = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels: pontos.map((p) => formatMesCurto(p.mes)),
+        datasets: [
+          {
+            label: 'Despesas',
+            data: pontos.map((p) => p.despesas),
+            backgroundColor: 'rgba(239, 68, 68, 0.7)',
+            borderColor: 'rgba(239, 68, 68, 1)',
+            borderWidth: 1,
+            borderRadius: 6,
+            maxBarThickness: 48
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => ` ${formatValor(ctx.parsed.y ?? 0)}`
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#cbd5e1' },
+            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#cbd5e1',
+              callback: (val) => formatValor(Number(val))
+            },
+            grid: { color: 'rgba(255, 255, 255, 0.08)' }
+          }
+        }
+      }
+    });
+  }
+
+  // Reactive: se os pontos chegarem antes do chart.js (raro mas possível
+  // num refresh), re-renderiza.  Cobre o caso `loading = true` →
+  // `loading = false` em que o chart.js já estava registado.
+  $effect(() => {
+    // Re-render quando os pontos mudarem (mas só depois de o chart estar
+    // pronto e de já termos saído de loading).
+    const _ = pontos;
+    const __ = Chart;
+    const ___ = canvas;
+    const ____ = loading;
+    if (!____ && __ && ___ && _.length > 0) {
+      renderChart();
+    }
+  });
+</script>
+
+<svelte:head>
+  <title>Finanças — Presuntinho</title>
+</svelte:head>
+
+<div class="financas-page">
+  <header class="hero">
+    <h1>💰 Finanças</h1>
+    <p class="sub">Resumo de <strong>{formatMes(mesAtual)}</strong></p>
+  </header>
+
+  <nav class="crumbs" aria-label="Caminho de navegação">
+    <a href="/">← Hub</a>
+    <span aria-hidden="true">/</span>
+    <span aria-current="page">Finanças</span>
+  </nav>
+
+  {#if loading}
+    <p class="empty">A carregar…</p>
+  {:else if error}
+    <p class="empty error" role="alert">⚠️ {error}</p>
+  {:else}
+    <section class="cards" aria-label="Totais do mês">
+      <article class="card card-receitas">
+        <span class="card-label">Receitas</span>
+        <span class="card-value">{formatValor(totais.receitas)}</span>
+        <span class="card-hint">entradas no mês</span>
+      </article>
+      <article class="card card-despesas">
+        <span class="card-label">Despesas</span>
+        <span class="card-value">{formatValor(totais.despesas)}</span>
+        <span class="card-hint">saídas no mês</span>
+      </article>
+      <article class="card card-saldo" class:negativo={totais.saldo < 0}>
+        <span class="card-label">Saldo</span>
+        <span class="card-value">{formatValor(totais.saldo)}</span>
+        <span class="card-hint">
+          {totais.saldo >= 0 ? 'a teu favor' : 'em défice'}
+        </span>
+      </article>
+    </section>
+
+    <section class="chart-section" aria-label="Despesas dos últimos 6 meses">
+      <h2 class="section-title">Despesas — últimos 6 meses</h2>
+      <div class="chart-wrap">
+        <canvas bind:this={canvas} aria-label="Gráfico de despesas mensais"></canvas>
+      </div>
+    </section>
+
+    <section class="quick-links" aria-label="Atalhos">
+      <a class="quick" href="/financas/nova/">
+        <span class="quick-icon" aria-hidden="true">➕</span>
+        <span class="quick-text">
+          <span class="quick-title">Nova transação</span>
+          <span class="quick-sub">Adicionar receita ou despesa</span>
+        </span>
+      </a>
+      <a class="quick" href="/financas/transacoes/">
+        <span class="quick-icon" aria-hidden="true">📋</span>
+        <span class="quick-text">
+          <span class="quick-title">Ver todas</span>
+          <span class="quick-sub">Histórico completo</span>
+        </span>
+      </a>
+      <a class="quick" href="/financas/orcamento/">
+        <span class="quick-icon" aria-hidden="true">📊</span>
+        <span class="quick-text">
+          <span class="quick-title">Orçamento</span>
+          <span class="quick-sub">Limites por categoria</span>
+        </span>
+      </a>
+    </section>
+  {/if}
+
+  {#if financasApp}
+    <footer class="page-footer" aria-hidden="true">
+      <span style="--swatch: {financasApp.color}">{financasApp.icon}</span>
+      <span>Sub-app #{financasApp.order} no hub</span>
+    </footer>
+  {/if}
+</div>
+
+<style>
+  .financas-page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 2rem;
+  }
+  .hero {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+    color: var(--txt, #fff);
+  }
+  .sub {
+    color: var(--txt2, #cbd5e1);
+    margin: 0;
+    font-size: 1rem;
+  }
+  .sub strong {
+    color: var(--txt, #fff);
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+  .crumbs {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.875rem;
+    color: var(--txt3, #94a3b8);
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .crumbs a {
+    color: var(--success, #10b981);
+    text-decoration: none;
+  }
+  .crumbs a:hover,
+  .crumbs a:focus-visible {
+    text-decoration: underline;
+  }
+  .empty {
+    background: var(--card, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--txt2, #cbd5e1);
+  }
+  .empty.error {
+    border-color: var(--error, #ef4444);
+    color: var(--error, #ef4444);
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .card {
+    background: var(--card, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+    border-left: 4px solid var(--success, #10b981);
+    border-radius: 0.75rem;
+    padding: 1.125rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .card-receitas {
+    border-left-color: var(--success, #10b981);
+  }
+  .card-despesas {
+    border-left-color: var(--error, #ef4444);
+  }
+  .card-saldo {
+    border-left-color: var(--accent, #ec4899);
+  }
+  .card-saldo.negativo {
+    border-left-color: var(--warning, #f59e0b);
+  }
+  .card-label {
+    font-size: 0.8125rem;
+    color: var(--txt3, #94a3b8);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+  .card-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--txt, #fff);
+    line-height: 1.1;
+  }
+  .card-hint {
+    font-size: 0.8125rem;
+    color: var(--txt3, #94a3b8);
+  }
+  .section-title {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--txt3, #94a3b8);
+    margin: 0 0 0.75rem 0.25rem;
+    font-weight: 600;
+  }
+  .chart-section {
+    background: var(--card, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+    border-radius: 0.75rem;
+    padding: 1rem 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .chart-wrap {
+    position: relative;
+    width: 100%;
+    height: 260px;
+  }
+  .quick-links {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .quick {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.125rem;
+    background: var(--card, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: var(--txt, #fff);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .quick:hover,
+  .quick:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
+    outline: none;
+  }
+  .quick-icon {
+    font-size: 1.75rem;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 2.5rem;
+    text-align: center;
+  }
+  .quick-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+  }
+  .quick-title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+  }
+  .quick-sub {
+    font-size: 0.8125rem;
+    color: var(--txt3, #94a3b8);
+  }
+  .page-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 2rem;
+    color: var(--txt3, #94a3b8);
+    font-size: 0.8125rem;
+  }
+  .page-footer span:first-child {
+    color: var(--swatch, #10b981);
+    font-size: 1.125rem;
+  }
+  @media (min-width: 640px) {
+    .financas-page {
+      padding: 2rem 1.5rem 3rem;
+    }
+    .hero h1 {
+      font-size: 2.5rem;
+    }
+    .cards {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .chart-wrap {
+      height: 300px;
+    }
+    .quick-links {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .quick { transition: none; transform: none; }
+  }
+</style>

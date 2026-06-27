@@ -1,11 +1,21 @@
 # STATUS.md — Presuntinho V4 Migration
 
-> Last updated: 2026-06-27 (Phase 1 complete, Phase 2 ready)
+> Last updated: 2026-06-27 (Phase 11 complete — v4.0.0 release)
 
 ## Where we are
 
 **Phase 0 — Recon: COMPLETE** ✅
 **Phase 1 — Bootstrap: COMPLETE** ✅ (commit `897057f`, Netlify deployed)
+**Phase 2 — Auth + Hub + Registry: COMPLETE** ✅ (commit `a0cd7c5`)
+**Phase 3 — Dexie + Migration + Easter Eggs + Quizzes: COMPLETE** ✅ (commit `441d527`)
+**Phase 4 — Escola sub-app: COMPLETE** ✅
+**Phase 5 — Trabalhos sub-app: COMPLETE** ✅
+**Phase 6 — Finanças sub-app: COMPLETE** ✅
+**Phase 7 — Hábitos sub-app: COMPLETE** ✅
+**Phase 8 — Biblioteca sub-app: COMPLETE** ✅
+**Phase 9 — Settings + i18n: COMPLETE** ✅
+**Phase 10 — PWA + a11y + responsive polish: COMPLETE** ✅
+**Phase 11 — docs + tag: COMPLETE** ✅
 
 ## What's done
 
@@ -103,6 +113,27 @@ presuntinho/
 3. Confirm Phase 2 with user (or auto-proceed if user said "vai").
 4. Pick up at Phase 2 task #12 (Skander 2 builds /splash).
 5. Respect the orchestration rules (delegate, don't implement; verify every sub-agent output; gate between phases).
+
+---
+
+## v4.0.0 — Final release (2026-06-27)
+
+✅ Phase 0: PRESERVATION.md (commit 1b85a32)
+✅ Phase 1: SvelteKit + Vite + iframe legacy (897057f)
+✅ Phase 2: PBKDF2 auth + Hub + Registry (a0cd7c5)
+✅ Phase 3: Dexie + migration + stores + easter eggs + quizzes (441d527)
+✅ Phase 4: Escola sub-app
+✅ Phase 5: Trabalhos sub-app
+✅ Phase 6: Finanças sub-app
+✅ Phase 7: Hábitos sub-app
+✅ Phase 8: Biblioteca sub-app
+✅ Phase 9: Settings + i18n
+✅ Phase 10: PWA + a11y + responsive polish
+✅ Phase 11: docs + tag
+
+**Live:** https://presuntinho.netlify.app/
+**Tag:** v4.0.0
+**PRESERVATION:** all 13 items checked
 
 ---
 

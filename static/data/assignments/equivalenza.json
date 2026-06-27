@@ -1,0 +1,31 @@
+{
+  "id": "equivalenza-midterm",
+  "title": "Equivalenza — Mid-Term BCOBM311",
+  "course": "BCOBM311",
+  "description": "Trabalho de meio-período sobre a Equivalenza — análise estratégica, persona, e TOWS. Inclui análise SWOT, buyer persona, problema de marketing, TOWS, e recomendação final.",
+  "deadline": "2026-06-29T14:00:00+01:00",
+  "status": "open",
+  "documents": [
+    {
+      "name": "Equivalenza_Mid_Term_Fatma.pdf",
+      "description": "Versão final em PDF",
+      "path": "/legacy/docs/Equivalenza_Mid_Term_Fatma.pdf",
+      "size": 161,
+      "type": "pdf"
+    },
+    {
+      "name": "Equivalenza_Mid_Term_Fatma.docx",
+      "description": "Versão editável em Word",
+      "path": "/legacy/docs/Equivalenza_Mid_Term_Fatma.docx",
+      "size": 2248,
+      "type": "docx"
+    },
+    {
+      "name": "equivalenza-midterm-deliverables-V3.zip",
+      "description": "Pacote completo (PDF + DOCX + anexos)",
+      "path": "/legacy/equivalenza-midterm-deliverables-V3.zip",
+      "size": 1709,
+      "type": "zip"
+    }
+  ]
+}

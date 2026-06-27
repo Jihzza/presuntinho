@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { CONFETTI_EVENT } from './events';
+  import { CONFETTI_EVENT, prefersReducedMotion } from './events';
 
   interface Props {
     count?: number;
@@ -14,6 +14,8 @@
 
   function fire(n: number) {
     if (!layer) return;
+    // OS-level a11y: do not spawn particles if the user prefers reduced motion.
+    if (prefersReducedMotion()) return;
     const total = typeof n === 'number' && n > 0 ? n : count;
     for (let i = 0; i < total; i++) {
       const piece = document.createElement('div');

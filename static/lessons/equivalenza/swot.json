@@ -1,0 +1,53 @@
+{
+  "id": "swot",
+  "courseSlug": "equivalenza",
+  "title": "Análise SWOT",
+  "audio": "/legacy/assets/intro_swot.mp3",
+  "audioLabel": "Audio walkthrough (PT)",
+  "sections": [
+    { "type": "p", "text": "A análise SWOT é uma ferramenta de diagnóstico estratégico. Divide os fatores em quatro quadrantes, cruzando interno vs. externo com útil vs. prejudicial." },
+    { "type": "h2", "text": "Strengths (Forças) — interno, útil" },
+    { "type": "ul", "items": [
+      "528 lojas físicas em 19 países",
+      "Margem de ~2/3 nos produtos",
+      "Les Secrets — linha premium em crescimento",
+      "Modelo de refill (recheio) gera receita recorrente",
+      "Diversificação geográfica (Espanha, Itália, Portugal…)"
+    ]},
+    { "type": "h2", "text": "Weaknesses (Fraquezas) — interno, prejudicial" },
+    { "type": "ul", "items": [
+      "Notoriedade de marca de apenas 30% (entre não-clientes)",
+      "Vendas online de 1% vs. média do mercado de 12%",
+      "NPS de 17 — bem abaixo de Druni (56) e Primor (46)",
+      "Qualidade inconsistente entre franquias",
+      "Identidade de marca pouco clara / sem ressonância emocional"
+    ]},
+    { "type": "h2", "text": "Opportunities (Oportunidades) — externo, útil" },
+    { "type": "ul", "items": [
+      "Crescimento do consumo de fragrância na Gen Z",
+      "Mercado espanhol de perfumaria a crescer ~10%/ano",
+      "Tendência de sustentabilidade reforça o modelo refill",
+      "Les Secrets permite subir de preço sem alienar a base",
+      "Espaço para marketing digital mais sofisticado"
+    ]},
+    { "type": "h2", "text": "Threats (Ameaças) — externo, prejudicial" },
+    { "type": "ul", "items": [
+      "Colapso do segmento dupe: de 37% para 13% de consumidores (2018–2023)",
+      "Sandwich effect: marcas premium a descontar por cima; Zara e Mercadona a melhorar por baixo",
+      "Concorrentes nativos digitais (Divain, Dossier, Adopt) sem custos de loja física",
+      "Custos de aquisição digital em subida",
+      "Pressão sobre EBITDA (€2M em 2023 → meta de €8M)"
+    ]},
+    { "type": "callout", "variant": "info", "text": "Pista para o trabalho: o NPS 17 (vs Druni 56) é uma fraqueza que também funciona como ponte direta para o teu Marketing Problem. Mostra que tens olho para o detalhe." }
+  ],
+  "keyPoints": [
+    "528 lojas + Les Secrets + refill = o lado forte da operação",
+    "Fraqueza mais citada: notoriedade baixa + fraca presença digital",
+    "Oportunidade clara: Gen Z + crescimento do mercado + tendência refill",
+    "Ameaça dominante: colapso do segmento dupe + sandwich effect",
+    "Lembra-te de citar Elson (2024) e usar números concretos (NPS 17, 1% online, 528 lojas)"
+  ],
+  "quizSlug": "q1",
+  "nextLesson": "persona",
+  "prevLesson": null
+}

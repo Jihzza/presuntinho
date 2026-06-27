@@ -1,0 +1,41 @@
+{
+  "id": "tows",
+  "courseSlug": "equivalenza",
+  "title": "Matriz TOWS",
+  "audio": "/legacy/assets/tows_recommendation.mp3",
+  "audioLabel": "Audio walkthrough (PT)",
+  "sections": [
+    { "type": "p", "text": "TOWS é a evolução do SWOT. Em vez de listar quadrantes, cruza Forças e Fraquezas com Oportunidades e Ameaças para gerar quatro TIPOS de estratégia: ofensiva, corretiva, defensiva-ofensiva e defensiva." },
+    { "type": "h2", "text": "As quatro estratégias" },
+    { "type": "h3", "text": "SO — Ofensiva (Strengths × Opportunities)" },
+    { "type": "p", "text": "Usar Forças para Aproveitar Oportunidades → crescimento." },
+    { "type": "p", "text": "Exemplo Equivalenza: usar as 528 lojas + a Les Secrets para criar uma experiência de craft fragrance, capturando o crescimento do mercado espanhol (+10%/ano) e da Gen Z." },
+    { "type": "h3", "text": "WO — Corretiva (Weaknesses × Opportunities)" },
+    { "type": "p", "text": "Ultrapassar Fraquezas para Aproveitar Oportunidades → melhoria." },
+    { "type": "p", "text": "Exemplo Equivalenza: construir uma plataforma de e-commerce robusta para capturar Gen Z fora das lojas físicas. Corrige a fraqueza de 1% online e entra no canal onde a Marta já compra." },
+    { "type": "h3", "text": "ST — Defensiva-Ofensiva (Strengths × Threats)" },
+    { "type": "p", "text": "Usar Forças para Neutralizar Ameaças → proteção." },
+    { "type": "p", "text": "Exemplo Equivalenza: usar a rede de lojas físicas como moat contra Divain e Dossier — a experiência sensorial e o refill não são replicáveis digitalmente." },
+    { "type": "h3", "text": "WT — Defensiva (Weaknesses × Threats)" },
+    { "type": "p", "text": "Minimizar Fraquezas e evitar Ameaças → contenção." },
+    { "type": "p", "text": "Exemplo Equivalenza: fechar as piores franquias, cortar despesas discricionárias, suspender expansão em mercados saturados. Contém danos enquanto se prepara a ofensiva." },
+    { "type": "h2", "text": "Como apresentar a matriz" },
+    { "type": "ul", "items": [
+      "Tabela 2×2 com cabeçalhos coloridos (verde = strengths, vermelho = weaknesses, azul = opportunities, amarelo = threats)",
+      "Cada célula = 1 estratégia em 1 linha",
+      "Acompanha com um parágrafo a explicar qual estratégia escolhes e porquê",
+      "Defende a escolha contra as outras três (curto, não exaustivo)"
+    ]},
+    { "type": "callout", "variant": "info", "text": "Para o trabalho: cada célula em 1 linha. Não escrevas ensaios aqui — esta é uma matriz de leitura rápida. O raciocínio vai no parágrafo de justificação." }
+  ],
+  "keyPoints": [
+    "SO = Forças × Oportunidades → crescimento (ofensiva)",
+    "WO = Fraquezas × Oportunidades → melhoria (corretiva)",
+    "ST = Forças × Ameaças → proteção (defensiva-ofensiva)",
+    "WT = Fraquezas × Ameaças → contenção (defensiva)",
+    "Apresenta como tabela 2×2; cada célula em 1 linha; justifica a escolha num parágrafo"
+  ],
+  "quizSlug": "q2",
+  "nextLesson": "recommendation",
+  "prevLesson": "problem"
+}

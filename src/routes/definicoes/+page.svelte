@@ -1,0 +1,693 @@
+<script lang="ts">
+  /**
+   * Phase 9 — Settings page (Definições).
+   *
+   * Sections:
+   *   1. Theme    — light / dark / auto (persists to Dexie `settings` row,
+   *                 applies CSS class to document.documentElement)
+   *   2. Language — pt-PT / en (persists to localStorage `fat-pref-lang`
+   *                 via the i18n module + to Dexie `settings.lang`)
+   *   3. Account  — reset password (MVP: stub message)
+   *   4. Data     — clear local data (with confirmation modal),
+   *                 export to JSON, import from JSON
+   *   5. About    — version + links
+   *
+   * All persistent state lives in Dexie via the existing
+   * `src/lib/state/stores.ts` stores (`theme`, `lang`, `funMode`).  The
+   * settings page does not introduce a parallel persistence path.
+   */
+
+  import { onMount, tick } from 'svelte';
+  import { db, DEFAULT_SETTINGS } from '$lib/state/db';
+  import { theme as themeStore, lang as langStore, funMode as funModeStore } from '$lib/state/stores';
+  import { locale, waitLocale } from 'svelte-i18n';
+  import { setLocale } from '$lib/i18n';
+  import Sun from 'lucide-svelte/icons/sun';
+  import Moon from 'lucide-svelte/icons/moon';
+  import Monitor from 'lucide-svelte/icons/monitor';
+  import Languages from 'lucide-svelte/icons/languages';
+  import Key from 'lucide-svelte/icons/key-round';
+  import Trash from 'lucide-svelte/icons/trash-2';
+  import Download from 'lucide-svelte/icons/download';
+  import Upload from 'lucide-svelte/icons/upload';
+  import Info from 'lucide-svelte/icons/info';
+  import Palette from 'lucide-svelte/icons/palette';
+  import Globe from 'lucide-svelte/icons/globe';
+  import Database from 'lucide-svelte/icons/database';
+  import Heart from 'lucide-svelte/icons/heart';
+  import Github from 'lucide-svelte/icons/github';
+  import ExternalLink from 'lucide-svelte/icons/external-link';
+
+  // ----- i18n -----
+  // svelte-i18n 4 ships `$t` as the message-formatter store.  In a
+  // <script lang="ts"> block we can call it as a function via `$t(...)`
+  // thanks to Svelte's store auto-subscription.
+  import { t } from 'svelte-i18n';
+  // Make sure translations are loaded before first paint to avoid
+  // flickering fallback strings.
+  onMount(() => {
+    void waitLocale();
+  });
+
+  // ----- Theme -----
+  type ThemeChoice = 'light' | 'dark' | 'auto';
+  // $themeStore auto-subscribes via Svelte's `$` prefix on stores.
+  let currentTheme: ThemeChoice = $state('auto');
+
+  // Hydrate from Dexie once stores are ready (the store factory also
+  // hydrates asynchronously; we wait for it).
+  onMount(() => {
+    const unsub = themeStore.subscribe((v) => {
+      currentTheme = (v ?? 'auto') as ThemeChoice;
+    });
+    return unsub;
+  });
+
+  /**
+   * Apply the chosen theme to documentElement by toggling a `theme-...`
+   * class.  CSS variables in `src/app.css` switch on these classes.
+   * For `auto` we follow the OS preference.
+   */
+  function applyTheme(t: ThemeChoice): void {
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+    root.classList.remove('theme-light', 'theme-dark');
+    if (t === 'light') {
+      root.classList.add('theme-light');
+    } else if (t === 'dark') {
+      root.classList.add('theme-dark');
+    } else {
+      // auto: respect OS preference via media query (no class needed;
+      // CSS can branch on @media (prefers-color-scheme: dark)).
+      // We don't add any class; the `auto` value is also persisted so
+      // a future layout pass can read it.
+      const mql = window.matchMedia('(prefers-color-scheme: dark)');
+      if (mql.matches) root.classList.add('theme-dark');
+      else root.classList.add('theme-light');
+    }
+  }
+
+  function pickTheme(t: ThemeChoice): void {
+    currentTheme = t;
+    themeStore.set(t);
+    applyTheme(t);
+  }
+
+  // Apply on mount (in case settings already exist in Dexie).
+  onMount(() => {
+    applyTheme(currentTheme);
+  });
+
+  // ----- Language -----
+  let currentLang: 'pt-PT' | 'en' = $state('pt-PT');
+  onMount(() => {
+    const unsub = langStore.subscribe((v) => {
+      currentLang = (v ?? 'pt-PT') as 'pt-PT' | 'en';
+    });
+    return unsub;
+  });
+
+  async function pickLang(loc: 'pt-PT' | 'en'): Promise<void> {
+    currentLang = loc;
+    setLocale(loc);          // updates svelte-i18n + persists localStorage
+    langStore.set(loc);      // mirrors into Dexie `settings.lang`
+    await tick();
+    await waitLocale();      // ensure dictionary swap is settled
+  }
+
+  // ----- Fun mode (just a checkbox, persists via existing store) -----
+  let funMode: boolean = $state(true);
+  onMount(() => {
+    const unsub = funModeStore.subscribe((v) => {
+      funMode = Boolean(v);
+    });
+    return unsub;
+  });
+
+  // ----- Reset password (MVP stub) -----
+  let resetSoon = $state(false);
+  function resetPassword(): void {
+    resetSoon = true;
+    setTimeout(() => (resetSoon = false), 4000);
+  }
+
+  // ----- Clear local data -----
+  let confirmOpen = $state(false);
+  let clearing = $state(false);
+
+  async function clearAllData(): Promise<void> {
+    clearing = true;
+    try {
+      const d = db();
+      await Promise.all([
+        d.transacoes.clear(),
+        d.orcamentos.clear(),
+        d.categorias.clear(),
+        d.habitos.clear(),
+        d.habit_logs.clear(),
+        d.biblioteca.clear(),
+        d.badges.clear(),
+        d.visited.clear(),
+        d.quizScores.clear(),
+        d.secrets.clear(),
+        d.state.clear(),
+        d.settings.clear()
+      ]);
+      // Re-seed default settings so the rest of the app keeps working
+      // after the reload.
+      await d.settings.put({ ...DEFAULT_SETTINGS, updatedAt: Date.now() });
+      confirmOpen = false;
+      // Hard reload so every store re-hydrates from the empty Dexie.
+      if (typeof location !== 'undefined') location.reload();
+    } catch (e) {
+      console.error('[definicoes] clear data failed', e);
+      clearing = false;
+    }
+  }
+
+  // ----- Export JSON -----
+  let exporting = $state(false);
+  async function exportData(): Promise<void> {
+    if (exporting) return;
+    exporting = true;
+    try {
+      const d = db();
+      const data = {
+        version: 4,
+        exportedAt: new Date().toISOString(),
+        transacoes: await d.transacoes.toArray(),
+        orcamentos: await d.orcamentos.toArray(),
+        categorias: await d.categorias.toArray(),
+        habitos: await d.habitos.toArray(),
+        habit_logs: await d.habit_logs.toArray(),
+        biblioteca: await d.biblioteca.toArray(),
+        badges: await d.badges.toArray(),
+        visited: await d.visited.toArray(),
+        quizScores: await d.quizScores.toArray(),
+        secrets: await d.secrets.toArray(),
+        state: await d.state.toArray(),
+        settings: await d.settings.toArray()
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `presuntinho-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('[definicoes] export failed', e);
+    } finally {
+      exporting = false;
+    }
+  }
+
+  // ----- Import JSON -----
+  let importing = $state(false);
+  let importMessage = $state<{ kind: 'success' | 'error'; text: string } | null>(null);
+  let fileInput: HTMLInputElement | null = $state(null);
+
+  function triggerImport(): void {
+    if (importing) return;
+    importMessage = null;
+    fileInput?.click();
+  }
+
+  async function onFileSelected(ev: Event): Promise<void> {
+    const target = ev.target as HTMLInputElement;
+    const file = target.files?.[0];
+    if (!file) return;
+    importing = true;
+    importMessage = null;
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      if (typeof parsed !== 'object' || parsed === null) {
+        throw new Error('not a JSON object');
+      }
+      if (typeof parsed.version !== 'number') {
+        throw new Error('missing `version` field');
+      }
+      // Version check — be permissive: accept 3+ so V3 exports also
+      // import cleanly into V4.
+      if (parsed.version < 3) {
+        throw new Error(`unsupported version ${parsed.version}`);
+      }
+
+      const d = db();
+
+      // Helper: bulkPut only if the key exists and is an array.
+      async function restore(
+        key: keyof PresuntinhoDBSnapshot,
+        table: 'transacoes' | 'orcamentos' | 'categorias' | 'habitos' | 'habit_logs' | 'biblioteca' | 'badges' | 'visited' | 'quizScores' | 'secrets' | 'state' | 'settings'
+      ): Promise<void> {
+        const arr = (parsed as Record<string, unknown>)[key];
+        if (!Array.isArray(arr) || arr.length === 0) return;
+        // @ts-ignore — Dexie typings vary by table; trust the local JSON contract.
+        await d[table].clear();
+        // @ts-ignore — see above.
+        await d[table].bulkPut(arr);
+      }
+
+      await Promise.all([
+        restore('transacoes', 'transacoes'),
+        restore('orcamentos', 'orcamentos'),
+        restore('categorias', 'categorias'),
+        restore('habitos', 'habitos'),
+        restore('habit_logs', 'habit_logs'),
+        restore('biblioteca', 'biblioteca'),
+        restore('badges', 'badges'),
+        restore('visited', 'visited'),
+        restore('quizScores', 'quizScores'),
+        restore('secrets', 'secrets'),
+        restore('state', 'state'),
+        restore('settings', 'settings')
+      ]);
+
+      importMessage = {
+        kind: 'success',
+        text: $t('settings.import.success')
+      };
+      // Reload so every store re-hydrates from the freshly-imported data.
+      setTimeout(() => location.reload(), 600);
+    } catch (e) {
+      console.error('[definicoes] import failed', e);
+      const msg = e instanceof Error ? e.message : String(e);
+      importMessage = {
+        kind: 'error',
+        text: $t('settings.import.error', { values: { msg } })
+      };
+    } finally {
+      importing = false;
+      // Allow re-selecting the same file.
+      if (target) target.value = '';
+    }
+  }
+
+  // Just a local type alias to satisfy the generic in `restore`.
+  type PresuntinhoDBSnapshot = {
+    transacoes: unknown[];
+    orcamentos: unknown[];
+    categorias: unknown[];
+    habitos: unknown[];
+    habit_logs: unknown[];
+    biblioteca: unknown[];
+    badges: unknown[];
+    visited: unknown[];
+    quizScores: unknown[];
+    secrets: unknown[];
+    state: unknown[];
+    settings: unknown[];
+  };
+
+  // Misc
+  const today = new Date().toISOString().slice(0, 10);
+</script>
+
+<svelte:head>
+  <title>{$t('settings.title')} · Presuntinho</title>
+</svelte:head>
+
+<div class="definicoes">
+  <header class="header">
+    <h1>{$t('settings.title')}</h1>
+  </header>
+
+  <!-- ============ Theme ============ -->
+  <section class="card" aria-labelledby="theme-h">
+    <div class="card-head">
+      <span class="icon-wrap"><Palette size={18} /></span>
+      <h2 id="theme-h">{$t('settings.theme')}</h2>
+    </div>
+    <div class="seg" role="radiogroup" aria-label={$t('settings.theme')}>
+      <button
+        type="button"
+        role="radio"
+        aria-checked={currentTheme === 'light'}
+        class:active={currentTheme === 'light'}
+        onclick={() => pickTheme('light')}
+      >
+        <Sun size={16} aria-hidden="true" />
+        {$t('settings.theme.light')}
+      </button>
+      <button
+        type="button"
+        role="radio"
+        aria-checked={currentTheme === 'dark'}
+        class:active={currentTheme === 'dark'}
+        onclick={() => pickTheme('dark')}
+      >
+        <Moon size={16} aria-hidden="true" />
+        {$t('settings.theme.dark')}
+      </button>
+      <button
+        type="button"
+        role="radio"
+        aria-checked={currentTheme === 'auto'}
+        class:active={currentTheme === 'auto'}
+        onclick={() => pickTheme('auto')}
+      >
+        <Monitor size={16} aria-hidden="true" />
+        {$t('settings.theme.auto')}
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ Language ============ -->
+  <section class="card" aria-labelledby="lang-h">
+    <div class="card-head">
+      <span class="icon-wrap"><Languages size={18} /></span>
+      <h2 id="lang-h">{$t('settings.lang')}</h2>
+    </div>
+    <div class="seg" role="radiogroup" aria-label={$t('settings.lang')}>
+      <button
+        type="button"
+        role="radio"
+        aria-checked={currentLang === 'pt-PT'}
+        class:active={currentLang === 'pt-PT'}
+        onclick={() => pickLang('pt-PT')}
+      >
+        🇵🇹 {$t('settings.lang.pt')}
+      </button>
+      <button
+        type="button"
+        role="radio"
+        aria-checked={currentLang === 'en'}
+        class:active={currentLang === 'en'}
+        onclick={() => pickLang('en')}
+      >
+        🇬🇧 {$t('settings.lang.en')}
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ Account / Password ============ -->
+  <section class="card" aria-labelledby="acct-h">
+    <div class="card-head">
+      <span class="icon-wrap"><Key size={18} /></span>
+      <h2 id="acct-h">{$t('settings.reset_password')}</h2>
+    </div>
+    <p class="muted">
+      {$t('settings.reset_password.soon')}
+    </p>
+    <button type="button" class="btn" onclick={resetPassword} disabled={resetSoon}>
+      <Key size={16} aria-hidden="true" />
+      {$t('settings.reset_password')}
+    </button>
+    {#if resetSoon}
+      <p class="hint">⏳ {$t('settings.reset_password.soon')}</p>
+    {/if}
+  </section>
+
+  <!-- ============ Data ============ -->
+  <section class="card" aria-labelledby="data-h">
+    <div class="card-head">
+      <span class="icon-wrap"><Database size={18} /></span>
+      <h2 id="data-h">{$t('settings.clear_data')}</h2>
+    </div>
+
+    <div class="data-actions">
+      <button type="button" class="btn btn-secondary" onclick={exportData} disabled={exporting}>
+        <Download size={16} aria-hidden="true" />
+        {exporting ? '…' : $t('settings.export')}
+      </button>
+
+      <button type="button" class="btn btn-secondary" onclick={triggerImport} disabled={importing}>
+        <Upload size={16} aria-hidden="true" />
+        {importing ? '…' : $t('settings.import')}
+      </button>
+      <input
+        bind:this={fileInput}
+        type="file"
+        accept="application/json,.json"
+        onchange={onFileSelected}
+        hidden
+      />
+
+      <button type="button" class="btn btn-danger" onclick={() => (confirmOpen = true)} disabled={clearing}>
+        <Trash size={16} aria-hidden="true" />
+        {$t('settings.clear_data')}
+      </button>
+    </div>
+
+    {#if importMessage}
+      <p class="hint" class:err={importMessage.kind === 'error'} class:ok={importMessage.kind === 'success'}>
+        {importMessage.text}
+      </p>
+    {/if}
+  </section>
+
+  <!-- ============ About ============ -->
+  <section class="card" aria-labelledby="about-h">
+    <div class="card-head">
+      <span class="icon-wrap"><Info size={18} /></span>
+      <h2 id="about-h">{$t('settings.about')}</h2>
+    </div>
+    <p class="muted">
+      <Heart size={14} aria-hidden="true" fill="currentColor" />
+      {$t('splash.credit').replace('❤️ ', '')}
+    </p>
+    <ul class="about-list">
+      <li>
+        <Globe size={14} aria-hidden="true" />
+        {$t('settings.version')} · {today}
+      </li>
+      <li>
+        <a href="/legacy/" target="_blank" rel="noopener noreferrer">
+          <ExternalLink size={14} aria-hidden="true" />
+          {$t('settings.about.legacy')}
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/" target="_blank" rel="noopener noreferrer">
+          <Github size={14} aria-hidden="true" />
+          {$t('settings.about.repo')}
+        </a>
+      </li>
+    </ul>
+  </section>
+</div>
+
+<!-- ============ Confirm modal ============ -->
+{#if confirmOpen}
+  <div
+    class="modal-backdrop"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="confirm-h"
+    tabindex="-1"
+  >
+    <button
+      type="button"
+      class="modal-backdrop-btn"
+      aria-label="Fechar"
+      onclick={() => (confirmOpen = false)}
+    ></button>
+    <div class="modal" role="document">
+      <h2 id="confirm-h">{$t('settings.clear_data')}</h2>
+      <p class="muted">{$t('settings.clear.confirm')}</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick={() => (confirmOpen = false)} disabled={clearing}>
+          {$t('settings.cancel')}
+        </button>
+        <button type="button" class="btn btn-danger" onclick={clearAllData} disabled={clearing}>
+          <Trash size={14} aria-hidden="true" />
+          {clearing ? '…' : $t('settings.clear.confirm_button')}
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}
+
+<style>
+  .definicoes {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .header h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.75rem;
+    color: #fff;
+  }
+  .card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    backdrop-filter: blur(10px);
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .card-head h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: #fff;
+  }
+  .icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 0.5rem;
+    background: rgba(236, 72, 153, 0.18);
+    color: #ec4899;
+  }
+  .seg {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .seg button {
+    flex: 1 1 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.6rem 0.8rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0.6rem;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .seg button:hover,
+  .seg button:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    outline: none;
+  }
+  .seg button.active {
+    background: rgba(236, 72, 153, 0.18);
+    border-color: #ec4899;
+    color: #fff;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.65rem 1rem;
+    background: #ec4899;
+    color: #fff;
+    border: 0;
+    border-radius: 0.6rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn:hover:not(:disabled) {
+    background: #db2777;
+    transform: translateY(-1px);
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.14);
+  }
+  .btn-danger {
+    background: #ef4444;
+  }
+  .btn-danger:hover:not(:disabled) {
+    background: #dc2626;
+  }
+  .data-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .muted {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    margin: 0 0 0.75rem 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .hint {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    margin: 0.75rem 0 0 0;
+  }
+  .hint.ok { color: #6ee7b7; }
+  .hint.err { color: #fca5a5; }
+  .about-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+  }
+  .about-list li,
+  .about-list a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #cbd5e1;
+    text-decoration: none;
+  }
+  .about-list a:hover {
+    color: #ec4899;
+  }
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 50;
+    backdrop-filter: blur(4px);
+  }
+  .modal {
+    background: #1f2e4a;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  }
+  .modal h2 {
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+    font-size: 1.15rem;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+  }
+  @media (min-width: 640px) {
+    .definicoes {
+      padding: 2rem 1.5rem 3rem;
+    }
+    .header h1 {
+      font-size: 2rem;
+    }
+  }
+</style>

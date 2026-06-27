@@ -1,0 +1,43 @@
+{
+  "id": "recommendation",
+  "courseSlug": "equivalenza",
+  "title": "Recomendação Estratégica",
+  "audio": "/legacy/assets/tows_recommendation.mp3",
+  "audioLabel": "Audio walkthrough (PT)",
+  "sections": [
+    { "type": "p", "text": "A recomendação é onde tudo se decide. Pegas na estratégia TOWS que escolheste, defendes porque é a melhor (e não as outras), validas a viabilidade e desenhas um plano de implementação com liderança, recursos e timeline." },
+    { "type": "h2", "text": "Recomendação sugerida: SO — Craft Experience Around Les Secrets" },
+    { "type": "p", "text": "Reposicionar a Equivalenza de \"marca de dupes acessíveis\" para \"marca de descoberta e craft em fragrância\", ancorada na linha Les Secrets e na experiência da loja física. Complementar com WO corretiva (e-commerce) e ST protetiva (refill como assinatura)." },
+    { "type": "h2", "text": "Porque é que esta (e não as outras)" },
+    { "type": "ul", "items": [
+      "SO é a única que CRESCE — WO e ST defendem, WT contém",
+      "Aproveita o ativo mais difícil de copiar: 528 lojas + experiência sensorial + refill",
+      "Alinha-se com a tendência (Gen Z, sustentabilidade, craft) em vez de a combater",
+      "Permite subir o ticket médio via Les Secrets sem alienar a base price-sensitive"
+    ]},
+    { "type": "h2", "text": "Viabilidade" },
+    { "type": "ul", "items": [
+      "Liderança: CEO Juan Franco (nomeado 2023) tem mandato claro para reposicionar",
+      "Recursos: a Les Secrets já existe e já cresce — não é greenfield",
+      "Operação: as 528 lojas são o ativo; o plano opera sobre elas, não contra elas",
+      "Risco: a queda de €60M para os valores atuais mostra que inação também é um risco"
+    ]},
+    { "type": "h2", "text": "Plano de implementação" },
+    { "type": "ul", "items": [
+      "Curto prazo (0–6 meses): refresh visual das lojas flagship + campanha digital Les Secrets",
+      "Médio prazo (6–18 meses): e-commerce robusto + programa de refill nacional + formação de franquia",
+      "Longo prazo (18–36 meses): Les Secrets em todos os mercados + parcerias com criativos locais"
+    ]},
+    { "type": "callout", "variant": "highlight", "text": "Lembra-te: Q3, Q4 e Q5 NÃO podem usar IA diretamente. Estas secções têm de ser escritas por ti, na tua voz. O guia serve para perceberes a metodologia — depois escreves sozinha." }
+  ],
+  "keyPoints": [
+    "Pega na TOWS escolhida e defende-a contra as outras três (curto)",
+    "Viabilidade = liderança + recursos + operação + risco de inação",
+    "Implementação: curto, médio, longo prazo — com nomes e números",
+    "Termina sempre com uma frase de fecho que una recomendação + persona + problema",
+    "Q5 (e Q3, Q4) são para escrever à mão — o guia dá a estrutura, não o texto"
+  ],
+  "quizSlug": null,
+  "nextLesson": null,
+  "prevLesson": "tows"
+}
