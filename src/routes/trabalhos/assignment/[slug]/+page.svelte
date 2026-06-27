@@ -1,29 +1,27 @@
 <script lang="ts">
   import { page } from '$app/state';
   import Countdown from '$lib/components/Countdown.svelte';
+  import type { AssignmentPack } from '$lib/assignments';
 
-  interface AssignmentDoc {
-    name: string;
-    description: string;
-    path: string;
-    size: number;
-    type: string;
-  }
-
-  interface Assignment {
+  // V6 pack shape — single file holds every assignment for the course.
+  // We only need the Assignment fields on the page, so we inline a
+  // narrow type rather than importing the full Assignment interface
+  // (which would force us to handle every optional field).
+  interface AssignmentFromPack {
     id: string;
+    slug: string;
     title: string;
-    course: string;
-    description: string;
-    deadline: string; // ISO 8601
-    status: string;
-    documents: AssignmentDoc[];
+    weight: number;
+    lessonSlug?: string;
+    audioSlug?: string;
+    whatToDo: string;
+    howToDo: string;
+    hint: string;
+    estimatedMinutes: number;
   }
 
-  // Svelte 5 runes for reactive fetch state.  We don't use onMount because
-  // the +page.svelte is rendered with ssr=false (see +layout.ts) and we
-  // want the fetch to fire on the client only.
-  let assignment = $state<Assignment | null>(null);
+  let pack = $state<AssignmentPack | null>(null);
+  let assignment = $state<AssignmentFromPack | null>(null);
   let loading = $state(true);
   let error = $state<string | null>(null);
 
@@ -37,78 +35,63 @@
     loading = true;
     error = null;
     assignment = null;
+    pack = null;
 
-    fetch(`/data/assignments/${slug}.json`, { cache: 'no-store' })
+    fetch('/data/assignments/equivalenza.json', { cache: 'no-store' })
       .then(async (res) => {
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}`);
         }
-        return (await res.json()) as Assignment;
+        return (await res.json()) as AssignmentPack;
       })
       .then((data) => {
-        assignment = data;
+        pack = data;
+        const found = data.assignments.find(
+          (a) => a.slug === slug || a.id === slug
+        );
+        if (!found) {
+          error = `Trabalho "${slug}" não encontrado no pack.`;
+        } else {
+          assignment = found;
+        }
         loading = false;
       })
       .catch((e: unknown) => {
         error =
           e instanceof Error
-            ? `Não foi possível carregar o trabalho: ${e.message}`
-            : 'Não foi possível carregar o trabalho.';
+            ? `Não foi possível carregar o pack: ${e.message}`
+            : 'Não foi possível carregar o pack de trabalhos.';
         loading = false;
       });
   });
 
-  function statusLabel(status: string): string {
-    switch (status) {
-      case 'open':
-        return 'Em curso';
-      case 'submitted':
-        return 'Entregue';
-      case 'late':
-        return 'Atrasado';
-      default:
-        return status;
-    }
-  }
-
-  function formatSize(kb: number): string {
-    if (kb >= 1024) {
-      const mb = kb / 1024;
-      return `${mb.toFixed(mb >= 10 ? 0 : 1)} MB`;
-    }
-    return `${kb} KB`;
-  }
-
-  function docIcon(type: string): string {
-    switch (type) {
-      case 'pdf':
-        return '📄';
-      case 'docx':
-        return '📝';
-      case 'zip':
-        return '🗂️';
-      default:
-        return '📎';
-    }
-  }
+  // Combined description: what + how + hint, so the detail page gives
+  // the student everything they need in one place.
+  let descriptionText = $derived(
+    assignment
+      ? [assignment.whatToDo, assignment.howToDo, assignment.hint]
+          .filter((s) => s && s.trim().length > 0)
+          .join(' ')
+      : ''
+  );
 
   // SEO — used by <svelte:head> below.
   let pageTitle = $derived(
     assignment ? `${assignment.title} · Trabalhos` : 'Trabalho · Trabalhos'
   );
-  let description = $derived(
-    assignment?.description?.slice(0, 160) || 'Detalhe do trabalho'
+  let metaDescription = $derived(
+    descriptionText.slice(0, 160) || 'Detalhe do trabalho'
   );
 </script>
 
 <svelte:head>
   <title>{pageTitle} · Presuntinho</title>
-  <meta name="description" content={description} />
+  <meta name="description" content={metaDescription} />
   <meta property="og:title" content={pageTitle} />
-  <meta property="og:description" content={description} />
-  <meta property="og:url" content="https://presuntinho.netlify.app/trabalhos/assignment/" />
+  <meta property="og:description" content={metaDescription} />
+  <meta property="og:url" content="https://presuntinho.netlify.app/trabalhos/" />
   <meta name="twitter:title" content={pageTitle} />
-  <meta name="twitter:description" content={description} />
+  <meta name="twitter:description" content={metaDescription} />
 </svelte:head>
 
 <div class="detail">
@@ -122,61 +105,62 @@
 
   {#if loading}
     <p class="state">A carregar trabalho…</p>
-  {:else if error}
+  {:else if error || !assignment}
     <div class="state error" role="alert">
-      <p>⚠️ {error}</p>
+      <p>⚠️ {error ?? 'Trabalho desconhecido.'}</p>
       <p>
-        Verifica que o slug <code>{page.params.slug}</code> existe em
-        <code>static/data/assignments/</code>.
+        Verifica que o slug <code>{page.params.slug}</code> existe no pack
+        <code>static/data/assignments/equivalenza.json</code>.
       </p>
       <a class="back-link" href="/trabalhos/">← Voltar à lista de trabalhos</a>
     </div>
-  {:else if assignment}
+  {:else}
     <article class="assignment">
       <header class="header">
         <div class="title-row">
           <h1>{assignment.title}</h1>
-          <span class="course-pill" aria-label="Curso">{assignment.course}</span>
+          <span class="weight-pill" aria-label="Peso">Peso {assignment.weight}%</span>
         </div>
-        <span class="status status-{assignment.status}">
-          {statusLabel(assignment.status)}
+        <span class="meta-pill" aria-label="Duração estimada">
+          ⏱️ ~{assignment.estimatedMinutes} min
         </span>
       </header>
 
-      <p class="description">{assignment.description}</p>
+      <section class="description-block" aria-label="Descrição do trabalho">
+        <h2 class="block-title">O que fazer</h2>
+        <p class="description">{descriptionText}</p>
+      </section>
 
       <section class="meta-block" aria-label="Prazo">
         <h2 class="block-title">Prazo</h2>
         <div class="deadline-row">
-          <Countdown deadline={assignment.deadline} />
+          {#if pack?.deadline}
+            <Countdown deadline={pack.deadline} />
+          {/if}
         </div>
       </section>
 
-      <section class="docs-block" aria-label="Documentos para descarregar">
-        <h2 class="block-title">Documentos ({assignment.documents.length})</h2>
-        {#if assignment.documents.length === 0}
-          <p class="muted">Sem documentos anexados.</p>
-        {:else}
-          <ul class="docs">
-            {#each assignment.documents as doc (doc.path)}
-              <li class="doc">
-                <a class="doc-link" href={doc.path} download>
-                  <span class="doc-icon" aria-hidden="true">{docIcon(doc.type)}</span>
-                  <span class="doc-content">
-                    <span class="doc-name">{doc.name}</span>
-                    <span class="doc-desc">{doc.description}</span>
-                    <span class="doc-meta">
-                      <span class="doc-type">{doc.type.toUpperCase()}</span>
-                      <span aria-hidden="true">·</span>
-                      <span>{formatSize(doc.size)}</span>
-                    </span>
-                  </span>
-                  <span class="doc-cta" aria-hidden="true">↓</span>
-                </a>
-              </li>
-            {/each}
-          </ul>
-        {/if}
+      <section class="recursos-block" aria-label="Recursos">
+        <h2 class="block-title">Recursos</h2>
+        <ul class="recursos">
+          {#if assignment.lessonSlug}
+            <li>
+              <a class="recurso-link" href={`/escola/curso/${assignment.lessonSlug}/`}>
+                📖 Ver aula: {assignment.lessonSlug}
+              </a>
+            </li>
+          {/if}
+          {#if assignment.audioSlug}
+            <li>
+              <a class="recurso-link" href={`/walk/?slug=${assignment.audioSlug}`}>
+                🎧 Ouvir walkthrough
+              </a>
+            </li>
+          {/if}
+          {#if !assignment.lessonSlug && !assignment.audioSlug}
+            <li class="muted">Sem recursos associados.</li>
+          {/if}
+        </ul>
       </section>
 
       <footer class="footer-row">
@@ -256,42 +240,27 @@
     line-height: 1.25;
     color: var(--txt, #fff);
   }
-  .course-pill {
+  .weight-pill {
     font-size: 0.75rem;
     padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(236, 72, 153, 0.15);
+    color: var(--accent, #ec4899);
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .meta-pill {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.08);
     color: var(--txt2, #cbd5e1);
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
     font-weight: 600;
     letter-spacing: 0.02em;
-  }
-  .status {
-    font-size: 0.75rem;
-    padding: 0.2rem 0.6rem;
-    border-radius: 999px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
     white-space: nowrap;
-  }
-  .status-open {
-    background: rgba(236, 72, 153, 0.15);
-    color: var(--accent, #ec4899);
-  }
-  .status-submitted {
-    background: rgba(16, 185, 129, 0.15);
-    color: var(--success, #10b981);
-  }
-  .status-late {
-    background: rgba(245, 158, 11, 0.15);
-    color: var(--warning, #f59e0b);
-  }
-  .description {
-    color: var(--txt2, #cbd5e1);
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.55;
   }
   .block-title {
     font-size: 0.8125rem;
@@ -301,12 +270,18 @@
     margin: 0 0 0.5rem 0;
     font-weight: 600;
   }
+  .description {
+    color: var(--txt2, #cbd5e1);
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
   .deadline-row {
     background: rgba(0, 0, 0, 0.15);
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
   }
-  .docs {
+  .recursos {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -314,66 +289,28 @@
     flex-direction: column;
     gap: 0.5rem;
   }
-  .doc {
+  .recurso-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.9rem;
     background: rgba(0, 0, 0, 0.15);
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
     border-radius: 0.5rem;
-    overflow: hidden;
-  }
-  .doc-link {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
     color: var(--txt, #fff);
     text-decoration: none;
-    transition: background 0.15s;
-  }
-  .doc-link:hover,
-  .doc-link:focus-visible {
-    background: rgba(255, 255, 255, 0.05);
-    outline: none;
-  }
-  .doc-link:focus-visible {
-    box-shadow: inset 0 0 0 2px var(--accent, #ec4899);
-  }
-  .doc-icon {
-    font-size: 1.5rem;
-    flex-shrink: 0;
-    width: 2rem;
-    text-align: center;
-  }
-  .doc-content {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-  }
-  .doc-name {
     font-weight: 600;
     font-size: 0.9375rem;
-    overflow-wrap: anywhere;
+    transition: background 0.15s;
   }
-  .doc-desc {
-    font-size: 0.8125rem;
-    color: var(--txt2, #cbd5e1);
-  }
-  .doc-meta {
-    font-size: 0.75rem;
-    color: var(--txt3, #94a3b8);
-    display: flex;
-    gap: 0.4rem;
-    align-items: center;
-  }
-  .doc-type {
-    font-weight: 600;
-    letter-spacing: 0.04em;
-  }
-  .doc-cta {
+  .recurso-link:hover,
+  .recurso-link:focus-visible {
+    background: rgba(255, 255, 255, 0.05);
     color: var(--accent, #ec4899);
-    font-size: 1.25rem;
-    flex-shrink: 0;
+    outline: none;
+  }
+  .recurso-link:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--accent, #ec4899);
   }
   .muted {
     color: var(--txt3, #94a3b8);
