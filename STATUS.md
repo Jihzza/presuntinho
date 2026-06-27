@@ -1,6 +1,6 @@
-# STATUS.md — Presuntinho V4 Migration
+# STATUS.md — Presuntinho V5 Migration
 
-> Last updated: 2026-06-27 (Phase 11 complete — v4.0.0 release)
+> Last updated: 2026-06-27 (Phase 16.5 complete — v5.0.0 release candidate)
 
 ## Where we are
 

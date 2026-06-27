@@ -21,3 +21,5 @@ SLASH_GOAL_*.md
 .idea/
 *.swp
 *~
+# Local Netlify folder
+.netlify
