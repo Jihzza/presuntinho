@@ -25,6 +25,7 @@
 // load after the deploy.
 
 import Dexie, { type Table } from 'dexie';
+import type { ProfileId } from '../auth/hash';
 
 // ---------------------------------------------------------------------------
 // Row interfaces
@@ -293,8 +294,8 @@ class PresuntinhoDB extends Dexie {
     //          to sort newest-first.
     notes!: Table<NoteRow, number>;
 
-    constructor() {
-      super('presuntinho');
+    constructor(name = 'presuntinho') {
+      super(name);
       // Schema string syntax: 'primaryKey, indexA, indexB, ...'
       // v1: existing V3-mirroring tables (singletons + PK-only collections).
       this.version(1).stores({
@@ -387,10 +388,30 @@ class PresuntinhoDB extends Dexie {
 // `db()` is lazy so that simply importing this module never opens the
 // IndexedDB connection.  This is important for SSR (SvelteKit prerender)
 // where `indexedDB` is undefined and any attempt to open Dexie throws.
-let _db: PresuntinhoDB | null = null;
-export function db(): PresuntinhoDB {
-  if (!_db) _db = new PresuntinhoDB();
-  return _db;
+let activeProfile: ProfileId = 'fatma';
+const _dbCache = new Map<ProfileId, PresuntinhoDB>();
+
+export function setActiveProfile(profile: ProfileId): void {
+  activeProfile = profile;
+}
+
+export function dbNameForProfile(profile: ProfileId): string {
+  return profile === 'fatma' ? 'presuntinho' : `presuntinho-${profile}`;
+}
+
+export function db(profile: ProfileId = activeProfile): PresuntinhoDB {
+  const cached = _dbCache.get(profile);
+  if (cached) return cached;
+  const fresh = new PresuntinhoDB(dbNameForProfile(profile));
+  _dbCache.set(profile, fresh);
+  return fresh;
+}
+
+export function resetDbCache(): void {
+  for (const inst of Array.from(_dbCache.values())) {
+    try { inst.close(); } catch { /* ignore */ }
+  }
+  _dbCache.clear();
 }
 
 // ---------------------------------------------------------------------------
@@ -472,8 +493,8 @@ export const DEFAULT_CATEGORIAS: CategoriaRow[] = [
  * The 11 default categories cover the MVP Finanças needs (see
  * `DEFAULT_CATEGORIAS` for the source of truth).
  */
-export async function ensureDefaults(): Promise<void> {
-  const d = db();
+export async function ensureDefaults(profile: ProfileId = activeProfile): Promise<void> {
+  const d = db(profile);
   const now = Date.now();
   // Singleton state — only seed if it doesn't exist yet.  Once the
   // user has any XP / clicks / badges, their values must NOT be

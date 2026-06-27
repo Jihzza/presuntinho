@@ -6,29 +6,41 @@
 // db.ts → StateRow exactly (additional V3 fields preserved for fidelity).
 
 import { writable, type Writable } from 'svelte/store';
-import { db, DEFAULT_STATE, DEFAULT_SETTINGS, ensureDefaults } from './db';
+import { db, DEFAULT_STATE, DEFAULT_SETTINGS, ensureDefaults, resetDbCache, setActiveProfile } from './db';
 import { bootMigration } from './migration';
+import type { ProfileId } from '../auth/hash';
 
 // We use Svelte's classic writable stores here (not runes) so they work
 // across SSR boundaries and can be subscribed to from any component
 // (including non-rune legacy code or plain .ts modules).
 
 let _initialized = false;
+let _initializedProfile: ProfileId | null = null;
 let _initPromise: Promise<void> | null = null;
 
 /**
  * Initialize all stores: run migration, ensure default rows exist.
  * Idempotent — safe to call from multiple places.
  */
-export async function initStores(): Promise<void> {
-  if (_initialized) return;
+export async function initStores(profile: ProfileId = 'fatma'): Promise<void> {
+  if (_initialized && _initializedProfile === profile) return;
   if (_initPromise) return _initPromise;
   _initPromise = (async () => {
-    await bootMigration();
-    await ensureDefaults();
+    setActiveProfile(profile);
+    await bootMigration(profile);
+    await ensureDefaults(profile);
+    await hydrateStores(profile);
     _initialized = true;
+    _initializedProfile = profile;
   })();
   return _initPromise;
+}
+
+export function resetStores(): void {
+  _initialized = false;
+  _initializedProfile = null;
+  _initPromise = null;
+  resetDbCache();
 }
 
 /**
@@ -115,6 +127,31 @@ function createSettingsStore<K extends keyof Omit<typeof DEFAULT_SETTINGS, 'id' 
 export const theme = createSettingsStore('theme', DEFAULT_SETTINGS.theme) as Writable<'light' | 'dark' | 'auto'>;
 export const lang = createSettingsStore('lang', DEFAULT_SETTINGS.lang) as Writable<'pt-PT' | 'en' | 'tn' | 'fr' | 'ar'>;
 export const funMode = createSettingsStore('funMode', DEFAULT_SETTINGS.funMode) as Writable<boolean>;
+
+async function hydrateStores(profile: ProfileId): Promise<void> {
+  const d = db(profile);
+  const [stateRow, settingsRow] = await Promise.all([
+    d.state.get('main'),
+    d.settings.get('main')
+  ]);
+  if (stateRow) {
+    xp.set(stateRow.xp);
+    heartClicks.set(stateRow.heartClicks);
+    heartMaxClicks.set(stateRow.heartMaxClicks);
+    logoClicks.set(stateRow.logoClicks);
+    logoTimer.set(stateRow.logoTimer);
+    konamiProg.set(stateRow.konamiProg);
+    keyBuf.set(stateRow.keyBuf);
+    footerClicks.set(stateRow.footerClicks);
+    mascotShown.set(stateRow.mascotShown);
+    sroomOpened.set(stateRow.sroomOpened);
+  }
+  if (settingsRow) {
+    theme.set(settingsRow.theme);
+    lang.set(settingsRow.lang);
+    funMode.set(settingsRow.funMode);
+  }
+}
 
 // ============================================================================
 // High-level helpers (preserve V3 addXP / awardBadge semantics)
@@ -227,5 +264,6 @@ export async function markQuizComplete(quizId: string): Promise<void> {
 /** Reset _initialized so tests can re-run initStores. */
 export function __resetForTests(): void {
   _initialized = false;
+  _initializedProfile = null;
   _initPromise = null;
 }

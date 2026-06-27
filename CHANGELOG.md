@@ -2,6 +2,22 @@
 
 All notable changes to Presuntinho are documented in this file.
 
+## [6.0.3] - 2026-06-27
+
+### Added
+- **Two-profile auth (Daniel + Fatma)** — splash now shows two buttons ("Sou a Fatma" / "Sou o Daniel"). Daniel's password is `princesa`. Storage is fully isolated per profile: separate `sessionStorage` keys, separate `IndexedDB` databases (`presuntinho-fatma` vs `presuntinho-daniel`), separate `sessionStorage` keys for lockout counter and failed-attempt tracking. Cross-profile reads are impossible by design.
+- **Multi-language UI (i18n)** — full app now ships with 5 locales: `pt-PT` (default), `en`, `tn` (Tunisian Arabic transliterated to Latin script — no Arabic characters, no font fallback needed), `fr`, `ar` (Arabic with proper RTL + character shaping). `LanguageSwitcher` dropdown in the header persists the choice to localStorage and to Dexie `settings.lang` so it follows the user across sessions. All navigation, buttons, errors, splash copy and page titles are translated. Source: `src/lib/i18n/{pt-PT,en,tn,fr,ar}.json` + `src/lib/components/LanguageSwitcher.svelte`.
+
+### Changed
+- `SettingsRow.lang` extended from `'pt-PT' | 'en'` to `'pt-PT' | 'en' | 'tn' | 'fr' | 'ar'`.
+- `HashSlot` extended with `'daniel'` slot, `ProfileId = 'fatma' | 'daniel'`.
+- Splash card replaces single password input with profile picker + contextual placeholder (`princesa` when Daniel selected, translated placeholder when Fatma selected).
+
+## [6.0.2] - 2026-06-27
+
+### Fixed
+- **Love Lock cross-browser persistence** — Netlify Functions runtime never auto-injects `NETLIFY_BLOBS_CONTEXT` into Function invocations. Switched `netlify/functions/love-lock.js` to use `connectLambda(event)` from `@netlify/blobs` so the context is reconstructed from the event payload, working identically on Chrome, Edge, Safari, Firefox and any other browser/device.
+
 ## [6.0.1] - 2026-06-27
 
 ### Added

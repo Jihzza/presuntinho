@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { verifyAgainstHashes } from '$lib/auth/hash';
+  import { verifyAgainstHashes, type ProfileId } from '$lib/auth/hash';
   import { setSession, isLockedOut, recordFailedAttempt, resetAttempts, getSession } from '$lib/auth/session';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
@@ -24,6 +24,7 @@
   let shake = $state(false);
   let locked = $state({ locked: false, remainingMs: 0 });
   let loading = $state(false);
+  let selectedProfile = $state<ProfileId>('fatma');
   // Love Lock state — when non-null the splash card is replaced by the
   // LoveLock full-screen modal until the user clicks the confirmation.
   let loveLockState = $state<LoveLockState | null>(null);
@@ -54,12 +55,12 @@
           // Don't return — still wire up the lockout counter underneath for the
           // case where the user lets the love-lock TTL expire mid-session.
         }
-        locked = isLockedOut();
+        locked = isLockedOut(selectedProfile);
       })();
       let interval: ReturnType<typeof setInterval> | undefined;
       if (locked.locked) {
         interval = setInterval(() => {
-          locked = isLockedOut();
+          locked = isLockedOut(selectedProfile);
           if (!locked.locked && interval) clearInterval(interval);
         }, 500);
       }
@@ -112,13 +113,14 @@
           // it as a love-lock trigger. Only if PBKDF2 rejects do we check the
           // emotional phrase — at which point we know the user typed it on purpose
           // and the real password isn't it.
-          const method = await verifyAgainstHashes(password);
-          if (method) {
-            setSession(method);
-            resetAttempts();
-            await goto('/');
-            return;
-          }
+          const authResult = await verifyAgainstHashes(password);
+                    if (authResult && authResult.profile === selectedProfile) {
+                      setSession(authResult.profile, authResult.method);
+                      resetAttempts(authResult.profile);
+                      if (typeof location !== 'undefined') location.href = '/';
+                      else await goto('/');
+                      return;
+                    }
 
           // ── Love Lock check SECOND ──
           // Only fires when the password was wrong AND looks like an emotional
@@ -135,13 +137,13 @@
                     }
 
           // Real auth failure — record attempt, show error, shake.
-          const result = recordFailedAttempt();
-          error = $t('splash.error.wrong', { values: { n: result.attempts } });
+          const attemptResult = recordFailedAttempt(selectedProfile);
+          error = $t('splash.error.wrong', { values: { n: attemptResult.attempts } });
           password = '';
           shake = true;
           setTimeout(() => (shake = false), 500);
-          if (result.locked) {
-            locked = { locked: true, remainingMs: result.remainingMs };
+          if (attemptResult.locked) {
+            locked = { locked: true, remainingMs: attemptResult.remainingMs };
           }
         } catch (e) {
           const msg = e instanceof Error ? e.message : String(e);
@@ -181,24 +183,49 @@
   {:else}
   <div class="card" class:shake>
     <div class="mascot">🐷</div>
-    <h1>{$t('splash.title')}</h1>
-    <p class="sub">{$t('splash.subtitle')}</p>
+        <h1>{$t('splash.title')}</h1>
+        <p class="sub">{$t('splash.subtitle')}</p>
 
-    {#if locked.locked}
-      <p class="lockout">{$t('splash.lockout', { values: { n: formatRemaining(locked.remainingMs) } })}</p>
-    {:else}
-      <form onsubmit={handleSubmit}>
-        <input
-          type="password"
-          bind:value={password}
-          placeholder={$t('splash.placeholder')}
-          aria-label={$t('splash.password.label')}
-          disabled={loading}
-          autocomplete="off"
-          autocapitalize="off"
-          autocorrect="off"
-          spellcheck="false"
-        />
+        {#if locked.locked}
+          <p class="lockout">{$t('splash.lockout', { values: { n: formatRemaining(locked.remainingMs) } })}</p>
+        {:else}
+          <div class="profile-picker" role="radiogroup" aria-label="Quem está a entrar?">
+            <button
+              type="button"
+              class="profile-btn"
+              class:profile-active={selectedProfile === 'fatma'}
+              onclick={() => (selectedProfile = 'fatma')}
+              role="radio"
+              aria-checked={selectedProfile === 'fatma'}
+            >
+              <span class="profile-icon" aria-hidden="true">👩</span>
+              <span class="profile-label">Sou a Fatma</span>
+            </button>
+            <button
+              type="button"
+              class="profile-btn"
+              class:profile-active={selectedProfile === 'daniel'}
+              onclick={() => (selectedProfile = 'daniel')}
+              role="radio"
+              aria-checked={selectedProfile === 'daniel'}
+            >
+              <span class="profile-icon" aria-hidden="true">👨</span>
+              <span class="profile-label">Sou o Daniel</span>
+            </button>
+          </div>
+
+          <form onsubmit={handleSubmit}>
+            <input
+              type="password"
+              bind:value={password}
+              placeholder={selectedProfile === 'daniel' ? 'princesa' : $t('splash.placeholder')}
+              aria-label={$t('splash.password.label')}
+              disabled={loading}
+              autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
+              spellcheck="false"
+            />
         <button type="submit" disabled={loading}>
           {loading ? $t('splash.checking') : $t('splash.submit')}
         </button>

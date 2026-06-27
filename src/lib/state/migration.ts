@@ -4,6 +4,7 @@
 // key — kept for one rollback cycle per the project brief.
 
 import { db, DEFAULT_STATE, DEFAULT_SETTINGS, ensureDefaults } from './db';
+import type { ProfileId } from '../auth/hash';
 
 const LEGACY_KEY = 'presuntinho';
 const MIGRATION_FLAG_KEY = 'presuntinho-migrated-v4';
@@ -47,7 +48,7 @@ interface LegacyBlob {
   secretDiscovered?: Record<string, boolean | number>;
 }
 
-export async function migrateFromLocalStorage(): Promise<MigrationResult> {
+export async function migrateFromLocalStorage(profile: ProfileId = 'fatma'): Promise<MigrationResult> {
   const result: MigrationResult = {
     migrated: false,
     alreadyDone: false,
@@ -58,6 +59,11 @@ export async function migrateFromLocalStorage(): Promise<MigrationResult> {
     totalXp: 0,
     errors: []
   };
+
+  if (profile !== 'fatma') {
+    await ensureDefaults(profile);
+    return result;
+  }
 
   if (typeof localStorage === 'undefined') {
     result.errors.push('localStorage unavailable (SSR context)');
@@ -74,7 +80,7 @@ export async function migrateFromLocalStorage(): Promise<MigrationResult> {
   if (!raw) {
     // Nothing to migrate — but mark as done so we don't keep checking
     localStorage.setItem(MIGRATION_FLAG_KEY, 'done');
-    await ensureDefaults();
+    await ensureDefaults(profile);
     return result;
   }
 
@@ -87,8 +93,8 @@ export async function migrateFromLocalStorage(): Promise<MigrationResult> {
   }
 
   try {
-    await ensureDefaults();
-    const d = db();
+    await ensureDefaults(profile);
+    const d = db(profile);
     const now = Date.now();
 
     // 1. Singleton state row.
@@ -188,7 +194,7 @@ export async function migrateFromLocalStorage(): Promise<MigrationResult> {
 }
 
 // Auto-run on import (browser only). Layout can call this on mount.
-export async function bootMigration(): Promise<void> {
+export async function bootMigration(profile: ProfileId = 'fatma'): Promise<void> {
   if (typeof window === 'undefined') return;
-  await migrateFromLocalStorage();
+  await migrateFromLocalStorage(profile);
 }

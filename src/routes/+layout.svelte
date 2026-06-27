@@ -9,6 +9,7 @@
   import Mascot from '$lib/components/Mascot.svelte';
   import SecretModal from '$lib/components/SecretModal.svelte';
   import OfflineIndicator from '$lib/components/OfflineIndicator.svelte';
+  import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
   import { handleKonamiKey, logoClick, footerClick } from '$lib/easterEggs';
   import { onMount } from 'svelte';
   import { pwaInfo } from 'virtual:pwa-info';
@@ -63,7 +64,7 @@
     void (async () => {
       // Initialise Dexie-backed stores + run migration (Phase 3 #17)
       try {
-        await initStores();
+        if (session) await initStores(session.profile);
         storesReady = true;
       } catch (e) {
         console.error('[presuntinho] initStores failed:', e);
@@ -152,6 +153,7 @@
           <span>Presuntinho</span>
         </a>
         <div class="nav-actions">
+          <LanguageSwitcher />
           <a href="/definicoes" class="icon-btn" aria-label="Definições" title="Definições">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="3"/>

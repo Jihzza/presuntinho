@@ -4,18 +4,24 @@
 const ITERATIONS = 600_000;
 const HASH_LENGTH_BITS = 256;
 
+export type ProfileId = 'fatma' | 'daniel';
+export type HashSlot = 'primary' | 'secret' | 'daniel';
+
+export interface VerifyResult {
+  profile: ProfileId;
+  method: HashSlot;
+}
+
+interface HashesFile {
+  salts: Partial<Record<HashSlot, string>>;
+  hashes: Partial<Record<HashSlot, string>>;
+  profiles?: Partial<Record<HashSlot, ProfileId>>;
+}
+
 function bufToHex(buf: ArrayBuffer): string {
   return Array.from(new Uint8Array(buf))
     .map(b => b.toString(16).padStart(2, '0'))
     .join('');
-}
-
-function hexToBuf(hex: string): Uint8Array {
-  const out = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < out.length; i++) {
-    out[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
-  }
-  return out;
 }
 
 export async function verifyPassword(password: string, salt: string, expectedHashHex: string): Promise<boolean> {
@@ -39,7 +45,6 @@ export async function verifyPassword(password: string, salt: string, expectedHas
     HASH_LENGTH_BITS
   );
   const derivedHex = bufToHex(derivedBits);
-  // Constant-time-ish comparison (still string compare, but identical-length hex)
   if (derivedHex.length !== expectedHashHex.length) return false;
   let mismatch = 0;
   for (let i = 0; i < derivedHex.length; i++) {
@@ -48,17 +53,22 @@ export async function verifyPassword(password: string, salt: string, expectedHas
   return mismatch === 0;
 }
 
-export async function verifyAgainstHashes(password: string): Promise<'primary' | 'secret' | null> {
+export async function verifyAgainstHashes(password: string): Promise<VerifyResult | null> {
   const res = await fetch('/auth/hashes.json', { cache: 'no-store' });
   if (!res.ok) return null;
-  const hashes = await res.json();
+  const hashes = (await res.json()) as HashesFile;
   const trimPwd = password.trim();
 
-  const primaryOk = await verifyPassword(trimPwd, hashes.salts.primary, hashes.hashes.primary);
-  if (primaryOk) return 'primary';
-
-  const secretOk = await verifyPassword(trimPwd, hashes.salts.secret, hashes.hashes.secret);
-  if (secretOk) return 'secret';
+  const slots: HashSlot[] = ['primary', 'secret', 'daniel'];
+  for (const slot of slots) {
+    const salt = hashes.salts?.[slot];
+    const expected = hashes.hashes?.[slot];
+    if (!salt || !expected) continue;
+    const ok = await verifyPassword(trimPwd, salt, expected);
+    if (!ok) continue;
+    const profile = hashes.profiles?.[slot] ?? (slot === 'daniel' ? 'daniel' : 'fatma');
+    return { profile, method: slot };
+  }
 
   return null;
 }
