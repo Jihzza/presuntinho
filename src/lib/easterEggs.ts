@@ -167,9 +167,9 @@ function setLastHeartClickTime(t: number): void { _lastHeartClickTime = t; }
 //   - After 8 → only tiny easter-egg toast if sroom already opened
 // Reset: 3-second window between clicks (state.logoTimer = setTimeout(...)).
 
-const LOGO_RESET_MS = 3000;
-const SECRET_ROOM_MIN = 6;
-const SECRET_ROOM_MAX = 8;
+const LOGO_RESET_MS = 5000;          // window between clicks (was 3000 — too tight)
+const SECRET_ROOM_MIN = 5;          // lowered from 6 — easier to discover
+const SECRET_ROOM_MAX = 10;         // wider top end so accidental double-clicks still count
 let _logoResetTimer: ReturnType<typeof setTimeout> | null = null;
 
 export async function logoClick(): Promise<void> {
@@ -193,6 +193,8 @@ export async function logoClick(): Promise<void> {
     showToast('🎉 Logo triple-click! Confetti unlocked!');
     await addXP(30);
     await discoverSecret('logo3');
+  } else if (next === 4) {
+    showToast('🐷 One more click! 🎯');
   } else if (next >= SECRET_ROOM_MIN && next <= SECRET_ROOM_MAX) {
     showToast('🧴 Welcome to the Secret Room!');
     sroomOpened.set(true);
@@ -204,10 +206,6 @@ export async function logoClick(): Promise<void> {
     }
   } else if (next === 2) {
     showToast('🐷 One more...');
-  } else if (next === 4) {
-    showToast('🐷 One more click! 🎯');
-  } else if (next === 5) {
-    showToast('🐷 Almost there... 2 more clicks!');
   }
 }
 
