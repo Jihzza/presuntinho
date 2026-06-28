@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T14:50:00+02:00",
+  "lastUpdated": "2026-06-28T16:30:00+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -42,20 +42,28 @@
       "created_at": "2026-06-28T13:05:00+02:00"
     },
     {
-      "id": "gap-040",
-      "category": "lição/curso",
-      "description": "8 lições dos cursos novos (gap-038/039) por escrever: gestao-mudanca/{1-conceitos-mudanca,2-modelos-mudanca,3-resistencia-mudanca,4-cultura-organizacional} + negociacao/{1-fundamentos-negociacao,2-estilos-negociacao,3-comunicacao-negociacao,4-negociacao-internacional}. CATALOGUE já linka os slugs — clicar no curso hoje devolve 404 nas lições.",
+      "id": "gap-042",
+      "category": "feature-pedida-pelo-Daniel",
+      "description": "gap-034 escalado: 16 cursos BA prontos; Daniel pede 'tudo que souber a cadeiras da universidade'. Próxima vaga: cadeiras da EU Business School (BA) — Introdução ao Direito / Direito Empresarial (já existe) / Comportamento Organizacional (já existe) / Ética Empresarial / Sistemas de Informação / Logística / Inovação e Empreendedorismo. Foco: 4-8 cursos novos com 4 lições + 1 quiz cada, adicionados ao CATALOGUE em escola/+page.svelte + aulas/+page.server.ts.",
       "severity": "alta",
-      "source": "watchdog-tick-2026-06-28-14",
-      "created_at": "2026-06-28T14:50:00+02:00"
+      "source": "audio-Daniel-2026-06-28-cadeiras",
+      "created_at": "2026-06-28T16:30:00+02:00"
     },
     {
-      "id": "gap-041",
-      "category": "lição/curso",
-      "description": "2 quizzes novos por escrever: static/quizzes/gmq.json (Gestão da Mudança) + static/quizzes/neq.json (Negociação). Schema: {id,title,description,questions:[{q,opts,a}]} — 8-10 perguntas cada. Sem quiz, o lesson-runner mostra link mas a rota /escola/quiz/gmq/ fica vazia.",
-      "severity": "alta",
-      "source": "watchdog-tick-2026-06-28-14",
-      "created_at": "2026-06-28T14:50:00+02:00"
+      "id": "gap-043",
+      "category": "empty-area",
+      "description": "APS Finanças (gap-003 fechou empty-state mas área continua 'vazia' para quem não criou categorias). Adicionar 3-5 categorias de exemplo + 3-5 transações de exemplo no seed (categoria:Habitação, Alimentação, Transportes, Saúde, Lazer; 1 transação por categoria nos últimos 30 dias) para Fatma não ver ecrã em branco no primeiro arranque.",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-28-15",
+      "created_at": "2026-06-28T16:30:00+02:00"
+    },
+    {
+      "id": "gap-044",
+      "category": "empty-area",
+      "description": "APS Hábitos (gap-004 fechou 8 default habits mas pode estar só no seed estático). Verificar se hábitos aparecem sem o user criar manualmente — abrir app fresh e ver /habitos/. Se aparecer lista pré-populada OK; senão, mover defaults para dentro de initSeed().",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-28-15",
+      "created_at": "2026-06-28T16:30:00+02:00"
     }
   ],
   "closedItems": [
@@ -267,6 +275,18 @@
       "description": "5 form placeholders PT hardcoded → $t() with fallback in biblioteca/novo (title/url/tags), habitos/novo (name), financas/transacoes (pesquisa). 25 new i18n entries (5 keys × 5 locales). npm run check + build verdes, push origin done.",
       "sha": "58087d2",
       "closed_at": "2026-06-28T14:10:00+02:00"
+    },
+    {
+      "id": "gap-040",
+      "description": "8 lições escritas para gap-038/039 (Gestão da Mudança + Negociação): gestao-mudanca/{1-conceitos-mudanca,2-modelos-mudanca,3-resistencia-mudanca,4-cultura-organizacional} + negociacao/{1-fundamentos-negociacao,2-estilos-negociacao,3-comunicacao-negociacao,4-negociacao-internacional}. Cada lição ~80-100 linhas com 4-5 secções h2/h3/p/ul/callout + audioLabel. Smoke: 8/8 routes retornam 200 em produção; JSONs servidos em build/lessons/.",
+      "sha": "cd52f32",
+      "closed_at": "2026-06-28T16:30:00+02:00"
+    },
+    {
+      "id": "gap-041",
+      "description": "2 quizzes novos: static/quizzes/gmq.json (Gestão da Mudança Organizacional, 10 perguntas — Beckhard-Harris, Kotter 8, ADKAR, Kotter-Schlesinger, Schein, ancoragem, Kübler-Ross) + static/quizzes/neq.json (Técnicas de Negociação Empresarial, 10 perguntas — BATNA, ZOPA, Thomas-Kilmann, Fisher & Ury, CNV, Hofstede, Hall, âncoras). Smoke: /escola/quiz/gmq e /escola/quiz/neq retornam 200 em produção; JSONs com 10 questions cada.",
+      "sha": "cd52f32",
+      "closed_at": "2026-06-28T16:30:00+02:00"
     }
   ]
 }
