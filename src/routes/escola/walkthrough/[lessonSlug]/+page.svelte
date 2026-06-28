@@ -316,7 +316,7 @@
             Transcrição
           </h2>
           <details>
-            <summary>Mostrar transcrição completa</summary>
+            <summary>{$t('escola.walkthrough.transcript.show', { default: 'Mostrar transcrição completa' })}</summary>
             <p class="prose">{transcript}</p>
           </details>
         </section>

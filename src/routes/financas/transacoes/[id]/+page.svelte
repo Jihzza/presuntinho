@@ -149,21 +149,21 @@
   </header>
 
   {#if loading}
-    <p aria-live="polite">A carregar…</p>
+    <p aria-live="polite">{$t('common.loading', { default: 'A carregar…' })}</p>
   {:else if error && !transacaoOriginal}
     <p class="error" role="alert">{error}</p>
   {:else if transacaoOriginal}
     <form onsubmit={handleSubmit} novalidate>
       <fieldset class="tipo" aria-label="Tipo de transação">
-        <legend>Tipo</legend>
-        <label class="radio">
-          <input type="radio" bind:group={tipo} value="despesa" name="tipo" />
-          <span>Despesa</span>
-        </label>
-        <label class="radio">
-          <input type="radio" bind:group={tipo} value="receita" name="tipo" />
-          <span>Receita</span>
-        </label>
+        <legend>{$t('financas.transacoes.editar.tipo.legend', { default: 'Tipo' })}</legend>
+                <label class="radio">
+                  <input type="radio" bind:group={tipo} value="despesa" name="tipo" />
+                  <span>{$t('financas.transacoes.editar.tipo.despesa', { default: 'Despesa' })}</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" bind:group={tipo} value="receita" name="tipo" />
+                  <span>{$t('financas.transacoes.editar.tipo.receita', { default: 'Receita' })}</span>
+                </label>
       </fieldset>
 
       <div class="field">

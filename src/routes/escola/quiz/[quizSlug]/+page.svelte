@@ -31,7 +31,7 @@
       <span class="sep">›</span>
       <a href="/escola/curso/equivalenza/">{$t('escola.quiz.breadcrumb.curso', { default: 'Equivalenza' })}</a>
       <span class="sep">›</span>
-      <span>Quiz {quizSlug.toUpperCase()}</span>
+      <span>{$t('escola.quiz.breadcrumb.current', { default: 'Quiz' })} {quizSlug.toUpperCase()}</span>
     </p>
   </header>
 

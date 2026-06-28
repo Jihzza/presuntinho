@@ -246,7 +246,7 @@
     <span aria-hidden="true">/</span>
     <a href="/financas/">{$t('financas.transacoes.breadcrumb.home', { default: '← Finanças' })}</a>
     <span aria-hidden="true">/</span>
-    <span aria-current="page">Transações</span>
+    <span aria-current="page">{$t('financas.transacoes.breadcrumb.current', { default: 'Transações' })}</span>
   </nav>
 
   <section class="actions" aria-label="Ações">

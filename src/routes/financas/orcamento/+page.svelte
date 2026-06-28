@@ -166,7 +166,7 @@
     <span aria-hidden="true">/</span>
     <a href="/financas/">{$t('financas.orcamento.breadcrumb.home', { default: '← Finanças' })}</a>
     <span aria-hidden="true">/</span>
-    <span aria-current="page">Orçamento</span>
+    <span aria-current="page">{$t('financas.orcamento.breadcrumb.current', { default: 'Orçamento' })}</span>
   </nav>
 
   <section class="controls" aria-label="Filtros">
@@ -185,11 +185,11 @@
   {:else}
     <section class="summary" aria-label="Resumo do orçamento">
       <div class="summary-row">
-        <span class="summary-label">Total limite</span>
+        <span class="summary-label">{$t('financas.orcamento.summary.total_limit', { default: 'Total limite' })}</span>
         <span class="summary-value">{formatValor(totalLimite)}</span>
       </div>
       <div class="summary-row">
-        <span class="summary-label">Total gasto</span>
+        <span class="summary-label">{$t('financas.orcamento.summary.total_spent', { default: 'Total gasto' })}</span>
         <span class="summary-value" class:over={totalGasto > totalLimite && totalLimite > 0}>
           {formatValor(totalGasto)}
         </span>

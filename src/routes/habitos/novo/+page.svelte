@@ -178,7 +178,7 @@
         </label>
         <label class="radio disabled" title="Disponível em breve">
           <input type="radio" name="cadence" value="weekly" bind:group={cadence} disabled />
-          <span>Semanal (brevemente)</span>
+          <span>{$t('habitos.novo.cadence.weekly', { default: 'Semanal (brevemente)' })}</span>
         </label>
       </div>
     </fieldset>
