@@ -188,7 +188,7 @@
         <span class="stat-value" class:done={todayLogged} class:todo={!todayLogged}>
           {todayLogged ? '✓' : '○'}
         </span>
-        <span class="stat-label">Hoje</span>
+        <span class="stat-label">{$t('habitos.habit.hoje', { default: 'Hoje' })}</span>
       </div>
     </section>
 

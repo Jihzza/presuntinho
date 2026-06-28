@@ -256,7 +256,7 @@
   <section class="filters" aria-label="Filtros">
     <div class="filters-row">
       <label class="field">
-        <span class="field-label">Mês</span>
+        <span class="field-label">{$t('financas.transacoes.filtros.mes', { default: 'Mês' })}</span>
         <input
           type="month"
           bind:value={mesFiltro}
@@ -264,7 +264,7 @@
         />
       </label>
       <label class="field">
-        <span class="field-label">Categoria</span>
+        <span class="field-label">{$t('financas.transacoes.filtros.categoria', { default: 'Categoria' })}</span>
         <select bind:value={categoriaFiltro} aria-label="Filtrar por categoria">
           <option value="">{$t('financas.transacoes.filter.all', { default: 'Todas' })}</option>
           {#each categorias as c (c.id)}
@@ -273,11 +273,11 @@
         </select>
       </label>
       <label class="field">
-        <span class="field-label">Tipo</span>
+        <span class="field-label">{$t('financas.transacoes.filtros.tipo', { default: 'Tipo' })}</span>
         <select bind:value={tipoFiltro} aria-label="Filtrar por tipo">
-          <option value="todas">Todas</option>
-          <option value="receita">Receitas</option>
-          <option value="despesa">Despesas</option>
+          <option value="todas">{$t('financas.transacoes.filtros.tipo.todas', { default: 'Todas' })}</option>
+          <option value="receita">{$t('financas.transacoes.filtros.tipo.receitas', { default: 'Receitas' })}</option>
+          <option value="despesa">{$t('financas.transacoes.filtros.tipo.despesas', { default: 'Despesas' })}</option>
         </select>
       </label>
       <label class="field grow">

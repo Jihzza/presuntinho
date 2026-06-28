@@ -108,7 +108,7 @@
     <span aria-hidden="true">/</span>
     <a href="/habitos/">{$t('habitos.novo.breadcrumb.home', { default: '← Hábitos' })}</a>
     <span aria-hidden="true">/</span>
-    <span aria-current="page">Novo</span>
+    <span aria-current="page">{$t('habitos.novo.novo', { default: 'Novo' })}</span>
   </nav>
 
   <form class="form" onsubmit={handleSubmit} novalidate>
@@ -188,7 +188,7 @@
     {/if}
 
     <div class="actions">
-      <a class="btn-secondary" href="/habitos/">Cancelar</a>
+      <a class="btn-secondary" href="/habitos/">{$t('habitos.novo.cancelar', { default: 'Cancelar' })}</a>
       <button type="submit" class="btn-primary" disabled={submitting}>
         {submitting ? 'A criar…' : 'Criar hábito'}
       </button>

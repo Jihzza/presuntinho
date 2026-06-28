@@ -147,7 +147,7 @@
     <span aria-hidden="true">/</span>
     <a href="/financas/">{$t('financas.nova.breadcrumb.home', { default: '← Finanças' })}</a>
     <span aria-hidden="true">/</span>
-    <span aria-current="page">Nova</span>
+    <span aria-current="page">{$t('financas.nova.nova', { default: 'Nova' })}</span>
   </nav>
 
   <form class="form" onsubmit={handleSubmit} novalidate>
@@ -184,7 +184,7 @@
 
     <!-- Valor -->
     <div class="field">
-      <label for="valor">Valor <span aria-hidden="true">*</span></label>
+      <label for="valor">{$t('financas.nova.valor', { default: 'Valor' })} <span aria-hidden="true">*</span></label>
       <div class="valor-row">
         <input
           id="valor"
@@ -203,11 +203,11 @@
 
     <!-- Categoria -->
     <div class="field">
-      <label for="categoria">Categoria <span aria-hidden="true">*</span></label>
+      <label for="categoria">{$t('financas.nova.categoria', { default: 'Categoria' })} <span aria-hidden="true">*</span></label>
       {#if loadingCategorias}
-        <p class="hint">A carregar categorias…</p>
+        <p class="hint">{$t('financas.nova.aCarregar', { default: 'A carregar categorias…' })}</p>
       {:else if categoriasCompativeis.length === 0}
-        <p class="hint">Sem categorias compatíveis com este tipo.</p>
+        <p class="hint">{$t('financas.nova.semCategorias', { default: 'Sem categorias compatíveis com este tipo.' })}</p>
       {:else}
         <div class="cat-select">
           <select id="categoria" bind:value={categoria} required>
@@ -230,7 +230,7 @@
 
     <!-- Descrição -->
     <div class="field">
-      <label for="descricao">Descrição</label>
+      <label for="descricao">{$t('financas.nova.descricao', { default: 'Descrição' })}</label>
       <input
         id="descricao"
         type="text"
@@ -239,12 +239,12 @@
         placeholder="Ex.: Almoço com a equipa"
         autocomplete="off"
       />
-      <span class="hint">Opcional. Máx. 120 caracteres.</span>
+      <span class="hint">{$t('financas.nova.opcional', { default: 'Opcional' })}. {$t('financas.nova.maxCaracteres', { default: 'Máx. 120 caracteres.' })}</span>
     </div>
 
     <!-- Data -->
     <div class="field">
-      <label for="data">Data <span aria-hidden="true">*</span></label>
+      <label for="data">{$t('financas.nova.data', { default: 'Data' })} <span aria-hidden="true">*</span></label>
       <input id="data" type="date" bind:value={data} required />
     </div>
 

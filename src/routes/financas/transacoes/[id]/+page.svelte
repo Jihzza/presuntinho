@@ -145,7 +145,7 @@
     <a href="/financas/transacoes" class="back-link" aria-label="Voltar à lista">
       ← Transações
     </a>
-    <h1 id="page-title">Editar transação</h1>
+    <h1 id="page-title">{$t('financas.transacoes.editar.titulo', { default: 'Editar transação' })}</h1>
   </header>
 
   {#if loading}
@@ -167,7 +167,7 @@
       </fieldset>
 
       <div class="field">
-        <label for="valor">Valor (€)</label>
+        <label for="valor">{$t('financas.transacoes.editar.valor', { default: 'Valor (€)' })}</label>
         <input
           id="valor"
           type="text"
@@ -179,7 +179,7 @@
       </div>
 
       <div class="field">
-        <label for="categoria">Categoria</label>
+        <label for="categoria">{$t('financas.transacoes.editar.categoria', { default: 'Categoria' })}</label>
         <select id="categoria" bind:value={categoria} required>
           {#each categoriasCompativeis as cat (cat.id)}
             <option value={cat.id}>{cat.icone} {cat.nome}</option>
@@ -188,7 +188,7 @@
       </div>
 
       <div class="field">
-        <label for="descricao">Descrição (opcional)</label>
+        <label for="descricao">{$t('financas.transacoes.editar.descricao', { default: 'Descrição (opcional)' })}</label>
         <input
           id="descricao"
           type="text"
@@ -198,7 +198,7 @@
       </div>
 
       <div class="field">
-        <label for="data">Data</label>
+        <label for="data">{$t('financas.transacoes.editar.data', { default: 'Data' })}</label>
         <input id="data" type="date" bind:value={data} required />
       </div>
 
