@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T14:10:00+02:00",
+  "lastUpdated": "2026-06-28T14:50:00+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -40,6 +40,22 @@
       "severity": "média",
       "source": "audio-Daniel-2026-06-28",
       "created_at": "2026-06-28T13:05:00+02:00"
+    },
+    {
+      "id": "gap-040",
+      "category": "lição/curso",
+      "description": "8 lições dos cursos novos (gap-038/039) por escrever: gestao-mudanca/{1-conceitos-mudanca,2-modelos-mudanca,3-resistencia-mudanca,4-cultura-organizacional} + negociacao/{1-fundamentos-negociacao,2-estilos-negociacao,3-comunicacao-negociacao,4-negociacao-internacional}. CATALOGUE já linka os slugs — clicar no curso hoje devolve 404 nas lições.",
+      "severity": "alta",
+      "source": "watchdog-tick-2026-06-28-14",
+      "created_at": "2026-06-28T14:50:00+02:00"
+    },
+    {
+      "id": "gap-041",
+      "category": "lição/curso",
+      "description": "2 quizzes novos por escrever: static/quizzes/gmq.json (Gestão da Mudança) + static/quizzes/neq.json (Negociação). Schema: {id,title,description,questions:[{q,opts,a}]} — 8-10 perguntas cada. Sem quiz, o lesson-runner mostra link mas a rota /escola/quiz/gmq/ fica vazia.",
+      "severity": "alta",
+      "source": "watchdog-tick-2026-06-28-14",
+      "created_at": "2026-06-28T14:50:00+02:00"
     }
   ],
   "closedItems": [

@@ -1,0 +1,78 @@
+{
+  "slug": "2-modelos-mudanca",
+  "title": "2. Modelos de Mudança (Kotter 8 + ADKAR)",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Os 8 Passos de Kotter"
+    },
+    {
+      "type": "p",
+      "text": "John Kotter, professor em Harvard, destilou décadas de pesquisa em 8 passos sequenciais. São lineares na teoria mas iterativos na prática — voltar atrás é normal e necessário."
+    },
+    {
+      "type": "ol",
+      "items": [
+        "Criar sentido de urgência — mostrar porque a mudança é necessária AGORA, não amanhã",
+        "Formar uma coligação guia — aliar quem tem poder, expertise, credibilidade e liderança",
+        "Desenvolver visão e estratégia — uma visão clara que direccione decisões",
+        "Comunicar a visão — repetidamente, em múltiplos canais, com acções coerentes",
+        "Empoderar acção ampla — remover barreiras, alinhar estruturas, dar ferramentas",
+        "Gerar quick wins — vitórias visíveis ecelebradas em 6-18 meses",
+        "Sustentar aceleração — não declarar vitória cedo; consolidar e avançar mais",
+        "Ancorar na cultura — ligar mudanças a sucessos e ensinar a cultura continuamente"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "⚠️ O erro mais comum: saltar do passo 1 (urgência) directamente para o passo 8 (celebrar). Sem quick wins e sem sustentação, a mudança retrocede."
+    },
+    {
+      "type": "h2",
+      "text": "ADKAR da Prosci"
+    },
+    {
+      "type": "p",
+      "text": "A Prosci (liderada por Jeff Hiatt) complementa Kotter com foco no indivíduo. ADKAR é um acrónimo para os 5 resultados que cada pessoa precisa de alcançar para a mudança ter sucesso."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Awareness — consciência de porque a mudança é necessária",
+        "Desire — desejo pessoal de apoiar e participar na mudança",
+        "Knowledge — conhecimento sobre como mudar (skills, comportamentos)",
+        "Ability — capacidade de aplicar o conhecimento no dia-a-dia",
+        "Reinforcement — reforço contínuo para sustentar a mudança"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Quando usar ADKAR"
+    },
+    {
+      "type": "p",
+      "text": "ADKAR é especialmente útil quando a mudança falha e não se percebe onde. Faz-se um diagnóstico por persona ou segmento: onde está cada uma nas 5 letras? Se a Awareness é fraca, comunicar mais não resolve — resolver é diferente em cada letra."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🎯 ADKAR complementa Kotter. Kotter diz COMO organizar a mudança na organização; ADKAR diz COMO cada pessoa a vive. Use os dois em conjunto."
+    },
+    {
+      "type": "h2",
+      "text": "Comparação Rápida"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Kotter = organizacional, top-down, sequencial",
+        "ADKAR = individual, bottom-up, diagnóstico",
+        "Kotter para visionar e estruturar",
+        "ADKAR para diagnosticar bloqueios e desenhar suporte"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "id": "neq",
+  "title": "Quiz: Técnicas de Negociação Empresarial",
+  "description": "Testa os teus conhecimentos sobre BATNA, ZOPA, estilos Thomas-Kilmann, Fisher & Ury, comunicação CNV e Hofstede.",
+  "questions": [
+    {
+      "q": "O que significa BATNA?",
+      "opts": [
+        "Basic Agreement To Negotiate Anything",
+        "Best Alternative To a Negotiated Agreement",
+        "Better Approach Than Normal Agreements",
+        "Budget Allocation Towards Negotiation Activity"
+      ],
+      "a": 1
+    },
+    {
+      "q": "ZOPA é:",
+      "opts": [
+        "Zero Output Price Agreement",
+        "Zone of Possible Agreement",
+        "Zone of Particular Advantages",
+        "Zonal Option Pricing Area"
+      ],
+      "a": 1
+    },
+    {
+      "q": "No modelo Thomas-Kilmann, qual é o estilo assertivo E cooperativo?",
+      "opts": [
+        "Competir",
+        "Ceder",
+        "Colaborar",
+        "Evitar"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Quem são os autores de 'Getting to Yes' (negociação baseada em princípios)?",
+      "opts": [
+        "Kotter e Schlesinger",
+        "Fisher e Ury",
+        "Cameron e Quinn",
+        "Hofstede e Hall"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Qual NÃO é um dos 4 princípios do método Harvard (Fisher & Ury)?",
+      "opts": [
+        "Separar as pessoas do problema",
+        "Focar em interesses, não posições",
+        "Inventar opções para ganho mútuo",
+        "Maximizar concessões para fechar depressa"
+      ],
+      "a": 3
+    },
+    {
+      "q": "Na Comunicação Não-Violenta (Rosenberg), qual a sequência dos 4 passos?",
+      "opts": [
+        "Observação, Sentimento, Necessidade, Pedido",
+        "Pensamento, Emoção, Acção, Resultado",
+        "Facto, Juízo, Pedido, Consequência",
+        "Escuta, Empatia, Acordo, Acção"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Em Hofstede, 'Power Distance' mede:",
+      "opts": [
+        "Distância física entre escritório e sala de reuniões",
+        "Até que ponto uma sociedade aceita desigualdade hierárquica",
+        "Tempo médio de tomada de decisão",
+        "Diferença salarial entre CEO e trabalhador médio"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Segundo Edward Hall, uma cultura 'high-context':",
+      "opts": [
+        "Privilegia o significado explícito e contratos detalhados",
+        "Coloca grande parte do significado no que NÃO é dito e nas relações",
+        "É típica da Alemanha e Países Baixos",
+        "Não valoriza relações pessoais"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Qual das seguintes é uma 'âncora' em negociação?",
+      "opts": [
+        "A primeira proposta numérica, que influencia toda a conversa",
+        "A data limite do contrato",
+        "O intervalo de ZOPA",
+        "A BATNA do outro"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Sobre BATNA, qual é a recomendação MAIS correcta?",
+      "opts": [
+        "Bluff sobre uma BATNA forte mesmo sem a ter",
+        "Nunca revelar a BATNA",
+        "Melhorar activamente a BATNA antes de negociar",
+        "Assumir que a BATNA da contraparte é sempre fraca"
+      ],
+      "a": 2
+    }
+  ]
+}

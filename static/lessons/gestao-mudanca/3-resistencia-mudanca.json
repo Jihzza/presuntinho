@@ -1,0 +1,86 @@
+{
+  "slug": "3-resistencia-mudanca",
+  "title": "3. Resistência à Mudança",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Resistência Não é o Problema — é Informação"
+    },
+    {
+      "type": "p",
+      "text": "Resistência é frequentemente mal lida como irracionalidade ou má-fé. Na verdade é informação valiosa sobre o sistema. Cada resistência diz algo sobre o que a pessoa está a perder: controlo, status, competência, pertença, sentido."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🔍 Tratar resistência como sinal, não como obstáculo. Ignorá-la é desperdiçar informação que pode salvar a mudança."
+    },
+    {
+      "type": "h3",
+      "text": "As Quatro Fontes (Kotter-Schlesinger)"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Self-interest — receio de perder algo (emprego, bónus, poder, prestígio)",
+        "Misunderstanding and distrust — falta de informação ou baixa confiança nos proponentes",
+        "Different assessments — discordância genuína sobre factos ou prognósticos",
+        "Low tolerance for change — aversão pessoal a incerteza e ambiguidade"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Oito Estratégias para Lidar com Resistência"
+    },
+    {
+      "type": "ol",
+      "items": [
+        "Educação e comunicação — para quem resiste por falta de informação",
+        "Participação e involvement — para quem discorda legitimamente; envolve cedo",
+        "Facilitação e suporte — formação, coaching, tempo de adaptação",
+        "Negociação e acordo — incentivos concretos para quem tem self-interest legítimo",
+        "Manipulação e co-optação — atribuir papéis simbólicos a resistentes (usar com cuidado)",
+        "Coerção implícita ou explícita — último recurso; arrisca backlash duradouro",
+        "Cooptação selectiva de líderes informais — dar-lhes voz genuína no desenho",
+        "Modelagem (model the way) — líderes visíveis a fazer o que pedem"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Escolher a Estratégia Certa"
+    },
+    {
+      "type": "p",
+      "text": "Não há bala de prata. A escolha depende da fonte (qual das 4?), da velocidade necessária, da intensidade da resistência e do poder relativo das partes. Educação é lenta mas sustentável; coerção é rápida mas custosa."
+    },
+    {
+      "type": "h2",
+      "text": "Erros Comuns na Gestão de Resistência"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Tratar toda a resistência igual — diferentes fontes pedem diferentes estratégias",
+        "Confundir silêncio com adesão — quem não fala pode estar a sabotar em silêncio",
+        "Rotular resistentes como 'teimosos' ou 'resistentes à mudança' — desumaniza e bloqueia diálogo",
+        "Negociar com todos em público — fragmenta; muitas vezes é melhor 1:1 primeiro"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Sinais de Alerta na Equipa"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Reuniões com agenda oculta ou comentários em off",
+        "Queda de produtividade sem causa técnica",
+        "Aumento de licenças e turnover em segmentos específicos",
+        "Procura de aliados fora da cadeia formal (sindicatos, influenciadores)",
+        "Pedidos constantes de clarificação sobre 'o que muda para mim'"
+      ]
+    }
+  ]
+}

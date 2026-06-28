@@ -1,0 +1,100 @@
+{
+  "slug": "4-negociacao-internacional",
+  "title": "4. Negociação Internacional Cross-Cultural",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Porque Cultura Muda Tudo"
+    },
+    {
+      "type": "p",
+      "text": "O que funciona em Lisboa não funciona em Tóquio. Não por moral — por diferença de valores, normas e expectativas. Negociação cross-cultural é negociação com mais variáveis e mais trabalho de tradução cultural."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🌍 Cultura não é folclore; é o software que corre debaixo do comportamento visível. Ignorar cultura é negociar contra um sistema que não conheces."
+    },
+    {
+      "type": "h2",
+      "text": "Hofstede — 6 Dimensões Culturais"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Power Distance — até que ponto aceitar desigualdade hierárquica (alto: Malásia; baixo: Dinamarca)",
+        "Individualism vs Collectivism — 'eu' vs 'nós' (alto: EUA; baixo: Guatemala)",
+        "Masculinity vs Femininity — performance vs qualidade de vida e cuidado (alto: Japão; baixo: Suécia)",
+        "Uncertainty Avoidance — tolerância a ambiguidade (alto: Grécia; baixo: Singapura)",
+        "Long-term vs Short-term Orientation — pragmatismo futuro vs tradição (alto: China; baixo: EUA)",
+        "Indulgence vs Restraint — expressão livre vs contenção (alto: Brasil; baixo: Paquistão)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Como Usar Hofstede"
+    },
+    {
+      "type": "p",
+      "text": "Hofstede é heurística, não destino. Ajuda a prever onde tens de calibrar (ritmo, formalidade, individualismo vs grupo, foco curto vs longo prazo). Não substitui ouvir o interlocutor real."
+    },
+    {
+      "type": "h2",
+      "text": "Contexto Alto vs Baixo (Edward Hall)"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "High-context (Japão, Arábia Saudita, Brasil) — significado no que NÃO se diz; relações longas; confiança pessoal antes do negócio",
+        "Low-context (EUA, Alemanha, Países Baixos) — significado no explícito; contratos detalhados; relação constrói-se com o negócio"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Erro Cross-Cultural Típico"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Tratar silêncio como согласие (low-context num high-context)",
+        "Pressionar relação quando ela constrói-se com tempo",
+        "Subestimar importância de intermediários e apresentações em culturas high-context",
+        "Confundir cordialidade com acordo — em muitas culturas, dizer sim é educar, não aprovar"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Gestão do Tempo"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Culturas monocronicas (Alemanha, Suíça) — uma coisa de cada vez, agenda rígida, pontualidade é respeito",
+        "Culturas policronicas (Brasil, Médio Oriente) — multitarefa, agenda fluida, relação > horário",
+        "Dica prática: perguntar, não assumir; adaptar o teu tempo ao contexto"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Checklist para Negociação Internacional"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Pesquisar Hofstede e Hall do país antes de viajar",
+        "Identificar se business se faz com ou sem intermediário",
+        "Adaptar着装 (formal vs business casual) à expectativa local",
+        "Preparar saudações e small talk — em algumas culturas constrói o acordo",
+        "Considerar tradução juramentada para documentos legais",
+        "Ponderar reunião prévia online vs primeira reunião presencial"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🎓 Cultura não se decora; pratica-se. Cada negociação internacional é aula. Reflecte, regista, melhora — é assim que bons negociadores cross-cultural se formam."
+    }
+  ]
+}

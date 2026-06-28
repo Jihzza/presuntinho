@@ -1,0 +1,87 @@
+{
+  "slug": "1-fundamentos-negociacao",
+  "title": "1. Fundamentos de Negociação",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O Que é Negociação (e o Que Não é)"
+    },
+    {
+      "type": "p",
+      "text": "Negociação é o processo pelo qual duas ou mais partes com interesses parcialmente divergentes procuram chegar a acordo. Não é discussão — é arquitectura de decisões conjuntas. Não é concessões infinitas — é criação de valor seguida de divisão."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🤝 Negociação é a forma mais honesta de lidar com conflitos de interesse: tentamos criar uma solução melhor do que a alternativa (acordo, impasse ou ruptura)."
+    },
+    {
+      "type": "h3",
+      "text": "Distributiva vs Integrativa"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Distributiva (win-lose) — o bolo é fixo; o teu ganho é a minha perda. Tende a zero soma. Útil em rupturas unilaterais ou quando a relação termina.",
+        "Integrativa (win-win) — o bolo pode crescer; expandimos antes de dividir. Requer informação partilhada e confiança. É o alvo da negociação estratégica."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Os Três Pilares da Preparação"
+    },
+    {
+      "type": "ol",
+      "items": [
+        "Substância — factos, dados, BATNA, ZOPA, opções de valor agregado",
+        "Processo — agenda, sequência, timing, decisão final, quem decide",
+        "Relação — confiança, respeito, percepção, canal, história partilhada"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🧱 Substância sem processo gera acordo frágil. Processo sem substância gera acordo subóptimo. Relação sem os dois gera impasse educado."
+    },
+    {
+      "type": "h3",
+      "text": "Porque Preparar é Multiplicar Resultado"
+    },
+    {
+      "type": "p",
+      "text": "Estudos em procurement corporativo mostram que 30-60 minutos de preparação por cada hora de negociação têm um retorno multiplicador. Saber o seu BATNA, o BATNA dele, a ZOPA provável e três opções integrativas transforma a conversa."
+    },
+    {
+      "type": "h2",
+      "text": "Os Quatro Erros do Iniciante"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Negociar consigo próprio — ceder antes da contraproposta",
+        "Confundir posição com interesse — 'quero X' em vez de 'porque preciso disto'",
+        "Âncora irracional — a primeira proposta influencia tudo, mesmo se absurda",
+        "Confundir amabilidade com acordo — ceder para ser simpático é ruinoso"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Lista de Preparação (15 min)"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Qual é o meu BATNA? (melhor alternativa se não houver acordo)",
+        "Qual é o BATNA provável da contraparte?",
+        "Quais são os meus 3 interesses reais (por trás das posições)?",
+        "Quais são os interesses prováveis dela?",
+        "Onde está a ZOPA? (zona de acordo possível)",
+        "Que opções integrativas posso preparar? (offers que crescem o bolo)",
+        "Quem decide? Quem influencia? Quem bloqueia?",
+        "Qual é a minha âncora e porquê?"
+      ]
+    }
+  ]
+}

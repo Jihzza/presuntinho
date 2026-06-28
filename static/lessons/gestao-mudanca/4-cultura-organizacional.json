@@ -1,0 +1,97 @@
+{
+  "slug": "4-cultura-organizacional",
+  "title": "4. Cultura Organizacional e Ancoragem",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Cultura Segundo Edgar Schein"
+    },
+    {
+      "type": "p",
+      "text": "Edgar Schein definiu cultura organizacional como o conjunto de pressupostos básicos que um grupo aprendeu ao resolver problemas de adaptação externa e integração interna — pressupostos que funcionaram bem enough para serem ensinados aos novos membros como a forma correcta de pensar e agir."
+    },
+    {
+      "type": "h3",
+      "text": "Os Três Níveis"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Artefactos e comportamentos — visíveis mas nem sempre decifráveis (escritório, dress code, rituais, linguagem)",
+        "Valores e crenças professados — estratégias, objectivos, princípios (frequentemente aspiracionais)",
+        "Pressupostos básicos inconscientes — as verdades invisíveis que realmente guiam comportamento (verdadeiras regras do jogo)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🧠 Cultura muda-se no terceiro nível. Mudar artefactos sem mexer nos pressupostos é cosmética — voltamos ao estado anterior assim que a pressão afrouxa."
+    },
+    {
+      "type": "h2",
+      "text": "Ancoragem Segundo Kotter"
+    },
+    {
+      "type": "p",
+      "text": "O passo 8 de Kotter (ancorar na cultura) é onde a maioria das mudanças falha. Consiste em ligar explicitamente os novos comportamentos a sucessos e em cultivar a próxima geração de líderes dentro da nova cultura."
+    },
+    {
+      "type": "h3",
+      "text": "Cinco Mecanismos de Ancoragem"
+    },
+    {
+      "type": "ol",
+      "items": [
+        "Planificação e orçamento alinhados com a visão",
+        "Sistemas de medição que reforçam a mudança (KPIs, incentivos)",
+        "Processos de recrutamento, onboarding e socialização que seleccionem pela cultura",
+        "Promoções e sucessões que privilegiem quem viveu os novos comportamentos",
+        "Histórias e símbolos que celebrem a mudança e os seus heróis"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Ferramentas de Diagnóstico Cultural"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Cameron-Quinn (Competing Values Framework) — 4 tipos de cultura (clã, adhocracia, mercado, hierarquia)",
+        "Denison (Denison Organisational Culture Survey) — missão, consistência, envolvimento, adaptabilidade",
+        "Observação etnográfica — andar pela organização, ver rituais, ouvir linguagem",
+        "Histórias que se contam sobre fundadores, heróis e momentos críticos"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Mudança Cultural: Duas Abordagens"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Top-down (declarada pelo CEO): rápida no anúncio, lenta na substância; arrisca backlash se as palavras não casam com actos",
+        "Emergente (de baixo para cima, por tribos e redes informais): lenta mas sustentável; requer allies em toda a estrutura"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🎭 A cultura diz-se nos comportamentos tolerados, não nos posters do corredor. Se o que se prega diverge do que se perdoa, o que se perdoa é a cultura real."
+    },
+    {
+      "type": "h2",
+      "text": "Sustentação no Longo Prazo"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Não declarar vitória cedo — burnout cultural é real",
+        "Manter pressão moderada — complacência regressa em 12-24 meses",
+        "Formar e patrocinar novos líderes alinhados",
+        "Revisitar a visão e os comportamentos esperados em ciclos anuais"
+      ]
+    }
+  ]
+}

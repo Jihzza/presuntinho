@@ -1,0 +1,96 @@
+{
+  "slug": "3-comunicacao-negociacao",
+  "title": "3. Comunicação Eficaz em Negociação",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Escuta Activa — A Ferramenta Mais Subestimada"
+    },
+    {
+      "type": "p",
+      "text": "A maioria dos negociadores ouve para responder, não para compreender. Escuta activa é ouvir para entender o quadro mental do outro — não só as palavras, mas os interesses, emoções e pressupostos por trás."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Parafrasear — 'Se percebi bem, o que te preocupa é X?'",
+        "Resumir periodicamente — confirma compreensão e força clareza",
+        "Perguntar antes de afirmar — clareza > velocidade",
+        "Validar emoções — 'Faz sentido que isso te preocupe, dado Y'",
+        "Silêncio estratégico — pausas dão espaço ao outro para elaborar"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "👂 80% do que se aprende numa negociação vem de ouvir, não de falar. Falar muito é, literalmente, negociar pior."
+    },
+    {
+      "type": "h2",
+      "text": "Comunicação Não-Violenta (CNV) de Rosenberg"
+    },
+    {
+      "type": "h3",
+      "text": "Os 4 Passos"
+    },
+    {
+      "type": "ol",
+      "items": [
+        "Observação — 'Quando recebi a proposta na sexta às 18h...'",
+        "Sentimento — '... senti-me desrespeitado...'",
+        "Necessidade — '... porque valorizo tempo pessoal e clareza...'",
+        "Pedido — '... gostaria que propostas não urgentes fossem enviadas até quinta às 17h. Podes concordar?'"
+      ]
+    },
+    {
+      "type": "p",
+      "text": "CNV substitui o ciclo julgamento→culpa→vergonha→defesa por um ciclo observação→sentimento→necessidade→pedido. Em negociação, desarma defesas e abre caminho para soluções."
+    },
+    {
+      "type": "h2",
+      "text": "Linguagem e Framing"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Perdas pesam mais que ganhos equivalentes (aversão à perda, Kahneman-Tversky) — 'Perder 5% de quota' mobiliza mais que 'ganhar 5%'",
+        "Âncoras — o primeiro número define a referência; escolher a âncora com cuidado",
+        "Labels — etiquetar emoções reduz intensidade ('pareces hesitante' convida à explicação)",
+        "Perguntas calibradas — 'Como é que chegámos a este número?' abre diálogo, 'Porque é tão caro?' fecha"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Gestão de Emoções"
+    },
+    {
+      "type": "p",
+      "text": "Emoções intensas — raiva, frustração, medo — deterioram a negociação. O melhor negociador reconhece as suas (e as do outro) cedo e age para baixar a temperatura."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Pausa estratégica — 'Posso pedir 10 minutos para pensar?'",
+        "Mover-se fisicamente — caminhar, água, mudar de sala",
+        "Reenquadrar — 'Vamos olhar para isto como um problema em comum a resolver'",
+        "Nomear sem culpar — 'Sinto tensão nesta conversa; vamos recuar e identificar o que está em jogo'"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Perguntas Poderosas"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "'O que é que precisa de acontecer para isto funcionar?'",
+        "'Qual é a parte mais importante para si?'",
+        "'Se chegássemos a acordo hoje, o que mudava para si na segunda-feira?'",
+        "'Onde está a flexibilidade? Onde não está?'",
+        "'O que faria se fosse eu a fazer a contraproposta?'"
+      ]
+    }
+  ]
+}

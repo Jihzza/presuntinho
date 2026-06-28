@@ -1,0 +1,91 @@
+{
+  "slug": "2-estilos-negociacao",
+  "title": "2. BATNA, ZOPA e Estilos",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "BATNA — Best Alternative To a Negotiated Agreement"
+    },
+    {
+      "type": "p",
+      "text": "Conceito de Roger Fisher e William Ury (Harvard, 'Getting to Yes'). A BATNA é o que cada parte faz se as negociações falharem. Quanto mais forte a tua BATNA, mais podes recusar ofertas fracas. Quanto mais fraca, mais poder a contraparte tem."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "⚓ BATNA forte é a melhor defesa contra mau acordo. Melhorar a BATNA antes de negociar é tão importante quanto negociar bem em si."
+    },
+    {
+      "type": "h3",
+      "text": "Como Melhorar a BATNA"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Identificar alternativas reais (outros fornecedores, clientes, empregos, parceiros)",
+        "Desenvolver ativamente uma alternativa antes de negociar (RFP, entrevistas, protótipos)",
+        "Comunicar (sem bluff) a existência da BATNA à contraparte — altera o cálculo dela",
+        "Nunca bluff sobre BATNA — perde credibilidade para sempre"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "ZOPA — Zone of Possible Agreement"
+    },
+    {
+      "type": "p",
+      "text": "ZOPA é o intervalo entre o mínimo aceitável do vendedor e o máximo aceitável do comprador. Se não há sobreposição, não há acordo possível sem concessões que mudem os BATNAs."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Determinar o teu preço de reserva (mínimo que aceitas / máximo que pagas)",
+        "Estimar — com cuidado — o preço de reserva da contraparte",
+        "Se ZOPA existe, focar em partilha para a encontrar e fechar acordo",
+        "Se ZOPA não existe, parar e construir alternativas antes de continuar"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Cinco Estilos de Conflito (Thomas-Kilmann)"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Competir (assertivo + não-cooperativo) — ganha/perde, poder puro; útil em crises ou quando há princípio duro",
+        "Colaborar (assertivo + cooperativo) — win-win, substância alta; consome tempo",
+        "Ceder (não-assertivo + cooperativo) — perde/ganha para preservar relação",
+        "Evitar (não-assertivo + não-cooperativo) — adiar; útil quando o assunto é trivial ou timing é mau",
+        "Comprimir (meio-termo) — acordo rápido; perde valor potencial mas ganha eficiência"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🎯 Não há estilo melhor. O estilo certo depende do assunto, da relação, do tempo e da BATNA. Bons negociadores variam o estilo dentro da mesma conversa."
+    },
+    {
+      "type": "h2",
+      "text": "Método Harvard (Fisher & Ury) — 4 Princípios"
+    },
+    {
+      "type": "ol",
+      "items": [
+        "Separar as pessoas do problema — atacar o problema, não o interlocutor",
+        "Focar em interesses, não posições — 'porque' antes de 'o quê'",
+        "Inventar opções para ganho mútuo — brainstorming sem juízode valor",
+        "Insistir em critérios objectivos — mercado, lei, precedentes, eficiência"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Erro Clássico: Posições"
+    },
+    {
+      "type": "p",
+      "text": "'Quero 50.000€' é posição. 'Preciso de fechar este orçamento sem afectar margem' é interesse. Quando duas posições se defrontam, impasse. Quando dois interesses se encontram, soluções."
+    }
+  ]
+}

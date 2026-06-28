@@ -1,0 +1,107 @@
+{
+  "id": "gmq",
+  "title": "Quiz: Gestão da Mudança Organizacional",
+  "description": "Testa os teus conhecimentos sobre modelos de mudança (Kotter, ADKAR), resistência, cultura e ancoragem.",
+  "questions": [
+    {
+      "q": "Qual a percentagem aproximada de iniciativas de mudança organizacional que falham, segundo a literatura?",
+      "opts": [
+        "10-20%",
+        "30-40%",
+        "60-70%",
+        "90-95%"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Na fórmula D × V × F > R de Beckhard-Harris, o que representa o D?",
+      "opts": [
+        "Direcção da mudança",
+        "Dissatisfaction com o estado actual",
+        "Decisão da liderança",
+        "Duração do processo"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Quantos passos tem o modelo de John Kotter?",
+      "opts": [
+        "5",
+        "7",
+        "8",
+        "10"
+      ],
+      "a": 2
+    },
+    {
+      "q": "O que significa a letra 'A' em ADKAR (Prosci)?",
+      "opts": [
+        "Adoption",
+        "Awareness",
+        "Alignment",
+        "Accountability"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Qual destas NÃO é uma das 4 fontes de resistência segundo Kotter-Schlesinger?",
+      "opts": [
+        "Self-interest",
+        "Misunderstanding and distrust",
+        "Different assessments",
+        "Cultural misalignment"
+      ],
+      "a": 3
+    },
+    {
+      "q": "Em ADKAR, qual é a sequência correcta dos 5 resultados?",
+      "opts": [
+        "Awareness, Desire, Knowledge, Ability, Reinforcement",
+        "Awareness, Decision, Knowledge, Action, Review",
+        "Analysis, Design, Kickoff, Adaptation, Reinforcement",
+        "Advocacy, Desire, Knowledge, Ability, Results"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Qual é o passo 8 de Kotter, frequentemente o mais falhado?",
+      "opts": [
+        "Comunicar a visão",
+        "Formar a coligação guia",
+        "Ancorar a mudança na cultura",
+        "Gerar quick wins"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Segundo Edgar Schein, quantos níveis tem a cultura organizacional?",
+      "opts": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Qual destes é um mecanismo de ancoragem segundo Kotter?",
+      "opts": [
+        "Anunciar a visão em todos-os-emails",
+        "Planos, sistemas e incentivos alinhados com a nova visão",
+        "Realizar uma conferência anual",
+        "Criar um comité de mudança"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Sobre a curva da mudança (Kübler-Ross adaptada), qual a ordem típica das fases?",
+      "opts": [
+        "Aceitação → Choque → Negação → Integração",
+        "Choque → Negação → Frustração → Experimentação → Integração",
+        "Planeamento → Execução → Controlo → Fecho",
+        "Curiosidade → Experimentação → Adopção → Domínio"
+      ],
+      "a": 1
+    }
+  ]
+}

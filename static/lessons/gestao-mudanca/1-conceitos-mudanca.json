@@ -1,0 +1,82 @@
+{
+  "slug": "1-conceitos-mudanca",
+  "title": "1. Conceitos Fundamentais de Mudança",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Porque é que a Mudança é Difícil"
+    },
+    {
+      "type": "p",
+      "text": "A literatura é unânime: entre 60% e 70% das iniciativas de mudança organizacional falham. Não por falta de estratégia, mas por falta de gestão da mudança — a parte humana. Uma visão brilhante sem adopção é, no fim do dia, custo perdido."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "💡 A mudança técnica é trivial face à mudança humana. Linhas de código mudam-se em horas; mindsets demoram meses."
+    },
+    {
+      "type": "h3",
+      "text": "Três tipos de mudança"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Mudança incremental (1ª ordem): ajustes contínuos, optimização, kaizen. Baixo risco, baixa disrupção.",
+        "Mudança transformacional (2ª ordem): reformulação profunda de processos, estrutura ou estratégia. Risco moderado a alto.",
+        "Mudança disruptiva (3ª ordem): reimaginada do zero, mudança de paradigma, mudança de identidade do negócio. Risco máximo, janela curta."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Escala de Beckhard e Harris"
+    },
+    {
+      "type": "p",
+      "text": "Dick Beckhard e Reuben Harris propuseram a fórmula D × V × F > R, em que D = dissatisfaction com o estado actual, V = vision do estado futuro, F = first steps concretos, e R = resistance. A mudança só acontece quando o produto (D × V × F) ultrapassa R."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "📐 Se qualquer um dos três (D, V ou F) for zero, o produto é zero. Uma visão inspiradora sem insatisfação com o presente não move ninguém."
+    },
+    {
+      "type": "h3",
+      "text": "Curva da Mudança (Kübler-Ross adaptada)"
+    },
+    {
+      "type": "p",
+      "text": "Adaptado de Elisabeth Kübler-Ross, pessoas em mudança percorrem uma curva emocional previsível: choque → negação → frustração → depressão → experimentação → decisão → integração. Líderes eficazes antecipam cada fase e respondem com comunicação e suporte diferentes em cada uma."
+    },
+    {
+      "type": "h2",
+      "text": "Porque Falham as Iniciativas"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Visão ausente ou demasiado vaga — as pessoas não sabem para onde vão",
+        "Subestimar a cultura — cultura come estratégia ao pequeno-almoço",
+        "Confundir anúncio com adopção — comunicar não é envolver",
+        "Ignorar中层管理 — chefias intermédias são correia de transmissão ou bloqueio",
+        "Sem quick wins — vitórias iniciais geram tracção; vitórias tardias geram fadiga"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Checklist Inicial"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Qual é o D (insatisfação com o presente)? É real e partilhado?",
+        "Qual é o V (visão)? Cabe numa frase e gera entusiasmo?",
+        "Quais são os F (primeiros passos)? Concretos e visíveis em 30-90 dias?",
+        "Onde está a R (resistência)? Em pessoas, estruturas ou sistemas?",
+        "Quem são os allies e quem são os blockers? Mapear antes de actuar."
+      ]
+    }
+  ]
+}
