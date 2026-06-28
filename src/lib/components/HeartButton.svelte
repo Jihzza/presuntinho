@@ -17,6 +17,7 @@
   import { onMount } from 'svelte';
   import { heartClick } from '$lib/easterEggs';
   import { prefersReducedMotion } from './events';
+  import { t } from 'svelte-i18n';
 
   let emoji = $state('❤️');
   let intensity = $state(0);
@@ -52,8 +53,8 @@
   class="heart-btn intensity-{intensity}"
   class:pulse={pulsing}
   onclick={onClick}
-  aria-label="Clica no coração — easter egg"
-  title="Clica — easter egg"
+  aria-label={$t('components.heart.aria', { default: 'Clica no coração — easter egg' })}
+  title={$t('components.heart.title', { default: 'Clica — easter egg' })}
 >
   <span class="emoji" aria-hidden="true">{emoji}</span>
 </button>

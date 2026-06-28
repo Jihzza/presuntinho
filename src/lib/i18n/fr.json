@@ -297,5 +297,17 @@
   "caderno.filters.aria": "Filtres",
   "caderno.notes.aria": "Mes notes",
   "caderno.note.default_title": "Note",
-  "caderno.note.audio_title": "Audio ({n}s)"
+  "caderno.note.audio_title": "Audio ({n}s)",
+  "components.badge.unlocked": "Débloqué",
+  "components.badge.locked": "Verrouillé",
+  "components.badge.grid.heading": "Succès",
+  "components.badge.grid.aria": "Succès",
+  "components.countdown.expired": "⏰ Délai dépassé",
+  "components.heart.aria": "Cliquez sur le cœur — easter egg",
+  "components.heart.title": "Cliquez — easter egg",
+  "components.mascot.aria": "Mascotte — easter egg",
+  "components.mascot.title": "Cliquez — pro tip",
+  "components.onboarding.close.aria": "Fermer",
+  "components.onboarding.apps.aria": "Sous-apps",
+  "routes.hub.title": "Presuntinho — Hub"
 }

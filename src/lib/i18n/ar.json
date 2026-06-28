@@ -297,5 +297,17 @@
   "caderno.filters.aria": "مرشحات",
   "caderno.notes.aria": "ملاحظاتي",
   "caderno.note.default_title": "ملاحظة",
-  "caderno.note.audio_title": "صوت ({n}ث)"
+  "caderno.note.audio_title": "صوت ({n}ث)",
+  "components.badge.unlocked": "مفتوح",
+  "components.badge.locked": "مغلق",
+  "components.badge.grid.heading": "الإنجازات",
+  "components.badge.grid.aria": "الإنجازات",
+  "components.countdown.expired": "⏰ انتهت المهلة",
+  "components.heart.aria": "انقر على القلب — بيضة عيد",
+  "components.heart.title": "انقر — بيضة عيد",
+  "components.mascot.aria": "الرمز — بيضة عيد",
+  "components.mascot.title": "انقر — نصيحة",
+  "components.onboarding.close.aria": "إغلاق",
+  "components.onboarding.apps.aria": "التطبيقات الفرعية",
+  "routes.hub.title": "بريزونتينيو — المركز"
 }

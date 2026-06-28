@@ -10,6 +10,8 @@
    * - unlockedAt: optional timestamp for tooltip / future stats
    */
 
+  import { t } from 'svelte-i18n';
+
   interface Props {
     id: string;
     name: string;
@@ -21,8 +23,17 @@
 
   let { id, name, description, icon, unlocked, unlockedAt }: Props = $props();
 
-  let stateLabel = $derived(unlocked ? 'Desbloqueado' : 'Bloqueado');
-  let ariaLabel = $derived(`Conquista ${name}: ${description}. Estado: ${stateLabel}.`);
+  let stateLabel = $derived(unlocked
+    ? $t('components.badge.unlocked', { default: 'Desbloqueado' })
+    : $t('components.badge.locked', { default: 'Bloqueado' }));
+  let ariaLabel = $derived(
+    $t('components.badge.card.aria', {
+      default: `Conquista ${name}: ${description}. Estado: ${stateLabel}.`
+    })
+      .replace('{name}', name)
+      .replace('{description}', description)
+      .replace('{state}', stateLabel)
+  );
 
   // Format unlock date in pt-PT if we have one
   let unlockedDate = $derived<string | null>(
@@ -52,10 +63,10 @@
     <div class="status" aria-hidden="true">
       {#if unlocked}
         <span class="status-dot status-dot--on"></span>
-        <span>Desbloqueado{#if unlockedDate} · {unlockedDate}{/if}</span>
+        <span>{$t('components.badge.unlocked', { default: 'Desbloqueado' })}{#if unlockedDate} · {unlockedDate}{/if}</span>
       {:else}
         <span class="status-dot status-dot--off"></span>
-        <span>Bloqueado</span>
+        <span>{$t('components.badge.locked', { default: 'Bloqueado' })}</span>
       {/if}
     </div>
   </div>

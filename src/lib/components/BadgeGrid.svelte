@@ -13,6 +13,7 @@
    */
 
   import BadgeCard from './BadgeCard.svelte';
+  import { t } from 'svelte-i18n';
 
   interface BadgeStatus {
     unlocked: boolean;
@@ -52,9 +53,9 @@
   );
 </script>
 
-<div class="badge-grid" role="list" aria-label="Conquistas">
+<div class="badge-grid" role="list" aria-label={$t('components.badge.grid.aria', { default: 'Conquistas' })}>
   <header class="grid-head" aria-hidden="true">
-    <span class="grid-head-label">Conquistas</span>
+    <span class="grid-head-label">{$t('components.badge.grid.heading', { default: 'Conquistas' })}</span>
     <span class="grid-head-count">{unlockedCount}/{totalCount}</span>
   </header>
   <div class="grid">

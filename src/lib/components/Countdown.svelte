@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { t } from 'svelte-i18n';
 
   interface Props {
     deadline: string; // ISO 8601
@@ -22,7 +23,7 @@
 </script>
 
 {#if expired}
-  <p class="expired">⏰ Prazo terminado</p>
+  <p class="expired">{$t('components.countdown.expired', { default: '⏰ Prazo terminado' })}</p>
 {:else}
   <div class="countdown" role="timer" aria-live="polite">
     <span class="unit"><strong>{days}</strong>d</span>

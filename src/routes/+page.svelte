@@ -191,7 +191,7 @@
 </script>
 
 <svelte:head>
-  <title>Presuntinho — Hub</title>
+  <title>{$t('routes.hub.title', { default: 'Presuntinho — Hub' })}</title>
 </svelte:head>
 
 <OnboardingModal open={showOnboarding} onClose={handleOnboardingClose} />

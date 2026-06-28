@@ -297,5 +297,17 @@
   "caderno.filters.aria": "Filtres",
   "caderno.notes.aria": "Notes mta3i",
   "caderno.note.default_title": "Note",
-  "caderno.note.audio_title": "Audio ({n}s)"
+  "caderno.note.audio_title": "Audio ({n}s)",
+  "components.badge.unlocked": "Maftou7",
+  "components.badge.locked": "Mghafel",
+  "components.badge.grid.heading": "Les badges",
+  "components.badge.grid.aria": "Les badges",
+  "components.countdown.expired": "⏰ Deadline fatchet",
+  "components.heart.aria": "Click 3la el 2leb — easter egg",
+  "components.heart.title": "Click — easter egg",
+  "components.mascot.aria": "Mascotte — easter egg",
+  "components.mascot.title": "Click — pro tip",
+  "components.onboarding.close.aria": "Bla",
+  "components.onboarding.apps.aria": "Sous-apps",
+  "routes.hub.title": "Presuntinho — Hub"
 }

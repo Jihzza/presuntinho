@@ -17,7 +17,7 @@
    */
 
   import { onMount, tick } from 'svelte';
-  import { _ } from 'svelte-i18n';
+  import { t, _ } from 'svelte-i18n';
   import { subApps } from '$lib/registry';
 
   interface Props {
@@ -136,14 +136,14 @@
         class="close"
         type="button"
         onclick={onClose}
-        aria-label="Fechar"
+        aria-label={$t('components.onboarding.close.aria', { default: 'Fechar' })}
       >×</button>
 
       <h2 id="onboarding-title" class="title">{$_('onboarding.welcome')}</h2>
       <p class="lead">{$_('onboarding.firstHint')}</p>
 
       <h3 class="section-title">{$_('onboarding.subAppsTitle')}</h3>
-      <ul class="apps" aria-label="Sub-apps">
+      <ul class="apps" aria-label={$t('components.onboarding.apps.aria', { default: 'Sub-apps' })}>
         {#each subApps as app (app.id)}
           <li class="app">
             <span class="app-icon" aria-hidden="true">{app.icon}</span>

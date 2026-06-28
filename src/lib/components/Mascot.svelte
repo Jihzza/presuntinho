@@ -14,6 +14,7 @@
   import { db } from '$lib/state/db';
   import { mascotClick } from '$lib/easterEggs';
   import { prefersReducedMotion } from './events';
+  import { t } from 'svelte-i18n';
 
   const VISITED_THRESHOLD = 4;
 
@@ -54,8 +55,8 @@
     class="mascot-fab"
     class:reduced
     onclick={onClick}
-    aria-label="Mascote — easter egg"
-    title="Clica — pro tip"
+    aria-label={$t('components.mascot.aria', { default: 'Mascote — easter egg' })}
+    title={$t('components.mascot.title', { default: 'Clica — pro tip' })}
   >
     <span class="emoji" aria-hidden="true">🧴</span>
   </button>

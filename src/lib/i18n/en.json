@@ -297,5 +297,17 @@
   "caderno.filters.aria": "Filters",
   "caderno.notes.aria": "My notes",
   "caderno.note.default_title": "Note",
-  "caderno.note.audio_title": "Audio ({n}s)"
+  "caderno.note.audio_title": "Audio ({n}s)",
+  "components.badge.unlocked": "Unlocked",
+  "components.badge.locked": "Locked",
+  "components.badge.grid.heading": "Badges",
+  "components.badge.grid.aria": "Badges",
+  "components.countdown.expired": "⏰ Deadline passed",
+  "components.heart.aria": "Click the heart — easter egg",
+  "components.heart.title": "Click — easter egg",
+  "components.mascot.aria": "Mascot — easter egg",
+  "components.mascot.title": "Click — pro tip",
+  "components.onboarding.close.aria": "Close",
+  "components.onboarding.apps.aria": "Sub-apps",
+  "routes.hub.title": "Presuntinho — Hub"
 }

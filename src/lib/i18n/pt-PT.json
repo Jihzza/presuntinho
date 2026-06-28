@@ -297,5 +297,17 @@
   "caderno.filters.aria": "Filtros",
   "caderno.notes.aria": "As minhas notas",
   "caderno.note.default_title": "Nota",
-  "caderno.note.audio_title": "Áudio ({n}s)"
+  "caderno.note.audio_title": "Áudio ({n}s)",
+  "components.badge.unlocked": "Desbloqueado",
+  "components.badge.locked": "Bloqueado",
+  "components.badge.grid.heading": "Conquistas",
+  "components.badge.grid.aria": "Conquistas",
+  "components.countdown.expired": "⏰ Prazo terminado",
+  "components.heart.aria": "Clica no coração — easter egg",
+  "components.heart.title": "Clica — easter egg",
+  "components.mascot.aria": "Mascote — easter egg",
+  "components.mascot.title": "Clica — pro tip",
+  "components.onboarding.close.aria": "Fechar",
+  "components.onboarding.apps.aria": "Sub-apps",
+  "routes.hub.title": "Presuntinho — Hub"
 }
