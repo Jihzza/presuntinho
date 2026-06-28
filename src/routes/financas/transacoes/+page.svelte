@@ -285,7 +285,7 @@
         <input
           type="search"
           bind:value={pesquisa}
-          placeholder="ex: almoço"
+          placeholder={$t('financas.transacoes.placeholder.pesquisa', { default: 'ex: almoço' })}
           aria-label="Pesquisar na descrição"
         />
       </label>

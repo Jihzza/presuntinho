@@ -125,7 +125,7 @@
         bind:value={title}
         maxlength="120"
         required
-        placeholder="Ex.: Python — functools.lru_cache"
+        placeholder={$t('biblioteca.novo.placeholder.title', { default: 'Ex.: Python — functools.lru_cache' })}
         autocomplete="off"
       />
       <span class="hint">{$t('biblioteca.new.name.hint', { default: 'Como queres identificar este link?' })}</span>
@@ -140,7 +140,7 @@
         type="url"
         bind:value={url}
         required
-        placeholder="https://docs.python.org/3/library/functools.html"
+        placeholder={$t('biblioteca.novo.placeholder.url', { default: 'https://docs.python.org/3/library/functools.html' })}
         autocomplete="off"
         inputmode="url"
       />
@@ -165,7 +165,7 @@
         id="bm-tags"
         type="text"
         bind:value={tagsInput}
-        placeholder="python, docs, performance"
+        placeholder={$t('biblioteca.novo.placeholder.tags', { default: 'python, docs, performance' })}
         autocomplete="off"
       />
       <span class="hint">{$t('biblioteca.new.tags.hint', { default: 'Separa com vírgulas. Até 10 tags por marcador.' })}</span>

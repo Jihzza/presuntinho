@@ -120,7 +120,7 @@
         bind:value={name}
         maxlength="60"
         required
-        placeholder="Ex.: Beber 2L de água"
+        placeholder={$t('habitos.novo.placeholder.name', { default: 'Ex.: Beber 2L de água' })}
         autocomplete="off"
       />
       <span class="hint">{$t('habitos.new.name.hint', { default: 'Como queres chamar este hábito?' })}</span>
