@@ -173,7 +173,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 </svelte:head>
 
-<main class="splash">
+<main id="main-content" class="splash" tabindex="-1">
   {#if loveLockState}
     <LoveLock
       lockState={loveLockState}
@@ -300,7 +300,7 @@
     outline: none;
   }
   input:focus {
-    border-color: #ec4899;
+    border-color: #be185d;
   }
   button {
     padding: 0.75rem 1rem;
@@ -308,13 +308,13 @@
     font-weight: 600;
     border: 0;
     border-radius: 0.5rem;
-    background: #ec4899;
+    background: #be185d;
     color: #fff;
     cursor: pointer;
     transition: transform 0.1s, background 0.2s;
   }
   button:hover:not(:disabled) {
-    background: #db2777;
+    background: #9d174d;
     transform: translateY(-1px);
   }
   button:disabled {
