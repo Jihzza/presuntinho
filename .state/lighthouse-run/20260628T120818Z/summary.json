@@ -1,0 +1,17 @@
+{
+  "tick": "20260628T120818Z",
+  "previous": "commit 2a75ffb (gap-033 close)",
+  "regressionCheck": "NO REGRESSION",
+  "scores": {
+    "home":        { "score": 1, "pct": 100, "fails": 0 },
+    "escola":      { "score": 1, "pct": 100, "fails": 0 },
+    "financas":    { "score": 1, "pct": 100, "fails": 0 },
+    "habitos":     { "score": 1, "pct": 100, "fails": 0 },
+    "biblioteca":  { "score": 1, "pct": 100, "fails": 0 },
+    "trabalhos":   { "score": 1, "pct": 100, "fails": 0 },
+    "aulas":       { "score": 1, "pct": 100, "fails": 0 },
+    "definicoes":  { "score": 1, "pct": 100, "fails": 0 }
+  },
+  "manualChecks": 10,
+  "notApplicable": 41
+}
