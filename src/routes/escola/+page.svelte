@@ -179,7 +179,7 @@
 </script>
 
 <svelte:head>
-  <title>Escola · Cursos e Quizzes · Presuntinho</title>
+  <title>{$t('routes.escola.title', { default: 'Escola · Cursos e Quizzes' })} · Presuntinho</title>
   <meta name="description" content="Cursos, lições e quizzes da Fatma" />
   <meta property="og:title" content="Escola · Cursos e Quizzes" />
   <meta property="og:description" content="Cursos, lições e quizzes da Fatma" />

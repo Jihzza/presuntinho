@@ -80,7 +80,7 @@
 </script>
 
 <svelte:head>
-  <title>Hábitos · Daily Check-in · Presuntinho</title>
+  <title>{$t('routes.habitos.title', { default: 'Hábitos · Daily Check-in' })} · Presuntinho</title>
   <meta name="description" content="Hábitos diários com streaks" />
   <meta property="og:title" content="Hábitos · Daily Check-in" />
   <meta property="og:description" content="Hábitos diários com streaks" />

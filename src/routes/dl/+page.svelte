@@ -2,6 +2,8 @@
   // DL — Download Center (V4 port of V3 #pg-dl).
   // 4 download cards + a how-to-use card + a warning card.
 
+  import { t } from 'svelte-i18n';
+
   interface Download {
     icon: string;
     title: string;
@@ -70,7 +72,7 @@
 </script>
 
 <svelte:head>
-  <title>Downloads · Assignment Center · Presuntinho</title>
+  <title>{$t('routes.dl.title', { default: 'Downloads · Assignment Center' })} · Presuntinho</title>
 </svelte:head>
 
 <div class="dl">
@@ -82,7 +84,7 @@
     </p>
     <span class="tag">Módulo 6</span>
     <h1>📥 Download Center</h1>
-    <p class="sub">Ficheiros do assignment e materiais de estudo.</p>
+    <p class="sub">{$t('dl.sub', { default: 'Ficheiros do assignment e materiais de estudo.' })}</p>
   </header>
 
   <section class="grid" aria-label="Downloads">

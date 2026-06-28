@@ -140,7 +140,7 @@
 </script>
 
 <svelte:head>
-  <title>Finanças · Dashboard · Presuntinho</title>
+  <title>{$t('routes.financas.title', { default: 'Finanças · Dashboard' })} · Presuntinho</title>
   <meta name="description" content="Transações, orçamento e categorias" />
   <meta property="og:title" content="Finanças · Dashboard" />
   <meta property="og:description" content="Transações, orçamento e categorias" />

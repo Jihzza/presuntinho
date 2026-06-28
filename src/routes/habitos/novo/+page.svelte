@@ -14,7 +14,8 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { addHabito } from '$lib/habitos';
-  import { showToast } from '$lib/components/events';
+    import { showToast } from '$lib/components/events';
+    import { t } from 'svelte-i18n';
 
   let name = $state('');
   let icon = $state('✅');
@@ -122,7 +123,7 @@
         placeholder="Ex.: Beber 2L de água"
         autocomplete="off"
       />
-      <span class="hint">Como queres chamar este hábito?</span>
+      <span class="hint">{$t('habitos.new.name.hint', { default: 'Como queres chamar este hábito?' })}</span>
     </div>
 
     <div class="field">

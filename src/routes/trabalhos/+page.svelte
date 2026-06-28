@@ -127,7 +127,7 @@
 </script>
 
 <svelte:head>
-  <title>Trabalhos · Entregas e Prazos · Presuntinho</title>
+  <title>{$t('routes.trabalhos.title', { default: 'Trabalhos · Entregas e Prazos' })} · Presuntinho</title>
   <meta name="description" content="Trabalhos e entregas com prazos" />
   <meta property="og:title" content="Trabalhos · Entregas e Prazos" />
   <meta property="og:description" content="Trabalhos e entregas com prazos" />

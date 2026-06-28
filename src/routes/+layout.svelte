@@ -195,6 +195,10 @@
                     <span class="nav-icon" aria-hidden="true">📚</span>
                     <span class="nav-label">{$t('nav.escola', { default: 'Escola' })}</span>
                   </a>
+                  <a href="/aulas" class="nav-btn" aria-label={$t('nav.aulas.aria', { default: 'Aulas — todas as lições agregadas' })} data-sveltekit-preload-data>
+                    <span class="nav-icon" aria-hidden="true">🎓</span>
+                    <span class="nav-label">{$t('nav.aulas', { default: 'Aulas' })}</span>
+                  </a>
                   <a href="/financas" class="nav-btn" aria-label={$t('nav.financas.aria', { default: 'Finanças — despesas e contas' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">💰</span>
                     <span class="nav-label">{$t('nav.financas', { default: 'Finanças' })}</span>

@@ -169,7 +169,7 @@
 <div class="transacoes-page">
   <header class="hero">
     <h1>📋 Transações</h1>
-    <p class="sub">Histórico de receitas e despesas.</p>
+    <p class="sub">{$t('transacoes.sub', { default: 'Histórico de receitas e despesas.' })}</p>
   </header>
 
   <nav class="crumbs" aria-label="Caminho de navegação">

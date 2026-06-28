@@ -137,7 +137,7 @@
 </script>
 
 <svelte:head>
-  <title>🔐 Secrets · Presuntinho</title>
+  <title>🔐 {$t('routes.secrets.title', { default: 'Secrets' })} · Presuntinho</title>
 </svelte:head>
 
 <div class="secrets">

@@ -136,7 +136,7 @@
 </script>
 
 <svelte:head>
-  <title>Biblioteca · Bookmarks · Presuntinho</title>
+  <title>{$t('routes.biblioteca.title', { default: 'Biblioteca · Bookmarks' })} · Presuntinho</title>
   <meta name="description" content="Bookmarks, links e referências" />
   <meta property="og:title" content="Biblioteca · Bookmarks" />
   <meta property="og:description" content="Bookmarks, links e referências" />

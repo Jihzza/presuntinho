@@ -167,7 +167,7 @@
 </script>
 
 <svelte:head>
-  <title>Meu Caderno · Escola · Presuntinho</title>
+  <title>{$t('routes.escola.caderno.title', { default: 'Meu Caderno' })} · {$t('routes.escola.title', { default: 'Escola' })} · Presuntinho</title>
 </svelte:head>
 
 <div class="caderno">

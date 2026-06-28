@@ -3,6 +3,8 @@
   // 5 numbered steps (each worth 20%) with linked lessons + 3 audio
   // walkthroughs using the LessonRunner audio pattern.
 
+  import { t } from 'svelte-i18n';
+
   interface Step {
     num: string;
     title: string;
@@ -100,7 +102,7 @@
 </script>
 
 <svelte:head>
-  <title>Walkthrough · Assignment · Presuntinho</title>
+  <title>{$t('routes.walk.title', { default: 'Walkthrough · Assignment' })} · Presuntinho</title>
 </svelte:head>
 
 <div class="walk">

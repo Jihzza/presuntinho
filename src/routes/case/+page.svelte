@@ -2,6 +2,8 @@
   // Case — Equivalenza Deep Dive (V4 port of V3 #pg-case).
   // Pt-PT throughout. V4 design tokens (navy + accent pink).
 
+  import { t } from 'svelte-i18n';
+
   // Overview table data (V3 lines 95-102)
   const OVERVIEW: Array<{ label: string; value: string }> = [
     { label: 'Empresa',     value: 'Equivalenza S.L.' },
@@ -57,7 +59,7 @@
 </script>
 
 <svelte:head>
-  <title>Case · Equivalenza Deep Dive · Presuntinho</title>
+  <title>{$t('routes.case.title', { default: 'Case · Equivalenza Deep Dive' })} · Presuntinho</title>
 </svelte:head>
 
 <div class="case">
@@ -93,11 +95,11 @@
     <div class="kpi-grid">
       <div class="kpi">
         <div class="kpi-value">€60M</div>
-        <div class="kpi-label">Pico de vendas em 2015</div>
+        <div class="kpi-label">{$t('case.kpi.sales2015', { default: 'Pico de vendas em 2015' })}</div>
       </div>
       <div class="kpi">
         <div class="kpi-value">810</div>
-        <div class="kpi-label">Lojas no pico</div>
+        <div class="kpi-label">{$t('case.kpi.storesPeak', { default: 'Lojas no pico' })}</div>
       </div>
       <div class="kpi danger">
         <div class="kpi-value">−35%</div>
@@ -139,7 +141,7 @@
     <p><strong>Marta, 27.</strong> Profissional criativa em Madrid. Rendimento moderado-a-bom. Universitária, urbana, socialmente ativa.</p>
     <blockquote class="quote">{PERSONA.quote}</blockquote>
     <p class="cite">{PERSONA.cite}</p>
-    <h3>O que ela valoriza</h3>
+    <h3>{$t('case.tagline', { default: 'O que ela valoriza' })}</h3>
     <ul>
       {#each PERSONA.values as v (v)}
         <li>{v}</li>

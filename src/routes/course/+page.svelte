@@ -2,6 +2,8 @@
   // Course Theory — SWOT / TOWS / SCQA / Buyer Persona (V4 port of V3 #pg-course).
   // 4 framework cards, each links to the matching lesson.
 
+  import { t } from 'svelte-i18n';
+
   interface Framework {
     id: string;
     icon: string;
@@ -53,7 +55,7 @@
 </script>
 
 <svelte:head>
-  <title>Course · Teoria · Presuntinho</title>
+  <title>{$t('routes.course.title', { default: 'Course · Teoria' })} · Presuntinho</title>
 </svelte:head>
 
 <div class="course">

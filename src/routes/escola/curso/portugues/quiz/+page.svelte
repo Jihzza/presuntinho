@@ -9,6 +9,7 @@
    * The QuizRunner already awards badge b11 (Lusófono) + confetti via
    * `recordQuizSubmission()` when the score is perfect.
    */
+  import { t } from 'svelte-i18n';
 
   import { onMount } from 'svelte';
   import QuizRunner from '$lib/components/QuizRunner.svelte';
@@ -53,7 +54,7 @@
 </script>
 
 <svelte:head>
-  <title>🇵🇹 Quiz PT · Escola · Presuntinho</title>
+  <title>🇵🇹 {$t('routes.escola.quizpt.title', { default: 'Quiz PT' })} · {$t('routes.escola.title', { default: 'Escola' })} · Presuntinho</title>
   <meta
     name="description"
     content="Quiz rápido de Português de Portugal — 5 perguntas para ganhar a badge 🇵🇹 Lusófono."

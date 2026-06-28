@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from '$app/state';
   import { onMount } from 'svelte';
+  import { t } from 'svelte-i18n';
 
   // Course detail. Phase 4 ships with one course (Equivalenza) hardcoded
   // here. When a 2nd course ships, move this into static/courses.json
@@ -312,7 +313,7 @@
     </header>
 
     <section class="lessons" aria-label="Lições do curso">
-      <h2 class="section-title">Plano de aulas</h2>
+      <h2 class="section-title">{$t('escola.curso.plan.title', { default: 'Plano de aulas' })}</h2>
       <ol class="lesson-list">
         {#each course.lessons as lesson, i (lesson.slug)}
           <li class="lesson-item">

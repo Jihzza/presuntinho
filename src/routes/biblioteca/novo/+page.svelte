@@ -11,8 +11,9 @@
 -->
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { addItem, parseTagsInput } from '$lib/biblioteca';
-  import { showToast } from '$lib/components/events';
+    import { addItem, parseTagsInput } from '$lib/biblioteca';
+    import { showToast } from '$lib/components/events';
+    import { t } from 'svelte-i18n';
 
   let title = $state('');
   let url = $state('');
@@ -90,7 +91,7 @@
 </script>
 
 <svelte:head>
-  <title>Novo Marcador · Biblioteca · Presuntinho</title>
+  <title>{$t('routes.biblioteca.new.title', { default: 'Novo Marcador' })} · {$t('routes.biblioteca.title', { default: 'Biblioteca' })} · Presuntinho</title>
   <meta name="description" content="Adicionar novo marcador" />
   <meta property="og:title" content="Novo Marcador · Biblioteca" />
   <meta property="og:description" content="Adicionar novo marcador" />
@@ -127,7 +128,7 @@
         placeholder="Ex.: Python — functools.lru_cache"
         autocomplete="off"
       />
-      <span class="hint">Como queres identificar este link?</span>
+      <span class="hint">{$t('biblioteca.new.name.hint', { default: 'Como queres identificar este link?' })}</span>
     </div>
 
     <div class="field">
@@ -167,7 +168,7 @@
         placeholder="python, docs, performance"
         autocomplete="off"
       />
-      <span class="hint">Separa com vírgulas. Até 10 tags por marcador.</span>
+      <span class="hint">{$t('biblioteca.new.tags.hint', { default: 'Separa com vírgulas. Até 10 tags por marcador.' })}</span>
     </div>
 
     {#if error}

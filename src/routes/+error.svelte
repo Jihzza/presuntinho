@@ -43,7 +43,7 @@
 </script>
 
 <svelte:head>
-  <title>{status} · {title} · Presuntinho</title>
+  <title>{status} · {title} · {$t('error.title', { default: 'Erro' })} · Presuntinho</title>
   <meta name="description" content={$t('error.meta_description', { default: 'Página de erro do Presuntinho.' })} />
   <meta name="robots" content="noindex" />
 </svelte:head>

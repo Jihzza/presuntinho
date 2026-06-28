@@ -3,6 +3,8 @@
   // 4 framework sections (pt-PT) + mini-curso de Português (vogais,
   // 50 palavras, mini-diálogos, 5 verbos, quiz rápido).
 
+  import { t } from 'svelte-i18n';
+
   // 4 frameworks in pt-PT
   interface FwSection {
     icon: string;
@@ -187,7 +189,7 @@
 </script>
 
 <svelte:head>
-  <title>PT 🇵🇹 · Aulas em Português · Presuntinho</title>
+  <title>PT 🇵🇹 · {$t('routes.pt.title', { default: 'Aulas em Português' })} · Presuntinho</title>
 </svelte:head>
 
 <div class="pt">
