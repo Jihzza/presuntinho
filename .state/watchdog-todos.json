@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T09:31:47+02:00",
+  "lastUpdated": "2026-06-28T09:55:00+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -45,14 +45,6 @@
       "id": "gap-025",
       "category": "i18n",
       "description": "escola/curso/portugues/+page.svelte tem 3 PT strings residuais ('Não foi possível carregar o curso.', aria-labels) — confirma se ficam PT por design",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-28-08",
-      "created_at": "2026-06-28T08:55:00+02:00"
-    },
-    {
-      "id": "gap-026",
-      "category": "i18n",
-      "description": "biblioteca/item/[id]/+page.svelte tem 'Marcador não encontrado.' hardcoded 2x — converter para $t()",
       "severity": "baixa",
       "source": "watchdog-tick-2026-06-28-08",
       "created_at": "2026-06-28T08:55:00+02:00"
@@ -230,6 +222,12 @@
       "description": "escola/curso/[slug] renderiza title/tagline/description via literais do CATALOGUE; passar a $t() com fallback (i18n keys já existem: routes.escola.curso.<slug>.{title,description})",
       "sha": "62d8f08",
       "closed_at": "2026-06-28T09:31:47+02:00"
+    },
+    {
+      "id": "gap-026",
+      "description": "biblioteca/item/[id] notFound + loadFailed now $t() with fallback. 2 keys × 5 locales = 10 entries i18n.",
+      "sha": "6631223",
+      "closed_at": "2026-06-28T09:55:00+02:00"
     }
   ]
 }
