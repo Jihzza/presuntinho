@@ -19,7 +19,7 @@
 //   - Phase 8 / Biblioteca: biblioteca                          (added in v4)
 //   - Phase 10 / Caderno:    notes                               (added in v5)
 //
-// Dexie version: 5.  When the schema changes again, bump to 6 and add a
+// Dexie version: 6.  When the schema changes again, bump to 7 and add a
 // `.upgrade()` block.  Versions are additive — older versions stay in
 // place so existing IndexedDB databases still open cleanly on first
 // load after the deploy.
@@ -248,6 +248,27 @@ export interface NoteRow {
   blob?: Blob;
 }
 
+/**
+ * Phase V7+ — Agente chat. Added in v6.
+ *
+ * One row per message exchanged with the in-app agent. `role` distinguishes
+ * user / assistant / system turns. `attachment` holds optional blob for
+ * files the user attached (image / audio / file). `createdAt` index powers
+ * newest-first ordering.
+ */
+export interface ChatMessageRow {
+  id?: number;            // auto-incremented by Dexie (++)
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  attachment?: {
+    kind: 'image' | 'audio' | 'file';
+    mimeType: string;
+    name: string;
+    blob?: Blob;
+  };
+  createdAt: number;
+}
+
 // ---------------------------------------------------------------------------
 // Database class
 // ---------------------------------------------------------------------------
@@ -288,11 +309,15 @@ class PresuntinhoDB extends Dexie {
     //               can sort newest-first without a table scan.
     biblioteca!: Table<BibliotecaRow, number>;
     // Phase 10 / Meu Caderno — added in v5.
-    //   notes: auto-increment PK; `category` index supports the
-    //          "show me escola notes only" filter; `createdAt` is the
-    //          hot-path secondary index used by the caderno list view
-    //          to sort newest-first.
-    notes!: Table<NoteRow, number>;
+        //   notes: auto-increment PK; `category` index supports the
+        //          "show me escola notes only" filter; `createdAt` is the
+        //          hot-path secondary index used by the caderno list view
+        //          to sort newest-first.
+        notes!: Table<NoteRow, number>;
+        // Phase V7+ — Agente chat — added in v6.
+        //   chat_messages: one row per message. `createdAt` is the
+        //                  secondary index powering newest-first ordering.
+        chat_messages!: Table<ChatMessageRow, number>;
 
     constructor(name = 'presuntinho') {
       super(name);
@@ -358,28 +383,45 @@ class PresuntinhoDB extends Dexie {
         biblioteca:  '++id, *tags, createdAt'
       });
       // v5: Phase 10 / Meu Caderno (Escola sub-app).  Brand-new table,
-      // no upgrade body needed — Dexie creates the empty table on the
-      // first open after deploy.  `category` is the secondary index the
-      // caderno's filter chips use; `createdAt` powers the
-      // `orderBy('createdAt').reverse()` list query (the caderno
-      // renders newest-first).
-      this.version(5).stores({
-        state:       'id',
-        badges:      'id',
-        visited:     'id',
-        quizScores:  'id',
-        secrets:     'id',
-        settings:    'id',
-        transacoes:  '++id, tipo, data, [tipo+data], categoria',
-        orcamentos:  'id, mes',
-        categorias:  'id, tipo',
-        habitos:     '++id, createdAt',
-        habit_logs:  '++id, [habitId+date], habitId, date, createdAt',
-        biblioteca:  '++id, *tags, createdAt',
-        notes:       '++id, category, createdAt'
-      });
-    }
-  }
+            // no upgrade body needed — Dexie creates the empty table on the
+            // first open after deploy.  `category` is the secondary index the
+            // caderno's filter chips use; `createdAt` powers the
+            // `orderBy('createdAt').reverse()` list query (the caderno
+            // renders newest-first).
+            this.version(5).stores({
+              state:       'id',
+              badges:      'id',
+              visited:     'id',
+              quizScores:  'id',
+              secrets:     'id',
+              settings:    'id',
+              transacoes:  '++id, tipo, data, [tipo+data], categoria',
+              orcamentos:  'id, mes',
+              categorias:  'id, tipo',
+              habitos:     '++id, createdAt',
+              habit_logs:  '++id, [habitId+date], habitId, date, createdAt',
+              biblioteca:  '++id, *tags, createdAt',
+              notes:       '++id, category, createdAt'
+            });
+            // v6: Agente chat. Brand-new table, no upgrade body needed.
+            this.version(6).stores({
+              state:         'id',
+              badges:        'id',
+              visited:       'id',
+              quizScores:    'id',
+              secrets:       'id',
+              settings:      'id',
+              transacoes:    '++id, tipo, data, [tipo+data], categoria',
+              orcamentos:    'id, mes',
+              categorias:    'id, tipo',
+              habitos:       '++id, createdAt',
+              habit_logs:    '++id, [habitId+date], habitId, date, createdAt',
+              biblioteca:    '++id, *tags, createdAt',
+              notes:         '++id, category, createdAt',
+              chat_messages: '++id, createdAt'
+            });
+          }
+        }
 
 // ---------------------------------------------------------------------------
 // Lazy singleton accessor

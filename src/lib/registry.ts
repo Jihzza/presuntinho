@@ -78,13 +78,12 @@ export const legacySubApp: SubApp = {
   order: 99
 };
 
-// ---------------------------------------------------------------------------
+// -------------------------------------------------------------------
 // V3 content routes — native SvelteKit ports of the 7 missing V3 pages.
 // Each entry is rendered on the Hub via HubCard (with an optional `tagline`).
 // Phase 12: these replace the iframe shell for case / course / walk / write /
 // pt / dl / secrets. The legacy HTML stays at /legacy/ for archival.
-// ---------------------------------------------------------------------------
-
+// -------------------------------------------------------------------
 export interface V3ContentEntry {
   id: string;
   slug: string;
@@ -168,3 +167,27 @@ export const v3Content: V3ContentEntry[] = [
     tagline: 'Easter eggs + badges'
   }
 ];
+
+// ---------------------------------------------------------------------------
+// Agent (V7+) — in-app assistant that knows the user's state.
+// Hub exposes it as a card so users can find it from the Hub.
+// ---------------------------------------------------------------------------
+export interface AgentEntry {
+  id: 'agente';
+  title: string;
+  icon: string;
+  accent: string;
+  description: string;
+  href: string;
+  tagline: string;
+}
+
+export const agentEntry: AgentEntry = {
+  id: 'agente',
+  title: 'Agente',
+  icon: '💬',
+  accent: '#06b6d4',
+  description: 'Pergunta qualquer coisa — vê os teus hábitos, finanças e escola.',
+  href: '/agente/',
+  tagline: 'Assistente com memória da app'
+};

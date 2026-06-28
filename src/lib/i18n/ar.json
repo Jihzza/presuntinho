@@ -635,5 +635,10 @@
   "walkthrough.transcript": "النص",
   "walkthrough.verify.exists": "موجود.",
   "walkthrough.verify.text": "تأكد من",
-  "write.breadcrumb.home": "← المحور"
+  "write.breadcrumb.home": "← المحور",
+  "agente.title": "الوكيل",
+  "agente.empty": "اسألني أي شيء عن التطبيق.",
+  "agente.placeholder": "اسأل أي شيء…",
+  "hub.app.agente.name": "الوكيل",
+  "hub.app.agente.description": "اسأل أي شيء — يرى عاداتك وماليتك ودراستك."
 }

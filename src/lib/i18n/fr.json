@@ -635,5 +635,10 @@
   "walkthrough.transcript": "Transcription",
   "walkthrough.verify.exists": "existe.",
   "walkthrough.verify.text": "Vérifie que",
-  "write.breadcrumb.home": "← Hub"
+  "write.breadcrumb.home": "← Hub",
+  "agente.title": "Agent",
+  "agente.empty": "Demande-moi tout ce que tu veux savoir sur l'app.",
+  "agente.placeholder": "Demande n'importe quoi…",
+  "hub.app.agente.name": "Agent",
+  "hub.app.agente.description": "Demande n'importe quoi — il voit tes habitudes, finances et école."
 }

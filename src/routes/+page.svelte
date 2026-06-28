@@ -27,7 +27,7 @@
   import InstallButton from '$lib/components/InstallButton.svelte';
   import OnboardingModal from '$lib/components/OnboardingModal.svelte';
 
-  import { subApps, legacySubApp, v3Content } from '$lib/registry';
+  import { subApps, legacySubApp, v3Content, agentEntry } from '$lib/registry';
   import { db } from '$lib/state/db';
   import { xp, initStores } from '$lib/state/stores';
   import { getSession } from '$lib/auth/session';
@@ -263,14 +263,15 @@
   </section>
 
   <section class="v3-section" aria-label={$t('hub.section.v3.aria', { default: 'Conteúdo V3 migrado' })}>
-    <h2 class="section-title">{$t('hub.section.v3', { default: 'V3 Content' })}</h2>
-    <p class="v3-desc">{$t('hub.v3.desc', { default: 'As 7 páginas do V3 agora são rotas SvelteKit nativas — sem iframe, navegação rápida, prontas para SEO e PWA.' })}</p>
-    <div class="v3-grid">
-      {#each v3Content as entry (entry.id)}
-        <HubCard app={legacySubApp} v3={entry} />
-      {/each}
-    </div>
-  </section>
+      <h2 class="section-title">{$t('hub.section.v3', { default: 'V3 Content' })}</h2>
+      <p class="v3-desc">{$t('hub.v3.desc', { default: 'As 7 páginas do V3 agora são rotas SvelteKit nativas — sem iframe, navegação rápida, prontas para SEO e PWA.' })}</p>
+      <div class="v3-grid">
+        <HubCard app={agentEntry as any} />
+        {#each v3Content as entry (entry.id)}
+          <HubCard app={legacySubApp} v3={entry} />
+        {/each}
+      </div>
+    </section>
 </div>
 
 <style>
