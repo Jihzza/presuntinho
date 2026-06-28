@@ -92,18 +92,18 @@
 
 <svelte:head>
   <title>{$t('routes.biblioteca.new.title', { default: 'Novo Marcador' })} · {$t('routes.biblioteca.title', { default: 'Biblioteca' })} · Presuntinho</title>
-  <meta name="description" content="Adicionar novo marcador" />
-  <meta property="og:title" content="Novo Marcador · Biblioteca" />
-  <meta property="og:description" content="Adicionar novo marcador" />
+  <meta name="description" content={$t('routes.biblioteca.new.metaDescription', { default: 'Adicionar novo marcador' })} />
+  <meta property="og:title" content={`${$t('routes.biblioteca.new.title', { default: 'Novo Marcador' })} · ${$t('routes.biblioteca.title', { default: 'Biblioteca' })}`} />
+  <meta property="og:description" content={$t('routes.biblioteca.new.metaDescription', { default: 'Adicionar novo marcador' })} />
   <meta property="og:url" content="https://presuntinho.netlify.app/biblioteca/novo/" />
-  <meta name="twitter:title" content="Novo Marcador · Biblioteca" />
-  <meta name="twitter:description" content="Adicionar novo marcador" />
+  <meta name="twitter:title" content={`${$t('routes.biblioteca.new.title', { default: 'Novo Marcador' })} · ${$t('routes.biblioteca.title', { default: 'Biblioteca' })}`} />
+  <meta name="twitter:description" content={$t('routes.biblioteca.new.metaDescription', { default: 'Adicionar novo marcador' })} />
 </svelte:head>
 
 <div class="novo">
   <header class="hero">
     <h1>➕ Novo marcador</h1>
-    <p class="sub">Guarda um link com título, descrição e tags.</p>
+    <p class="sub">{$t('biblioteca.novo.hero.sub', { default: 'Guarda um link com título, descrição e tags.' })}</p>
   </header>
 
   <nav class="crumbs" aria-label={$t('biblioteca.crumbs.aria', { default: 'Caminho de navegação' })}>
@@ -144,11 +144,11 @@
         autocomplete="off"
         inputmode="url"
       />
-      <span class="hint">Tem de começar por http:// ou https://.</span>
+      <span class="hint">{$t('biblioteca.novo.url.hint', { default: 'Tem de começar por http:// ou https://.' })}</span>
     </div>
 
     <div class="field">
-      <label for="bm-desc">Descrição</label>
+      <label for="bm-desc">{$t('biblioteca.novo.label.description', { default: 'Descrição' })}</label>
       <textarea
         id="bm-desc"
         bind:value={description}

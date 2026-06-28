@@ -253,7 +253,7 @@
       <h1>{$t('escola.curso.pt.loading', { default: '🇵🇹 A carregar curso…' })}</h1>
     {:else if loadError}
       <h1>🇵🇹 Curso de Português</h1>
-      <p class="sub">Conteúdo temporariamente indisponível.</p>
+      <p class="sub">{$t('escola.curso.pt.temporarilyUnavailable', { default: 'Conteúdo temporariamente indisponível.' })}</p>
     {:else if course}
       <span class="tag">🇵🇹 Curso</span>
       <h1>
@@ -341,7 +341,7 @@
           {:else if section.type === 'vowels'}
             {#if section.data?.tunisianNotes}
               <div class="callout info">
-                <strong>🇹🇳 Notas tunisianas:</strong>
+                <strong>{$t('escola.curso.pt.tunisianNotesLabel', { default: '🇹🇳 Notas tunisianas:' })}</strong>
                 {section.data.tunisianNotes}
               </div>
             {/if}
@@ -350,11 +350,11 @@
                 <table class="data-table">
                   <thead>
                     <tr>
-                      <th scope="col">Vogal</th>
-                      <th scope="col">IPA</th>
-                      <th scope="col">Truque</th>
-                      <th scope="col">AR</th>
-                      <th scope="col">FR</th>
+                      <th scope="col">{$t('escola.curso.pt.th.vowel', { default: 'Vogal' })}</th>
+                      <th scope="col">{$t('escola.curso.pt.th.ipa', { default: 'IPA' })}</th>
+                      <th scope="col">{$t('escola.curso.pt.th.trick', { default: 'Truque' })}</th>
+                      <th scope="col">{$t('escola.curso.pt.th.ar', { default: 'AR' })}</th>
+                      <th scope="col">{$t('escola.curso.pt.th.fr', { default: 'FR' })}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -382,10 +382,10 @@
                         <table class="data-table">
                           <thead>
                             <tr>
-                              <th scope="col">PT</th>
-                              <th scope="col">EN</th>
-                              <th scope="col">AR</th>
-                              <th scope="col">FR</th>
+                              <th scope="col">{$t('escola.curso.pt.th.vocab.pt', { default: 'PT' })}</th>
+                              <th scope="col">{$t('escola.curso.pt.th.vocab.en', { default: 'EN' })}</th>
+                              <th scope="col">{$t('escola.curso.pt.th.vocab.ar', { default: 'AR' })}</th>
+                              <th scope="col">{$t('escola.curso.pt.th.vocab.fr', { default: 'FR' })}</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -406,10 +406,10 @@
                         <table class="data-table">
                           <thead>
                             <tr>
-                              <th scope="col">PT</th>
-                              <th scope="col">EN</th>
-                              <th scope="col">AR</th>
-                              <th scope="col">FR</th>
+                              <th scope="col">{$t('escola.curso.pt.th.vocab.pt', { default: 'PT' })}</th>
+                              <th scope="col">{$t('escola.curso.pt.th.vocab.en', { default: 'EN' })}</th>
+                              <th scope="col">{$t('escola.curso.pt.th.vocab.ar', { default: 'AR' })}</th>
+                              <th scope="col">{$t('escola.curso.pt.th.vocab.fr', { default: 'FR' })}</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -540,7 +540,7 @@
     <section class="completion" aria-label="Conclusão do curso">
       <h2>🏁 Conclusão</h2>
       {#if isComplete}
-        <p class="completion-msg">✅ Curso concluído a {new Date(progress.completedAt ?? 0).toLocaleString('pt-PT')}.</p>
+        <p class="completion-msg">{$t('escola.curso.pt.completedAt', { values: { date: new Date(progress.completedAt ?? 0).toLocaleString('pt-PT') }, default: '✅ Curso concluído a {date}.' })}</p>
         <button
           type="button"
           class="mark-btn"

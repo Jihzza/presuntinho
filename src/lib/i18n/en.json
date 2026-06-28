@@ -599,5 +599,20 @@
   "walkthrough.backToCourse": "← Back to course",
   "escola.curso.pt.loadFailed": "Could not load the course.",
   "escola.curso.pt.loading": "🇵🇹 Loading course…",
-  "escola.curso.pt.loadingShort": "Loading…"
+  "escola.curso.pt.loadingShort": "Loading…",
+  "biblioteca.novo.hero.sub": "Save a link with title, description and tags.",
+  "biblioteca.novo.url.hint": "It must start with http:// or https://.",
+  "biblioteca.novo.label.description": "Description",
+  "biblioteca.item.loading": "Loading…",
+  "biblioteca.item.addedAt": "Added on {date}",
+  "biblioteca.item.label.url": "URL",
+  "escola.curso.pt.temporarilyUnavailable": "Content temporarily unavailable.",
+  "escola.curso.pt.tunisianNotesLabel": "🇹🇳 Tunisian notes:",
+  "escola.curso.pt.completedAt": "✅ Course completed on {date}.",
+  "escola.curso.pt.th.ar": "AR",
+  "escola.curso.pt.th.fr": "FR",
+  "escola.curso.pt.th.vocab.pt": "PT",
+  "escola.curso.pt.th.vocab.en": "EN",
+  "escola.curso.pt.th.vocab.ar": "AR",
+  "escola.curso.pt.th.vocab.fr": "FR"
 }

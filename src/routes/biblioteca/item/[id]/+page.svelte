@@ -152,7 +152,7 @@
   </nav>
 
   {#if loading}
-    <p class="empty">A carregar…</p>
+    <p class="empty">{$t('biblioteca.item.loading', { default: 'A carregar…' })}</p>
   {:else if error || !item}
     <p class="empty error" role="alert">
       ⚠️ {error ?? $t('biblioteca.item.notFound', { default: 'Marcador não encontrado.' })}
@@ -161,11 +161,11 @@
   {:else}
     <header class="hero">
       <h1>{item.title}</h1>
-      <p class="sub">Adicionado a {formatCreatedAt(item.createdAt)}</p>
+      <p class="sub">{$t('biblioteca.item.addedAt', { values: { date: formatCreatedAt(item.createdAt) }, default: 'Adicionado a {date}' })}</p>
     </header>
 
     <section class="url-block" aria-label="URL">
-      <span class="label">URL</span>
+      <span class="label">{$t('biblioteca.item.label.url', { default: 'URL' })}</span>
       <div class="url-row">
         <a
           class="url-link"
