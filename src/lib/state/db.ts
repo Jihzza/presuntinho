@@ -468,11 +468,41 @@ export const DEFAULT_CATEGORIAS: CategoriaRow[] = [
   { id: 'presentes',   nome: 'Presentes',   icone: '🎁', cor: '#d946ef', tipo: 'despesa' },
   { id: 'outros',      nome: 'Outros',      icone: '📦', cor: '#94a3b8', tipo: 'ambos'    },
   { id: 'salario',     nome: 'Salário',     icone: '💰', cor: '#10b981', tipo: 'receita'  }
-];
+  ];
 
-// ---------------------------------------------------------------------------
-// Bootstrap helper
-// ---------------------------------------------------------------------------
+  /**
+   * Phase 7 / Hábitos — default habits seeded on first run for Fatma.
+   *
+   * Eight sensible, non-overlapping daily habits chosen to give a new
+   * user a populated list the moment they open the Hábitos sub-app, so
+   * the streak/heatmap UI has something to render and the user can pick
+   * the ones they actually want (or delete the rest) instead of facing
+   * an empty state and not knowing what to type.
+   *
+   * The user can rename / recolour / delete any of these later — the
+   * `id` (auto-incremented by Dexie) is the only stable identifier and
+   * `createdAt` is the only field we set automatically, so there is no
+   * collision risk with future user-created habits.
+   *
+   * `cadence` is hard-coded to 'daily' for all eight.  The schema already
+   * allows 'weekly' / arbitrary strings, but the MVP UI only renders
+   * daily habits, so seeding anything else would create rows the user
+   * couldn't see or interact with.
+   */
+  export const DEFAULT_HABITOS: HabitoRow[] = [
+  { name: 'Beber água 2L',        icon: '💧', color: '#3b82f6', cadence: 'daily', createdAt: 0 },
+  { name: 'Dormir 8h',            icon: '😴', color: '#6366f1', cadence: 'daily', createdAt: 0 },
+  { name: 'Exercício 30min',      icon: '🏃', color: '#10b981', cadence: 'daily', createdAt: 0 },
+  { name: 'Meditar 10min',        icon: '🧘', color: '#8b5cf6', cadence: 'daily', createdAt: 0 },
+  { name: 'Estudar 1h',           icon: '📚', color: '#f59e0b', cadence: 'daily', createdAt: 0 },
+  { name: 'Ler 20min',            icon: '📖', color: '#ec4899', cadence: 'daily', createdAt: 0 },
+  { name: 'Sem açúcar',           icon: '🍎', color: '#22c55e', cadence: 'daily', createdAt: 0 },
+  { name: 'Caminhar 8000 passos', icon: '👟', color: '#f43f5e', cadence: 'daily', createdAt: 0 }
+  ];
+
+  // ---------------------------------------------------------------------------
+  // Bootstrap helper
+  // ---------------------------------------------------------------------------
 
 /**
  * Ensure the singleton rows (`state`, `settings`) and the default
@@ -514,5 +544,23 @@ export async function ensureDefaults(profile: ProfileId = activeProfile): Promis
   const existingCategoryCount = await d.categorias.count();
   if (existingCategoryCount === 0) {
     await d.categorias.bulkPut(DEFAULT_CATEGORIAS);
+  }
+  // Seed the eight default habits (Phase 7) only on a fresh DB —
+  // same idempotent pattern as `categorias` above.  We stamp
+  // `createdAt` here so the list comes out newest-first within the
+  // seed batch and any user-created habit added later naturally sorts
+  // after all eight seeds (because Dexie auto-assigns a higher id AND
+  // we use createdAt+1 ms increments between the seeds to make the
+  // ordering deterministic on first render).
+  const existingHabitCount = await d.habitos.count();
+  if (existingHabitCount === 0) {
+    const seeded = DEFAULT_HABITOS.map((h, i) => ({
+      ...h,
+      // createdAt: 0 would sort to the very back of the `orderBy('createdAt')`
+      // query and put all eight seeds at the bottom of the list.  Add a
+      // small per-index delta so the seed order is stable and predictable.
+      createdAt: now + i
+    }));
+    await d.habitos.bulkPut(seeded);
   }
 }
