@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T03:36:00+02:00",
+  "lastUpdated": "2026-06-28T02:39:28+01:00",
   "openItems": [
     {
       "id": "gap-008",
@@ -153,27 +153,33 @@
     },
     {
       "id": "gap-015",
-      "description": "Hub sub-app names + descriptions i18n: 60 novas keys (5 línguas × 12 keys) + HubCard.svelte resolve via $t('hub.app.<id>.name') com fallback registry",
-      "sha": "<pending>",
-      "closed_at": "2026-06-28T03:36:00+02:00"
+      "description": "Hub sub-app names + descriptions i18n: 60 novas keys (5 línguas × 12 keys)",
+      "sha": "68be912",
+      "closed_at": "2026-06-28T02:39:28+01:00"
     },
     {
       "id": "gap-012",
-      "description": "PWA icons completos — maskable 192+512 adicionados + manifest.webmanifest com 5 ícones (any + maskable)",
-      "sha": "<pending>",
-      "closed_at": "2026-06-28T03:36:00+02:00"
+      "description": "PWA icons completos (manifest + apple-touch-icon)",
+      "sha": "68be912",
+      "closed_at": "2026-06-28T02:39:28+01:00"
     },
     {
       "id": "feat-005",
-      "description": "3 novos cursos BA adicionados: etica-negocios (governanca-corporativa), macroeconomia (4 lições), marketing-estrategico (4 lições) — pre-existing uncommitted work",
-      "sha": "<pending>",
-      "closed_at": "2026-06-28T03:36:00+02:00"
+      "description": "3 cursos BA novos (etica-negocios, macroeconomia, marketing-estrategico) + 3 quizzes (enq, mceq, meq-est)",
+      "sha": "68be912",
+      "closed_at": "2026-06-28T02:39:28+01:00"
     },
     {
       "id": "fix-003",
-      "description": "transacoes +page.svelte: pre-existing svelte-check error (Cannot subscribe to stores in conditional aria-label) — fixed via {@const} bindings",
-      "sha": "<pending>",
-      "closed_at": "2026-06-28T03:36:00+02:00"
+      "description": "transacoes +page.svelte: ti() em escopo top-level → get(t)() resolve svelte-check",
+      "sha": "68be912",
+      "closed_at": "2026-06-28T02:39:28+01:00"
+    },
+    {
+      "id": "gap-019",
+      "description": "HeartButton FAB fixo bottom-right + XpPill global visível (resolve bug do XP não aparecer fora do /hub)",
+      "sha": "68be912",
+      "closed_at": "2026-06-28T02:39:28+01:00"
     }
   ]
 }
