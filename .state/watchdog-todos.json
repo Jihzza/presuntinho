@@ -1,18 +1,10 @@
 {
-  "lastUpdated": "2026-06-28T03:45:29+02:00",
+  "lastUpdated": "2026-06-28T08:55:00+02:00",
   "openItems": [
-    {
-      "id": "gap-008",
-      "category": "lição/curso",
-      "description": "Mais cursos BA — expandir cursos existentes com mais lições (já temos 8 cursos BA × 8 lições + 8 quizzes; auditoria pode adicionar cadeiras que faltam)",
-      "severity": "média",
-      "source": "audio-Daniel-2026-06-28",
-      "created_at": "2026-06-28T02:36:00+02:00"
-    },
     {
       "id": "gap-010",
       "category": "polish",
-      "description": "Mais cuídos: edge cases, UX, validações, mensagens de erro úteis (ex: empty stat dos Cards em /financas quando totais.receitas=0)",
+      "description": "Mais cuídos: edge cases, UX, validações, mensagens de erro úteis",
       "severity": "média",
       "source": "audio-Daniel-2026-06-28",
       "created_at": "2026-06-28T02:36:00+02:00"
@@ -42,20 +34,44 @@
       "created_at": "2026-06-28T02:36:00+02:00"
     },
     {
-      "id": "gap-020",
+      "id": "gap-023",
       "category": "i18n",
-      "description": "Strings PT residuais em case/dl/transacoes (modelo Equivalenza: 'CEO', 'EBITDA 2023', 'Fundada', etc.) + dl cards titles ainda em PT + transacoes mensagens de erro PT",
+      "description": "escola/curso/[slug] renderiza title/tagline/description via literais do CATALOGUE; passar a $t() com fallback (i18n keys já existem: routes.escola.curso.<slug>.{title,description})",
       "severity": "baixa",
-      "source": "watchdog-tick-2026-06-28-04",
-      "created_at": "2026-06-28T03:55:00+02:00"
+      "source": "watchdog-tick-2026-06-28-08",
+      "created_at": "2026-06-28T08:55:00+02:00"
     },
     {
-      "id": "gap-021",
-      "category": "ui-ux",
-      "description": "PageTitle em walkthrough (escola/walkthrough/[lessonSlug]): <title>{pageTitle} é derivado mas body 'Voltar para a escola' + breadcrumbs ainda PT",
+      "id": "gap-024",
+      "category": "conteudo-vazio",
+      "description": "/escola/walkthrough/[lessonSlug] ainda tem breadcrumbs PT e link 'Voltar para a escola' PT — patch-grep original do gap-021 mencionava esta rota",
       "severity": "baixa",
-      "source": "watchdog-tick-2026-06-28-04",
-      "created_at": "2026-06-28T03:55:00+02:00"
+      "source": "watchdog-tick-2026-06-28-08",
+      "created_at": "2026-06-28T08:55:00+02:00"
+    },
+    {
+      "id": "gap-025",
+      "category": "i18n",
+      "description": "escola/curso/portugues/+page.svelte tem 3 PT strings residuais ('Não foi possível carregar o curso.', aria-labels) — confirma se ficam PT por design",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-28-08",
+      "created_at": "2026-06-28T08:55:00+02:00"
+    },
+    {
+      "id": "gap-026",
+      "category": "i18n",
+      "description": "biblioteca/item/[id]/+page.svelte tem 'Marcador não encontrado.' hardcoded 2x — converter para $t()",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-28-08",
+      "created_at": "2026-06-28T08:55:00+02:00"
+    },
+    {
+      "id": "gap-027",
+      "category": "lição/curso",
+      "description": "Daniel: 'faz cursos sobretudo' / 'tudo a cadeiras da universidade' — adicionar 1-2 cadeiras finais como Comportamento do Consumidor, Pesquisa de Marketing, Sistemas de Informação",
+      "severity": "média",
+      "source": "audio-Daniel-2026-06-28",
+      "created_at": "2026-06-28T08:55:00+02:00"
     }
   ],
   "closedItems": [
@@ -175,21 +191,39 @@
     },
     {
       "id": "gap-016",
-      "description": "<title> elements in 16 routes (biblioteca/novo, case, course, dl, escola/caderno, escola/curso/portugues/quiz, financas, habitos, pt, secrets, trabalhos, walk, +error, +page titles) all use $t() with locale fallback. 25 new i18n keys × 5 locales = 125 entries added.",
+      "description": "<title> elements in 16 routes all use $t() with locale fallback. 25 new i18n keys × 5 locales = 125 entries added.",
       "sha": "pending-gap-016-017-tick",
       "closed_at": "2026-06-28T03:55:00+02:00"
     },
     {
       "id": "gap-017",
-      "description": "PT body strings patched to use $t(): biblioteca.new.{name,tags}.hint, case.{tagline,kpi.sales2015,kpi.storesPeak}, dl.sub, transacoes.sub, habitos.new.name.hint, escola.curso.plan.title. ~10 strings × 5 locales = 50 keys covered.",
+      "description": "PT body strings patched to use $t() in biblioteca/case/dl/transacoes/habitos/escola.curso.plan. ~10 strings × 5 locales = 50 keys covered.",
       "sha": "pending-gap-016-017-tick",
       "closed_at": "2026-06-28T03:55:00+02:00"
     },
     {
-      "id": "close-gap-018",
+      "id": "gap-018",
       "description": "Rota /aulas standalone: src/routes/aulas/+page.svelte + +page.server.ts agrega 13 cursos BA; link 🎓 no bottom-nav; i18n completo",
       "sha": "3f6f5aa",
       "closed_at": "2026-06-28T03:45:29+02:00"
+    },
+    {
+      "id": "gap-008",
+      "description": "Mais 3 cursos BA — Direito Empresarial, Gestão de Operações, Análise Financeira (4 lições + quiz cada). Total BA: 16 cursos, ~64 lições, 16 quizzes.",
+      "sha": "71c36a1",
+      "closed_at": "2026-06-28T08:55:00+02:00"
+    },
+    {
+      "id": "gap-020",
+      "description": "Strings PT residuais em case/dl: case OVERVIEW values (6 keys) + case FORCES titles/texts (6 keys) + dl howto+warning (4 keys) — total 16 keys × 5 locales = 80 entries i18n.",
+      "sha": "71c36a1",
+      "closed_at": "2026-06-28T08:55:00+02:00"
+    },
+    {
+      "id": "gap-021",
+      "description": "Walk audio section h2 + intro now $t() with fallback. 2 keys × 5 locales = 10 entries i18n. (Walkthrough route /escola/walkthrough/[lessonSlug] PT strings tracked separately as gap-024.)",
+      "sha": "71c36a1",
+      "closed_at": "2026-06-28T08:55:00+02:00"
     }
   ]
 }
