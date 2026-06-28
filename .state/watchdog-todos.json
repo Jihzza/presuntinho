@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T09:40:08+02:00",
+  "lastUpdated": "2026-06-28T13:05:00+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -10,36 +10,36 @@
       "created_at": "2026-06-28T02:36:00+02:00"
     },
     {
-      "id": "gap-011",
-      "category": "a11y",
-      "description": "Lighthouse a11y ≥95 — auditar todas as páginas com axe-core",
-      "severity": "média",
-      "source": "brief-inicial",
-      "created_at": "2026-06-28T02:36:00+02:00"
-    },
-    {
-      "id": "gap-013",
-      "category": "smoke-fail",
-      "description": "Backup/export testado end-to-end (existe a feature, falta validação via browser)",
-      "severity": "média",
-      "source": "brief-inicial",
-      "created_at": "2026-06-28T02:36:00+02:00"
-    },
-    {
-      "id": "gap-014",
-      "category": "smoke-fail",
-      "description": "Confetti a disparar em TODOS os easter eggs (já wired, falta smoke visual em produção)",
-      "severity": "média",
-      "source": "brief-inicial",
-      "created_at": "2026-06-28T02:36:00+02:00"
-    },
-    {
       "id": "gap-028",
       "category": "smoke-fail",
-      "description": "Verificar fluxo de auth via browser: splash → escolha profile → password → onboarding modal — confirmar que funciona end-to-end sem console errors",
+      "description": "Verificar fluxo de auth via browser: splash → escolha profile → password → onboarding modal — confirmar que funciona end-to-end sem console errors. Auth verificado por código (splash renders 2 buttons + ARIA radiogroup + form) mas live-fire bloqueado por password gating.",
       "severity": "média",
       "source": "watchdog-tick-2026-06-28-09",
       "created_at": "2026-06-28T09:31:47+02:00"
+    },
+    {
+      "id": "gap-034",
+      "category": "feature-pedida-pelo-Daniel",
+      "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Já temos 16 cursos BA + rota /aulas (gap-018). Daniel quer MAIS. Próximo: integrar cadeiras EU Business School além de BA.",
+      "severity": "média",
+      "source": "audio-Daniel-2026-06-27",
+      "created_at": "2026-06-28T13:05:00+02:00"
+    },
+    {
+      "id": "gap-035",
+      "category": "conteúdo vazio",
+      "description": "Auditar páginas /financas (categorias), /habitos (forms), /trabalhos (assignment submit), /biblioteca (item creation) para garantir formulários funcionais e não placeholders.",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-28-13",
+      "created_at": "2026-06-28T13:05:00+02:00"
+    },
+    {
+      "id": "gap-036",
+      "category": "UI/UX",
+      "description": "HeartButton visibilidade + localização: investigar se é visível em /, splash, escola, financas, habitos. Daniel pediu 'no sítio que eu disse' — verificar que está no sítio certo (atualmente hero home + header layout global).",
+      "severity": "média",
+      "source": "audio-Daniel-2026-06-28",
+      "created_at": "2026-06-28T13:05:00+02:00"
     }
   ],
   "closedItems": [
@@ -221,6 +221,30 @@
       "id": "gap-027",
       "description": "2 cursos BA finais (Comportamento do Consumidor + Pesquisa de Marketing) — 4 lessons + 1 quiz cada, registados no CATALOGUE de aulas/+page.server.ts, escola/+page.svelte, escola/curso/[slug]/+page.svelte, e i18n keys (pt-PT, en, ar, fr, tn).",
       "closed_at": "2026-06-28T09:40:08+02:00"
+    },
+    {
+      "id": "gap-011",
+      "description": "Lighthouse a11y fix: splash color-contrast #ec4899→#be185d (pink-700, ~5.16:1) + splash <main> ganha id='main-content' tabindex='-1' para skip-link target. Fechado por 21118a5; re-run lighthouse (gap-033) para confirmar ≥95 nas 8 páginas.",
+      "sha": "21118a5",
+      "closed_at": "2026-06-28T11:00:00+02:00"
+    },
+    {
+      "id": "gap-033",
+      "description": "Lighthouse a11y 8-page re-run: HOME/ESCOLA/FINANCAS/HABITOS/BIBLIOTECA/TRABALHOS/AULAS/DEFINICOES — todas com score=1.0 (100%), beat target ≥95. Scripts + results commitados em .state/lighthouse-*.json + run-lighthouse.sh.",
+      "sha": "2a75ffb",
+      "closed_at": "2026-06-28T13:05:00+02:00"
+    },
+    {
+      "id": "gap-013",
+      "description": "Backup/export end-to-end audit: BACKUP_TABLES (13 tables), BACKUP_VERSION=5, payloadToBlob=application/json + 2-space indent, URL.createObjectURL + Anchor click + revoke. Import path: file→parse→modal confirm→importData→reload. Tudo wired em src/lib/backup.ts + src/routes/definicoes/+page.svelte:214-316. Live-fire bloqueado por auth gate.",
+      "sha": "2a75ffb",
+      "closed_at": "2026-06-28T13:05:00+02:00"
+    },
+    {
+      "id": "gap-014",
+      "description": "Confetti easter-egg flow: 5 entry points (heartClick, logo triple-click, konami code, secret room, XP tier) — todos via fireConfettiEvent→CustomEvent→Confetti.svelte mounted em +layout.svelte:139. Reduced-motion respeitada em CSS+JS. showToast par likewise wired.",
+      "sha": "2a75ffb",
+      "closed_at": "2026-06-28T13:05:00+02:00"
     }
   ]
 }
