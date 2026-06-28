@@ -24,6 +24,7 @@
 //     the "Língua: pt-PT" setting in Phase 9's i18n.
 
 import { db } from './state/db';
+import { awardXP } from './state/xp-actions';
 import type { TransacaoRow, OrcamentoRow, CategoriaRow } from './state/db';
 
 // ---------------------------------------------------------------------------
@@ -124,12 +125,17 @@ export async function addTransacao(t: NovaTransacaoInput): Promise<number> {
     data: t.data,
     createdAt: Date.now()
   };
-  return await db().transacoes.add(row) as number;
+  const id = (await db().transacoes.add(row)) as number;
+  // M0-S2: award XP for the action (Daniel's P2)
+  await awardXP(t.tipo === 'receita' ? 'transacao_add_receita' : 'transacao_add_despesa');
+  return id;
 }
 
 /** Delete a single transaction by id.  No-op if the id doesn't exist. */
 export async function deleteTransacao(id: number): Promise<void> {
   await db().transacoes.delete(id);
+  // M0-S2: small XP penalty to discourage accidental deletes
+  await awardXP('transacao_delete');
 }
 
 // ---------------------------------------------------------------------------
@@ -225,6 +231,8 @@ export async function setOrcamento(
     limite: Number(limite),
     mes
   });
+  // M0-S2: award XP for setting a budget
+  await awardXP('orcamento_define');
 }
 
 /**
