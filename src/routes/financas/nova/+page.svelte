@@ -99,7 +99,7 @@
       return;
     }
     if (descricao.length > 120) {
-      error = 'Descrição demasiado longa (máx. 120 caracteres).';
+      error = $t('error.descricao_demasiado_longa_max', { default: 'Descrição demasiado longa (máx. 120 caracteres).' });
       return;
     }
 
@@ -142,7 +142,7 @@
     <p class="sub">Adiciona uma receita ou despesa.</p>
   </header>
 
-  <nav class="crumbs" aria-label="Caminho de navegação">
+  <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
     <a href="/">← Hub</a>
     <span aria-hidden="true">/</span>
     <a href="/financas/">{$t('financas.nova.breadcrumb.home', { default: '← Finanças' })}</a>
@@ -236,7 +236,7 @@
         type="text"
         bind:value={descricao}
         maxlength="120"
-        placeholder="Ex.: Almoço com a equipa"
+        placeholder="{$t('placeholder.ex_almoco_com_a_equipa', { default: 'Ex.: Almoço com a equipa' })}"
         autocomplete="off"
       />
       <span class="hint">{$t('financas.nova.opcional', { default: 'Opcional' })}. {$t('financas.nova.maxCaracteres', { default: 'Máx. 120 caracteres.' })}</span>

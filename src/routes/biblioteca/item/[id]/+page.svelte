@@ -211,7 +211,7 @@
       </section>
     {/if}
 
-    <section class="actions" aria-label="Ações">
+    <section class="actions" aria-label="{$t('a11y.aria.acoes', { default: 'Ações' })}">
       <a
         class="btn-secondary"
         href={`/biblioteca/editar/${item.id}/`}

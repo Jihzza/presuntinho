@@ -60,7 +60,7 @@
         ]);
         categorias = cats;
         if (!trans) {
-          error = 'Transação não encontrada.';
+          error = $t('error.transacao_nao_encontrada', { default: 'Transação não encontrada.' });
           return;
         }
         transacaoOriginal = trans;
@@ -105,7 +105,7 @@
         descricao,
         data
       });
-      showToast('Transação atualizada.');
+      showToast($t('toast.transacao_atualizada', { default: 'Transação atualizada.' }));
       await goto('/financas/transacoes');
     } catch (err) {
       error =
@@ -127,10 +127,10 @@
     submitting = true;
     try {
       await deleteTransacao(transacaoId);
-      showToast('Transação removida.');
+      showToast($t('toast.transacao_removida', { default: 'Transação removida.' }));
       await goto('/financas/transacoes');
     } catch {
-      error = 'Erro a remover a transação.';
+      error = $t('error.erro_a_remover_a_transacao', { default: 'Erro a remover a transação.' });
       submitting = false;
     }
   }
@@ -154,7 +154,7 @@
     <p class="error" role="alert">{error}</p>
   {:else if transacaoOriginal}
     <form onsubmit={handleSubmit} novalidate>
-      <fieldset class="tipo" aria-label="Tipo de transação">
+      <fieldset class="tipo" aria-label="{$t('a11y.aria.tipo_de_transacao', { default: 'Tipo de transação' })}">
         <legend>{$t('financas.transacoes.editar.tipo.legend', { default: 'Tipo' })}</legend>
                 <label class="radio">
                   <input type="radio" bind:group={tipo} value="despesa" name="tipo" />
@@ -223,7 +223,7 @@
           class="btn-danger"
           onclick={handleDelete}
           disabled={submitting}
-          aria-label="Eliminar transação"
+          aria-label="{$t('a11y.aria.eliminar_transacao', { default: 'Eliminar transação' })}"
         >
           {confirmarEliminar ? 'Confirmar?' : 'Eliminar'}
         </button>

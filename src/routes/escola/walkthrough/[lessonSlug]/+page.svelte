@@ -147,7 +147,7 @@
     </div>
   {:else}
     <!-- Breadcrumb -->
-    <nav class="crumbs" aria-label="Caminho de navegação">
+    <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
       <a href="/">{$t('walkthrough.breadcrumb.home', { default: '← Hub' })}</a>
       <span aria-hidden="true">/</span>
       <a href="/escola/">{$t('walkthrough.breadcrumb.escola', { default: 'Escola' })}</a>
@@ -190,7 +190,7 @@
     </section>
 
     <!-- Sticky mini-nav (desktop) -->
-    <aside class="mini-nav" aria-label="Saltar para secção">
+    <aside class="mini-nav" aria-label="{$t('a11y.aria.saltar_para_seccao', { default: 'Saltar para secção' })}">
       <h2>🗂 Saltar</h2>
       <ol>
         {#each lesson.sections as section, idx (idx)}

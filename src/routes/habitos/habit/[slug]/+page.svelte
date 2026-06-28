@@ -66,7 +66,7 @@
       const all = await listHabitos();
       habit = all.find((h) => h.id === id) ?? null;
       if (!habit) {
-        error = 'Hábito não encontrado.';
+        error = $t('error.habito_nao_encontrado', { default: 'Hábito não encontrado.' });
         return;
       }
       const [s, h] = await Promise.all([
@@ -106,7 +106,7 @@
     try {
       if (todayLogged) {
         await unlogHabit(habit.id, today);
-        showToast('Marcação removida');
+        showToast($t('toast.marcacao_removida', { default: 'Marcação removida' }));
       } else {
         await logHabit(habit.id, today);
         showToast('Marcado como feito ✅');
@@ -151,7 +151,7 @@
 </svelte:head>
 
 <div class="detail">
-  <nav class="crumbs" aria-label="Caminho de navegação">
+  <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
     <a href="/">← Hub</a>
     <span aria-hidden="true">/</span>
     <a href="/habitos/">{$t('habitos.habit.breadcrumb.home', { default: '← Hábitos' })}</a>
@@ -175,7 +175,7 @@
       </p>
     </header>
 
-    <section class="stats" aria-label="Estatísticas">
+    <section class="stats" aria-label="{$t('a11y.aria.estatisticas', { default: 'Estatísticas' })}">
       <div class="stat">
         <span class="stat-value" style="color: {habit.color}">{streak}</span>
         <span class="stat-label">Streak atual</span>

@@ -51,11 +51,11 @@
 
     const trimmed = name.trim();
     if (!trimmed) {
-      error = 'O nome é obrigatório.';
+      error = $t('error.o_nome_obrigatorio', { default: 'O nome é obrigatório.' });
       return;
     }
     if (trimmed.length > 60) {
-      error = 'Nome demasiado longo (máx. 60 caracteres).';
+      error = $t('error.nome_demasiado_longo_max_60', { default: 'Nome demasiado longo (máx. 60 caracteres).' });
       return;
     }
 
@@ -67,7 +67,7 @@
         color,
         cadence
       });
-      showToast('Hábito criado');
+      showToast($t('toast.habito_criado', { default: 'Hábito criado' }));
       goto(`/habitos/habit/${id}/`);
     } catch (e) {
       console.error('[habitos] addHabito failed', e);
@@ -103,7 +103,7 @@
     <p class="sub">Define um hábito diário para acompanhares com streaks.</p>
   </header>
 
-  <nav class="crumbs" aria-label="Caminho de navegação">
+  <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
     <a href="/">← Hub</a>
     <span aria-hidden="true">/</span>
     <a href="/habitos/">{$t('habitos.novo.breadcrumb.home', { default: '← Hábitos' })}</a>
@@ -137,7 +137,7 @@
           placeholder="✅"
           aria-describedby="icon-hint"
         />
-        <div class="suggestions" role="group" aria-label="Sugestões de ícones">
+        <div class="suggestions" role="group" aria-label="{$t('a11y.aria.sugestoes_de_icones', { default: 'Sugestões de ícones' })}">
           {#each iconSuggestions as s (s)}
             <button
               type="button"
@@ -153,7 +153,7 @@
 
     <div class="field">
       <label for="habit-color">{$t('habitos.novo.label.color', { default: 'Cor' })}</label>
-      <div class="palette" role="radiogroup" aria-label="Cor do hábito">
+      <div class="palette" role="radiogroup" aria-label="{$t('a11y.aria.cor_do_habito', { default: 'Cor do hábito' })}">
         {#each palette as c (c)}
           <button
             type="button"

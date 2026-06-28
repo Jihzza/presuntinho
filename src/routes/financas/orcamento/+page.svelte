@@ -103,7 +103,7 @@
     }
     const num = Number(trimmed.replace(',', '.'));
     if (!Number.isFinite(num) || num < 0) {
-      showToast('Limite inválido');
+      showToast($t('toast.limite_invalido', { default: 'Limite inválido' }));
       return;
     }
     orcamentosMes = { ...orcamentosMes, [categoriaId]: num };
@@ -161,7 +161,7 @@
     <p class="sub">Limites por categoria — <strong>{formatMes(mesFiltro)}</strong></p>
   </header>
 
-  <nav class="crumbs" aria-label="Caminho de navegação">
+  <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
     <a href="/">← Hub</a>
     <span aria-hidden="true">/</span>
     <a href="/financas/">{$t('financas.orcamento.breadcrumb.home', { default: '← Finanças' })}</a>
@@ -172,7 +172,7 @@
   <section class="controls" aria-label="Filtros">
     <label class="field">
       <span class="field-label">Mês</span>
-      <input type="month" bind:value={mesFiltro} aria-label="Mês do orçamento" />
+      <input type="month" bind:value={mesFiltro} aria-label="{$t('a11y.aria.mes_do_orcamento', { default: 'Mês do orçamento' })}" />
     </label>
   </section>
 
@@ -183,7 +183,7 @@
   {:else if categoriasDespesa.length === 0}
     <p class="empty">Sem categorias de despesa configuradas.</p>
   {:else}
-    <section class="summary" aria-label="Resumo do orçamento">
+    <section class="summary" aria-label="{$t('a11y.aria.resumo_do_orcamento', { default: 'Resumo do orçamento' })}">
       <div class="summary-row">
         <span class="summary-label">{$t('financas.orcamento.summary.total_limit', { default: 'Total limite' })}</span>
         <span class="summary-value">{formatValor(totalLimite)}</span>

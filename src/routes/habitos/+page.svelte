@@ -105,7 +105,7 @@
     <a class="btn-primary" href="/habitos/novo/">{$t('habitos.new', { default: '+ Novo hábito' })}</a>
   </section>
 
-  <section class="list" aria-label="Lista de hábitos">
+  <section class="list" aria-label="{$t('a11y.aria.lista_de_habitos', { default: 'Lista de hábitos' })}">
     {#if loading}
       <Skeleton variant="list" lines={4} label={$t('common.loading')} />
     {:else if error}

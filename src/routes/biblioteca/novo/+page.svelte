@@ -50,25 +50,25 @@
     const trimmedDesc = description.trim();
 
     if (!trimmedTitle) {
-      error = 'O título é obrigatório.';
+      error = $t('error.o_titulo_obrigatorio', { default: 'O título é obrigatório.' });
       return;
     }
     if (trimmedTitle.length > 120) {
-      error = 'Título demasiado longo (máx. 120 caracteres).';
+      error = $t('error.titulo_demasiado_longo_max_120', { default: 'Título demasiado longo (máx. 120 caracteres).' });
       return;
     }
     if (!isValidUrl(trimmedUrl)) {
-      error = 'O URL tem de começar por http:// ou https://.';
+      error = $t('error.o_url_tem_de_comecar_por_http', { default: 'O URL tem de começar por http:// ou https://.' });
       return;
     }
     if (trimmedDesc.length > 500) {
-      error = 'Descrição demasiado longa (máx. 500 caracteres).';
+      error = $t('error.descricao_demasiado_longa_max_500', { default: 'Descrição demasiado longa (máx. 500 caracteres).' });
       return;
     }
 
     const parsedTags = parseTagsInput(tagsInput);
     if (parsedTags.length > 10) {
-      error = 'Máximo de 10 tags por marcador.';
+      error = $t('error.maximo_de_10_tags_por_marcador', { default: 'Máximo de 10 tags por marcador.' });
       return;
     }
 

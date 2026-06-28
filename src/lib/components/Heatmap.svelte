@@ -27,6 +27,7 @@
 -->
 <script lang="ts">
   import { subDays } from 'date-fns';
+  import { t } from 'svelte-i18n';
   import type { HeatmapData } from '$lib/habitos';
 
   interface Props {
@@ -152,7 +153,7 @@
   }
 </script>
 
-<div class="heatmap-wrap" role="figure" aria-label="Mapa de calor dos últimos {days} dias">
+<div class="heatmap-wrap" role="figure" aria-label="{$t('a11y.aria.mapa_de_calor_dos_ultimos_dias', { default: 'Mapa de calor dos últimos {days} dias' })}">
   <svg
     class="heatmap"
     viewBox={`0 0 ${WIDTH} ${HEIGHT}`}

@@ -241,7 +241,7 @@
     <p class="sub">{$t('transacoes.sub', { default: 'Histórico de receitas e despesas.' })}</p>
   </header>
 
-  <nav class="crumbs" aria-label="Caminho de navegação">
+  <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
     <a href="/">← Hub</a>
     <span aria-hidden="true">/</span>
     <a href="/financas/">{$t('financas.transacoes.breadcrumb.home', { default: '← Finanças' })}</a>
@@ -249,7 +249,7 @@
     <span aria-current="page">{$t('financas.transacoes.breadcrumb.current', { default: 'Transações' })}</span>
   </nav>
 
-  <section class="actions" aria-label="Ações">
+  <section class="actions" aria-label="{$t('a11y.aria.acoes', { default: 'Ações' })}">
     <a class="btn-primary" href="/financas/nova/">+ Nova transação</a>
   </section>
 
@@ -260,7 +260,7 @@
         <input
           type="month"
           bind:value={mesFiltro}
-          aria-label="Filtrar por mês"
+          aria-label="{$t('a11y.aria.filtrar_por_mes', { default: 'Filtrar por mês' })}"
         />
       </label>
       <label class="field">
@@ -286,7 +286,7 @@
           type="search"
           bind:value={pesquisa}
           placeholder={$t('financas.transacoes.placeholder.pesquisa', { default: 'ex: almoço' })}
-          aria-label="Pesquisar na descrição"
+          aria-label="{$t('a11y.aria.pesquisar_na_descricao', { default: 'Pesquisar na descrição' })}"
         />
       </label>
     </div>
@@ -324,7 +324,7 @@
     </div>
   </section>
 
-  <section class="list" aria-label="Lista de transações">
+  <section class="list" aria-label="{$t('a11y.aria.lista_de_transacoes', { default: 'Lista de transações' })}">
     {#if loading}
       <Skeleton variant="list" lines={5} label={$t('common.loading')} />
     {:else if error}

@@ -479,7 +479,7 @@
       </p>
     </header>
 
-    <section class="lessons" aria-label="Lições do curso">
+    <section class="lessons" aria-label="{$t('a11y.aria.licoes_do_curso', { default: 'Lições do curso' })}">
       <h2 class="section-title">{$t('escola.curso.plan.title', { default: 'Plano de aulas' })}</h2>
       <ol class="lesson-list">
         {#each course.lessons as lesson, i (lesson.slug)}

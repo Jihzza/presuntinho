@@ -30,7 +30,7 @@
   $effect(() => {
     const slug = page.params.slug;
     if (!slug) {
-      error = 'Trabalho não especificado.';
+      error = $t('error.trabalho_nao_especificado', { default: 'Trabalho não especificado.' });
       loading = false;
       return;
     }
@@ -104,7 +104,7 @@
 </svelte:head>
 
 <div class="detail">
-  <nav class="crumbs" aria-label="Caminho de navegação">
+  <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
     <a href="/">← Hub</a>
     <span aria-hidden="true">/</span>
     <a href="/trabalhos/">{$t('trabalhos.assignment.breadcrumb.home', { default: '← Trabalhos' })}</a>
@@ -130,12 +130,12 @@
           <h1>{assignment.title}</h1>
           <span class="weight-pill" aria-label="Peso">Peso {assignment.weight}%</span>
         </div>
-        <span class="meta-pill" aria-label="Duração estimada">
+        <span class="meta-pill" aria-label="{$t('a11y.aria.duracao_estimada', { default: 'Duração estimada' })}">
           ⏱️ ~{assignment.estimatedMinutes} min
         </span>
       </header>
 
-      <section class="description-block" aria-label="Descrição do trabalho">
+      <section class="description-block" aria-label="{$t('a11y.aria.descricao_do_trabalho', { default: 'Descrição do trabalho' })}">
         <h2 class="block-title">O que fazer</h2>
         <p class="description">{descriptionText}</p>
       </section>

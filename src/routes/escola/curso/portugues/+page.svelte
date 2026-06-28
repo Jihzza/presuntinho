@@ -293,7 +293,7 @@
     </section>
 
     <!-- Section navigator -->
-    <nav class="section-nav" aria-label="Navegação por secção">
+    <nav class="section-nav" aria-label="{$t('a11y.aria.navegacao_por_seccao', { default: 'Navegação por secção' })}">
       <h2 class="section-title">🗂 Secções</h2>
       <ul>
         {#each course.sections as section, idx (sectionId(idx, section))}
@@ -435,7 +435,7 @@
                           {@const item = rawItem as any}
                           <div class="dialogue">
                             <h3>{item.title}</h3>
-                            <ul class="bubbles" aria-label="Diálogo">
+                            <ul class="bubbles" aria-label="{$t('a11y.aria.dialogo', { default: 'Diálogo' })}">
                               {#each (item.lines ?? []) as line, li (li)}
                                 <li class="bubble bubble-{line.speaker.toLowerCase()}">
                                   <span class="speaker" aria-hidden="true">{line.speaker}</span>
@@ -511,7 +511,7 @@
               <a
                 class="cta-btn quiz-cta"
                 href={`/escola/curso/portugues/quiz/`}
-                aria-label="Ir para o quiz de Português"
+                aria-label="{$t('a11y.aria.ir_para_o_quiz_de_portugues', { default: 'Ir para o quiz de Português' })}"
               >
                 🎯 Começar quiz · Ganhar badge Lusófono (b11)
               </a>
@@ -537,7 +537,7 @@
     </article>
 
     <!-- Course completion -->
-    <section class="completion" aria-label="Conclusão do curso">
+    <section class="completion" aria-label="{$t('a11y.aria.conclusao_do_curso', { default: 'Conclusão do curso' })}">
       <h2>🏁 Conclusão</h2>
       {#if isComplete}
         <p class="completion-msg">{$t('escola.curso.pt.completedAt', { values: { date: new Date(progress.completedAt ?? 0).toLocaleString('pt-PT') }, default: '✅ Curso concluído a {date}.' })}</p>
@@ -545,7 +545,7 @@
           type="button"
           class="mark-btn"
           onclick={unmarkCourseComplete}
-          aria-label="Reabrir curso (desmarcar como concluído)"
+          aria-label="{$t('a11y.aria.reabrir_curso_desmarcar_como', { default: 'Reabrir curso (desmarcar como concluído)' })}"
         >
           ↩ Reabrir curso
         </button>
@@ -561,7 +561,7 @@
           type="button"
           class="mark-btn primary"
           onclick={markCourseComplete}
-          aria-label="Marcar curso como concluído"
+          aria-label="{$t('a11y.aria.marcar_curso_como_concluido', { default: 'Marcar curso como concluído' })}"
         >
           🏆 Marcar curso como concluído
         </button>
