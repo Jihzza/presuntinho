@@ -1,0 +1,79 @@
+{
+  "id": "04-supply-chain-e-lean",
+  "title": "Supply Chain e Lean Management",
+  "courseSlug": "gestao-operacoes",
+  "lessonNumber": 4,
+  "description": "A cadeia de abastecimento de ponta a ponta: fornecedores, logística, inventário e os princípios do Lean para eliminar desperdício.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["supply chain", "lean", "inventário", "logística"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "A Supply Chain Management"
+    },
+    {
+      "type": "p",
+      "text": "A cadeia de abastecimento (Supply Chain, SC) vai do fornecedor do fornecedor até ao cliente do cliente. Inclui fornecedores, fabricantes, armazéns, transportadores, retalhistas e consumidores. O objectivo da SCM é sincronizar todos estes elos para entregar o produto certo, no lugar certo, no momento certo, ao menor custo total. Vista como sistema único (em vez de cada elo a optimizar localmente), a cadeia ganha muita eficiência."
+    },
+    {
+      "type": "h3",
+      "text": "Os 7 Rs do supply chain"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Right product (produto certo)",
+        "Right quantity (quantidade certa)",
+        "Right condition (condição certa)",
+        "Right place (lugar certo)",
+        "Right time (momento certo)",
+        "Right customer (cliente certo)",
+        "Right cost (custo certo)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Gestão de inventário"
+    },
+    {
+      "type": "p",
+      "text": "Inventário custa dinheiro — ocupa espaço, exige financiamento, deteriora-se. Mas sem inventário faltam produtos. A solução clássica é o modelo EOQ (Economic Order Quantity): equilíbrio entre custo de encomenda (fixo por ordem) e custo de armazenagem (proporcional ao stock médio). Para artigos com procura previsível, o EOQ é uma boa aproximação. Para artigos com procura volátil, usam-se modelos como o (s, S) — repor quando o stock cai abaixo de 's', até um nível máximo 'S'. A gestão moderna prefere VMI (Vendor Managed Inventory) ou CPFR (Collaborative Planning, Forecasting and Replenishment), onde fornecedor e cliente partilham dados e decisões."
+    },
+    {
+      "type": "h3",
+      "text": "Os sete desperdícios (muda) do Lean"
+    },
+    {
+      "type": "p",
+      "text": "O Lean Thinking, popularizado por Womack & Jones, identifica sete fontes de desperdício a eliminar: transporte (movimentações desnecessárias), inventário (stock a mais), movimento (pessoas a andar), espera (pessoas ou máquinas paradas), sobreprocessamento (passos que não acrescentam valor), sobreprodução (fabricar mais do que o necessário) e defeitos (retrabalho). Mais tarde acrescentou-se o oitavo: talento não utilizado (ideias dos colaboradores ignoradas). Combater o muda é a essência do Lean — não é uma ferramenta, é uma filosofia de gestão."
+    },
+    {
+      "type": "h3",
+      "text": "Lean e Agile: dois modelos, uma família"
+    },
+    {
+      "type": "p",
+      "text": "O Lean (Toyota) domina o mundo da produção física; o Agile domina o mundo do software (Scrum, Kanban). Ambos partilham princípios: foco no cliente, iteração curta, melhoria contínua, empowerment das equipas, eliminação de desperdício. Para uma empresa moderna, a pergunta não é 'Lean ou Agile?' — é 'como aplicar ambos consoante o contexto?'."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Dica para a Fatma: a próxima vez que vires uma fila num processo, pergunta 'isto é value-add (o cliente paga por isto) ou muda (desperdício)?'. Se for muda, elimina."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma empresa encomenda 1.000 unidades/ano a um fornecedor. Cada encomenda custa 50€ (setup) e cada unidade em stock custa 2€/ano para manter. Qual é o EOQ aproximado?",
+      "answer": "EOQ = raiz(2 × D × S / H) = raiz(2 × 1000 × 50 / 2) = raiz(50000) ≈ 224 unidades por encomenda. A empresa deve fazer cerca de 4-5 encomendas por ano em vez de uma grande."
+    }
+  ],
+  "keyPoints": [
+    "Supply Chain vai do fornecedor do fornecedor até ao cliente do cliente.",
+    "EOQ equilibra custo de encomenda e custo de armazenagem.",
+    "Lean identifica sete desperdícios: transporte, inventário, movimento, espera, sobreprocessamento, sobreprodução e defeitos.",
+    "Lean e Agile partilham foco no cliente e melhoria contínua."
+  ],
+  "quizSlug": "goq",
+  "nextLesson": null,
+  "prevLesson": "03-capacidade-e-planeamento"
+}

@@ -1,0 +1,76 @@
+{
+  "id": "02-qualidade-e-melhoria-continua",
+  "title": "Qualidade, Kaizen e Six Sigma",
+  "courseSlug": "gestao-operacoes",
+  "lessonNumber": 2,
+  "description": "Como definir, medir e melhorar a qualidade: dos gurus (Deming, Juran) às ferramentas práticas (PDCA, Six Sigma, Kaizen).",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["qualidade", "kaizen", "six sigma", "PDCA"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Qualidade: mais do que ausência de defeitos"
+    },
+    {
+      "type": "p",
+      "text": "A qualidade pode ser definida de várias formas: conformidade com especificações (Crosby), adequação ao uso (Juran), ou o conjunto de características que satisfazem necessidades (ISO 9001). Para o cliente, qualidade é o desvio entre o que esperava e o que recebeu — quanto menor esse desvio, maior a percepção de qualidade. Por isso, a gestão da qualidade começa por perceber o que o cliente valoriza (e não por definir padrões internos que ninguém lê)."
+    },
+    {
+      "type": "h3",
+      "text": "Os gurus da qualidade"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "W. Edwards Deming: 14 pontos para a gestão; ciclo PDCA (Plan-Do-Check-Act) como motor de melhoria contínua.",
+        "Joseph Juran: trilogia da qualidade — planeamento, controlo e melhoria.",
+        "Philip Crosby: 'qualidade é grátis'; zero defeitos como padrão cultural.",
+        "Genichi Taguchi: função de perda — a qualidade cai a partir do alvo, não só quando passa o limite."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "PDCA — o ciclo de melhoria"
+    },
+    {
+      "type": "p",
+      "text": "Plan: identifica o problema, analisa causas, propõe solução. Do: implementa em pequena escala. Check: mede os resultados e compara com o esperado. Act: padroniza o que funcionou, ou reinicia o ciclo se falhou. O PDCA é simples mas poderoso: transforma a melhoria de evento raro em rotina semanal. Empresas japonesas chamam a isto 'Kaizen' — melhoria contínua com pequenos passos diários, envolvendo todos os colaboradores."
+    },
+    {
+      "type": "h3",
+      "text": "Six Sigma"
+    },
+    {
+      "type": "p",
+      "text": "Six Sigma é uma metodologia disciplinada de melhoria, desenvolvida pela Motorola nos anos 80 e famosa pela aplicação na GE sob Jack Welch. O objectivo é reduzir defeitos a 3,4 por milhão de oportunidades (sigma 6). A estrutura segue o DMAIC (Define-Measure-Analyze-Improve-Control), uma variante do PDCA para projectos de melhoria com dados. É uma metodologia cara e pesada — exige formação estatística (Green Belt, Black Belt) — mas dá resultados consistentes em processos repetitivos."
+    },
+    {
+      "type": "h3",
+      "text": "Ferramentas práticas do dia-a-dia"
+    },
+    {
+      "type": "p",
+      "text": "Para além dos grandes frameworks, há ferramentas que qualquer gestor pode usar: diagrama de Pareto (80/20 — onde actuar primeiro), diagrama de causa-efeito (Ishikawa, 'espinha de peixe' — brainstorm de causas), histogramas (distribuição de frequências), gráficos de controlo (detectar quando um processo saiu do controlo estatístico), e 5 Whys (perguntar 'porquê?' cinco vezes para chegar à causa raiz)."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Dica para a Fatma: começa sempre com um problema bem definido e dados. Sem dados, 'qualidade' é opinião — e cada melhoria é só um palpite caro."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma linha de produção tem 5% de defeitos. Quantos defeitos por milhão de oportunidades isso representa?",
+      "answer": "5% = 50.000 defeitos por milhão. Para chegar ao nível Six Sigma (3,4 defeitos por milhão), seria necessário reduzir os defeitos em mais de 14.000 vezes."
+    }
+  ],
+  "keyPoints": [
+    "Qualidade pode ser conformidade, adequação ao uso ou satisfação de necessidades.",
+    "PDCA é o motor simples da melhoria contínua.",
+    "Six Sigma procura 3,4 defeitos por milhão com a metodologia DMAIC.",
+    "Ferramentas úteis: Pareto, Ishikawa, 5 Whys e gráficos de controlo."
+  ],
+  "quizSlug": "goq",
+  "nextLesson": "03-capacidade-e-planeamento",
+  "prevLesson": "01-conceitos-e-estrategia-operacional"
+}

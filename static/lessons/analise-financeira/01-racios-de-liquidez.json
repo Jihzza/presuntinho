@@ -1,0 +1,76 @@
+{
+  "id": "01-racios-de-liquidez",
+  "title": "Rácios de Liquidez e Solvência",
+  "courseSlug": "analise-financeira",
+  "lessonNumber": 1,
+  "description": "Os rácios que medem se a empresa consegue pagar as contas e sobreviver a curto e longo prazo.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["rácios", "liquidez", "solvência", "balanço"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que são rácios financeiros"
+    },
+    {
+      "type": "p",
+      "text": "Um rácio financeiro é uma razão entre dois valores das demonstrações financeiras. Sozinhos, números absolutos dizem pouco: uma empresa com 1 milhão de euros em caixa pode estar tranquila ou a dois passos da insolvência (se tiver 5 milhões de dívida de curto prazo). Os rácios colocam os números em proporção e permitem comparar a empresa com ela própria ao longo do tempo, com concorrentes e com benchmarks sectoriais. São a ferramenta mais usada em análise financeira — tão básica quanto essencial."
+    },
+    {
+      "type": "h3",
+      "text": "Rácios de liquidez — capacidade de pagar a curto prazo"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Liquidez geral = Ativo corrente / Passivo corrente. Mede se, em tese, os activos de curto prazo cobrem as dívidas de curto prazo. Valor saudável: ≥ 1,5. Acima de 2 pode indicar activos ociosos.",
+        "Liquidez reduzida = (Ativo corrente − Inventários) / Passivo corrente. Exclui inventários (menos líquidos) da análise. Valor saudável: ≥ 1.",
+        "Liquidez imediata = Caixa e equivalentes / Passivo corrente. O teste mais conservador: 'quanto do que devo nos próximos 12 meses posso pagar já em dinheiro?'. Valor saudável: ≥ 0,2–0,3."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Rácios de solvência — capacidade de pagar a longo prazo"
+    },
+    {
+      "type": "p",
+      "text": "Aqui o foco é a estrutura de capital: quanto a empresa deve versus quanto tem de capital próprio. Os rácios de endividamento são críticos porque excesso de dívida aumenta o risco financeiro (juros fixos têm de ser pagos mesmo em anos maus) e o risco de insolvência. Um banco, antes de conceder crédito, olha primeiro para estes rácios — não para a margem."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Endividamento total = Passivo total / Ativo total. Acima de 0,6 (60%) já é considerado elevado na maioria dos sectores.",
+        "Autonomia financeira = Capital próprio / Ativo total. O complemento do anterior. Ideal: ≥ 0,3.",
+        "Debt-to-equity (D/E) = Passivo total / Capital próprio. Setores industriais aceitam D/E até 2; sectores estáveis (utilities) toleram mais; startups de tecnologia menos.",
+        "Cobertura de juros = EBIT / Juros. Mede se o resultado operacional cobre os juros. Abaixo de 1,5 é zona de perigo."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Interpretação em contexto"
+    },
+    {
+      "type": "p",
+      "text": "Um rácio isolado vale pouco. Cada sector tem os seus benchmarks: uma cadeia de restaurantes pode ter liquidez geral de 0,8 e estar saudável (inventário gira rápido); uma construtora tem necessariamente elevado endividamento (obra em curso). Por isso, ao analisar rácios, pergunta sempre: 'comparado com quê?'. O ideal é ter séries históricas (5 anos) e pelo menos 3-5 concorrentes para triangular."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: lembra-te que rácios altos nem sempre são bons. Liquidez geral a 3 pode significar caixa parado a perder valor — dinheiro parado também é um problema."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma empresa tem Ativo Corrente = 800.000€, Inventário = 300.000€, Passivo Corrente = 500.000€. Qual é a Liquidez Reduzida?",
+      "answer": "Liquidez Reduzida = (800.000 − 300.000) / 500.000 = 500.000 / 500.000 = 1,0. Está no limite mínimo saudável — significa que, sem contar com inventário, a empresa cobre exactamente as dívidas de curto prazo."
+    }
+  ],
+  "keyPoints": [
+    "Rácios isolados valem pouco; comparar com histórico e sector.",
+    "Liquidez geral, reduzida e imediata medem capacidade de curto prazo.",
+    "Endividamento, D/E e cobertura de juros medem risco de longo prazo.",
+    "Estrutura de capital saudável: capital próprio ≥ 30% do activo."
+  ],
+  "quizSlug": "afq",
+  "nextLesson": "02-racios-de-rentabilidade",
+  "prevLesson": null
+}

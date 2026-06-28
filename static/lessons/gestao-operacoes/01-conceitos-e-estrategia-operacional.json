@@ -1,0 +1,77 @@
+{
+  "id": "01-conceitos-e-estrategia-operacional",
+  "title": "Conceitos e Estratégia de Operações",
+  "courseSlug": "gestao-operacoes",
+  "lessonNumber": 1,
+  "description": "O que é uma operação, como se classifica e como alinhar a estratégia operacional com a estratégia competitiva.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["operações", "produção", "estratégia"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é Gestão de Operações"
+    },
+    {
+      "type": "p",
+      "text": "Gestão de Operações (Operations Management, OM) é a área que se ocupa de desenhar, operar e melhorar os processos que transformam inputs — matérias-primas, trabalho, capital, informação — em outputs — produtos ou serviços. Não é apenas chão de fábrica: aplica-se a bancos (operações financeiras), hospitais (fluxo de pacientes), restaurantes (gestão de mesas) e software (DevOps). O ponto comum é sempre o mesmo: criar valor para o cliente de forma eficiente, repetível e melhorável."
+    },
+    {
+      "type": "h3",
+      "text": "Tipos de processos"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Projeto: único, não-repetitivo, longa duração (construção de uma ponte).",
+        "Job shop / oficina: pequenos lotes personalizados (tipografia, consultoria).",
+        "Lote: produção em séries (padaria, indústria de vestuário).",
+        "Linha de montagem (assembly line): alto volume, baixa variedade (automóvel).",
+        "Contínuo: produção 24/7 sem paragens (refinaria, electricidade)."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Classificação bens vs. serviços"
+    },
+    {
+      "type": "p",
+      "text": "Bens são tangíveis (um sapato, um carro), serviços são intangíveis (uma consulta, um seguro). A maioria das empresas vende uma mistura — é a chamada 'servitização': o fabricante passa a vender o uso, não a propriedade (rolls-Royce vende 'horas de voo' em vez de motores). Esta mudança tem implicações operacionais profundas: o foco passa do produto para a disponibilidade, da venda para o contrato de manutenção, do defeito para o uptime."
+    },
+    {
+      "type": "h2",
+      "text": "Prioridades competitivas (ordem de operações)"
+    },
+    {
+      "type": "p",
+      "text": "Terry Hill propôs a 'ordem de operações': primeiro a empresa deve entender as necessidades dos clientes (qualidade, rapidez, preço, flexibilidade); depois ganhar vantagem competitiva em algumas dessas dimensões; e só depois traduzir essa vantagem em prioridades operacionais concretas. Sem esta cadeia, as operações melhoram tudo — e nada relevante. A Dell, por exemplo, compete em customização e velocidade; uma gasolineira compete em localização e rapidez — não na personalização do combustível."
+    },
+    {
+      "type": "h3",
+      "text": "Duas visões da estratégia de operações"
+    },
+    {
+      "type": "p",
+      "text": "A visão top-down vê as operações como instrumento da estratégia de negócio (ex: 'ser o produtor de baixo custo'). A bottom-up começa pelo que as operações fazem bem e ajusta a estratégia — é menos comum mas útil quando uma competência operacional é tão forte que define a empresa (a Toyota fez isto durante décadas com o Sistema de Produção Toyota)."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: sempre que um processo é lento, caro ou errático, a pergunta certa não é 'como faço mais rápido?', mas sim 'qual é a prioridade competitiva que estamos a servir?'."
+    },
+    {
+      "type": "exercise",
+      "question": "Um restaurante quer ser conhecido pela rapidez do serviço. Que tipo de layout de cozinha minimiza o tempo desde o pedido até à entrega?",
+      "answer": "Layout por produto (assembly-line style), onde os postos de trabalho estão dispostos na sequência do prato — cada cozinheiro faz uma etapa. É o oposto do layout por função (carnes, legumes, peixe em zonas separadas), que exige mais movimento."
+    }
+  ],
+  "keyPoints": [
+    "Operações transformam inputs em outputs — aplica-se a bens, serviços e híbridos.",
+    "Processos podem ser classificados como projeto, job shop, lote, linha ou contínuo.",
+    "Prioridades competitivas definem onde a operação deve ser excelente.",
+    "Servitização desloca o foco do produto para o uso e disponibilidade."
+  ],
+  "quizSlug": "goq",
+  "nextLesson": "02-qualidade-e-melhoria-continua",
+  "prevLesson": null
+}

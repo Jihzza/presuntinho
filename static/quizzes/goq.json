@@ -1,0 +1,57 @@
+{
+  "id": "goq",
+  "title": "Quiz: Gestão de Operações",
+  "description": "Testa os fundamentos de gestão de operações, qualidade e supply chain.",
+  "questions": [
+    {
+      "q": "O Sistema de Produção Toyota (Lean) nasceu para combater o desperdício chamado:",
+      "opts": [
+        "Mura",
+        "Muri",
+        "Muda",
+        "Muri-muda"
+      ],
+      "a": 2
+    },
+    {
+      "q": "O ciclo PDCA de Deming tem como sequência:",
+      "opts": [
+        "Plan-Do-Check-Act",
+        "Define-Measure-Analyze-Control",
+        "Plan-Execute-Review-Adjust",
+        "Analyze-Design-Implement-Operate"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Numa fábrica com capacidade teórica de 1000 unid/dia e eficiência de 80%, a capacidade efectiva é:",
+      "opts": [
+        "200 unidades/dia",
+        "800 unidades/dia",
+        "1000 unidades/dia",
+        "1200 unidades/dia"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Six Sigma procura atingir o nível de:",
+      "opts": [
+        "3,4 defeitos por milhão de oportunidades",
+        "34 defeitos por milhão de oportunidades",
+        "6,8 defeitos por milhão de oportunidades",
+        "Zero defeitos absoluto"
+      ],
+      "a": 0
+    },
+    {
+      "q": "O EOQ (Economic Order Quantity) equilibra:",
+      "opts": [
+        "Custo de produção e preço de venda",
+        "Custo de encomenda e custo de armazenagem",
+        "Custo de transporte e custo de inventário",
+        "Custo de pessoal e custo de matérias-primas"
+      ],
+      "a": 1
+    }
+  ]
+}

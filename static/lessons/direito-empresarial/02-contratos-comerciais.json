@@ -1,0 +1,82 @@
+{
+  "id": "02-contratos-comerciais",
+  "title": "Contratos Comerciais e Obrigações",
+  "courseSlug": "direito-empresarial",
+  "lessonNumber": 2,
+  "description": "Os contratos que toda a empresa celebra: compra e venda, prestação de serviços, locação e cláusulas essenciais.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["contratos", "obrigações", "direito civil"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O contrato como lei entre as partes"
+    },
+    {
+      "type": "p",
+      "text": "O artigo 405.º do Código Civil é claro: 'O contrato é uma declaração de vontade, pela qual duas ou mais pessoas se obrigam a dar, fazer ou não fazer alguma coisa'. Mais à frente, o artigo 406.º acrescenta: 'O contrato legalmente celebrado tem força obrigatória entre as partes'. Ou seja, um contrato bem feito vale como lei privada — quem o viola tem de indemnizar. Por isso, saber redigir e ler contratos é uma competência central de qualquer gestor."
+    },
+    {
+      "type": "h3",
+      "text": "Requisitos de validade"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Capacidade: as partes têm de ter legitimidade para contratar (maiores de 18, não interditos).",
+        "Objecto: possível, lícito e determinado ou determinável.",
+        "Forma: em princípio livre, mas alguns contratos exigem forma escrita (venda de imóveis, sociedades).",
+        "Consenso: vontade livre e esclarecida, sem vícios (erro, dolo, coacção)."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Contratos comerciais mais comuns"
+    },
+    {
+      "type": "p",
+      "text": "Em contexto empresarial, há contratos que aparecem repetidamente: compra e venda (fornecimento de mercadorias ou matérias-primas), prestação de serviços (consultoria, manutenção, software), locação (escritório, equipamento), empreitada (construção de algo com resultado específico), distribuição e franchising (canais comerciais), e leasing e factoring (soluções financeiras). Cada um tem regras próprias no Código Civil e na legislação especial."
+    },
+    {
+      "type": "h3",
+      "text": "Cláusulas que tens de saber ler"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Cláusula penal: define à partida o valor da indemnização em caso de incumprimento (art. 810.º CC).",
+        "Cláusula de não-concorrência: impede o fornecedor de trabalhar com concorrentes durante X meses.",
+        "Cláusula de exclusividade: reserva para uma das partes o direito de actuar num território ou sector.",
+        "Cláusula de limitação de responsabilidade: limita o montante máximo que uma parte paga em caso de erro.",
+        "Cláusula de protecção de dados: essencial desde o RGPD (UE 2016/679)."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Incumprimento e resolução"
+    },
+    {
+      "type": "p",
+      "text": "Quando uma parte não cumpre, a outra pode exigir o cumprimento forçado, recorrer à indemnização, ou resolver o contrato (art. 801.º CC) — desde que o incumprimento seja suficientemente grave. A resolução tem efeitos retroactivos: cada parte devolve o que recebeu. Antes de resolver, é boa prática tentar uma negociação extrajudicial, com registo escrito (e-mail serve)."
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Atenção: contratos verbais são válidos em Portugal (salvo quando a lei exige forma escrita), mas são muito mais difíceis de provar em tribunal. Tudo o que for relevante — preço, prazo, qualidade — deve ficar por escrito."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma empresa entrega mercadoria com 30 dias de atraso e o contrato prevê uma cláusula penal de 500€ por semana de atraso. O cliente pode exigir os 500€ sem provar prejuízo?",
+      "answer": "Sim, em regra. A cláusula penal fixada no contrato é devida independentemente de prova de prejuízo, salvo se for manifestamente excessiva (art. 812.º CC)."
+    }
+  ],
+  "keyPoints": [
+    "Contrato válido tem força obrigatória entre as partes (art. 406.º CC).",
+    "Requisitos: capacidade, objecto lícito, forma (quando exigida), vontade livre.",
+    "Cláusulas importantes: penal, não-concorrência, exclusividade, limitação de responsabilidade.",
+    "Incumprimento grave permite resolução do contrato com efeitos retroactivos."
+  ],
+  "quizSlug": "deq",
+  "nextLesson": "03-propriedade-intelectual",
+  "prevLesson": "01-fontes-e-tipos-societarios"
+}

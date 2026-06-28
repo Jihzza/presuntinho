@@ -1,0 +1,71 @@
+{
+  "id": "03-capacidade-e-planeamento",
+  "title": "Capacidade, Layout e Planeamento",
+  "courseSlug": "gestao-operacoes",
+  "lessonNumber": 3,
+  "description": "Dimensionar capacidade, escolher layout, e planear a produção para responder à procura sem stock a mais nem a menos.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["capacidade", "layout", "planeamento", "MRP"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Planeamento de capacidade"
+    },
+    {
+      "type": "p",
+      "text": "Capacidade é o máximo que um processo consegue produzir em condições normais (não em pico, nem em modo de emergência). Mede-se em unidades relevantes: clientes por dia (restaurante), consultas por semana (clínica), unidades por turno (fábrica). O primeiro passo do planeamento é calcular a capacidade efectiva — capacidade teórica a multiplicar pela eficiência real (tipicamente 80-85% por paragens, manutenção, setups). Depois, comparar com a procura prevista: se a capacidade efectiva fica abaixo da procura, há três opções — aumentar capacidade, reduzir procura (preço, marketing), ou aceitar perda de serviço (filas, prazos maiores)."
+    },
+    {
+      "type": "h3",
+      "text": "Decisões de layout"
+    },
+    {
+      "type": "p",
+      "text": "Há quatro grandes tipos: por produto (linha de montagem — eficiente para grandes volumes), por processo ou função (departamentos agrupados por especialidade — flexível para baixa variedade), celular (mini-linhas agrupadas por família de produtos), e posição fixa (o produto não se move — construção naval, casas). A escolha depende do volume e da variedade: alta variedade e baixo volume pede layout por processo; alta variedade baixa pede linha; variedade média pede celular."
+    },
+    {
+      "type": "h2",
+      "text": "Planeamento da produção"
+    },
+    {
+      "type": "p",
+      "text": "O planeamento hierárquico vai do estratégico ao operacional: plano de produção agregado (famílias de produtos, horizonte 12-18 meses), plano-mestre de produção (PMP/MPS — produtos específicos, horizonte 2-3 meses), planeamento de necessidades de materiais (MRP — explode a BOM e calcula componentes, dependências e prazos), e por fim o agendamento detalhado (sequência de ordens, recursos e pessoas nas próximas horas/dias). ERP como SAP ou Primavera são as ferramentas que sustentam esta cascata."
+    },
+    {
+      "type": "h3",
+      "text": "Push vs. Pull"
+    },
+    {
+      "type": "p",
+      "text": "No sistema push (empurrar), a produção é desencadeada pela previsão de procura — útil para produtos de baixo custo de armazenagem e procura estável. No sistema pull (puxar), a produção é desencadeada pelo consumo real — minimiza stock mas exige processos ágeis. O exemplo clássico de pull é o kanban da Toyota: cada etapa só produz quando a etapa seguinte 'puxa' um contentor vazio. A combinação dos dois modelos (push na matéria-prima, pull no acabamento) é frequente."
+    },
+    {
+      "type": "h3",
+      "text": "Teoria das filas (filas de espera)"
+    },
+    {
+      "type": "p",
+      "text": "Quando a procura ultrapassa a capacidade, formam-se filas. A teoria das filas estuda o trade-off entre custo de espera do cliente (filas longas) e custo de ociosidade (mais capacidade). Para serviços (bancos, call centres), é fundamental: a fórmula M/M/1 dá o tempo médio de espera em função da taxa de chegada e de serviço. Regra prática: se a utilização do servidor ultrapassa 85-90%, as filas explodem — é altura de aumentar a capacidade."
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Erro clássico: equiparar 'capacidade instalada' com 'capacidade utilizada'. Uma fábrica com capacidade teórica de 1000 unidades/dia raramente produz mais de 750-800 — a diferença é manutenção, setups, avarias, e falta de pessoal."
+    },
+    {
+      "type": "exercise",
+      "question": "Um restaurante tem 30 lugares e o cliente médio fica 45 minutos. Qual a capacidade teórica em clientes/hora?",
+      "answer": "30 lugares × (60/45) = 30 × 1,33 = 40 clientes/hora. Aplicando uma eficiência de 80%, a capacidade efectiva fica em 32 clientes/hora."
+    }
+  ],
+  "keyPoints": [
+    "Capacidade efectiva é menor que a teórica por setups, manutenção e paragens.",
+    "Layouts: por produto, por processo, celular ou posição fixa.",
+    "Planeamento hierárquico: agregado → MPS → MRP → agendamento.",
+    "Push usa previsão; pull usa consumo real; kanban é o exemplo clássico."
+  ],
+  "quizSlug": "goq",
+  "nextLesson": "04-supply-chain-e-lean",
+  "prevLesson": "02-qualidade-e-melhoria-continua"
+}

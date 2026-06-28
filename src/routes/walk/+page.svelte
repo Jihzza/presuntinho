@@ -167,8 +167,8 @@
 
   <!-- Audio walkthroughs ------------------------------------------------ -->
   <section class="card" aria-labelledby="aud-h">
-    <h2 id="aud-h">🎧 Audio walkthroughs</h2>
-    <p class="aud-intro">Ouve enquanto revês. Voz em inglês, 3 faixas que cobrem as 5 secções.</p>
+    <h2 id="aud-h">{$t('walk.audio.section.h2', { default: '🎧 Audio walkthroughs' })}</h2>
+    <p class="aud-intro">{$t('walk.audio.intro', { default: 'Ouve enquanto revês. Voz em inglês, 3 faixas que cobrem as 5 secções.' })}</p>
 
     {#each AUDIOS as track, i (track.src)}
       <div class="audio-row">

@@ -1,0 +1,81 @@
+{
+  "id": "01-fontes-e-tipos-societarios",
+  "title": "Fontes de Direito e Tipos Societários",
+  "courseSlug": "direito-empresarial",
+  "lessonNumber": 1,
+  "description": "Onde se encontra o direito das empresas e que formas jurídicas pode uma sociedade assumir em Portugal.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["direito", "sociedades", "empresa"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Onde está o Direito Empresarial?"
+    },
+    {
+      "type": "p",
+      "text": "Direito Empresarial é o ramo que regula a actividade económica das empresas: a sua constituição, organização, contratos, responsabilidades e dissolução. Não vive num código único — vem de várias fontes que tens de saber hierarquizar: a Constituição da República Portuguesa garante a liberdade de empresa (art. 61.º); o Código Civil regula obrigações e contratos; o Código das Sociedades Comerciais (CSC, aprovado pelo DL 262/86) é o diploma central para a vida das sociedades; o Código Comercial (1888) mantém-se em vigor para matérias comerciais; e há ainda legislação especial para sectores regulados (banca, seguros, telecomunicações). A União Europeia acrescenta diretivas que Portugal transpõe — por exemplo, a Diretiva Societária sobre fusões e a Diretiva dos Direitos dos Accionistas."
+    },
+    {
+      "type": "h3",
+      "text": "Hierarquia das fontes"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Direito europeu (regulamentos e diretivas) tem primazia sobre a lei nacional.",
+        "Lei da Assembleia da República e decretos-lei do Governo.",
+        "Regulamentos administrativos e portarias.",
+        "Costume comercial e práticas contratuais (fontes subsidiárias)."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Empresário em nome individual vs. sociedade"
+    },
+    {
+      "type": "p",
+      "text": "Um empresário em nome individual (ENI) é uma pessoa singular que exerce uma actividade económica por conta própria. Responde ilimitadamente com todo o seu património pessoal — o que é um risco sério se o negócio correr mal. Por isso, quando o volume aumenta ou o risco cresce, a maioria dos empreendedores cria uma pessoa colectiva (sociedade) com personalidade jurídica própria, autónoma dos sócios."
+    },
+    {
+      "type": "h2",
+      "text": "Os principais tipos societários em Portugal"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Sociedade Unipessoal por Quotas: um sócio, capital mínimo 1€ (ou 2 sócios com 1€ cada), responsabilidade limitada ao capital social. Ideal para freelancers e pequenos negócios.",
+        "Sociedade por Quotas (Lda.): dois ou mais sócios, capital mínimo 1€ (regime geral) ou 5.000€ (regime clássico), responsabilidade limitada. É a forma mais comum em Portugal.",
+        "Sociedade Anónima (SA): mínimo cinco accionistas, capital mínimo 50.000€. Pode emitir acções e obrigações. Obrigatória para bancos, seguradoras e empresas cotadas.",
+        "Cooperativa: variável em número de sócios, foco no benefício dos membros e não no lucro. Regida pelo Código Cooperativo."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Sociedades civis vs. comerciais"
+    },
+    {
+      "type": "p",
+      "text": "A distinção clássica está no objecto: sociedades comerciais têm por objecto a prática de actos de comércio (compra para revenda, indústria, seguros, banca, transporte); sociedades civis têm objecto civil (agricultura, serviços profissionais liberais). Em termos práticos, quase todas as empresas adoptam hoje o tipo comercial pela maior previsibilidade e pela existência de tipos como Lda. e SA."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Lembra-te: a escolha do tipo societário condiciona a responsabilidade dos sócios, o capital mínimo, a fiscalidade e a facilidade de transmitir participações. Não é uma decisão técnica — é uma decisão de risco."
+    },
+    {
+      "type": "exercise",
+      "question": "Um consultor freelance quer abrir uma empresa em Portugal. Quer separar o património pessoal do profissional mas quer continuar sozinho. Que tipo societário deve escolher?",
+      "answer": "Sociedade Unipessoal por Quotas: permite um único sócio e limita a sua responsabilidade ao capital social."
+    }
+  ],
+  "keyPoints": [
+    "Direito Empresarial vem da Constituição, Código Civil, CSC e legislação especial europeia e nacional.",
+    "Empresário em nome individual responde ilimitadamente com o seu património pessoal.",
+    "Tipos societários mais comuns: Unipessoal por Quotas, Lda. e SA.",
+    "A escolha do tipo societário condiciona responsabilidade, capital e fiscalidade."
+  ],
+  "quizSlug": "deq",
+  "nextLesson": "02-contratos-comerciais",
+  "prevLesson": null
+}

@@ -164,18 +164,54 @@
       badge: 'Uni'
     },
     {
-      slug: 'etica-negocios',
-      title: 'Ética nos Negócios',
-      tagline: 'Business Administration · Governança, responsabilidade social, sustentabilidade e compliance',
-      description:
-        'Decisões empresariais têm consequências humanas, sociais e ambientais. Aprende frameworks de governança, ESG, sustentabilidade e compliance para líderes responsáveis.',
-      icon: '⚖️',
-      color: '#16a34a',
-      lessonCount: 4,
-      quizCount: 1,
-      badge: 'Uni'
-    }
-  ];
+          slug: 'etica-negocios',
+          title: 'Ética nos Negócios',
+          tagline: 'Business Administration · Governança, responsabilidade social, sustentabilidade e compliance',
+          description:
+            'Decisões empresariais têm consequências humanas, sociais e ambientais. Aprende frameworks de governança, ESG, sustentabilidade e compliance para líderes responsáveis.',
+          icon: '⚖️',
+          color: '#16a34a',
+          lessonCount: 4,
+          quizCount: 1,
+          badge: 'Uni'
+        },
+        {
+          slug: 'direito-empresarial',
+          title: 'Direito Empresarial',
+          tagline: 'Business Administration · Tipos societários, contratos, propriedade intelectual e arbitragem',
+          description:
+            'Fundamentos jurídicos da empresa em Portugal: tipos societários (Lda., SA, Unipessoal), contratos comerciais e cláusulas essenciais, marcas, patentes e resolução de litígios.',
+          icon: '⚖️',
+          color: '#7e22ce',
+          lessonCount: 4,
+          quizCount: 1,
+          badge: 'Uni'
+        },
+        {
+          slug: 'gestao-operacoes',
+          title: 'Gestão de Operações',
+          tagline: 'Business Administration · Processos, qualidade, capacidade e supply chain',
+          description:
+            'Como desenhar, operar e melhorar processos que transformam inputs em outputs: estratégia operacional, qualidade e Six Sigma, capacidade e layout, supply chain e Lean.',
+          icon: '🏭',
+          color: '#ea580c',
+          lessonCount: 4,
+          quizCount: 1,
+          badge: 'Uni'
+        },
+        {
+          slug: 'analise-financeira',
+          title: 'Análise Financeira',
+          tagline: 'Business Administration · Rácios, fluxos de caixa e valuation',
+          description:
+            'Como interpretar as demonstrações financeiras para avaliar desempenho e valor: rácios de liquidez, solvência e rentabilidade, free cash flow e métodos de valuation.',
+          icon: '📈',
+          color: '#0d9488',
+          lessonCount: 4,
+          quizCount: 1,
+          badge: 'Uni'
+        }
+      ];
 </script>
 
 <svelte:head>

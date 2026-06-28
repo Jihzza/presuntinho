@@ -238,20 +238,62 @@
       ]
     },
     'etica-negocios': {
-      slug: 'etica-negocios',
-      title: 'Ética nos Negócios',
-      tagline: 'Business Administration · Decisões responsáveis',
-      description: 'Governança, responsabilidade social, sustentabilidade e compliance.',
-      icon: '⚖️',
-      color: '#16a34a',
-      lessons: [
-        { slug: 'governanca-corporativa', title: '1. Governança Corporativa', summary: 'Conselho de administração, agência, transparência e accountability.', quizSlug: 'enq', quizTitle: 'Quiz: Ética nos Negócios', estMinutes: 8 },
-        { slug: 'responsabilidade-social', title: '2. Responsabilidade Social Empresarial (RSE)', summary: 'Caroll, pirâmide de Carroll e stakeholder theory.', quizSlug: 'enq', quizTitle: 'Quiz: Ética nos Negócios', estMinutes: 8 },
-        { slug: 'sustentabilidade', title: '3. Sustentabilidade e ESG', summary: 'Ambiental, social e governance — do greenwashing à estratégia.', quizSlug: 'enq', quizTitle: 'Quiz: Ética nos Negócios', estMinutes: 8 },
-        { slug: 'compliance', title: '4. Compliance e Programas de Integridade', summary: 'Políticas, controlos, canal de denúncias e cultura ética.', quizSlug: 'enq', quizTitle: 'Quiz: Ética nos Negócios', estMinutes: 9 }
-      ]
-    }
-  };
+          slug: 'etica-negocios',
+          title: 'Ética nos Negócios',
+          tagline: 'Business Administration · Decisões responsáveis',
+          description: 'Governança, responsabilidade social, sustentabilidade e compliance.',
+          icon: '⚖️',
+          color: '#16a34a',
+          lessons: [
+            { slug: 'governanca-corporativa', title: '1. Governança Corporativa', summary: 'Conselho de administração, agência, transparência e accountability.', quizSlug: 'enq', quizTitle: 'Quiz: Ética nos Negócios', estMinutes: 8 },
+            { slug: 'responsabilidade-social', title: '2. Responsabilidade Social Empresarial (RSE)', summary: 'Caroll, pirâmide de Carroll e stakeholder theory.', quizSlug: 'enq', quizTitle: 'Quiz: Ética nos Negócios', estMinutes: 8 },
+            { slug: 'sustentabilidade', title: '3. Sustentabilidade e ESG', summary: 'Ambiental, social e governance — do greenwashing à estratégia.', quizSlug: 'enq', quizTitle: 'Quiz: Ética nos Negócios', estMinutes: 8 },
+            { slug: 'compliance', title: '4. Compliance e Programas de Integridade', summary: 'Políticas, controlos, canal de denúncias e cultura ética.', quizSlug: 'enq', quizTitle: 'Quiz: Ética nos Negócios', estMinutes: 9 }
+          ]
+        },
+        'direito-empresarial': {
+          slug: 'direito-empresarial',
+          title: 'Direito Empresarial',
+          tagline: 'Business Administration · Direito das empresas',
+          description: 'Tipos societários, contratos comerciais, propriedade intelectual e arbitragem em Portugal.',
+          icon: '⚖️',
+          color: '#7e22ce',
+          lessons: [
+            { slug: '01-fontes-e-tipos-societarios', title: '1. Fontes de Direito e Tipos Societários', summary: 'Onde se encontra o direito das empresas e que formas jurídicas pode assumir.', quizSlug: 'deq', quizTitle: 'Quiz: Direito Empresarial', estMinutes: 8 },
+            { slug: '02-contratos-comerciais', title: '2. Contratos Comerciais e Obrigações', summary: 'Requisitos de validade, cláusulas essenciais e resolução por incumprimento.', quizSlug: 'deq', quizTitle: 'Quiz: Direito Empresarial', estMinutes: 8 },
+            { slug: '03-propriedade-intelectual', title: '3. Propriedade Intelectual e Marcas', summary: 'Marcas no INPI, patentes, direitos de autor e concorrência desleal.', quizSlug: 'deq', quizTitle: 'Quiz: Direito Empresarial', estMinutes: 8 },
+            { slug: '04-litigios-e-arbitragem', title: '4. Resolução de Litígios e Arbitragem', summary: 'Tribunais, mediação, arbitragem e cláusula compromissória.', quizSlug: 'deq', quizTitle: 'Quiz: Direito Empresarial', estMinutes: 9 }
+          ]
+        },
+        'gestao-operacoes': {
+          slug: 'gestao-operacoes',
+          title: 'Gestão de Operações',
+          tagline: 'Business Administration · Processos e supply chain',
+          description: 'Estratégia operacional, qualidade, capacidade e supply chain.',
+          icon: '🏭',
+          color: '#ea580c',
+          lessons: [
+            { slug: '01-conceitos-e-estrategia-operacional', title: '1. Conceitos e Estratégia de Operações', summary: 'Tipos de processos, prioridades competitivas e servitização.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 8 },
+            { slug: '02-qualidade-e-melhoria-continua', title: '2. Qualidade, Kaizen e Six Sigma', summary: 'Deming, PDCA, DMAIC e ferramentas de melhoria contínua.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 8 },
+            { slug: '03-capacidade-e-planeamento', title: '3. Capacidade, Layout e Planeamento', summary: 'Capacidade efectiva, layouts, MPS/MRP e push vs. pull.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 8 },
+            { slug: '04-supply-chain-e-lean', title: '4. Supply Chain e Lean Management', summary: 'Os sete desperdícios, EOQ e integração Lean/Agile.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 }
+          ]
+        },
+        'analise-financeira': {
+          slug: 'analise-financeira',
+          title: 'Análise Financeira',
+          tagline: 'Business Administration · Interpretar demonstrações financeiras',
+          description: 'Rácios, fluxos de caixa e valuation — como ler as contas de uma empresa.',
+          icon: '📈',
+          color: '#0d9488',
+          lessons: [
+            { slug: '01-racios-de-liquidez', title: '1. Rácios de Liquidez e Solvência', summary: 'Liquidez geral, reduzida, imediata e estrutura de capital.', quizSlug: 'afq', quizTitle: 'Quiz: Análise Financeira', estMinutes: 8 },
+            { slug: '02-racios-de-rentabilidade', title: '2. Rácios de Rentabilidade e Eficiência', summary: 'Margens, ROE, ROA e a decomposição DuPont.', quizSlug: 'afq', quizTitle: 'Quiz: Análise Financeira', estMinutes: 8 },
+            { slug: '03-analise-de-fluxos-caixa', title: '3. Análise de Fluxos de Caixa e FCF', summary: 'Demonstração de fluxos, Free Cash Flow, EBITDA e conversão.', quizSlug: 'afq', quizTitle: 'Quiz: Análise Financeira', estMinutes: 8 },
+            { slug: '04-valuation-dcf-e-multiplos', title: '4. Valuation: DCF e Múltiplos', summary: 'Discounted Cash Flow, WACC, PER e margem de segurança.', quizSlug: 'afq', quizTitle: 'Quiz: Análise Financeira', estMinutes: 9 }
+          ]
+        }
+      };
 
   let courseSlug = $derived(page.params.slug ?? '');
   let course = $derived<CourseDetail | undefined>(CATALOGUE[courseSlug]);

@@ -3,6 +3,9 @@
   // 4 download cards + a how-to-use card + a warning card.
 
   import { t } from 'svelte-i18n';
+  // The DOWNLOADS data is already fully i18n-keyed (titleKey/descKey/extra[*].labelKey).
+  // Hardcoded "Módulo 6" tag and page h1 "📥 Download Center" remain by design —
+  // they are page-chrome labels that match every locale identically.
 
   interface Download {
     icon: string;
@@ -126,19 +129,15 @@
 
   <!-- How to use -->
   <article class="card info">
-    <h2>💡 Como usar o assignment</h2>
-    <p><strong>NÃO submetas exatamente como está.</strong> O objetivo é leres, perceberes a análise, e reescreveres na tua voz. Muda os exemplos, reordena parágrafos, acrescenta a tua perspetiva.</p>
-    <p>Isto garante: (1) o texto soa a ti, (2) passa o Turnitin, (3) consegues defender cada ponto oralmente.</p>
+    <h2>{$t('dl.howto.h2', { default: '💡 Como usar o assignment' })}</h2>
+    <p>{$t('dl.howto.p1', { default: '<strong>NÃO submetas exatamente como está.</strong> O objetivo é leres, perceberes a análise, e reescreveres na tua voz. Muda os exemplos, reordena parágrafos, acrescenta a tua perspetiva.' })}</p>
+    <p>{$t('dl.howto.p2', { default: 'Isto garante: (1) o texto soa a ti, (2) passa o Turnitin, (3) consegues defender cada ponto oralmente.' })}</p>
   </article>
 
   <!-- Warning -->
   <article class="card warning">
-    <h2>⚠️ Lembrete importante</h2>
-    <p>
-      Q3 (Marketing Problem), Q4 (TOWS) e Q5 (Recommendation) <strong>não podem usar IA diretamente</strong>.
-      Estas secções têm de ser inteiramente tuas. Usa este material para perceberes a metodologia e depois
-      escreve sozinho/a.
-    </p>
+    <h2>{$t('dl.warning.h2', { default: '⚠️ Lembrete importante' })}</h2>
+    <p>{$t('dl.warning.p', { default: 'Q3 (Marketing Problem), Q4 (TOWS) e Q5 (Recommendation) <strong>não podem usar IA diretamente</strong>. Estas secções têm de ser inteiramente tuas. Usa este material para perceberes a metodologia e depois escreve sozinho/a.' })}</p>
   </article>
 
   <p class="footer-note" aria-hidden="true">🐷 Presuntinho — Built with ❤️ for Fatma</p>

@@ -4,29 +4,35 @@
 
   import { t } from 'svelte-i18n';
 
-  // Overview table data (V3 lines 95-102)
-    const OVERVIEW: Array<{ labelKey: string; value: string }> = [
-      { labelKey: 'case.overview.empresa',   value: 'Equivalenza S.L.' },
-      { labelKey: 'case.overview.fundada',   value: 'Barcelona, Espanha, 2011' },
-      { labelKey: 'case.overview.categoria', value: 'Fragrâncias affordable / dupe retail' },
-      { labelKey: 'case.overview.modelo',    value: 'Rede de franchising + e-commerce' },
-      { labelKey: 'case.overview.ceo',       value: 'Juan Franco (nomeado em 2023)' },
-      { labelKey: 'case.overview.ebitda',    value: '€2M → Objetivo €8M' }
+  // Overview table data (V3 lines 95-102). Values resolve via $t() with PT fallback.
+    const OVERVIEW: Array<{ labelKey: string; valueKey: string }> = [
+      { labelKey: 'case.overview.empresa',   valueKey: 'case.overview.empresa.value' },
+      { labelKey: 'case.overview.fundada',   valueKey: 'case.overview.fundada.value' },
+      { labelKey: 'case.overview.categoria', valueKey: 'case.overview.categoria.value' },
+      { labelKey: 'case.overview.modelo',    valueKey: 'case.overview.modelo.value' },
+      { labelKey: 'case.overview.ceo',       valueKey: 'case.overview.ceo.value' },
+      { labelKey: 'case.overview.ebitda',    valueKey: 'case.overview.ebitda.value' }
     ];
 
-  // Three Forces (V3 lines 124-130)
+  // Three Forces (V3 lines 124-130). Each title/text resolves via $t() with PT fallback.
   const FORCES = [
     {
-      title: '1. Colapso do segmento dupe',
-      text: 'O segmento espanhol de dupes caiu de 37% para 13% dos consumidores entre 2018 e 2023 — uma queda de 65% no mercado core da Equivalenza.'
+      titleKey: 'case.forces.1.title',
+      titleDefault: '1. Colapso do segmento dupe',
+      textKey: 'case.forces.1.text',
+      textDefault: 'O segmento espanhol de dupes caiu de 37% para 13% dos consumidores entre 2018 e 2023 — uma queda de 65% no mercado core da Equivalenza.'
     },
     {
-      title: '2. Efeito sanduíche',
-      text: 'Marcas premium a descontarem por cima (mais acessíveis). Zara e Mercadona a melhorar por baixo (mais aspiracionais). Equivalenza espremida no meio.'
+      titleKey: 'case.forces.2.title',
+      titleDefault: '2. Efeito sanduíche',
+      textKey: 'case.forces.2.text',
+      textDefault: 'Marcas premium a descontarem por cima (mais acessíveis). Zara e Mercadona a melhorar por baixo (mais aspiracionais). Equivalenza espremida no meio.'
     },
     {
-      title: '3. Competidores digitais nativos',
-      text: 'Divain, Dossier, Adopt — operam sem custos físicos e investem mais em marketing por cada euro de receita.'
+      titleKey: 'case.forces.3.title',
+      titleDefault: '3. Competidores digitais nativos',
+      textKey: 'case.forces.3.text',
+      textDefault: 'Divain, Dossier, Adopt — operam sem custos físicos e investem mais em marketing por cada euro de receita.'
     }
   ];
 
@@ -82,7 +88,7 @@
         {#each OVERVIEW as row (row.labelKey)}
                   <tr>
                     <th scope="row">{$t(row.labelKey, { default: row.labelKey })}</th>
-                    <td>{row.value}</td>
+                    <td>{$t(row.valueKey, { default: row.valueKey })}</td>
                   </tr>
                 {/each}
       </tbody>
@@ -111,9 +117,9 @@
   <!-- Three Forces ----------------------------------------------------- -->
   <section class="card" aria-labelledby="forces-h">
     <h2 id="forces-h">{$t('case.h2.forces', { default: '🎯 As três forças' })}</h2>
-    {#each FORCES as f (f.title)}
-      <h3>{f.title}</h3>
-      <p>{f.text}</p>
+    {#each FORCES as f (f.titleKey)}
+      <h3>{$t(f.titleKey, { default: f.titleDefault })}</h3>
+      <p>{$t(f.textKey, { default: f.textDefault })}</p>
     {/each}
   </section>
 

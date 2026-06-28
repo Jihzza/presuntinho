@@ -1,0 +1,75 @@
+{
+  "id": "03-propriedade-intelectual",
+  "title": "Propriedade Intelectual e Marcas",
+  "courseSlug": "direito-empresarial",
+  "lessonNumber": 3,
+  "description": "Como proteger o que a tua empresa cria: marcas, patentes, direitos de autor e segredos de negócio.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["PI", "marcas", "patentes", "copyright"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Porque é que a PI importa"
+    },
+    {
+      "type": "p",
+      "text": "Propriedade Intelectual (PI) é o conjunto de direitos que protegem as criações do intelecto humano. Para uma empresa, é tão importante como proteger uma loja física: o nome, o logótipo, o produto, o software, o processo industrial — tudo isso pode (e deve) ser protegido. Sem protecção, qualquer concorrente pode copiar e o investimento em inovação perde-se."
+    },
+    {
+      "type": "h3",
+      "text": "Os três grandes ramos"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Propriedade Industrial: marcas, patentes, desenhos ou modelos, logótipos. Regista-se no INPI (Instituto Nacional da Propriedade Industrial).",
+        "Direitos de Autor (copyright): protege obras literárias, artísticas, software, fotografia, música. Nasce com a criação — não precisa de registo, mas convém guardar prova da data (ex: registo notarial, e-mail datado).",
+        "Segredos de negócio: informação confidencial que dá vantagem competitiva (receitas, listas de clientes, algoritmos). Protegida enquanto for mantida secreta e houver esforço razoável para a guardar."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Marcas em Portugal"
+    },
+    {
+      "type": "p",
+      "text": "Uma marca é um sinal que distingue os produtos ou serviços de uma empresa dos concorrentes. Pode ser nominativa (palavra), figurativa (imagem), mista (combinação) ou até sonora. O registo no INPI dá direito de uso exclusivo por 10 anos, renováveis. Para registar, a marca não pode ser idêntica ou confundível com uma já registada para a mesma classe de Nice (sistema internacional que classifica produtos e serviços em 45 classes). Convém fazer uma pesquisa antes de avançar — e, em mercados internacionais, usar o sistema de Madrid (registo internacional via OMPI)."
+    },
+    {
+      "type": "h3",
+      "text": "Patentes e propriedade industrial"
+    },
+    {
+      "type": "p",
+      "text": "Uma patente protege uma invenção nova, que envolva actividade inventiva e seja susceptível de aplicação industrial. Em Portugal, vigora durante 20 anos a contar da data de depósito, mediante pagamento de anuidades. Os desenhos ou modelos (design) têm protecção mais curta (5 anos, renováveis até 25 anos). Para o software, em Portugal e na maior parte da UE, o código é protegido por direitos de autor — não há patenteabilidade do código em si, mas o algoritmo pode ser protegido se resolver um problema técnico de forma nova."
+    },
+    {
+      "type": "h2",
+      "text": "Concorrência desleal"
+    },
+    {
+      "type": "p",
+      "text": "Mesmo sem registo, a Lei da Concorrência Desleal (DL 57/2008) protege contra actos que distorçam a concorrência de forma contrária às regras da boa-fé: imitação servil, aproveitamento de prestígio alheio, publicidade enganosa, denegrição, violação de segredos de negócio. Em contexto internacional, a Convenção de Paris (1883) e o Acordo TRIPS da OMC garantem protecção mínima em quase todos os países."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: regista a tua marca antes de lançar o site. Custa pouco, evita dissabores, e transforma-te em proprietária exclusiva do nome durante 10 anos."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma empresa cria um logótipo e usa-o durante dois anos sem registar. Uma concorrente regista o mesmo nome como marca no INPI. Quem tem prioridade?",
+      "answer": "Quem registou primeiro. Em Portugal e na UE, o direito sobre a marca nasce com o registo — a mera utilização anterior não dá protecção contra o registo de terceiros."
+    }
+  ],
+  "keyPoints": [
+    "PI abrange propriedade industrial, direitos de autor e segredos de negócio.",
+    "Marca registada no INPI dá direito exclusivo por 10 anos, renováveis.",
+    "Patente protege invenções novas por 20 anos; direitos de autor nascem com a criação.",
+    "Concorrência desleal protege contra imitação e aproveitamento de prestígio alheio."
+  ],
+  "quizSlug": "deq",
+  "nextLesson": "04-litigios-e-arbitragem",
+  "prevLesson": "02-contratos-comerciais"
+}

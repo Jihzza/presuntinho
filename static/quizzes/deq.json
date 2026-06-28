@@ -1,0 +1,57 @@
+{
+  "id": "deq",
+  "title": "Quiz: Direito Empresarial",
+  "description": "Testa os fundamentos de direito empresarial português.",
+  "questions": [
+    {
+      "q": "Qual é o diploma central que regula a vida das sociedades comerciais em Portugal?",
+      "opts": [
+        "Código Civil",
+        "Código Comercial",
+        "Código das Sociedades Comerciais (DL 262/86)",
+        "Código do Trabalho"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Numa sociedade por quotas (Lda.) os sócios respondem:",
+      "opts": [
+        "Ilimitadamente com todo o património pessoal",
+        "Limitada e subsidiariamente ao capital social",
+        "Limitada e directamente ao capital social",
+        "Solidariamente entre si"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Uma cláusula penal fixada num contrato é devida:",
+      "opts": [
+        "Só com prova efectiva de prejuízo",
+        "Só se houver dolo",
+        "Em regra, mesmo sem prova de prejuízo, salvo se for excessiva",
+        "Apenas após decisão judicial"
+      ],
+      "a": 2
+    },
+    {
+      "q": "O registo de marca no INPI dá direito exclusivo por:",
+      "opts": [
+        "5 anos, renováveis",
+        "10 anos, renováveis",
+        "20 anos, não renováveis",
+        "25 anos, renováveis"
+      ],
+      "a": 1
+    },
+    {
+      "q": "A arbitragem institucional tem como principal vantagem sobre os tribunais estaduais:",
+      "opts": [
+        "É sempre gratuita",
+        "É confidencial e mais rápida, com árbitros especializados",
+        "Não precisa de contrato",
+        "Tem força executiva apenas em Portugal"
+      ],
+      "a": 1
+    }
+  ]
+}

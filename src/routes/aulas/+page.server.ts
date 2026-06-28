@@ -69,8 +69,11 @@ const COURSE_META: Record<string, CourseMeta> = {
   'comportamento-organizacional': { slug: 'comportamento-organizacional', title: 'Comportamento Organizacional', icon: '🧠', color: '#0891b2' },
   macroeconomia: { slug: 'macroeconomia', title: 'Macroeconomia', icon: '🌍', color: '#0ea5e9' },
   'marketing-estrategico': { slug: 'marketing-estrategico', title: 'Marketing Estratégico', icon: '🎯', color: '#e11d48' },
-  'etica-negocios': { slug: 'etica-negocios', title: 'Ética nos Negócios', icon: '⚖️', color: '#16a34a' }
-};
+    'etica-negocios': { slug: 'etica-negocios', title: 'Ética nos Negócios', icon: '⚖️', color: '#16a34a' },
+    'direito-empresarial': { slug: 'direito-empresarial', title: 'Direito Empresarial', icon: '⚖️', color: '#7e22ce' },
+    'gestao-operacoes': { slug: 'gestao-operacoes', title: 'Gestão de Operações', icon: '🏭', color: '#ea580c' },
+    'analise-financeira': { slug: 'analise-financeira', title: 'Análise Financeira', icon: '📈', color: '#0d9488' }
+  };
 
 /** Turn "blue-ocean-strategy" → "Blue Ocean Strategy". */
 function humanise(slug: string): string {

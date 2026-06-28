@@ -1,0 +1,57 @@
+{
+  "id": "afq",
+  "title": "Quiz: Análise Financeira",
+  "description": "Testa rácios financeiros, fluxos de caixa e valuation.",
+  "questions": [
+    {
+      "q": "A Liquidez Geral mede:",
+      "opts": [
+        "Caixa disponível / dívida de curto prazo",
+        "Ativo corrente / Passivo corrente",
+        "Capital próprio / Ativo total",
+        "Resultado líquido / Vendas"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O ROE = Margem líquida × Rotação × Alavancagem é a decomposição de:",
+      "opts": [
+        "Gordon-Shapiro",
+        "DuPont",
+        "CAPM",
+        "WACC"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Free Cash Flow (FCF) é:",
+      "opts": [
+        "Lucro líquido + amortizações",
+        "EBITDA − impostos",
+        "Fluxo de Caixa Operacional − Capex",
+        "Resultado líquido − dividendos"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Numa perpetuidade com FCF = 1M€, g = 2%, WACC = 7%, o valor terminal é:",
+      "opts": [
+        "20M€",
+        "14,3M€",
+        "12,5M€",
+        "25M€"
+      ],
+      "a": 0
+    },
+    {
+      "q": "O PER (Price-to-Earnings Ratio) é um múltiplo de:",
+      "opts": [
+        "Valor contabilístico",
+        "Vendas",
+        "Lucro",
+        "EBITDA"
+      ],
+      "a": 2
+    }
+  ]
+}

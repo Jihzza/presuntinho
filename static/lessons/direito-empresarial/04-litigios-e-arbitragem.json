@@ -1,0 +1,77 @@
+{
+  "id": "04-litigios-e-arbitragem",
+  "title": "Resolução de Litígios e Arbitragem",
+  "courseSlug": "direito-empresarial",
+  "lessonNumber": 4,
+    "description": "Tribunais, arbitragem, mediação e os mecanismos alternativos para resolver conflitos empresariais.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["litígios", "arbitragem", "mediação", "tribunal"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Litigar em Portugal: como funciona"
+    },
+    {
+      "type": "p",
+      "text": "Em Portugal, a estrutura judiciária cível tem como base os tribunais de comarca (1.ª instância), tribunais da Relação (2.ª instância) e o Supremo Tribunal de Justiça (revisão de direito). Para empresas, existem tribunais especializados — os juízos de comércio, existentes nas maiores comarcas, julgam acções de valor superior a 50.000€ que envolvam matérias comerciais e societárias. Tudo é formal: as peças processuais seguem a forma legal, há prazos estritos (regra geral, 10 dias para contestar) e a língua é o português."
+    },
+    {
+      "type": "h3",
+      "text": "Custos e duração"
+    },
+    {
+      "type": "p",
+      "text": "Litigar em Portugal não é caro comparado com outros países, mas é lento: um processo de comércio pode demorar 18 a 36 meses até sentença. Os custos incluem taxa de justiça (proporcional ao valor da acção), honorários de advogado (livres mas regulados por tabela), e custas com peritos e testemunhas. Em acções até 5.000€ há um regime simplificado; acima de 50.000€ é obrigatória constituição de advogado."
+    },
+    {
+      "type": "h2",
+      "text": "Mecanismos alternativos de resolução de litígios"
+    },
+    {
+      "type": "p",
+      "text": "Justamente porque os tribunais são lentos, três mecanismos ganharam peso em contexto empresarial: a mediação (um terceiro neutro facilita a negociação mas não impõe decisão), a conciliação (similar mas mais directiva) e a arbitragem (um ou mais árbitros decidem o litígio, com força de sentença). A arbitragem pode ser institucional (ex: Centro de Arbitragem Comercial da Câmara de Comércio e Indústria Portuguesa) ou ad hoc (definida pelas próprias partes)."
+    },
+    {
+      "type": "h3",
+      "text": "Vantagens da arbitragem"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Confidencialidade: ao contrário dos tribunais, a arbitragem não é pública.",
+        "Rapidez: um processo arbitral pode resolver-se em 6 a 12 meses.",
+        "Especialização: as partes podem escolher árbitros com conhecimento técnico (ex: construção, telecomunicações).",
+        "Neutralidade: útil em litígios internacionais, evitando o foro de uma das partes.",
+        "Exequibilidade internacional: a Convenção de Nova Iorque (1958) garante reconhecimento de sentenças arbitrais em 170 países."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Quando incluir cláusula arbitral"
+    },
+    {
+      "type": "p",
+      "text": "Em contratos B2B de valor significativo (acima de 50.000€) ou em sectores técnicos, é prática corrente incluir uma cláusula compromissória: 'Quaisquer litígios emergentes deste contrato serão resolvidos por tribunal arbitral, com sede em Lisboa, por três árbitros nomeados de acordo com o regulamento do Centro de Arbitragem da CCIP'. Esta cláusula evita a discussão sobre o foro competente e força as partes a um caminho mais previsível."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Dica para a Fatma: lê sempre a cláusula de resolução de litígios antes de assinar. Em contratos internacionais, escolhe sempre um mecanismo que reconheças no teu país — caso contrário, uma sentença em tribunal estrangeiro pode não ser executada em Portugal."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma empresa portuguesa e uma empresa brasileira celebram um contrato de 200.000€ sem cláusula de resolução de litígios e surgem desentendimentos. Onde podem litigar?",
+      "answer": "Podem intentar acção no tribunal da comarca da parte demandada, ou no tribunal do lugar de cumprimento da obrigação. Sem cláusula prévia, cada parte pode escolher propor acção no seu próprio país — e a sentença final terá de ser reconhecida no outro país via cooperação judiciária internacional."
+    }
+  ],
+  "keyPoints": [
+    "Tribunais de comarca julgam acções cíveis e comerciais; juízos de comércio para matérias societárias.",
+    "Mecanismos alternativos: mediação, conciliação e arbitragem.",
+    "Arbitragem é confidencial, rápida, especializada e executável internacionalmente.",
+    "Cláusula compromissória fixa à partida o foro arbitral, evitando litígio sobre jurisdição."
+  ],
+  "quizSlug": "deq",
+  "nextLesson": null,
+  "prevLesson": "03-propriedade-intelectual"
+}

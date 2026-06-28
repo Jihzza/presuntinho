@@ -1,0 +1,72 @@
+{
+  "id": "04-valuation-dcf-e-multiplos",
+  "title": "Valuation: DCF e Múltiplos",
+  "courseSlug": "analise-financeira",
+  "lessonNumber": 4,
+  "description": "Como estimar o valor intrínseco de uma empresa: discounted cash flow, múltiplos de mercado e a arte de cruzar métodos.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["valuation", "DCF", "WACC", "múltiplos"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é Valuation?"
+    },
+    {
+      "type": "p",
+      "text": "Valuation é o processo de estimar quanto vale uma empresa. É simultaneamente ciência (tem modelos quantitativos) e arte (envolve hipóteses sobre o futuro). O valor de uma empresa é, em última análise, o valor presente dos cash flows que ela vai gerar no futuro. Dois grandes métodos: discounted cash flow (DCF) — intrínseco, baseado em projecções; evaluation por múltiplos — relativo, baseado em comparação com o mercado."
+    },
+    {
+      "type": "h2",
+      "text": "Discounted Cash Flow (DCF)"
+    },
+    {
+      "type": "p",
+      "text": "O método DCF começa por projectar os fluxos de caixa livres (FCF) para os próximos 5-10 anos, depois calcula um valor terminal (perpétuo crescimento) e desconta tudo para o presente a uma taxa adequada (o WACC — Weighted Average Cost of Capital). A fórmula é: Valor da empresa = Σ FCF_t / (1+WACC)^t + Valor Terminal / (1+WACC)^n. Para calcular o valor por acção, divide-se pelo número de acções. O DCF é poderoso mas muito sensível às hipóteses: alterar a taxa de crescimento de 3% para 4% pode mudar o valor em 20-30%."
+    },
+    {
+      "type": "h3",
+      "text": "WACC: a taxa de desconto"
+    },
+    {
+      "type": "p",
+      "text": "O WACC representa o custo médio ponderado do capital: WACC = (E/V) × Ke + (D/V) × Kd × (1−t), onde Ke é o custo do capital próprio (frequentemente estimado via CAPM: Ke = Rf + β × (Rm − Rf)), Kd é o custo da dívida, t a taxa de imposto, E o valor de mercado do capital próprio e D o valor de mercado da dívida. WACC típico para empresas europeias maduras: 7-10%. Para startups, 12-18% (maior risco)."
+    },
+    {
+      "type": "h2",
+      "text": "Múltiplos de mercado"
+    },
+    {
+      "type": "p",
+      "text": "Mais usados do que DCF na prática, especialmente em M&A e private equity. Os mais frequentes: PER (Preço / Lucro) — rápido mas volátil; EV/EBITDA — útil para comparar empresas com estruturas de capital distintas; EV/Vendas — para empresas em crescimento ainda sem lucro; P/B (Preço / Valor contabilístico) — para bancos. Cada sector tem os seus múltiplos típicos: tecnologia pode negociar a EV/Vendas de 6-10x, banca a PER de 8-12x, utilities a PER de 12-16x."
+    },
+    {
+      "type": "h3",
+      "text": "Cruzar métodos e margem de segurança"
+    },
+    {
+      "type": "p",
+      "text": "O valuation mais robusto cruza DCF com múltiplos: se uma empresa vale, pelo DCF, entre 80M€ e 120M€, e o múltiplo de EBITDA do sector diz que deveria valer 90M€, há convergência — o intervalo razoável é 90-110M€. Benjamin Graham e Warren Buffett sempre defenderam uma margem de segurança: comprar empresas a 30-50% abaixo do valor intrínseco estimado, para absorver o erro das hipóteses. Nenhum modelo é perfeito — todos podem falhar. A margem de segurança é a defesa do investidor."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Dica para a Fatma: ao avaliar uma empresa para investimento (ou para vender a tua), faz sempre pelo menos dois métodos. Se DCF e múltiplos convergem, a confiança sobe; se divergem muito, convém re-examinar as hipóteses."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma empresa gera FCF de 1.000.000€/ano, cresce 3% ao ano em perpetuidade, e o WACC é 8%. Qual é o valor presente (fórmula de Gordon-Shapiro)?",
+      "answer": "Valor terminal (ano 1) = FCF × (1+g) / (WACC − g) = 1.000.000 × 1,03 / (0,08 − 0,03) = 1.030.000 / 0,05 = 20.600.000€. Como é uma perpetuidade que já começa no ano 1, o valor presente da empresa é aproximadamente 20,6M€."
+    }
+  ],
+  "keyPoints": [
+    "Valuation é arte e ciência: envolve hipóteses sobre o futuro.",
+    "DCF = valor presente dos FCFs futuros descontados ao WACC.",
+    "WACC combina custo do capital próprio (Ke via CAPM) e custo da dívida após imposto.",
+    "Múltiplos (PER, EV/EBITDA, EV/Vendas) são comparativos sectoriais; cruzar sempre com DCF.",
+    "Margem de segurança de 30-50% protege contra erro das hipóteses."
+  ],
+  "quizSlug": "afq",
+  "nextLesson": null,
+  "prevLesson": "03-analise-de-fluxos-caixa"
+}

@@ -1,0 +1,71 @@
+{
+  "id": "02-racios-de-rentabilidade",
+  "title": "Rácios de Rentabilidade e Eficiência",
+  "courseSlug": "analise-financeira",
+  "lessonNumber": 2,
+  "description": "Como medir quanto a empresa ganha com cada euro vendido, investido ou aplicado — margem, ROE, ROA e rotação de activos.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["rentabilidade", "ROE", "ROA", "margem"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Margens: quanto sobra por cada euro de vendas"
+    },
+    {
+      "type": "p",
+      "text": "As margens olham só para a Demonstração de Resultados: quanto fica em cada etapa depois de subtrair os custos. São o ponto de partida para perceber se o negócio é lucrativo — antes de questionar a estrutura de capital ou a eficiência operacional. A margem bruta mede a margem sobre o produto em si (antes de custos fixos), a margem operacional mede depois de todos os custos operacionais, e a margem líquida é o que sobra depois de juros e impostos."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Margem bruta = (Vendas − CMVMC) / Vendas. Retalho de moda saudável: 50–65%; restauração: 60–70%; distribuição: 5–10%.",
+        "Margem operacional (EBIT margin) = EBIT / Vendas. Retalho: 4–8%; tecnologia: 20–35%; banca: 25–40%.",
+        "Margem líquida = Resultado líquido / Vendas. Última fatia — depende muito do sector."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "ROA, ROE e o DuPont"
+    },
+    {
+      "type": "p",
+      "text": "Os rácios mais usados para medir a eficiência global são o ROA (Return on Assets) e o ROE (Return on Equity). O ROA mede o retorno sobre o activo total — quanto cada euro investido em activos gera de lucro operacional. O ROE mede o retorno sobre o capital próprio — quanto cada euro dos sócios gera de lucro líquido. O ROE é o número que os investidores privados mais olham: 'quanto rende o meu dinheiro nesta empresa?'. Em média, exigir ROE ≥ 15% é uma regra saudável para empresas maduras."
+    },
+    {
+      "type": "h3",
+      "text": "Decomposição DuPont"
+    },
+    {
+      "type": "p",
+      "text": "A análise DuPont parte o ROE em três factores: ROE = Margem líquida × Rotação do activo × Alavancagem financeira. Esta decomposição é poderosa porque mostra de onde vem o retorno: empresas com margem alta e rotação baixa (luxo) versus margem baixa e rotação alta (distribuição). Permite também detectar empresas que 'fabricam' ROE por excesso de endividamento — o que aparenta eficiência é na verdade alavancagem arriscada. Se Margem cai e Alavancagem sobe, há um sinal de alerta."
+    },
+    {
+      "type": "h3",
+      "text": "Eficiência operacional: rotação dos activos"
+    },
+    {
+      "type": "p",
+      "text": "A rotação mede quantas vezes os activos 'giram' por ano: Rotação do activo = Vendas / Ativo total. Uma loja de retalho pode ter rotação 2,5 (os activos — loja, stock — geram 2,5x o seu valor em vendas/ano); uma empresa de software tem rotação 0,5 (activos altos, vendas também, mas mais lentos). Comparar a rotação com o sector diz-te se a empresa está a explorar bem os seus recursos — ou se tem activos parados (fábrica ociosa, excesso de inventário)."
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "ROE alto e alavancagem alta andam frequentemente juntos. Antes de investir numa empresa pelo ROE, confirma se o retorno vem de eficiência real ou de endividamento excessivo."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma empresa tem margem líquida de 5%, rotação do activo de 1,5 e activos financiados com 60% de capital próprio (alavancagem = Ativo / Capital próprio = 1/0,6 = 1,67). Qual é o ROE?",
+      "answer": "ROE = 5% × 1,5 × 1,67 = 12,5%. Um ROE de 12,5% é razoável para uma empresa com esta estrutura — mas note-se que 2/3 do retorno vem da rotação e alavancagem, não da margem."
+    }
+  ],
+  "keyPoints": [
+    "Margens (bruta, operacional, líquida) olham só para a Demonstração de Resultados.",
+    "ROA mede retorno sobre activos; ROE mede retorno sobre capital próprio.",
+    "DuPont decompõe ROE em margem × rotação × alavancagem.",
+    "ROE alto + alavancagem alta = alerta; eficiência real vem da margem e rotação."
+  ],
+  "quizSlug": "afq",
+  "nextLesson": "03-analise-de-fluxos-caixa",
+  "prevLesson": "01-racios-de-liquidez"
+}

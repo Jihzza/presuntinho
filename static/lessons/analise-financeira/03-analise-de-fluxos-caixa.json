@@ -1,0 +1,71 @@
+{
+  "id": "03-analise-de-fluxos-caixa",
+  "title": "Análise de Fluxos de Caixa e Free Cash Flow",
+  "courseSlug": "analise-financeira",
+  "lessonNumber": 3,
+  "description": "Caixa é rei: como ler a demonstração de fluxos, calcular o free cash flow e detectar problemas escondidos nos resultados.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["FCF", "cash flow", "EBITDA", "demonstração"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Lucro não é caixa"
+    },
+    {
+      "type": "p",
+      "text": "Uma empresa pode ter lucro crescente e caixa a sangrar — basta crescer em inventário e prazos a clientes. Por isso, a Demonstração de Fluxos de Caixa (DFC) é tão importante como a Demonstração de Resultados. A DFC divide os movimentos de caixa em três actividades: operacionais (o dia-a-dia do negócio), de investimento (compra de activos, M&A) e de financiamento (empréstimos, dividendos, recompra de acções). Empresas sólidas geram caixa operacional positivo sustentável — é o sinal mais importante de saúde financeira."
+    },
+    {
+      "type": "h3",
+      "text": "Free Cash Flow — o caixa que sobra"
+    },
+    {
+      "type": "p",
+      "text": "Free Cash Flow (FCF) é o caixa que a empresa gera depois de pagar os investimentos necessários para manter ou expandir a operação. A fórmula mais comum: FCF = Fluxo de Caixa Operacional − Capex (investimento em activos fixos). O FCF é o dinheiro disponível para pagar dívida, recompensar accionistas via dividendos ou buybacks, ou fazer aquisições. É o 'lucro real' — porque não pode ser manipulado com accruals."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "FCF positivo e crescente: empresa saudável, gera caixa além do necessário.",
+        "FCF negativo mas com lucro: alerta — pode estar a financiar clientes ou a investir muito (normal em crescimento).",
+        "FCF positivo mas lucro negativo: situação rara — pode indicar amortizações pesadas ou ajustamentos não-monetários."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "EBITDA — o proxy operacional"
+    },
+    {
+      "type": "p",
+      "text": "EBITDA (Earnings Before Interest, Taxes, Depreciation and Amortization) isola o resultado operacional antes dos efeitos financeiros e não-caixa. É útil para comparar empresas com estruturas de capital diferentes (uma muito endividada com outra sem dívida) ou com políticas de amortização distintas. Mas tem limitações: ignora a necessidade de reinvestimento e pode ser manipulado com 'ajustamentos'. Warren Buffett famously não gosta dele. Usa-o com critério."
+    },
+    {
+      "type": "h3",
+      "text": "Conversão de lucro em caixa"
+    },
+    {
+      "type": "p",
+      "text": "Um indicador muito útil é a taxa de conversão: Fluxo de Caixa Operacional / Resultado líquido. Uma conversão ≥ 0,8 é saudável. Conversão persistentemente baixa (< 0,5) sugere qualidade dos resultados fraca — pode estar a empurrar vendas para o fim do trimestre, ou ter provisionamentos inadequados. Esta métrica foi popularizada pelos investidores value e tornou-se standard na análise fundamental."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Regra prática: 'cash is king'. Uma empresa com lucro zero mas caixa forte pode sobreviver uma recessão; uma com lucro alto mas caixa negativo pode morrer em 6 meses."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma empresa reporta Resultado Líquido de 500.000€ e Fluxo de Caixa Operacional de 200.000€. Qual é a conversão de lucro em caixa e o que sugere?",
+      "answer": "Conversão = 200.000 / 500.000 = 0,4 (40%). Uma conversão abaixo de 50% sugere problemas — pode ser aumento de inventário, prazos maiores a clientes, ou provisões inadequadas. Investigar urgentemente."
+    }
+  ],
+  "keyPoints": [
+    "Lucro ≠ caixa; a DFC é tão importante como a Demonstração de Resultados.",
+    "Free Cash Flow = Caixa Operacional − Capex — é o caixa disponível para remunerar capital.",
+    "EBITDA isola o operacional mas ignora reinvestimento; usar com critério.",
+    "Conversão de lucro em caixa ≥ 0,8 é saudável; < 0,5 é alerta."
+  ],
+  "quizSlug": "afq",
+  "nextLesson": "04-valuation-dcf-e-multiplos",
+  "prevLesson": "02-racios-de-rentabilidade"
+}
