@@ -12,7 +12,8 @@
    */
 
   import { onMount } from 'svelte';
-  import { page } from '$app/state';
+    import { page } from '$app/state';
+    import { t } from 'svelte-i18n';
 
   // ---------------------------------------------------------------------
   // Lesson type (loose — covers text/list/callout/table/h2_intro)
@@ -141,21 +142,20 @@
   {:else if loadError || !lesson}
     <div class="state error" role="alert">
       <p>⚠️ {loadError ?? 'Lição não encontrada.'}</p>
-      <p>Verifica que <code>/lessons/equivalenza/{lessonSlug}.json</code> existe.</p>
+      <p>{$t('walkthrough.verify.text', { default: 'Verifica que' })} <code>/lessons/equivalenza/{lessonSlug}.json</code> {$t('walkthrough.verify.exists', { default: 'existe.' })}</p>
       <p><a href="/escola/">← Voltar à Escola</a></p>
     </div>
   {:else}
     <!-- Breadcrumb -->
     <nav class="crumbs" aria-label="Caminho de navegação">
-      <a href="/">Hub</a>
+      <a href="/">{$t('walkthrough.breadcrumb.home', { default: '← Hub' })}</a>
       <span aria-hidden="true">/</span>
-      <a href="/escola/">Escola</a>
+      <a href="/escola/">{$t('walkthrough.breadcrumb.escola', { default: 'Escola' })}</a>
       <span aria-hidden="true">/</span>
-      <a href="/escola/curso/equivalenza/">Equivalenza</a>
+      <a href="/escola/curso/equivalenza/">{$t('walkthrough.breadcrumb.curso', { default: 'Equivalenza' })}</a>
       <span aria-hidden="true">/</span>
-      <span>Walkthrough</span>
+      <span aria-current="page">{$t('walkthrough.breadcrumb.current', { default: 'Walkthrough' })}</span>
     </nav>
-
     <!-- Hero -->
     <header class="head">
       <span class="tag">🎧 Walkthrough</span>
@@ -178,10 +178,10 @@
             aria-label={`Audio walkthrough da lição ${lesson.title}`}
           >
             <track kind="captions" />
-            <a href={audioSrc}>Descarregar audio</a>
+            <a href={audioSrc}>{$t('walkthrough.audio.download', { default: 'Descarregar áudio' })}</a>
           </audio>
           <p class="audio-fallback">
-            Não consegues ouvir? <a href={audioSrc} download>Descarrega o MP3</a>.
+            Não consegues ouvir? <a href={audioSrc} download>{$t('walkthrough.audio.download', { default: 'Descarregar áudio' })}</a>.
           </p>
         </div>
       {:else}

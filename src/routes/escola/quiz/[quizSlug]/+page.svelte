@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import { t } from 'svelte-i18n';
   import QuizRunner from '$lib/components/QuizRunner.svelte';
 
   // Quiz route. Maps slug → JSON file. All 5 quizzes live under /quizzes/
@@ -26,9 +27,9 @@
 <div class="quiz-page">
   <header class="quiz-head">
     <p class="breadcrumb">
-      <a href="/escola/">Escola</a>
+      <a href="/escola/">{$t('escola.quiz.breadcrumb.home', { default: '← Escola' })}</a>
       <span class="sep">›</span>
-      <a href="/escola/curso/equivalenza/">Equivalenza</a>
+      <a href="/escola/curso/equivalenza/">{$t('escola.quiz.breadcrumb.curso', { default: 'Equivalenza' })}</a>
       <span class="sep">›</span>
       <span>Quiz {quizSlug.toUpperCase()}</span>
     </p>

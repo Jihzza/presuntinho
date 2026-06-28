@@ -143,9 +143,9 @@
 <div class="secrets">
   <header class="secrets-head">
     <p class="breadcrumb">
-      <a href="/">Hub</a>
+      <a href="/">{$t('secrets.breadcrumb.home', { default: '← Hub' })}</a>
       <span class="sep">›</span>
-      <span>Secrets</span>
+      <span>{$t('secrets.breadcrumb.current', { default: 'Secrets' })}</span>
     </p>
     <span class="tag">🔐 Escondido</span>
     <h1>
@@ -265,7 +265,7 @@
             <p class="desc">🔒 {b.id}</p>
             <div class="status" aria-hidden="true">
               <span class="status-dot status-dot--off"></span>
-              <span>Bloqueado</span>
+              <span>{$t('secrets.locked', { default: 'Bloqueado' })}</span>
             </div>
           </div>
         {/if}

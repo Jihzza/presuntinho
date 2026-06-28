@@ -32,6 +32,8 @@
   // Parse `slug` as a number.  Anything else → 404-like redirect back
   // to the list.  This is the single guard against /habitos/habit/abc/
   // trying to query Dexie with a non-numeric id.
+
+  import { t } from "svelte-i18n";
   function parseId(raw: string | undefined): number | null {
     if (!raw) return null;
     const n = Number.parseInt(raw, 10);
@@ -152,7 +154,7 @@
   <nav class="crumbs" aria-label="Caminho de navegação">
     <a href="/">← Hub</a>
     <span aria-hidden="true">/</span>
-    <a href="/habitos/">Hábitos</a>
+    <a href="/habitos/">{$t('habitos.habit.breadcrumb.home', { default: '← Hábitos' })}</a>
     <span aria-hidden="true">/</span>
     <span aria-current="page">{habit?.name ?? '...'}</span>
   </nav>

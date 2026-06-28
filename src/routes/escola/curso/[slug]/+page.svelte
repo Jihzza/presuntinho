@@ -293,14 +293,14 @@
   <div class="course" style="--course-color: {course.color};">
     <header class="course-head">
       <p class="breadcrumb">
-        <a href="/escola/">Escola</a>
+        <a href="/escola/">{$t('lesson.breadcrumb.escola', { default: 'Escola' })}</a>
         <span class="sep">›</span>
         <span>{course.title}</span>
       </p>
       <div class="title-row">
         <span class="icon" aria-hidden="true">{course.icon}</span>
         <div>
-          <span class="tag">Curso</span>
+          <span class="tag">{$t('escola.curso.slug.tag', { default: 'Curso' })}</span>
           <h1>{course.title}</h1>
           <p class="tagline">{course.tagline}</p>
         </div>

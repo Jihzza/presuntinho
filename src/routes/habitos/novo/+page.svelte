@@ -106,7 +106,7 @@
   <nav class="crumbs" aria-label="Caminho de navegação">
     <a href="/">← Hub</a>
     <span aria-hidden="true">/</span>
-    <a href="/habitos/">Hábitos</a>
+    <a href="/habitos/">{$t('habitos.novo.breadcrumb.home', { default: '← Hábitos' })}</a>
     <span aria-hidden="true">/</span>
     <span aria-current="page">Novo</span>
   </nav>
@@ -127,7 +127,7 @@
     </div>
 
     <div class="field">
-      <label for="habit-icon">Ícone</label>
+      <label for="habit-icon">{$t('habitos.novo.label.icon', { default: 'Ícone' })}</label>
       <div class="icon-row">
         <input
           id="habit-icon"
@@ -152,7 +152,7 @@
     </div>
 
     <div class="field">
-      <label for="habit-color">Cor</label>
+      <label for="habit-color">{$t('habitos.novo.label.color', { default: 'Cor' })}</label>
       <div class="palette" role="radiogroup" aria-label="Cor do hábito">
         {#each palette as c (c)}
           <button
@@ -170,11 +170,11 @@
     </div>
 
     <fieldset class="field cadence-field">
-      <legend>Cadência</legend>
+      <legend>{$t('habitos.novo.legend.cadence', { default: 'Cadência' })}</legend>
       <div class="cadence-options">
         <label class="radio">
           <input type="radio" name="cadence" value="daily" bind:group={cadence} />
-          <span>Diário</span>
+          <span>{$t('habitos.novo.cadence.daily', { default: 'Diário' })}</span>
         </label>
         <label class="radio disabled" title="Disponível em breve">
           <input type="radio" name="cadence" value="weekly" bind:group={cadence} disabled />

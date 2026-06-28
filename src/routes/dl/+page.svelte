@@ -78,9 +78,9 @@
 <div class="dl">
   <header class="dl-head">
     <p class="breadcrumb">
-      <a href="/">Hub</a>
+      <a href="/">{$t('dl.breadcrumb.home', { default: '← Hub' })}</a>
       <span class="sep">›</span>
-      <span>Downloads</span>
+      <span>{$t('dl.breadcrumb.current', { default: 'Downloads' })}</span>
     </p>
     <span class="tag">Módulo 6</span>
     <h1>📥 Download Center</h1>

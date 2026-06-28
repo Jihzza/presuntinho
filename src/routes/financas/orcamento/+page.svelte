@@ -28,8 +28,9 @@
     type TotaisPorCategoria
   } from '$lib/financas';
   import { showToast } from '$lib/components/events';
+    import { t } from 'svelte-i18n';
 
-  let todasCategorias = $state<CategoriaRow[]>([]);
+    let todasCategorias = $state<CategoriaRow[]>([]);
   let orcamentosMes = $state<Record<string, number>>({});   // categoriaId → limite
   let gastosMes = $state<TotaisPorCategoria>({});
   let loading = $state(true);
@@ -163,7 +164,7 @@
   <nav class="crumbs" aria-label="Caminho de navegação">
     <a href="/">← Hub</a>
     <span aria-hidden="true">/</span>
-    <a href="/financas/">Finanças</a>
+    <a href="/financas/">{$t('financas.orcamento.breadcrumb.home', { default: '← Finanças' })}</a>
     <span aria-hidden="true">/</span>
     <span aria-current="page">Orçamento</span>
   </nav>

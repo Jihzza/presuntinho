@@ -106,12 +106,12 @@
     <p class="sub">Guarda um link com título, descrição e tags.</p>
   </header>
 
-  <nav class="crumbs" aria-label="Caminho de navegação">
-    <a href="/">← Hub</a>
+  <nav class="crumbs" aria-label={$t('biblioteca.crumbs.aria', { default: 'Caminho de navegação' })}>
+    <a href="/">{$t('biblioteca.crumbs.home', { default: '← Hub' })}</a>
     <span aria-hidden="true">/</span>
-    <a href="/biblioteca/">Biblioteca</a>
+    <a href="/biblioteca/">{$t('biblioteca.novo.breadcrumb.home', { default: '← Biblioteca' })}</a>
     <span aria-hidden="true">/</span>
-    <span aria-current="page">Novo</span>
+    <span aria-current="page">{$t('biblioteca.novo.breadcrumb.current', { default: 'Novo' })}</span>
   </nav>
 
   <form class="form" onsubmit={handleSubmit} novalidate>
@@ -154,13 +154,13 @@
         bind:value={description}
         maxlength="500"
         rows="4"
-        placeholder="Notas pessoais, porquê que guardaste, capítulos a ler…"
+        placeholder={$t('biblioteca.novo.notes.placeholder', { default: 'Notas pessoais, porquê que guardaste, capítulos a ler…' })}
       ></textarea>
       <span class="hint">{description.length}/500</span>
     </div>
 
     <div class="field">
-      <label for="bm-tags">Tags</label>
+      <label for="bm-tags">{$t('biblioteca.novo.label.tags', { default: 'Tags' })}</label>
       <input
         id="bm-tags"
         type="text"
@@ -176,7 +176,7 @@
     {/if}
 
     <div class="actions">
-      <a class="btn-secondary" href="/biblioteca/">Cancelar</a>
+      <a class="btn-secondary" href="/biblioteca/">{$t('biblioteca.novo.action.cancel', { default: 'Cancelar' })}</a>
       <button type="submit" class="btn-primary" disabled={submitting}>
         {submitting ? 'A criar…' : 'Criar marcador'}
       </button>

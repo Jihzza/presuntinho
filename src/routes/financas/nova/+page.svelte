@@ -145,7 +145,7 @@
   <nav class="crumbs" aria-label="Caminho de navegação">
     <a href="/">← Hub</a>
     <span aria-hidden="true">/</span>
-    <a href="/financas/">Finanças</a>
+    <a href="/financas/">{$t('financas.nova.breadcrumb.home', { default: '← Finanças' })}</a>
     <span aria-hidden="true">/</span>
     <span aria-current="page">Nova</span>
   </nav>

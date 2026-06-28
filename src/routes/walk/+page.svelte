@@ -108,9 +108,9 @@
 <div class="walk">
   <header class="walk-head">
     <p class="breadcrumb">
-      <a href="/">Hub</a>
+      <a href="/">{$t('walk.breadcrumb.home', { default: '← Hub' })}</a>
       <span class="sep">›</span>
-      <span>Walkthrough</span>
+      <span>{$t('walk.breadcrumb.current', { default: 'Walkthrough' })}</span>
     </p>
     <span class="tag">Módulo 3</span>
     <h1>🎙️ Assignment Walkthrough</h1>

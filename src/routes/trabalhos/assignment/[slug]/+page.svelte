@@ -7,6 +7,8 @@
   // We only need the Assignment fields on the page, so we inline a
   // narrow type rather than importing the full Assignment interface
   // (which would force us to handle every optional field).
+
+  import { t } from "svelte-i18n";
   interface AssignmentFromPack {
     id: string;
     slug: string;
@@ -105,7 +107,7 @@
   <nav class="crumbs" aria-label="Caminho de navegação">
     <a href="/">← Hub</a>
     <span aria-hidden="true">/</span>
-    <a href="/trabalhos/">Trabalhos</a>
+    <a href="/trabalhos/">{$t('trabalhos.assignment.breadcrumb.home', { default: '← Trabalhos' })}</a>
     <span aria-hidden="true">/</span>
     <span aria-current="page">{page.params.slug ?? '...'}</span>
   </nav>

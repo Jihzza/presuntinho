@@ -175,7 +175,7 @@
   <nav class="crumbs" aria-label="Caminho de navegação">
     <a href="/">← Hub</a>
     <span aria-hidden="true">/</span>
-    <a href="/financas/">Finanças</a>
+    <a href="/financas/">{$t('financas.transacoes.breadcrumb.home', { default: '← Finanças' })}</a>
     <span aria-hidden="true">/</span>
     <span aria-current="page">Transações</span>
   </nav>
@@ -197,7 +197,7 @@
       <label class="field">
         <span class="field-label">Categoria</span>
         <select bind:value={categoriaFiltro} aria-label="Filtrar por categoria">
-          <option value="">Todas</option>
+          <option value="">{$t('financas.transacoes.filter.all', { default: 'Todas' })}</option>
           {#each categorias as c (c.id)}
             <option value={c.id}>{c.icone} {c.nome}</option>
           {/each}

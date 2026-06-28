@@ -2,6 +2,8 @@
   // Write — Writing Tips & Anti-AI Detection (V4 port of V3 #pg-write).
   // 5 tip cards in pt-PT (V3 lines 333-390).
 
+  import { t } from 'svelte-i18n';
+
   interface Tip {
     icon: string;
     title: string;
@@ -76,9 +78,9 @@
 <div class="write">
   <header class="write-head">
     <p class="breadcrumb">
-      <a href="/">Hub</a>
+      <a href="/">{$t('write.breadcrumb.home', { default: '← Hub' })}</a>
       <span class="sep">›</span>
-      <span>Writing</span>
+      <span>{$t('write.breadcrumb.current', { default: 'Writing' })}</span>
     </p>
     <span class="tag">Módulo 5</span>
     <h1>✍️ Writing Tips & Anti-AI Detection</h1>

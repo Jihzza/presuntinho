@@ -18,10 +18,11 @@
    */
 
   import { onMount } from 'svelte';
+    import { t } from 'svelte-i18n';
 
-  // ---------------------------------------------------------------------
-  // Types — minimal mirror of curso.json
-  // ---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // Types — minimal mirror of curso.json
+    // ---------------------------------------------------------------------
 
   interface VowelRow {
     vogal: string;
@@ -244,9 +245,9 @@
 <div class="pt-course">
   <header class="hero" style="--course-color: {course?.color ?? '#10b981'};">
     <p class="breadcrumb">
-      <a href="/escola/">Escola</a>
+      <a href="/escola/">{$t('escola.curso.pt.breadcrumb.home', { default: '← Escola' })}</a>
       <span class="sep">›</span>
-      <span>Curso PT</span>
+      <span>{$t('escola.curso.pt.breadcrumb.current', { default: 'Curso PT' })}</span>
     </p>
     {#if loading}
       <h1>🇵🇹 A carregar curso…</h1>
@@ -273,7 +274,7 @@
   {:else if loadError}
     <div class="state error" role="alert">
       <p>⚠️ {loadError}</p>
-      <p>Verifica que o ficheiro <code>static/lessons/portugues/curso.json</code> existe.</p>
+      <p>{$t('escola.curso.pt.verify.text', { default: 'Verifica que o ficheiro' })} <code>static/lessons/portugues/curso.json</code> {$t('escola.curso.pt.verify.exists', { default: 'existe.' })}</p>
       <p><a href="/escola/">← Voltar à Escola</a></p>
     </div>
   {:else if course}

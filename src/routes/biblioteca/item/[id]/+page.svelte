@@ -143,10 +143,10 @@
 </svelte:head>
 
 <div class="detail">
-  <nav class="crumbs" aria-label="Caminho de navegação">
-    <a href="/">← Hub</a>
+  <nav class="crumbs" aria-label={$t('biblioteca.crumbs.aria', { default: 'Caminho de navegação' })}>
+    <a href="/">{$t('biblioteca.item.breadcrumb.home', { default: '← Hub' })}</a>
     <span aria-hidden="true">/</span>
-    <a href="/biblioteca/">Biblioteca</a>
+    <a href="/biblioteca/">{$t('biblioteca.item.breadcrumb.current', { default: 'Biblioteca' })}</a>
     <span aria-hidden="true">/</span>
     <span aria-current="page">{item?.title ?? '…'}</span>
   </nav>
@@ -181,14 +181,14 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          Abrir ↗
+          {$t('biblioteca.item.action.open', { default: 'Abrir' })} ↗
         </a>
       </div>
     </section>
 
     {#if item.tags.length > 0}
       <section class="tags-block" aria-label="Tags">
-        <span class="label">Tags</span>
+        <span class="label">{$t('biblioteca.item.label.tags', { default: 'Tags' })}</span>
         <div class="tag-list">
           {#each item.tags as tag (tag)}
             <button
@@ -206,7 +206,7 @@
 
     {#if item.description}
       <section class="notes-block" aria-label="Notas">
-        <span class="label">Notas</span>
+        <span class="label">{$t('biblioteca.item.label.notes', { default: 'Notas' })}</span>
         <p class="notes">{item.description}</p>
       </section>
     {/if}

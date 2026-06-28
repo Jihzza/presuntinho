@@ -64,11 +64,11 @@
 <div class="pt-quiz">
   <header class="head">
     <p class="breadcrumb">
-      <a href="/escola/">Escola</a>
+      <a href="/escola/">{$t('escola.quiz.breadcrumb.home', { default: '← Escola' })}</a>
       <span class="sep">›</span>
-      <a href="/escola/curso/portugues/">🇵🇹 Curso PT</a>
+      <a href="/escola/curso/portugues/">🇵🇹 {$t('escola.curso.pt.breadcrumb.current', { default: 'Curso PT' })}</a>
       <span class="sep">›</span>
-      <span>Quiz</span>
+      <span>{$t('escola.quiz.breadcrumb.current', { default: 'Quiz' })}</span>
     </p>
     <h1>🇵🇹 Quiz de Português</h1>
     <p class="sub">5 perguntas · Ganha a badge 🇵🇹 Lusófono (b11) com 5/5 certas.</p>

@@ -61,9 +61,9 @@
 <div class="course">
   <header class="course-head">
     <p class="breadcrumb">
-      <a href="/">Hub</a>
+      <a href="/">{$t('course.breadcrumb.home', { default: '← Hub' })}</a>
       <span class="sep">›</span>
-      <span>Course</span>
+      <span>{$t('course.breadcrumb.current', { default: 'Course' })}</span>
     </p>
     <span class="tag">Módulo 2</span>
     <h1>🎓 Course Theory</h1>

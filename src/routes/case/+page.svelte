@@ -65,18 +65,18 @@
 <div class="case">
   <header class="case-head">
     <p class="breadcrumb">
-      <a href="/">Hub</a>
+      <a href="/">{$t('case.breadcrumb.home', { default: '← Hub' })}</a>
       <span class="sep">›</span>
-      <span>Case</span>
+      <span>{$t('case.breadcrumb.current', { default: 'Case' })}</span>
     </p>
-    <span class="tag">Módulo 1</span>
-    <h1>📊 Equivalenza: Deep Dive</h1>
-    <p class="sub">Tudo o que precisas saber sobre a empresa, o mercado e a concorrência.</p>
+    <span class="tag">{$t('case.tag.modulo', { default: 'Módulo 1' })}</span>
+    <h1>{$t('case.h1', { default: '📊 Equivalenza: Deep Dive' })}</h1>
+    <p class="sub">{$t('case.subtitle', { default: 'Tudo o que precisas saber sobre a empresa, o mercado e a concorrência.' })}</p>
   </header>
 
   <!-- Company Overview ------------------------------------------------- -->
   <section class="card" aria-labelledby="ov-h">
-    <h2 id="ov-h">📋 Visão geral da empresa</h2>
+    <h2 id="ov-h">{$t('case.h2.overview', { default: '📋 Visão geral da empresa' })}</h2>
     <table class="overview">
       <tbody>
         {#each OVERVIEW as row (row.label)}
@@ -91,7 +91,7 @@
 
   <!-- The Decline ------------------------------------------------------ -->
   <section class="card" aria-labelledby="dec-h">
-    <h2 id="dec-h">📉 O declínio</h2>
+    <h2 id="dec-h">{$t('case.h2.decline', { default: '📉 O declínio' })}</h2>
     <div class="kpi-grid">
       <div class="kpi">
         <div class="kpi-value">€60M</div>
@@ -103,14 +103,14 @@
       </div>
       <div class="kpi danger">
         <div class="kpi-value">−35%</div>
-        <div class="kpi-label">Lojas perdidas até 2023</div>
+        <div class="kpi-label">{$t('case.kpi.lost', { default: 'Lojas perdidas até 2023' })}</div>
       </div>
     </div>
   </section>
 
   <!-- Three Forces ----------------------------------------------------- -->
   <section class="card" aria-labelledby="forces-h">
-    <h2 id="forces-h">🎯 As três forças</h2>
+    <h2 id="forces-h">{$t('case.h2.forces', { default: '🎯 As três forças' })}</h2>
     {#each FORCES as f (f.title)}
       <h3>{f.title}</h3>
       <p>{f.text}</p>
@@ -119,15 +119,15 @@
 
   <!-- Competitor: Divain ---------------------------------------------- -->
   <section class="card" aria-labelledby="div-h">
-    <h2 id="div-h">🏢 Concorrente: Divain</h2>
-    <p><strong>Porquê esta escolha:</strong> a ameaça estrutural mais directa. Mesmo price point (€15-30). Modelo digital-first.</p>
-    <h3>Forças</h3>
+    <h2 id="div-h">{$t('case.h2.divain', { default: '🏢 Concorrente: Divain' })}</h2>
+    <p><strong>{$t('case.divain.why', { default: 'Porquê esta escolha:' })}</strong> {$t('case.divain.why.text', { default: 'a ameaça estrutural mais directa. Mesmo price point (€15-30). Modelo digital-first.' })}</p>
+    <h3>{$t('case.h3.strengths', { default: 'Forças' })}</h3>
     <ul>
       {#each DIVAIN.strengths as s (s)}
         <li>{s}</li>
       {/each}
     </ul>
-    <h3>Fraquezas</h3>
+    <h3>{$t('case.h3.weaknesses', { default: 'Fraquezas' })}</h3>
     <ul>
       {#each DIVAIN.weaknesses as w (w)}
         <li>{w}</li>
@@ -137,7 +137,7 @@
 
   <!-- The Discerning Explorer ----------------------------------------- -->
   <section class="card" aria-labelledby="pers-h">
-    <h2 id="pers-h">👤 The Discerning Explorer</h2>
+    <h2 id="pers-h">{$t('case.h2.persona', { default: '👤 The Discerning Explorer' })}</h2>
     <p><strong>Marta, 27.</strong> Profissional criativa em Madrid. Rendimento moderado-a-bom. Universitária, urbana, socialmente ativa.</p>
     <blockquote class="quote">{PERSONA.quote}</blockquote>
     <p class="cite">{PERSONA.cite}</p>
