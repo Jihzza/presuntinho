@@ -7,81 +7,109 @@
 
   interface Step {
     num: string;
-    title: string;
+    titleKey: string;       // i18n key for step name
+    titleDefault: string;
     weight: string;
-    what: string;
-    how: string;
-    hint?: string;
+    whatKey: string;
+    whatDefault: string;
+    howKey: string;
+    howDefault: string;
+    hintKey?: string;
+    hintDefault?: string;
     href: string;
   }
 
   const STEPS: Step[] = [
     {
       num: '1️⃣',
-      title: 'Análise SWOT',
+      titleKey: 'walk.step.swot.title',
+      titleDefault: 'Análise SWOT',
       weight: '20%',
-      what: 'SWOT da Equivalenza + 1 concorrente (Divain).',
-      how: '4-5 bullets por quadrante. Cita o case study (Elson, 2024). Sê específica com números.',
-      hint: 'NPS 17 vs Druni 56 é uma fraqueza que também serve de ponte para o Marketing Problem.',
+      whatKey: 'walk.step.swot.what',
+      whatDefault: 'SWOT da Equivalenza + 1 concorrente (Divain).',
+      howKey: 'walk.step.swot.how',
+      howDefault: '4-5 bullets por quadrante. Cita o case study (Elson, 2024). Sê específica com números.',
+      hintKey: 'walk.step.swot.hint',
+      hintDefault: 'NPS 17 vs Druni 56 é uma fraqueza que também serve de ponte para o Marketing Problem.',
       href: '/escola/licao/equivalenza/swot/'
     },
     {
       num: '2️⃣',
-      title: 'Buyer Persona',
+      titleKey: 'walk.step.persona.title',
+      titleDefault: 'Buyer Persona',
       weight: '20%',
-      what: 'Uma persona primária com demografia, psicografia, comportamento, frustrações.',
-      how: 'Ancorada em investigação do case study. Acrescenta um parágrafo de "Importância Estratégica" a explicar porque é que esta persona importa.',
+      whatKey: 'walk.step.persona.what',
+      whatDefault: 'Uma persona primária com demografia, psicografia, comportamento, frustrações.',
+      howKey: 'walk.step.persona.how',
+      howDefault: 'Ancorada em investigação do case study. Acrescenta um parágrafo de «Importância Estratégica» a explicar porque é que esta persona importa.',
       href: '/escola/licao/equivalenza/persona/'
     },
     {
       num: '3️⃣',
-      title: 'Problema de Marketing',
+      titleKey: 'walk.step.problem.title',
+      titleDefault: 'Problema de Marketing',
       weight: '20%',
-      what: 'Formula o problema mais urgente em SCQA.',
-      how: 'Mostra o teu raciocínio. Termina com um problem statement claro (1-2 frases) que a recomendação vai resolver.',
+      whatKey: 'walk.step.problem.what',
+      whatDefault: 'Formula o problema mais urgente em SCQA.',
+      howKey: 'walk.step.problem.how',
+      howDefault: 'Mostra o teu raciocínio. Termina com um problem statement claro (1-2 frases) que a recomendação vai resolver.',
       href: '/escola/licao/equivalenza/problem/'
     },
     {
       num: '4️⃣',
-      title: 'Matriz TOWS',
+      titleKey: 'walk.step.tows.title',
+      titleDefault: 'Matriz TOWS',
       weight: '20%',
-      what: 'Matriz 2×2. 4 alternativas estratégicas. Breve avaliação de cada uma.',
-      how: 'Cada célula = 1 estratégia em 1 linha. Depois um parágrafo a explicar porque é que SO ganha (ou qualquer outra que escolhas).',
+      whatKey: 'walk.step.tows.what',
+      whatDefault: 'Matriz 2×2. 4 alternativas estratégicas. Breve avaliação de cada uma.',
+      howKey: 'walk.step.tows.how',
+      howDefault: 'Cada célula = 1 estratégia em 1 linha. Depois um parágrafo a explicar porque é que SO ganha (ou qualquer outra que escolhas).',
       href: '/escola/licao/equivalenza/tows/'
     },
     {
       num: '5️⃣',
-      title: 'Recomendação Estratégica',
+      titleKey: 'walk.step.rec.title',
+      titleDefault: 'Recomendação Estratégica',
       weight: '20%',
-      what: 'Escolhe uma estratégia TOWS e defende-a.',
-      how: 'Porque é que esta (e não as outras). Verificação de viabilidade. Plano de implementação com liderança, recursos, timeline.',
+      whatKey: 'walk.step.rec.what',
+      whatDefault: 'Escolhe uma estratégia TOWS e defende-a.',
+      howKey: 'walk.step.rec.how',
+      howDefault: 'Porque é que esta (e não as outras). Verificação de viabilidade. Plano de implementação com liderança, recursos, timeline.',
       href: '/escola/licao/equivalenza/recommendation/'
     }
   ];
 
   interface AudioTrack {
     icon: string;
-    title: string;
-    label: string;
+    titleKey: string;
+    titleDefault: string;
+    labelKey: string;
+    labelDefault: string;
     src: string;
   }
   const AUDIOS: AudioTrack[] = [
     {
       icon: '🎙️',
-      title: 'Secções 1 + 2',
-      label: 'SWOT + Persona',
+      titleKey: 'walk.audio.swot',
+      titleDefault: 'Secções 1 + 2',
+      labelKey: 'walk.audio.swot.label',
+      labelDefault: 'SWOT + Persona',
       src: '/legacy/assets/intro_swot.mp3'
     },
     {
       icon: '🎙️',
-      title: 'Secções 2 + 3',
-      label: 'Persona + Marketing Problem',
+      titleKey: 'walk.audio.swot',
+      titleDefault: 'Secções 2 + 3',
+      labelKey: 'walk.audio.pers.label',
+      labelDefault: 'Persona + Marketing Problem',
       src: '/legacy/assets/persona_problem.mp3'
     },
     {
       icon: '🎙️',
-      title: 'Secções 4 + 5',
-      label: 'TOWS + Recommendation',
+      titleKey: 'walk.audio.swot',
+      titleDefault: 'Secções 4 + 5',
+      labelKey: 'walk.audio.tows.label',
+      labelDefault: 'TOWS + Recommendation',
       src: '/legacy/assets/tows_recommendation.mp3'
     }
   ];
@@ -112,27 +140,27 @@
       <span class="sep">›</span>
       <span>{$t('walk.breadcrumb.current', { default: 'Walkthrough' })}</span>
     </p>
-    <span class="tag">Módulo 3</span>
-    <h1>🎙️ Assignment Walkthrough</h1>
-    <p class="sub">O que o professor espera em cada secção — e onde gastar bem o teu tempo.</p>
+    <span class="tag">{$t('walk.tag.modulo', { default: 'Módulo 3' })}</span>
+    <h1>{$t('walk.h1', { default: '🎙️ Assignment Walkthrough' })}</h1>
+    <p class="sub">{$t('walk.sub', { default: 'O que o professor espera em cada secção — e onde gastar bem o teu tempo.' })}</p>
   </header>
 
   <!-- Steps ------------------------------------------------------------- -->
-  <section class="steps" aria-label="Os 5 passos do trabalho">
-    {#each STEPS as step, i (step.num)}
+  <section class="steps" aria-label="{$t('walk.steps.aria', { default: 'Os 5 passos do trabalho' })}">
+    {#each STEPS as step, i (step.href)}
       <article class="step">
         <div class="step-head">
           <span class="step-num" aria-hidden="true">{step.num}</span>
           <div class="step-meta">
-            <h2>{step.title} <span class="weight">({step.weight})</span></h2>
-            <p><strong>O que fazer:</strong> {step.what}</p>
-            <p><strong>Como:</strong> {step.how}</p>
-            {#if step.hint}
-              <p class="hint">💡 {step.hint}</p>
+            <h2>{$t(step.titleKey, { default: step.titleDefault })} <span class="weight">({step.weight})</span></h2>
+            <p><strong>{$t('walk.step.what', { default: 'O que fazer' })}:</strong> {$t(step.whatKey, { default: step.whatDefault })}</p>
+            <p><strong>{$t('walk.step.how', { default: 'Como' })}:</strong> {$t(step.howKey, { default: step.howDefault })}</p>
+            {#if step.hintKey && step.hintDefault}
+              <p class="hint">💡 {$t(step.hintKey, { default: step.hintDefault })}</p>
             {/if}
           </div>
         </div>
-        <a class="step-link" href={step.href}>Abrir lição detalhada →</a>
+        <a class="step-link" href={step.href}>{$t('walk.openLesson', { default: 'Abrir lição detalhada →' })}</a>
       </article>
     {/each}
   </section>
@@ -146,8 +174,8 @@
       <div class="audio-row">
         <span class="audio-icon" aria-hidden="true">{playing[i] ? '🔊' : track.icon}</span>
         <div class="audio-meta">
-          <strong>{track.label}</strong>
-          <span class="audio-sub">{track.title}</span>
+          <strong>{$t(track.labelKey, { default: track.labelDefault })}</strong>
+          <span class="audio-sub">{$t(track.titleKey, { default: track.titleDefault })}</span>
           <div class="audio-bar" aria-hidden="true">
             <div class="audio-fill" style="width: {Math.round(progress[i] * 100)}%"></div>
           </div>

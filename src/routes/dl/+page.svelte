@@ -6,12 +6,14 @@
 
   interface Download {
     icon: string;
-    title: string;
-    desc: string;
+    titleKey: string;       // i18n key
+    titleDefault: string;
+    descKey: string;
+    descDefault: string;
     size: string;
     href: string;
     accent: string;
-    extra?: Array<{ label: string; href: string; size?: string }>;
+    extra?: Array<{ labelKey: string; labelDefault: string; href: string; size?: string }>;
   }
 
   // Helper: human-readable size (no live fs access — sizes are stable, sourced
@@ -30,40 +32,47 @@
   const DOWNLOADS: Download[] = [
     {
       icon: '📄',
-      title: 'Assignment PDF',
-      desc:
-        'O mid-term completo — 13 páginas, ~2000 palavras, referências Harvard, capa, TOC, matriz TOWS com código de cores, anexo com tabela de dados-chave e visual da buyer persona.',
+      titleKey: 'dl.card.pdf.title',
+      titleDefault: 'Assignment PDF',
+      descKey: 'dl.card.pdf.desc',
+      descDefault: 'O mid-term completo — 13 páginas, ~2000 palavras, referências Harvard, capa, TOC, matriz TOWS com código de cores, anexo com tabela de dados-chave e visual da buyer persona.',
       size: SIZES.pdf,
       href: '/legacy/docs/Equivalenza_Mid_Term_Fatma.pdf',
       accent: '#f59e0b'
     },
     {
       icon: '📝',
-      title: 'Versão Word editável',
-      desc: 'Mesmo conteúdo do PDF, editável. Usa este para reescreveres na tua voz antes de submeter.',
+      titleKey: 'dl.card.docx.title',
+      titleDefault: 'Versão Word editável',
+      descKey: 'dl.card.docx.desc',
+      descDefault: 'Mesmo conteúdo do PDF, editável. Usa este para reescreveres na tua voz antes de submeter.',
       size: SIZES.docx,
       href: '/legacy/docs/Equivalenza_Mid_Term_Fatma.docx',
       accent: '#8b5cf6'
     },
     {
       icon: '🎙️',
-      title: 'Audio walkthroughs (5 MP3)',
-      desc: 'Ouve enquanto revês. Voz em inglês (3 faixas) e versões de intro em inglês + PT.',
+      titleKey: 'dl.card.audio.title',
+      titleDefault: 'Audio walkthroughs (5 MP3)',
+      descKey: 'dl.card.audio.desc',
+      descDefault: 'Ouve enquanto revês. Voz em inglês (3 faixas) e versões de intro em inglês + PT.',
       size: `${SIZES.introSwot} + ${SIZES.persona} + ${SIZES.tows}`,
       href: '/legacy/assets/intro_swot.mp3',
       accent: '#06b6d4',
       extra: [
-        { label: `🎧 Sections 1+2 (SWOT + Persona) — ${SIZES.introSwot}`, href: '/legacy/assets/intro_swot.mp3' },
-        { label: `🎧 Sections 2+3 (Persona + Marketing Problem) — ${SIZES.persona}`, href: '/legacy/assets/persona_problem.mp3' },
-        { label: `🎧 Sections 4+5 (TOWS + Recommendation) — ${SIZES.tows}`, href: '/legacy/assets/tows_recommendation.mp3' },
-        { label: `🎧 Full intro (EN) — ${SIZES.audioEn}`, href: '/legacy/assets/audio_intro_en.mp3' },
-        { label: `🎧 Full intro (PT) — ${SIZES.audioPt}`, href: '/legacy/assets/audio_intro_pt-PT.mp3' }
+        { labelKey: 'dl.extra.swot',    labelDefault: '🎧 Secções 1+2 (SWOT + Persona)',                href: '/legacy/assets/intro_swot.mp3' },
+        { labelKey: 'dl.extra.persona', labelDefault: '🎧 Secções 2+3 (Persona + Marketing Problem)',  href: '/legacy/assets/persona_problem.mp3' },
+        { labelKey: 'dl.extra.tows',    labelDefault: '🎧 Secções 4+5 (TOWS + Recommendation)',        href: '/legacy/assets/tows_recommendation.mp3' },
+        { labelKey: 'dl.extra.audioEn', labelDefault: '🎧 Intro completa (EN)',                         href: '/legacy/assets/audio_intro_en.mp3' },
+        { labelKey: 'dl.extra.audioPt', labelDefault: '🎧 Intro completa (PT)',                         href: '/legacy/assets/audio_intro_pt-PT.mp3' }
       ]
     },
     {
       icon: '📦',
-      title: 'ZIP de deliverables (V3)',
-      desc: 'Tudo o que estava no ZIP original do V3 — PDFs, DOCX, MP3s, persona visual.',
+      titleKey: 'dl.card.zip.title',
+      titleDefault: 'ZIP de deliverables (V3)',
+      descKey: 'dl.card.zip.desc',
+      descDefault: 'Tudo o que estava no ZIP original do V3 — PDFs, DOCX, MP3s, persona visual.',
       size: SIZES.zip,
       href: '/legacy/equivalenza-midterm-deliverables-V3.zip',
       accent: '#ec4899'
@@ -88,14 +97,14 @@
   </header>
 
   <section class="grid" aria-label="Downloads">
-    {#each DOWNLOADS as d (d.title)}
+    {#each DOWNLOADS as d (d.titleKey)}
       <article class="dl-card" style="--dl-accent: {d.accent};">
         <div class="dl-head-row">
           <span class="dl-icon" aria-hidden="true">{d.icon}</span>
           <span class="dl-size">{d.size}</span>
         </div>
-        <h2>{d.title}</h2>
-        <p>{d.desc}</p>
+        <h2>{$t(d.titleKey, { default: d.titleDefault })}</h2>
+        <p>{$t(d.descKey, { default: d.descDefault })}</p>
         <div class="dl-actions">
           <a class="btn primary" href={d.href} download>⬇ Descarregar</a>
           {#if d.extra}
@@ -104,7 +113,7 @@
               <ul>
                 {#each d.extra as e (e.href)}
                   <li>
-                    <a href={e.href} download>{e.label}</a>
+                    <a href={e.href} download>{$t(e.labelKey, { default: e.labelDefault })}</a>
                   </li>
                 {/each}
               </ul>

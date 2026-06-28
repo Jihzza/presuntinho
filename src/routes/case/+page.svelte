@@ -5,14 +5,14 @@
   import { t } from 'svelte-i18n';
 
   // Overview table data (V3 lines 95-102)
-  const OVERVIEW: Array<{ label: string; value: string }> = [
-    { label: 'Empresa',     value: 'Equivalenza S.L.' },
-    { label: 'Fundada',     value: 'Barcelona, Espanha, 2011' },
-    { label: 'Categoria',   value: 'Fragrâncias affordable / dupe retail' },
-    { label: 'Modelo',      value: 'Rede de franchising + e-commerce' },
-    { label: 'CEO',         value: 'Juan Franco (nomeado em 2023)' },
-    { label: 'EBITDA 2023', value: '€2M → Objetivo €8M' }
-  ];
+    const OVERVIEW: Array<{ labelKey: string; value: string }> = [
+      { labelKey: 'case.overview.empresa',   value: 'Equivalenza S.L.' },
+      { labelKey: 'case.overview.fundada',   value: 'Barcelona, Espanha, 2011' },
+      { labelKey: 'case.overview.categoria', value: 'Fragrâncias affordable / dupe retail' },
+      { labelKey: 'case.overview.modelo',    value: 'Rede de franchising + e-commerce' },
+      { labelKey: 'case.overview.ceo',       value: 'Juan Franco (nomeado em 2023)' },
+      { labelKey: 'case.overview.ebitda',    value: '€2M → Objetivo €8M' }
+    ];
 
   // Three Forces (V3 lines 124-130)
   const FORCES = [
@@ -79,12 +79,12 @@
     <h2 id="ov-h">{$t('case.h2.overview', { default: '📋 Visão geral da empresa' })}</h2>
     <table class="overview">
       <tbody>
-        {#each OVERVIEW as row (row.label)}
-          <tr>
-            <th scope="row">{row.label}</th>
-            <td>{row.value}</td>
-          </tr>
-        {/each}
+        {#each OVERVIEW as row (row.labelKey)}
+                  <tr>
+                    <th scope="row">{$t(row.labelKey, { default: row.labelKey })}</th>
+                    <td>{row.value}</td>
+                  </tr>
+                {/each}
       </tbody>
     </table>
   </section>
@@ -138,7 +138,7 @@
   <!-- The Discerning Explorer ----------------------------------------- -->
   <section class="card" aria-labelledby="pers-h">
     <h2 id="pers-h">{$t('case.h2.persona', { default: '👤 The Discerning Explorer' })}</h2>
-    <p><strong>Marta, 27.</strong> Profissional criativa em Madrid. Rendimento moderado-a-bom. Universitária, urbana, socialmente ativa.</p>
+    <p><strong>Marta, 27.</strong> {$t('case.persona.intro', { default: 'Profissional criativa em Madrid. Rendimento moderado-a-bom. Universitária, urbana, socialmente ativa.' })}</p>
     <blockquote class="quote">{PERSONA.quote}</blockquote>
     <p class="cite">{PERSONA.cite}</p>
     <h3>{$t('case.tagline', { default: 'O que ela valoriza' })}</h3>
@@ -150,7 +150,7 @@
   </section>
 
   <div class="cta">
-    <a href="/course/" class="btn primary">Seguinte: Course Theory →</a>
+    <a href="/course/" class="btn primary">{$t('case.cta.next', { default: 'Seguinte: Course Theory →' })}</a>
   </div>
 </div>
 
