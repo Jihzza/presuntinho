@@ -193,7 +193,7 @@
   <title>{$t('routes.hub.title', { default: 'Presuntinho — Hub' })}</title>
 </svelte:head>
 
-<OnboardingModal open={showOnboarding} onClose={handleOnboardingClose} />
+<OnboardingModal open={showOnboarding} onClose={handleOnboardingClose} profile={activeProfile} />
 
 <div class="hub">
   <header class="hub-hero" class:hero-in={heroIn}>

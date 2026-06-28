@@ -19,12 +19,25 @@
   import { onMount, tick } from 'svelte';
   import { t, _ } from 'svelte-i18n';
   import { subApps } from '$lib/registry';
+  import type { ProfileId } from '$lib/auth/hash';
 
   interface Props {
     open: boolean;
     onClose: () => void;
+    /** Active profile — selects the personalised greeting. */
+    profile?: ProfileId | null;
   }
-  let { open = false, onClose }: Props = $props();
+  let { open = false, onClose, profile = null }: Props = $props();
+
+  // Resolve the greeting key based on the active profile. Falls back to the
+  // Fatma variant if the profile is unknown / not yet hydrated, so the modal
+  // never shows a missing-key placeholder on first paint.
+  let greetingKey = $derived(`onboarding.welcome.${profile ?? 'fatma'}`);
+  let greetingFallback = $derived(
+    profile === 'daniel'
+      ? '🐷 Bem-vindo, Daniel! Find the easter eggs 🥚'
+      : '🐷 Bem-vinda, Fatma! Encontra os easter eggs 🥚'
+  );
 
   // Refs for focus trap
   let dialogEl = $state<HTMLDivElement | null>(null);
@@ -139,7 +152,7 @@
         aria-label={$t('components.onboarding.close.aria', { default: 'Fechar' })}
       >×</button>
 
-      <h2 id="onboarding-title" class="title">{$_('onboarding.welcome')}</h2>
+      <h2 id="onboarding-title" class="title">{$t(greetingKey, { default: greetingFallback })}</h2>
       <p class="lead">{$_('onboarding.firstHint')}</p>
 
       <h3 class="section-title">{$_('onboarding.subAppsTitle')}</h3>
