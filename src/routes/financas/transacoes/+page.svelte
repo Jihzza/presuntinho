@@ -15,7 +15,8 @@
 -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { t as ti } from 'svelte-i18n';
+  import { get } from 'svelte/store';
+  import { t } from 'svelte-i18n';
   import {
     listCategorias,
     listTransacoesMes,
@@ -36,14 +37,14 @@
   // inside a Svelte @const block (it's a store subscription, not a
   // function call), so we resolve these once via the `ti()` helper at
   // the top level of the component.
-  const ARIA_RECEITA = ti('transacoes.tipo.receita', { default: 'Receita' });
-  const ARIA_DESPESA = ti('transacoes.tipo.despesa', { default: 'Despesa' });
-  const ARIA_DELETE = ti('transacoes.delete.aria', { default: 'Remover transação' });
-  const ARIA_CONFIRM = ti('transacoes.delete.confirm', { default: 'Confirmar remoção' });
-  const CONFIRM_SHORT = ti('transacoes.delete.confirm_short', { default: 'Confirmar?' });
-  const TOAST_REMOVED = ti('transacoes.toast.removed', { default: 'Transação removida' });
-  const TOAST_DELETE_FAILED = ti('transacoes.toast.delete_failed', { default: 'Erro a remover transação' });
-  const SALDO_LABEL = ti('transacoes.saldo', { default: 'Saldo' });
+  const ARIA_RECEITA = get(t)('transacoes.tipo.receita', { default: 'Receita' });
+  const ARIA_DESPESA = get(t)('transacoes.tipo.despesa', { default: 'Despesa' });
+  const ARIA_DELETE = get(t)('transacoes.delete.aria', { default: 'Remover transação' });
+  const ARIA_CONFIRM = get(t)('transacoes.delete.confirm', { default: 'Confirmar remoção' });
+  const CONFIRM_SHORT = get(t)('transacoes.delete.confirm_short', { default: 'Confirmar?' });
+  const TOAST_REMOVED = get(t)('transacoes.toast.removed', { default: 'Transação removida' });
+  const TOAST_DELETE_FAILED = get(t)('transacoes.toast.delete_failed', { default: 'Erro a remover transação' });
+  const SALDO_LABEL = get(t)('transacoes.saldo', { default: 'Saldo' });
 
   let transacoes = $state<Transacao[]>([]);
   let categorias = $state<CategoriaRow[]>([]);

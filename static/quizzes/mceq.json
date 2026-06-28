@@ -1,0 +1,77 @@
+{
+  "id": "mceq",
+  "title": "Quiz: Macroeconomia",
+  "description": "PIB, inflação, política monetária e comércio internacional.",
+  "questions": [
+    {
+      "q": "O PIB real difere do nominal porque:",
+      "opts": [
+        "Exclui exportações",
+        "Desconta a inflação",
+        "Inclui só serviços",
+        "É medido trimestralmente"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Na óptica da despesa, o PIB é C + I + G + (X − M). O termo (X − M) representa:",
+      "opts": [
+        "Exportações líquidas",
+        "Câmbio",
+        "Política monetária",
+        "Impostos indirectos"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Inflação de procura acontece quando:",
+      "opts": [
+        "Salários sobem",
+        "Petróleo sobe",
+        "Procura agregada excede a oferta",
+        "O banco central baixa juros"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Quando o BCE sobe a taxa de juro diretora, espera-se que:",
+      "opts": [
+        "O crédito barateie",
+        "O investimento abrande",
+        "A inflação suba",
+        "O euro desvalorize"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Quantitative Easing (QE) é:",
+      "opts": [
+        "Compra de activos pelo banco central para injectar liquidez",
+        "Aumento de impostos",
+        "Corte nas despesas públicas",
+        "Devalorização da moeda"
+      ],
+      "a": 0
+    },
+    {
+      "q": "A teoria das vantagens comparativas (Ricardo) diz que:",
+      "opts": [
+        "Cada país deve produzir tudo",
+        "Países beneficiam ao especializar-se no que têm menor custo de oportunidade",
+        "Apenas países grandes devem exportar",
+        "Tarifas protegem indústrias nascentes"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Uma tarifa sobre importações é:",
+      "opts": [
+        "Um subsídio à exportação",
+        "Um imposto que encarece produtos externos",
+        "Um acordo de livre-câmbio",
+        "Uma quota de produção"
+      ],
+      "a": 1
+    }
+  ]
+}

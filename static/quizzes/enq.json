@@ -1,0 +1,87 @@
+{
+  "id": "enq",
+  "title": "Quiz: Ética nos Negócios",
+  "description": "Governança, RSE, sustentabilidade e compliance.",
+  "questions": [
+    {
+      "q": "Governança corporativa trata principalmente de:",
+      "opts": [
+        "Marketing",
+        "Sistema de regras para dirigir e controlar a empresa",
+        "Vendas",
+        "Logística"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O problema de agência refere-se a:",
+      "opts": [
+        "Conflito entre gestores e accionistas",
+        "Falta de clientes",
+        "Excesso de stock",
+        "Problemas de marketing"
+      ],
+      "a": 0
+    },
+    {
+      "q": "A pirâmide de Carroll (1991) tem, por ordem:",
+      "opts": [
+        "Filantrópica, ética, legal, económica",
+        "Económica, legal, ética, filantrópica",
+        "Legal, económica, filantrópica, ética",
+        "Ética, legal, económica, filantrópica"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Stakeholders são:",
+      "opts": [
+        "Apenas accionistas",
+        "Todos afectados pelas decisões da empresa",
+        "Apenas clientes",
+        "Apenas reguladores"
+      ],
+      "a": 1
+    },
+    {
+      "q": "ESG significa:",
+      "opts": [
+        "Earnings, Sales, Growth",
+        "Environmental, Social, Governance",
+        "Equity, Stock, Grant",
+        "Energy, Safety, Governance"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Greenwashing é:",
+      "opts": [
+        "Comunicação de sustentabilidade sem acção real",
+        "Investimento em energias limpas",
+        "Auditoria ambiental",
+        "Certificação ISO 14001"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Um canal de denúncias eficaz deve ser:",
+      "opts": [
+        "Público",
+        "Confidencial e independente",
+        "Gerido pelo chefe directo",
+        "Apenas por email"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O RGPD aplica-se a:",
+      "opts": [
+        "Apenas empresas dos EUA",
+        "Protecção de dados pessoais na UE",
+        "Apenas bancos",
+        "Apenas sector público"
+      ],
+      "a": 1
+    }
+  ]
+}

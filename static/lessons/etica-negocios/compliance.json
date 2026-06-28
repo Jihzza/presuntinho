@@ -1,0 +1,48 @@
+{
+  "id": "compliance",
+  "courseSlug": "etica-negocios",
+  "title": "Compliance e Programas de Integridade",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "Compliance — a função que garante que a empresa joga pelo regras" },
+    { "type": "p", "text": "Compliance é o conjunto de políticas, procedimentos e controlos para garantir que a empresa cumpre leis, regulamentos e padrões éticos. Vai além da função jurídica — é cultura, monitorização e responsabilização contínua." },
+    { "type": "h3", "text": "Pilares de um programa de compliance" },
+    { "type": "ul", "items": [
+      "Compromisso da liderança: tone at the top e código de ética.",
+      "Políticas escritas: anticorrupção, antitrust, anti-branqueamento, protecção de dados.",
+      "Formação regular para todos os colaboradores.",
+      "Canal de denúncias (whistleblower) confidencial e independente.",
+      "Monitorização e auditoria interna.",
+      "Resposta a incidentes: investigação, acção disciplinar, comunicação."
+    ] },
+    { "type": "h3", "text": "Áreas críticas" },
+    { "type": "ul", "items": [
+      "Anti-corrupção: Foreign Corrupt Practices Act (EUA), UK Bribery Act, lei portuguesa.",
+      "Anti-branqueamento (AML/KYC): conhecer cliente, reportar suspeitas.",
+      "Protecção de dados: RGPD na UE — base legal, direitos dos titulares, DPIA.",
+      "Concorrência: antitrust (proibição de cartéis, abuso de posição dominante).",
+      "Sanções internacionais: embargos, listas de pessoas e entidades."
+    ] },
+    { "type": "h3", "text": "Modelo das três linhas" },
+    { "type": "p", "text": "IIA (Institute of Internal Auditors):" },
+    { "type": "ul", "items": [
+      "1ª linha: áreas de negócio — dono do risco operacional.",
+      "2ª linha: compliance, risco, jurídico — define políticas e monitoriza.",
+      "3ª linha: auditoria interna — assegura efectividade da 1ª e 2ª linhas."
+    ] },
+    { "type": "h3", "text": "Avaliação de eficácia" },
+    { "type": "p", "text": "Como saber se o programa funciona? KPIs: número de denúncias (paradoxo: mais denúncias = mais confiança no canal), tempo médio de resposta, taxa de conclusão de formação, número de violações detectadas, multas e sanções evitadas." },
+    { "type": "callout", "variant": "success", "text": "Para PME: começar com código de ética, política anticorrupção e canal de denúncias simples. Crescer conforme a exposição ao risco." }
+  ],
+  "keyPoints": [
+    "Compliance garante cumprimento de leis, regulamentos e padrões éticos.",
+    "Pilares: liderança, políticas, formação, denúncias, monitorização, resposta.",
+    "Áreas críticas: anticorrupção, AML/KYC, RGPD, antitrust, sanções.",
+    "Modelo IIA: 3 linhas (negócio, risco/compliance, auditoria).",
+    "Eficácia mede-se com denúncias, tempo de resposta, formação, sanções."
+  ],
+  "quizSlug": "enq",
+  "nextLesson": null,
+  "prevLesson": "sustentabilidade"
+}

@@ -12,6 +12,7 @@
   import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
   import { handleKonamiKey, logoClick, footerClick } from '$lib/easterEggs';
   import HeartButton from '$lib/components/HeartButton.svelte';
+  import XpPill from '$lib/components/XpPill.svelte';
   import { t } from 'svelte-i18n';
   import { onMount } from 'svelte';
   import { pwaInfo } from 'virtual:pwa-info';
@@ -164,7 +165,6 @@
                 </div>
                 <div class="nav-actions">
                   <LanguageSwitcher />
-                  <HeartButton />
                   <a href="/definicoes" class="icon-btn" aria-label={$t('a11y.settings', { default: 'Definições' })} title={$t('a11y.settings', { default: 'Definições' })}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <circle cx="12" cy="12" r="3"/>
@@ -213,6 +213,18 @@
                     <span class="nav-label">{$t('nav.bottom.copyright.label', { default: '©' })}</span>
                   </button>
                 </nav>
+
+                <!--
+                  Floating XP + Heart, fixed to the bottom-right corner.
+                  Lives OUTSIDE the header / bottom-nav so it doesn't
+                  shift layout. Sits ABOVE the bottom-nav (z-index 50)
+                  and BELOW modal overlays (which are typically 100+).
+                  Respects iOS safe-area for notched devices.
+                -->
+                <div class="fab-stack" aria-live="polite">
+                  <XpPill />
+                  <HeartButton />
+                </div>
   </div>
 {/if}
 
@@ -408,6 +420,29 @@
       }
       .nav-btn:active {
         transform: none;
+      }
+    }
+
+    /* Floating action button stack (XP pill + heart) — bottom-right corner. */
+    .fab-stack {
+      position: fixed;
+      right: max(1rem, env(safe-area-inset-right));
+      bottom: calc(72px + env(safe-area-inset-bottom) + 0.5rem);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+      z-index: 60;
+      pointer-events: none; /* container ignores — children re-enable */
+    }
+    .fab-stack > :global(*) {
+      pointer-events: auto;
+    }
+    /* On wide screens give a little extra breathing room from the edge. */
+    @media (min-width: 768px) {
+      .fab-stack {
+        right: max(1.5rem, env(safe-area-inset-right));
+        bottom: calc(72px + env(safe-area-inset-bottom) + 1rem);
       }
     }
 </style>

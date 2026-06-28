@@ -1,0 +1,77 @@
+{
+  "id": "meq-est",
+  "title": "Quiz: Marketing Estratégico",
+  "description": "STP, mix marketing (4P), posicionamento e brand equity.",
+  "questions": [
+    {
+      "q": "No STP, 'S' significa:",
+      "opts": [
+        "Selling",
+        "Segmentação",
+        "Satisfação",
+        "Serviço"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Marketing concentrado é focar em:",
+      "opts": [
+        "Todos os segmentos",
+        "Um nicho específico",
+        "Apenas exportação",
+        "Apenas clientes existentes"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Os 4P clássicos são:",
+      "opts": [
+        "Preço, Praça, Pessoas, Produto",
+        "Produto, Preço, Praça, Promoção",
+        "Plano, Preço, Praça, Promoção",
+        "Produto, Posicionamento, Preço, Promoção"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O posicionamento é principalmente:",
+      "opts": [
+        "O slogan da marca",
+        "O lugar único que a marca ocupa na mente do cliente",
+        "O preço mais baixo do mercado",
+        "A embalagem do produto"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Reason-to-believe (RTB) é:",
+      "opts": [
+        "Uma promessa vaga",
+        "Uma prova concreta que sustenta o posicionamento",
+        "O nome do CEO",
+        "Um slogan publicitário"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Segundo Keller, brand equity inclui:",
+      "opts": [
+        "Apenas vendas",
+        "Awareness, associations, perceived quality, loyalty",
+        "Apenas o preço premium",
+        "Apenas o NPS"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Construir brand equity demora geralmente:",
+      "opts": [
+        "Uma campanha",
+        "Anos de investimento sustentado",
+        "Uma semana",
+        "Um trimestre"
+      ],
+      "a": 1
+    }
+  ]
+}
