@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T13:05:00+02:00",
+  "lastUpdated": "2026-06-28T14:10:00+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -245,6 +245,12 @@
       "description": "Confetti easter-egg flow: 5 entry points (heartClick, logo triple-click, konami code, secret room, XP tier) — todos via fireConfettiEvent→CustomEvent→Confetti.svelte mounted em +layout.svelte:139. Reduced-motion respeitada em CSS+JS. showToast par likewise wired.",
       "sha": "2a75ffb",
       "closed_at": "2026-06-28T13:05:00+02:00"
+    },
+    {
+      "id": "gap-037",
+      "description": "5 form placeholders PT hardcoded → $t() with fallback in biblioteca/novo (title/url/tags), habitos/novo (name), financas/transacoes (pesquisa). 25 new i18n entries (5 keys × 5 locales). npm run check + build verdes, push origin done.",
+      "sha": "58087d2",
+      "closed_at": "2026-06-28T14:10:00+02:00"
     }
   ]
 }
