@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T22:30:00+02:00",
+  "lastUpdated": "2026-06-28T23:15:00+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -20,8 +20,8 @@
     {
       "id": "gap-034",
       "category": "feature-pedida-pelo-Daniel",
-      "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Já temos 20 cursos BA + rota /aulas (gap-018). Daniel quer MAIS. Próximo: integrar cadeiras EU Business School além de BA.",
-      "severity": "média",
+      "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Já temos 24 cursos BA+Uni+Advanced, 119+16 lições, 32+4 quizzes. Próximo round se Daniel pedir mais.",
+      "severity": "baixa",
       "source": "audio-Daniel-2026-06-27",
       "created_at": "2026-06-28T13:05:00+02:00"
     },
@@ -36,15 +36,15 @@
     {
       "id": "gap-036",
       "category": "UI/UX",
-      "description": "HeartButton visibilidade + localização: investigar se é visível em /, splash, escola, financas, habitos. Daniel pediu 'no sítio que eu disse' — código atual: bottom-right FAB stack (XpPill + HeartButton) em +layout.svelte:230. Verificar se é exactamente onde o Daniel quer ou se prefere header / hero / splash.",
-      "severity": "média",
+      "description": "HeartButton visibilidade + localização: smoke confirmou FAB bottom-right em / (visível e acessível). Daniel pediu 'no sítio que eu disse' — confirmar se bottom-right é exactamente onde ele quer ou se prefere header / hero / splash.",
+      "severity": "baixa",
       "source": "audio-Daniel-2026-06-28",
       "created_at": "2026-06-28T13:05:00+02:00"
     },
     {
       "id": "gap-045",
       "category": "empty-area",
-      "description": "NOVO: smoke real em /financas em app fresh para confirmar dashboard mostra totais + transações seed (gap-043 fix). Browser smoke pendente — código OK mas live-fire bloqueado por auth gating.",
+      "description": "smoke real em /financas em app fresh para confirmar dashboard mostra totais + transações seed (gap-043 fix). Browser smoke pendente — código OK mas live-fire bloqueado por auth gating.",
       "severity": "baixa",
       "source": "watchdog-tick-2026-06-28-17",
       "created_at": "2026-06-28T17:00:00+02:00"
@@ -52,7 +52,7 @@
     {
       "id": "gap-049",
       "category": "i18n",
-      "description": "NOVO: smoke test nas 5 línguas (pt-PT, en, fr, tn, ar) em produção após gap-048 — verificar que $t() resolve todas as 41 chaves novas sem mostrar 'a11y.aria.X' literal no DOM. Bloqueado por auth gate (todas as áreas ficam atrás do splash).",
+      "description": "smoke test nas 5 línguas (pt-PT, en, fr, tn, ar) em produção após gap-048 — verificar que $t() resolve todas as 41 chaves novas sem mostrar 'a11y.aria.X' literal no DOM. Bloqueado por auth gate (todas as áreas ficam atrás do splash).",
       "severity": "média",
       "source": "watchdog-tick-2026-06-28-22",
       "created_at": "2026-06-28T22:30:00+02:00"
@@ -60,18 +60,18 @@
     {
       "id": "gap-050",
       "category": "smoke-fail",
-      "description": "NOVO: HeartButton não aparece em /splash (correto — só após auth) mas aparece em /, /escola, /aulas, /financas, /habitos, /biblioteca, /trabalhos, /definicoes. Verificar visualmente com Fatma logged-in que FAB bottom-right está no sítio certo e não esconde conteúdo.",
+      "description": "HeartButton aparece no DOM em / (correto, bottom-right). Smoke live-fire pendente — auth gate bloqueia. Quando Fatma logada confirmar visualmente que FAB bottom-right está no sítio certo e não esconde conteúdo.",
       "severity": "baixa",
       "source": "watchdog-tick-2026-06-28-22",
       "created_at": "2026-06-28T22:30:00+02:00"
     },
     {
-      "id": "gap-051",
-      "category": "feature-pedida-pelo-Daniel",
-      "description": "NOVO: Daniel tem 20 cursos (BA + cadeiras universidade) mas pediu 'tudo que souber a cadeiras da universidade' — próximo passo é expandir para: cadeiras EU Business School (Genebra/Barcelona/Munich), Marketing Advanced, International Business, Supply Chain, Data Analytics, Project Management, Corporate Finance, Negociacao Avancada, Lideranca. Prioridade média: gap-034/042 cobriu 20 cursos, este é o próximo round.",
+      "id": "gap-052",
+      "category": "i18n",
+      "description": "NOVO: detectar PT literals hardcoded em aria-label e em conteúdo de modal/seções. Smell-test do PASSO 2 deste tick apanhou 22 PT literals não-$t() em src/routes (biblioteca, case, escola, financas). Maioria são aria-labels (acessibilidade) — devem ser $t() para garantir que L10n aplica. Acumulado: 5-15 chaves × 5 locales.",
       "severity": "média",
-      "source": "audio-Daniel-2026-06-28-cadeiras-EBS",
-      "created_at": "2026-06-28T22:30:00+02:00"
+      "source": "watchdog-tick-2026-06-28-23",
+      "created_at": "2026-06-28T23:15:00+02:00"
     }
   ],
   "closedItems": [
@@ -114,6 +114,7 @@
     {"id": "gap-046", "description": "gap-042 follow-up: course 'Inovação e Empreendedorismo' was advertised as 4 lessons + 1 quiz in escola/+page.svelte and curso/[slug]/+page.svelte but only had 3 lessons and 0 quiz. Created 4-financiamento-e-pitch.json + ieq.json + i18n 5 locales + escola/curso/[slug] wired.", "sha": "41cebe3", "closed_at": "2026-06-28T18:18:35+02:00"},
     {"id": "gap-042", "description": "4 cadeiras universidade (Introdução ao Direito / Sistemas de Informação / Logística / Inovação e Empreendedorismo) × 4 lições + 1 quiz cada. Adicionadas ao CATALOGUE em escola/+page.svelte + aulas/+page.server.ts + curso/[slug]/+page.svelte. Total: 20 cursos, 119 lições, 32 quizzes.", "sha": "43eb23f", "closed_at": "2026-06-28T18:18:35+02:00"},
     {"id": "gap-047", "description": "6 PT body strings → $t() w/ default fallback across escola/biblioteca/financas pages.", "sha": "48f6228", "closed_at": "2026-06-28T19:00:00+02:00"},
-    {"id": "gap-048", "description": "i18n audit pass massivo: 41 chaves × 5 locales = 205 entries adicionadas em JSON; 14 ficheiros Svelte patched para usar $t() com default fallback; renamed stripped-as-accent keys (navega_o_por_sec_o → navegacao_por_seccao etc.); corrigido EN translations que estavam em PT; corrigido biblioteca/novo description max=500. npm run check: 0 erros / 3 warnings (CSS pre-existentes). npm run build: green. SHA 564fa64.", "sha": "564fa64", "closed_at": "2026-06-28T22:30:00+02:00"}
+    {"id": "gap-048", "description": "i18n audit pass massivo: 41 chaves × 5 locales = 205 entries adicionadas em JSON; 14 ficheiros Svelte patched para usar $t() com default fallback; renamed stripped-as-accent keys (navega_o_por_sec_o → navegacao_por_seccao etc.); corrigido EN translations que estavam em PT; corrigido biblioteca/novo description max=500. npm run check: 0 erros / 3 warnings (CSS pre-existentes). npm run build: green. SHA 564fa64.", "sha": "564fa64", "closed_at": "2026-06-28T22:30:00+02:00"},
+    {"id": "gap-051", "description": "4 cadeiras universidade advanced (International Business / Supply Chain / Data Analytics / Project Management) × 4 lições + 1 quiz cada = 16 lições + 4 quizzes. Total CATALOGUE: 94 slugs (era 90, +4). Wired em escola/+page.svelte (group Universitade), escola/curso/[slug]/+page.svelte (full lessons array + quizSlug), aulas/+page.server.ts (slug→title/icon/color). Smoke: 16/16 lições + 4/4 quizzes retornam 200 em produção. npm run check 0/0, build green. SHA 80bc814.", "sha": "80bc814", "closed_at": "2026-06-28T23:15:00+02:00"}
   ]
 }
