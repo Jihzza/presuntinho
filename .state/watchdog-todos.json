@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T09:55:00+02:00",
+  "lastUpdated": "2026-06-28T10:10:00+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -32,22 +32,6 @@
       "severity": "média",
       "source": "brief-inicial",
       "created_at": "2026-06-28T02:36:00+02:00"
-    },
-    {
-      "id": "gap-024",
-      "category": "conteudo-vazio",
-      "description": "/escola/walkthrough/[lessonSlug] ainda tem breadcrumbs PT e link 'Voltar para a escola' PT — patch-grep original do gap-021 mencionava esta rota",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-28-08",
-      "created_at": "2026-06-28T08:55:00+02:00"
-    },
-    {
-      "id": "gap-025",
-      "category": "i18n",
-      "description": "escola/curso/portugues/+page.svelte tem 3 PT strings residuais ('Não foi possível carregar o curso.', aria-labels) — confirma se ficam PT por design",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-28-08",
-      "created_at": "2026-06-28T08:55:00+02:00"
     },
     {
       "id": "gap-027",
@@ -228,6 +212,18 @@
       "description": "biblioteca/item/[id] notFound + loadFailed now $t() with fallback. 2 keys × 5 locales = 10 entries i18n.",
       "sha": "6631223",
       "closed_at": "2026-06-28T09:55:00+02:00"
+    },
+    {
+      "id": "gap-024",
+      "description": "Walkthrough route /escola/walkthrough/[lessonSlug] PT strings now $t() with fallback ('Voltar à Escola', 'Voltar ao curso'). 2 new keys × 5 locales = 10 entries i18n.",
+      "sha": "873cf8a",
+      "closed_at": "2026-06-28T10:10:00+02:00"
+    },
+    {
+      "id": "gap-025",
+      "description": "escola/curso/portugues 'Não foi possível carregar o curso.' + 'A carregar curso…' + 'A carregar…' + 'Voltar à Escola' now $t() with fallback. 3 new keys × 5 locales = 15 entries i18n (backToEscola reuses walkthrough key).",
+      "sha": "873cf8a",
+      "closed_at": "2026-06-28T10:10:00+02:00"
     }
   ]
 }

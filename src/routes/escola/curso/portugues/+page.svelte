@@ -177,7 +177,7 @@
       course = data;
     } catch (e) {
       loadError =
-        e instanceof Error ? e.message : 'Não foi possível carregar o curso.';
+        e instanceof Error ? e.message : $t('escola.curso.pt.loadFailed', { default: 'Não foi possível carregar o curso.' }) as string;
     } finally {
       loading = false;
     }
@@ -250,7 +250,7 @@
       <span>{$t('escola.curso.pt.breadcrumb.current', { default: 'Curso PT' })}</span>
     </p>
     {#if loading}
-      <h1>🇵🇹 A carregar curso…</h1>
+      <h1>{$t('escola.curso.pt.loading', { default: '🇵🇹 A carregar curso…' })}</h1>
     {:else if loadError}
       <h1>🇵🇹 Curso de Português</h1>
       <p class="sub">Conteúdo temporariamente indisponível.</p>
@@ -270,12 +270,12 @@
   </header>
 
   {#if loading}
-    <p class="state">A carregar…</p>
+    <p class="state">{$t('escola.curso.pt.loadingShort', { default: 'A carregar…' })}</p>
   {:else if loadError}
     <div class="state error" role="alert">
       <p>⚠️ {loadError}</p>
       <p>{$t('escola.curso.pt.verify.text', { default: 'Verifica que o ficheiro' })} <code>static/lessons/portugues/curso.json</code> {$t('escola.curso.pt.verify.exists', { default: 'existe.' })}</p>
-      <p><a href="/escola/">← Voltar à Escola</a></p>
+      <p><a href="/escola/">{$t('walkthrough.backToEscola', { default: '← Voltar à Escola' })}</a></p>
     </div>
   {:else if course}
     <!-- Progress bar -->

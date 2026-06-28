@@ -143,7 +143,7 @@
     <div class="state error" role="alert">
       <p>⚠️ {loadError ?? 'Lição não encontrada.'}</p>
       <p>{$t('walkthrough.verify.text', { default: 'Verifica que' })} <code>/lessons/equivalenza/{lessonSlug}.json</code> {$t('walkthrough.verify.exists', { default: 'existe.' })}</p>
-      <p><a href="/escola/">← Voltar à Escola</a></p>
+      <p><a href="/escola/">{$t('walkthrough.backToEscola', { default: '← Voltar à Escola' })}</a></p>
     </div>
   {:else}
     <!-- Breadcrumb -->
@@ -329,7 +329,7 @@
         📝 Começar trabalho →
       </a>
       <a class="secondary" href="/escola/curso/equivalenza/">
-        ← Voltar ao curso
+        {$t('walkthrough.backToCourse', { default: '← Voltar ao curso' })}
       </a>
     </div>
   {/if}
