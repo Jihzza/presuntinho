@@ -17,6 +17,8 @@
   import { onMount } from 'svelte';
   import { get } from 'svelte/store';
   import { t } from 'svelte-i18n';
+  import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
   import {
     listCategorias,
     listTransacoesMes,
@@ -50,8 +52,14 @@
   let categorias = $state<CategoriaRow[]>([]);
   let loading = $state(true);
   let error = $state<string | null>(null);
+  // M1-S2: extended filter set. URL params act as single source of truth
+  // so users can bookmark filtered views.
   let mesFiltro = $state(getMesAtual());
   let categoriaFiltro = $state<string>('');   // '' = todas
+  let tipoFiltro = $state<'todas' | 'receita' | 'despesa'>('todas'); // M1-S2
+  let pesquisa = $state<string>('');                                  // M1-S2: substring em descricao
+  let dataDe = $state<string>('');                                    // M1-S2: YYYY-MM-DD
+  let dataAte = $state<string>('');                                   // M1-S2: YYYY-MM-DD
   let confirmingDelete = $state<number | null>(null);
 
   // Mapa id → CategoriaRow para lookup O(1) por linha.
@@ -60,12 +68,18 @@
   );
 
   // Agrupa transações por data (YYYY-MM-DD) e mantém a ordem
-  // newest-first dentro de cada grupo.
+  // newest-first dentro de cada grupo. Aplica TODOS os filtros
+  // (categoria + tipo + pesquisa + intervalo datas).
   type Grupo = { data: string; items: Transacao[] };
   let grupos = $derived.by<Grupo[]>(() => {
     const map = new Map<string, Transacao[]>();
+    const needle = pesquisa.trim().toLowerCase();
     for (const t of transacoes) {
       if (categoriaFiltro && t.categoria !== categoriaFiltro) continue;
+      if (tipoFiltro !== 'todas' && t.tipo !== tipoFiltro) continue;
+      if (dataDe && t.data < dataDe) continue;
+      if (dataAte && t.data > dataAte) continue;
+      if (needle && !(t.descricao ?? '').toLowerCase().includes(needle)) continue;
       const arr = map.get(t.data);
       if (arr) arr.push(t);
       else map.set(t.data, [t]);
@@ -74,7 +88,23 @@
     return Array.from(map.entries()).map(([data, items]) => ({ data, items }));
   });
 
+  // M1-S2: hydrate filters from URL params (single source of truth).
+  // Updates the URL when filters change so views are bookmarkable.
   onMount(() => {
+    const sp = $page.url.searchParams;
+    const m = sp.get('mes');
+    if (m && /^\d{4}-\d{2}$/.test(m)) mesFiltro = m;
+    const cat = sp.get('cat');
+    if (cat) categoriaFiltro = cat;
+    const tipo = sp.get('tipo');
+    if (tipo === 'receita' || tipo === 'despesa') tipoFiltro = tipo;
+    const q = sp.get('q');
+    if (q) pesquisa = q;
+    const de = sp.get('de');
+    if (de && /^\d{4}-\d{2}-\d{2}$/.test(de)) dataDe = de;
+    const ate = sp.get('ate');
+    if (ate && /^\d{4}-\d{2}-\d{2}$/.test(ate)) dataAte = ate;
+
     void (async () => {
       try {
         categorias = await listCategorias();
@@ -90,6 +120,23 @@
   $effect(() => {
     const _ = mesFiltro;
     void refresh();
+  });
+
+  // M1-S2: sync filters → URL params (preserva bookmarkable state).
+  $effect(() => {
+    const sp = new URLSearchParams();
+    if (mesFiltro !== getMesAtual()) sp.set('mes', mesFiltro);
+    if (categoriaFiltro) sp.set('cat', categoriaFiltro);
+    if (tipoFiltro !== 'todas') sp.set('tipo', tipoFiltro);
+    if (pesquisa.trim()) sp.set('q', pesquisa.trim());
+    if (dataDe) sp.set('de', dataDe);
+    if (dataAte) sp.set('ate', dataAte);
+    const qs = sp.toString();
+    const url = qs ? `?${qs}` : window.location.pathname;
+    if (typeof window !== 'undefined' && window.location.search !== (qs ? `?${qs}` : '')) {
+      // Use replaceState so back-button isn't polluted with filter churn
+      window.history.replaceState(null, '', url);
+    }
   });
 
   async function refresh(): Promise<void> {
@@ -127,16 +174,38 @@
   function clearFilters(): void {
     mesFiltro = getMesAtual();
     categoriaFiltro = '';
+    tipoFiltro = 'todas';
+    pesquisa = '';
+    dataDe = '';
+    dataAte = '';
   }
+
+  // M1-S2: derived flag for "any filter active" — drives visibility of the
+  // "Limpar filtros" button and the EmptyState hint.
+  let temFiltroAtivo = $derived(
+    categoriaFiltro !== '' ||
+    tipoFiltro !== 'todas' ||
+    pesquisa.trim() !== '' ||
+    dataDe !== '' ||
+    dataAte !== '' ||
+    mesFiltro !== getMesAtual()
+  );
 
   function cat(categoriaId: string): CategoriaRow | undefined {
     return categoriasPorId[categoriaId];
   }
 
-  // Total do mês (somando só as visíveis pelo filtro de categoria)
+  // Total do mês (somando só as visíveis pelos filtros activos)
   let totalVisivel = $derived(
     transacoes
       .filter((t) => !categoriaFiltro || t.categoria === categoriaFiltro)
+      .filter((t) => tipoFiltro === 'todas' || t.tipo === tipoFiltro)
+      .filter((t) => !dataDe || t.data >= dataDe)
+      .filter((t) => !dataAte || t.data <= dataAte)
+      .filter((t) => {
+        const n = pesquisa.trim().toLowerCase();
+        return !n || (t.descricao ?? '').toLowerCase().includes(n);
+      })
       .reduce(
         (acc, t) => {
           if (t.tipo === 'receita') acc.receitas += t.valor;
@@ -203,14 +272,41 @@
           {/each}
         </select>
       </label>
-      {#if categoriaFiltro || mesFiltro !== getMesAtual()}
+      <label class="field">
+        <span class="field-label">Tipo</span>
+        <select bind:value={tipoFiltro} aria-label="Filtrar por tipo">
+          <option value="todas">Todas</option>
+          <option value="receita">Receitas</option>
+          <option value="despesa">Despesas</option>
+        </select>
+      </label>
+      <label class="field grow">
+        <span class="field-label">Pesquisar</span>
+        <input
+          type="search"
+          bind:value={pesquisa}
+          placeholder="ex: almoço"
+          aria-label="Pesquisar na descrição"
+        />
+      </label>
+    </div>
+    <div class="filters-row">
+      <label class="field">
+        <span class="field-label">De</span>
+        <input type="date" bind:value={dataDe} aria-label="Data inicial" />
+      </label>
+      <label class="field">
+        <span class="field-label">Até</span>
+        <input type="date" bind:value={dataAte} aria-label="Data final" />
+      </label>
+      {#if temFiltroAtivo}
         <button
           type="button"
           class="clear-btn"
           onclick={clearFilters}
           aria-label="Limpar filtros"
         >
-          {$t('common.filter')}: limpar
+          Limpar filtros
         </button>
       {/if}
     </div>
