@@ -145,6 +145,24 @@ export async function addItem(input: NewItemInput): Promise<number> {
   };
   const id = await db().biblioteca.add(row) as number;
   await awardXP('biblioteca_add');
+
+  // gap-055: award XP for each NEW tag used for the first time
+  try {
+    if (row.tags.length > 0) {
+      const existingTags = new Set(await listTags());
+      let firstUseCount = 0;
+      for (const tag of row.tags) {
+        if (!existingTags.has(tag)) firstUseCount += 1;
+      }
+      for (let i = 0; i < firstUseCount; i += 1) {
+        await awardXP('biblioteca_use_tag');
+      }
+    }
+  } catch (err) {
+    // XP wiring must never break the core bookmark-add flow
+    console.warn('[biblioteca] awardXP(use_tag) failed (non-fatal):', err);
+  }
+
   return id;
 }
 

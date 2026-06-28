@@ -80,7 +80,11 @@ const COURSE_META: Record<string, CourseMeta> = {
             'introducao-ao-direito': { slug: 'introducao-ao-direito', title: 'Introdução ao Direito', icon: '⚖️', color: '#7c2d12' },
             'logistica': { slug: 'logistica', title: 'Logística', icon: '🚚', color: '#0f766e' },
             'sistemas-de-informacao': { slug: 'sistemas-de-informacao', title: 'Sistemas de Informação', icon: '💻', color: '#1e40af' },
-            'inovacao-empreendedorismo': { slug: 'inovacao-empreendedorismo', title: 'Inovação e Empreendedorismo', icon: '💡', color: '#ca8a04' }
+            'inovacao-empreendedorismo': { slug: 'inovacao-empreendedorismo', title: 'Inovação e Empreendedorismo', icon: '💡', color: '#ca8a04' },
+            'international-business': { slug: 'international-business', title: 'International Business', icon: '🌐', color: '#2563eb' },
+            'supply-chain': { slug: 'supply-chain', title: 'Supply Chain Management', icon: '📦', color: '#b45309' },
+            'data-analytics': { slug: 'data-analytics', title: 'Data Analytics for Business', icon: '📊', color: '#7c3aed' },
+            'project-management': { slug: 'project-management', title: 'Project Management', icon: '📋', color: '#0d9488' }
           };
 
 /** Turn "blue-ocean-strategy" → "Blue Ocean Strategy". */

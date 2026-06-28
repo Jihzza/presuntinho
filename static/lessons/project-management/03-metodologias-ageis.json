@@ -1,0 +1,87 @@
+{
+  "id": "03-metodologias-ageis",
+  "title": "Metodologias Ágeis",
+  "courseSlug": "project-management",
+  "lessonNumber": 3,
+  "description": "Manifesto ágil, Scrum (roles, events, artifacts), Kanban, XP, SAFe para escala e hybrid approaches.",
+  "audio": "Lição sobre metodologias ágeis.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["ágil", "Scrum", "Kanban", "SAFe"],
+  "sections": [
+    { "type": "h2", "text": "A génese do ágil" },
+    { "type": "p", "text": "Em 2001, dezassete praticantes de software reuniram-se em Snowbird, Utah, e assinaram o Manifesto Ágil. Não inventaram Scrum (Ken Schwaber e Jeff Sutherland já o vinham a desenvolver desde os anos 90) nem XP (Kent Beck, fim dos anos 90). Formalizaram um conjunto de valores e princípios que condensava o que essas práticas tinham em comum: foco em entrega de valor, colaboração, adaptação e melhoria contínua." },
+    { "type": "h2", "text": "Os 4 valores do Manifesto Ágil" },
+    { "type": "ul", "items": [
+      "Indivíduos e interacções sobre processos e ferramentas.",
+      "Software funcional sobre documentação abrangente.",
+      "Colaboração com o cliente sobre negociação de contratos.",
+      "Responder a mudanças sobre seguir um plano."
+    ] },
+    { "type": "p", "text": "A segunda parte de cada item é importante: 'ou seja, embora haja valor nos itens da direita, valorizamos mais os da esquerda'. Ágil não é anti-documentação ou anti-planeamento — é sobre priorizar o que mais gera valor em cada contexto." },
+    { "type": "h2", "text": "Os 12 princípios" },
+    { "type": "p", "text": "O manifesto é complementado por 12 princípios que operacionalizam os valores:" },
+    { "type": "ul", "items": [
+      "Satisfação do cliente via entrega contínua e precoce de software valioso.",
+      "Aceitar mudanças de requisitos, mesmo tarde no desenvolvimento — vantagem competitiva.",
+      "Entregar software funcional frequentemente (semanas, não meses).",
+      "Business people e developers trabalham juntos diariamente.",
+      "Construir projectos em torno de indivíduos motivados — dar-lhes ambiente e apoio.",
+      "Conversa face-a-face é o método mais eficiente de comunicação.",
+      "Software funcional é a medida primária de progresso.",
+      "Desenvolvimento sustentável — manter ritmo constante indefinidamente.",
+      "Excelência técnica e bom design aumentam a agilidade.",
+      "Simplicidade — a arte de maximizar a quantidade de trabalho não-feito — é essencial.",
+      "As melhores arquitecturas, requisitos e designs emergem de equipas auto-organizadas.",
+      "Reflexão regular sobre como se tornar mais eficaz — ajustar comportamento."
+    ] },
+    { "type": "h2", "text": "Scrum — o framework mais usado" },
+    { "type": "p", "text": "Scrum é um framework leve que ajuda pessoas, equipas e organizações a gerar valor através de soluções adaptativas para problemas complexos. Estrutura-se em três pilares, três accountabilities e cinco eventos." },
+    { "type": "h3", "text": "Três accountabilities (Scrum Guide 2020)" },
+    { "type": "ul", "items": [
+      "Product Owner: responsável por maximizar o valor do produto. Gere o Product Backlog, prioriza, representa stakeholders.",
+      "Scrum Master: responsável por estabelecer Scrum como definido. Coach da equipa, remove impedimentos, protege o processo.",
+      "Developers: pessoas da equipa que trabalham para entregar um Increment útil ao final de cada Sprint."
+    ] },
+    { "type": "h3", "text": "Cinco eventos" },
+    { "type": "ul", "items": [
+      "Sprint: ciclo de 1-4 semanas (2 semanas é o mais comum) onde se constrói um Incremento utilizável.",
+      "Sprint Planning: reunião no início da Sprint para definir o que e como vai ser feito.",
+      "Daily Scrum: reunião diária de 15 min para sincronizar actividades e identificar impedimentos.",
+      "Sprint Review: no fim da Sprint, demonstração do trabalho feito a stakeholders para recolher feedback.",
+      "Sprint Retrospective: reflexão da equipa sobre o que correu bem/mal e o que ajustar no próximo Sprint."
+    ] },
+    { "type": "h3", "text": "Três artefactos" },
+    { "type": "ul", "items": [
+      "Product Backlog: lista ordenada de tudo o que é necessário no produto. Gerida pelo Product Owner.",
+      "Sprint Backlog: items seleccionados para a Sprint + plano para os entregar. Gerida pela equipa.",
+      "Increment: a soma de todos os items concluídos durante a Sprint, somada ao valor de Sprints anteriores."
+    ] },
+    { "type": "h2", "text": "Kanban" },
+    { "type": "p", "text": "Kanban é um sistema visual de gestão de fluxo originário da Toyota. Em software, adaptou-se para gestão do trabalho contínuo: visualizar o trabalho, limitar WIP (work in progress), medir lead time, gerir fluxo explicitamente. Não tem Sprints — é contínuo." },
+    { "type": "h3", "text": "Práticas essenciais" },
+    { "type": "ul", "items": [
+      "Visualizar o workflow (board com colunas como To Do, In Progress, Done).",
+      "Limitar WIP por coluna — força foco e identifica gargalos.",
+      "Medir e gerir fluxo (cycle time, lead time, throughput).",
+      "Tornar as regras do processo explícitas.",
+      "Implementar loops de feedback (reuniões de operação, reviews).",
+      "Melhorar continuamente, evoluir experimentalmente."
+    ] },
+    { "type": "h3", "text": "Kanban vs Scrum" },
+    { "type": "p", "text": "Scrum é cadenciado (Sprints de duração fixa), Kanban é contínuo. Scrum tem roles definidos (PO, SM), Kanban não prescreve roles. Scrum limita WIP pela duração da Sprint; Kanban por limites explícitos por coluna. Ambos compatíveis com melhoria contínua." },
+    { "type": "h2", "text": "XP — Extreme Programming" },
+    { "type": "p", "text": "XP foca-se em práticas técnicas que melhoram a qualidade do código e a resposta à mudança: pair programming, test-driven development (TDD), continuous integration, refactoring constante, simple design, collective code ownership, planning game. Frequentemente combinado com Scrum (Scrum + XP = 'ScrumBan')." },
+    { "type": "h2", "text": "Scaled agile — SAFe e afins" },
+    { "type": "p", "text": "Scaled Agile Framework (SAFe) é o framework mais usado para escalar ágil a grandes organizações. Estrutura-se em quatro configurações (Essential, Large Solution, Portfolio, Full) e três níveis (Team, Program, Large Solution, Portfolio). Inclui Agile Release Trains (ART), PI Planning (Planning Interval de 8-12 semanas) e cerimónicas adicionais. Críticos apontam-no como 'Scrum com mais cerimónias'; fãs argumentam que é necessário em contextos de centenas de equipas e integrações complexas." },
+    { "type": "h3", "text": "Alternativas ao SAFe" },
+    { "type": "ul", "items": [
+      "LeSS (Large-Scale Scrum): extensão minimalista do Scrum para múltiplas equipas (até 8).",
+      "Scrum@Scale: extensão do Scrum criada por Jeff Sutherland.",
+      "Spotify Model: case study famoso, mas não é um framework prescrito — é uma descrição de práticas.",
+      "DSDM, Crystal, FDD: frameworks ágeis menos difundidos mas com nichos fiéis."
+    ] },
+    { "type": "h2", "text": "Hybrid approaches — o caso geral" },
+    { "type": "p", "text": "Na prática, a maioria das organizações usa abordagens híbridas. Agile não é dogma — é um conjunto de práticas e valores. Em bancos, é comum usar ágil para o desenvolvimento de front-end digital mas waterfall para o core banking (regulado). Em construtoras, é ágil para design e planeamento mas waterfall para execução física. O bom project manager sabe puxar de cada lado o que o contexto pede." },
+    { "type": "callout", "variant": "success", "text": "Para a Fatma: ágil não é fazer sprints — é inspeccionar e adaptar continuamente. Se a tua equipa faz standups e sprints mas não muda nada com base no que aprende, não é ágil — é waterfall disfarçado." }
+  ]
+}

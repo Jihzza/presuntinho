@@ -1,0 +1,64 @@
+{
+  "id": "02-estrategias-de-entrada",
+  "title": "Estratégias de Entrada e Análise de País",
+  "courseSlug": "international-business",
+  "lessonNumber": 2,
+  "description": "Como escolher o modo de entrada certo, analisar risco-país, distância cultural e desenhar uma estratégia glocal.",
+  "audio": "Lição sobre estratégias de entrada.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["PESTEL", "Hofstede", "risco-país", "glocal"],
+  "sections": [
+    { "type": "h2", "text": "A decisão de entrar num mercado internacional" },
+    { "type": "p", "text": "Antes de escolher entre exportação, licenciamento, joint venture ou subsidiária integral, é preciso responder a três perguntas: vale a pena entrar? Quando? Como? Estas decisões têm de ser tomadas em sequência lógica — primeiro a atractividade do mercado, depois o timing, depois o modo de entrada." },
+    { "type": "h3", "text": "Atractividade do mercado" },
+    { "type": "p", "text": "Combina tamanho actual (volume de vendas, número de clientes), crescimento esperado, intensidade competitiva e margem potencial. Mercados grandes e em crescimento são atractivos, mas a concorrência pode ser feroz; mercados pequenos podem oferecer margens maiores com menos pressão." },
+    { "type": "h3", "text": "Vantagens competitivas para esse mercado" },
+    { "type": "p", "text": "A empresa deve ter algo que funcione especificamente nesse país — marca global, tecnologia, escala, custo baixo. Uma PME local raramente ganha a multinacionais em marcas globais, mas pode vencer em nichos (proximidade, agilidade, conhecimento cultural profundo)." },
+    { "type": "h3", "text": "Recursos e tolerância ao risco" },
+    { "type": "p", "text": "Quanto capital a empresa pode imobilizar? Está disposta a perder dinheiro durante 3-5 anos enquanto constrói presença? Consegue gerir equipas à distância? A resposta a estas perguntas define se uma subsidiária integral é viável ou se faz mais sentido começar com licenciamento." },
+    { "type": "h2", "text": "Análise de país: framework PESTEL" },
+    { "type": "p", "text": "PESTEL é o acrónimo dos seis factores macro que afectam qualquer actividade empresarial num país:" },
+    { "type": "ul", "items": [
+      "Political: estabilidade política, sistema de governo, risco de expropriação, corrupção, políticas comerciais.",
+      "Economic: crescimento do PIB, inflação, taxa de câmbio, taxa de juro, rendimento disponível, infra-estrutura.",
+      "Social: demografia, educação, valores culturais, estrutura familiar, religião, padrões de consumo.",
+      "Technological: nível de infra-estrutura digital, penetração da internet, capacidade de inovação, regulamentação de dados.",
+      "Environmental: políticas ambientais, riscos naturais, disponibilidade de recursos, tendências ESG.",
+      "Legal: sistema legal, protecção de propriedade intelectual, legislação laboral, fiscalidade, contratos."
+    ] },
+    { "type": "h3", "text": "Aplicação prática" },
+    { "type": "p", "text": "Construa uma matriz PESTEL para o país-alvo, com classificação qualitativa (baixo/médio/alto) ou quantitativa (1-5) por factor. Compare países candidatos na mesma matriz para identificar o mais favorável. Exemplo: para um e-commerce de moda, Technological e Logistics são críticos; para uma farmacêutica, Legal (regulação) e Political pesam mais." },
+    { "type": "h2", "text": "Risco-país" },
+    { "type": "p", "text": "O risco-país combina três dimensões que precisam de ser avaliadas separadamente:" },
+    { "type": "ul", "items": [
+      "Risco económico: probabilidade de crise cambial, recessão,default da dívida soberana. Avaliado por agências (Moody's, S&P, Fitch).",
+      "Risco político: probabilidade de mudanças de regime, nacionalizações, sanções, guerra, instabilidade social.",
+      "Risco de transferência: dificuldade em repatriar lucros ou capital (controlos de câmbios, burocracia, impostos)."
+    ] },
+    { "type": "h3", "text": "Como medir risco-país" },
+    { "type": "p", "text": "Agências como EIU (Economist Intelligence Unit), Coface, Euler Hermes publicam ratings trimestrais por país. Bancos centrais e multilaterais (Banco Mundial — Worldwide Governance Indicators) também disponibilizam dados. Uma boa prática: combinar ratings externos com due diligence interna (entrevistas, visita ao terreno, revisão jurídica local)." },
+    { "type": "callout", "variant": "warning", "text": "Risco-país muda ao longo do tempo. A Argentina era vista como mercado atractivo até 2001 (default da dívida); hoje continua volátil. Planeie cenários: o que acontece ao meu negócio se houver uma desvalorização de 30% ou uma crise política? Ter um plano B é obrigatório." },
+    { "type": "h2", "text": "Distância cultural: o modelo de Hofstede" },
+    { "type": "p", "text": "Geert Hofstede identificou (a partir de inquéritos a 100.000+ trabalhadores da IBM) seis dimensões que quantificam diferenças culturais entre países. Quanto maior a distância entre o país de origem e o destino, mais cuidado é preciso na adaptação do produto, do marketing e da gestão." },
+    { "type": "ul", "items": [
+      "Power Distance: quanto a sociedade aceita desigualdade de poder (Índia alta, Suécia baixa).",
+      "Individualism vs Collectivism: foco no indivíduo (EUA, UK) vs no grupo (Japão, Brasil).",
+      "Masculinity vs Femininity: orientação para performance e competição (Japão) vs cooperação e qualidade de vida (Países Nórdicos).",
+      "Uncertainty Avoidance: tolerância à ambiguidade (Portugal média-alta, Singapura baixa).",
+      "Long-term vs Short-term Orientation: foco no futuro (China) vs tradições e presente (Rússia).",
+      "Indulgence vs Restraint: grau em que a sociedade permite a satisfação de necessidades (EUA alta, Rússia baixa)."
+    ] },
+    { "type": "h3", "text": "Aplicação prática de Hofstede" },
+    { "type": "p", "text": "Umamarca de luxo ocidental entra num país com alta Power Distance e Masculinity (ex.: Japão clássico) e precisa de ajustar a comunicação para ser mais formal e respeitosa. Uma empresa japonesa a entrar nos EUA (baixa PDI, alta Individualism) precisa de enfatizar autonomia individual e marketing directo. Ignorar Hofstede é uma das causas mais frequentes de fracassos internacionais." },
+    { "type": "h2", "text": "Estratégia glocal" },
+    { "type": "p", "text": "Glocal = global + local. O princípio: manter a coerência da marca e da oferta core a nível mundial (para ganhar escala e reconhecimento), mas adaptar elementos específicos (sabor, embalagem, preço, mensagem, canais) às preferências e regulamentações locais." },
+    { "type": "h3", "text": "Exemplos clássicos" },
+    { "type": "ul", "items": [
+      "McDonald's: mantém a marca, o processo e o layout global, mas adapta o menu — McAloo Tikki na Índia, McPasta em Itália, McRice no Filipinas.",
+      "IKEA: catálogo global mas dimensões de cama adaptadas a cada mercado, restaurantes com receitas locais.",
+      "Coca-Cola: fórmula core global mas embalagens e campanhas locais — garrafas com nomes árabes no Médio Oriente.",
+      "Netflix: catálogo global (produções próprias) com curadoria local e tradução em dezenas de línguas."
+    ] },
+    { "type": "callout", "variant": "success", "text": "Para a Fatma: a regra prática é manter o core (marca, qualidade, processo) e ajustar o periférico (sabor, tamanho, linguagem, canais). Vais ver este princípio repetido em qualquer multinacional bem-sucedida." }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "id": "03-gestao-de-multinacionais",
+  "title": "Gestão de Multinacionais",
+  "courseSlug": "international-business",
+  "lessonNumber": 3,
+  "description": "Estrutura organizacional global, coordenação, transferência de conhecimento e orientação cultural: etnocentrismo, polycentrismo e geocentrismo.",
+  "audio": "Lição sobre gestão de multinacionais.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["multinacional", "expatriação", "geocentrismo", "estrutura"],
+  "sections": [
+    { "type": "h2", "text": "O que é uma empresa multinacional (MNC)" },
+    { "type": "p", "text": "Uma multinational corporation (MNC) ou multinational enterprise (MNE) é uma empresa que opera em mais de um país, com subsidiárias, fábricas, escritórios de vendas ou centros de I&D distribuídos globalmente. Exemplos: Nestlé, Unilever, Toyota, Apple, Shell, Volkswagen. Operar em vários países traz benefícios (escala, diversificação, proximidade de clientes) mas também complexidade (coordenar fusos horários, línguas, culturas, moedas e regimes fiscais)." },
+    { "type": "h2", "text": "Estrutura organizacional global" },
+    { "type": "p", "text": "Há três grandes modelos de estrutura para MNC, cada um com trade-offs entre integração global e resposta local:" },
+    { "type": "h3", "text": "Internacional — exportação com subsidiária comercial" },
+    { "type": "p", "text": "A casa-mãe mantém o controlo estratégico e operacional. As subsidiárias limitam-se a vender e a distribuir. Comum em sectores onde a I&D e a produção estão concentradas no país de origem (aeronáutica, alta tecnologia). Pouca adaptação local, mas garante coerência da marca e do produto." },
+    { "type": "h3", "text": "Multinacional — área geográfica autónoma" },
+    { "type": "p", "text": "Cada região (Europa, Américas, Ásia-Pacífico) tem uma estrutura autónoma, com decisões de produto, marketing e operações próprias. Favorece adaptação local mas gera duplicação e dificulta economias de escala. Comum em bens de consumo (Unilever, Procter & Gamble)." },
+    { "type": "h3", "text": "Global — matriz integrada com produto mundial" },
+    { "type": "p", "text": "A empresa organiza-se por produto/linha de negócio a nível global, não por região. Cada linha tem responsabilidade mundial. Maximiza escala e sinergias, mas pode falhar em responder a diferenças locais. Comum em sectores com produtos standardizados (semicondutores, software, aviação)." },
+    { "type": "h3", "text": "Transnacional (modelo de Bartlett & Ghoshal)" },
+    { "type": "p", "text": "Combina os três anteriores: eficiência global (escala), resposta local (adaptação) e aprendizagem mundial (transferência de conhecimento entre unidades). É o modelo mais sofisticado mas o mais difícil de executar — exige sistemas de informação maduros e cultura de colaboração. Citado como referência em multinacionais como ABB e P&G." },
+    { "type": "h2", "text": "Coordenação e controlo" },
+    { "type": "p", "text": "Numa MNC, a casa-mãe precisa de coordenar e controlar as subsidiárias. Os mecanismos mais usados:" },
+    { "type": "ul", "items": [
+      "Reporte hierárquico: linhas formais de autoridade e reporting mensal/trimestral.",
+      "Standards globais: manuais de processo, KPIs, auditorias internas, certificações ISO.",
+      "Reuniões de coordenação: comitês de produto, fóruns funcionais, encontros anuais de subsidiárias.",
+      "Sistemas de informação integrados: ERP global (SAP, Oracle) que consolida dados de todas as unidades.",
+      "Rotação de pessoal: expatriados que passam 3-5 anos em diferentes países, garantindo consistência."
+    ] },
+    { "type": "h2", "text": "Transferência de conhecimento entre unidades" },
+    { "type": "p", "text": "Um dos maiores desafios (e fontes de vantagem competitiva) das MNC é a transferência de conhecimento entre subsidiárias. Boas práticas de Singapura que podem beneficiar o Brasil; melhorias de processo de Detroit que podem ser aplicadas em Frankfurt." },
+    { "type": "h3", "text": "Mecanismos formais" },
+    { "type": "ul", "items": [
+      "Documentação: manuais, bases de dados de melhores práticas, repositórios de lições aprendidas.",
+      "Formação: programas globais de desenvolvimento,MBAs internos, mentoring cruzado entre unidades.",
+      "Comunidades de prática: redes temáticas globais (ex: cientistas de I&D, marketers) que partilham problemas e soluções."
+    ] },
+    { "type": "h3", "text": "Mecanismos informais" },
+    { "type": "ul", "items": [
+      "Mobilidade internacional: expatriados e repatriados que transportam conhecimento tácito.",
+      "Eventos e conferências internas: oportunidades de contacto entre colegas de diferentes países.",
+      "Projectos transversais: equipas multi-país que resolvem problemas comuns."
+    ] },
+    { "type": "h2", "text": "Expatriação e gestão global de talento" },
+    { "type": "p", "text": "Expatriados (expats) são colaboradores enviados pela casa-mãe para trabalhar em subsidiárias no estrangeiro, normalmente por 3-5 anos. Custo elevado (40-100% acima do salário base, somando allowances, housing, schooling, fiscalidade) mas justificado pela transferência de conhecimento e pela ligação cultural com a matriz." },
+    { "type": "h3", "text": "Ciclo de expatriação" },
+    { "type": "ul", "items": [
+      "Selecção: identificar colaboradores com competência técnica, adaptabilidade cultural e motivação.",
+      "Preparação: formação pré-partida (língua, cultura, fiscalidade, saúde), coaching intercultural.",
+      "Acolhimento: suporte no terreno (housing, escola, spouse support, tax equalisation).",
+      "Gestão durante o destacamento: acompanhamento regular, combate ao isolamento, gestão de expectativas.",
+      "Repatriação: reintegração na casa-mãe com valorização da experiência — frequentemente o ponto mais frágil."
+    ] },
+    { "type": "h2", "text": "Orientação cultural da MNC: três perspectivas" },
+    { "type": "p", "text": "Perlmutter identificou três orientações que definem como a casa-mãe vê as subsidiárias:" },
+    { "type": "h3", "text": "Etnocentrismo (home country-oriented)" },
+    { "type": "p", "text": "A casa-mãe acredita que as práticas do país de origem são superiores. Recruta expatriados para cargos-chave, centraliza decisões, aplica as mesmas políticas em todo o lado. Vantagens: coerência, controlo. Risco: ignorância das realidades locais, perda de agilidade, ressentimento das subsidiárias." },
+    { "type": "h3", "text": "Polycentrismo (host country-oriented)" },
+    { "type": "p", "text": "Cada subsidiária é autónoma e adapta-se ao mercado local. Recruta gestores locais, decide localmente, reporta resultados à matriz. Vantagens: alta adaptabilidade, motivação das equipas locais. Risco: fragmentação, perda de sinergia global, difícil partilha de boas práticas." },
+    { "type": "h3", "text": "Geocentrismo (world-oriented)" },
+    { "type": "p", "text": "A empresa procura os melhores talentos e práticas independentemente da nacionalidade. Posições-chave são preenchidas pelos melhores do mundo, com critérios objectivos. Integração entre unidades é elevada. É a orientação ideal mas difícil de implementar — exige cultura organizacional muito forte e visão de longo prazo. Empresas como Shell, HSBC e Procter & Gamble são citadas como exemplos." },
+    { "type": "callout", "variant": "success", "text": "Para a Fatma: etnocentrismo é copiar-colar, polycentrismo é fragmentar, geocentrismo é integrar o melhor dos dois mundos. As empresas que sobrevivem a longo prazo tendem a evoluir do etnocentrismo para o geocentrismo à medida que amadurecem internacionalmente." }
+  ]
+}

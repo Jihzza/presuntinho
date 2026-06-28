@@ -1,0 +1,107 @@
+{
+  "id": "scmq",
+  "title": "Quiz: Supply Chain Management",
+  "description": "Testa os teus conhecimentos sobre cadeia de abastecimento, procurement, inventário, logística e última milha.",
+  "questions": [
+    {
+      "q": "O modelo SCOR divide a supply chain em:",
+      "opts": [
+        "3 processos",
+        "6 processos: Plan, Source, Make, Deliver, Return, Enable",
+        "10 processos",
+        "Apenas Make e Deliver"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Upstream na supply chain refere-se a:",
+      "opts": [
+        "Clientes finais",
+        "Fornecedores e matérias-primas antes da produção",
+        "Logística de saída",
+        "Devoluções"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Num sistema push, a produção é desencadeada por:",
+      "opts": [
+        "Pedido real do cliente",
+        "Previsão de procura",
+        "Stock mínimo atingido",
+        "Sugestão do CEO"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O ponto de decoupling point é:",
+      "opts": [
+        "O local da fábrica",
+        "Onde a cadeia transita de push para pull",
+        "O armazém central",
+        "O centro de distribuição"
+      ],
+      "a": 1
+    },
+    {
+      "q": "EOQ (Economic Order Quantity) calcula:",
+      "opts": [
+        "Preço óptimo de venda",
+        "Quantidade óptima de encomenda para minimizar custo total (compra + posse + ruptura)",
+        "Número de colaboradores do armazém",
+        "Distância de entrega"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Na classificação ABC, itens classe A representam:",
+      "opts": [
+        "20% dos itens e cerca de 80% do valor",
+        "50% dos itens e 50% do valor",
+        "80% dos itens e 20% do valor",
+        "100% dos itens e 0% do valor"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Safety stock existe para:",
+      "opts": [
+        "Cumprir requisito legal",
+        "Proteger contra variabilidade de procura e lead time",
+        "Aumentar custos",
+        "Demonstrar volume em balanço"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Lead time é:",
+      "opts": [
+        "Tempo de produção apenas",
+        "Tempo total entre encomenda e recepção",
+        "Tempo de pagamento",
+        "Tempo de expedição apenas"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Procurement estratégico foca-se em:",
+      "opts": [
+        "Comprar pelo menor preço",
+        "Gestão de relacionamento com fornecedores, TCO, risco e inovação",
+        "Reduzir o número de fornecedores sem análise",
+        "Substituir importação por produção local"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Last-mile delivery é:",
+      "opts": [
+        "Transporte marítimo",
+        "Etapa final de entrega ao cliente — tipicamente a mais cara e complexa",
+        "Transporte aéreo internacional",
+        "Devolução ao fornecedor"
+      ],
+      "a": 1
+    }
+  ]
+}

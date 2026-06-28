@@ -1,0 +1,8 @@
+{
+  "slug": "supply-chain",
+  "title": "Supply Chain Management",
+  "icon": "📦",
+  "color": "#b45309",
+  "description": "Desenho, planeamento e optimização da cadeia de abastecimento: procurement, logística, inventário e última milha.",
+  "order": 25
+}

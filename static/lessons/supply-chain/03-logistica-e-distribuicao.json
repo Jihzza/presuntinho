@@ -1,0 +1,74 @@
+{
+  "id": "03-logistica-e-distribuicao",
+  "title": "Logística e Distribuição",
+  "courseSlug": "supply-chain",
+  "lessonNumber": 3,
+  "description": "Modal split, warehousing, cross-docking, last mile e reverse logistics — os pilares da distribuição física.",
+  "audio": "Lição sobre logística e distribuição.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["logística", "transportes", "cross-docking", "last mile"],
+  "sections": [
+    { "type": "h2", "text": "O que é logística" },
+    { "type": "p", "text": "Logística é a parte da supply chain que planifica, implementa e controla o fluxo e armazenamento eficiente de bens, serviços e informação relacionada, desde o ponto de origem até ao ponto de consumo. Inclui transporte, armazenagem, manuseamento de materiais, embalagem, inventário em trânsito, processamento de encomendas e gestão de informação. Conselho de Supply Chain Management Professionals (CSCMP)." },
+    { "type": "h2", "text": "Modal split — escolha do modo de transporte" },
+    { "type": "p", "text": "Existem cinco modos principais de transporte de carga, cada um com trade-offs de custo, velocidade, capacidade e impacto ambiental:" },
+    { "type": "ul", "items": [
+      "Rodoviário (camionagem): flexível, porta-a-porta, ideal para curtas e médias distâncias. Limitado por capacidade (24-26 ton por camião na UE) e regulamentações de condução.",
+      "Ferroviário: eficiente para grandes volumes a longa distância, menor custo por tonelada-quilómetro, mais ecológico. Limitado pela rede e rigidez de horários.",
+      "Marítimo: dominante no comércio internacional (80% do comércio global em volume). Muito barato por unidade, mas lento (semanas). Contentores standardizaram a indústria.",
+      "Aéreo: o mais rápido e o mais caro. Usado para produtos de alto valor, perecíveis ou urgentes (eletrónica, medicamentos, moda fast-fashion).",
+      "Fluvial / multimodal: vias navegáveis interiores, pipelines para líquidos e gases. Usos específicos, baixo custo onde aplicável."
+    ] },
+    { "type": "h3", "text": "Escolha do modo" },
+    { "type": "p", "text": "Critérios de decisão: urgência (lead time), valor da carga (custo de capital imobilizado), peso e volume (carga geral vs contentor), distância, requisitos especiais (refrigeração, perigosos), sustentabilidade (pegada de carbono), fiabilidade. Frequentemente combina-se mais do que um modo (intermodal/multimodal) para optimizar o trade-off." },
+    { "type": "h2", "text": "Warehousing — armazenagem" },
+    { "type": "p", "text": "Armazéns não são apenas lugares para guardar coisas. São centros de operações que cumprem múltiplas funções:" },
+    { "type": "ul", "items": [
+      "Recepção e inspecção de mercadoria.",
+      "Armazenagem propriamente dita (com diferentes zonas: picking, reserva, cross-dock, devoluções).",
+      "Picking e packing de encomendas.",
+      "Cross-docking (ver abaixo).",
+      "Value-added services: etiquetagem, kitting, montagem ligeira, configuração.",
+      "Expedição e carregamento para transporte."
+    ] },
+    { "type": "h3", "text": "Tipos de armazém" },
+    { "type": "ul", "items": [
+      "Centro de distribuição (DC): armazém grande que serve uma região. Tipicamente localizado perto de auto-estradas e hubs logísticos.",
+      "Armazém de trânsito (in-transit warehouse): consolidação/desconsolidação de cargas entre modos de transporte.",
+      "Centro de fulfillment (FC): dedicado a e-commerce, com processos optimizados para picking de encomendas individuais.",
+      "Armazém satélite / micro-fulfillment: perto do cliente final para reduzir lead time da última milha.",
+      "Armazém frio / refrigerado: para produtos perecíveis (alimentos, farmacêutica)."
+    ] },
+    { "type": "h2", "text": "Cross-docking" },
+    { "type": "p", "text": "Operação logística onde a mercadoria recebida não é armazenada — é directamente transferida para expedição, muitas vezes sem sequer tocar no chão. Recebe-se de vários fornecedores, consolida-se por destino e envia-se em poucas horas." },
+    { "type": "h3", "text": "Tipos" },
+    { "type": "ul", "items": [
+      "Pre-distribution cross-dock: já se sabe o destino antes da chegada.",
+      "Post-distribution cross-dock: o destino é decidido após a chegada (sorting).",
+      "Hybrid cross-dock: combinação de armazenagem temporária e cross-docking."
+    ] },
+    { "type": "p", "text": "Vantagens: inventário quase zero, lead time curto, utilização intensiva do espaço. Desvantagens: exige processos muito bem afinados, tecnologia (WMS avançado) e fiabilidade de fornecedores. Walmart e Tesco são referências históricas de cross-docking." },
+    { "type": "h2", "text": "Last mile — a última milha" },
+    { "type": "p", "text": "A última milha é a etapa final da entrega — do centro de distribuição ao cliente final. É tipicamente a mais cara (até 50% do custo total de transporte) e a mais crítica para a experiência do cliente. Estudos mostram que 70% dos custos de envio B2C estão concentrados nesta etapa." },
+    { "type": "h3", "text": "Soluções para última milha" },
+    { "type": "ul", "items": [
+      "Locker points (cacifos):Amazon Hub, InPost — cliente recolhe em horário conveniente.",
+      "Pick-up points: conveniados (correios, mercearias, gasolineiras) que recebem entregas.",
+      "Crowdsourced delivery: estafetas independentes (Glovo, Uber Direct, Stuart) contratados em picos de procura.",
+      "Drones e robots: experimentais mas em crescimento (Amazon Prime Air, Starship).",
+      "Veículos eléctricos / bicicletas: zonas urbanas com restrições de emissão e tráfego."
+    ] },
+    { "type": "h2", "text": "Reverse logistics — logística inversa" },
+    { "type": "p", "text": "Processo de planear, implementar e controlar o fluxo de produtos e informação do ponto de consumo de volta ao ponto de origem, para fins de recuperação de valor ou disposição adequada. Inclui:" },
+    { "type": "ul", "items": [
+      "Devoluções de clientes (e-commerce: 20-30% das encomendas são devolvidas).",
+      "Recalls (retirada de produtos por questões de segurança).",
+      "Reparações dentro da garantia.",
+      "Reciclagem e disposição final (e-waste, resíduos perigosos).",
+      "Reuso / remanufacturing: recuperação de produtos para revenda (ex: telefones recondicionados)."
+    ] },
+    { "type": "h3", "text": "Porquê é cada vez mais importante" },
+    { "type": "p", "text": "Crescimento do e-commerce multiplica devoluções. Regulamentações ESG obrigam a回收 de produtos em fim de vida. Economia circular procura recuperar materiais. Amazon, IKEA e Patagonia são conhecidas pelas políticas robustas de reverse logistics." },
+    { "type": "callout", "variant": "tip", "text": "A última milha é onde a promessa ao cliente se concretiza ou falha. Investir em tracking em tempo real, janelas de entrega flexíveis e comunicação proactiva (SMS, email) tem retorno directo em NPS e recompra." }
+  ]
+}

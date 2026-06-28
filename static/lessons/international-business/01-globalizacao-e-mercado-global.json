@@ -1,0 +1,51 @@
+{
+  "id": "01-globalizacao-e-mercado-global",
+  "title": "Globalização e Mercado Global",
+  "courseSlug": "international-business",
+  "lessonNumber": 1,
+  "description": "O que é globalização, como funciona o mercado global e quais são os principais modos de entrada em mercados internacionais.",
+  "audio": "Lição sobre globalização e mercado global.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["globalização", "modos de entrada", "OMC", "FDI"],
+  "sections": [
+    { "type": "h2", "text": "O que é globalização" },
+    { "type": "p", "text": "Globalização é o processo de integração económica, política, cultural e tecnológica entre países. Manifesta-se em fluxos crescentes de bens, serviços, capital, informação e pessoas. Para uma empresa, significa que o mercado relevante já não é o país de origem — é o mundo, ou pelo menos uma região onde as barreiras à entrada são menores. A internet, os acordos de livre comércio e a redução do custo do transporte internacional aceleraram este processo nas últimas três décadas." },
+    { "type": "h3", "text": "Os quatro fluxos da globalização" },
+    { "type": "ul", "items": [
+      "Comércio de bens: exportação e importação de produtos físicos (máquinas, vestuário, alimentos).",
+      "Comércio de serviços: turismo, consultoria, software, serviços financeiros — vendidos além-fronteiras.",
+      "Investimento: fluxos de capital entre países, sob a forma de FDI (investimento directo estrangeiro) ou investimento de portfolio.",
+      "Pessoas e informação: migração, viagens de negócios, transferência de conhecimento, dados que circulam em tempo real."
+    ] },
+    { "type": "h2", "text": "Drivers da globalização" },
+    { "type": "p", "text": "Vários factores convergem para tornar o mercado global mais acessível a empresas de qualquer dimensão:" },
+    { "type": "ul", "items": [
+      "Queda dos custos de transporte e comunicação: contentores standardizados, voos low-cost, banda larga, cloud computing.",
+      "Acordos comerciais: OMC, GATT, UE, USMCA, RCEP — redução ou eliminação de direitos aduaneiros.",
+      "Convergência de preferências: marcas globais (Apple, Zara, Starbucks) criam expectativas comuns em consumidores de diferentes países.",
+      "Inovação tecnológica: internet das coisas, IA, pagamentos digitais — operações internacionais tornam-se viáveis para PME."
+    ] },
+    { "type": "h3", "text": "Globalização nem sempre é consensual" },
+    { "type": "p", "text": "Há custos sociais e políticos: deslocalização de empregos, erosão de indústrias locais, pressão sobre salários, dependência de cadeias longas. Movimentos como Brexit, políticas protecionistas dos EUA (tariff wars com a China) e tensões geopolíticas recentes mostram que a globalização é um equilíbrio dinâmico, não um destino inevitável. Para o gestor, isto significa que cenários de desglobalização ou regionalização também precisam de ser considerados no planeamento." },
+    { "type": "h2", "text": "Instituições internacionais que enquadram o comércio" },
+    { "type": "p", "text": "Três pilares institucionais dão forma ao sistema de comércio global:" },
+    { "type": "h3", "text": "OMC — Organização Mundial do Comércio" },
+    { "type": "p", "text": "Sucessora do GATT (1947), criada em 1995. Sede em Genebra. Reúne 164 membros e define as regras multilaterais do comércio: princípios da nação mais favorecida, tratamento nacional, redução tarifária, resolução de disputas. Os seus acordos (GATS para serviços, TRIPS para propriedade intelectual, SPS para sanitário/fitosanitário) cobrem praticamente todos os aspectos do comércio internacional." },
+    { "type": "h3", "text": "FMI — Fundo Monetário Internacional" },
+    { "type": "p", "text": "Criado em 1944 (Bretton Woods). Sede em Washington. Funções: estabilidade cambial, balança de pagamentos, assistência financeira a países em crise (mediante condicionalidades), vigilância macroeconómica. Contribui para evitar desvalorizações competitivas e crises em cadeia." },
+    { "type": "h3", "text": "Banco Mundial" },
+    { "type": "p", "text": "Também de Bretton Woods. Foco no desenvolvimento: financia projectos de infra-estrutura, saúde, educação em países de rendimento baixo e médio. Trabalha em coordenação com bancos regionais de desenvolvimento (BAD em África, BID nas Américas, AIIB na Ásia)." },
+    { "type": "callout", "variant": "success", "text": "Para a Fatma: a OMC define as regras, o FMI estabiliza as moedas, o Banco Mundial financia o desenvolvimento. Pensa neles como três pilares que sustentam o mercado global — se um deles vacilar, todo o sistema treme." },
+    { "type": "h2", "text": "Modos de entrada em mercados internacionais" },
+    { "type": "p", "text": "Cada modo de entrada tem trade-offs de investimento, controlo, risco e velocidade. A escolha depende do sector, do país-alvo, dos recursos da empresa e da tolerância ao risco." },
+    { "type": "h3", "text": "Exportação (directa ou indirecta)" },
+    { "type": "p", "text": "Venda de bens produzidos no país de origem para clientes no estrangeiro. Baixo investimento, baixo risco, mas também baixo controlo sobre distribuição e marketing local. Indirecta: através de intermediários (trading houses, agentes). Directa: a empresa trata do contacto com o cliente final (e-commerce, equipa comercial no destino)." },
+    { "type": "h3", "text": "Licenciamento e franchising" },
+    { "type": "p", "text": "A empresa cede o direito de produzir ou vender o seu produto a um parceiro local em troca de royalties ou fees. Licenciamento aplica-se a produtos (patentes, marcas, fórmulas); franchising é um modelo mais estruturado com manual operacional, formação e suporte contínuo. Permite escalar rápido com pouco capital, mas perde-se controlo sobre qualidade e a marca pode diluir-se." },
+    { "type": "h3", "text": "Joint ventures e alianças estratégicas" },
+    { "type": "p", "text": "Acordo entre duas ou mais empresas (uma local, outra estrangeira) para partilhar recursos, risco e lucros num mercado específico. É frequente quando o país exige parceiro local (China durante décadas exigiu JV com parceiro chinês) ou quando o conhecimento do mercado local é crítico. Desafios: alinhamento estratégico entre sócios, governance, gestão de lucros repatriados." },
+    { "type": "h3", "text": "FDI — Investimento directo estrangeiro (subsidiária integral)" },
+    { "type": "p", "text": "A empresa constrói ou compra operações no estrangeiro (fábrica, escritório de vendas, centro de I&D). Máximo controlo e máximo investimento. Usado quando o mercado é grande e estratégico, ou quando o custo de produção local compensa o investimento. Exemplos: fábricas da Bosch no México, centros de I&D da Google em Zurique, da Microsoft em Dublin." },
+    { "type": "callout", "variant": "tip", "text": "A escolha do modo de entrada não é definitiva. Empresas frequentemente começam com exportação, aprendem o mercado, depois licenciam ou fazem JV e, quando o mercado justifica, constroem subsidiária integral. Esta sequência — country-commitment ladder — reduz risco mas requer visão de longo prazo." }
+  ]
+}

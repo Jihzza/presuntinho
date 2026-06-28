@@ -1,0 +1,89 @@
+{
+  "id": "02-kpis-e-metricas",
+  "title": "KPIs e Métricas",
+  "courseSlug": "data-analytics",
+  "lessonNumber": 2,
+  "description": "KPIs SMART, leading vs lagging indicators, north star metric e os indicadores essenciais por área de negócio.",
+  "audio": "Lição sobre KPIs e métricas.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["KPIs", "north star", "MRR", "churn"],
+  "sections": [
+    { "type": "h2", "text": "Métrica vs KPI — a diferença importa" },
+    { "type": "p", "text": "Nem toda a métrica é um KPI (Key Performance Indicator). Métrica é qualquer número que se mede (temperatura, número de visitantes, likes no Instagram). KPI é uma métrica estratégica, ligada directamente a um objectivo do negócio, accionável e monitorizada regularmente. A diferença está no 'K' (Key): um KPI tem de ser crítico para o desempenho da empresa, não apenas interessante de medir." },
+    { "type": "h2", "text": "A regra SMART para KPIs" },
+    { "type": "p", "text": "Um bom KPI obedece a cinco critérios:" },
+    { "type": "ul", "items": [
+      "Specific: o que se está a medir exactamente. Não 'vendas', mas 'vendas mensais de novos clientes no canal digital'.",
+      "Measurable: tem de ser quantificável de forma consistente.",
+      "Achievable: ambicioso mas realista. KPI impossível de cumprir desmotiva.",
+      "Relevant: alinhado com um objectivo estratégico claro.",
+      "Time-bound: definido num período (semanal, mensal, trimestral)."
+    ] },
+    { "type": "h3", "text": "Antipatões comuns" },
+    { "type": "ul", "items": [
+      "KPI de vaidade: bonito mas não accionável (ex: número total de utilizadores registados há 5 anos).",
+      "KPI sem dono: ninguém é responsável pelo número.",
+      "KPI em excesso: 30 KPIs por área dilui atenção e gera overhead de reporting.",
+      "KPI desfasado da estratégia: mede actividade, não resultado."
+    ] },
+    { "type": "h2", "text": "Leading vs lagging indicators" },
+    { "type": "p", "text": "Lagging indicators medem resultados passados — receitas, lucro, quota de mercado. Leading indicators preveem resultados futuros — pipeline de vendas, NPS, taxa de试用, qualidade do produto. Ambos são necessários, mas o gestor deve prestar mais atenção aos leading, porque são sobre os quais pode actuar a tempo de influenciar os lagging." },
+    { "type": "h3", "text": "Exemplo clássico" },
+    { "type": "p", "text": "NPS (Net Promoter Score) é leading: se cair este mês, prevemos churn daqui a 3-6 meses. Receita é lagging: é o resultado final que confirma ou desmente a previsão. Bons gestores antecipam-se aos lagging através dos leading." },
+    { "type": "h2", "text": "A North Star Metric" },
+    { "type": "p", "text": "A North Star Metric (NSM) é o KPI mais importante da empresa — aquele que melhor capta o valor entregue ao cliente e que, quando cresce, reflecte o crescimento saudável do negócio. Exemplos:" },
+    { "type": "ul", "items": [
+      "Airbnb: noites reservadas.",
+      "Spotify: tempo de escuta.",
+      "WhatsApp: mensagens enviadas por dia.",
+      "Amazon (antigo): gross merchandise volume.",
+      "Uber: viagens completadas por semana."
+    ] },
+    { "type": "h3", "text": "Porquê ter uma NSM" },
+    { "type": "p", "text": "Alinha toda a organização em torno de um único número. Sub-áreas (marketing, produto, vendas) definem os seus KPIs em coerência com a NSM — são input metrics que contribuem para ela. Reduz a tentação de optimizar localmente para prejuízo do todo." },
+    { "type": "h2", "text": "KPIs por área de negócio" },
+    { "type": "p", "text": "Cada área tem os seus KPIs essenciais. Vejamos alguns exemplos por sector." },
+    { "type": "h3", "text": "SaaS" },
+    { "type": "ul", "items": [
+      "MRR / ARR: receita mensal/anual recorrente. Receita previsível é o Santo Graal do SaaS.",
+      "Churn rate: % de clientes que cancelam por mês/trimestre. Churn alto destrói o modelo.",
+      "LTV (Lifetime Value): quanto um cliente paga durante todo o ciclo de vida. Calculado como ARPU / churn.",
+      "CAC (Customer Acquisition Cost): quanto custa adquirir um cliente. Razão LTV/CAC ≥ 3 é regra de ouro.",
+      "Net Revenue Retention (NRR): receita retida dos clientes existentes após expansão menos churn. >100% é excelente.",
+      "Payback period: meses para recuperar o CAC. Target típico: <12 meses."
+    ] },
+    { "type": "h3", "text": "E-commerce" },
+    { "type": "ul", "items": [
+      "Conversion rate: % de visitantes que compram.",
+      "Average Order Value (AOV): valor médio por compra.",
+      "Cart abandonment rate: % de carrinhos abandonados. >70% é normal; reduzi-lo é uma alavanca.",
+      "Customer Acquisition Cost (CAC) e ROAS (Return on Ad Spend).",
+      "Repeat purchase rate: % de clientes que voltam a comprar. Sinal de retenção e LTV."
+    ] },
+    { "type": "h3", "text": "Retalho físico" },
+    { "type": "ul", "items": [
+      "Vendas por m²: eficiência do espaço. Compara locais e formatos.",
+      "Footfall / conversion: visitantes que entram e % que compram.",
+      "Ticket médio: valor médio por transacção.",
+      "Stock turnover: vezes que o inventário é vendido por ano. Quanto maior, mais saudável.",
+      "Sell-through rate: % do inventário recebido que é vendido em período definido."
+    ] },
+    { "type": "h3", "text": "Marketing" },
+    { "type": "ul", "items": [
+      "CAC por canal: quanto custa adquirir cliente via Google, Facebook, orgânico, etc.",
+      "ROMI / ROAS: retorno por euro investido em marketing.",
+      "Brand awareness: % de pessoas que reconhecem a marca. Pesquisas directas, branded search volume.",
+      "Engagement rate: interacção com conteúdo (likes, shares, comments, time on page).",
+      "MQLs / SQLs: leads qualificados pelo marketing e leads aceites por vendas."
+    ] },
+    { "type": "h2", "text": "Como escolher os KPIs certos" },
+    { "type": "p", "text": "Princípios práticos:" },
+    { "type": "ul", "items": [
+      "Comece pela estratégia: o que estamos a tentar alcançar? Os KPIs derivam daí.",
+      "Poucos mas importantes: 3-7 KPIs por área é saudável. Mais do que isso dispersa.",
+      "Meça o que importa, não o que é fácil: o número difícil de medir é frequentemente o que importa mais.",
+      "Revise periodicamente: o que era crítico há 2 anos pode já não ser."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Métricas de vaidade dão-nos uma sensação boa mas não mudam nada. Métricas accionáveis podem doer no curto prazo mas mudam o negócio. Escolhe métricas que te obriguem a agir — não as que te façam sentir bem." }
+  ]
+}

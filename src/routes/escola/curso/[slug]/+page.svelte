@@ -404,6 +404,62 @@
                             { slug: '3-validacao-de-ideias', title: '3. Validação de Ideias', summary: 'MVP, customer development e ciclos build-measure-learn.', estMinutes: 8 },
                             { slug: '4-financiamento-e-pitch', title: '4. Financiamento e Pitch', summary: 'Fontes de capital, pitch deck, métricas para investidores e como abordar business angels.', quizSlug: 'ieq', quizTitle: 'Quiz: Inovação e Empreendedorismo', estMinutes: 9 }
                           ]
+                        },
+                        'international-business': {
+                          slug: 'international-business',
+                          title: 'International Business',
+                          tagline: 'Universidade · Globalização, modos de entrada e multinacionais',
+                          description: 'Estratégias para operar além-fronteiras: globalização e seus drivers, instituições internacionais (OMC, FMI, Banco Mundial), modos de entrada (exportação, licenciamento, JV, subsidiária, M&A), gestão de multinacionais e finanças internacionais.',
+                          icon: '🌐',
+                          color: '#2563eb',
+                          lessons: [
+                            { slug: '1-globalizacao-e-mercado-global', title: '1. Globalização e Mercado Global', summary: 'O que é globalização, drivers e instituições (OMC, FMI, Banco Mundial).', estMinutes: 8 },
+                            { slug: '2-estrategias-de-entrada', title: '2. Estratégias de Entrada', summary: 'Exportação, licenciamento, franchising, joint venture, subsidiária e M&A.', estMinutes: 9 },
+                            { slug: '3-gestao-de-multinacionais', title: '3. Gestão de Multinacionais', summary: 'Estratégias global, multi-doméstica, transnacional e gestão cultural.', estMinutes: 9 },
+                            { slug: '4-financas-internacionais', title: '4. Finanças Internacionais', summary: 'Risco cambial, hedge, transfer pricing e financiamento cross-border.', quizSlug: 'ibq', quizTitle: 'Quiz: International Business', estMinutes: 10 }
+                          ]
+                        },
+                        'supply-chain': {
+                          slug: 'supply-chain',
+                          title: 'Supply Chain Management',
+                          tagline: 'Universidade · Procurement, inventário, logística e última milha',
+                          description: 'Desenho, planeamento e optimização da cadeia de abastecimento: elos upstream/midstream/downstream, modelo SCOR, sistemas push vs pull, gestão de inventário (EOQ, ABC, safety stock), procurement estratégico, transporte, distribuição e last-mile.',
+                          icon: '📦',
+                          color: '#b45309',
+                          lessons: [
+                            { slug: '1-fundamentos-supply-chain', title: '1. Fundamentos de Supply Chain', summary: 'Elos upstream/midstream/downstream, modelo SCOR, push vs pull.', estMinutes: 8 },
+                            { slug: '2-gestao-de-inventarios', title: '2. Gestão de Inventários', summary: 'EOQ, classificação ABC, safety stock e ponto de encomenda.', estMinutes: 8 },
+                            { slug: '3-logistica-e-distribuicao', title: '3. Logística e Distribuição', summary: 'Transporte, armazenagem, Incoterms e última milha.', estMinutes: 8 },
+                            { slug: '4-procurement-e-relacoes', title: '4. Procurement e Relações com Fornecedores', summary: 'Procurement estratégico, TCO, sourcing e avaliação de fornecedores.', quizSlug: 'scmq', quizTitle: 'Quiz: Supply Chain Management', estMinutes: 9 }
+                          ]
+                        },
+                        'data-analytics': {
+                          slug: 'data-analytics',
+                          title: 'Data Analytics for Business',
+                          tagline: 'Universidade · Descriptive/diagnostic/predictive/prescriptive, KPIs e cultura data-driven',
+                          description: 'Fundamentos de analytics para gestores: os quatro tipos (descriptive, diagnostic, predictive, prescriptive), KPIs e SMART, dashboards, cohort e funnel analysis, A/B testing, data literacy e cultura data-driven na organização.',
+                          icon: '📊',
+                          color: '#7c3aed',
+                          lessons: [
+                            { slug: '1-tipos-de-analytics', title: '1. Os 4 Tipos de Analytics', summary: 'Descriptive, diagnostic, predictive e prescriptive — o que cada um responde.', estMinutes: 7 },
+                            { slug: '2-kpis-e-metricas', title: '2. KPIs e Métricas', summary: 'SMART, North Star Metric, leading vs lagging indicators.', estMinutes: 7 },
+                            { slug: '3-visualizacao-e-dashboards', title: '3. Visualização e Dashboards', summary: 'Boas práticas de gráficos, dashboards operacionais vs estratégicos.', estMinutes: 7 },
+                            { slug: '4-cultura-data-driven', title: '4. Cultura Data-Driven', summary: 'Data literacy, experimentação contínua, cohort/funnel/A/B testing.', quizSlug: 'dataq', quizTitle: 'Quiz: Data Analytics for Business', estMinutes: 8 }
+                          ]
+                        },
+                        'project-management': {
+                          slug: 'project-management',
+                          title: 'Project Management',
+                          tagline: 'Universidade · Triple constraint, PMBOK, Agile e gestão de risco',
+                          description: 'Metodologias de gestão de projectos: triple constraint (scope/time/cost), ciclo de vida, WBS, Gantt, critical path, Earned Value, Scrum e Kanban, gestão de riscos e stakeholders.',
+                          icon: '📋',
+                          color: '#0d9488',
+                          lessons: [
+                            { slug: '1-fundamentos-pm', title: '1. Fundamentos de Gestão de Projectos', summary: 'Triple constraint, ciclo de vida e stakeholders.', estMinutes: 7 },
+                            { slug: '2-pmbok-e-metodologias-tradicionais', title: '2. PMBOK e Metodologias Tradicionais', summary: 'WBS, Gantt, critical path, Earned Value.', estMinutes: 8 },
+                            { slug: '3-metodologias-ageis', title: '3. Metodologias Ágeis', summary: 'Scrum, Kanban, sprints e cerimónias ágeis.', estMinutes: 7 },
+                            { slug: '4-risk-e-stakeholders', title: '4. Gestão de Risco e Stakeholders', summary: 'Risk register, matrizes de probabilidade/impacto e plano de comunicação.', quizSlug: 'pmq', quizTitle: 'Quiz: Project Management', estMinutes: 8 }
+                          ]
                         }
                       };
 

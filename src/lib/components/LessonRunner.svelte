@@ -3,6 +3,7 @@
   import { goto } from '$app/navigation';
   import { markVisited } from '$lib/state/stores';
   import { t } from 'svelte-i18n';
+  import { awardXP } from '$lib/state/xp-actions';
 
   // ----- Types --------------------------------------------------------------
 
@@ -84,6 +85,8 @@
 
   function goNext() {
     if (!lesson?.nextLesson) return;
+    // gap-054: award XP when user advances to next lesson (= completed this one)
+    void awardXP('lesson_complete');
     goto(`/escola/licao/${courseSlug}/${lesson.nextLesson}/`);
   }
   function goPrev() {
@@ -92,6 +95,8 @@
   }
   function goQuiz() {
     if (!lesson?.quizSlug) return;
+    // gap-054: also award XP when going to the quiz (lesson done)
+    void awardXP('lesson_complete');
     goto(`/escola/quiz/${lesson.quizSlug}/`);
   }
 </script>

@@ -1,107 +1,107 @@
 {
   "id": "pmq",
-  "title": "Quiz: Pesquisa de Marketing",
-  "description": "Testa os teus conhecimentos sobre tipos de pesquisa, qualitativa vs quantitativa, amostragem e análise de dados.",
+  "title": "Quiz: Project Management",
+  "description": "Testa os teus conhecimentos sobre triple constraint, ciclo de vida do projecto, PMBOK, Agile e gestão de risco/stakeholders.",
   "questions": [
     {
-      "q": "Qual a principal característica da pesquisa exploratória?",
+      "q": "A triple constraint de um projecto é:",
       "opts": [
-        "Medir e caracterizar um mercado em escala",
-        "Entender um problema mal definido, gerar hipóteses — usa métodos qualitativos e amostras pequenas",
-        "Testar relações de causa-efeito com experimentos",
-        "Calcular quota de mercado com censos"
+        "Qualidade, custo, risco",
+        "Scope, time, cost (escopo, prazo, orçamento)",
+        "Pessoas, processo, produto",
+        "Sponsor, PM, cliente"
       ],
       "a": 1
     },
     {
-      "q": "Pesquisa causal usa como método de referência:",
+      "q": "O ciclo de vida tradicional de um projecto tem:",
       "opts": [
-        "Focus group",
-        "Survey online",
-        "Experimento controlado (A/B test)",
-        "Observação participante"
-      ],
-      "a": 2
-    },
-    {
-      "q": "Dados secundários são:",
-      "opts": [
-        "Recolhidos especificamente para a pesquisa em causa",
-        "Dados já existentes, recolhidos para outros fins (censos, relatórios sectoriais)",
-        "Sempre mais fiáveis que dados primários",
-        "Dados qualitativos por oposição a quantitativos"
+        "2 fases",
+        "5 phase groups: initiation, planning, execution, monitoring & controlling, closure",
+        "10 fases",
+        "Apenas execução e encerramento"
       ],
       "a": 1
     },
     {
-      "q": "Um focus group típico tem:",
+      "q": "WBS (Work Breakdown Structure) é:",
       "opts": [
-        "1-2 pessoas, 10 minutos",
-        "6-10 pessoas com perfil semelhante, 1-2 horas, moderado por profissional",
-        "50-100 pessoas, 1 dia inteiro",
-        "Apenas decisores de topo da empresa"
+        "Lista de stakeholders",
+        "Decomposição hierárquica do trabalho em pacotes geríveis",
+        "Diagrama de Gantt",
+        "Matriz de risco"
       ],
       "a": 1
     },
     {
-      "q": "Qual a principal diferença entre pesquisa qualitativa e quantitativa?",
+      "q": "Gantt chart mostra:",
       "opts": [
-        "Qualitativa é mais cara",
-        "Qualitativa busca profundidade (porquê, como); quantitativa busca amplitude (quantos, quanto)",
-        "Quantitativa é sempre melhor",
-        "Qualitativa usa computadores; quantitativa usa pessoas"
+        "Custos detalhados",
+        "Tarefas em barras ao longo do tempo, mostrando duração e sequência",
+        "Stakeholders",
+        "Riscos"
       ],
       "a": 1
     },
     {
-      "q": "Amostragem estratificada divide a população em:",
+      "q": "Caminho crítico (critical path) é:",
       "opts": [
-        "Clusters geográficos aleatórios",
-        "Estratos homogéneos (ex: idade, região) e tira amostra aleatória dentro de cada",
-        "Elementos escolhidos por conveniência",
-        "Respostas auto-seleccionadas em painel online"
+        "Caminho mais curto do projecto",
+        "Sequência de tarefas mais longa — determina a duração mínima do projecto",
+        "Lista de tarefas de baixo risco",
+        "Apenas tarefas com budget alto"
       ],
       "a": 1
     },
     {
-      "q": "Para uma survey nacional em Portugal, uma amostra de 1000 entrevistas dá, em média, uma margem de erro de:",
+      "q": "Scrum é um framework:",
       "opts": [
-        "±0,5%",
-        "±3% (95% de confiança)",
-        "±10%",
-        "±30%"
+        "Waterfall",
+        "Ágil, com sprints, daily stand-ups, retrospectives e product backlog",
+        "Sequencial e linear",
+        "Apenas para software"
       ],
       "a": 1
     },
     {
-      "q": "Um valor-p < 0,05 indica:",
+      "q": "Kanban usa:",
       "opts": [
-        "O padrão observado é certamente verdadeiro",
-        "Há menos de 5% de probabilidade de o padrão ser acaso — sugere significância estatística",
-        "A pesquisa é válida",
-        "A amostra é suficientemente grande"
+        "Sprints fixos",
+        "Quadro visual com colunas (to do, doing, done) e WIP limits",
+        "Apenas documentação",
+        "Hierarquia funcional"
       ],
       "a": 1
     },
     {
-      "q": "Garbage in, garbage out significa:",
+      "q": "Earned Value Management (EVM) mede:",
       "opts": [
-        "Que dados antigos não servem",
-        "Que dados mal preparados geram conclusões erradas — a qualidade da análise depende da qualidade dos dados de entrada",
-        "Que é preciso deitar fora lixo físico",
-        "Que o questionário tem de ser curto"
+        "Satisfação do cliente",
+        "Desempenho do projecto integrando scope, schedule e cost (PV, EV, AC)",
+        "Apenas custos reais",
+        "Apenas prazos"
       ],
       "a": 1
     },
     {
-      "q": "Um bom relatório de pesquisa termina com:",
+      "q": "Risk register contém:",
       "opts": [
-        "Tabelas detalhadas de frequência",
-        "Recomendações accionáveis e priorizadas para o negócio",
-        "Bibliografia académica",
-        "Anexo com questionário completo"
+        "Lista de stakeholders",
+        "Identificação, probabilidade, impacto e resposta a riscos",
+        "Apenas orçamento",
+        "Apenas marcos do projecto"
       ],
       "a": 1
+    },
+    {
+      "q": "Matriz Poder × Interesse classifica stakeholders em:",
+      "opts": [
+        "4 quadrantes: manage closely, keep satisfied, keep informed, monitor",
+        "2 grupos",
+        "6 categorias",
+        "Apenas sponsor e cliente"
+      ],
+      "a": 0
     }
   ]
 }

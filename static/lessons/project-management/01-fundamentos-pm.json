@@ -1,0 +1,60 @@
+{
+  "id": "01-fundamentos-pm",
+  "title": "Fundamentos de Gestão de Projectos",
+  "courseSlug": "project-management",
+  "lessonNumber": 1,
+  "description": "A triple constraint, o ciclo de vida do projecto e as cinco fases: initiation, planning, execution, monitoring e closure.",
+  "audio": "Lição sobre fundamentos de gestão de projectos.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["project management", "triple constraint", "ciclo de vida"],
+  "sections": [
+    { "type": "h2", "text": "O que é um projecto" },
+    { "type": "p", "text": "Um projecto é um esforço temporário empreendido para criar um produto, serviço ou resultado único. Ao contrário de operações (que são contínuas e repetitivas), um projecto tem início, fim e objectivos bem definidos. Exemplos: lançar um novo produto, organizar uma conferência, implementar um ERP, construir uma estrada. A gestão de projectos (PM) é a aplicação de conhecimento, skills, ferramentas e técnicas às actividades do projecto para cumprir os requisitos." },
+    { "type": "h2", "text": "A Triple Constraint — escopo, tempo, custo" },
+    { "type": "p", "text": "Todo projecto é governado por três restrições primárias, frequentemente chamadas 'triângulo de ferro':" },
+    { "type": "ul", "items": [
+      "Scope (escopo): o trabalho que precisa de ser feito. Definido pelo WBS (Work Breakdown Structure).",
+      "Time (tempo): o prazo para conclusão. Definido pelo schedule (cronograma).",
+      "Cost (custo): o orçamento disponível. Definido pelo cost baseline."
+    ] },
+    { "type": "h3", "text": "O trade-off fundamental" },
+    { "type": "p", "text": "Alterar uma restrição afecta as outras: entregar mais escopo exige mais tempo e/ou mais custo; reduzir o tempo exige mais recursos ou menos escopo; cortar o orçamento obriga a reduzir escopo ou aumentar o tempo. O gestor de projecto negoceia estes trade-offs com o sponsor. A qualidade é afectada pela forma como equilibramos as três restrições — é, por isso, frequentemente desenhada no centro do triângulo, como aquilo que se preserva quando se negoceia." },
+    { "type": "h3", "text": "Restrições expandidas" },
+    { "type": "p", "text": "Em ambientes modernos, acrescentam-se ao triângulo outras dimensões: qualidade, risco, recursos, benefícios, stakeholders. OPMI ou PMI chamam-lhe 'multiple constraints' ou 'competing demands'. Não são novas — são o reconhecimento de que um projecto vive num sistema complexo onde outras variáveis também contam." },
+    { "type": "h2", "text": "O ciclo de vida do projecto" },
+    { "type": "p", "text": "Independentemente da metodologia (waterfall, agile, híbrida), todo projecto atravessa cinco phase groups:" },
+    { "type": "h3", "text": "1. Initiation (iniciação)" },
+    { "type": "p", "text": "Definir o projecto a alto nível, justificar o investimento, identificar stakeholders chave, obter autorização formal para avançar. Produtos típicos: project charter (termo de abertura), business case, nomeação do project manager. Responder à pergunta: vale a pena fazer este projecto?" },
+    { "type": "h3", "text": "2. Planning (planeamento)" },
+    { "type": "p", "text": "Definir como o projecto será executado. Estabelecer objectivos SMART, decompor o trabalho (WBS), estimar tempo e custo, identificar riscos, planear comunicações, definir equipa e governança. Produtos típicos: project management plan, schedule, orçamento, risk register, communication plan." },
+    { "type": "h3", "text": "3. Execution (execução)" },
+    { "type": "p", "text": "Coordenar pessoas e recursos para realizar o trabalho definido no plano. Gerir equipa, executar procurement, implementar planos de comunicação e gestão de stakeholders, realizar entregas, gerir qualidade. Project manager passa a maior parte do tempo aqui. É a fase mais longa e a que consome mais orçamento." },
+    { "type": "h3", "text": "4. Monitoring & Controlling (monitorização e controlo)" },
+    { "type": "p", "text": "Acontece em paralelo com a execução: medir desempenho, comparar com o plano, identificar desvios, aplicar acções correctivas. Ferramentas: Earned Value Management (EVM), dashboards, status reports, change control. Responder à pergunta: estamos no caminho certo?" },
+    { "type": "h3", "text": "5. Closure (encerramento)" },
+    { "type": "p", "text": "Formalizar a aceitação do produto/serviço, arquivar lições aprendidas, libertar recursos, fechar contratos com fornecedores, celebrar com a equipa. Frequentemente negligenciada — e é onde se perde a oportunidade de melhorar a prática organizacional." },
+    { "type": "h2", "text": "Stakeholders — quem se importa com o projecto" },
+    { "type": "p", "text": "Stakeholders são todas as pessoas, grupos ou organizações que podem afectar ou serem afectados pelo projecto. Identificá-los cedo e gerir activamente o seu engajamento é tão importante como gerir prazo e custo. A framework mais usada é a matriz Poder × Interesse:" },
+    { "type": "ul", "items": [
+      "Alto poder, alto interesse (Manage Closely): sponsor, cliente principal — gestão próxima, decisões consultadas.",
+      "Alto poder, baixo interesse (Keep Satisfied): alta direcção, reguladores — manter informados sem sobrecarregar.",
+      "Baixo poder, alto interesse (Keep Informed): equipa alargada, utilizadores finais — comunicação frequente.",
+      "Baixo poder, baixo interesse (Monitor): público geral, terceiros — monitorar, intervir se subir de quadrante."
+    ] },
+    { "type": "h2", "text": "Os dez knowledge areas do PMI" },
+    { "type": "p", "text": "O PMI (Project Management Institute) organiza o conhecimento de PM em dez áreas, transversais aos cinco phase groups:" },
+    { "type": "ul", "items": [
+      "Integration: planos integrados, gestão de mudanças, controlo do projecto como um todo.",
+      "Scope: definir e controlar o que está dentro e fora do projecto.",
+      "Schedule: planear e controlar o cronograma.",
+      "Cost: estimar, orçamentar e controlar os custos.",
+      "Quality: planear e garantir a qualidade das entregas.",
+      "Resource: planear, adquirir e desenvolver a equipa.",
+      "Communication: planear e gerir a informação que circula.",
+      "Risk: identificar, analisar, responder e monitorizar riscos.",
+      "Procurement: comprar bens e serviços externos.",
+      "Stakeholder: identificar e gerir expectativas."
+    ] },
+    { "type": "callout", "variant": "success", "text": "Para a Fatma: o triângulo de ferro é o conceito mais importante de PM. Quando alguém te pedir para reduzir tempo ou custo, pergunta sempre: o que está disposto a ceder em escopo? Se a resposta for 'nada', há um problema que não é técnico — é político." }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "id": "02-pmbok-e-metodologias-tradicionais",
+  "title": "PMBOK e Metodologias Tradicionais",
+  "courseSlug": "project-management",
+  "lessonNumber": 2,
+  "description": "PMBOK 7 (8 performance domains, 12 princípios), waterfall, critical path method (CPM) e Gantt.",
+  "audio": "Lição sobre PMBOK e metodologias tradicionais.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["PMBOK", "waterfall", "CPM", "Gantt"],
+  "sections": [
+    { "type": "h2", "text": "PMBOK — o standard do PMI" },
+    { "type": "p", "text": "O PMBOK (Project Management Body of Knowledge) é o guia de referência publicado pelo PMI. Actualmente na 7.ª edição (2021), representa a evolução de um standard baseado em processos (versões 1-6) para um standard baseado em princípios e domínios. Continua a ser a referência mais citada globalmente para a profissão." },
+    { "type": "h2", "text": "PMBOK 7 — 12 princípios" },
+    { "type": "p", "text": "A nova edição abandona a estrutura rígida de processos e adopta 12 princípios que guiam o comportamento do project manager e da equipa:" },
+    { "type": "ul", "items": [
+      "Be a diligent, respectful, and caring steward (ser um administrador diligente, respeitoso e cuidador).",
+      "Create a collaborative project team environment (criar ambiente colaborativo na equipa).",
+      "Effectively engage with stakeholders (envolver efectivamente os stakeholders).",
+      "Focus on value (focar em valor, não só entregas).",
+      "Recognize, evaluate, and respond to system interactions (reconhecer, avaliar e responder a interacções do sistema).",
+      "Demonstrate leadership behaviors (demonstrar comportamentos de liderança).",
+      "Tailor based on context (adaptar com base no contexto — não há one-size-fits-all).",
+      "Build quality into processes and deliverables (incorporar qualidade nos processos e entregas).",
+      "Navigate complexity (navegar a complexidade).",
+      "Optimize risk responses (optimizar respostas ao risco).",
+      "Embrace adaptability and resiliency (abraçar adaptabilidade e resiliência).",
+      "Enable change to achieve the envisioned future state (permitir mudança para alcançar o estado futuro desejado)."
+    ] },
+    { "type": "h2", "text": "PMBOK 7 — 8 performance domains" },
+    { "type": "p", "text": "Os princípios aplicam-se em oito domínios de performance, que cobrem o que é preciso dominar para entregar valor:" },
+    { "type": "ul", "items": [
+      "Stakeholders: identificar, compreender e envolver.",
+      "Team: desenvolver e liderar a equipa.",
+      "Development approach and life cycle: escolher entre predictive, adaptive ou hybrid e definir fases.",
+      "Planning: organizar o trabalho e recursos.",
+      "Project work: estabelecer processos, gerir físico e mental.",
+      "Delivery: entregar com qualidade, no prazo, com âmbito.",
+      "Measurement: avaliar desempenho e tomar decisões informadas.",
+      "Uncertainty: identificar, avaliar e responder a ambiguidade e risco."
+    ] },
+    { "type": "h2", "text": "Desenvolvimento preditivo vs adaptativo vs híbrido" },
+    { "type": "p", "text": "A 7.ª edição oficializa a escolha de abordagem como decisão de planeamento:" },
+    { "type": "h3", "text": "Preditivo (waterfall)" },
+    { "type": "p", "text": "Requisitos conhecidos e estáveis desde o início. Plano detalhado antes de começar a executar. Funciona bem em construção, manufacturing,工程建设 onde mudanças são caras. Planeamento rigoroso, controlo de baseline, change control formal." },
+    { "type": "h3", "text": "Adaptativo (ágil)" },
+    { "type": "p", "text": "Requisitos emergentes, alta incerteza, valor entregue em iterações curtas. Scrum, Kanban, XP. Funciona bem em software, marketing, produtos digitais. Plano revisitado frequentemente, mudança incorporada como rotina." },
+    { "type": "h3", "text": "Híbrido" },
+    { "type": "p", "text": "Combina elementos dos dois: planeamento preditivo para a fase de discovery/arquitectura, iteração ágil para construção. Cada vez mais comum em empresas que adoptam ágil na engenharia mas mantêm waterfall nas áreas regulamentadas (farmacêutica, construção, banca)." },
+    { "type": "h2", "text": "Waterfall clássico" },
+    { "type": "p", "text": "Sequência linear: requirements → design → implementation → verification → maintenance. Cada fase completa antes da próxima começar. Vantagens: clareza de planeamento, fácil de comunicar a stakeholders não-técnicos, bom para contratos com âmbito fixo. Desvantagens: mudanças são caras; feedback do utilizador só chega no fim." },
+    { "type": "h3", "text": "Quando waterfall ainda é a escolha certa" },
+    { "type": "ul", "items": [
+      "Requisitos regulamentares claros (farmacêutica, aeroespacial, construção civil).",
+      "Âmbito fixo por contrato com penalidades por mudança.",
+      "Projecto físico com dependências sequenciais (não dá para fazer a casa sem fundações).",
+      "Equipa distribuída em fusos muito diferentes — planeamento detalhado ajuda a sincronizar."
+    ] },
+    { "type": "h2", "text": "Critical Path Method (CPM)" },
+    { "type": "p", "text": "Técnica de planeamento que identifica a sequência mais longa de actividades dependentes — o caminho crítico — que determina a duração mínima do projecto. Actividades no caminho crítico têm folga zero: qualquer atraso atrasa o projecto todo. Actividades fora dele têm folga (slack) e podem ser adiadas sem afectar a data final." },
+    { "type": "h3", "text": "Forward pass e backward pass" },
+    { "type": "p", "text": "Forward pass calcula o Earliest Start (ES) e Earliest Finish (EF) de cada actividade. Backward pass calcula o Latest Start (LS) e Latest Finish (LF). A diferença LS-ES é a folga (float). Actividades com float zero são as do caminho crítico." },
+    { "type": "h3", "text": "Crashing e fast-tracking" },
+    { "type": "p", "text": "Para reduzir a duração do projecto, há duas técnicas:" },
+    { "type": "ul", "items": [
+      "Crashing: adicionar recursos a actividades do caminho crítico (mais pessoas, turnos extra). Aumenta custo.",
+      "Fast-tracking: executar em paralelo actividades que estavam planeadas em série. Aumenta risco de retrabalho."
+    ] },
+    { "type": "h2", "text": "Gantt chart" },
+    { "type": "p", "text": "Ferramenta visual desenvolvida por Henry Gantt em 1910-1915. Mostra tarefas como barras horizontais num eixo temporal, com comprimento proporcional à duração. Inclui dependências (setas ou linhas), marcos (diamantes), recursos atribuídos e progresso." },
+    { "type": "h3", "text": "Boas práticas" },
+    { "type": "ul", "items": [
+      "Resumo executivo no topo: 5-10 milestones principais.",
+      "Detalhe por fase abaixo, agrupado por work package.",
+      "Caminho crítico destacado a vermelho.",
+      "Baseline vs actual: linha vertical mostrando onde estamos vs onde planeávamos estar.",
+      "Responsável por actividade indicado (RACI)."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Gantt funciona para projectos de duração média (1-18 meses) com stakeholders que precisam de ver a linha temporal. Para software com sprints de 2 semanas, prefira Kanban ou roadmap baseado em OKRs. Cada ferramenta ao seu contexto." }
+  ]
+}

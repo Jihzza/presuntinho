@@ -1,0 +1,61 @@
+{
+  "id": "01-fundamentos-supply-chain",
+  "title": "Fundamentos de Supply Chain",
+  "courseSlug": "supply-chain",
+  "lessonNumber": 1,
+  "description": "O que é supply chain, os elos upstream-midstream-downstream, sistemas push vs pull e o modelo SCOR.",
+  "audio": "Lição sobre fundamentos de supply chain.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["supply chain", "SCOR", "push", "pull"],
+  "sections": [
+    { "type": "h2", "text": "O que é supply chain" },
+    { "type": "p", "text": "Supply chain (cadeia de abastecimento) é a sequência de processos e entidades que levam um produto ou serviço desde as matérias-primas até ao cliente final. Inclui fornecedores, fabricantes, armazéns, transportadores, distribuidores, retalhistas e o próprio cliente, mais os fluxos de informação e financeiros que os conectam. Gerir bem a supply chain significa sincronizar estes elos para entregar o produto certo, no sítio certo, na quantidade certa, ao menor custo possível." },
+    { "type": "h3", "text": "Porquê é uma área crítica" },
+    { "type": "p", "text": "Para a maioria dos sectores, supply chain representa entre 50% e 80% dos custos operacionais e é o principal determinante da experiência do cliente. Um fornecedor que falha, um armazém mal posicionado, uma transportadora lenta — qualquer elo fraco compromete todo o sistema. Os choques recentes (COVID-19, guerra na Ucrânia, tensão no Mar Vermelho) mostraram que cadeias eficientes mas frágeis podem colapsar de um dia para o outro." },
+    { "type": "h2", "text": "Os três elos: upstream, midstream, downstream" },
+    { "type": "p", "text": "A cadeia divide-se em três macro-segmentos, cada um com desafios e fornecedores específicos:" },
+    { "type": "h3", "text": "Upstream (montante)" },
+    { "type": "p", "text": "Tudo o que está antes da produção: fornecedores de matérias-primas, componentes, embalagens, serviços indirectos (limpeza, manutenção). Inclui o tier 1 (fornecedores directos), tier 2 (fornecedores dos fornecedores) e por aí adiante. Compras e procurement lideram esta parte." },
+    { "type": "h3", "text": "Midstream (meio)" },
+    { "type": "p", "text": "A produção propriamente dita: fábricas, linhas de montagem, controlo de qualidade, planeamento de produção. Inclui também armazenagem intermédia entre etapas. Operações industriais e logística interna." },
+    { "type": "h3", "text": "Downstream (jusante)" },
+    { "type": "p", "text": "Tudo o que vem depois da produção: armazéns de produto acabado, distribuição, transporte, retalho, entrega ao cliente final. Inclui logística de saída (outbound logistics) e, cada vez mais, o canal digital (e-commerce)." },
+    { "type": "h2", "text": "Os cinco fluxos da supply chain" },
+    { "type": "p", "text": "Além dos bens físicos, há quatro outros fluxos que precisam de ser geridos:" },
+    { "type": "ul", "items": [
+      "Fluxo de informação: encomendas, previsões, níveis de stock, alterações de plano — circulam tipicamente via ERP.",
+      "Fluxo financeiro: pagamentos a fornecedores, condições de crédito, gestão de risco cambial.",
+      "Fluxo de risco: eventos disruptivos (greves, desastres naturais, quebras de fornecedor) que precisam de planos de contingência.",
+      "Fluxo de retorno: logística inversa — devoluções, recalls, reparações, reciclagem."
+    ] },
+    { "type": "h2", "text": "Push vs Pull — duas filosofias opostas" },
+    { "type": "p", "text": "Há duas formas fundamentais de planificar a produção e a distribuição:" },
+    { "type": "h3", "text": "Push (empurrar)" },
+    { "type": "p", "text": "Produz-se com base em previsões de procura, independentemente de encomendas concretas. A produção é empurrada pela oferta. Vantagem: eficiência (economias de escala, produção estável); desvantagem: risco de inventário excessivo ou ruptura se a previsão falhar. Comum em bens de consumo massificado (bebidas, papel, detergentes)." },
+    { "type": "h3", "text": "Pull (puxar)" },
+    { "type": "p", "text": "Produz-se apenas quando há uma encomenda ou procura confirmada pelo cliente. A procura puxa a produção. Vantagem: zero inventário desnecessário; desvantagem: lead times mais longos, exige flexibilidade operacional. Comum em bens de elevado valor, customização ou perecíveis." },
+    { "type": "h3", "text": "Push-Pull híbrido" },
+    { "type": "p", "text": "Na prática, a maioria das operações usa um modelo híbrido: certas etapas (componentes base) são push, outras (acabamento, embalagem) são pull. O ponto de separação (decoupling point) é onde se transita do push para o pull — e define o nível de inventário que se mantém em buffer." },
+    { "type": "callout", "variant": "example", "text": "A Zara usa um modelo predominantemente pull: metade das coleções são desenhadas, produzidas e distribuídas em resposta a vendas nas lojas, com ciclos de 2-3 semanas. Já a Toyota usa push-pull: componentes standard são produzidos em push (eficiência), mas a montagem final só começa com encomenda firme do concessionário (pull)." },
+    { "type": "h2", "text": "O modelo SCOR (Supply Chain Operations Reference)" },
+    { "type": "p", "text": "Desenvolvido pelo Supply Chain Council (hoje parte do APICS/ASCM), o SCOR é o framework de referência para descrever, comparar e melhorar supply chains em qualquer sector. Estrutura-se em seis processos centrais:" },
+    { "type": "ul", "items": [
+      "Plan: planeamento da supply chain (procura, oferta, inventário, distribuição, produção, procurement).",
+      "Source: procurement de bens e serviços (seleccionar fornecedores, fazer encomendas, receber, verificar).",
+      "Make: transformação de produtos (produção, montagem, embalagem, manutenção de equipamentos).",
+      "Deliver: gestão de pedidos, warehousing e transporte (entrega ao cliente, incluindo logística inversa).",
+      "Return: devoluções de clientes e recalls (incluindo recepção, inspecção, reparação ou descarte).",
+      "Enable: gestão das regras, recursos, performance e compliance da cadeia."
+    ] },
+    { "type": "h3", "text": "Métricas SCOR (nível 1)" },
+    { "type": "p", "text": "Cinco atributos de performance:" },
+    { "type": "ul", "items": [
+      "Reliability: capacidade de executar tarefas como previsto (perfect order fulfilment ≥ 95%).",
+      "Responsiveness: velocidade de execução (order fulfilment cycle time).",
+      "Agility: capacidade de responder a mudanças externas (upside supply chain flexibility).",
+      "Costs: gestão dos custos operacionais (total supply chain management costs / revenue).",
+      "Asset management efficiency: eficiência na utilização de activos (cash-to-cash cycle time, ROA da supply chain)."
+    ] },
+    { "type": "callout", "variant": "success", "text": "Para a Fatma: o SCOR é uma linguagem comum. Se vais trabalhar em supply chain, aprende os seis processos de cor — vais encontrá-los em entrevistas, em consultoras e em ferramentas de gestão (SAP, Oracle, Blue Yonder)." }
+  ]
+}

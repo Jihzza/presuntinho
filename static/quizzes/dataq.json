@@ -1,0 +1,107 @@
+{
+  "id": "dataq",
+  "title": "Quiz: Data Analytics for Business",
+  "description": "Testa os teus conhecimentos sobre descriptive/diagnostic/predictive/prescriptive analytics, KPIs, dashboards e cultura data-driven.",
+  "questions": [
+    {
+      "q": "Descriptive analytics responde à pergunta:",
+      "opts": [
+        "Porque aconteceu?",
+        "O que aconteceu?",
+        "O que vai acontecer?",
+        "O que devemos fazer?"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Predictive analytics usa como input principal:",
+      "opts": [
+        "Intuição do gestor",
+        "Dados históricos e modelos estatísticos/ML",
+        "Apenas dados em tempo real",
+        "Apenas dados qualitativos"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Um KPI deve ser:",
+      "opts": [
+        "Apenas financeiro",
+        "Específico, mensurável e ligado a um objectivo estratégico",
+        "Definido uma vez e nunca revisto",
+        "Igual para todas as áreas"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O SMART framework para objectivos inclui:",
+      "opts": [
+        "Strategic, Marketable, Agile, Real, Timely",
+        "Specific, Measurable, Achievable, Relevant, Time-bound",
+        "Simple, Memorable, Actionable, Reliable, Tested",
+        "Standard, Manual, Audited, Reviewed, Tracked"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Um dashboard operacional vs. um dashboard estratégico diferencia-se por:",
+      "opts": [
+        "Cor de fundo",
+        "Granularidade e frequência — operacional é tático e frequente; estratégico é agregado e periódico",
+        "Ferramenta usada",
+        "Número de gráficos"
+      ],
+      "a": 1
+    },
+    {
+      "q": "A/B testing é uma técnica de:",
+      "opts": [
+        "Descriptive analytics",
+        "Diagnostic e causal analytics",
+        "Prescriptive analytics",
+        "Reporting estático"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Cohort analysis agrupa utilizadores por:",
+      "opts": [
+        "Apelido",
+        "Característica comum (data de registo, canal, plano)",
+        "Cor preferida",
+        "Navegador usado"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Data-driven culture significa:",
+      "opts": [
+        "Decidir sempre pelo instinto",
+        "Decisões suportadas por dados, com métricas e experimentação contínua",
+        "Acumular dados sem os usar",
+        "Substituir equipas por algoritmos"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Data literacy na organização requer:",
+      "opts": [
+        "Todos serem data scientists",
+        "Capacidade básica de ler, interpretar e questionar dados em todos os níveis",
+        "Apenas a equipa de TI ter acesso",
+        "Relatórios manuais em Excel"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Um funil de conversão mostra:",
+      "opts": [
+        "Custos totais",
+        "Onde utilizadores abandonam um processo sequencial",
+        "Lucro líquido",
+        "Satisfação de colaboradores"
+      ],
+      "a": 1
+    }
+  ]
+}

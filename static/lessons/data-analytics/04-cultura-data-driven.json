@@ -1,0 +1,82 @@
+{
+  "id": "04-cultura-data-driven",
+  "title": "Cultura Data-Driven",
+  "courseSlug": "data-analytics",
+  "lessonNumber": 4,
+  "description": "Data literacy, self-service BI, A/B testing, ética, privacidade (GDPR) e data governance.",
+  "audio": "Lição sobre cultura data-driven.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["data literacy", "A/B testing", "GDPR", "governance"],
+  "sections": [
+    { "type": "h2", "text": "O que é uma cultura data-driven" },
+    { "type": "p", "text": "Uma cultura data-driven é aquela em que decisões — grandes e pequenas — são tomadas com base em dados e evidência, e não apenas em intuição, hierarquia ou tradição. Não significa 'só os dados falam' — significa que dados e experiência se complementam, com clareza sobre o papel de cada um. Empresas data-driven consistentemente outperform os pares: McKinsey estima 23x mais probabilidade de aquisição de clientes, 6x mais probabilidade de retenção, 19x mais probabilidade de margem acima da média." },
+    { "type": "h2", "text": "Data literacy" },
+    { "type": "p", "text": "Data literacy é a capacidade de ler, compreender, criar e comunicar com dados. Envolve três dimensões:" },
+    { "type": "ul", "items": [
+      "Ler dados: interpretar gráficos, KPIs, relatórios sem误导.",
+      "Trabalhar com dados: usar ferramentas básicas (Excel, SQL básico, dashboards) para responder perguntas.",
+      "Argumentar com dados: estruturar uma narrativa que use evidência para sustentar uma recomendação."
+    ] },
+    { "type": "h3", "text": "Como aumentar a data literacy na equipa" },
+    { "type": "ul", "items": [
+      "Programas de formação estruturados (não pontuais).",
+      "Onboarding com dashboards como primeira paragem do dia.",
+      "Biblioteca de métricas e glossário acessível.",
+      "Comunidade interna de prática (data champions em cada área).",
+      "Líderes que exemplificam — pedem dados antes de decidir."
+    ] },
+    { "type": "h2", "text": "Self-service BI" },
+    { "type": "p", "text": "Self-service Business Intelligence democratiza o acesso a dados: qualquer colaborador (não apenas analistas) pode explorar dados, criar dashboards e responder às suas próprias perguntas. Ferramentas como Power BI, Tableau, Looker, Metabase permitem-no com pouco código." },
+    { "type": "h3", "text": "Cuidados" },
+    { "type": "ul", "items": [
+      "Governance: quem pode aceder a quê? Dados sensíveis (PII, dados financeiros confidenciais) devem ter controlos de acesso.",
+      "Definições únicas: métricas precisam de definições canónicas. Um 'cliente activo' para marketing pode ser diferente do que para finanças — alinhar ou documentar as diferenças.",
+      "Certificação de dashboards: distinguir dashboards validados pela equipa de analytics dos experimentais."
+    ] },
+    { "type": "h2", "text": "A/B testing — experimentar para decidir" },
+    { "type": "p", "text": "A/B testing (ou split testing) é a forma mais rigorosa de comparar duas versões de algo: divide-se aleatoriamente a audiência em dois grupos, expõe-se um à versão A e outro à versão B, e mede-se a diferença de resultado. É a base do método científico aplicado a produto e marketing digital." },
+    { "type": "h3", "text": "Cuidados essenciais" },
+    { "type": "ul", "items": [
+      "Sample size: calcular à partida. Testes pequenos demais geram conclusões erradas.",
+      "Significância estatística: não aceitar resultados sem p-value adequado (<0.05 é convenção).",
+      "Duração: cobrir pelo menos um ciclo completo de negócio (semana, mês).",
+      "Segmentação: resultados agregados podem esconder comportamentos opostos em segmentos.",
+      "Testes em sequência: parar um teste ao atingir significância leva a falsos positivos. Use sempre sequential testing ou correção de Bonferroni."
+    ] },
+    { "type": "h3", "text": "Quando A/B testing não é suficiente" },
+    { "type": "p", "text": "Para efeitos de longo prazo (LTV, churn, brand awareness), A/B testing clássico pode não captar. Complementar com cohort analysis, geo-tests, holdout groups, e modelagem causal. Não usar A/B testing como única fonte de verdade em decisões estratégicas." },
+    { "type": "h2", "text": "Ética em dados" },
+    { "type": "p", "text": "Trabalhar com dados traz responsabilidades que vão além do cumprimento legal:" },
+    { "type": "h3", "text": "Princípios éticos" },
+    { "type": "ul", "items": [
+      "Beneficência: o uso de dados deve trazer benefício real e proporcional.",
+      "Não-maleficência: evitar danos (discriminação, exclusão, manipulação).",
+      "Autonomia: o indivíduo deve ter controlo sobre os seus dados.",
+      "Justiça: distribuição equitativa dos benefícios e dos riscos do uso de dados.",
+      "Transparência: comunicar como os dados são usados, em linguagem acessível."
+    ] },
+    { "type": "h3", "text": "GDPR — General Data Protection Regulation" },
+    { "type": "p", "text": "Em vigor desde 2018, o GDPR é a referência mundial em protecção de dados pessoais. Princípios-chave:" },
+    { "type": "ul", "items": [
+      "Consentimento explícito: a Recolha de dados pessoais exige base legal clara (consentimento, execução de contrato, interesse legítimo).",
+      "Direito ao esquecimento: o titular pode pedir eliminação dos seus dados.",
+      "Portabilidade: o titular pode pedir cópia dos seus dados em formato estruturado.",
+      "Minimização: Recolher apenas os dados estritamente necessários.",
+      "Privacy by design: incorporar privacidade desde o design do produto/processo.",
+      "DPO (Data Protection Officer): obrigatório em muitas organizações."
+    ] },
+    { "type": "h3", "text": "Multas e impacto" },
+    { "type": "p", "text": "Multas até 4% do volume de negócios global anual ou 20M€ (o que for maior). Casos notórios: Meta (1,2 mil milhões em 2023, transferências de dados EUA-Europa), Amazon (746M€ em 2021), Google (50M€ em 2019, cookies). Para PME em Portugal, a CNPD é a autoridade nacional responsável." },
+    { "type": "h2", "text": "Data governance" },
+    { "type": "p", "text": "Conjunto de políticas, processos, standards e responsabilidades que garantem a qualidade, segurança, disponibilidade e uso adequado dos dados de uma organização. Inclui:" },
+    { "type": "ul", "items": [
+      "Data ownership: quem é responsável por cada dataset (data steward, data owner).",
+      "Data quality: monitorização de completude, exactidão, consistência, actualidade.",
+      "Master data management (MDM): visão única das entidades core (cliente, produto, fornecedor).",
+      "Catálogo de dados: inventário acessível de que dados existem, onde, quem os usa.",
+      "Lineage: rastreabilidade de onde veio cada dataset e onde é usado.",
+      "Acesso: regras de quem pode ver/editar o quê (RBAC — role-based access control)."
+    ] },
+    { "type": "callout", "variant": "success", "text": "Para a Fatma: cultura data-driven não é sobre comprar ferramentas caras — é sobre instalar o hábito de perguntar 'o que dizem os dados?' antes de decidir. Quem pratica isso, com ou sem Power BI, está à frente." }
+  ]
+}

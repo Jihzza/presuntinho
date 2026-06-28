@@ -1,0 +1,84 @@
+{
+  "id": "04-procurement-e-relacoes",
+  "title": "Procurement e Relações com Fornecedores",
+  "courseSlug": "supply-chain",
+  "lessonNumber": 4,
+  "description": "Supplier selection, strategic sourcing, parcerias (VMI, CPFR) e ética na cadeia de fornecedores.",
+  "audio": "Lição sobre procurement e relações com fornecedores.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["procurement", "sourcing", "VMI", "CPFR", "ética"],
+  "sections": [
+    { "type": "h2", "text": "Compras vs Procurement vs Sourcing" },
+    { "type": "p", "text": "São termos usados como sinónimos mas têm nuances. Compras (purchasing) é a transacção operacional — emitir PO, receber mercadoria, pagar factura. Procurement é mais estratégico: identifica necessidades, selecciona fornecedores, negocia contratos, gere o ciclo de vida do fornecedor. Sourcing é ainda mais estratégico: decidir de onde comprar (geografias, categorias, estrutura de base de fornecedores). A evolução da função de procurement nas últimas décadas elevou-a de centro de custos a parceiro estratégico do negócio." },
+    { "type": "h2", "text": "Strategic sourcing — o processo em 7 passos" },
+    { "type": "p", "text": "Metodologia usada para definir a estratégia de sourcing de uma categoria de compras:" },
+    { "type": "ul", "items": [
+      "1. Perfil da categoria: o que se compra, quanto se gasta, com quem (spend analysis).",
+      "2. Análise do mercado: quem são os fornecedores, qual o seu poder de negociação, qual o nosso poder, quais as alternativas.",
+      "3. Análise de riscos: concentração, geopolítica, qualidade, dependência.",
+      "4. Estratégia de sourcing: faz-buy, single vs dual source, parceria de longo prazo vs spot buying.",
+      "5. Selecção de fornecedores: RFx (RFI, RFP, RFQ), avaliação técnica e financeira, referências.",
+      "6. Negociação: tácticas e BATNA, win-win, alinhamento de incentivos.",
+      "7. Implementação: contrato, KPIs, transição, gestão contínua."
+    ] },
+    { "type": "h2", "text": "Supplier selection — critérios e ferramentas" },
+    { "type": "p", "text": "Avaliar fornecedores vai muito além do preço. Frameworks comuns:" },
+    { "type": "ul", "items": [
+      "Qualidade: certificações (ISO 9001, ISO 14001), histórico de defeitos, capacidade de inspecção.",
+      "Capacidade técnica: I&D, know-how, flexibilidade para customização.",
+      "Capacidade financeira: estabilidade, capacidade de investimento, exposição cambial.",
+      "Confiabilidade: pontualidade (OTD — On Time Delivery), gestão de risco de ruptura.",
+      "Sustentabilidade: práticas ESG, certificações ambientais, pegada de carbono.",
+      "Localização e risco geopolítico: proximidade, exposição a sanções, estabilidade política."
+    ] },
+    { "type": "h3", "text": "Ferramentas formais" },
+    { "type": "ul", "items": [
+      "Weighted scoring model: atribui peso a cada critério e pontua fornecedores. Objectivo e auditável.",
+      "Total Cost of Ownership (TCO): preço + transporte + armazenagem + risco + custo de ruptura. Mais completo que comparar apenas preço unitário.",
+      "Supplier audit: visita ao terreno, revisão de processos, entrevistas com equipa.",
+      "Referências e benchmarking: falar com outros clientes do fornecedor."
+    ] },
+    { "type": "h2", "text": "Single vs multiple sourcing" },
+    { "type": "p", "text": "Decisão clássica: comprar tudo a um fornecedor (single source) ou repartir entre vários (multiple source)?" },
+    { "type": "ul", "items": [
+      "Single source: melhor preço (volume), mais fácil de gerir, parceria mais profunda. Risco: dependência, vulnerabilidade a ruptura.",
+      "Multiple source: mais robusto, poder de negociação, competição entre fornecedores. Custo: menos volume por fornecedor, mais gestão.",
+      "Dual sourcing: compromisso — dois fornecedores por categoria, com quotas que podem variar."
+    ] },
+    { "type": "p", "text": "Tendência recente (pós-COVID): muitas empresas passaram de single source extreme lean para uma estratégia mais equilibrada, com critérios de resiliência a pesar mais que os de eficiência pura." },
+    { "type": "h2", "text": "Parcerias estratégicas com fornecedores" },
+    { "type": "p", "text": "Modelos de colaboração mais profundos, que vão além do contrato transacional:" },
+    { "type": "h3", "text": "VMI — Vendor Managed Inventory" },
+    { "type": "p", "text": "O fornecedor é responsável por manter os níveis de inventário no cliente. Tem visibilidade do stock e decide quando reabastecer. Vantagem para o cliente: menos ruptura, menos gestão de ordens; para o fornecedor: melhor planeamento da sua própria produção, dados em tempo real. Comum em retalho (Walmart com Procter & Gamble foi o caso pioneiro)." },
+    { "type": "h3", "text": "CPFR — Collaborative Planning, Forecasting and Replenishment" },
+    { "type": "p", "text": "Modelo mais avançado: comprador e vendedor partilham informação de vendas, previsões e níveis de stock, e colaboram activamente no planeamento. Requer sistemas de informação compatíveis e confiança mútua. Benefícios: redução do efeito bullwhip, melhor serviço, menos inventário total na cadeia." },
+    { "type": "h3", "text": "Efeito bullwhip" },
+    { "type": "p", "text": "Fenómeno onde pequenas variações na procura do cliente final geram flutuações cada vez maiores ao longo da cadeia (retalhista → grossista → fabricante → fornecedor). Causas: previsões independentes, lead times, ordens em lote, escassez percebida. CPFR, VMI e partilha de dados reduzem-no significativamente." },
+    { "type": "h2", "text": "Ética na cadeia de fornecedores" },
+    { "type": "p", "text": "ESG (Environmental, Social, Governance) redefine o que significa ser um bom parceiro. Compras éticas exigem due diligence em quatro dimensões:" },
+    { "type": "ul", "items": [
+      "Trabalho infantil e forçado: conformidade com ILO Conventions 138 e 182.",
+      "Condições de trabalho: salários dignos, horas extras limitadas, segurança, liberdade de associação.",
+      "Impacto ambiental: emissões, uso de água, gestão de resíduos,化学品 perigosos (REACH, RoHS).",
+      "Anti-corrupção: conformidade com FCPA, UK Bribery Act, práticas de suborno."
+    ] },
+    { "type": "h3", "text": "Frameworks e certificações" },
+    { "type": "ul", "items": [
+      "Código de Conduta do Comprador: documento que define expectativas e padrões mínimos.",
+      "Auditorias de terceiros: SA8000 (social), ISO 14001 (ambiental), ISO 45001 (segurança).",
+      "Due diligence baseada em risco: foco em países e categorias de maior risco.",
+      "Rastreabilidade da cadeia: cada vez mais exigida por lei (German Supply Chain Act, EU CSDDD, UK Modern Slavery Act)."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "A tua reputação é tão boa quanto a do teu pior fornecedor. Uma fábrica em Bangladesh a colapsar ou um caso de trabalho infantil na tua cadeia pode destruir anos de construção de marca. Investir em due diligence ESG não é caridade — é protecção de negócio." },
+    { "type": "h2", "text": "Compras digitais e procurement 4.0" },
+    { "type": "p", "text": "A função de procurement está em transformação digital acelerada:" },
+    { "type": "ul", "items": [
+      "e-Procurement: portais onde fornecedores submetem cotações, contratos são geridos electronicamente (SAP Ariba, Coupa, Jaggaer).",
+      "P2P (Procure-to-Pay): ciclo completo automatizado, desde requisição até pagamento, com integração ao ERP.",
+      "Spend analytics: ferramentas de BI que identificam oportunidades de poupança e risco.",
+      "IA e machine learning: previsão de procura, avaliação automática de risco de fornecedor, chatbots de procurement.",
+      "Blockchain: rastreabilidade da cadeia de fornecedores (em piloto em sectores como diamantes, alimentos, farmacêutica)."
+    ] },
+    { "type": "callout", "variant": "success", "text": "Para a Fatma: procurement moderno é 50% negociação, 30% análise de dados, 20% relacionamento humano. Quanto mais a função se digitaliza, mais valor acrescentam os profissionais que entendem estratégia, risco e ESG." }
+  ]
+}

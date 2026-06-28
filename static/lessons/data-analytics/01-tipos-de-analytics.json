@@ -1,0 +1,66 @@
+{
+  "id": "01-tipos-de-analytics",
+  "title": "Os 4 Tipos de Analytics",
+  "courseSlug": "data-analytics",
+  "lessonNumber": 1,
+  "description": "Descriptive, diagnostic, predictive e prescriptive analytics — o que cada um responde e onde aplicar.",
+  "audio": "Lição sobre os quatro tipos de analytics.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["analytics", "descriptive", "predictive", "prescriptive"],
+  "sections": [
+    { "type": "h2", "text": "Analytics não é tudo igual" },
+    { "type": "p", "text": "Quando se fala em analytics, é comum confundir reporting, business intelligence, data science, machine learning. Uma framework útil para pensar é a que separa analytics em quatro tipos, ordenados por sofisticação e valor acrescentado: descriptive, diagnostic, predictive e prescriptive. Cada um responde a uma pergunta diferente e exige maturidade técnica crescente." },
+    { "type": "h2", "text": "1. Descriptive analytics — O quê?" },
+    { "type": "p", "text": "Responde à pergunta: o que aconteceu? É a forma mais básica de analytics: agregação de dados históricos em dashboards, relatórios e KPIs. Inclui somas, médias, contagens, percentagens, séries temporais. A maioria das empresas opera predominantemente aqui — Excel, ERP, Google Analytics, dashboards em Power BI ou Tableau." },
+    { "type": "h3", "text": "Exemplos práticos" },
+    { "type": "ul", "items": [
+      "Vendas do mês: €1,2M, +5% vs mês anterior.",
+      "Tráfego do website: 250.000 sessões, com taxa de bounce de 45%.",
+      "Taxa de churn trimestral: 4,8%.",
+      "Distribuição de receita por linha de produto."
+    ] },
+    { "type": "p", "text": "Descriptive analytics é indispensável mas tem uma limitação fundamental: olha para trás. Saber o que aconteceu não explica porque aconteceu nem o que vai acontecer." },
+    { "type": "h2", "text": "2. Diagnostic analytics — Porquê?" },
+    { "type": "p", "text": "Responde à pergunta: porque aconteceu? Drill-down, root cause analysis, correlações, segmentação. Procura identificar as causas por trás dos padrões observados no descriptive. Ferramentas: cohort analysis, funnel analysis, comparison vs control group, statistical testing básico." },
+    { "type": "h3", "text": "Técnicas comuns" },
+    { "type": "ul", "items": [
+      "Análise de cohort: comportamento de grupos que partilham característica comum (mês de registo, canal de aquisição).",
+      "Análise de funil: onde os utilizadores abandonam o processo (registo → checkout → pagamento).",
+      "Análise de contribuição: qual segmento explica a variação das vendas (preço, volume, mix).",
+      "Comparação com baseline: vendas vs mesmo período do ano passado, ajustadas por sazonalidade."
+    ] },
+    { "type": "h3", "text": "Da correlação à causalidade" },
+    { "type": "p", "text": "Diagnostic analytics frequentemente descobre correlações, não causalidades. Para estabelecer causalidade é preciso ir além — A/B testing, quasi-experiments, modelos causais. Um erro comum em gestores é confundir correlação com causalidade e tomar decisões erradas por causa disso." },
+    { "type": "h2", "text": "3. Predictive analytics — O que vai acontecer?" },
+    { "type": "p", "text": "Responde à pergunta: o que provavelmente vai acontecer? Usa dados históricos, técnicas estatísticas e machine learning para prever outcomes futuros: propensão de compra, risco de churn, probabilidade de default, procura esperada, falhas de equipamento. Inclui técnicas como regressão, árvores de decisão, redes neuronais, gradient boosting." },
+    { "type": "h3", "text": "Aplicações comuns" },
+    { "type": "ul", "items": [
+      "Credit scoring: prever probabilidade de um cliente pagar o empréstimo.",
+      "Churn prediction: identificar clientes com alta probabilidade de cancelar nos próximos 30 dias.",
+      "Demand forecasting: prever vendas para as próximas 4-12 semanas.",
+      "Predictive maintenance: antecipar falhas em equipamentos industriais.",
+      "Recommendation systems: prever que produtos vão interessar a cada utilizador."
+    ] },
+    { "type": "p", "text": "Predictive analytics exige dados de boa qualidade, limpeza rigorosa, escolha correcta de variáveis e validação contínua do modelo. Não basta ter o algoritmo certo — é preciso saber que dados usar, como avaliar a performance e como evitar bias." },
+    { "type": "h2", "text": "4. Prescriptive analytics — O que fazer?" },
+    { "type": "p", "text": "Responde à pergunta: o que devemos fazer? É o nível mais sofisticado: combina previsão com optimização para recomendar acções. Técnicas: optimização linear e inteira, simulação, reinforcement learning, decision analysis." },
+    { "type": "h3", "text": "Exemplos" },
+    { "type": "ul", "items": [
+      "Route optimization: qual o melhor trajecto para 50 entregas com janelas de tempo diferentes.",
+      "Price optimization: quanto cobrar para maximizar margem mantendo elasticidade do cliente.",
+      "Inventory allocation: como distribuir inventário entre armazéns para minimizar ruptura.",
+      "Portfolio optimization: como alocar capital entre activos para maximizar retorno com risco controlado.",
+      "Treatment effect: qual a melhor estratégia de retenção para cada segmento de cliente em risco."
+    ] },
+    { "type": "h2", "text": "Os 4 tipos em conjunto — maturidade analítica" },
+    { "type": "p", "text": "Empresas de baixa maturidade têm apenas descriptive. À medida que crescem, adicionam diagnostic (para entender o porquê), depois predictive (para antecipar) e finalmente prescriptive (para decidir). O caminho inverso (do prescriptive para o descriptive) raramente funciona — a tomada de decisão exige contexto e compreensão." },
+    { "type": "callout", "variant": "success", "text": "Para a Fatma: a maioria das empresas gasta 90% do tempo em descriptive e só 10% nas outras três. A verdadeira vantagem competitiva está em subir a pirâmide. Pergunta sempre: estamos a tomar decisões com dados do passado, do presente ou do futuro?" },
+    { "type": "h2", "text": "Quando usar cada tipo — perguntas práticas" },
+    { "type": "ul", "items": [
+      "Quero saber quanto vendi este mês → Descriptive.",
+      "Quero saber porque as vendas caíram → Diagnostic.",
+      "Quero prever quanto vou vender o próximo trimestre → Predictive.",
+      "Quero saber quanto investir em marketing em cada canal → Prescriptive."
+    ] }
+  ]
+}

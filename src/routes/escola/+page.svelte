@@ -306,6 +306,54 @@
                                   lessonCount: 4,
                                   quizCount: 1,
                                   badge: 'Uni'
+                                },
+                                {
+                                  slug: 'international-business',
+                                  title: 'International Business',
+                                  tagline: 'Universidade · Globalização, modos de entrada e multinacionais',
+                                  description:
+                                    'Estratégias para operar além-fronteiras: globalização e seus drivers, instituições internacionais (OMC, FMI, Banco Mundial), modos de entrada (exportação, licenciamento, JV, subsidiária, M&A), gestão de multinacionais e finanças internacionais.',
+                                  icon: '🌐',
+                                  color: '#2563eb',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
+                                },
+                                {
+                                  slug: 'supply-chain',
+                                  title: 'Supply Chain Management',
+                                  tagline: 'Universidade · Procurement, inventário, logística e última milha',
+                                  description:
+                                    'Desenho, planeamento e optimização da cadeia de abastecimento: elos upstream/midstream/downstream, modelo SCOR, sistemas push vs pull, gestão de inventário (EOQ, ABC, safety stock), procurement estratégico, transporte, distribuição e last-mile.',
+                                  icon: '📦',
+                                  color: '#b45309',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
+                                },
+                                {
+                                  slug: 'data-analytics',
+                                  title: 'Data Analytics for Business',
+                                  tagline: 'Universidade · Descriptive/diagnostic/predictive/prescriptive, KPIs e cultura data-driven',
+                                  description:
+                                    'Fundamentos de analytics para gestores: os quatro tipos (descriptive, diagnostic, predictive, prescriptive), KPIs e SMART, dashboards, cohort e funnel analysis, A/B testing, data literacy e cultura data-driven na organização.',
+                                  icon: '📊',
+                                  color: '#7c3aed',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
+                                },
+                                {
+                                  slug: 'project-management',
+                                  title: 'Project Management',
+                                  tagline: 'Universidade · Triple constraint, PMBOK, Agile e gestão de risco',
+                                  description:
+                                    'Metodologias de gestão de projectos: triple constraint (scope/time/cost), ciclo de vida, WBS, Gantt, critical path, Earned Value, Scrum e Kanban, gestão de riscos e stakeholders.',
+                                  icon: '📋',
+                                  color: '#0d9488',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
                                 }
                               ];
 </script>

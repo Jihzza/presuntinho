@@ -1,0 +1,69 @@
+{
+  "id": "03-visualizacao-e-dashboards",
+  "title": "Visualização de Dados e Dashboards",
+  "courseSlug": "data-analytics",
+  "lessonNumber": 3,
+  "description": "Princípios de data visualization, escolha do gráfico certo, design de dashboards e como evitar mentir com números.",
+  "audio": "Lição sobre visualização de dados e dashboards.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["data viz", "dashboards", "Tufte", "chart choice"],
+  "sections": [
+    { "type": "h2", "text": "Porquê data visualization importa" },
+    { "type": "p", "text": "O cérebro humano processa imagens 60.000 vezes mais depressa do que texto. Uma boa visualização transforma dados complexos em insight imediato; uma má visualização esconde padrões, confunde o leitor e conduz a más decisões. Investir em visualização não é cosmética — é parte essencial da comunicação da análise." },
+    { "type": "h2", "text": "Princípios de Edward Tufte" },
+    { "type": "p", "text": "Edward Tufte, considerado o pai da visualização de informação moderna, definiu princípios que continuam a orientar a disciplina. Quatro são especialmente úteis para o gestor:" },
+    { "type": "h3", "text": "1. Data-ink ratio" },
+    { "type": "p", "text": "Maximizar a proporção de 'tinta' (pixels, no digital) usada para representar dados vs decoração. Cada elemento gráfico deve justificar-se pela informação que comunica. Gridlines excessivas, sombras 3D, cores decorativas reduzem o data-ink ratio e diluem a mensagem." },
+    { "type": "h3", "text": "2. Chartjunk" },
+    { "type": "p", "text": "Qualquer elemento gráfico que não acrescenta informação: padrões de fundo desnecessários, animações, ícones redundantes, legendas exageradas. Remover chartjunk torna o gráfico mais legível e mais honesto." },
+    { "type": "h3", "text": "3. Lie factor" },
+    { "type": "p", "text": "Razão entre o tamanho do efeito visual mostrado e o tamanho real do efeito nos dados. Se um valor duplica mas a barra só cresce 20%, o gráfico está a mentir. Tufte cunhou o termo para denunciar manipulações (intencionais ou não)." },
+    { "type": "h3", "text": "4. Small multiples" },
+    { "type": "p", "text": "Repetir o mesmo gráfico com pequenas variações (mesmo eixo, mesma escala, mesmo formato) para facilitar comparação. Comum em dashboards com KPIs por país, produto ou mês. Permite detectar padrões que se perderiam em gráficos isolados." },
+    { "type": "h2", "text": "Escolher o gráfico certo" },
+    { "type": "p", "text": "A escolha errada do gráfico é a fonte mais frequente de confusão. Guia rápida:" },
+    { "type": "ul", "items": [
+      "Comparação entre categorias: bar chart (vertical ou horizontal). Horizontal quando labels são longas.",
+      "Evolução ao longo do tempo: line chart. Usar quando há continuidade temporal; não usar para variáveis categóricas.",
+      "Composição (partes de um todo): stacked bar (partes de categorias) ou treemap (muitas categorias hierárquicas). Pie chart apenas com <5 fatias e poucas categorias.",
+      "Distribuição: histogram (variável contínua), boxplot (resumo estatístico), violin plot (densidade).",
+      "Correlação entre duas variáveis: scatter plot. Adicionar linha de tendência se útil.",
+      "Ranking: bar chart ordenado. Dot plot é alternativa mais limpa quando há muitas categorias.",
+      "Geografia: choropleth map (intensidade por região) ou symbol map (tamanho do ponto proporcional ao valor)."
+    ] },
+    { "type": "h3", "text": "Erros de gráfico mais comuns" },
+    { "type": "ul", "items": [
+      "Pie chart com 12 fatias — ilegível.",
+      "Eixo Y a começar em valor não-zero em bar chart — exagera diferenças.",
+      "Dual-axis line chart sem aviso — sugere correlação que pode não existir.",
+      "3D em gráficos que não precisam — distorce percepção.",
+      "Cores sem significado — confundir leitor ou não respeitar acessibilidade (daltonismo)."
+    ] },
+    { "type": "h2", "text": "Design de dashboards" },
+    { "type": "p", "text": "Um bom dashboard responde a perguntas de negócio em poucos segundos. Não é uma colecção aleatória de gráficos — é uma narrativa visual, hierarquizada por importância e frequência de uso." },
+    { "type": "h3", "text": "Hierarquia visual" },
+    { "type": "p", "text": "Topo: visão executiva (3-5 KPIs principais, com comparação vs período anterior e indicador de tendência). Meio: detalhe operacional por área/segmento. Fundo: dados granulares, tabelas, drill-down. Tipografia e cor guiam o olhar: maior e mais saturado para o mais importante." },
+    { "type": "h3", "text": "Princípios de design" },
+    { "type": "ul", "items": [
+      "Menos é mais: 5-9 gráficos por página é o limite cognitivo saudável.",
+      "Tudo cabe no ecrã: nada de scroll horizontal. Mobile-friendly obrigatório.",
+      "Cores com significado: verde/bom, vermelho/mau, amarelo/atenção. Não inventar paletas aleatórias.",
+      "Contexto sempre: comparar com período anterior, com meta, com benchmark.",
+      "Actualização em tempo real quando relevante: vendas do dia, NPS em tempo real."
+    ] },
+    { "type": "h2", "text": "Como mentir com números — e como evitar" },
+    { "type": "p", "text": "Darrell Huff escreveu em 1954 o clássico How to Lie with Statistics. As técnicas continuam actuais:" },
+    { "type": "h3", "text": "Truques comuns" },
+    { "type": "ul", "items": [
+      "Eixo truncado: começar o eixo Y em valor não-zero para amplificar diferenças.",
+      "Média sem distribuição: 'salário médio = 50.000€' pode esconder que 5% ganham 500.000€ e 95% ganham 30.000€.",
+      "Percentagens sem base: 'crescimento de 100%' pode ser de 1 para 2. Sempre perguntar a base.",
+      "Correlação assumida como causalidade: dois números correlacionados não querem dizer que um causa o outro.",
+      "Cherry-picking: escolher o período ou segmento que favorece a narrativa.",
+      "Sample size: conclusões baseadas em amostras pequenas."
+    ] },
+    { "type": "h3", "text": "Como defender-se" },
+    { "type": "p", "text": "Como gestor, antes de apresentar um gráfico, pergunte: este número engana? Mostrei o suficiente do contexto? Usei a média certa (mediana vs média)? Tenho n suficiente? Como leitor de dashboards de outros, faça as mesmas perguntas. Ceticismo informado é a melhor defesa." },
+    { "type": "callout", "variant": "success", "text": "Para a Fatma: a função de data visualization não é fazer bonito — é tornar o complexo simples sem o falsear. Cada gráfico deve sobreviver ao teste: se eu mostrar isto a um colega sem contexto, ele tira a conclusão certa?" }
+  ]
+}

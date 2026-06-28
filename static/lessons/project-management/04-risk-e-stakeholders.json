@@ -1,0 +1,76 @@
+{
+  "id": "04-risk-e-stakeholders",
+  "title": "Gestão de Riscos e Stakeholders",
+  "courseSlug": "project-management",
+  "lessonNumber": 4,
+  "description": "Risk management (identificar, qualificar, responder, monitor), análise de stakeholders (power/interest) e plano de comunicação.",
+  "audio": "Lição sobre gestão de riscos e stakeholders.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["risk management", "stakeholders", "power interest"],
+  "sections": [
+    { "type": "h2", "text": "Porque é que a gestão de risco é vital" },
+    { "type": "p", "text": "Projectos vivem em ambientes incertos. Requisitos mudam, pessoas saem, fornecedores atrasam, tecnologias revelam-se imaturas, mercados oscilam. Sem gestão de risco, os problemas apanham a equipa desprevenida e obrigam a respostas reactivas (sempre mais caras). Com gestão de risco, antecipam-se cenários, preparam-se respostas, e constrói-se resiliência no plano." },
+    { "type": "h2", "text": "O processo de gestão de risco (PMI)" },
+    { "type": "p", "text": "O PMI define seis processos que se repetem ao longo do projecto:" },
+    { "type": "h3", "text": "1. Plan Risk Management" },
+    { "type": "p", "text": "Definir como os riscos serão identificados, analisados, respondidos e monitorizados neste projecto. Inclui definir categorias de risco, papéis e responsabilidades, tolerância a risco, métodos e ferramentas, frequência de análise." },
+    { "type": "h3", "text": "2. Identify Risks" },
+    { "type": "p", "text": "Listar eventos incertos que podem afectar o projecto. Técnicas: brainstorming com a equipa, análise de SWOT, checklists de projectos anteriores, opinião de especialistas, análise de premissas, diagramas de causa-efeito (Ishikawa). Cada risco identificado deve ter descrição, categoria, e se possível impacto potencial." },
+    { "type": "h3", "text": "3. Perform Qualitative Risk Analysis" },
+    { "type": "p", "text": "Priorizar riscos por probabilidade × impacto (matriz P×I). Tipicamente classifica-se em baixo/médio/alto. Saída: lista dos top 10-20 riscos que merecem análise aprofundada. Rápido e barato de fazer." },
+    { "type": "h3", "text": "4. Perform Quantitative Risk Analysis" },
+    { "type": "p", "text": "Modelar numericamente o impacto de riscos prioritários: simulação de Monte Carlo, decision trees, expected monetary value (EMV). Mais lento e exigente em dados, mas dá números concretos para decidir onde reforçar contingências." },
+    { "type": "h3", "text": "5. Plan Risk Responses" },
+    { "type": "p", "text": "Para cada risco significativo, definir uma estratégia:" },
+    { "type": "ul", "items": [
+      "Avoid (evitar): mudar o plano para eliminar o risco. Ex: substituir tecnologia imatura por uma mais madura.",
+      "Mitigate (mitigar): reduzir probabilidade ou impacto. Ex: treinar equipa, diversificar fornecedores.",
+      "Transfer (transferir): passar parte do risco a terceiro. Ex: seguro, contrato com penalidade para fornecedor.",
+      "Accept (aceitar): risco demasiado caro de mitigar; criar reserva de contingência.",
+      "Exploit / Enhance / Share: para riscos positivos (oportunidades) — explorar, reforçar, partilhar."
+    ] },
+    { "type": "h3", "text": "6. Monitor and Control Risks" },
+    { "type": "p", "text": "Acompanhar riscos identificados, identificar novos, executar respostas planeadas, avaliar eficácia. Reuniões de risk review quinzenais ou mensais, risk register actualizado, comunicação ao sponsor dos top risks." },
+    { "type": "h2", "text": "Risk register" },
+    { "type": "p", "text": "Documento vivo onde se registam todos os riscos identificados. Típicas colunas:" },
+    { "type": "ul", "items": [
+      "ID, descrição, categoria.",
+      "Probabilidade (1-5), Impacto (1-5), Score (P×I).",
+      "Resposta planeada (avoid/mitigate/transfer/accept).",
+      "Owner (quem é responsável por esta resposta).",
+      "Status (open, in progress, closed).",
+      "Data de próxima revisão."
+    ] },
+    { "type": "h2", "text": "Reserva de contingência e management reserve" },
+    { "type": "p", "text": "Reserva de contingência: orçamento ou tempo reservado para responder a riscos identificados (ex: +10% no orçamento para mitigar riscos médios). Management reserve: reserva para riscos desconhecidos, gerida pela alta direcção, fora do orçamento do project manager. A regra prática é Contingency Reserve ≈ (Expected Impact × Probability) para riscos médios; Management Reserve ≈ 5-10% adicional para o desconhecido." },
+    { "type": "h2", "text": "Gestão de stakeholders — o lado humano" },
+    { "type": "p", "text": "Riscos não são só técnicos — são frequentemente sobre pessoas. O sponsor que muda de ideias, o utilizador-chave que sai da empresa, o regulador que levanta objecções inesperadas, o consultor que atrasa entregas. A gestão de stakeholders reduz estes riscos e desbloqueia apoios." },
+    { "type": "h2", "text": "Análise de stakeholders — modelo Power × Interest" },
+    { "type": "p", "text": "Já vimos a matriz 2x2 (alto/baixo poder × alto/baixo interesse). Aplicação prática:" },
+    { "type": "ul", "items": [
+      "Manage Closely (alto/alto): sponsor, cliente principal, decisores-chave. Envolvimento contínuo, decisões consultadas antes de tomadas.",
+      "Keep Satisfied (alto/baixo): alta direcção, reguladores, financiadores. Informados com summaries executivos. Responder rapidamente a pedidos.",
+      "Keep Informed (baixo/alto): equipa alargada, utilizadores finais, parceiros operacionais. Newsletters, demos, sessões de Q&A.",
+      "Monitor (baixo/baixo): público, terceiros sem impacto directo. Comunicação genérica, monitorar se ascendem de quadrante."
+    ] },
+    { "type": "h2", "text": "Plano de comunicação" },
+    { "type": "p", "text": "Define o quê, quem, quando, como e porquê comunicar:" },
+    { "type": "ul", "items": [
+      "O quê: tipo de informação (status, decisão, risco, mudança).",
+      "Quem: destinatário (por stakeholder group).",
+      "Quando: frequência (diário, semanal, quinzenal, mensal, ad-hoc).",
+      "Como: formato (email, dashboard, reunião, apresentação) e canal.",
+      "Porquê: objectivo (informar, consultar, decidir, alinhamento)."
+    ] },
+    { "type": "h3", "text": "Tipos de comunicação" },
+    { "type": "ul", "items": [
+      "Push: email, newsletter —unidirecional, assíncrono.",
+      "Pull: dashboard, repositório de documentos —assíncrono, on-demand.",
+      "Interactive: reunião, workshop —síncrono, bidireccional."
+    ] },
+    { "type": "p", "text": "A regra é usar o canal certo para o tipo de mensagem: decisões em reuniões, status por dashboard, mudanças em emails escritos, motivação em conversas 1:1. Não usar reuniões para o que se resolve por email — nem email para o que precisa de discussão." },
+    { "type": "h2", "text": "Stakeholder engagement assessment matrix" },
+    { "type": "p", "text": "Ferramenta complementar: avalia o nível de engajamento actual (unaware, resistant, neutral, supportive, leading) versus o nível desejado, e define acções para fechar o gap. Útil para planear comunicação activa com stakeholders-chave." },
+    { "type": "callout", "variant": "success", "text": "Para a Fatma: o gestor de projecto gasta mais tempo a gerir pessoas e riscos do que a fazer tarefas técnicas. Se não te sentires confortável com política, conflito e negociação, começa a praticar — é onde 80% do valor de um PM é entregue." }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "id": "04-financas-internacionais",
+  "title": "Finanças Internacionais",
+  "courseSlug": "international-business",
+  "lessonNumber": 4,
+  "description": "Risco cambial, hedging, mercados de câmbios (spot e forward), balança de pagamentos e financiamento internacional.",
+  "audio": "Lição sobre finanças internacionais.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["câmbio", "hedging", "balança de pagamentos", "eurobonds"],
+  "sections": [
+    { "type": "h2", "text": "Porquê estudar finanças internacionais" },
+    { "type": "p", "text": "Qualquer empresa que compra, vende, investe ou se financia além-fronteiras lida com moedas diferentes, taxas de câmbio voláteis, regulamentações locais e custos de capital distintos. Dominar os conceitos de finanças internacionais é essencial para gerir risco, optimizar o funding e avaliar o desempenho das operações internacionais." },
+    { "type": "h2", "text": "Taxa de câmbio: spot e forward" },
+    { "type": "p", "text": "A taxa de câmbio é o preço de uma moeda em termos de outra. Existem dois mercados principais:" },
+    { "type": "h3", "text": "Mercado spot — operação à vista" },
+    { "type": "p", "text": "Liquidação em dois dias úteis (T+2). É o preço que vês nos sites de notícias financeiras. Exemplo: EUR/USD spot = 1,085 significa que 1€ compra 1,085 USD hoje. Usado para pagamentos imediatos, transferências correntes, viagens." },
+    { "type": "h3", "text": "Mercado forward — operação a prazo" },
+    { "type": "p", "text": "Acordo para trocar moeda a uma taxa pré-fixada numa data futura (1 mês, 3 meses, 1 ano). Sem adiantamento de capital; liquidada na maturidade. Taxa forward depende do diferencial de juros entre as duas moedas (covered interest rate parity)." },
+    { "type": "ul", "items": [
+      "Se EUR/USD forward > spot: euro está com prêmio forward (forward premium).",
+      "Se EUR/USD forward < spot: euro está com desconto forward (forward discount).",
+      "O ponto forward (forward points) é a diferença entre spot e forward; depende das taxas de juro."
+    ] },
+    { "type": "h3", "text": "Porquê usar forwards" },
+    { "type": "p", "text": "Permitem fixar hoje a taxa a que uma exportação será paga daqui a 90 dias, eliminando a incerteza. É a forma mais simples e comum de cobertura cambial." },
+    { "type": "h2", "text": "Sistemas de taxas de câmbio" },
+    { "type": "p", "text": "Os países escolhem entre vários regimes cambiais:" },
+    { "type": "ul", "items": [
+      "Câmbio flutuante (livre): taxa determinada pelo mercado. Maioria das moedas desenvolvidas (USD, EUR, JPY, GBP).",
+      "Câmbio fixo: moeda ancorada a outra (crawling peg, currency board). Ex: dólar de Hong Kong ancorado ao USD.",
+      "Câmbio gerido (managed float): banco central intervém ocasionalmente para suavizar volatilidade. Ex: China, Singapura.",
+      "União monetária: países partilham a mesma moeda (zona euro desde 1999)."
+    ] },
+    { "type": "h2", "text": "Risco cambial" },
+    { "type": "p", "text": "É o risco de perdas financeiras devido a movimentos adversos da taxa de câmbio. Manifesta-se em três dimensões:" },
+    { "type": "h3", "text": "Risco de transacção" },
+    { "type": "p", "text": "Quando uma factura é emitida em moeda estrangeira e paga mais tarde: se a moeda estrangeira se desvaloriza antes do pagamento, o exportador recebe menos em moeda local. Inversamente, o importador pode beneficiar-se." },
+    { "type": "h3", "text": "Risco de tradução (contabilístico)" },
+    { "type": "p", "text": "Multinacionais consolidam contas de subsidiárias em diferentes moedas. As flutuações cambiais afectam o valor reportado dos activos e resultados, sem impacto real no cash flow. Relevante para investidores e analistas." },
+    { "type": "h3", "text": "Risco económico (operacional)" },
+    { "type": "p", "text": "Mudanças estruturais no câmbio alteram a competitividade da empresa a longo prazo. Uma desvalorização persistente da moeda local pode prejudicar exportadores que importam inputs (mais caros) e ajudar exportadores de produtos locais." },
+    { "type": "h2", "text": "Hedging (cobertura cambial)" },
+    { "type": "p", "text": "Hedging é a estratégia de proteger o negócio contra movimentos adversos do câmbio, usando instrumentos financeiros:" },
+    { "type": "ul", "items": [
+      "Forward contract: fixa a taxa de câmbio para uma data futura. Mais comum em PME.",
+      "Currency option: dá o direito (não obrigação) de comprar/vender moeda a uma taxa pré-fixada. Paga-se um prémio. Útil quando há incerteza sobre se a exposição se concretiza.",
+      "Currency swap: troca de fluxos de caixa em duas moedas ao longo do tempo. Usado em financiamentos longos.",
+      "Natural hedge: estruturar o negócio de modo a que receitas e despesas estejam na mesma moeda (ex: produzir localmente para vender localmente)."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Hedging perfeito é caro e raramente desejável — protege contra perdas mas também elimina ganhos. A maioria das empresas adota cobertura parcial (50-80% da exposição prevista) e deixa o resto descoberto para participar de movimentos favoráveis." },
+    { "type": "h2", "text": "Balança de pagamentos" },
+    { "type": "p", "text": "A balança de pagamentos regista todas as transacções económicas entre residentes de um país e o resto do mundo. Tem duas contas principais:" },
+    { "type": "ul", "items": [
+      "Conta corrente: balança comercial (exportações − importações de bens), serviços (turismo, transporte, financeiros), rendimentos primários (juros, dividendos, salários) e transferências correntes (remessas de emigrantes, ajuda externa).",
+      "Conta de capital e financeira: investimento directo, investimento de portfolio, outros investimentos (empréstimos), derivados e reservas."
+    ] },
+    { "type": "h3", "text": "Desequilíbrios e sustentabilidade" },
+    { "type": "p", "text": "Défice persistente da conta corrente (>4-5% do PIB) é sinal de alerta: o país financia-se externamente, ficando vulnerável a mudanças de humor dos investidores. Superávite consistente gera pressão para apreciar a moeda (e perder competitividade). O equilíbrio sustentável varia por país; depende do grau de desenvolvimento e da estrutura produtiva." },
+    { "type": "h2", "text": "Financiamento internacional" },
+    { "type": "p", "text": "Empresas com operações globais recorrem a mercados financeiros internacionais para diversificar fontes de funding e reduzir custo de capital:" },
+    { "type": "h3", "text": "Mercado de eurodollars e eurobonds" },
+    { "type": "p", "text": "Eurodollars são depósitos em USD mantidos em bancos fora dos EUA (sobretudo em Londres). Eurobonds são obrigações emitidas em moeda diferente da do país de emissão (ex: empresa brasileira emitindo bonds em USD em Londres). Permitem aceder a investidores globais sem restrições cambiais locais." },
+    { "type": "h3", "text": "Mercado de eurocurrencies" },
+    { "type": "p", "text": "Versão genérica dos eurodollars: depósitos e empréstimos em qualquer moeda fora do país emissor. Euroyen, euroeuro, eurosterling — todos seguem a mesma lógica. Mercado offshore, menos regulado que o doméstico, com spreads mais apertados para grandes emitentes." },
+    { "type": "h3", "text": "Financiamento sindicalizado (syndicated loans)" },
+    { "type": "p", "text": "Empréstimos grandes (US$ 100M+) organizados por um consórcio de bancos. Comum para project finance, acquisitions e operações de subsidiárias em países com mercados de capitais pouco desenvolvidos. Spread sobre LIBOR/SOFR + margem." },
+    { "type": "h3", "text": "ADR e GDR (American Depositary Receipts / Global DRs)" },
+    { "type": "p", "text": "Certificados negociados em bolsas dos EUA (ADR) ou em múltiplas bolsas (GDR) que representam acções de empresas estrangeiras. Permitem a empresas não-americanas captar capital nos EUA sem ter de cumprir os requisitos totais de uma listagem directa." },
+    { "type": "callout", "variant": "success", "text": "Para a Fatma: lembra que hedging não é especulação ao contrário — é protecção. O gestor prudente cobre a exposição real do negócio e usa o resto da tesouraria para oportunidades, não para apostas cambiais." }
+  ]
+}

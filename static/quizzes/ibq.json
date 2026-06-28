@@ -1,0 +1,107 @@
+{
+  "id": "ibq",
+  "title": "Quiz: International Business",
+  "description": "Testa os teus conhecimentos sobre globalização, modos de entrada, gestão de multinacionais e finanças internacionais.",
+  "questions": [
+    {
+      "q": "A OMC (Organização Mundial do Comércio) tem sede em:",
+      "opts": [
+        "Nova Iorque",
+        "Genebra",
+        "Washington",
+        "Londres"
+      ],
+      "a": 1
+    },
+    {
+      "q": "FDI significa:",
+      "opts": [
+        "Free Domestic Investment",
+        "Foreign Direct Investment — investimento directo estrangeiro",
+        "Federal Department of Industry",
+        "Fixed Deposit Interest"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Exportação indirecta é:",
+      "opts": [
+        "Vender directamente ao consumidor final",
+        "Vender através de intermediários no país de origem (trading companies, etc.)",
+        "Abrir uma fábrica no estrangeiro",
+        "Licenciar a marca"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Joint venture é:",
+      "opts": [
+        "Subsidiária 100% detida",
+        "Parceria com empresa local para partilha de risco e conhecimento",
+        "Acordo de licenciamento",
+        "Franchising"
+      ],
+      "a": 1
+    },
+    {
+      "q": "A teoria de Uppsala (Johanson & Vahlne) sugere:",
+      "opts": [
+        "Entrar de uma vez em todos os mercados",
+        "Compromisso incremental com mercados — aprende-se pela experiência",
+        "Apenas exportar",
+        "Comprar concorrentes locais"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Risco cambial numa operação internacional pode ser hedgeado com:",
+      "opts": [
+        "Ignorar",
+        "Forward contracts, opções ou swaps cambiais",
+        "Facturação em moeda local apenas",
+        "Pagamento em ouro"
+      ],
+      "a": 1
+    },
+    {
+      "q": "CIF (Cost, Insurance and Freight) é um Incoterm onde:",
+      "opts": [
+        "Comprador paga tudo",
+        "Vendedor paga transporte e seguro até porto destino; risco transfere-se no embarque",
+        "Vendedor paga direitos no destino",
+        "Comprador só paga o produto"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Dumping é:",
+      "opts": [
+        "Vender a preço justo",
+        "Vender no estrangeiro abaixo do preço de mercado doméstico ou abaixo do custo",
+        "Exportar produtos proibidos",
+        "Importar em grandes volumes"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Na estratégia multi-doméstica, a empresa:",
+      "opts": [
+        "Padroniza produtos globalmente",
+        "Adapta produtos e marketing a cada país",
+        "Produz apenas no país de origem",
+        "Licencia tudo"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Cross-border M&A é:",
+      "opts": [
+        "Fusão dentro do mesmo país",
+        "Fusão ou aquisição entre empresas de países diferentes",
+        "Apenas joint venture",
+        "Apenas IPO internacional"
+      ],
+      "a": 1
+    }
+  ]
+}

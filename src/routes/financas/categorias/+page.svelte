@@ -266,10 +266,7 @@
   .cat-form { background: var(--surface, #fafafa); border: 1px solid var(--border, #e5e5e5); padding: 1rem; border-radius: 8px; margin: 1rem 0; }
   .cat-form label { display: block; margin: 0.5rem 0; }
   .cat-form label > span { display: block; font-size: 0.875rem; color: var(--text-dim, #666); margin-bottom: 0.25rem; }
-  .cat-form input[type="text"] { width: 100%; padding: 0.5rem; border: 1px solid var(--border, #ccc); border-radius: 4px; box-sizing: border-box; }
-  .cat-form input[type="color"] { width: 48px; height: 32px; border: 1px solid var(--border, #ccc); border-radius: 4px; padding: 2px; }
-  .cor-row { display: flex; gap: 0.5rem; align-items: center; }
-  .cor-row input[type="text"] { flex: 1; }
+  .cat-form input[type="text"] { width: 100%; padding: 0.5rem; border: 1px solid var(--border, #ccc); border-radius: 4px; box-sizing: border-box; font-family: 'JetBrains Mono', 'Consolas', monospace; }
   .cat-form fieldset { border: 1px solid var(--border, #e5e5e5); padding: 0.5rem 0.75rem; border-radius: 4px; margin: 0.5rem 0; }
   .cat-form .radio { display: inline-flex; align-items: center; gap: 0.25rem; margin-right: 1rem; }
   .form-error { color: #c0392b; font-size: 0.875rem; margin: 0.5rem 0; }

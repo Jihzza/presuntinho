@@ -128,6 +128,11 @@ export async function getHabitLogs(habitId: number, since: string): Promise<Habi
  * Mark a habit as done on `date` (default = today).  Idempotent — if
  * a log already exists for that (habitId, date), we leave it alone so
  * `createdAt` stays stable and the streak counter doesn't wobble.
+ *
+ * Wires XP (gap-052, gap-053): every new log awards `habito_log_today`
+ * (+4 XP). If the resulting streak crosses a milestone (7/14/30/50/100/365),
+ * also award the corresponding `habito_streak_*` reward. XP is only awarded
+ * for a NEW log — re-logging an existing date is a no-op.
  */
 export async function logHabit(habitId: number, date: string = localDateKey(new Date())): Promise<void> {
   const existing = await db().habit_logs
@@ -141,6 +146,32 @@ export async function logHabit(habitId: number, date: string = localDateKey(new 
     done: true,
     createdAt: Date.now()
   });
+
+  // gap-052: award XP for marking today done
+  try {
+    const { awardXP } = await import('./state/xp-actions');
+    await awardXP('habito_log_today');
+
+    // gap-053: award streak milestone XP (only when crossing the threshold)
+    const streak = await getStreak(habitId);
+    const milestones: Array<[number, 'habito_streak_7' | 'habito_streak_14' | 'habito_streak_30' | 'habito_streak_50' | 'habito_streak_100' | 'habito_streak_365']> = [
+      [7, 'habito_streak_7'],
+      [14, 'habito_streak_14'],
+      [30, 'habito_streak_30'],
+      [50, 'habito_streak_50'],
+      [100, 'habito_streak_100'],
+      [365, 'habito_streak_365']
+    ];
+    for (const [threshold, reason] of milestones) {
+      if (streak === threshold) {
+        await awardXP(reason);
+        break; // only one milestone per log (can't cross two at once)
+      }
+    }
+  } catch (err) {
+    // XP wiring must never break the core habit-log flow
+    console.warn('[habitos] awardXP failed (non-fatal):', err);
+  }
 }
 
 /**

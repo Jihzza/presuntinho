@@ -1,0 +1,8 @@
+{
+  "slug": "data-analytics",
+  "title": "Data Analytics for Business",
+  "icon": "📊",
+  "color": "#7c3aed",
+  "description": "Fundamentos de analytics para gestores: descriptive, diagnostic, predictive e prescriptive analytics, KPIs, dashboards e cultura data-driven.",
+  "order": 26
+}

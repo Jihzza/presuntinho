@@ -484,6 +484,7 @@
   "quiz.pt.progress": "🇵🇹 PT Progress",
   "quiz.submit": "Submit",
   "quiz.try_again": "Try again",
+  "routes.biblioteca.new.metaDescription": "Add new bookmark",
   "routes.biblioteca.new.title": "New Bookmark",
   "routes.biblioteca.title": "Library · Bookmarks",
   "routes.case.title": "Case · Equivalenza Deep Dive",

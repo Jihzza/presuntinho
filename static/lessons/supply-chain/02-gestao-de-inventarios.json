@@ -1,0 +1,75 @@
+{
+  "id": "02-gestao-de-inventarios",
+  "title": "Gestão de Inventários",
+  "courseSlug": "supply-chain",
+  "lessonNumber": 2,
+  "description": "Modelos de gestão de stock: EOQ, safety stock, reorder point, ABC analysis e os sistemas JIT/Kanban.",
+  "audio": "Lição sobre gestão de inventários.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["EOQ", "safety stock", "ABC", "JIT", "Kanban"],
+  "sections": [
+    { "type": "h2", "text": "Porquê gerir inventário" },
+    { "type": "p", "text": "Inventário é o conjunto de bens armazenados para uso futuro — matérias-primas, trabalho-em-curso (WIP), produto acabado, peças de manutenção. Mantê-lo traz custos (armazenamento, capital imobilizado, obsolescência, seguro), mas tê-lo em falta traz custos ainda piores (perda de vendas, paragens de produção, penalidades contratuais, insatisfação do cliente). A gestão de inventário procura o equilíbrio óptimo entre estes dois trade-offs." },
+    { "type": "h2", "text": "Os custos do inventário" },
+    { "type": "ul", "items": [
+      "Custo de posse (carrying cost): armazenamento, seguro, impostos, capital imobilizado, obsolescência. Tipicamente 15-30% do valor do inventário por ano.",
+      "Custo de encomenda (ordering cost): processamento, transporte, recepção, inspecção. Por cada encomenda feita.",
+      "Custo de ruptura (stockout cost): venda perdida, paragem de produção, perda de reputação. Difícil de quantificar mas muitas vezes o maior dos três.",
+      "Custo de aquisição: preço do produto (negociado com fornecedor, depende do volume e timing)."
+    ] },
+    { "type": "h2", "text": "Modelo EOQ — Economic Order Quantity" },
+    { "type": "p", "text": "Desenvolvido por Ford Harris em 1913 e refinado por Wilson, o EOQ calcula a quantidade óptima de encomenda que minimiza a soma do custo de posse e do custo de encomenda. Fórmula clássica:" },
+    { "type": "p", "text": "EOQ = √(2 × D × S / H)" },
+    { "type": "ul", "items": [
+      "D = procura anual em unidades",
+      "S = custo fixo por encomenda",
+      "H = custo de posse por unidade por ano"
+    ] },
+    { "type": "h3", "text": "Exemplo prático" },
+    { "type": "p", "text": "Uma empresa vende 10.000 unidades/ano de um componente. Cada encomenda custa 50€ em processamento. O custo de posse é 2€/unidade/ano. EOQ = √(2 × 10.000 × 50 / 2) = √500.000 ≈ 707 unidades. Encomendar 707 unidades de cada vez, em 14 ciclos por ano, minimiza o custo total." },
+    { "type": "h3", "text": "Limitações do EOQ" },
+    { "type": "p", "text": "Assume procura constante e conhecida, lead time fixo, ausência de ruptura. Pouco realista em ambientes voláteis. É útil como ponto de partida e ferramenta pedagógica, mas operações modernas usam modelos mais sofisticados (MRP, s&OP, modelos estocásticos)." },
+    { "type": "h2", "text": "Safety stock (stock de segurança)" },
+    { "type": "p", "text": "Inventário adicional mantido para cobrir variabilidade inesperada da procura ou do lead time. Fórmula típica:" },
+    { "type": "p", "text": "Safety Stock = Z × √(LT × σD² + D̄² × σLT²)" },
+    { "type": "ul", "items": [
+      "Z = factor de serviço (1,65 para 95%, 2,33 para 99%)",
+      "LT = lead time médio em dias",
+      "σD = desvio-padrão da procura diária",
+      "D̄ = procura média diária",
+      "σLT = desvio-padrão do lead time"
+    ] },
+    { "type": "h3", "text": "Aumentar serviço custa dinheiro" },
+    { "type": "p", "text": "Passar de 95% para 99% de nível de serviço pode duplicar o safety stock necessário. Antes de aumentar o serviço, vale perguntar: vale mesmo a pena? Quanto custa cada 1% adicional em stock vs quanto custa uma ruptura?" },
+    { "type": "h2", "text": "Reorder point (ponto de encomenda)" },
+    { "type": "p", "text": "Nível de stock que dispara uma nova encomenda. ROP = (procura média × lead time) + safety stock. Exemplo: 100 unidades/dia × 5 dias lead + 50 unidades safety = 550 unidades. Quando o stock atinge 550, faz-se nova encomenda." },
+    { "type": "h2", "text": "ABC analysis — inventário por valor" },
+    { "type": "p", "text": "Técnica de classificação baseada no princípio de Pareto (80/20). Divide os artigos em três classes:" },
+    { "type": "ul", "items": [
+      "Classe A (~20% dos artigos, ~80% do valor): controlo apertado, revisão frequente, fornecedores próximos.",
+      "Classe B (~30% dos artigos, ~15% do valor): controlo moderado, revisão periódica.",
+      "Classe C (~50% dos artigos, ~5% do valor): controlo simples, revisão anual, encomendas grandes e baratas."
+    ] },
+    { "type": "h3", "text": "Aplicação prática" },
+    { "type": "p", "text": "Não vale a pena gastar o mesmo esforço de gestão num parafuso de 5 cêntimos e num motor de 5.000€. O ABC analysis permite focalizar recursos onde o impacto é maior. É uma das técnicas mais aplicadas em qualquer armazém ou planeamento." },
+    { "type": "h2", "text": "JIT — Just-in-Time" },
+    { "type": "p", "text": "Sistema de produção puxada onde os materiais chegam à linha de produção exactamente quando são necessários — nem antes, nem depois. Conceito central do Toyota Production System. Prós: inventário mínimo, redução de desperdício, detecção rápida de problemas. Contras: muito sensível a rupturas, exige fornecedores muito fiáveis e próximos, lead times curtos." },
+    { "type": "h3", "text": "Quando JIT faz sentido" },
+    { "type": "ul", "items": [
+      "Procura estável e previsível.",
+      "Fornecedores próximos e fiáveis.",
+      "Linhas de produção com tempos de setup muito curtos (SMED).",
+      "Cultura de qualidade forte (zero defeitos).",
+      "Custo de transporte não é dominante."
+    ] },
+    { "type": "h2", "text": "Kanban — o sistema visual de sinalização" },
+    { "type": "p", "text": "Kanban (看板, sinal visual em japonês) é o mecanismo operacional do JIT. Cada etapa da produção só inicia trabalho quando recebe um cartão (ou sinal electrónico) da etapa seguinte. Limita o trabalho-em-curso (WIP), impede a sobre-produção e expõe problemas rapidamente." },
+    { "type": "h3", "text": "Três tipos de kanban" },
+    { "type": "ul", "items": [
+      "Production kanban: autoriza a produção de um lote.",
+      "Withdrawal kanban: autoriza a movimentação de peças entre etapas.",
+      "Vendor kanban: autoriza o fornecedor a entregar mais material."
+    ] },
+    { "type": "callout", "variant": "success", "text": "Para a Fatma: EOQ, safety stock e ROP são o vocabulário básico que qualquer entrevistador de supply chain vai esperar que saibas. JIT e Kanban são o coração da Toyota — aplica-os sempre que vires desperdício." }
+  ]
+}
