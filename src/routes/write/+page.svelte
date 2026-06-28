@@ -87,7 +87,7 @@
     <p class="sub">Como escrever Q3-Q5 que soem a ti, não a um bot.</p>
   </header>
 
-  <section class="grid" aria-label="Tips de escrita">
+  <section class="grid" aria-label="{$t('a11y.aria.tips_de_escrita', { default: 'Tips de escrita' })}">
     {#each TIPS as tip (tip.title)}
       <article class="tip-card">
         <h2><span class="icon" aria-hidden="true">{tip.icon}</span> {tip.title}</h2>

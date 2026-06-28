@@ -169,7 +169,7 @@
     <span aria-current="page">{$t('financas.orcamento.breadcrumb.current', { default: 'Orçamento' })}</span>
   </nav>
 
-  <section class="controls" aria-label="Filtros">
+  <section class="controls" aria-label="{$t('a11y.aria.filtros', { default: 'Filtros' })}">
     <label class="field">
       <span class="field-label">Mês</span>
       <input type="month" bind:value={mesFiltro} aria-label="{$t('a11y.aria.mes_do_orcamento', { default: 'Mês do orçamento' })}" />
@@ -196,7 +196,7 @@
       </div>
     </section>
 
-    <section class="categories" aria-label="Limites por categoria">
+    <section class="categories" aria-label="{$t('a11y.aria.limites_por_categoria', { default: 'Limites por categoria' })}">
       {#each categoriasDespesa as c (c.id)}
         {@const gasto = gastosMes[c.id] || 0}
         {@const limite = orcamentosMes[c.id] || 0}

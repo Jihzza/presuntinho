@@ -490,7 +490,7 @@
     <button
       type="button"
       class="modal-backdrop-btn"
-      aria-label="Fechar"
+      aria-label="{$t('a11y.aria.fechar', { default: 'Fechar' })}"
       onclick={cancelImport}
       disabled={importing}
     ></button>
@@ -527,7 +527,7 @@
     <button
       type="button"
       class="modal-backdrop-btn"
-      aria-label="Fechar"
+      aria-label="{$t('a11y.aria.fechar', { default: 'Fechar' })}"
       onclick={() => (confirmOpen = false)}
     ></button>
     <div class="modal" role="document">

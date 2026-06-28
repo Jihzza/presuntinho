@@ -164,7 +164,7 @@
       <p class="sub">{$t('biblioteca.item.addedAt', { values: { date: formatCreatedAt(item.createdAt) }, default: 'Adicionado a {date}' })}</p>
     </header>
 
-    <section class="url-block" aria-label="URL">
+    <section class="url-block" aria-label="{$t('a11y.aria.url', { default: 'URL' })}">
       <span class="label">{$t('biblioteca.item.label.url', { default: 'URL' })}</span>
       <div class="url-row">
         <a
@@ -187,7 +187,7 @@
     </section>
 
     {#if item.tags.length > 0}
-      <section class="tags-block" aria-label="Tags">
+      <section class="tags-block" aria-label="{$t('a11y.aria.tags', { default: 'Tags' })}">
         <span class="label">{$t('biblioteca.item.label.tags', { default: 'Tags' })}</span>
         <div class="tag-list">
           {#each item.tags as tag (tag)}
@@ -205,7 +205,7 @@
     {/if}
 
     {#if item.description}
-      <section class="notes-block" aria-label="Notas">
+      <section class="notes-block" aria-label="{$t('a11y.aria.notas', { default: 'Notas' })}">
         <span class="label">{$t('biblioteca.item.label.notes', { default: 'Notas' })}</span>
         <p class="notes">{item.description}</p>
       </section>
@@ -215,7 +215,7 @@
       <a
         class="btn-secondary"
         href={`/biblioteca/editar/${item.id}/`}
-        aria-label="Editar marcador"
+        aria-label="{$t('a11y.aria.editar_marcador', { default: 'Editar marcador' })}"
       >
         ✏️ Editar
       </a>

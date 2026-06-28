@@ -142,7 +142,7 @@
 
 <main class="container" aria-labelledby="page-title">
   <header class="page-header">
-    <a href="/financas/transacoes" class="back-link" aria-label="Voltar à lista">
+    <a href="/financas/transacoes" class="back-link" aria-label="{$t('a11y.aria.voltar_a_lista', { default: 'Voltar à lista' })}">
       ← Transações
     </a>
     <h1 id="page-title">{$t('financas.transacoes.editar.titulo', { default: 'Editar transação' })}</h1>

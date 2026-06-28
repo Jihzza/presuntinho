@@ -192,7 +192,7 @@
       </div>
     </section>
 
-    <section class="action" aria-label="Marcar hoje">
+    <section class="action" aria-label="{$t('a11y.aria.marcar_hoje', { default: 'Marcar hoje' })}">
       <button
         type="button"
         class="toggle"
@@ -207,7 +207,7 @@
       <p class="streak-msg">{streakMessage(streak)}</p>
     </section>
 
-    <section class="heatmap-section" aria-label="Mapa de calor">
+    <section class="heatmap-section" aria-label="{$t('a11y.aria.mapa_de_calor', { default: 'Mapa de calor' })}">
       <h2 class="section-title">Últimos 90 dias</h2>
       <Heatmap data={heatmap} color={habit.color} />
     </section>

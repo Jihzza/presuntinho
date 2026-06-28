@@ -170,7 +170,7 @@
     </p>
   </article>
 
-  <section class="grid" aria-label="Segredos">
+  <section class="grid" aria-label="{$t('a11y.aria.segredos', { default: 'Segredos' })}">
     {#each secrets as s (s.id)}
       <EasterEggsCard
         secret={s}

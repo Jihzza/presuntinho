@@ -182,7 +182,7 @@
 <div class="chat-root">
   <div class="chat-header">
     <h1>💬 {$t('agente.title', { default: 'Agente' })}</h1>
-    <button class="clear" type="button" onclick={onClearHistory} aria-label="Limpar histórico">
+    <button class="clear" type="button" onclick={onClearHistory} aria-label="{$t('a11y.aria.limpar_historico', { default: 'Limpar histórico' })}">
       🗑️
     </button>
   </div>
@@ -240,7 +240,7 @@
       type="button"
       class="icon-btn"
       onclick={triggerFilePicker}
-      aria-label="Anexar ficheiro"
+      aria-label="{$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}"
       title="Anexar ficheiro"
     >
       📎
@@ -264,7 +264,7 @@
       class="send"
       onclick={send}
       disabled={busy || !input.trim()}
-      aria-label="Enviar"
+      aria-label="{$t('a11y.aria.enviar', { default: 'Enviar' })}"
     >
       ➤
     </button>

@@ -166,7 +166,7 @@
     </header>
 
     <!-- Audio player (big) -->
-    <section class="audio-card" aria-label="Audio walkthrough">
+    <section class="audio-card" aria-label="{$t('a11y.aria.audio_walkthrough', { default: 'Audio walkthrough' })}">
       {#if audioSrc}
         <div class="audio-icon" aria-hidden="true">🎧</div>
         <div class="audio-meta">

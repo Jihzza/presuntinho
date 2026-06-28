@@ -128,7 +128,7 @@
       <header class="header">
         <div class="title-row">
           <h1>{assignment.title}</h1>
-          <span class="weight-pill" aria-label="Peso">Peso {assignment.weight}%</span>
+          <span class="weight-pill" aria-label="{$t('a11y.aria.peso', { default: 'Peso' })}">Peso {assignment.weight}%</span>
         </div>
         <span class="meta-pill" aria-label="{$t('a11y.aria.duracao_estimada', { default: 'Duração estimada' })}">
           ⏱️ ~{assignment.estimatedMinutes} min
@@ -140,7 +140,7 @@
         <p class="description">{descriptionText}</p>
       </section>
 
-      <section class="meta-block" aria-label="Prazo">
+      <section class="meta-block" aria-label="{$t('a11y.aria.prazo', { default: 'Prazo' })}">
         <h2 class="block-title">Prazo</h2>
         <div class="deadline-row">
           {#if pack?.deadline}
@@ -149,7 +149,7 @@
         </div>
       </section>
 
-      <section class="recursos-block" aria-label="Recursos">
+      <section class="recursos-block" aria-label="{$t('a11y.aria.recursos', { default: 'Recursos' })}">
         <h2 class="block-title">Recursos</h2>
         <ul class="recursos">
           {#if assignment.lessonSlug}

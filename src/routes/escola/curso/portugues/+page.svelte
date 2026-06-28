@@ -279,10 +279,10 @@
     </div>
   {:else if course}
     <!-- Progress bar -->
-    <section class="progress" aria-label="Progresso do curso">
+    <section class="progress" aria-label="{$t('a11y.aria.progresso_do_curso', { default: 'Progresso do curso' })}">
       <div class="progress-meta">
         <span><strong>{studiedCount}</strong> / {totalSections} secções estudadas</span>
-        <span aria-label="Percentagem">{progressPct}%</span>
+        <span aria-label="{$t('a11y.aria.percentagem', { default: 'Percentagem' })}">{progressPct}%</span>
       </div>
       <div class="progress-track" role="progressbar"
            aria-valuemin="0"
@@ -332,7 +332,7 @@
               {section.title}
             </h2>
             {#if studied}
-              <span class="studied-badge" aria-label="Estudado">✓ Estudado</span>
+              <span class="studied-badge" aria-label="{$t('a11y.aria.estudado', { default: 'Estudado' })}">✓ Estudado</span>
             {/if}
           </header>
 

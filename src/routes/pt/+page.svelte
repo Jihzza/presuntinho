@@ -205,7 +205,7 @@
   </header>
 
   <!-- 4 Frameworks pt-PT -------------------------------------------------- -->
-  <section class="frameworks" aria-label="Frameworks em português">
+  <section class="frameworks" aria-label="{$t('a11y.aria.frameworks_em_portugues', { default: 'Frameworks em português' })}">
     {#each FRAMEWORKS as fw (fw.title)}
       <article class="card">
         <h2>{fw.icon} {fw.title}</h2>

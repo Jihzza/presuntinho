@@ -253,7 +253,7 @@
     <a class="btn-primary" href="/financas/nova/">+ Nova transação</a>
   </section>
 
-  <section class="filters" aria-label="Filtros">
+  <section class="filters" aria-label="{$t('a11y.aria.filtros', { default: 'Filtros' })}">
     <div class="filters-row">
       <label class="field">
         <span class="field-label">{$t('financas.transacoes.filtros.mes', { default: 'Mês' })}</span>
@@ -265,7 +265,7 @@
       </label>
       <label class="field">
         <span class="field-label">{$t('financas.transacoes.filtros.categoria', { default: 'Categoria' })}</span>
-        <select bind:value={categoriaFiltro} aria-label="Filtrar por categoria">
+        <select bind:value={categoriaFiltro} aria-label="{$t('a11y.aria.filtrar_por_categoria', { default: 'Filtrar por categoria' })}">
           <option value="">{$t('financas.transacoes.filter.all', { default: 'Todas' })}</option>
           {#each categorias as c (c.id)}
             <option value={c.id}>{c.icone} {c.nome}</option>
@@ -274,7 +274,7 @@
       </label>
       <label class="field">
         <span class="field-label">{$t('financas.transacoes.filtros.tipo', { default: 'Tipo' })}</span>
-        <select bind:value={tipoFiltro} aria-label="Filtrar por tipo">
+        <select bind:value={tipoFiltro} aria-label="{$t('a11y.aria.filtrar_por_tipo', { default: 'Filtrar por tipo' })}">
           <option value="todas">{$t('financas.transacoes.filtros.tipo.todas', { default: 'Todas' })}</option>
           <option value="receita">{$t('financas.transacoes.filtros.tipo.receitas', { default: 'Receitas' })}</option>
           <option value="despesa">{$t('financas.transacoes.filtros.tipo.despesas', { default: 'Despesas' })}</option>
@@ -293,18 +293,18 @@
     <div class="filters-row">
       <label class="field">
         <span class="field-label">De</span>
-        <input type="date" bind:value={dataDe} aria-label="Data inicial" />
+        <input type="date" bind:value={dataDe} aria-label="{$t('a11y.aria.data_inicial', { default: 'Data inicial' })}" />
       </label>
       <label class="field">
         <span class="field-label">Até</span>
-        <input type="date" bind:value={dataAte} aria-label="Data final" />
+        <input type="date" bind:value={dataAte} aria-label="{$t('a11y.aria.data_final', { default: 'Data final' })}" />
       </label>
       {#if temFiltroAtivo}
         <button
           type="button"
           class="clear-btn"
           onclick={clearFilters}
-          aria-label="Limpar filtros"
+          aria-label="{$t('a11y.aria.limpar_filtros', { default: 'Limpar filtros' })}"
         >
           Limpar filtros
         </button>

@@ -70,7 +70,7 @@
     <p class="sub">SWOT, TOWS, SCQA, Buyer Persona — os quatro frameworks que precisas dominar.</p>
   </header>
 
-  <section class="grid" aria-label="Frameworks">
+  <section class="grid" aria-label="{$t('a11y.aria.frameworks', { default: 'Frameworks' })}">
     {#each FRAMEWORKS as fw (fw.id)}
       <a
         class="fw-card"

@@ -99,7 +99,7 @@
     <p class="sub">{$t('dl.sub', { default: 'Ficheiros do assignment e materiais de estudo.' })}</p>
   </header>
 
-  <section class="grid" aria-label="Downloads">
+  <section class="grid" aria-label="{$t('a11y.aria.downloads', { default: 'Downloads' })}">
     {#each DOWNLOADS as d (d.titleKey)}
       <article class="dl-card" style="--dl-accent: {d.accent};">
         <div class="dl-head-row">

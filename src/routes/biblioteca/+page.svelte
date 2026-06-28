@@ -202,7 +202,7 @@
     {/if}
   </section>
 
-  <section class="list" aria-label="Lista de marcadores">
+  <section class="list" aria-label="{$t('a11y.aria.lista_de_marcadores', { default: 'Lista de marcadores' })}">
     {#if loading}
       <Skeleton variant="list" lines={4} label={$t('common.loading')} />
     {:else if error}
