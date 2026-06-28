@@ -53,13 +53,13 @@
     try {
       const row = await getItem(id);
       if (!row) {
-        error = 'Marcador não encontrado.';
+        error = $t('biblioteca.item.notFound', { default: 'Marcador não encontrado.' }) as string;
         return;
       }
       item = row;
     } catch (e) {
       console.error('[biblioteca] reload failed', e);
-      error = e instanceof Error ? e.message : 'Erro a carregar marcador';
+      error = e instanceof Error ? e.message : $t('biblioteca.item.loadFailed', { default: 'Erro a carregar marcador' }) as string;
     } finally {
       loading = false;
     }
@@ -155,7 +155,7 @@
     <p class="empty">A carregar…</p>
   {:else if error || !item}
     <p class="empty error" role="alert">
-      ⚠️ {error ?? 'Marcador não encontrado.'}
+      ⚠️ {error ?? $t('biblioteca.item.notFound', { default: 'Marcador não encontrado.' })}
     </p>
     <p class="back-row"><a href="/biblioteca/">← {$t('common.back')}</a></p>
   {:else}
