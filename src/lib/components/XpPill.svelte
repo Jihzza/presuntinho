@@ -1,21 +1,24 @@
 <script lang="ts">
   /**
-   * XpPill — Compact "N XP" badge with a glowing dot.
+   * XpPill — Compact "N XP" badge with visibility on change.
    *
    * Lives in the global layout (next to the floating HeartButton)
-   * so the user can see their XP at any time, not just on the hub.
+   * so the user can see their XP changing, but only when it does.
+   *
+   * Modes:
+   *   - "always"  : always visible (legacy behaviour, default off in V7)
+   *   - "onChange": hidden by default; animates IN 250ms when xp changes,
+   *                 stays visible 3.0s after last change, animates OUT 250ms,
+   *                 then display:none.
    *
    * Reactivity: subscribes to the persisted `xp` store from
    * `$lib/state/stores`. The subscription is set up in onMount so
    * SSR renders an empty placeholder (matching initial client paint).
    *
    * Design notes:
-   *   - Uses $derived for the formatted label so the display updates
-   *     automatically without manual $state plumbing.
-   *   - Pulse animation on every increment is gated behind
-   *     `prefers-reduced-motion` to honour user OS preferences.
    *   - aria-live="polite" via the parent <div class="fab-stack"> means
    *     screen readers announce XP changes without interrupting.
+   *   - prefers-reduced-motion: skip all animations; toggle instantly.
    */
 
   import { onMount } from 'svelte';
@@ -23,31 +26,49 @@
   import { xp, initStores } from '$lib/state/stores';
   import { t } from 'svelte-i18n';
 
+  type Visibility = 'always' | 'onChange';
+
+  // Props — default to "onChange" to satisfy the V7 brief (Daniel's P1).
+  let { mode = 'onChange' as Visibility }: { mode?: Visibility } = $props();
+
   let currentXp = $state(0);
+  let visible = $state(false);
+  let hidden = $state(true); // display:none when true
   let pulse = $state(false);
   let pulseTimer: ReturnType<typeof setTimeout> | null = null;
+  let hideTimer: ReturnType<typeof setTimeout> | null = null;
+  let lastSeenXp = $state<number | null>(null);
 
-  // Derived label — recomputes whenever currentXp changes.
   let label = $derived(new Intl.NumberFormat('pt-PT').format(currentXp) + ' XP');
 
-  onMount(() => {
-    void (async () => {
-      // Make sure the store is hydrated before subscribing so the
-      // first frame shows the real value, not the default 0.
-      try {
-        await initStores();
-      } catch {
-        /* fall through — defaults will render */
-      }
-      currentXp = get(xp);
-      xp.subscribe((v) => {
-        if (v !== currentXp) {
-          currentXp = v;
-          triggerPulse();
-        }
-      });
-    })();
-  });
+  function prefersReducedMotion(): boolean {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  }
+
+  function show(): void {
+    if (prefersReducedMotion()) {
+      visible = true;
+      hidden = false;
+      return;
+    }
+    hidden = false;
+    // next frame so the CSS transition fires
+    requestAnimationFrame(() => {
+      visible = true;
+    });
+  }
+
+  function scheduleHide(delayMs: number): void {
+    if (hideTimer) clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => {
+      visible = false;
+      // After fade-out finishes, set display:none
+      setTimeout(() => {
+        if (!visible) hidden = true;
+      }, 260);
+    }, delayMs);
+  }
 
   function triggerPulse(): void {
     if (prefersReducedMotion()) return;
@@ -59,15 +80,49 @@
     }, 350);
   }
 
-  function prefersReducedMotion(): boolean {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  function onXpChanged(newXp: number): void {
+    currentXp = newXp;
+    if (lastSeenXp !== null && newXp !== lastSeenXp) {
+      // Real change → make visible + pulse + restart hide timer
+      show();
+      triggerPulse();
+      if (mode === 'onChange') scheduleHide(3000);
+    }
+    lastSeenXp = newXp;
   }
+
+  onMount(() => {
+    void (async () => {
+      try {
+        await initStores();
+      } catch {
+        /* fall through — defaults will render */
+      }
+      const initial = get(xp);
+      currentXp = initial;
+      lastSeenXp = initial;
+
+      // "always" mode shows immediately on mount; "onChange" stays hidden
+      if (mode === 'always') {
+        show();
+      }
+
+      xp.subscribe((v) => onXpChanged(v));
+    })();
+
+    return () => {
+      if (pulseTimer) clearTimeout(pulseTimer);
+      if (hideTimer) clearTimeout(hideTimer);
+    };
+  });
 </script>
 
 <span
   class="xp-pill"
+  class:xp-pill--visible={visible}
+  class:xp-pill--hidden={hidden}
   class:pulse
+  aria-hidden={hidden ? 'true' : undefined}
   aria-label={$t('a11y.xp_label', { default: 'Pontos de experiência: {n}' }).replace(
     '{n}',
     String(currentXp)
@@ -97,11 +152,28 @@
     font-weight: 600;
     font-variant-numeric: tabular-nums;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-    transition: transform 0.18s ease, box-shadow 0.2s ease, background 0.2s ease;
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease,
+      box-shadow 0.2s ease,
+      background 0.2s ease;
     user-select: none;
   }
-  .xp-pill:hover,
-  .xp-pill:focus-visible {
+  /* Hidden base — translateY lifts it slightly so the IN animation has motion */
+  .xp-pill--hidden {
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    display: none;
+  }
+  .xp-pill--visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    display: inline-flex;
+  }
+  .xp-pill:hover:not(.xp-pill--hidden),
+  .xp-pill:focus-visible:not(.xp-pill--hidden) {
     background: rgba(0, 0, 0, 0.7);
     border-color: rgba(255, 255, 255, 0.32);
     outline: none;
