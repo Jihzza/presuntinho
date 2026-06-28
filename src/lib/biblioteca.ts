@@ -23,6 +23,7 @@
 //     the splash and hábitos routes already do.
 
 import { db } from './state/db';
+import { awardXP } from './state/xp-actions';
 import type { BibliotecaRow } from './state/db';
 
 // ---------------------------------------------------------------------------
@@ -142,7 +143,9 @@ export async function addItem(input: NewItemInput): Promise<number> {
     description: input.description?.trim() ?? '',
     createdAt: Date.now()
   };
-  return await db().biblioteca.add(row) as number;
+  const id = await db().biblioteca.add(row) as number;
+  await awardXP('biblioteca_add');
+  return id;
 }
 
 /**

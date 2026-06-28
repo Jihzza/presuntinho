@@ -32,9 +32,10 @@ import {
   sroomOpened,
   awardBadge,
   discoverSecret,
-  addXP,
   saveQuizScore
 } from './state/stores';
+// awardXP substitui addXP — cada easter egg passa pela XP_TABLE central.
+import { awardXP } from './state/xp-actions';
 import { fireConfettiEvent, showToast } from './components/events';
 
 // ============================================================================
@@ -129,7 +130,7 @@ export async function heartClick(): Promise<void> {
 
   if (tier) {
     showToast(tier.msg);
-    if (tier.xp) await addXP(tier.xp);
+    if (tier.xp) await awardXP('easteregg_heart_tier', tier.xp);
     if (tier.conf) fireConfettiEvent(tier.conf);
     if (tier.badge) await awardBadge(tier.badge);
     if (tier.at === 1) {
@@ -141,8 +142,8 @@ export async function heartClick(): Promise<void> {
     // Continuous feedback (V3 lines 78-87)
     const speedNote = speedBonus ? ' ⚡speed bonus +5' : '';
     showToast(`${lastHeartTierEmoji(clicks)} +1 amor (${clicks})${speedNote}`, 1800);
-    if (speedBonus) await addXP(5);
-    if (clicks % 5 === 0 && clicks >= 5) await addXP(2);
+    if (speedBonus) await awardXP('easteregg_heart_tier', 5);
+    if (clicks % 5 === 0 && clicks >= 5) await awardXP('easteregg_heart_tier', 2);
     if (clicks > 100 && clicks % 10 === 0) fireConfettiEvent(8);
   }
 }
@@ -191,14 +192,14 @@ export async function logoClick(): Promise<void> {
   if (next === 3) {
     fireConfettiEvent();
     showToast('🎉 Logo triple-click! Confetti unlocked!');
-    await addXP(30);
+    await awardXP('easteregg_logo_3click', 30);
     await discoverSecret('logo3');
   } else if (next === 4) {
     showToast('🐷 One more click! 🎯');
   } else if (next >= SECRET_ROOM_MIN && next <= SECRET_ROOM_MAX) {
     showToast('🧴 Welcome to the Secret Room!');
     sroomOpened.set(true);
-    await addXP(100);
+    await awardXP('easteregg_secret_room', 100);
     await awardBadge('b14');
     await discoverSecret('logo7');
     if (typeof window !== 'undefined') {
@@ -226,7 +227,7 @@ const MASCOT_TIPS = [
 export async function mascotClick(): Promise<void> {
   const tip = MASCOT_TIPS[Math.floor(Math.random() * MASCOT_TIPS.length)];
   showToast(tip);
-  await addXP(5);
+  await awardXP('easteregg_mascot', 5);
 }
 
 // ============================================================================
@@ -253,7 +254,7 @@ export async function handleKonamiKey(key: string, keyCode: number): Promise<voi
     buf.every((k, i) => k === KONAMI_KEYCODES[i]);
   if (matches) {
     showToast('🎮 KONAMI CODE! +100 XP');
-    await addXP(100);
+    await awardXP('easteregg_konami', 100);
     await awardBadge('b8');
     fireConfettiEvent();
     await discoverSecret('konami');
@@ -289,14 +290,14 @@ export async function handleKeywordKey(key: string): Promise<void> {
 
   if (buf.includes('perfume')) {
     showToast('🌸 Scent Discovery! You smell the strategy.');
-    await addXP(50);
+    await awardXP('easteregg_keyword', 50);
     await awardBadge('b7');
     fireConfettiEvent();
     await discoverSecret('perfume');
     keyBuf.set('');
   } else if (buf.includes('behi')) {
     showToast('🇹🇳 Tunisian Secret! Behi — beautiful in Tunisian Arabic.');
-    await addXP(50);
+    await awardXP('easteregg_keyword', 50);
     await awardBadge('b9');
     fireConfettiEvent();
     await discoverSecret('behi');
@@ -367,7 +368,7 @@ export async function recordQuizSubmission(
 
   if (perfect) {
     showToast(`🏆 Perfect score on ${quizId.toUpperCase()}! +50 XP bonus`, 3500);
-    await addXP(50);
+    await awardXP('quiz_perfect_score', 50);
     await awardBadge('b3');
     if (pt) {
       await awardBadge('b11');

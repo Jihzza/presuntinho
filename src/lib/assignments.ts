@@ -2,6 +2,7 @@
 // Writes user status to localStorage (no schema changes to Dexie).
 
 import { browser } from '$app/environment';
+import { awardXP } from './state/xp-actions';
 
 const STATUS_KEY = 'fat-assignments-status';
 
@@ -60,6 +61,12 @@ export function setAssignmentStatus(
     const all = JSON.parse(localStorage.getItem(STATUS_KEY) || '{}');
     all[assignmentId] = status;
     localStorage.setItem(STATUS_KEY, JSON.stringify(all));
+    // Award XP for status change (skip 'open' → no XP).
+    if (status === 'done') {
+      void awardXP('assignment_status_done');
+    } else if (status === 'in_progress') {
+      void awardXP('assignment_status_in_progress');
+    }
     // Dispatch event for reactive UI
     window.dispatchEvent(
       new CustomEvent('presuntinho:assignment-status', {
