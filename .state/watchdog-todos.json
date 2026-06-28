@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T02:58:00+02:00",
+  "lastUpdated": "2026-06-28T03:00:00+02:00",
   "openItems": [
     {
       "id": "gap-001",
@@ -20,22 +20,6 @@
       "status": "done",
       "sha": "877a01e",
       "closed_at": "2026-06-28T02:42:00+02:00"
-    },
-    {
-      "id": "gap-005",
-      "category": "empty-area",
-      "description": "APS Trabalhos — verificar e adicionar conteúdo se vazio",
-      "severity": "média",
-      "source": "audio-Daniel-2026-06-28",
-      "created_at": "2026-06-28T02:36:00+02:00"
-    },
-    {
-      "id": "gap-006",
-      "category": "empty-area",
-      "description": "APS Biblioteca — verificar e adicionar conteúdo se vazio",
-      "severity": "média",
-      "source": "audio-Daniel-2026-06-28",
-      "created_at": "2026-06-28T02:36:00+02:00"
     },
     {
       "id": "gap-008",
@@ -146,6 +130,18 @@
       "description": "OnboardingModal accepts profile prop, resolves onboarding.welcome.{profile} dynamically (Fatma vs Daniel)",
       "sha": "6b63a51",
       "closed_at": "2026-06-28T02:55:00+02:00"
+    },
+    {
+      "id": "gap-005",
+      "description": "Trabalhos ja tem EmptyState (post-1) — assignments.length === 0 mostra mensagem",
+      "sha": "d8bcec3",
+      "closed_at": "2026-06-28T02:59:00+02:00"
+    },
+    {
+      "id": "gap-006",
+      "description": "Biblioteca ja tem 2 variantes EmptyState (post-1 sem bookmarks, post-1 filter vazio com CTA limpar)",
+      "sha": "d8bcec3",
+      "closed_at": "2026-06-28T02:59:00+02:00"
     }
   ]
 }
