@@ -1,0 +1,42 @@
+{
+  "id": "brand-equity",
+  "courseSlug": "marketing-estrategico",
+  "title": "Brand Equity",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "Brand equity — o valor que vai para lá do produto" },
+    { "type": "p", "text": "Brand equity é o valor acrescentado que uma marca dá a um produto ou serviço — o que faz com que clientes escolham, paguem mais e sejam leais. Construir equity demora anos; destruir pode levar meses." },
+    { "type": "h3", "text": "Modelo de Keller (Customer-Based Brand Equity)" },
+    { "type": "p", "text": "Keller (1993) define quatro pilares da brand equity baseada no cliente:" },
+    { "type": "ul", "items": [
+      "Brand awareness: o cliente reconhece e lembra-se da marca.",
+      "Brand associations: o que vem à mente (qualidade, inovação, confiança).",
+      "Perceived quality: juízo subjectivo sobre a qualidade global.",
+      "Brand loyalty: ligação que leva à repetição e recomendação."
+    ] },
+    { "type": "h3", "text": "Modelo de Aaker" },
+    { "type": "p", "text": "Aaker (1991) inclui cinco activos: brand awareness, perceived quality, brand associations, brand loyalty, e proprietary assets (patentes, canais, marcas registadas)." },
+    { "type": "h3", "text": "Como se mede" },
+    { "type": "ul", "items": [
+      "Reconhecimento: 'top-of-mind' em listas de marcas de uma categoria.",
+      "Consideração: % que considera a marca numa compra.",
+      "NPS (Net Promoter Score): %promotores − %detractores.",
+      "Price premium: quanto mais o cliente paga pela marca vs. genérico.",
+      "Brand valuation: Interbrand, BrandZ — estimam valor financeiro da marca (McDonald's, Apple, Coca-Cola no top)."
+    ] },
+    { "type": "h3", "text": "Construir vs. alavancar brand equity" },
+    { "type": "p", "text": "Construir requer investimento sustentado em comunicação, experiência consistente, qualidade real. Alavancar é usar a equity para lançar extensões (Apple Watch, iPad) ou entrar em categorias novas com transferência de associações." },
+    { "type": "callout", "variant": "success", "text": "Equivalenza pode alavancar brand equity da casa-mãe espanhola se comunicar origem e qualidade — mas arrisca diluir se os produtos divergirem em qualidade." }
+  ],
+  "keyPoints": [
+    "Brand equity = valor acrescentado pela marca ao produto.",
+    "Keller: awareness + associations + perceived quality + loyalty.",
+    "Aaker: igual, mais proprietary assets.",
+    "Mede-se com NPS, top-of-mind, price premium, brand valuation.",
+    "Construir demora anos; alavancar permite extensões e novas categorias."
+  ],
+  "quizSlug": "meq-est",
+  "nextLesson": null,
+  "prevLesson": "posicionamento"
+}

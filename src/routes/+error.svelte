@@ -7,28 +7,32 @@
    */
 
   import { page } from '$app/state';
+  import { t } from 'svelte-i18n';
 
   // `page.status` and `page.error.message` are reactive in SvelteKit.
   let status = $derived(page.status ?? 500);
-  let message = $derived(page.error?.message ?? 'Erro desconhecido.');
+  let message = $derived(page.error?.message ?? $t('error.message_unknown', { default: 'Erro desconhecido.' }));
 
-  // Pick a friendly title + subtitle per status range.
+  // Pick a friendly title + subtitle per status range. Each variant
+  // resolves through $t() so en/ar/tn/fr get the localised message;
+  // the inline `default:` keeps pt-PT working when the key is absent
+  // from the active locale dictionary.
   let title = $derived(
     status === 404
-      ? 'Página não encontrada'
+      ? $t('error.title.404', { default: 'Página não encontrada' })
       : status === 403
-        ? 'Acesso negado'
+        ? $t('error.title.403', { default: 'Acesso negado' })
         : status >= 500
-          ? 'Erro no servidor'
-          : 'Algo correu mal'
+          ? $t('error.title.500', { default: 'Erro no servidor' })
+          : $t('error.title.generic', { default: 'Algo correu mal' })
   );
 
   let subtitle = $derived(
     status === 404
-      ? 'O caminho que procuraste não existe — mas o Hub continua aqui.'
+      ? $t('error.subtitle.404', { default: 'O caminho que procuraste não existe — mas o Hub continua aqui.' })
       : status >= 500
-        ? 'Tenta outra vez. Se persistir, exporta os teus dados em Definições.'
-        : 'Pequeno tropeção. Clica abaixo para voltar.'
+        ? $t('error.subtitle.500', { default: 'Tenta outra vez. Se persistir, exporta os teus dados em Definições.' })
+        : $t('error.subtitle.generic', { default: 'Pequeno tropeção. Clica abaixo para voltar.' })
   );
 
   function goHub(): void {
@@ -40,21 +44,21 @@
 
 <svelte:head>
   <title>{status} · {title} · Presuntinho</title>
-  <meta name="description" content="Página de erro do Presuntinho." />
+  <meta name="description" content={$t('error.meta_description', { default: 'Página de erro do Presuntinho.' })} />
   <meta name="robots" content="noindex" />
 </svelte:head>
 
 <div class="error-page">
   <div class="card">
-    <p class="status" aria-label="Código de erro {status}">{status}</p>
+    <p class="status" aria-label={$t('error.code_aria', { default: 'Código de erro' }).replace('{n}', String(status))}>{status}</p>
     <h1>🐷 {title}</h1>
     <p class="subtitle">{subtitle}</p>
     <details class="detail">
-      <summary>Detalhes técnicos</summary>
+      <summary>{$t('error.details', { default: 'Detalhes técnicos' })}</summary>
       <p class="msg">{message}</p>
     </details>
-    <button type="button" class="cta" onclick={goHub} aria-label="Voltar ao Hub">
-      ← Voltar ao Hub
+    <button type="button" class="cta" onclick={goHub} aria-label={$t('error.back_to_hub.aria', { default: 'Voltar ao Hub' })}>
+      ← {$t('error.back_to_hub', { default: 'Voltar ao Hub' })}
     </button>
   </div>
 </div>

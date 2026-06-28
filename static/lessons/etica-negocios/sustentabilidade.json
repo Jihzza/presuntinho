@@ -1,0 +1,48 @@
+{
+  "id": "sustentabilidade",
+  "courseSlug": "etica-negocios",
+  "title": "Sustentabilidade e ESG",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "Sustentabilidade — environmental, social and governance" },
+    { "type": "p", "text": "ESG é a sigla que condensa três dimensões de desempenho corporativo para lá do retorno financeiro: Ambiental (E), Social (S) e Governance (G). Tornou-se o framework dominante para investidores e reguladores avaliarem risco de sustentabilidade." },
+    { "type": "h3", "text": "Dimensão Ambiental (E)" },
+    { "type": "ul", "items": [
+      "Emissões de gases com efeito estufa (GEE) — Scope 1 (directas), 2 (energia comprada), 3 (cadeia de valor).",
+      "Consumo de água, gestão de resíduos, economia circular.",
+      "Pegada ecológica, biodiversidade, uso do solo.",
+      "Energia renovável vs fóssil, eficiência energética."
+    ] },
+    { "type": "h3", "text": "Dimensão Social (S)" },
+    { "type": "ul", "items": [
+      "Direitos humanos e laborais na cadeia de fornecimento.",
+      "Diversidade, equidade e inclusão (DEI).",
+      "Saúde e segurança dos colaboradores.",
+      "Privacidade e protecção de dados dos clientes.",
+      "Impacto nas comunidades locais."
+    ] },
+    { "type": "h3", "text": "Dimensão Governance (G)" },
+    { "type": "ul", "items": [
+      "Independência e diversidade do conselho.",
+      "Remuneração alinhada com desempenho de longo prazo.",
+      "Transparência fiscal e anti-corrupção.",
+      "Estrutura de direitos de accionista e minoritários."
+    ] },
+    { "type": "h3", "text": "Acordos e standards" },
+    { "type": "p", "text": "Acordo de Paris (2015): limitar aquecimento a 1,5–2°C. ODS (ONU): 17 objectivos até 2030. CSRD europeia: relatório de sustentabilidade obrigatório para grandes empresas. Standards: GRI (reporte), SASB (sector-específico), TCFD (climate-related risks), ISSB (convergência global)." },
+    { "type": "h3", "text": "Greenwashing e o risco de backlash" },
+    { "type": "p", "text": "Greenwashing é comunicar sustentabilidade sem acção real. Penaliza-se com litígio, boicotes e perda de reputação. Critérios para evitar: metas com baseline e cronograma, dados auditáveis, alinhamento com standards, transparência sobre trade-offs." },
+    { "type": "callout", "variant": "warning", "text": "Atenção: ESG não é activismo político. Empresas que se posicionam em questões sociais polarizadas atraem backlash regulatório nos EUA — manter foco no que é material ao negócio." }
+  ],
+  "keyPoints": [
+    "ESG = Ambiental + Social + Governance.",
+    "Scope 1/2/3 medem emissões directas, indirectas e da cadeia.",
+    "Standards de reporte: GRI, SASB, TCFD, ISSB.",
+    "CSRD europeia obriga grandes empresas a reportar sustentabilidade.",
+    "Greenwashing sem acção real arrisca reputação e litígio."
+  ],
+  "quizSlug": "enq",
+  "nextLesson": "compliance",
+  "prevLesson": "responsabilidade-social"
+}

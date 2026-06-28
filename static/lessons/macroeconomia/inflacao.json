@@ -1,0 +1,39 @@
+{
+  "id": "inflacao",
+  "courseSlug": "macroeconomia",
+  "title": "Inflação e Índice de Preços",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "Inflação — quando o dinheiro perde valor" },
+    { "type": "p", "text": "Inflação é o aumento sustentado e generalizado do nível de preços. Não é subir um preço (isso é variação relativa) — é a maioria dos preços a subir ao longo do tempo, fazendo com que cada euro compre menos." },
+    { "type": "h3", "text": "Como se mede: o IPC" },
+    { "type": "p", "text": "O Índice de Preços ao Consumidor (IPC) acompanha um cabaz representativo de bens e serviços (alimentação, habitação, transportes, saúde, educação). Variações mensais e anuais do IPC são a 'inflação observada'. O índice harmonizado IPCA permite comparar entre países da UE." },
+    { "type": "h3", "text": "Tipos de inflação" },
+    { "type": "ul", "items": [
+      "Inflação de procura: procura agregada excede a oferta (excesso de dinheiro, despesa pública).",
+      "Inflação de custos: salários ou matérias-primas mais caros empurram preços (choques petrolíferos, desvalorização cambial).",
+      "Inflação inercial: expectativa de inflação futura embute-se em contratos e salários."
+    ] },
+    { "type": "h3", "text": "Efeitos da inflação" },
+    { "type": "ul", "items": [
+      "Erode poder de compra — quem recebe rendimento fixo perde.",
+      "Redistribuição arbitrária: devedores beneficiam (pagam com moeda desvalorizada), credores perdem.",
+      "Incerteza: dificulta planeamento de investimento.",
+      "Vencedores: quem detém activos reais (imóveis, ações)."
+    ] },
+    { "type": "h3", "text": "Deflação e hiperinflação" },
+    { "type": "p", "text": "Deflação prolongada é perigosa: adiar compras deprime a procura, deflação de salários sobe a dívida real. Hiperinflação (>50%/mês) destrói a moeda como reserva de valor — casos históricos: Alemanha 1923, Zimbabué 2008, Venezuela 2018." },
+    { "type": "callout", "variant": "warning", "text": "Atenção: 'juro real = juro nominal − inflação'. Um depósito a 3% com inflação de 5% dá juro real negativo." }
+  ],
+  "keyPoints": [
+    "Inflação é subida generalizada e persistente de preços.",
+    "Mede-se pelo IPC/IHPC — cabaz de bens e serviços.",
+    "Tipos: de procura, de custos, inercial.",
+    "Erode poder de compra e redistribui entre devedores e credores.",
+    "Deflação prolongada é tão perigosa como inflação alta."
+  ],
+  "quizSlug": "mceq",
+  "nextLesson": "politica-monetaria",
+  "prevLesson": "pib"
+}

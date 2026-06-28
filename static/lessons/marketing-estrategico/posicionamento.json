@@ -1,0 +1,38 @@
+{
+  "id": "posicionamento",
+  "courseSlug": "marketing-estrategico",
+  "title": "Posicionamento Estratégico",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "Posicionamento — o lugar na cabeça do cliente" },
+    { "type": "p", "text": "Posicionamento é o acto de diseñar a oferta e a imagem da marca para ocupar um lugar distinto e valioso na mente do cliente-alvo. Não é o que fazes ao produto — é o que fazes à percepção." },
+    { "type": "h3", "text": "Tipos de posicionamento" },
+    { "type": "ul", "items": [
+      "Por atributo: 'o mais seguro' (Volvo), 'o mais barato' (Ryanair).",
+      "Por benefício: 'acaba com a dor de cabeça em 15 min'. Cuidado: o beneficio tem de ser único e crível.",
+      "Por uso/aplicação: 'o champô para cabelos encaracolados'.",
+      "Por utilizador: 'perfume para mulheres fortes e independentes'.",
+      "Por classe: 'o SUV premium do segmento'.",
+      "Por concorrente: 'a alternativa acessível ao iPhone'.",
+      "Por qualidade/preço: 'bom, bonito e barato' — perigoso porque contraditório."
+    ] },
+    { "type": "h3", "text": "Mapa perceptual" },
+    { "type": "p", "text": "Ferramenta visual com dois eixos (preço × qualidade, moderno × clássico, masculino × feminino). Marcam-se as marcas concorrentes e a tua. Mostra onde há 'espaço vazio' para um posicionamento diferenciado. Útil em grupo para alinhar equipa." },
+    { "type": "h3", "text": "Reason-to-believe (RTB)" },
+    { "type": "p", "text": "Sem provas, o posicionamento é só slogan. RTBs são evidências concretas: ingredientes, patentes, certificações, testimonials, dados. Cada claim deve ter pelo menos uma prova verificável." },
+    { "type": "h3", "text": "Posicionamento defensivo" },
+    { "type": "p", "text": "Uma vez ocupado um espaço, defende-o: dificuldade de troca para o cliente (lock-in), barreiras à entrada para concorrentes, consistência no 4P, investimento sustentado em comunicação. Marcas fortes mantêm o mesmo posicionamento durante décadas (Coca-Cola = felicidade)." },
+    { "type": "callout", "variant": "warning", "text": "Erro comum: confundir posicionamento com slogan. O posicionamento é uma escolha estratégica; o slogan é a expressão verbal dessa escolha." }
+  ],
+  "keyPoints": [
+    "Posicionamento é percepção, não produto.",
+    "Tipos: atributo, benefício, uso, utilizador, classe, concorrência.",
+    "Mapa perceptual mostra onde a marca se situa vs. concorrentes.",
+    "RTBs são provas concretas — sem elas, é slogan.",
+    "Defender o espaço ocupado requer consistência ao longo do tempo."
+  ],
+  "quizSlug": "meq-est",
+  "nextLesson": "brand-equity",
+  "prevLesson": "mix-marketing"
+}

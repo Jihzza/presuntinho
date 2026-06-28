@@ -1,0 +1,38 @@
+{
+  "id": "pib",
+  "courseSlug": "macroeconomia",
+  "title": "PIB (Produto Interno Bruto)",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "PIB — o que conta na economia" },
+    { "type": "p", "text": "O PIB mede o valor de mercado de todos os bens e serviços finais produzidos dentro de um país num período (geralmente um ano ou um trimestre). Não é uma medida de felicidade, distribuição ou sustentabilidade — é uma medida de atividade produtiva." },
+    { "type": "h3", "text": "Três ópticas equivalentes" },
+    { "type": "ul", "items": [
+      "Óptica da produção: PIB = soma do valor acrescentado em cada sector.",
+      "Óptica da despesa: PIB = C + I + G + (X − M) — consumo, investimento, despesa pública e exportações líquidas.",
+      "Óptica do rendimento: PIB = salários + rendas + juros + lucros + impostos indirectos − subsídios."
+    ] },
+    { "type": "h3", "text": "PIB nominal vs PIB real" },
+    { "type": "p", "text": "O PIB nominal usa preços correntes e cresce mesmo sem aumento de produção (por inflação). O PIB real desconta a inflação e mostra crescimento real — é o número que importa para comparar anos diferentes." },
+    { "type": "h3", "text": "PIB per capita e qualidade de vida" },
+    { "type": "p", "text": "PIB per capita = PIB / população. É uma média, não distribui riqueza. O Índice de Desenvolvimento Humano (IDH) combina PIB per capita com educação e esperança de vida para uma visão mais ampla." },
+    { "type": "callout", "variant": "info", "text": "Limite importante: o PIB ignora trabalho doméstico, economia informal e externalidades ambientais. É útil, mas incompleto." },
+    { "type": "h3", "text": "Como aplicar" },
+    { "type": "ul", "items": [
+      "Quando vês 'a economia cresceu 2%', confirma se é real (descontada inflação) ou nominal.",
+      "Compara PIB per capita, não absoluto, ao comparar Portugal com a Tunísia.",
+      "Lembra-te: PIB mede fluxo, não stock. Não é 'riqueza total do país'."
+    ] }
+  ],
+  "keyPoints": [
+    "PIB mede produção final num país e período.",
+    "Três ópticas: produção, despesa, rendimento — dão o mesmo número.",
+    "PIB real desconta inflação; PIB nominal não desconta.",
+    "PIB per capita é média, não distribuição.",
+    "PIB não mede bem-estar nem sustentabilidade."
+  ],
+  "quizSlug": "mceq",
+  "nextLesson": "inflacao",
+  "prevLesson": null
+}

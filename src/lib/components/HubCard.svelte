@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { SubApp, V3ContentEntry } from '$lib/registry';
+  import { t } from 'svelte-i18n';
 
   interface Props {
     app: SubApp;
@@ -18,11 +19,19 @@
   let resolvedHref = $derived(
     v3?.href ?? app.route ?? href ?? '#'
   );
+  // Resolve i18n-aware title/description from `hub.app.<id>.name/description`
+  // (defaults to the registry value if the key is missing).
   let resolvedTitle = $derived(
-    v3?.title ?? app.name ?? title ?? ''
+    v3?.title ??
+    $t(`hub.app.${app.id}.name`, { default: app.name }) ??
+    title ??
+    ''
   );
   let resolvedDesc = $derived(
-    v3?.description ?? app.description ?? description ?? ''
+    v3?.description ??
+    $t(`hub.app.${app.id}.description`, { default: app.description }) ??
+    description ??
+    ''
   );
   let resolvedTagline = $derived(v3?.tagline ?? tagline ?? '');
   let resolvedIcon = $derived(v3?.icon ?? app.icon ?? '🔗');

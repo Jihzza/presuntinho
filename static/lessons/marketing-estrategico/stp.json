@@ -1,0 +1,45 @@
+{
+  "id": "stp",
+  "courseSlug": "marketing-estrategico",
+  "title": "Segmentação, Targeting e Positioning (STP)",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "STP — três passos para escolher onde competir" },
+    { "type": "p", "text": "Marketing massificado é ineficiente: clientes diferentes querem coisas diferentes. O framework STP (Kotler) força a empresa a escolher: dividir o mercado (S), decidir onde competir (T) e ocupar um espaço mental (P)." },
+    { "type": "h3", "text": "S — Segmentação" },
+    { "type": "p", "text": "Dividir o mercado em grupos homogéneos internamente mas distintos entre si. Critérios clássicos:" },
+    { "type": "ul", "items": [
+      "Demográficos: idade, género, rendimento, educação.",
+      "Geográficos: país, região, clima, urbanidade.",
+      "Psicográficos: estilo de vida, valores, personalidade.",
+      "Comportamentais: lealdade, ocasião de uso, benefícios procurados."
+    ] },
+    { "type": "h3", "text": "T — Targeting" },
+    { "type": "p", "text": "Avaliar cada segmento pelo seu atractivo (tamanho, crescimento, concorrência) e pela capacidade da empresa de o servir. Três estratégias principais:" },
+    { "type": "ul", "items": [
+      "Marketing indiferenciado: um produto para todos (raro, ex: sal).",
+      "Marketing diferenciado: produto/mensagem por segmento (a maioria das marcas).",
+      "Marketing concentrado: foco num nicho específico (ex: Tesla inicialmente nos EV premium)."
+    ] },
+    { "type": "h3", "text": "P — Positioning" },
+    { "type": "p", "text": "O espaço único que a marca quer ocupar na cabeça do cliente-alvo. Bons posicionamentos são relevantes, distintos e credíveis. Bons exemplos: Volvo = segurança, Tesla = inovação sustentável, IKEA = design democrático." },
+    { "type": "callout", "variant": "success", "text": "Dica para o case Equivalenza: a STP força-te a escrever 'para quem exactamente' e 'contra quem exactamente'. Sem isso, a recomendação estratégica fica vaga." },
+    { "type": "h3", "text": "Como aplicar" },
+    { "type": "ul", "items": [
+      "Usa 3–5 critérios para criar segmentos accionáveis.",
+      "Escolhe segmentos onde a tua proposta de valor vence — não os maiores.",
+      "Escreve o positioning como uma frase: 'Para [cliente] que [necessidade], [marca] é [categoria] que [benefício único] porque [prova]'."
+    ] }
+  ],
+  "keyPoints": [
+    "Segmentação divide o mercado em grupos homogéneos.",
+    "Targeting escolhe onde competir (diferenciado, concentrado, indiferenciado).",
+    "Positioning é o espaço mental único que a marca ocupa.",
+    "STP força clareza: para quem, contra quem, com quê.",
+    "Positioning statement: cliente + necessidade + marca + benefício + prova."
+  ],
+  "quizSlug": "meq-est",
+  "nextLesson": "mix-marketing",
+  "prevLesson": null
+}

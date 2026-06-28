@@ -1,6 +1,6 @@
 # STATUS.md — Presuntinho V5 Migration
 
-> Last updated: 2026-06-27 (Phase 16.5 complete — v5.0.0 release candidate)
+> Last updated: 2026-06-28 (gap-005/006 EmptyState audit + a11y pass 1 + i18n pass 2)
 
 ## Where we are
 
@@ -134,6 +134,13 @@ presuntinho/
 **Live:** https://presuntinho.netlify.app/
 **Tag:** v4.0.0
 **PRESERVATION:** all 13 items checked
+
+### Gap closures (2026-06-28)
+
+- ✅ **gap-005** — Trabalhos: EmptyState.svelte already wired (line 206 of `+page.svelte`). When `assignments.length === 0`, shows 📭 empty placeholder via `empty.trabalhos.title/desc`. No code change required.
+- ✅ **gap-006** — Biblioteca: EmptyState.svelte already wired (lines 212–227 of `+page.svelte`). Two variants: 🔎 filter empty (CTA: clear filters) and 🔖 true empty (CTA: + Adicionar marcador → `/biblioteca/novo/`). No code change required.
+- ✅ **a11y pass 1** — added `aria-label` to: `+error.svelte` status pill + back button, `/splash` profile picker radiogroup + Fatma/Daniel radio buttons (role=radio now announces profile), `/financas/transacoes` delete buttons + tipo row label, `/financas/nova` tipo radiogroup + tipo buttons, `/habitos/novo` icon suggestions + colour swatches (radio role).
+- ✅ **i18n pass 2** — added 28 new keys to all 5 locales (en/ar/tn/fr/pt-PT): `splash.profile_picker.aria`, `splash.profile.fatma`, `splash.profile.daniel`, `splash.princesa_placeholder`, `error.title.404`, `error.title.403`, `error.title.500`, `error.title.generic`, `error.subtitle.404`, `error.subtitle.500`, `error.subtitle.generic`, `error.details`, `error.back_to_hub`, `error.code_aria`, `transacoes.delete.confirm`, `transacoes.delete.aria`, `transacoes.delete.confirm_short`, `transacoes.toast.removed`, `transacoes.toast.delete_failed`, `transacoes.saldo`, `transacoes.tipo.receita`, `transacoes.tipo.despesa`, `financas.nova.tipo.aria`, `financas.nova.tipo.despesa`, `financas.nova.tipo.receita`, `financas.nova.submit.add_despesa`, `financas.nova.submit.add_receita`, `financas.nova.cancel`.
 
 ---
 

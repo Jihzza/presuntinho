@@ -15,7 +15,7 @@
 -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { t } from 'svelte-i18n';
+  import { t as ti } from 'svelte-i18n';
   import {
     listCategorias,
     listTransacoesMes,
@@ -31,6 +31,19 @@
   import EmptyState from '$lib/components/EmptyState.svelte';
   import Skeleton from '$lib/components/Skeleton.svelte';
   import { showToast } from '$lib/components/events';
+
+  // Localised strings used inside the {#each} loop. We can't use $t
+  // inside a Svelte @const block (it's a store subscription, not a
+  // function call), so we resolve these once via the `ti()` helper at
+  // the top level of the component.
+  const ARIA_RECEITA = ti('transacoes.tipo.receita', { default: 'Receita' });
+  const ARIA_DESPESA = ti('transacoes.tipo.despesa', { default: 'Despesa' });
+  const ARIA_DELETE = ti('transacoes.delete.aria', { default: 'Remover transação' });
+  const ARIA_CONFIRM = ti('transacoes.delete.confirm', { default: 'Confirmar remoção' });
+  const CONFIRM_SHORT = ti('transacoes.delete.confirm_short', { default: 'Confirmar?' });
+  const TOAST_REMOVED = ti('transacoes.toast.removed', { default: 'Transação removida' });
+  const TOAST_DELETE_FAILED = ti('transacoes.toast.delete_failed', { default: 'Erro a remover transação' });
+  const SALDO_LABEL = ti('transacoes.saldo', { default: 'Saldo' });
 
   let transacoes = $state<Transacao[]>([]);
   let categorias = $state<CategoriaRow[]>([]);
@@ -103,10 +116,10 @@
     try {
       await deleteTransacao(id);
       await refresh();
-      showToast('Transação removida');
+      showToast(TOAST_REMOVED);
     } catch (e) {
       console.error('[financas] delete failed', e);
-      showToast('Erro a remover transação');
+      showToast(TOAST_DELETE_FAILED);
     }
   }
 
@@ -209,7 +222,7 @@
         − {formatValor(totalVisivel.despesas)}
       </span>
       <span class="total-pill saldo" class:negativo={totalVisivel.receitas - totalVisivel.despesas < 0}>
-        Saldo: {formatValor(totalVisivel.receitas - totalVisivel.despesas)}
+        {SALDO_LABEL}: {formatValor(totalVisivel.receitas - totalVisivel.despesas)}
       </span>
     </div>
   </section>
@@ -242,9 +255,10 @@
         <div class="day-group">
           <h3 class="day-header">{formatData(grupo.data)}</h3>
           <ul class="rows">
-            {#each grupo.items as t (t.id)}
-              {@const c = cat(t.categoria)}
-              <li class="row" class:receita={t.tipo === 'receita'} class:despesa={t.tipo === 'despesa'}>
+            {#each grupo.items as tx (tx.id)}
+              {@const c = cat(tx.categoria)}
+              {@const isReceita = tx.tipo === 'receita'}
+              <li class="row" class:receita={isReceita} class:despesa={!isReceita}>
                 <span
                   class="cat-icon"
                   style={c ? `--cat-cor: ${c.cor}` : '--cat-cor: #94a3b8'}
@@ -253,22 +267,22 @@
                   {c?.icone ?? '📦'}
                 </span>
                 <span class="row-main">
-                  <span class="row-desc">{t.descricao || (c?.nome ?? 'Sem descrição')}</span>
+                  <span class="row-desc">{tx.descricao || (c?.nome ?? 'Sem descrição')}</span>
                   <span class="row-meta">
-                    {c?.nome ?? t.categoria} · {t.tipo === 'receita' ? 'receita' : 'despesa'}
+                    {c?.nome ?? tx.categoria} · {isReceita ? ARIA_RECEITA : ARIA_DESPESA}
                   </span>
                 </span>
-                <span class="row-valor" aria-label={t.tipo === 'receita' ? 'Receita' : 'Despesa'}>
-                  {t.tipo === 'receita' ? '+' : '−'}{formatValor(t.valor)}
+                <span class="row-valor" aria-label={isReceita ? ARIA_RECEITA : ARIA_DESPESA}>
+                  {isReceita ? '+' : '−'}{formatValor(tx.valor)}
                 </span>
                 <button
                   type="button"
                   class="delete-btn"
-                  onclick={() => confirmDelete(t.id)}
-                  aria-label={confirmingDelete === t.id ? 'Confirmar remoção' : 'Remover transação'}
-                  data-confirming={confirmingDelete === t.id}
+                  onclick={() => confirmDelete(tx.id)}
+                  aria-label={confirmingDelete === tx.id ? ARIA_CONFIRM : ARIA_DELETE}
+                  data-confirming={confirmingDelete === tx.id}
                 >
-                  {confirmingDelete === t.id ? 'Confirmar?' : '🗑️'}
+                  {confirmingDelete === tx.id ? CONFIRM_SHORT : '🗑️'}
                 </button>
               </li>
             {/each}

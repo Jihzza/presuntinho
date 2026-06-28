@@ -138,7 +138,43 @@
       lessonCount: 8,
       quizCount: 2,
       badge: 'Uni'
-      }
+      },
+    {
+      slug: 'macroeconomia',
+      title: 'Macroeconomia',
+      tagline: 'Business Administration · PIB, inflação, política monetária e comércio internacional',
+      description:
+        'Vê a economia como um todo: como se mede o PIB, por que a inflação corrói o valor, como o banco central controla juros e moeda, e como países trocam bens e capitais.',
+      icon: '🌍',
+      color: '#0ea5e9',
+      lessonCount: 4,
+      quizCount: 1,
+      badge: 'Uni'
+    },
+    {
+      slug: 'marketing-estrategico',
+      title: 'Marketing Estratégico',
+      tagline: 'Business Administration · STP, mix marketing, posicionamento e brand equity',
+      description:
+        'Aprende a pensar marketing como sistema: segmentar o mercado, escolher onde competir (STP), desenhar o mix (4P) e construir brand equity que protege margem.',
+      icon: '🎯',
+      color: '#e11d48',
+      lessonCount: 4,
+      quizCount: 1,
+      badge: 'Uni'
+    },
+    {
+      slug: 'etica-negocios',
+      title: 'Ética nos Negócios',
+      tagline: 'Business Administration · Governança, responsabilidade social, sustentabilidade e compliance',
+      description:
+        'Decisões empresariais têm consequências humanas, sociais e ambientais. Aprende frameworks de governança, ESG, sustentabilidade e compliance para líderes responsáveis.',
+      icon: '⚖️',
+      color: '#16a34a',
+      lessonCount: 4,
+      quizCount: 1,
+      badge: 'Uni'
+    }
   ];
 </script>
 

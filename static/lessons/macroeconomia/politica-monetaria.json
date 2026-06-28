@@ -1,0 +1,39 @@
+{
+  "id": "politica-monetaria",
+  "courseSlug": "macroeconomia",
+  "title": "Política Monetária",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "Política monetária — quem controla a moeda" },
+    { "type": "p", "text": "Política monetária é o controlo da oferta de moeda e das taxas de juro pelo banco central (BCE no euro, Fed nos EUA, Banco de Portugal supervisiona bancos mas o BCE decide). O objectivo típico é estabilidade de preços (inflação ~2% na zona euro)." },
+    { "type": "h3", "text": "Instrumentos principais" },
+    { "type": "ul", "items": [
+      "Taxa de juro diretora (refi no BCE): o preço a que o banco central empresta aos bancos.",
+      "Operações de mercado aberto: compra/venda de títulos públicos para injectar ou drenar liquidez.",
+      "Reservas obrigatórias: percentagem de depósitos que os bancos têm de manter no banco central.",
+      "Forward guidance: comunicação sobre a trajectória esperada dos juros."
+    ] },
+    { "type": "h3", "text": "Como os juros chegam à economia" },
+    { "type": "p", "text": "Banco central sobe a taxa diretora → juros interbancários sobem → juros de hipotecas, crédito ao consumo e empresarial sobem → investimento e consumo arrefecem → procura agregada abranda → inflação abranda. O inverso funciona para baixar juros e estimular." },
+    { "type": "h3", "text": "Política expansionista vs contractionista" },
+    { "type": "ul", "items": [
+      "Expansionista (juro baixo, QE): estimula crescimento, desvaloriza moeda, pode gerar inflação.",
+      "Contractionista (juro alto, QT): trava inflação, valoriza moeda, abranda crescimento.",
+      "Trade-off clássico: arrefecer inflação pode causar recessão — é o 'soft landing' tão difícil de executar."
+    ] },
+    { "type": "h3", "text": "Quantitative Easing (QE) e Quantitative Tightening (QT)" },
+    { "type": "p", "text": "QE é compra massiva de activos pelo banco central para injectar liquidez quando os juros já estão próximos de zero (2008–2014, 2020–2022). QT é o inverso: vender activos ou deixar de reinvestir para drenar liquidez." },
+    { "type": "callout", "variant": "success", "text": "Regra prática para gestores: a taxa de juro director do BCE afecta o teu spread bancário, o custo do crédito e o valor do EUR face a outras moedas." }
+  ],
+  "keyPoints": [
+    "Política monetária é controlada pelo banco central (independência).",
+    "Objectivo primário: estabilidade de preços (~2% na zona euro).",
+    "Instrumentos: taxa diretora, mercado aberto, reservas, forward guidance.",
+    "Juros altos → menos crédito → menos inflação (com atraso).",
+    "QE/QT são ferramentas não-convencionais para juros próximos de zero."
+  ],
+  "quizSlug": "mceq",
+  "nextLesson": "comercio-internacional",
+  "prevLesson": "inflacao"
+}

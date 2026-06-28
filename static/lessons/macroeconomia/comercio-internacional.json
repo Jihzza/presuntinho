@@ -1,0 +1,41 @@
+{
+  "id": "comercio-internacional",
+  "courseSlug": "macroeconomia",
+  "title": "Comércio Internacional",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "Comércio internacional — o que países trocam" },
+    { "type": "p", "text": "Os países trocam bens, serviços e capitais. Exportações são vendas ao exterior; importações são compras ao exterior. A balança comercial = exportações − importações (de bens e serviços). A balança de pagamentos inclui também fluxos de rendimento (juros, dividendos) e financeiros (IDE, investimentos de carteira)." },
+    { "type": "h3", "text": "Vantagens comparativas" },
+    { "type": "p", "text": "David Ricardo (1817): cada país beneficia ao especializar-se no que produz com menor custo de oportunidade — mesmo que seja menos eficiente em termos absolutos. Portugal troca vinho por têxteis, Tunísia troca azeite por tecnologia — todos ganham." },
+    { "type": "h3", "text": "Taxa de câmbio" },
+    { "type": "ul", "items": [
+      "Câmbio fixo: a paridade é mantida pelo banco central (custou reservas a Portugal até 1999).",
+      "Câmbio flutuante: o preço da moeda é determinado pelo mercado (EUR/USD oscila diariamente).",
+      "Câmbio semi-fixo: banda cambial com intervenção ocasional."
+    ] },
+    { "type": "h3", "text": "Protecção vs livre-câmbio" },
+    { "type": "ul", "items": [
+      "Tarifas: imposto sobre importações — encarece produtos externos.",
+      "Quotas: limites quantitativos à importação.",
+      "Subsídios à exportação: tornam exportações artificialmente competitivas.",
+      "Barregas não-tarifárias: normas técnicas, sanitárias, burocráticas.",
+      "Argumento livre-cambista: especialização, ganhos de escala, concorrência.",
+      "Argumento proteccionista: indústrias nascentes, segurança nacional, balança comercial."
+    ] },
+    { "type": "h3", "text": "Organismos multilaterais" },
+    { "type": "p", "text": "OMC (Organização Mundial do Comércio) negoceia regras de comércio; FMI supervisiona estabilidade macro e financia países em crise; Banco Mundial financia desenvolvimento. Acordos regionais (UE, ASEAN, MERCOSUL) aprofundam integração entre membros." },
+    { "type": "callout", "variant": "info", "text": "Consequência prática: uma empresa que exporta para os EUA ganha quando o EUR desce (produto mais barato) — e perde quando EUR sobe." }
+  ],
+  "keyPoints": [
+    "Balança comercial = exportações − importações.",
+    "Vantagens comparativas justificam o comércio entre países.",
+    "Câmbio pode ser fixo, flutuante ou gerido.",
+    "Tarifas e quotas protegem indústrias mas geram ineficiências.",
+    "Coordenação internacional via OMC, FMI, Banco Mundial e blocos regionais."
+  ],
+  "quizSlug": "mceq",
+  "nextLesson": null,
+  "prevLesson": "politica-monetaria"
+}

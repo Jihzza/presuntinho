@@ -1,30 +1,10 @@
 {
-  "lastUpdated": "2026-06-28T03:00:00+02:00",
+  "lastUpdated": "2026-06-28T03:36:00+02:00",
   "openItems": [
-    {
-      "id": "gap-001",
-      "category": "UI/UX",
-      "description": "HeartButton no header global (entre LanguageSwitcher e Definições)",
-      "severity": "alta",
-      "source": "audio-Daniel-2026-06-28",
-      "status": "done",
-      "sha": "877a01e",
-      "closed_at": "2026-06-28T02:42:00+02:00"
-    },
-    {
-      "id": "gap-003",
-      "category": "empty-area",
-      "description": "APS Finanças — empty state melhorado quando não há despesas (icon + CTA)",
-      "severity": "alta",
-      "source": "audio-Daniel-2026-06-28",
-      "status": "done",
-      "sha": "877a01e",
-      "closed_at": "2026-06-28T02:42:00+02:00"
-    },
     {
       "id": "gap-008",
       "category": "lição/curso",
-      "description": "Mais cursos — tudo que souber a cadeiras da universidade dela (BA)",
+      "description": "Mais cursos BA — expandir cursos existentes com mais lições (já temos 5 cursos × 8 lições + 5 quizzes; auditoria pode adicionar cadeiras que faltam)",
       "severity": "média",
       "source": "audio-Daniel-2026-06-28",
       "created_at": "2026-06-28T02:36:00+02:00"
@@ -32,7 +12,7 @@
     {
       "id": "gap-010",
       "category": "polish",
-      "description": "Mais cuídos: edge cases, UX, validações, mensagens de erro úteis",
+      "description": "Mais cuídos: edge cases, UX, validações, mensagens de erro úteis (ex: empty stat dos Cards em /financas quando totais.receitas=0)",
       "severity": "média",
       "source": "audio-Daniel-2026-06-28",
       "created_at": "2026-06-28T02:36:00+02:00"
@@ -40,23 +20,15 @@
     {
       "id": "gap-011",
       "category": "a11y",
-      "description": "Lighthouse a11y ≥95 — auditar todas as páginas",
+      "description": "Lighthouse a11y ≥95 — auditar todas as páginas com axe-core",
       "severity": "média",
-      "source": "brief-inicial",
-      "created_at": "2026-06-28T02:36:00+02:00"
-    },
-    {
-      "id": "gap-012",
-      "category": "PWA",
-      "description": "PWA icons completos + offline page",
-      "severity": "baixa",
       "source": "brief-inicial",
       "created_at": "2026-06-28T02:36:00+02:00"
     },
     {
       "id": "gap-013",
       "category": "smoke-fail",
-      "description": "Backup/export testado end-to-end (já existe a feature, falta validar)",
+      "description": "Backup/export testado end-to-end (existe a feature, falta validação via browser)",
       "severity": "média",
       "source": "brief-inicial",
       "created_at": "2026-06-28T02:36:00+02:00"
@@ -64,10 +36,34 @@
     {
       "id": "gap-014",
       "category": "smoke-fail",
-      "description": "Confetti a disparar em TODOS os easter eggs (já wired, falta smoke visual)",
+      "description": "Confetti a disparar em TODOS os easter eggs (já wired, falta smoke visual em produção)",
       "severity": "média",
       "source": "brief-inicial",
       "created_at": "2026-06-28T02:36:00+02:00"
+    },
+    {
+      "id": "gap-016",
+      "category": "i18n",
+      "description": "Títulos <title> das routes ainda hardcoded em PT (case, course, dl, splash, +error.svelte, biblioteca/novo)",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-28-03",
+      "created_at": "2026-06-28T03:36:00+02:00"
+    },
+    {
+      "id": "gap-017",
+      "category": "i18n",
+      "description": "Strings PT hardcoded em <p>/<h3> nas routes (case: 'O que ela valoriza', dl: 'Isto garante:...', splash, walkthrough)",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-28-03",
+      "created_at": "2026-06-28T03:36:00+02:00"
+    },
+    {
+      "id": "gap-018",
+      "category": "feature-pedida-pelo-Daniel",
+      "description": "Aulas sobretudo — estrutura separada de AULAS (não só cursos/lições)",
+      "severity": "média",
+      "source": "audio-Daniel-2026-06-27",
+      "created_at": "2026-06-28T03:36:00+02:00"
     }
   ],
   "closedItems": [
@@ -142,6 +138,42 @@
       "description": "Biblioteca ja tem 2 variantes EmptyState (post-1 sem bookmarks, post-1 filter vazio com CTA limpar)",
       "sha": "d8bcec3",
       "closed_at": "2026-06-28T02:59:00+02:00"
+    },
+    {
+      "id": "gap-001",
+      "description": "HeartButton no header global (entre LanguageSwitcher e Definições)",
+      "sha": "877a01e",
+      "closed_at": "2026-06-28T02:42:00+02:00"
+    },
+    {
+      "id": "gap-003",
+      "description": "APS Finanças — empty state melhorado quando não há despesas (icon + CTA)",
+      "sha": "877a01e",
+      "closed_at": "2026-06-28T02:42:00+02:00"
+    },
+    {
+      "id": "gap-015",
+      "description": "Hub sub-app names + descriptions i18n: 60 novas keys (5 línguas × 12 keys) + HubCard.svelte resolve via $t('hub.app.<id>.name') com fallback registry",
+      "sha": "<pending>",
+      "closed_at": "2026-06-28T03:36:00+02:00"
+    },
+    {
+      "id": "gap-012",
+      "description": "PWA icons completos — maskable 192+512 adicionados + manifest.webmanifest com 5 ícones (any + maskable)",
+      "sha": "<pending>",
+      "closed_at": "2026-06-28T03:36:00+02:00"
+    },
+    {
+      "id": "feat-005",
+      "description": "3 novos cursos BA adicionados: etica-negocios (governanca-corporativa), macroeconomia (4 lições), marketing-estrategico (4 lições) — pre-existing uncommitted work",
+      "sha": "<pending>",
+      "closed_at": "2026-06-28T03:36:00+02:00"
+    },
+    {
+      "id": "fix-003",
+      "description": "transacoes +page.svelte: pre-existing svelte-check error (Cannot subscribe to stores in conditional aria-label) — fixed via {@const} bindings",
+      "sha": "<pending>",
+      "closed_at": "2026-06-28T03:36:00+02:00"
     }
   ]
 }

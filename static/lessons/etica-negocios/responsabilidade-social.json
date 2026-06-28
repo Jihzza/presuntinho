@@ -1,0 +1,41 @@
+{
+  "id": "responsabilidade-social",
+  "courseSlug": "etica-negocios",
+  "title": "Responsabilidade Social Empresarial (RSE)",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "RSE — a empresa tem obrigações para além do lucro" },
+    { "type": "p", "text": "Responsabilidade Social Empresarial é a obrigação da empresa de contribuir para o bem-estar da sociedade, para além das exigências legais e económicas. Não substitui o core business — integra-o." },
+    { "type": "h3", "text": "Pirâmide de Carroll (1991)" },
+    { "type": "p", "text": "Archie Carroll organizou as responsabilidades em quatro níveis hierárquicos:" },
+    { "type": "ul", "items": [
+      "Económica: ser lucrativa, base de tudo o resto.",
+      "Legal: cumprir a lei (fiscal, laboral, ambiental, concorrência).",
+      "Ética: fazer o que é correcto mesmo quando não é obrigatório (fairness, integridade).",
+      "Filantrópica: contribuir voluntariamente para a comunidade (doações, voluntariado)."
+    ] },
+    { "type": "h3", "text": "Teoria dos stakeholders (Freeman, 1984)" },
+    { "type": "p", "text": "A empresa não existe só para accionistas. Stakeholders são todos afectados pelas decisões: colaboradores, clientes, fornecedores, comunidade, ambiente, reguladores. Freeman defende gestão que cria valor para todos, não só para shareholders." },
+    { "type": "h3", "text": "RSE estratégica vs filantropia" },
+    { "type": "ul", "items": [
+      "Filantropia: doação avulsa, desligada do negócio (ex: empresa doa €10k a abrigo).",
+      "RSE estratégica: alinhada com o core business (ex: empresa de tecnologia ensina programação a jovens carenciados — forma futuros clientes e talentos).",
+      "RSE como custo: obrigações mínimas para evitar丑闻.",
+      "RSE como investimento: gera reputação, atracção de talento, licença social para operar."
+    ] },
+    { "type": "h3", "text": "Como medir" },
+    { "type": "p", "text": "Indicadores clássicos: investimento comunitário (em % lucro), horas de voluntariado dos colaboradores, impacto em programas próprios, certificações ISO 26000 (responsabilidade social), relatórios de sustentabilidade (GRI, SASB)." },
+    { "type": "callout", "variant": "info", "text": "Atenção: RSE não é greenwashing. Comunicar iniciativas sem acção real destrói credibilidade e atrai escrutínio." }
+  ],
+  "keyPoints": [
+    "RSE = obrigações sociais para além de lei e lucro.",
+    "Pirâmide de Carroll: económica, legal, ética, filantrópica.",
+    "Stakeholders: todos afectados pelas decisões da empresa.",
+    "RSE estratégica gera valor partilhado, filantropia é doação avulsa.",
+    "Mede-se com investimento, voluntariado, certificações, relatórios."
+  ],
+  "quizSlug": "enq",
+  "nextLesson": "sustentabilidade",
+  "prevLesson": "governanca-corporativa"
+}

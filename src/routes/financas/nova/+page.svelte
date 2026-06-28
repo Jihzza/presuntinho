@@ -152,19 +152,20 @@
 
   <form class="form" onsubmit={handleSubmit} novalidate>
     <!-- Toggle tipo (receita / despesa) -->
-    <fieldset class="tipo-field" aria-label="Tipo de transação">
-      <legend class="sr-only">Tipo</legend>
-      <div class="tipo-toggle" role="radiogroup" aria-label="Tipo de transação">
+    <fieldset class="tipo-field" aria-label={$t('financas.nova.tipo.aria', { default: 'Tipo de transação' })}>
+      <legend class="sr-only">{$t('financas.nova.tipo.aria', { default: 'Tipo de transação' })}</legend>
+      <div class="tipo-toggle" role="radiogroup" aria-label={$t('financas.nova.tipo.aria', { default: 'Tipo de transação' })}>
         <button
           type="button"
           class="tipo-btn"
           class:active={tipo === 'despesa'}
           role="radio"
           aria-checked={tipo === 'despesa'}
+          aria-label={$t('financas.nova.tipo.despesa', { default: 'Despesa' })}
           onclick={() => (tipo = 'despesa')}
         >
           <span class="tipo-icon" aria-hidden="true">💸</span>
-          <span>Despesa</span>
+          <span>{$t('financas.nova.tipo.despesa', { default: 'Despesa' })}</span>
         </button>
         <button
           type="button"
@@ -172,10 +173,11 @@
           class:active={tipo === 'receita'}
           role="radio"
           aria-checked={tipo === 'receita'}
+          aria-label={$t('financas.nova.tipo.receita', { default: 'Receita' })}
           onclick={() => (tipo = 'receita')}
         >
           <span class="tipo-icon" aria-hidden="true">💰</span>
-          <span>Receita</span>
+          <span>{$t('financas.nova.tipo.receita', { default: 'Receita' })}</span>
         </button>
       </div>
     </fieldset>
@@ -251,14 +253,14 @@
     {/if}
 
     <div class="actions">
-      <a class="btn-secondary" href="/financas/transacoes/">Cancelar</a>
+      <a class="btn-secondary" href="/financas/transacoes/">{$t('financas.nova.cancel', { default: 'Cancelar' })}</a>
       <button
         type="submit"
         class="btn-primary"
         class:receita={tipo === 'receita'}
         disabled={submitting || loadingCategorias || categoriasCompativeis.length === 0}
       >
-        {submitting ? 'A guardar…' : (tipo === 'receita' ? 'Adicionar receita' : 'Adicionar despesa')}
+        {submitting ? $t('common.loading') : (tipo === 'receita' ? $t('financas.nova.submit.add_receita', { default: 'Adicionar receita' }) : $t('financas.nova.submit.add_despesa', { default: 'Adicionar despesa' }))}
       </button>
     </div>
   </form>

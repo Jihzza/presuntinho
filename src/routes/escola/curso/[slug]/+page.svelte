@@ -207,6 +207,48 @@
           estMinutes: 9
         }
       ]
+    },
+    macroeconomia: {
+      slug: 'macroeconomia',
+      title: 'Macroeconomia',
+      tagline: 'Business Administration · A economia como um todo',
+      description: 'PIB, inflação, política monetária e comércio internacional — os quatro blocos que todo gestor precisa de entender.',
+      icon: '🌍',
+      color: '#0ea5e9',
+      lessons: [
+        { slug: 'pib', title: '1. PIB (Produto Interno Bruto)', summary: 'Como se mede a riqueza gerada por um país.', quizSlug: 'mceq', quizTitle: 'Quiz: Macroeconomia', estMinutes: 8 },
+        { slug: 'inflacao', title: '2. Inflação e Índice de Preços', summary: 'Por que o dinheiro perde valor e como se mede.', quizSlug: 'mceq', quizTitle: 'Quiz: Macroeconomia', estMinutes: 8 },
+        { slug: 'politica-monetaria', title: '3. Política Monetária', summary: 'Banco central, taxa de juro, oferta de moeda.', quizSlug: 'mceq', quizTitle: 'Quiz: Macroeconomia', estMinutes: 8 },
+        { slug: 'comercio-internacional', title: '4. Comércio Internacional', summary: 'Balança de pagamentos, câmbios, protecionismo e livre-câmbio.', quizSlug: 'mceq', quizTitle: 'Quiz: Macroeconomia', estMinutes: 9 }
+      ]
+    },
+    'marketing-estrategico': {
+      slug: 'marketing-estrategico',
+      title: 'Marketing Estratégico',
+      tagline: 'Business Administration · Pensar marketing como sistema',
+      description: 'STP, mix marketing (4P), posicionamento e brand equity.',
+      icon: '🎯',
+      color: '#e11d48',
+      lessons: [
+        { slug: 'stp', title: '1. Segmentação, Targeting e Positioning (STP)', summary: 'Dividir o mercado, escolher onde competir, ocupar um espaço.', quizSlug: 'meq-est', quizTitle: 'Quiz: Marketing Estratégico', estMinutes: 8 },
+        { slug: 'mix-marketing', title: '2. Mix Marketing (4P)', summary: 'Produto, preço, praça e promoção como alavancas.', quizSlug: 'meq-est', quizTitle: 'Quiz: Marketing Estratégico', estMinutes: 8 },
+        { slug: 'posicionamento', title: '3. Posicionamento Estratégico', summary: 'Linha de valor e reason-to-believ na cabeça do cliente.', quizSlug: 'meq-est', quizTitle: 'Quiz: Marketing Estratégico', estMinutes: 8 },
+        { slug: 'brand-equity', title: '4. Brand Equity', summary: 'Awareness, associações, qualidade percebida e lealdade.', quizSlug: 'meq-est', quizTitle: 'Quiz: Marketing Estratégico', estMinutes: 9 }
+      ]
+    },
+    'etica-negocios': {
+      slug: 'etica-negocios',
+      title: 'Ética nos Negócios',
+      tagline: 'Business Administration · Decisões responsáveis',
+      description: 'Governança, responsabilidade social, sustentabilidade e compliance.',
+      icon: '⚖️',
+      color: '#16a34a',
+      lessons: [
+        { slug: 'governanca-corporativa', title: '1. Governança Corporativa', summary: 'Conselho de administração, agência, transparência e accountability.', quizSlug: 'enq', quizTitle: 'Quiz: Ética nos Negócios', estMinutes: 8 },
+        { slug: 'responsabilidade-social', title: '2. Responsabilidade Social Empresarial (RSE)', summary: 'Caroll, pirâmide de Carroll e stakeholder theory.', quizSlug: 'enq', quizTitle: 'Quiz: Ética nos Negócios', estMinutes: 8 },
+        { slug: 'sustentabilidade', title: '3. Sustentabilidade e ESG', summary: 'Ambiental, social e governance — do greenwashing à estratégia.', quizSlug: 'enq', quizTitle: 'Quiz: Ética nos Negócios', estMinutes: 8 },
+        { slug: 'compliance', title: '4. Compliance e Programas de Integridade', summary: 'Políticas, controlos, canal de denúncias e cultura ética.', quizSlug: 'enq', quizTitle: 'Quiz: Ética nos Negócios', estMinutes: 9 }
+      ]
     }
   };
 

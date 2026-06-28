@@ -189,7 +189,7 @@
         {#if locked.locked}
           <p class="lockout">{$t('splash.lockout', { values: { n: formatRemaining(locked.remainingMs) } })}</p>
         {:else}
-          <div class="profile-picker" role="radiogroup" aria-label="Quem está a entrar?">
+          <div class="profile-picker" role="radiogroup" aria-label={$t('splash.profile_picker.aria', { default: 'Quem está a entrar?' })}>
             <button
               type="button"
               class="profile-btn"
@@ -197,9 +197,10 @@
               onclick={() => (selectedProfile = 'fatma')}
               role="radio"
               aria-checked={selectedProfile === 'fatma'}
+              aria-label={$t('splash.profile.fatma', { default: 'Sou a Fatma' })}
             >
               <span class="profile-icon" aria-hidden="true">👩</span>
-              <span class="profile-label">Sou a Fatma</span>
+              <span class="profile-label">{$t('splash.profile.fatma', { default: 'Sou a Fatma' })}</span>
             </button>
             <button
               type="button"
@@ -208,9 +209,10 @@
               onclick={() => (selectedProfile = 'daniel')}
               role="radio"
               aria-checked={selectedProfile === 'daniel'}
+              aria-label={$t('splash.profile.daniel', { default: 'Sou o Daniel' })}
             >
               <span class="profile-icon" aria-hidden="true">👨</span>
-              <span class="profile-label">Sou o Daniel</span>
+              <span class="profile-label">{$t('splash.profile.daniel', { default: 'Sou o Daniel' })}</span>
             </button>
           </div>
 
@@ -218,7 +220,7 @@
             <input
               type="password"
               bind:value={password}
-              placeholder={selectedProfile === 'daniel' ? 'princesa' : $t('splash.placeholder')}
+              placeholder={selectedProfile === 'daniel' ? $t('splash.princesa_placeholder', { default: 'princesa' }) : $t('splash.placeholder')}
               aria-label={$t('splash.password.label')}
               disabled={loading}
               autocomplete="off"

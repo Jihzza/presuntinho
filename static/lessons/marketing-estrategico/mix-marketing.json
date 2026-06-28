@@ -1,0 +1,32 @@
+{
+  "id": "mix-marketing",
+  "courseSlug": "marketing-estrategico",
+  "title": "Mix Marketing (4P)",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "Os 4P — o toolkit clássico do marketing" },
+    { "type": "p", "text": "McCarthy (1960) propôs agrupar as decisões de marketing em quatro variáveis controláveis: Produto, Preço, Praça (distribuição) e Promoção. A expansão para 7P (People, Process, Physical evidence) aplica-se a serviços." },
+    { "type": "h3", "text": "Produto" },
+    { "type": "p", "text": "O que entregas ao cliente: bem físico, serviço, ideia ou combinação. Decisões: gama, qualidade, design, marca, embalagem, serviços pós-venda, garantia. Três níveis: core benefit (o que o cliente quer realmente), actual product (características), augmented product (extras como entrega e suporte)." },
+    { "type": "h3", "text": "Preço" },
+    { "type": "p", "text": "Único P que gera receita; os outros geram custo. Decisões: posicionamento de preço (premium, médio, penetração), elasticidade, descontos, condições de pagamento, preços心理学 (9,99 vs 10,00)." },
+    { "type": "h3", "text": "Praça (distribuição)" },
+    { "type": "p", "text": "Como o produto chega ao cliente: canais directos (loja própria, e-commerce), indirectos (revenda, retalho), intensidade (intensiva, selectiva, exclusiva). Logística, armazenagem e gestão de inventário fazem parte." },
+    { "type": "h3", "text": "Promoção" },
+    { "type": "p", "text": "Comunicação: publicidade, relações públicas, promoções de vendas, vendas pessoais, marketing digital, patrocínios. O mix ideal depende do target, do orçamento e da fase do ciclo de vida." },
+    { "type": "h3", "text": "Os 4P devem ser coerentes" },
+    { "type": "p", "text": "Um posicionamento premium exige produto de qualidade, preço alto, distribuição selectiva, comunicação cuidada. Quebrar a coerência (preço premium em canal de massa) destrói valor. O inverso também: preço baixo só funciona com produto funcional, distribuição intensiva e comunicação de volume." },
+    { "type": "callout", "variant": "info", "text": "Para serviços, junta People (pessoas), Process (processos) e Physical evidence (provas físicas como recibo, ambiente, website)." }
+  ],
+  "keyPoints": [
+    "4P = Produto, Preço, Praça, Promoção (McCarthy, 1960).",
+    "Preço é o único P que gera receita; os outros geram custo.",
+    "Produto tem 3 níveis: core, actual, augmented.",
+    "Praça define como o produto chega ao cliente.",
+    "Os 4P têm de ser coerentes com o posicionamento."
+  ],
+  "quizSlug": "meq-est",
+  "nextLesson": "posicionamento",
+  "prevLesson": "stp"
+}

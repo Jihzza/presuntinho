@@ -1,0 +1,39 @@
+{
+  "id": "governanca-corporativa",
+  "courseSlug": "etica-negocios",
+  "title": "Governança Corporativa",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "Governança — quem decide e como" },
+    { "type": "p", "text": "Governança corporativa é o sistema de regras, práticas e processos pelo qual uma empresa é dirigida e controlada. Separa propriedade (accionistas) de gestão (executivos) e estabelece mecanismos de controlo e accountability." },
+    { "type": "h3", "text": "Os três pilares" },
+    { "type": "ul", "items": [
+      "Conselho de administração: elege CEO, aprova estratégia, supervisiona gestão.",
+      "Gestão executiva (CEO + C-suite): executa estratégia e reporta ao conselho.",
+      "Accionistas: aprovam contas, elegem administradores, decidem distribuição de dividendos."
+    ] },
+    { "type": "h3", "text": "Problema de agência" },
+    { "type": "p", "text": "Jensen & Meckling (1976): gestores (agentes) podem perseguir interesses próprios em vez dos accionistas (principais). Soluções: alinhamento via stock options, transparência, auditoria, conselho independente, dívida (obriga disciplina)." },
+    { "type": "h3", "text": "Princípios OCDE" },
+    { "type": "ul", "items": [
+      "Transparência: divulgação atempada de informação relevante.",
+      "Equidade: tratamento justo de todos os accionistas (incluindo minoritários).",
+      "Responsabilidade: clareza de papéis entre conselho, gestão e stakeholders.",
+      "Accountability: capacidade de pedir contas pelos resultados."
+    ] },
+    { "type": "h3", "text": "Códigos de referência" },
+    { "type": "p", "text": "Vários países adoptaram códigos de boas práticas de governança (Reino Unido Cadbury, Portugal CMVM/IPC). Embora voluntárias, são referência para investidores e reguladores. O comply-or-explain obriga a justificar qualquer divergência." },
+    { "type": "callout", "variant": "warning", "text": "Escândalos como Enron, WorldCom e BPN (Portugal) aconteceram onde a governança falhou — não por falta de regras, mas por falha no controlo independente." }
+  ],
+  "keyPoints": [
+    "Governança = sistema de regras para dirigir e controlar a empresa.",
+    "Conselho, gestão executiva e accionistas são os três pilares.",
+    "Problema de agência: gestores podem não alinh-ar com accionistas.",
+    "Princípios OCDE: transparência, equidade, responsabilidade, accountability.",
+    "Códigos voluntários com comply-or-explain são padrão internacional."
+  ],
+  "quizSlug": "enq",
+  "nextLesson": "responsabilidade-social",
+  "prevLesson": null
+}
