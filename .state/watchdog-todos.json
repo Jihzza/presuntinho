@@ -1,10 +1,10 @@
 {
-  "lastUpdated": "2026-06-28T02:39:28+01:00",
+  "lastUpdated": "2026-06-28T03:45:29+02:00",
   "openItems": [
     {
       "id": "gap-008",
       "category": "lição/curso",
-      "description": "Mais cursos BA — expandir cursos existentes com mais lições (já temos 5 cursos × 8 lições + 5 quizzes; auditoria pode adicionar cadeiras que faltam)",
+      "description": "Mais cursos BA — expandir cursos existentes com mais lições (já temos 8 cursos BA × 8 lições + 8 quizzes; auditoria pode adicionar cadeiras que faltam)",
       "severity": "média",
       "source": "audio-Daniel-2026-06-28",
       "created_at": "2026-06-28T02:36:00+02:00"
@@ -42,28 +42,20 @@
       "created_at": "2026-06-28T02:36:00+02:00"
     },
     {
-      "id": "gap-016",
+      "id": "gap-020",
       "category": "i18n",
-      "description": "Títulos <title> das routes ainda hardcoded em PT (case, course, dl, splash, +error.svelte, biblioteca/novo)",
+      "description": "Strings PT residuais em case/dl/transacoes (modelo Equivalenza: 'CEO', 'EBITDA 2023', 'Fundada', etc.) + dl cards titles ainda em PT + transacoes mensagens de erro PT",
       "severity": "baixa",
-      "source": "watchdog-tick-2026-06-28-03",
-      "created_at": "2026-06-28T03:36:00+02:00"
+      "source": "watchdog-tick-2026-06-28-04",
+      "created_at": "2026-06-28T03:55:00+02:00"
     },
     {
-      "id": "gap-017",
-      "category": "i18n",
-      "description": "Strings PT hardcoded em <p>/<h3> nas routes (case: 'O que ela valoriza', dl: 'Isto garante:...', splash, walkthrough)",
+      "id": "gap-021",
+      "category": "ui-ux",
+      "description": "PageTitle em walkthrough (escola/walkthrough/[lessonSlug]): <title>{pageTitle} é derivado mas body 'Voltar para a escola' + breadcrumbs ainda PT",
       "severity": "baixa",
-      "source": "watchdog-tick-2026-06-28-03",
-      "created_at": "2026-06-28T03:36:00+02:00"
-    },
-    {
-      "id": "gap-018",
-      "category": "feature-pedida-pelo-Daniel",
-      "description": "Aulas sobretudo — estrutura separada de AULAS (não só cursos/lições)",
-      "severity": "média",
-      "source": "audio-Daniel-2026-06-27",
-      "created_at": "2026-06-28T03:36:00+02:00"
+      "source": "watchdog-tick-2026-06-28-04",
+      "created_at": "2026-06-28T03:55:00+02:00"
     }
   ],
   "closedItems": [
@@ -111,75 +103,93 @@
     },
     {
       "id": "gap-004",
-      "description": "8 default habits (Beber água 2L, Dormir 8h, Exercício 30min, Meditar 10min, Estudar 1h, Ler 20min, Sem açúcar, Caminhar 8000 passos)",
+      "description": "8 default habits",
       "sha": "44eeb33",
       "closed_at": "2026-06-28T02:55:00+02:00"
     },
     {
       "id": "gap-007",
-      "description": "BA courses expanded 4→8 lessons each + 5 new 2nd quizzes (gfq2/ctq2/meq2/rhq2/coq2)",
+      "description": "BA courses expanded 4→8 lessons each + 5 new 2nd quizzes",
       "sha": "44eeb33",
       "closed_at": "2026-06-28T02:55:00+02:00"
     },
     {
       "id": "gap-009",
-      "description": "OnboardingModal accepts profile prop, resolves onboarding.welcome.{profile} dynamically (Fatma vs Daniel)",
+      "description": "OnboardingModal accepts profile prop, resolves onboarding.welcome.{profile} dynamically",
       "sha": "6b63a51",
       "closed_at": "2026-06-28T02:55:00+02:00"
     },
     {
       "id": "gap-005",
-      "description": "Trabalhos ja tem EmptyState (post-1) — assignments.length === 0 mostra mensagem",
+      "description": "Trabalhos ja tem EmptyState",
       "sha": "d8bcec3",
       "closed_at": "2026-06-28T02:59:00+02:00"
     },
     {
       "id": "gap-006",
-      "description": "Biblioteca ja tem 2 variantes EmptyState (post-1 sem bookmarks, post-1 filter vazio com CTA limpar)",
+      "description": "Biblioteca ja tem 2 variantes EmptyState",
       "sha": "d8bcec3",
       "closed_at": "2026-06-28T02:59:00+02:00"
     },
     {
       "id": "gap-001",
-      "description": "HeartButton no header global (entre LanguageSwitcher e Definições)",
+      "description": "HeartButton no header global",
       "sha": "877a01e",
       "closed_at": "2026-06-28T02:42:00+02:00"
     },
     {
       "id": "gap-003",
-      "description": "APS Finanças — empty state melhorado quando não há despesas (icon + CTA)",
+      "description": "APS Finanças — empty state melhorado",
       "sha": "877a01e",
       "closed_at": "2026-06-28T02:42:00+02:00"
     },
     {
       "id": "gap-015",
-      "description": "Hub sub-app names + descriptions i18n: 60 novas keys (5 línguas × 12 keys)",
+      "description": "Hub sub-app names + descriptions i18n",
       "sha": "68be912",
       "closed_at": "2026-06-28T02:39:28+01:00"
     },
     {
       "id": "gap-012",
-      "description": "PWA icons completos (manifest + apple-touch-icon)",
+      "description": "PWA icons completos",
       "sha": "68be912",
       "closed_at": "2026-06-28T02:39:28+01:00"
     },
     {
       "id": "feat-005",
-      "description": "3 cursos BA novos (etica-negocios, macroeconomia, marketing-estrategico) + 3 quizzes (enq, mceq, meq-est)",
+      "description": "3 cursos BA novos + 3 quizzes",
       "sha": "68be912",
       "closed_at": "2026-06-28T02:39:28+01:00"
     },
     {
       "id": "fix-003",
-      "description": "transacoes +page.svelte: ti() em escopo top-level → get(t)() resolve svelte-check",
+      "description": "transacoes +page.svelte: ti() em escopo top-level",
       "sha": "68be912",
       "closed_at": "2026-06-28T02:39:28+01:00"
     },
     {
       "id": "gap-019",
-      "description": "HeartButton FAB fixo bottom-right + XpPill global visível (resolve bug do XP não aparecer fora do /hub)",
+      "description": "HeartButton FAB fixo bottom-right + XpPill global visível",
       "sha": "68be912",
       "closed_at": "2026-06-28T02:39:28+01:00"
+    },
+    {
+      "id": "gap-016",
+      "description": "<title> elements in 16 routes (biblioteca/novo, case, course, dl, escola/caderno, escola/curso/portugues/quiz, financas, habitos, pt, secrets, trabalhos, walk, +error, +page titles) all use $t() with locale fallback. 25 new i18n keys × 5 locales = 125 entries added.",
+      "sha": "pending-gap-016-017-tick",
+      "closed_at": "2026-06-28T03:55:00+02:00"
+    },
+    {
+      "id": "gap-017",
+      "description": "PT body strings patched to use $t(): biblioteca.new.{name,tags}.hint, case.{tagline,kpi.sales2015,kpi.storesPeak}, dl.sub, transacoes.sub, habitos.new.name.hint, escola.curso.plan.title. ~10 strings × 5 locales = 50 keys covered.",
+      "sha": "pending-gap-016-017-tick",
+      "closed_at": "2026-06-28T03:55:00+02:00"
+    },
+    {
+      "id": "close-gap-018",
+      "description": "Rota /aulas standalone: src/routes/aulas/+page.svelte + +page.server.ts agrega 13 cursos BA; link 🎓 no bottom-nav; i18n completo",
+      "sha": "3f6f5aa",
+      "closed_at": "2026-06-28T03:45:29+02:00"
     }
   ]
 }
