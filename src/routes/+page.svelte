@@ -24,7 +24,6 @@
   import HubCard from '$lib/components/HubCard.svelte';
   import ProgressBar from '$lib/components/ProgressBar.svelte';
   import BadgeGrid from '$lib/components/BadgeGrid.svelte';
-  import HeartButton from '$lib/components/HeartButton.svelte';
   import InstallButton from '$lib/components/InstallButton.svelte';
   import OnboardingModal from '$lib/components/OnboardingModal.svelte';
 
@@ -210,7 +209,6 @@
         <span class="xp-dot" aria-hidden="true"></span>
         {xpLabel}
       </span>
-      <HeartButton />
     </div>
     <p class="sub">{$t('hub.subtitle', { default: 'Equivalenza Study Hub — escolhe por onde começar' })}</p>
   </header>

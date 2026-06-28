@@ -11,6 +11,7 @@
   import OfflineIndicator from '$lib/components/OfflineIndicator.svelte';
   import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
   import { handleKonamiKey, logoClick, footerClick } from '$lib/easterEggs';
+  import HeartButton from '$lib/components/HeartButton.svelte';
   import { t } from 'svelte-i18n';
   import { onMount } from 'svelte';
   import { pwaInfo } from 'virtual:pwa-info';
@@ -163,6 +164,7 @@
                 </div>
                 <div class="nav-actions">
                   <LanguageSwitcher />
+                  <HeartButton />
                   <a href="/definicoes" class="icon-btn" aria-label={$t('a11y.settings', { default: 'Definições' })} title={$t('a11y.settings', { default: 'Definições' })}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <circle cx="12" cy="12" r="3"/>

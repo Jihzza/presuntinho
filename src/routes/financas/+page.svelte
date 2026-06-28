@@ -188,9 +188,18 @@
 
     <section class="chart-section" aria-label={$t('financas.chart.aria', { default: 'Despesas dos últimos 6 meses' })}>
       <h2 class="section-title">{$t('financas.chart.title', { default: 'Despesas — últimos 6 meses' })}</h2>
-      <div class="chart-wrap">
-        <canvas bind:this={canvas} aria-label={$t('financas.chart.canvas_aria', { default: 'Gráfico de despesas mensais' })}></canvas>
-      </div>
+      {#if pontos.length === 0 || pontos.every((p) => p.despesas === 0)}
+        <div class="empty-state" role="status">
+          <span class="empty-icon" aria-hidden="true">💸</span>
+          <p class="empty-title">{$t('financas.empty.title', { default: 'Ainda não há despesas registadas' })}</p>
+          <p class="empty-sub">{$t('financas.empty.sub', { default: 'Adiciona a tua primeira transação para começares a ver gráficos e orçamento.' })}</p>
+          <a class="empty-cta" href="/financas/nova/">{$t('financas.empty.cta', { default: '➕ Adicionar transação' })}</a>
+        </div>
+      {:else}
+        <div class="chart-wrap">
+          <canvas bind:this={canvas} aria-label={$t('financas.chart.canvas_aria', { default: 'Gráfico de despesas mensais' })}></canvas>
+        </div>
+      {/if}
     </section>
 
     <section class="quick-links" aria-label={$t('financas.shortcuts.aria', { default: 'Atalhos' })}>
@@ -279,6 +288,37 @@
   .empty.error {
     border-color: var(--error, #ef4444);
     color: var(--error, #ef4444);
+  }
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 2rem 1rem;
+    background: var(--card, rgba(255, 255, 255, 0.05));
+    border: 1px dashed var(--border, rgba(255, 255, 255, 0.2));
+    border-radius: 0.75rem;
+    text-align: center;
+  }
+  .empty-icon { font-size: 2.5rem; }
+  .empty-title { margin: 0; color: var(--txt, #fff); font-weight: 600; font-size: 1.1rem; }
+  .empty-sub { margin: 0; color: var(--txt2, #cbd5e1); font-size: 0.95rem; max-width: 32ch; }
+  .empty-cta {
+    margin-top: 0.75rem;
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: var(--success, #10b981);
+    color: #052e1c;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.15s ease, background 0.2s ease;
+  }
+  .empty-cta:hover, .empty-cta:focus-visible {
+    background: #34d399;
+    transform: translateY(-1px);
+    outline: none;
   }
   .cards {
     display: grid;

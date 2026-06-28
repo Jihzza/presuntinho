@@ -1,0 +1,27 @@
+{
+  "lastUpdated": "2026-06-28T02:36:00+02:00",
+  "openItems": [
+    {"id": "gap-001", "category": "UI/UX", "description": "HeartButton no sítio que o Daniel indicou (não está no header global)", "severity": "alta", "source": "audio-Daniel-2026-06-28", "created_at": "2026-06-28T02:36:00+02:00"},
+    {"id": "gap-002", "category": "i18n", "description": "100% das strings traduzidas nas 5 línguas (pt-PT/en/tn/fr/ar) — última varredura pode ter deixado keys em falta", "severity": "alta", "source": "audio-Daniel-2026-06-28", "created_at": "2026-06-28T02:36:00+02:00"},
+    {"id": "gap-003", "category": "empty-area", "description": "APS Finanças vazia — precisa de categorias, exemplos, transações pré-carregadas", "severity": "alta", "source": "audio-Daniel-2026-06-28", "created_at": "2026-06-28T02:36:00+02:00"},
+    {"id": "gap-004", "category": "empty-area", "description": "APS Hábitos vazia — precisa de hábitos pré-definidos, streaks, exemplos", "severity": "alta", "source": "audio-Daniel-2026-06-28", "created_at": "2026-06-28T02:36:00+02:00"},
+    {"id": "gap-005", "category": "empty-area", "description": "APS Trabalhos — verificar e adicionar conteúdo se vazio", "severity": "média", "source": "audio-Daniel-2026-06-28", "created_at": "2026-06-28T02:36:00+02:00"},
+    {"id": "gap-006", "category": "empty-area", "description": "APS Biblioteca — verificar e adicionar conteúdo se vazio", "severity": "média", "source": "audio-Daniel-2026-06-28", "created_at": "2026-06-28T02:36:00+02:00"},
+    {"id": "gap-007", "category": "lição/curso", "description": "Mais lições nos 5 cursos Business Administration (cada curso tem 4 — pediu muitas mais)", "severity": "alta", "source": "audio-Daniel-2026-06-28-aulas-sobretudo", "created_at": "2026-06-28T02:36:00+02:00"},
+    {"id": "gap-008", "category": "lição/curso", "description": "Mais cursos — tudo que souber a cadeiras da universidade dela (BA)", "severity": "média", "source": "audio-Daniel-2026-06-28", "created_at": "2026-06-28T02:36:00+02:00"},
+    {"id": "gap-009", "category": "UI/UX", "description": "Onboarding modal diz 'Bem-vinda Fatma' mesmo quando user é Daniel — deve ser dinâmico", "severity": "média", "source": "smoke-test-2026-06-28", "created_at": "2026-06-28T02:36:00+02:00"},
+    {"id": "gap-010", "category": "polish", "description": "Mais cuídos: edge cases, UX, validações, mensagens de erro úteis", "severity": "média", "source": "audio-Daniel-2026-06-28", "created_at": "2026-06-28T02:36:00+02:00"},
+    {"id": "gap-011", "category": "a11y", "description": "Lighthouse a11y ≥95 — auditar todas as páginas", "severity": "média", "source": "brief-inicial", "created_at": "2026-06-28T02:36:00+02:00"},
+    {"id": "gap-012", "category": "PWA", "description": "PWA icons completos + offline page", "severity": "baixa", "source": "brief-inicial", "created_at": "2026-06-28T02:36:00+02:00"},
+    {"id": "gap-013", "category": "smoke-fail", "description": "Backup/export testado end-to-end (já existe a feature, falta validar)", "severity": "média", "source": "brief-inicial", "created_at": "2026-06-28T02:36:00+02:00"},
+    {"id": "gap-014", "category": "smoke-fail", "description": "Confetti a disparar em TODOS os easter eggs (já wired, falta smoke visual)", "severity": "média", "source": "brief-inicial", "created_at": "2026-06-28T02:36:00+02:00"}
+  ],
+  "closedItems": [
+    {"id": "fix-001", "description": "XP mirror sync após hydration", "sha": "8771315", "closed_at": "2026-06-28T00:09:54+02:00"},
+    {"id": "fix-002", "description": "Audio player hidden when lesson has no audio", "sha": "1afc0e1", "closed_at": "2026-06-28T01:30:00+02:00"},
+    {"id": "feat-001", "description": "5 Business Administration courses (20 lições + 5 quizzes)", "sha": "cb64406", "closed_at": "2026-06-28T01:30:00+02:00"},
+    {"id": "feat-002", "description": "Backup/export user data as JSON", "sha": "559066d", "closed_at": "2026-06-28T01:30:00+02:00"},
+    {"id": "feat-003", "description": "Empty states + skeletons + a11y polish", "sha": "d8bcec3", "closed_at": "2026-06-28T01:30:00+02:00"},
+    {"id": "feat-004", "description": "i18n full app translation coverage (12 keys, 5 locales)", "sha": "7ab773c", "closed_at": "2026-06-28T02:15:43+02:00"}
+  ]
+}
