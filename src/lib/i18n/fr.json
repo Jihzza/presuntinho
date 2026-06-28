@@ -529,5 +529,12 @@
   "financas.categorias.tx_count": "{n} transactions",
   "financas.categorias.group.despesa": "Depenses",
   "financas.categorias.group.receita": "Revenus",
-  "financas.categorias.group.ambos": "Les deux"
+  "financas.categorias.group.ambos": "Les deux",
+  "financas.shortcuts.categorias.title": "Catégories",
+  "financas.shortcuts.categorias.sub": "Gérer la taxonomie",
+  "routes.financas.categorias.title": "Catégories",
+  "routes.financas.categorias.description": "Gérer la taxonomie des revenus et dépenses",
+  "financas.categorias.form.errors.nomeRequired": "Nom requis",
+  "financas.categorias.form.errors.nomeTooLong": "Nom trop long (max 40)",
+  "financas.categorias.form.errors.corInvalida": "Couleur invalide (utilisez #rgb ou #rrggbb)"
 }

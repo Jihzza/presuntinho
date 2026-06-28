@@ -240,6 +240,13 @@
           <span class="quick-sub">{$t('financas.shortcuts.budget.sub', { default: 'Limites por categoria' })}</span>
         </span>
       </a>
+      <a class="quick" href="/financas/categorias/">
+        <span class="quick-icon" aria-hidden="true">🏷️</span>
+        <span class="quick-text">
+          <span class="quick-title">{$t('financas.shortcuts.categorias.title', { default: 'Categorias' })}</span>
+          <span class="quick-sub">{$t('financas.shortcuts.categorias.sub', { default: 'Gerir taxonomia' })}</span>
+        </span>
+      </a>
     </section>
   {/if}
 

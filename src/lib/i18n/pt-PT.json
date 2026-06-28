@@ -529,5 +529,12 @@
   "financas.categorias.tx_count": "{n} transacoes",
   "financas.categorias.group.despesa": "Despesas",
   "financas.categorias.group.receita": "Receitas",
-  "financas.categorias.group.ambos": "Ambas"
+  "financas.categorias.group.ambos": "Ambas",
+  "financas.shortcuts.categorias.title": "Categorias",
+  "financas.shortcuts.categorias.sub": "Gerir taxonomia",
+  "routes.financas.categorias.title": "Categorias",
+  "routes.financas.categorias.description": "Gerir taxonomia de receitas e despesas",
+  "financas.categorias.form.errors.nomeRequired": "Nome obrigatório",
+  "financas.categorias.form.errors.nomeTooLong": "Nome demasiado longo (max 40)",
+  "financas.categorias.form.errors.corInvalida": "Cor inválida (use #rgb ou #rrggbb)"
 }

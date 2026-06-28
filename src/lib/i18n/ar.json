@@ -529,5 +529,12 @@
   "financas.categorias.tx_count": "{n} muamalat",
   "financas.categorias.group.despesa": "Al-masrufat",
   "financas.categorias.group.receita": "Al-iaradat",
-  "financas.categorias.group.ambos": "Kilahuma"
+  "financas.categorias.group.ambos": "Kilahuma",
+  "financas.shortcuts.categorias.title": "الفئات",
+  "financas.shortcuts.categorias.sub": "إدارة التصنيفات",
+  "routes.financas.categorias.title": "الفئات",
+  "routes.financas.categorias.description": "إدارة تصنيفات الإيرادات والمصروفات",
+  "financas.categorias.form.errors.nomeRequired": "الاسم مطلوب",
+  "financas.categorias.form.errors.nomeTooLong": "الاسم طويل جداً (40 كحد أقصى)",
+  "financas.categorias.form.errors.corInvalida": "لون غير صالح (استخدم #rgb أو #rrggbb)"
 }

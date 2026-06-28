@@ -529,5 +529,12 @@
   "financas.categorias.tx_count": "{n} transaccoes",
   "financas.categorias.group.despesa": "Despesas",
   "financas.categorias.group.receita": "Receitas",
-  "financas.categorias.group.ambos": "As duas"
+  "financas.categorias.group.ambos": "As duas",
+  "financas.shortcuts.categorias.title": "Les catégories",
+  "financas.shortcuts.categorias.sub": "Gérer taxonomie",
+  "routes.financas.categorias.title": "Les catégories",
+  "routes.financas.categorias.description": "Gérer taxonomie des revenus et dépenses",
+  "financas.categorias.form.errors.nomeRequired": "Esmek required",
+  "financas.categorias.form.errors.nomeTooLong": "Esmek tawil bezzaf (max 40)",
+  "financas.categorias.form.errors.corInvalida": "Couleur invalide (#rgb ou #rrggbb)"
 }

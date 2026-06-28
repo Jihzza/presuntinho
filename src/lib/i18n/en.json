@@ -529,5 +529,12 @@
   "financas.categorias.tx_count": "{n} transactions",
   "financas.categorias.group.despesa": "Expenses",
   "financas.categorias.group.receita": "Income",
-  "financas.categorias.group.ambos": "Both"
+  "financas.categorias.group.ambos": "Both",
+  "financas.shortcuts.categorias.title": "Categories",
+  "financas.shortcuts.categorias.sub": "Manage taxonomy",
+  "routes.financas.categorias.title": "Categories",
+  "routes.financas.categorias.description": "Manage income and expense taxonomy",
+  "financas.categorias.form.errors.nomeRequired": "Name required",
+  "financas.categorias.form.errors.nomeTooLong": "Name too long (max 40)",
+  "financas.categorias.form.errors.corInvalida": "Invalid color (use #rgb or #rrggbb)"
 }
