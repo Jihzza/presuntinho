@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T23:15:00+02:00",
+  "lastUpdated": "2026-06-28T23:25:00+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -23,14 +23,6 @@
       "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Já temos 24 cursos BA+Uni+Advanced, 119+16 lições, 32+4 quizzes. Próximo round se Daniel pedir mais.",
       "severity": "baixa",
       "source": "audio-Daniel-2026-06-27",
-      "created_at": "2026-06-28T13:05:00+02:00"
-    },
-    {
-      "id": "gap-035",
-      "category": "conteúdo vazio",
-      "description": "Auditar páginas /financas (categorias), /habitos (forms), /trabalhos (assignment submit), /biblioteca (item creation) para garantir formulários funcionais e não placeholders.",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-28-13",
       "created_at": "2026-06-28T13:05:00+02:00"
     },
     {
@@ -66,55 +58,279 @@
       "created_at": "2026-06-28T22:30:00+02:00"
     },
     {
-      "id": "gap-052",
-      "category": "i18n",
-      "description": "NOVO: detectar PT literals hardcoded em aria-label e em conteúdo de modal/seções. Smell-test do PASSO 2 deste tick apanhou 22 PT literals não-$t() em src/routes (biblioteca, case, escola, financas). Maioria são aria-labels (acessibilidade) — devem ser $t() para garantir que L10n aplica. Acumulado: 5-15 chaves × 5 locales.",
+      "id": "gap-053",
+      "category": "smoke-fail",
+      "description": "Smoke i18n real nas 5 línguas (pt-PT, en, fr, tn, ar) em produção após deploy 92ba6eb — confirmar que () resolve 714 chaves sem mostrar fallbacks PT no DOM. Bloqueado por auth gate (splash). Estratégia: build um script que usa curl + parse do HTML para extrair aria-labels visíveis após auth bypass via cookies, OU pedir ao Daniel/Rafa a password de teste uma vez.",
       "severity": "média",
       "source": "watchdog-tick-2026-06-28-23",
-      "created_at": "2026-06-28T23:15:00+02:00"
+      "created_at": "2026-06-28T23:25:00+02:00"
+    },
+    {
+      "id": "gap-054",
+      "category": "polish",
+      "description": "2nd round de polish: /financas/orcamento (forms), /trabalhos/assignment status (custom event), HeartButton (gap-036 confirmar posição definitiva). Investigar edge cases: validação de URL em biblioteca/novo, max lengths, error messages localizados.",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-28-23",
+      "created_at": "2026-06-28T23:25:00+02:00"
     }
   ],
   "closedItems": [
-    {"id": "fix-001", "description": "XP mirror sync após hydration", "sha": "8771315", "closed_at": "2026-06-28T00:09:54+02:00"},
-    {"id": "fix-002", "description": "Audio player hidden when lesson has no audio", "sha": "1afc0e1", "closed_at": "2026-06-28T01:30:00+02:00"},
-    {"id": "feat-001", "description": "5 Business Administration courses (20 lições + 5 quizzes)", "sha": "cb64406", "closed_at": "2026-06-28T01:30:00+02:00"},
-    {"id": "feat-002", "description": "Backup/export user data as JSON", "sha": "559066d", "closed_at": "2026-06-28T01:30:00+02:00"},
-    {"id": "feat-003", "description": "Empty states + skeletons + a11y polish", "sha": "d8bcec3", "closed_at": "2026-06-28T01:30:00+02:00"},
-    {"id": "feat-004", "description": "i18n full app translation coverage (12 keys, 5 locales)", "sha": "7ab773c", "closed_at": "2026-06-28T02:15:43+02:00"},
-    {"id": "gap-002", "description": "i18n full audit pass: 10 onboarding keys + cross-locale cleanup", "sha": "6b63a51", "closed_at": "2026-06-28T02:55:00+02:00"},
-    {"id": "gap-004", "description": "8 default habits", "sha": "44eeb33", "closed_at": "2026-06-28T02:55:00+02:00"},
-    {"id": "gap-007", "description": "BA courses expanded 4→8 lessons each + 5 new 2nd quizzes", "sha": "44eeb33", "closed_at": "2026-06-28T02:55:00+02:00"},
-    {"id": "gap-009", "description": "OnboardingModal accepts profile prop, resolves onboarding.welcome.{profile} dynamically", "sha": "6b63a51", "closed_at": "2026-06-28T02:55:00+02:00"},
-    {"id": "gap-005", "description": "Trabalhos ja tem EmptyState", "sha": "d8bcec3", "closed_at": "2026-06-28T02:59:00+02:00"},
-    {"id": "gap-006", "description": "Biblioteca ja tem 2 variantes EmptyState", "sha": "d8bcec3", "closed_at": "2026-06-28T02:59:00+02:00"},
-    {"id": "gap-001", "description": "HeartButton no header global", "sha": "877a01e", "closed_at": "2026-06-28T02:42:00+02:00"},
-    {"id": "gap-003", "description": "APS Finanças — empty state melhorado", "sha": "877a01e", "closed_at": "2026-06-28T02:42:00+02:00"},
-    {"id": "gap-015", "description": "Hub sub-app names + descriptions i18n", "sha": "68be912", "closed_at": "2026-06-28T02:39:28+01:00"},
-    {"id": "gap-012", "description": "PWA icons completos", "sha": "68be912", "closed_at": "2026-06-28T02:39:28+01:00"},
-    {"id": "gap-016", "description": "<title> elements in 16 routes all use $t() with locale fallback. 25 new i18n keys × 5 locales = 125 entries added.", "sha": "pending-gap-016-017-tick", "closed_at": "2026-06-28T03:55:00+02:00"},
-    {"id": "gap-017", "description": "PT body strings patched to use $t() in biblioteca/case/dl/transacoes/habitos/escola.curso.plan. ~10 strings × 5 locales = 50 keys covered.", "sha": "pending-gap-016-017-tick", "closed_at": "2026-06-28T03:55:00+02:00"},
-    {"id": "gap-018", "description": "Rota /aulas standalone: src/routes/aulas/+page.svelte + +page.server.ts agrega 13 cursos BA; link 🎓 no bottom-nav; i18n completo", "sha": "3f6f5aa", "closed_at": "2026-06-28T03:45:29+02:00"},
-    {"id": "gap-008", "description": "Mais 3 cursos BA — Direito Empresarial, Gestão de Operações, Análise Financeira (4 lições + quiz cada). Total BA: 16 cursos, ~64 lições, 16 quizzes.", "sha": "71c36a1", "closed_at": "2026-06-28T08:55:00+02:00"},
-    {"id": "gap-020", "description": "Strings PT residuais em case/dl: case OVERVIEW values (6 keys) + case FORCES titles/texts (6 keys) + dl howto+warning (4 keys) — total 16 keys × 5 locales = 80 entries i18n.", "sha": "71c36a1", "closed_at": "2026-06-28T08:55:00+02:00"},
-    {"id": "gap-021", "description": "Walk audio section h2 + intro now $t() with fallback. 2 keys × 5 locales = 10 entries i18n. (Walkthrough route /escola/walkthrough/[lessonSlug] PT strings tracked separately as gap-024.)", "sha": "71c36a1", "closed_at": "2026-06-28T08:55:00+02:00"},
-    {"id": "gap-023", "description": "escola/curso/[slug] renderiza title/tagline/description via literais do CATALOGUE; passar a $t() com fallback (i18n keys já existem: routes.escola.curso.<slug>.{title,description})", "sha": "62d8f08", "closed_at": "2026-06-28T09:31:47+02:00"},
-    {"id": "gap-026", "description": "biblioteca/item/[id] notFound + loadFailed now $t() with fallback. 2 keys × 5 locales = 10 entries i18n.", "sha": "6631223", "closed_at": "2026-06-28T09:55:00+02:00"},
-    {"id": "gap-024", "description": "Walkthrough route /escola/walkthrough/[lessonSlug] PT strings now $t() with fallback ('Voltar à Escola', 'Voltar ao curso'). 2 new keys × 5 locales = 10 entries i18n.", "sha": "873cf8a", "closed_at": "2026-06-28T10:10:00+02:00"},
-    {"id": "gap-025", "description": "escola/curso/portugues 'Não foi possível carregar o curso.' + 'A carregar curso…' + 'A carregar…' + 'Voltar à Escola' now $t() with fallback. 3 new keys × 5 locales = 15 entries i18n (backToEscola reuses walkthrough key).", "sha": "873cf8a", "closed_at": "2026-06-28T10:10:00+02:00"},
-    {"id": "gap-027", "description": "2 cursos BA finais (Comportamento do Consumidor + Pesquisa de Marketing) — 4 lessons + 1 quiz cada, registados no CATALOGUE de aulas/+page.server.ts, escola/+page.svelte, escola/curso/[slug]/+page.svelte, e i18n keys (pt-PT, en, ar, fr, tn).", "closed_at": "2026-06-28T09:40:08+02:00"},
-    {"id": "gap-011", "description": "Lighthouse a11y fix: splash color-contrast #ec4899→#be185d (pink-700, ~5.16:1) + splash <main> ganha id='main-content' tabindex='-1' para skip-link target. Fechado por 21118a5; re-run lighthouse (gap-033) para confirmar ≥95 nas 8 páginas.", "sha": "21118a5", "closed_at": "2026-06-28T11:00:00+02:00"},
-    {"id": "gap-033", "description": "Lighthouse a11y 8-page re-run: HOME/ESCOLA/FINANCAS/HABITOS/BIBLIOTECA/TRABALHOS/AULAS/DEFINICOES — todas com score=1.0 (100%), beat target ≥95. Scripts + results commitados em .state/lighthouse-*.json + run-lighthouse.sh.", "sha": "2a75ffb", "closed_at": "2026-06-28T13:05:00+02:00"},
-    {"id": "gap-013", "description": "Backup/export end-to-end audit: BACKUP_TABLES (13 tables), BACKUP_VERSION=5, payloadToBlob=application/json + 2-space indent, URL.createObjectURL + Anchor click + revoke. Import path: file→parse→modal confirm→importData→reload. Tudo wired em src/lib/backup.ts + src/routes/definicoes/+page.svelte:214-316. Live-fire bloqueado por auth gate.", "sha": "2a75ffb", "closed_at": "2026-06-28T13:05:00+02:00"},
-    {"id": "gap-014", "description": "Confetti easter-egg flow: 5 entry points (heartClick, logo triple-click, konami code, secret room, XP tier) — todos via fireConfettiEvent→CustomEvent→Confetti.svelte mounted em +layout.svelte:139. Reduced-motion respeitada em CSS+JS. showToast par likewise wired.", "sha": "2a75ffb", "closed_at": "2026-06-28T13:05:00+02:00"},
-    {"id": "gap-037", "description": "5 form placeholders PT hardcoded → $t() with fallback in biblioteca/novo (title/url/tags), habitos/novo (name), financas/transacoes (pesquisa). 25 new i18n entries (5 keys × 5 locales). npm run check + build verdes, push origin done.", "sha": "58087d2", "closed_at": "2026-06-28T14:10:00+02:00"},
-    {"id": "gap-040", "description": "8 lições escritas para gap-038/039 (Gestão da Mudança + Negociação): gestao-mudanca/{1-conceitos-mudanca,2-modelos-mudanca,3-resistencia-mudanca,4-cultura-organizacional} + negociacao/{1-fundamentos-negociacao,2-estilos-negociacao,3-comunicacao-negociacao,4-negociacao-internacional}. Cada lição ~80-100 linhas com 4-5 secções h2/h3/p/ul/callout + audioLabel. Smoke: 8/8 routes retornam 200 em produção; JSONs servidos em build/lessons/.", "sha": "cd52f32", "closed_at": "2026-06-28T16:30:00+02:00"},
-    {"id": "gap-041", "description": "2 quizzes novos: static/quizzes/gmq.json (Gestão da Mudança Organizacional, 10 perguntas) + static/quizzes/neq.json (Técnicas de Negociação Empresarial, 10 perguntas). Smoke: /escola/quiz/gmq e /escola/quiz/neq retornam 200 em produção.", "sha": "cd52f32", "closed_at": "2026-06-28T16:30:00+02:00"},
-    {"id": "gap-043", "description": "Seed Finanças com 6 transações exemplo (1 receita Salário + 5 despesas) distribuídas pelos últimos 14 dias. Adicionado em ensureDefaults() em src/lib/state/db.ts com guard if (count===0).", "sha": "1d94db5", "closed_at": "2026-06-28T17:00:00+02:00"},
-    {"id": "gap-044", "description": "Verificado: 8 default habits já são seeded em ensureDefaults() via bulkPut(DEFAULT_HABITOS) quando count===0. Source-of-truth: src/lib/state/db.ts:557.", "sha": "44eeb33", "closed_at": "2026-06-28T17:00:00+02:00"},
-    {"id": "gap-046", "description": "gap-042 follow-up: course 'Inovação e Empreendedorismo' was advertised as 4 lessons + 1 quiz in escola/+page.svelte and curso/[slug]/+page.svelte but only had 3 lessons and 0 quiz. Created 4-financiamento-e-pitch.json + ieq.json + i18n 5 locales + escola/curso/[slug] wired.", "sha": "41cebe3", "closed_at": "2026-06-28T18:18:35+02:00"},
-    {"id": "gap-042", "description": "4 cadeiras universidade (Introdução ao Direito / Sistemas de Informação / Logística / Inovação e Empreendedorismo) × 4 lições + 1 quiz cada. Adicionadas ao CATALOGUE em escola/+page.svelte + aulas/+page.server.ts + curso/[slug]/+page.svelte. Total: 20 cursos, 119 lições, 32 quizzes.", "sha": "43eb23f", "closed_at": "2026-06-28T18:18:35+02:00"},
-    {"id": "gap-047", "description": "6 PT body strings → $t() w/ default fallback across escola/biblioteca/financas pages.", "sha": "48f6228", "closed_at": "2026-06-28T19:00:00+02:00"},
-    {"id": "gap-048", "description": "i18n audit pass massivo: 41 chaves × 5 locales = 205 entries adicionadas em JSON; 14 ficheiros Svelte patched para usar $t() com default fallback; renamed stripped-as-accent keys (navega_o_por_sec_o → navegacao_por_seccao etc.); corrigido EN translations que estavam em PT; corrigido biblioteca/novo description max=500. npm run check: 0 erros / 3 warnings (CSS pre-existentes). npm run build: green. SHA 564fa64.", "sha": "564fa64", "closed_at": "2026-06-28T22:30:00+02:00"},
-    {"id": "gap-051", "description": "4 cadeiras universidade advanced (International Business / Supply Chain / Data Analytics / Project Management) × 4 lições + 1 quiz cada = 16 lições + 4 quizzes. Total CATALOGUE: 94 slugs (era 90, +4). Wired em escola/+page.svelte (group Universitade), escola/curso/[slug]/+page.svelte (full lessons array + quizSlug), aulas/+page.server.ts (slug→title/icon/color). Smoke: 16/16 lições + 4/4 quizzes retornam 200 em produção. npm run check 0/0, build green. SHA 80bc814.", "sha": "80bc814", "closed_at": "2026-06-28T23:15:00+02:00"}
+    {
+      "id": "fix-001",
+      "description": "XP mirror sync após hydration",
+      "sha": "8771315",
+      "closed_at": "2026-06-28T00:09:54+02:00"
+    },
+    {
+      "id": "fix-002",
+      "description": "Audio player hidden when lesson has no audio",
+      "sha": "1afc0e1",
+      "closed_at": "2026-06-28T01:30:00+02:00"
+    },
+    {
+      "id": "feat-001",
+      "description": "5 Business Administration courses (20 lições + 5 quizzes)",
+      "sha": "cb64406",
+      "closed_at": "2026-06-28T01:30:00+02:00"
+    },
+    {
+      "id": "feat-002",
+      "description": "Backup/export user data as JSON",
+      "sha": "559066d",
+      "closed_at": "2026-06-28T01:30:00+02:00"
+    },
+    {
+      "id": "feat-003",
+      "description": "Empty states + skeletons + a11y polish",
+      "sha": "d8bcec3",
+      "closed_at": "2026-06-28T01:30:00+02:00"
+    },
+    {
+      "id": "feat-004",
+      "description": "i18n full app translation coverage (12 keys, 5 locales)",
+      "sha": "7ab773c",
+      "closed_at": "2026-06-28T02:15:43+02:00"
+    },
+    {
+      "id": "gap-002",
+      "description": "i18n full audit pass: 10 onboarding keys + cross-locale cleanup",
+      "sha": "6b63a51",
+      "closed_at": "2026-06-28T02:55:00+02:00"
+    },
+    {
+      "id": "gap-004",
+      "description": "8 default habits",
+      "sha": "44eeb33",
+      "closed_at": "2026-06-28T02:55:00+02:00"
+    },
+    {
+      "id": "gap-007",
+      "description": "BA courses expanded 4→8 lessons each + 5 new 2nd quizzes",
+      "sha": "44eeb33",
+      "closed_at": "2026-06-28T02:55:00+02:00"
+    },
+    {
+      "id": "gap-009",
+      "description": "OnboardingModal accepts profile prop, resolves onboarding.welcome.{profile} dynamically",
+      "sha": "6b63a51",
+      "closed_at": "2026-06-28T02:55:00+02:00"
+    },
+    {
+      "id": "gap-005",
+      "description": "Trabalhos ja tem EmptyState",
+      "sha": "d8bcec3",
+      "closed_at": "2026-06-28T02:59:00+02:00"
+    },
+    {
+      "id": "gap-006",
+      "description": "Biblioteca ja tem 2 variantes EmptyState",
+      "sha": "d8bcec3",
+      "closed_at": "2026-06-28T02:59:00+02:00"
+    },
+    {
+      "id": "gap-001",
+      "description": "HeartButton no header global",
+      "sha": "877a01e",
+      "closed_at": "2026-06-28T02:42:00+02:00"
+    },
+    {
+      "id": "gap-003",
+      "description": "APS Finanças — empty state melhorado",
+      "sha": "877a01e",
+      "closed_at": "2026-06-28T02:42:00+02:00"
+    },
+    {
+      "id": "gap-015",
+      "description": "Hub sub-app names + descriptions i18n",
+      "sha": "68be912",
+      "closed_at": "2026-06-28T02:39:28+01:00"
+    },
+    {
+      "id": "gap-012",
+      "description": "PWA icons completos",
+      "sha": "68be912",
+      "closed_at": "2026-06-28T02:39:28+01:00"
+    },
+    {
+      "id": "gap-016",
+      "description": "<title> elements in 16 routes all use $t() with locale fallback. 25 new i18n keys × 5 locales = 125 entries added.",
+      "sha": "pending-gap-016-017-tick",
+      "closed_at": "2026-06-28T03:55:00+02:00"
+    },
+    {
+      "id": "gap-017",
+      "description": "PT body strings patched to use $t() in biblioteca/case/dl/transacoes/habitos/escola.curso.plan. ~10 strings × 5 locales = 50 keys covered.",
+      "sha": "pending-gap-016-017-tick",
+      "closed_at": "2026-06-28T03:55:00+02:00"
+    },
+    {
+      "id": "gap-018",
+      "description": "Rota /aulas standalone: src/routes/aulas/+page.svelte + +page.server.ts agrega 13 cursos BA; link 🎓 no bottom-nav; i18n completo",
+      "sha": "3f6f5aa",
+      "closed_at": "2026-06-28T03:45:29+02:00"
+    },
+    {
+      "id": "gap-008",
+      "description": "Mais 3 cursos BA — Direito Empresarial, Gestão de Operações, Análise Financeira (4 lições + quiz cada). Total BA: 16 cursos, ~64 lições, 16 quizzes.",
+      "sha": "71c36a1",
+      "closed_at": "2026-06-28T08:55:00+02:00"
+    },
+    {
+      "id": "gap-020",
+      "description": "Strings PT residuais em case/dl: case OVERVIEW values (6 keys) + case FORCES titles/texts (6 keys) + dl howto+warning (4 keys) — total 16 keys × 5 locales = 80 entries i18n.",
+      "sha": "71c36a1",
+      "closed_at": "2026-06-28T08:55:00+02:00"
+    },
+    {
+      "id": "gap-021",
+      "description": "Walk audio section h2 + intro now $t() with fallback. 2 keys × 5 locales = 10 entries i18n. (Walkthrough route /escola/walkthrough/[lessonSlug] PT strings tracked separately as gap-024.)",
+      "sha": "71c36a1",
+      "closed_at": "2026-06-28T08:55:00+02:00"
+    },
+    {
+      "id": "gap-023",
+      "description": "escola/curso/[slug] renderiza title/tagline/description via literais do CATALOGUE; passar a $t() com fallback (i18n keys já existem: routes.escola.curso.<slug>.{title,description})",
+      "sha": "62d8f08",
+      "closed_at": "2026-06-28T09:31:47+02:00"
+    },
+    {
+      "id": "gap-026",
+      "description": "biblioteca/item/[id] notFound + loadFailed now $t() with fallback. 2 keys × 5 locales = 10 entries i18n.",
+      "sha": "6631223",
+      "closed_at": "2026-06-28T09:55:00+02:00"
+    },
+    {
+      "id": "gap-024",
+      "description": "Walkthrough route /escola/walkthrough/[lessonSlug] PT strings now $t() with fallback ('Voltar à Escola', 'Voltar ao curso'). 2 new keys × 5 locales = 10 entries i18n.",
+      "sha": "873cf8a",
+      "closed_at": "2026-06-28T10:10:00+02:00"
+    },
+    {
+      "id": "gap-025",
+      "description": "escola/curso/portugues 'Não foi possível carregar o curso.' + 'A carregar curso…' + 'A carregar…' + 'Voltar à Escola' now $t() with fallback. 3 new keys × 5 locales = 15 entries i18n (backToEscola reuses walkthrough key).",
+      "sha": "873cf8a",
+      "closed_at": "2026-06-28T10:10:00+02:00"
+    },
+    {
+      "id": "gap-027",
+      "description": "2 cursos BA finais (Comportamento do Consumidor + Pesquisa de Marketing) — 4 lessons + 1 quiz cada, registados no CATALOGUE de aulas/+page.server.ts, escola/+page.svelte, escola/curso/[slug]/+page.svelte, e i18n keys (pt-PT, en, ar, fr, tn).",
+      "closed_at": "2026-06-28T09:40:08+02:00"
+    },
+    {
+      "id": "gap-011",
+      "description": "Lighthouse a11y fix: splash color-contrast #ec4899→#be185d (pink-700, ~5.16:1) + splash <main> ganha id='main-content' tabindex='-1' para skip-link target. Fechado por 21118a5; re-run lighthouse (gap-033) para confirmar ≥95 nas 8 páginas.",
+      "sha": "21118a5",
+      "closed_at": "2026-06-28T11:00:00+02:00"
+    },
+    {
+      "id": "gap-033",
+      "description": "Lighthouse a11y 8-page re-run: HOME/ESCOLA/FINANCAS/HABITOS/BIBLIOTECA/TRABALHOS/AULAS/DEFINICOES — todas com score=1.0 (100%), beat target ≥95. Scripts + results commitados em .state/lighthouse-*.json + run-lighthouse.sh.",
+      "sha": "2a75ffb",
+      "closed_at": "2026-06-28T13:05:00+02:00"
+    },
+    {
+      "id": "gap-013",
+      "description": "Backup/export end-to-end audit: BACKUP_TABLES (13 tables), BACKUP_VERSION=5, payloadToBlob=application/json + 2-space indent, URL.createObjectURL + Anchor click + revoke. Import path: file→parse→modal confirm→importData→reload. Tudo wired em src/lib/backup.ts + src/routes/definicoes/+page.svelte:214-316. Live-fire bloqueado por auth gate.",
+      "sha": "2a75ffb",
+      "closed_at": "2026-06-28T13:05:00+02:00"
+    },
+    {
+      "id": "gap-014",
+      "description": "Confetti easter-egg flow: 5 entry points (heartClick, logo triple-click, konami code, secret room, XP tier) — todos via fireConfettiEvent→CustomEvent→Confetti.svelte mounted em +layout.svelte:139. Reduced-motion respeitada em CSS+JS. showToast par likewise wired.",
+      "sha": "2a75ffb",
+      "closed_at": "2026-06-28T13:05:00+02:00"
+    },
+    {
+      "id": "gap-037",
+      "description": "5 form placeholders PT hardcoded → $t() with fallback in biblioteca/novo (title/url/tags), habitos/novo (name), financas/transacoes (pesquisa). 25 new i18n entries (5 keys × 5 locales). npm run check + build verdes, push origin done.",
+      "sha": "58087d2",
+      "closed_at": "2026-06-28T14:10:00+02:00"
+    },
+    {
+      "id": "gap-040",
+      "description": "8 lições escritas para gap-038/039 (Gestão da Mudança + Negociação): gestao-mudanca/{1-conceitos-mudanca,2-modelos-mudanca,3-resistencia-mudanca,4-cultura-organizacional} + negociacao/{1-fundamentos-negociacao,2-estilos-negociacao,3-comunicacao-negociacao,4-negociacao-internacional}. Cada lição ~80-100 linhas com 4-5 secções h2/h3/p/ul/callout + audioLabel. Smoke: 8/8 routes retornam 200 em produção; JSONs servidos em build/lessons/.",
+      "sha": "cd52f32",
+      "closed_at": "2026-06-28T16:30:00+02:00"
+    },
+    {
+      "id": "gap-041",
+      "description": "2 quizzes novos: static/quizzes/gmq.json (Gestão da Mudança Organizacional, 10 perguntas) + static/quizzes/neq.json (Técnicas de Negociação Empresarial, 10 perguntas). Smoke: /escola/quiz/gmq e /escola/quiz/neq retornam 200 em produção.",
+      "sha": "cd52f32",
+      "closed_at": "2026-06-28T16:30:00+02:00"
+    },
+    {
+      "id": "gap-043",
+      "description": "Seed Finanças com 6 transações exemplo (1 receita Salário + 5 despesas) distribuídas pelos últimos 14 dias. Adicionado em ensureDefaults() em src/lib/state/db.ts com guard if (count===0).",
+      "sha": "1d94db5",
+      "closed_at": "2026-06-28T17:00:00+02:00"
+    },
+    {
+      "id": "gap-044",
+      "description": "Verificado: 8 default habits já são seeded em ensureDefaults() via bulkPut(DEFAULT_HABITOS) quando count===0. Source-of-truth: src/lib/state/db.ts:557.",
+      "sha": "44eeb33",
+      "closed_at": "2026-06-28T17:00:00+02:00"
+    },
+    {
+      "id": "gap-046",
+      "description": "gap-042 follow-up: course 'Inovação e Empreendedorismo' was advertised as 4 lessons + 1 quiz in escola/+page.svelte and curso/[slug]/+page.svelte but only had 3 lessons and 0 quiz. Created 4-financiamento-e-pitch.json + ieq.json + i18n 5 locales + escola/curso/[slug] wired.",
+      "sha": "41cebe3",
+      "closed_at": "2026-06-28T18:18:35+02:00"
+    },
+    {
+      "id": "gap-042",
+      "description": "4 cadeiras universidade (Introdução ao Direito / Sistemas de Informação / Logística / Inovação e Empreendedorismo) × 4 lições + 1 quiz cada. Adicionadas ao CATALOGUE em escola/+page.svelte + aulas/+page.server.ts + curso/[slug]/+page.svelte. Total: 20 cursos, 119 lições, 32 quizzes.",
+      "sha": "43eb23f",
+      "closed_at": "2026-06-28T18:18:35+02:00"
+    },
+    {
+      "id": "gap-047",
+      "description": "6 PT body strings → $t() w/ default fallback across escola/biblioteca/financas pages.",
+      "sha": "48f6228",
+      "closed_at": "2026-06-28T19:00:00+02:00"
+    },
+    {
+      "id": "gap-048",
+      "description": "i18n audit pass massivo: 41 chaves × 5 locales = 205 entries adicionadas em JSON; 14 ficheiros Svelte patched para usar $t() com default fallback; renamed stripped-as-accent keys (navega_o_por_sec_o → navegacao_por_seccao etc.); corrigido EN translations que estavam em PT; corrigido biblioteca/novo description max=500. npm run check: 0 erros / 3 warnings (CSS pre-existentes). npm run build: green. SHA 564fa64.",
+      "sha": "564fa64",
+      "closed_at": "2026-06-28T22:30:00+02:00"
+    },
+    {
+      "id": "gap-051",
+      "description": "4 cadeiras universidade advanced (International Business / Supply Chain / Data Analytics / Project Management) × 4 lições + 1 quiz cada = 16 lições + 4 quizzes. Total CATALOGUE: 94 slugs (era 90, +4). Wired em escola/+page.svelte (group Universitade), escola/curso/[slug]/+page.svelte (full lessons array + quizSlug), aulas/+page.server.ts (slug→title/icon/color). Smoke: 16/16 lições + 4/4 quizzes retornam 200 em produção. npm run check 0/0, build green. SHA 80bc814.",
+      "sha": "80bc814",
+      "closed_at": "2026-06-28T23:15:00+02:00"
+    },
+    {
+      "id": "gap-035",
+      "description": "Audit forms: biblioteca/novo, finanças/categorias, finanças/nova, finanças/transacoes/[id], habitos/novo — todos com form+handleSubmit+validation+i18n+$t() defaults. Trabalhos/assignment/[slug] é viewer (sem form) por design — student marca status via custom event.",
+      "sha": "92ba6eb",
+      "closed_at": "2026-06-28T23:25:00+02:00"
+    },
+    {
+      "id": "gap-052",
+      "description": "i18n aria-labels: 12 chaves a11y.aria.* em falta × 5 locales (60 entries) adicionadas (702→714). 21 routes patched com $t() + default fallback. npm run check 0/0, build green, push done, deploy 6a41a828 ready.",
+      "sha": "92ba6eb",
+      "closed_at": "2026-06-28T23:25:00+02:00"
+    }
   ]
 }
