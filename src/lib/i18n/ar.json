@@ -500,5 +500,9 @@
   "walk.audio.swot.label": "SWOT + الشخصية",
   "walk.audio.pers.label": "الشخصية + مشكلة التسويق",
   "walk.audio.tows.label": "TOWS + التوصية",
-  "walk.openLesson": "افتح الدرس المفصّل ←"
+  "walk.openLesson": "افتح الدرس المفصّل ←",
+  "financas.card.receitas.empty": "لا توجد إيرادات بعد — أضيفي معاملة",
+  "financas.card.despesas.empty": "لا توجد مصروفات بعد — علامة جيدة 👀",
+  "financas.card.saldo.neutral": "بانتظار الحركات",
+  "financas.chart.datasetLabel": "المصروفات"
 }

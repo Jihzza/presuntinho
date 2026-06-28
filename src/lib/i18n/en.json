@@ -500,5 +500,9 @@
   "walk.audio.swot.label": "SWOT + Persona",
   "walk.audio.pers.label": "Persona + Marketing Problem",
   "walk.audio.tows.label": "TOWS + Recommendation",
-  "walk.openLesson": "Open detailed lesson →"
+  "walk.openLesson": "Open detailed lesson →",
+  "financas.card.receitas.empty": "no income yet — add a transaction",
+  "financas.card.despesas.empty": "no expenses yet — good sign 👀",
+  "financas.card.saldo.neutral": "waiting for activity",
+  "financas.chart.datasetLabel": "Expenses"
 }

@@ -84,7 +84,7 @@
         labels: pontos.map((p) => formatMesCurto(p.mes)),
         datasets: [
           {
-            label: 'Despesas',
+            label: $t('financas.chart.datasetLabel', { default: 'Despesas' }),
             data: pontos.map((p) => p.despesas),
             backgroundColor: 'rgba(239, 68, 68, 0.7)',
             borderColor: 'rgba(239, 68, 68, 1)',
@@ -167,24 +167,40 @@
     <p class="empty error" role="alert">⚠️ {error}</p>
   {:else}
     <section class="cards" aria-label={$t('financas.cards.aria', { default: 'Totais do mês' })}>
-      <article class="card card-receitas">
-        <span class="card-label">{$t('financas.card.receitas', { default: 'Receitas' })}</span>
-        <span class="card-value">{formatValor(totais.receitas)}</span>
-        <span class="card-hint">{$t('financas.card.receitas.hint', { default: 'entradas no mês' })}</span>
-      </article>
-      <article class="card card-despesas">
-        <span class="card-label">{$t('financas.card.despesas', { default: 'Despesas' })}</span>
-        <span class="card-value">{formatValor(totais.despesas)}</span>
-        <span class="card-hint">{$t('financas.card.despesas.hint', { default: 'saídas no mês' })}</span>
-      </article>
-      <article class="card card-saldo" class:negativo={totais.saldo < 0}>
-        <span class="card-label">{$t('financas.card.saldo', { default: 'Saldo' })}</span>
-        <span class="card-value">{formatValor(totais.saldo)}</span>
-        <span class="card-hint">
-          {totais.saldo >= 0 ? $t('financas.card.saldo.positive', { default: 'a teu favor' }) : $t('financas.card.saldo.negative', { default: 'em défice' })}
-        </span>
-      </article>
-    </section>
+          <article class="card card-receitas">
+            <span class="card-label">{$t('financas.card.receitas', { default: 'Receitas' })}</span>
+            <span class="card-value">{formatValor(totais.receitas)}</span>
+            <span class="card-hint">
+              {#if totais.receitas === 0}
+                {$t('financas.card.receitas.empty', { default: 'ainda sem entradas — adiciona uma transação' })}
+              {:else}
+                {$t('financas.card.receitas.hint', { default: 'entradas no mês' })}
+              {/if}
+            </span>
+          </article>
+          <article class="card card-despesas">
+            <span class="card-label">{$t('financas.card.despesas', { default: 'Despesas' })}</span>
+            <span class="card-value">{formatValor(totais.despesas)}</span>
+            <span class="card-hint">
+              {#if totais.despesas === 0}
+                {$t('financas.card.despesas.empty', { default: 'ainda sem saídas — bom sinal 👀' })}
+              {:else}
+                {$t('financas.card.despesas.hint', { default: 'saídas no mês' })}
+              {/if}
+            </span>
+          </article>
+          <article class="card card-saldo" class:negativo={totais.saldo < 0}>
+            <span class="card-label">{$t('financas.card.saldo', { default: 'Saldo' })}</span>
+            <span class="card-value">{formatValor(totais.saldo)}</span>
+            <span class="card-hint">
+              {#if totais.receitas === 0 && totais.despesas === 0}
+                {$t('financas.card.saldo.neutral', { default: 'à espera de movimentos' })}
+              {:else}
+                {totais.saldo >= 0 ? $t('financas.card.saldo.positive', { default: 'a teu favor' }) : $t('financas.card.saldo.negative', { default: 'em défice' })}
+              {/if}
+            </span>
+          </article>
+        </section>
 
     <section class="chart-section" aria-label={$t('financas.chart.aria', { default: 'Despesas dos últimos 6 meses' })}>
       <h2 class="section-title">{$t('financas.chart.title', { default: 'Despesas — últimos 6 meses' })}</h2>
