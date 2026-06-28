@@ -1,0 +1,97 @@
+{
+  "id": "02-metodos-qualitativos-quantitativos",
+  "title": "Métodos Qualitativos vs Quantitativos",
+  "courseSlug": "pesquisa-de-marketing",
+  "lessonNumber": 2,
+  "description": "Diferenças entre pesquisa qualitativa e quantitativa: o que perguntam, como recolhem, que tipo de insight geram e quando usar cada.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["qualitativa", "quantitativa", "focus group", "survey"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Duas famílias de métodos"
+    },
+    {
+      "type": "p",
+      "text": "A pesquisa de marketing usa duas grandes famílias de métodos, qualitativa e quantitativa, que respondem a perguntas diferentes. A qualitativa busca profundidade — entender o 'porquê' e o 'como', explorar motivações, emoções e contextos. A quantitativa busca amplitude — medir 'quanto' e 'quantos', validar padrões em populações maiores. Não são rivais: complementam-se. O caminho clássico de uma boa pesquisa começa com qualitativa (explorar, gerar hipóteses) e segue com quantitativa (medir, confirmar)."
+    },
+    {
+      "type": "h3",
+      "text": "Pesquisa qualitativa — profundidade"
+    },
+    {
+      "type": "p",
+      "text": "Métodos: focus groups (6-10 pessoas, 1-2 horas, moderado por profissional, discussão guiada), entrevistas em profundidade (1-1, 30-90 min, semi-estruturadas), observação (etnografia, mystery shopping), projective techniques (associação de palavras, completar frases). Amostras são pequenas (10-50 pessoas), escolhidas por critério. Análise é interpretativa — procura padrões temáticos, não frequências estatísticas. Resultados são ricos em contexto mas não generalizáveis à população. Ideal para: problemas mal definidos, temas sensíveis, descoberta de motivações profundas."
+    },
+    {
+      "type": "h2",
+      "text": "Pesquisa quantitativa — amplitude"
+    },
+    {
+      "type": "p",
+      "text": "Métodos: surveys (online, telefone, presencial, painel), questionários auto-administrados, dados de painel (Nielsen, Kantar), análise de dados transacionais. Amostras são grandes (centenas a milhares) e geralmente probabilísticas. Análise é estatística — frequências, médias, regressões, testes de significância. Resultados são generalizáveis à população (dentro da margem de erro). Ideal para: medir dimensões do mercado, validar hipóteses, segmentar, prever comportamentos."
+    },
+    {
+      "type": "h3",
+      "text": "Comparação directa"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Objectivo: qualitativa = explorar; quantitativa = medir.",
+        "Amostra: qualitativa = pequena, por critério; quantitativa = grande, probabilística.",
+        "Perguntas: qualitativa = abertas, 'porquê', 'como'; quantitativa = fechadas, 'quantos', 'quanto'.",
+        "Dados: qualitativa = texto, imagem, vídeo; quantitativa = números, categorias.",
+        "Análise: qualitativa = interpretativa, temática; quantitativa = estatística.",
+        "Generalização: qualitativa = transferibilidade; quantitativa = representatividade estatística.",
+        "Custo: qualitativa = moderado (tempo de moderador); quantitativa = elevado (tamanho da amostra, infra-estrutura)."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Focus group — o clássico qualitativo"
+    },
+    {
+      "type": "p",
+      "text": "Grupo de 6-10 pessoas com perfil semelhante, reunido por 1-2 horas, discutindo um tema sob a orientação de um moderador treinado. O moderador não dá opinião — facilita, faz perguntas abertas, observa dinâmicas de grupo. A discussão em grupo gera insights que não surgiriam em entrevista individual (uma pessoa lembra-se de algo que outra pessoa acrescenta). Mas tem limitações: dominância de participantes mais extrovertidos, conformidade ao grupo, artificialidade do setting. Ideal para: explorar attitudes, testar conceitos novos, gerar ideias para campanhas."
+    },
+    {
+      "type": "h2",
+      "text": "Survey online — o padrão quantitativo"
+    },
+    {
+      "type": "p",
+      "text": "Questionário estruturado aplicado via web (painel, base de clientes, redes sociais). Permite chegar a amostras grandes rapidamente e a custo baixo. Tipos de perguntas: fechadas (escolha múltipla, escala Likert 1-5, escala semântica diferencial), abertas (texto livre, útil para contexto mas difícil de analisar em grandes amostras). Cuidados: evitar perguntas enviesadas, ordem neutra, testes de lógica, tempo de resposta curto (5-10 min ideal). Para garantir qualidade: testes-piloto, limpeza de respostas rectilíneas (sempre a mesma resposta), monitorização de tempo de resposta."
+    },
+    {
+      "type": "h3",
+      "text": "Métodos mistos"
+    },
+    {
+      "type": "p",
+      "text": "Muitos projectos combinam os dois. Sequência típica: qualitativa para entender o problema e gerar hipóteses; quantitativa para testar essas hipóteses em amostras maiores; qualitativa de novo para interpretar achados quantitativos ou explorar comportamentos específicos. Esta triangulação dá mais confiança aos resultados do que qualquer método isolado. Também há métodos que cruzam as duas famílias: netnografia (etnografia digital em fóruns e redes sociais), análise de sentiment (combina NLP quantitativo com interpretação qualitativa), grupos de discussão com votação anónima."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: lembra-te que qualitativa e quantitativa respondem a perguntas diferentes. Confundir 'muitos focus groups' com 'boa pesquisa' é comum — e não é o mesmo que fazer uma survey grande sem trabalho qualitativo prévio."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma startup quer lançar um novo produto de skincare. Quer perceber que motivações estão por trás da escolha de produtos pelas consumidoras. Que método usar e porquê?",
+      "answer": "Pesquisa qualitativa — focus groups e entrevistas em profundidade. As motivações são profundas, emocionais, subjectivas; precisam de exploração aberta. Depois, com base nos insights, pode desenhar-se uma survey quantitativa para medir dimensões e segmentar."
+    }
+  ],
+  "keyPoints": [
+    "Qualitativa: profundidade, amostra pequena, perguntas abertas, análise interpretativa.",
+    "Quantitativa: amplitude, amostra grande, perguntas fechadas, análise estatística.",
+    "Qualitativa para 'porquê' e 'como'; quantitativa para 'quantos' e 'quanto'.",
+    "Focus group é o clássico qualitativo — 6-10 pessoas, 1-2h, moderado.",
+    "Survey online é o padrão quantitativo — rápido, barato, mas exige cuidado de desenho.",
+    "Métodos mistos (qualitativa + quantitativa) dão mais confiança aos resultados."
+  ],
+  "quizSlug": "pmq",
+  "nextLesson": "03-amostragem-questionario",
+  "prevLesson": "01-tipos-pesquisa"
+}

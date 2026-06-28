@@ -280,20 +280,48 @@
           ]
         },
         'analise-financeira': {
-          slug: 'analise-financeira',
-          title: 'Análise Financeira',
-          tagline: 'Business Administration · Interpretar demonstrações financeiras',
-          description: 'Rácios, fluxos de caixa e valuation — como ler as contas de uma empresa.',
-          icon: '📈',
-          color: '#0d9488',
-          lessons: [
-            { slug: '01-racios-de-liquidez', title: '1. Rácios de Liquidez e Solvência', summary: 'Liquidez geral, reduzida, imediata e estrutura de capital.', quizSlug: 'afq', quizTitle: 'Quiz: Análise Financeira', estMinutes: 8 },
-            { slug: '02-racios-de-rentabilidade', title: '2. Rácios de Rentabilidade e Eficiência', summary: 'Margens, ROE, ROA e a decomposição DuPont.', quizSlug: 'afq', quizTitle: 'Quiz: Análise Financeira', estMinutes: 8 },
-            { slug: '03-analise-de-fluxos-caixa', title: '3. Análise de Fluxos de Caixa e FCF', summary: 'Demonstração de fluxos, Free Cash Flow, EBITDA e conversão.', quizSlug: 'afq', quizTitle: 'Quiz: Análise Financeira', estMinutes: 8 },
-            { slug: '04-valuation-dcf-e-multiplos', title: '4. Valuation: DCF e Múltiplos', summary: 'Discounted Cash Flow, WACC, PER e margem de segurança.', quizSlug: 'afq', quizTitle: 'Quiz: Análise Financeira', estMinutes: 9 }
-          ]
-        }
-      };
+                  slug: 'analise-financeira',
+                  title: 'Análise Financeira',
+                  tagline: 'Business Administration · Interpretar demonstrações financeiras',
+                  description: 'Rácios, fluxos de caixa e valuation — como ler as contas de uma empresa.',
+                  icon: '📈',
+                  color: '#0d9488',
+                  lessons: [
+                    { slug: '01-racios-de-liquidez', title: '1. Rácios de Liquidez e Solvência', summary: 'Liquidez geral, reduzida, imediata e estrutura de capital.', quizSlug: 'afq', quizTitle: 'Quiz: Análise Financeira', estMinutes: 8 },
+                    { slug: '02-racios-de-rentabilidade', title: '2. Rácios de Rentabilidade e Eficiência', summary: 'Margens, ROE, ROA e a decomposição DuPont.', quizSlug: 'afq', quizTitle: 'Quiz: Análise Financeira', estMinutes: 8 },
+                    { slug: '03-analise-de-fluxos-caixa', title: '3. Análise de Fluxos de Caixa e FCF', summary: 'Demonstração de fluxos, Free Cash Flow, EBITDA e conversão.', quizSlug: 'afq', quizTitle: 'Quiz: Análise Financeira', estMinutes: 8 },
+                    { slug: '04-valuation-dcf-e-multiplos', title: '4. Valuation: DCF e Múltiplos', summary: 'Discounted Cash Flow, WACC, PER e margem de segurança.', quizSlug: 'afq', quizTitle: 'Quiz: Análise Financeira', estMinutes: 9 }
+                  ]
+                },
+                'comportamento-do-consumidor': {
+                  slug: 'comportamento-do-consumidor',
+                  title: 'Comportamento do Consumidor',
+                  tagline: 'Business Administration · Factores de decisão e jornada omnichannel',
+                  description: 'Porque é que os consumidores escolhem, compram e usam produtos — do modelo de Kotler à experiência omnichannel.',
+                  icon: '🛍️',
+                  color: '#db2777',
+                  lessons: [
+                    { slug: '01-fatores-influencia-decisao', title: '1. Factores que Influenciam a Decisão de Compra', summary: 'Culturais, sociais, pessoais e psicológicos.', quizSlug: 'ccq', quizTitle: 'Quiz: Comportamento do Consumidor', estMinutes: 8 },
+                    { slug: '02-processo-decisao', title: '2. Processo de Decisão (5 Estágios)', summary: 'Reconhecimento, pesquisa, avaliação, decisão e pós-compra.', quizSlug: 'ccq', quizTitle: 'Quiz: Comportamento do Consumidor', estMinutes: 8 },
+                    { slug: '03-segmentacao-personas', title: '3. Segmentação e Personas', summary: 'Critérios de segmentação, STP e construção de personas.', quizSlug: 'ccq', quizTitle: 'Quiz: Comportamento do Consumidor', estMinutes: 8 },
+                    { slug: '04-comportamento-digital', title: '4. Comportamento Digital e Omnichannel', summary: 'Mobile-first, social commerce e integração de canais.', quizSlug: 'ccq', quizTitle: 'Quiz: Comportamento do Consumidor', estMinutes: 9 }
+                  ]
+                },
+                'pesquisa-de-marketing': {
+                  slug: 'pesquisa-de-marketing',
+                  title: 'Pesquisa de Marketing',
+                  tagline: 'Business Administration · Explorar, descrever e testar em marketing',
+                  description: 'Pesquisa de mercado do planeamento ao relatório — exploratória, descritiva, causal e análise de dados.',
+                  icon: '🔬',
+                  color: '#7c3aed',
+                  lessons: [
+                    { slug: '01-tipos-pesquisa', title: '1. Tipos de Pesquisa (Exploratória, Descritiva, Causal)', summary: 'Quando usar cada tipo e como se encadeiam.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 8 },
+                    { slug: '02-metodos-qualitativos-quantitativos', title: '2. Métodos Qualitativos vs Quantitativos', summary: 'Focus groups, entrevistas, surveys e métodos mistos.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 8 },
+                    { slug: '03-amostragem-questionario', title: '3. Amostragem e Desenho de Questionário', summary: 'Probabilística vs não-probabilística, margem de erro e boas práticas.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 8 },
+                    { slug: '04-analise-relatorio', title: '4. Análise de Dados e Relatório', summary: 'Da limpeza dos dados às recomendações accionáveis.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 9 }
+                  ]
+                }
+              };
 
   let courseSlug = $derived(page.params.slug ?? '');
   let course = $derived<CourseDetail | undefined>(CATALOGUE[courseSlug]);

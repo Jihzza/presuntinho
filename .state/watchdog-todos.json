@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T10:10:00+02:00",
+  "lastUpdated": "2026-06-28T09:40:08+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -32,14 +32,6 @@
       "severity": "média",
       "source": "brief-inicial",
       "created_at": "2026-06-28T02:36:00+02:00"
-    },
-    {
-      "id": "gap-027",
-      "category": "lição/curso",
-      "description": "Daniel: 'faz cursos sobretudo' / 'tudo a cadeiras da universidade' — adicionar 1-2 cadeiras finais como Comportamento do Consumidor, Pesquisa de Marketing, Sistemas de Informação",
-      "severity": "média",
-      "source": "audio-Daniel-2026-06-28",
-      "created_at": "2026-06-28T08:55:00+02:00"
     },
     {
       "id": "gap-028",
@@ -224,6 +216,11 @@
       "description": "escola/curso/portugues 'Não foi possível carregar o curso.' + 'A carregar curso…' + 'A carregar…' + 'Voltar à Escola' now $t() with fallback. 3 new keys × 5 locales = 15 entries i18n (backToEscola reuses walkthrough key).",
       "sha": "873cf8a",
       "closed_at": "2026-06-28T10:10:00+02:00"
+    },
+    {
+      "id": "gap-027",
+      "description": "2 cursos BA finais (Comportamento do Consumidor + Pesquisa de Marketing) — 4 lessons + 1 quiz cada, registados no CATALOGUE de aulas/+page.server.ts, escola/+page.svelte, escola/curso/[slug]/+page.svelte, e i18n keys (pt-PT, en, ar, fr, tn).",
+      "closed_at": "2026-06-28T09:40:08+02:00"
     }
   ]
 }

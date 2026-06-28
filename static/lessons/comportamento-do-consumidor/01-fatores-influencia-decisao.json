@@ -1,0 +1,95 @@
+{
+  "id": "01-fatores-influencia-decisao",
+  "title": "Fatores que Influenciam a Decisão de Compra",
+  "courseSlug": "comportamento-do-consumidor",
+  "lessonNumber": 1,
+  "description": "Os quatro grandes blocos de factores que pesam antes, durante e depois da compra: culturais, sociais, pessoais e psicológicos.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["comportamento", "factores", "cultura", "psicologia"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Por que estudar o comportamento do consumidor?"
+    },
+    {
+      "type": "p",
+      "text": "Nenhuma campanha de marketing funciona se não perceber porque é que as pessoas compram. Dois consumidores com o mesmo rendimento, expostos ao mesmo anúncio, podem tomar decisões completamente diferentes — um compra, outro ignora. O comportamento do consumidor é o estudo sistemático dessas decisões: como indivíduos, grupos ou organizações seleccionam, compram, usam e descartam bens, serviços, ideias ou experiências para satisfazer necessidades e desejos. É onde a psicologia encontra a economia e o marketing."
+    },
+    {
+      "type": "h3",
+      "text": "O modelo de Kotler — quatro blocos de influência"
+    },
+    {
+      "type": "p",
+      "text": "Philip Kotler organiza os factores que influenciam o comprador num esquema clássico: culturais, sociais, pessoais e psicológicos. Estes blocos não actuam isoladamente — interagem e o seu peso varia consoante o tipo de decisão (compra de rotina vs. compra complexa) e o contexto (presente social, momento do dia, estado emocional)."
+    },
+    {
+      "type": "h2",
+      "text": "Factores culturais — os mais profundos"
+    },
+    {
+      "type": "p",
+      "text": "São os que operam a um nível quase invisível, abaixo da consciência. Cultura (o conjunto de valores básicos, percepções, desejos e comportamentos aprendidos por um indivíduo enquanto membro da sociedade), subcultura (nacionalidade, religião, grupo étnico, região) e classe social (a divisão relativamente permanente e ordenada da sociedade cujos membros partilham valores, interesses e comportamentos similares). Uma pessoa de classe média alta não consome apenas coisas diferentes — tem valores, expectativas e vocabulários de marca diferentes."
+    },
+    {
+      "type": "h2",
+      "text": "Factores sociais — grupos e família"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Grupos de referência: pequenos grupos que exercem influência directa ou indirecta sobre atitudes e comportamentos (amigos, colegas, vizinhos, grupos online). Os grupos de aspiração (a quem se quer parecer) são especialmente fortes em produtos visíveis como moda, tecnologia, fitness.",
+        "Família: a família de orientação (pais e irmãos) transmite valores e atitudes mesmo depois de adulta; a família de procriação (cônjuge e filhos) influencia directamente as decisões do dia-a-dia, especialmente em bens duradouros.",
+        "Papéis e status: a posição da pessoa em cada grupo social (mãe, directora, estudante) determina o que é apropriado consumir. Status ≠ riqueza — é a estima que o grupo atribui a uma posição."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Factores pessoais — idade, estilo de vida, personalidade"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Idade e etapa do ciclo de vida: uma pessoa de 25 anos a começar a trabalhar consome de forma diferente de uma de 45 com filhos no colégio.",
+        "Ocupação e circunstâncias económicas: profissão define parte dos consumos; rendimento disponível, poupanças e capacidade de endividamento determinam o resto.",
+        "Estilo de vida: o padrão de viver expresso em actividades, interesses e opiniões (AIO). Uma pessoa pode ter o mesmo rendimento que outra e gastar de forma completamente diferente porque os seus valores e rotinas divergem.",
+        "Personalidade e autoconceito: traços de personalidade (extroversão, abertura) e a imagem que a pessoa tem de si própria (autoconceito real vs. ideal) influenciam a escolha de marcas que reforçam essa identidade."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Factores psicológicos — motivação, percepção, aprendizagem"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Motivação: uma necessidade torna-se motivo quando atinge um nível de intensidade suficiente para levar a pessoa a agir. Teoria de Maslow (hierarquia das necessidades) e teoria de Freud (motivações inconscientes) continuam a ser referenciais úteis.",
+        "Percepção: a forma como cada pessoa organiza e interpreta informação. Duas pessoas com a mesma motivação podem agir de forma diferente porque percebem o estímulo de modo diferente — atenção selectiva, distorção selectiva e retenção selectiva.",
+        "Aprendizagem: descreve mudanças no comportamento decorrentes da experiência. Os consumidores aprendem por tentativa e erro, por condicionamento clássico (associar marca a emoção) ou por condicionamento operante (recompensa repetida).",
+        "Crenças e atitudes: pensamentos e avaliações que a pessoa tem sobre objectos e ideias. As atitudes são difíceis de mudar uma vez formadas, por isso é mais fácil ajustar o produto às attitudes existentes do que tentar mudá-las."
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: lembra-te que os factores culturais são os mais profundos e os mais difíceis de mudar. Adaptar um produto à cultura local (e não o contrário) é quase sempre o caminho mais sólido."
+    },
+    {
+      "type": "exercise",
+      "question": "Um consumidor de 30 anos, classe média urbana, com actividade física regular, compra ténis de corrida. Identifica pelo menos um factor cultural, social, pessoal e psicológico em jogo nesta decisão.",
+      "answer": "Cultural: a cultura fitness/tracking que normaliza a corrida como prática de saúde. Social: o grupo de amigos corredores influencia marca e modelo. Pessoal: estilo de vida activo, rendimento disponível. Psicológico: motivação para manter saúde e auto-imagem associada a desporto."
+    }
+  ],
+  "keyPoints": [
+    "Quatro blocos de factores: culturais, sociais, pessoais, psicológicos.",
+    "Cultura e classe social operam a um nível quase invisível.",
+    "Família de orientação vs. família de procriação influenciam de forma diferente.",
+    "Personalidade e autoconceito ligam-se a identidades de marca.",
+    "Percepção é selectiva: atenção, distorção e retenção filtram estímulos.",
+    "Aprendizagem e attitudes determinam comportamento futuro."
+  ],
+  "quizSlug": "ccq",
+  "nextLesson": "02-processo-decisao",
+  "prevLesson": null
+}

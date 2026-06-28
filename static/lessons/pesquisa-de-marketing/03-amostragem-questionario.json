@@ -1,0 +1,99 @@
+{
+  "id": "03-amostragem-questionario",
+  "title": "Amostragem e Desenho de Questionário",
+  "courseSlug": "pesquisa-de-marketing",
+  "lessonNumber": 3,
+  "description": "Como escolher a amostra certa e desenhar um questionário que minimize erros e maximize respostas úteis.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["amostragem", "questionário", "survey", "margem de erro"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Porque a amostragem importa"
+    },
+    {
+      "type": "p",
+      "text": "Em quase nenhuma pesquisa de marketing é viável entrevistar toda a população-alvo. Medir a satisfação dos 11 milhões de portugueses seria absurdo. A solução é estudar uma amostra — um subconjunto representativo — e inferir os resultados para a população. Se a amostra for bem escolhida, os resultados da pesquisa reflectem, com margem de erro conhecida, o que se passa na população. Se for mal escolhida, os resultados são enviesados e potencialmente inúteis — mesmo com milhares de respostas."
+    },
+    {
+      "type": "h3",
+      "text": "Probabilística vs não-probabilística"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Amostragem probabilística: cada elemento da população tem probabilidade conhecida (e geralmente igual) de ser seleccionado. Permite generalização estatística com cálculo de margem de erro. Exemplos: aleatória simples, sistemática, estratificada, por clusters.",
+        "Amostragem não-probabilística: a selecção não é aleatória — depende de critério, conveniência ou auto-selecção. Não permite cálculo rigoroso de margem de erro, mas é mais barata e rápida. Exemplos: conveniência, bola de neve, quotas, julgamento."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Técnicas probabilísticas"
+    },
+    {
+      "type": "p",
+      "text": "Aleatória simples: cada elemento tem igual probabilidade de ser escolhido (sorteio, gerador de números aleatórios). Requer lista completa da população, que raramente existe. Sistemática: escolhe-se um ponto de partida aleatório e depois cada n-ésimo elemento (ex: cada 100º cliente na base de dados). Estratificada: divide-se a população em estratos homogéneos (idade, região, género) e tira-se amostra aleatória dentro de cada estrato — garante representatividade mesmo com amostra pequena. Por clusters: divide-se a população em grupos geográficos ou naturais, seleccionam-se clusters aleatoriamente e estudam-se todos os elementos dentro (útil quando há dispersão geográfica grande)."
+    },
+    {
+      "type": "h3",
+      "text": "Técnicas não-probabilísticas"
+    },
+    {
+      "type": "p",
+      "text": "Conveniência: entrevistar quem está disponível (clientes que passam na loja, colegas, amigos). Comum, barata, enviesada. Bola de neve: pedir a um entrevistado para indicar o próximo — útil para populações difíceis de encontrar (pessoas com doença rara, decisores B2B). Quotas: definir quotas por perfil (50% mulheres, 50% homens; 30% <30 anos, 70% ≥30) e ir preenchendo — tenta imitar a estrutura da população mas não é aleatória. Julgamento: o investigador escolhe os elementos por critério ('expert sampling') — útil quando a amostra tem de incluir pessoas com conhecimento específico."
+    },
+    {
+      "type": "h2",
+      "text": "Tamanho da amostra e margem de erro"
+    },
+    {
+      "type": "p",
+      "text": "O tamanho da amostra determina a margem de erro — quanto menor a amostra, maior a margem. Para uma survey nacional em Portugal, 1000 entrevistas dão margem de erro de cerca de ±3% (95% de confiança). Aumentar a amostra para 2000 reduz a margem para ±2%, mas o ganho marginal decresce rapidamente. A regra prática: para surveys de opinião pública, 1000-1500 costuma ser suficiente; para segmentações finas, precisam-se amostras maiores. Cuidado com amostras pequenas em subgrupos — concluir que 'mulheres em Lisboa preferem X' com base em 12 entrevistas é arriscado."
+    },
+    {
+      "type": "h3",
+      "text": "Desenho de questionário — boas práticas"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Começar pelo objectivo: o que precisa de saber? Cada pergunta deve ter propósito claro — se não servir para responder à pergunta de pesquisa, corte-a.",
+        "Ordem importa: começar com perguntas fáceis e neutras (aquecimento); perguntas sensíveis ou pessoais no meio, quando o entrevistado já está à vontade; perguntas demográficas no fim.",
+        "Linguagem clara: evitar jargão técnico, perguntas duplas (quer dizer duas coisas), indução (sugerir a resposta). Testar com pessoas reais antes de aplicar.",
+        "Escala de resposta consistente: usar a mesma escala (1-5, 1-7, 1-10) ao longo do questionário para reduzir fadiga cognitiva. Escala Likert (concordo totalmente → discordo totalmente) é a mais comum.",
+        "Evitar perguntas longas e abstractas: 'Qual a sua opinião sobre a sustentabilidade das marcas portuguesas?' é vago demais. Quebrar em perguntas concretas ('Quando compra um produto, considera se a marca é sustentável? 1-5').",
+        "Testar e refinar: pré-teste com 10-20 pessoas para identificar perguntas confusas, tempo excessivo, padrões de não-resposta. Iterar antes de aplicar em larga escala."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Vieses comuns"
+    },
+    {
+      "type": "p",
+      "text": "Viés de selecção: amostra não representa a população (só responda quem quer). Viés de resposta: entrevistado dá resposta que considera socialmente aceitável, em vez da verdadeira (desejabilidade social). Viés de não-resposta: certos grupos não respondem (homens mais novos, pessoas muito ocupadas). Viés de questionário: perguntas mal desenhadas induzem respostas. Viés de memória: entrevistado não se lembra com precisão (especialmente em perguntas sobre comportamento passado). Minimizar viéses: aleatoriedade na selecção, anonimato garantido, pré-testes, perguntas cruzadas para validação."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: lembra-te que um questionário longo demais perde qualidade. Cada minuto extra cai a taxa de conclusão e aumenta respostas apressadas. Curto e focado ganha sempre a longo e exaustivo."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma marca de cosmética quer saber que percentagem de mulheres em Lisboa usa protetor solar diariamente. Que técnica de amostragem usar e qual a dimensão aproximada de amostra?",
+      "answer": "Amostragem estratificada por idade (e talvez bairro) para garantir representatividade. Tamanho: 400-600 entrevistas para margem de erro de ±4-5%. Alternativa mais barata: amostragem por quotas em locais de elevada circulação (shoppings, farmácias), mas perde generalização estatística."
+    }
+  ],
+  "keyPoints": [
+    "Probabilística permite generalização; não-probabilística é mais barata mas enviesada.",
+    "Estratificada garante representatividade em amostras pequenas; clusters para dispersão geográfica.",
+    "Margem de erro: 1000 entrevistas dão ±3%; ganho marginal decresce rapidamente.",
+    "Questionário: começar fácil, terminar com demográficas, linguagem clara, escala consistente.",
+    "Vieses principais: selecção, resposta, não-resposta, questionário, memória.",
+    "Sempre pré-testar o questionário antes de aplicar em larga escala."
+  ],
+  "quizSlug": "pmq",
+  "nextLesson": "04-analise-relatorio",
+  "prevLesson": "02-metodos-qualitativos-quantitativos"
+}

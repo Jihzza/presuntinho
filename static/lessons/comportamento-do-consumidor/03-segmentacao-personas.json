@@ -1,0 +1,100 @@
+{
+  "id": "03-segmentacao-personas",
+  "title": "Segmentação e Personas de Mercado",
+  "courseSlug": "comportamento-do-consumidor",
+  "lessonNumber": 3,
+  "description": "Dividir o mercado em grupos homogéneos e traduzi-los em personas úteis: critérios de segmentação, STP e uso prático.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["segmentação", "personas", "STP", "targeting"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é segmentação de mercado"
+    },
+    {
+      "type": "p",
+      "text": "Segmentação de mercado é o processo de dividir um mercado em grupos distintos de compradores com base em características, necessidades ou comportamentos comuns, e seleccionar um ou mais segmentos para servir com uma oferta específica. A ideia central: consumidores são diferentes, e tentar agradar a todos geralmente significa não agradar verdadeiramente a ninguém. Bons segmentos são mensuráveis, acessíveis, substanciais (tamanho suficiente), diferenciais (respondem de forma diferente a mixes de marketing) e acionáveis (a empresa pode desenhar programas para os alcançar)."
+    },
+    {
+      "type": "h2",
+      "text": "Critérios de segmentação — quatro grandes eixos"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Geográfica: país, região, clima, densidade (urbano/rural), dimensão da cidade. É a forma mais básica — países diferentes têm normas, gostos e regulamentações distintas.",
+        "Demográfica: idade, género, rendimento, profissão, educação, estado civil, tamanho da família. É a mais usada porque fácil de medir e frequentemente correlacionada com necessidades.",
+        "Psicográfica: estilo de vida, valores, personalidade, interesses (AIO — actividades, interesses, opiniões). Vai além do que a pessoa faz e pergunta porque faz.",
+        "Comportamental: ocasião de uso (regular, especial), benefícios procurados, taxa de uso (heavy, médio, light), lealdade à marca, estágio de prontidão (desconhece, sabe, gosta, pretende, comprou)."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Segmentação por benefícios procurados"
+    },
+    {
+      "type": "p",
+      "text": "Muitos marketers consideram a segmentação por benefícios a melhor abordagem porque identifica directamente as motivações de compra. Exemplos em牙膏: alguns consumidores querem frescura (sabor forte), outros querem brancura (resultado cosmético), outros querem anti-cáries (preocupação de saúde), outros querem proteção gengival. Marcas como Sensodyne e Colgate posicionam-se em segmentos específicos e crescem porque servem bem grupos bem definidos. Segmentar por benefícios também é robusto porque correlaciona com outras variáveis."
+    },
+    {
+      "type": "h2",
+      "text": "STP — Segmentação, Targeting, Posicionamento"
+    },
+    {
+      "type": "p",
+      "text": "Depois de segmentar, a empresa atravessa três passos: Segmentação (dividir o mercado), Targeting (escolher que segmentos atacar — usando critérios como dimensão, crescimento, atractividade estrutural, objectivos e recursos da empresa) e Posicionamento (desenhar a oferta e imagem para ocupar um lugar distinto e valioso na mente do segmento-alvo). Targeting pode ser indiferenciado (marketing de massas), diferenciado (vários segmentos com ofertas distintas), concentrado (um nicho) ou micromarketing (segmentos muito pequenos ou individuais)."
+    },
+    {
+      "type": "h3",
+      "text": "Personas — do segmento à pessoa"
+    },
+    {
+      "type": "p",
+      "text": "Uma persona é um personagem semi-fictício que representa um segmento-alvo. Combina dados demográficos, psicográficos, comportamentos, objectivos, frustrações e contexto de uso. Boas personas têm nome, foto, citação-tipo e narrativa — tornam o segmento abstracto em alguém com quem a equipa se consegue identificar. Têm de ser baseadas em dados reais (pesquisa, entrevistas, analytics) e não em suposições. Uma boa prática: 3-5 personas por produto, cada uma representando um segmento diferente e significativo."
+    },
+    {
+      "type": "h2",
+      "text": "Como construir personas — processo prático"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Recolher dados: entrevistas a clientes e prospects, dados de analytics, surveys, equipas de vendas e suporte (que conhecem bem os clientes).",
+        "Identificar padrões: agrupar comportamentos, objectivos e frustrações em arquétipos — o que é comum entre vários entrevistados?",
+        "Criar perfis: dar nome, foto, dados demográficos, motivações, frustrações, canais preferidos, citação-tipo. Limitar a 1-2 páginas por persona.",
+        "Validar e iterar: testar personas em campanhas reais; medir se ressoam com o público; refinar à medida que se aprende.",
+        "Usar activamente: envolver as equipas no desenvolvimento das personas para que se apropriem delas; usá-las em copywriting, design de produto, priorização de features, scripts de vendas."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Do B2C ao B2B"
+    },
+    {
+      "type": "p",
+      "text": "Em B2B, a segmentação funciona por variáveis adicionais: indústria, dimensão da empresa (SME vs enterprise), função do decisor, processo de compra e ciclo de vendas. Personas B2B frequentemente incluem múltiplos decisores (champion, decisor económico, utilizador final, gatekeeper técnico) e o caminho de venda é mais longo. Ainda assim, o princípio mantém-se: entender bem o cliente-alvo e desenhar a oferta para ele é mais rentável do que tentar servir todos."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: lembra-te que personas não são listas de factos — são ferramentas de empatia. Uma boa persona faz a equipa parar de falar em features e começar a falar em problemas do cliente."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma marca de café quer identificar segmentos. Sugere um segmento demográfico, um psicográfico e um comportamental. Para cada um, descreve o benefício que procuram.",
+      "answer": "Demográfico: jovens urbanos 20-35 — procuram conveniência (café pronto para beber, cápsulas). Psicográfico: tradicionalistas que valorizam ritual — procuram café de especialidade, moído na hora. Comportamental: heavy users (3+ cafés/dia) — procuram valor (assinatura, formato económico) e sabor consistente."
+    }
+  ],
+  "keyPoints": [
+    "Bons segmentos: mensuráveis, acessíveis, substanciais, diferenciais, acionáveis.",
+    "Quatro eixos de segmentação: geográfica, demográfica, psicográfica, comportamental.",
+    "Segmentação por benefícios identifica directamente motivações de compra.",
+    "STP: Segmentação → Targeting → Posicionamento.",
+    "Personas traduzem segmentos em pessoas com nome, foto e história.",
+    "Personas B2B incluem múltiplos decisores e ciclos longos."
+  ],
+  "quizSlug": "ccq",
+  "nextLesson": "04-comportamento-digital",
+  "prevLesson": "02-processo-decisao"
+}

@@ -1,0 +1,89 @@
+{
+  "id": "02-processo-decisao",
+  "title": "Processo de Decisão do Consumidor (5 Estágios)",
+  "courseSlug": "comportamento-do-consumidor",
+  "lessonNumber": 2,
+  "description": "O modelo de cinco estágios de Kotler para entender como o consumidor reconhece a necessidade, avalia alternativas e age.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["decisão", "5 estágios", "jornada", "compra"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O modelo clássico de cinco estágios"
+    },
+    {
+      "type": "p",
+      "text": "O processo de decisão de compra pode ser visto como tendo cinco estágios: reconhecimento da necessidade, pesquisa de informação, avaliação de alternativas, decisão de compra e comportamento pós-compra. Este modelo aplica-se especialmente a compras com elevado envolvimento (high involvement) — carros, casas, férias caras. Para compras de rotina, o consumidor salta etapas e muitas vezes age por hábito."
+    },
+    {
+      "type": "h3",
+      "text": "Estágio 1: Reconhecimento da necessidade"
+    },
+    {
+      "type": "p",
+      "text": "Tudo começa quando o consumidor percebe uma diferença entre o estado actual e o estado desejado. Pode ser um estímulo interno (fome, sede, cansaço) ou externo (ver um anúncio, passar à porta de um restaurante, ouvir uma conversa). O marketer procura identificar as circunstâncias que desencadeiam essa percepção e desenvolver produtos ou mensagens que activem o gatilho certo. Para necessidades biológicas, o caminho é simples; para necessidades sociais e de auto-estima, o trabalho é maior."
+    },
+    {
+      "type": "h3",
+      "text": "Estágio 2: Pesquisa de informação"
+    },
+    {
+      "type": "p",
+      "text": "Depois de reconhecer a necessidade, o consumidor procura informação. Divide-se em dois níveis: pesquisa interna (relembrar experiências anteriores com o produto ou categoria — passa pela memória) e pesquisa externa (procurar informação no mercado — online, amigos,店員, reviews). O marketer tem de saber quais fontes os consumidores consultam e como influenciar a percepção dessas fontes. Reviews e boca-a-boca são desproporcionalmente poderosos."
+    },
+    {
+      "type": "h2",
+      "text": "Estágio 3: Avaliação de alternativas"
+    },
+    {
+      "type": "p",
+      "text": "O consumidor compara as marcas disponíveis usando um conjunto de critérios. Nem todos os atributos são igualmente importantes; nem todos os consumidores usam os mesmos critérios. Há vários modelos de avaliação: expect-value (cada alternativa tem um valor esperado ponderado), conjuntivo (a marca é aceite se passar limiares mínimos em todos os critérios), disjuntivo (a marca é rejeitada se falhar num critério-chave), lexicográfico (o critério mais importante decide). Na prática, o consumidor usa heurísticas e simplificações — não é um computador, é uma pessoa com tempo limitado."
+    },
+    {
+      "type": "h2",
+      "text": "Estágio 4: Decisão de compra"
+    },
+    {
+      "type": "p",
+      "text": "Depois de avaliar alternativas, o consumidor forma a intenção de compra — geralmente favoravelmente inclinada para a marca preferida. Mas dois factores podem alterar a intenção: a atitude dos outros (o que acham pessoas cuja opinião valoriza) e factores situacionais inesperados (preço subiu, produto esgotado, prazo não serve). Quanto mais arriscada a decisão, mais estes factores pesam. O marketer deve facilitar o caminho para o acto de compra — checkout simples, stock disponível, prazos flexíveis, devoluções claras."
+    },
+    {
+      "type": "h2",
+      "text": "Estágio 5: Comportamento pós-compra"
+    },
+    {
+      "type": "p",
+      "text": "Depois de comprar, o consumidor sente satisfação ou insatisfação — dependendo de como as expectativas foram correspondidas. Se o produto falha, há dissonância cognitiva (arrependimento, dúvida). Se excede, há reforço positivo e lealdade. O marketer pode reduzir a dissonância com comunicação pós-venda (confirmação da boa escolha, dicas de uso, suporte proactivo). A satisfação pós-compra é o motor de recompra, word-of-mouth e customer lifetime value — é aqui que o valor de longo prazo se ganha ou se perde."
+    },
+    {
+      "type": "h3",
+      "text": "Variáveis do processo de decisão"
+    },
+    {
+      "type": "p",
+      "text": "O processo de cinco estágios é mais visível em compras com elevado envolvimento. Para compras habituais (comprar leite, café do dia-a-dia), o consumidor usa rotina e o processo reduz-se a 'recordar a marca favorita → comprar'. Compras de baixo envolvimento podem ser influenciadas por embalagem, ponto de venda e promoções de última hora. Compras em grupo (família, equipa de compras B2B) envolvem múltiplos decisores com papéis diferentes — iniciador, influenciador, decisor, comprador, utilizador — todos a tratar de forma distinta."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: lembra-te que o estágio pós-compra é onde se ganha a recompra. Um cliente satisfeito volta e traz outros; um cliente insatisfeito vai embora e fala mal para 10 pessoas. Investir em pós-venda é o melhor ROI de longo prazo."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma família quer trocar de carro. Identifica em que estágio está em cada uma destas acções: (a) Pesquisar reviews online; (b) Ir ao concessionário experimentar; (c) Reparar que o carro actual avariou; (d) Pedir opinião ao vizinho que tem um modelo idêntico; (e) Sentir-se ansiosa depois de assinar o contrato.",
+      "answer": "(a) Pesquisa de informação; (b) Avaliação de alternativas / intenção de compra; (c) Reconhecimento da necessidade; (d) Avaliação — opinião de outros pode mudar a intenção; (e) Comportamento pós-compra — dissonância cognitiva."
+    }
+  ],
+  "keyPoints": [
+    "Cinco estágios: reconhecimento, pesquisa, avaliação, decisão, pós-compra.",
+    "Pesquisa interna (memória) e externa (mercado) são distintas.",
+    "Intenção de compra ≠ compra efectiva — attitudes dos outros e factores situacionais pesam.",
+    "Satisfação pós-compra é o motor do valor de longo prazo.",
+    "Compras habituais usam atalhos; compras complexas percorrem os 5 estágios.",
+    "Decisões em grupo têm múltiplos papéis: iniciador, decisor, comprador, utilizador."
+  ],
+  "quizSlug": "ccq",
+  "nextLesson": "03-segmentacao-personas",
+  "prevLesson": "01-fatores-influencia-decisao"
+}

@@ -1,0 +1,87 @@
+{
+  "id": "04-comportamento-digital",
+  "title": "Comportamento Digital e Omnichannel",
+  "courseSlug": "comportamento-do-consumidor",
+  "lessonNumber": 4,
+  "description": "Como o consumidor digital decide, social-media influence, mobile-first, omnichannel e a fronteira entre online e offline.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["digital", "omnichannel", "e-commerce", "mobile"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O novo consumidor digital"
+    },
+    {
+      "type": "p",
+      "text": "O consumidor digital de 2026 não é o mesmo do consumidor de 2010. Está permanentemente conectado, compara preços em segundos, espera entregas rápidas, lê reviews antes de comprar, partilha experiências em redes sociais e exige consistência entre canais. A pandemia acelerou anos de transformação digital em meses. Marcas que não se adaptaram a este novo perfil — onde a primeira impressão é frequentemente o Instagram, o Google ou um vídeo de TikTok — ficaram para trás. Mas o digital não substituiu o físico; adicionou novos pontos de contacto a uma jornada que continua a ser, fundamentalmente, humana."
+    },
+    {
+      "type": "h3",
+      "text": "Jornada do consumidor digital"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Descoberta: encontra a marca via search (Google), social media (Instagram, TikTok), word-of-mouth, recomendação de influencer, anúncio pago. O conteúdo é a nova montra.",
+        "Consideração: lê reviews (Trustpilot, Amazon, Google Reviews), compara preços, vê vídeos de unboxing e demos, segue a marca nas redes para sentir a comunidade.",
+        "Conversão: compra no e-commerce, na app, em loja (com stock pesquisado online antes — showrooming) ou emarketplace (Amazon, bol.pt). Decisão fortemente influenciada por reviews e tempo de entrega.",
+        "Retenção: notificações, email marketing, programa de fidelidade, conteúdo relevante, atendimento de qualidade, comunidade.",
+        "Advocacy: partilha a experiência em redes, escreve review, indica a amigos. O ciclo recomeça com a sua rede como nova fonte de descoberta."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Mobile-first e social commerce"
+    },
+    {
+      "type": "p",
+      "text": "Mais de 70% do tráfego web em Portugal e na Europa é mobile. Sites e apps têm de ser desenhados com o telemóvel em mente — botões grandes, formulários simples, checkout em poucos toques, performance rápida. Social commerce — comprar directamente dentro de plataformas como Instagram, TikTok ou Pinterest — está a crescer a dois dígitos e é especialmente forte em moda, beleza e lifestyle. Live shopping (vídeo ao vivo com venda em tempo real) é popular em mercados asiáticos e começa a ganhar tração em Portugal. O influencer marketing tornou-se central: 60-70% dos jovens portugueses dizem que já compraram algo recomendado por um creator."
+    },
+    {
+      "type": "h3",
+      "text": "Omnichannel — integração total de canais"
+    },
+    {
+      "type": "p",
+      "text": "Omnichannel é a estratégia que integra todos os canais (loja física, e-commerce, app, redes sociais, telefone, marketplace) numa experiência coerente para o cliente. Diferente de multichannel (estar presente em vários canais sem os integrar), omnichannel significa que o cliente pode começar uma compra no telemóvel, personalizar na app, levantar na loja e devolver por correio — tudo sem fricção. Exige back-office integrado (inventário único, cliente único, base de dados unificada), operações repensadas e métricas de avaliação do cliente, não do canal."
+    },
+    {
+      "type": "h2",
+      "text": "Dados, personalização e privacidade"
+    },
+    {
+      "type": "p",
+      "text": "O digital permite personalização em escala: recomendar produtos com base em histórico (Amazon, Netflix), enviar emails segmentados, ajustar preço em tempo real, exibir anúncios personalizados. O motor é o dado — comportamental, demográfico, transacional, contextual. Mas este poder vem com responsabilidade: o RGPD na Europa obriga a consentimento explícito, transparência e direito ao esquecimento. Cookies de terceiros estão a ser descontinuados. As marcas que prosperam são as que constroem confiança — recolhem o mínimo necessário, são transparentes, oferecem valor em troca do dado e tratam-no com cuidado."
+    },
+    {
+      "type": "h3",
+      "text": "Showrooming e webrooming"
+    },
+    {
+      "type": "p",
+      "text": "Dois fenómenos que ilustram como digital e físico se cruzam. Showrooming: o cliente vai à loja ver e tocar no produto, depois compra online (geralmente mais barato). Webrooming: o cliente pesquisa online, lê reviews, escolhe o produto, depois vai à loja comprar para ter a experiência física e levar logo. Marcas integradas ganham em ambos os casos — quem vende online e em loja, com stock e preço consistentes, captura o cliente qualquer que seja o caminho. Quem só tem loja sofre de showrooming; quem só tem e-commerce perde o contacto humano que muitos clientes ainda valorizam."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: lembra-te que omnichannel não é ter Instagram, site, loja e app. É fazer com que o cliente sinta que está a falar com a mesma marca, em qualquer canal, com o mesmo nível de serviço."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma marca de vestuário tem loja física em Lisboa, e-commerce e presença activa em Instagram. Identifica três melhorias omnichannel que pode implementar para reduzir a fricção entre canais.",
+      "answer": "(1) Click-and-collect: comprar online e levantar em loja, com stock em tempo real. (2) Devolução em loja de produtos comprados online (e vice-versa), sem custos. (3) Histórico de compras unificado: vendedor em loja vê o que o cliente comprou online e recomenda complementos. (4) Bónus: app que mostra o que está em stock na loja mais próxima do cliente."
+    }
+  ],
+  "keyPoints": [
+    "Jornada digital: descoberta, consideração, conversão, retenção, advocacy.",
+    "Mobile-first: site, app e checkout desenhados para o telemóvel.",
+    "Social commerce e influencer marketing são centrais no público jovem.",
+    "Omnichannel integra todos os canais; multichannel só os acumula.",
+    "Dados permitem personalização, mas RGPD exige transparência e consentimento.",
+    "Showrooming e webrooming mostram como digital e físico se cruzam."
+  ],
+  "quizSlug": "ccq",
+  "nextLesson": null,
+  "prevLesson": "03-segmentacao-personas"
+}

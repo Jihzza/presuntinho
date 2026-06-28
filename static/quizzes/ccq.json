@@ -1,0 +1,107 @@
+{
+  "id": "ccq",
+  "title": "Quiz: Comportamento do Consumidor",
+  "description": "Testa os teus conhecimentos sobre factores de influência, processo de decisão, segmentação e comportamento digital.",
+  "questions": [
+    {
+      "q": "No modelo de Kotler, qual destes blocos é considerado o que actua a um nível mais profundo e quase invisível?",
+      "opts": [
+        "Factores pessoais",
+        "Factores culturais",
+        "Factores sociais",
+        "Factores psicológicos"
+      ],
+      "a": 1
+    },
+    {
+      "q": "A teoria de Maslow explica a motivação como:",
+      "opts": [
+        "Reforço positivo e negativo",
+        "Hierarquia de necessidades (fisiológicas, segurança, sociais, estima, auto-realização)",
+        "Motivações inconscientes e racionalização",
+        "Aprendizagem por tentativa e erro"
+      ],
+      "a": 1
+    },
+    {
+      "q": "No processo de decisão de cinco estágios, qual é o primeiro?",
+      "opts": [
+        "Pesquisa de informação",
+        "Reconhecimento da necessidade",
+        "Avaliação de alternativas",
+        "Decisão de compra"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Qual a diferença entre dissonância cognitiva e satisfação pós-compra?",
+      "opts": [
+        "São a mesma coisa — ambas resultam de expectativas correspondidas",
+        "Dissonância é arrependimento/dúvida quando o produto falha expectativas; satisfação é reforço positivo quando excede",
+        "Dissonância ocorre antes da compra, satisfação depois",
+        "Satisfação é um conceito B2B; dissonância é B2C"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Os quatro critérios clássicos de segmentação são:",
+      "opts": [
+        "Preço, qualidade, distribuição, promoção",
+        "Geográfica, demográfica, psicográfica, comportamental",
+        "Online, offline, mobile, social",
+        "Idade, género, rendimento, religião"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Uma persona é:",
+      "opts": [
+        "Um cliente real que serve de referência",
+        "Um personagem semi-fictício que representa um segmento-alvo, baseado em dados",
+        "Um indicador de performance de vendas",
+        "O decisor final numa compra B2B"
+      ],
+      "a": 1
+    },
+    {
+      "q": "STP significa:",
+      "opts": [
+        "Sistema, Tecnologia, Pessoas",
+        "Segmentação, Targeting, Posicionamento",
+        "Serviço, Transacção, Preço",
+        "Sampling, Testing, Publishing"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Qual a diferença entre multichannel e omnichannel?",
+      "opts": [
+        "São sinónimos",
+        "Multichannel é ter vários canais; omnichannel é integrá-los numa experiência coerente para o cliente",
+        "Multichannel é só digital; omnichannel é só físico",
+        "Omnichannel é mais barato mas menos eficiente"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Showrooming é quando o cliente:",
+      "opts": [
+        "Vai à loja ver e tocar no produto, depois compra online",
+        "Pesquisa online, depois vai à loja comprar",
+        "Compra online e levanta em loja",
+        "Devolve o produto em loja depois de comprar online"
+      ],
+      "a": 0
+    },
+    {
+      "q": "RGPD afecta o marketing digital ao obrigar a:",
+      "opts": [
+        "Eliminar todo o uso de dados pessoais",
+        "Consentimento explícito, transparência e direito ao esquecimento na recolha de dados",
+        "Pagar uma taxa anual por cada utilizador",
+        "Proibir personalização de conteúdos"
+      ],
+      "a": 1
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "id": "pmq",
+  "title": "Quiz: Pesquisa de Marketing",
+  "description": "Testa os teus conhecimentos sobre tipos de pesquisa, qualitativa vs quantitativa, amostragem e análise de dados.",
+  "questions": [
+    {
+      "q": "Qual a principal característica da pesquisa exploratória?",
+      "opts": [
+        "Medir e caracterizar um mercado em escala",
+        "Entender um problema mal definido, gerar hipóteses — usa métodos qualitativos e amostras pequenas",
+        "Testar relações de causa-efeito com experimentos",
+        "Calcular quota de mercado com censos"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Pesquisa causal usa como método de referência:",
+      "opts": [
+        "Focus group",
+        "Survey online",
+        "Experimento controlado (A/B test)",
+        "Observação participante"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Dados secundários são:",
+      "opts": [
+        "Recolhidos especificamente para a pesquisa em causa",
+        "Dados já existentes, recolhidos para outros fins (censos, relatórios sectoriais)",
+        "Sempre mais fiáveis que dados primários",
+        "Dados qualitativos por oposição a quantitativos"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Um focus group típico tem:",
+      "opts": [
+        "1-2 pessoas, 10 minutos",
+        "6-10 pessoas com perfil semelhante, 1-2 horas, moderado por profissional",
+        "50-100 pessoas, 1 dia inteiro",
+        "Apenas decisores de topo da empresa"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Qual a principal diferença entre pesquisa qualitativa e quantitativa?",
+      "opts": [
+        "Qualitativa é mais cara",
+        "Qualitativa busca profundidade (porquê, como); quantitativa busca amplitude (quantos, quanto)",
+        "Quantitativa é sempre melhor",
+        "Qualitativa usa computadores; quantitativa usa pessoas"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Amostragem estratificada divide a população em:",
+      "opts": [
+        "Clusters geográficos aleatórios",
+        "Estratos homogéneos (ex: idade, região) e tira amostra aleatória dentro de cada",
+        "Elementos escolhidos por conveniência",
+        "Respostas auto-seleccionadas em painel online"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Para uma survey nacional em Portugal, uma amostra de 1000 entrevistas dá, em média, uma margem de erro de:",
+      "opts": [
+        "±0,5%",
+        "±3% (95% de confiança)",
+        "±10%",
+        "±30%"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Um valor-p < 0,05 indica:",
+      "opts": [
+        "O padrão observado é certamente verdadeiro",
+        "Há menos de 5% de probabilidade de o padrão ser acaso — sugere significância estatística",
+        "A pesquisa é válida",
+        "A amostra é suficientemente grande"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Garbage in, garbage out significa:",
+      "opts": [
+        "Que dados antigos não servem",
+        "Que dados mal preparados geram conclusões erradas — a qualidade da análise depende da qualidade dos dados de entrada",
+        "Que é preciso deitar fora lixo físico",
+        "Que o questionário tem de ser curto"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Um bom relatório de pesquisa termina com:",
+      "opts": [
+        "Tabelas detalhadas de frequência",
+        "Recomendações accionáveis e priorizadas para o negócio",
+        "Bibliografia académica",
+        "Anexo com questionário completo"
+      ],
+      "a": 1
+    }
+  ]
+}

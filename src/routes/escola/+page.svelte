@@ -200,18 +200,42 @@
           badge: 'Uni'
         },
         {
-          slug: 'analise-financeira',
-          title: 'Análise Financeira',
-          tagline: 'Business Administration · Rácios, fluxos de caixa e valuation',
-          description:
-            'Como interpretar as demonstrações financeiras para avaliar desempenho e valor: rácios de liquidez, solvência e rentabilidade, free cash flow e métodos de valuation.',
-          icon: '📈',
-          color: '#0d9488',
-          lessonCount: 4,
-          quizCount: 1,
-          badge: 'Uni'
-        }
-      ];
+                  slug: 'analise-financeira',
+                  title: 'Análise Financeira',
+                  tagline: 'Business Administration · Rácios, fluxos de caixa e valuation',
+                  description:
+                    'Como interpretar as demonstrações financeiras para avaliar desempenho e valor: rácios de liquidez, solvência e rentabilidade, free cash flow e métodos de valuation.',
+                  icon: '📈',
+                  color: '#0d9488',
+                  lessonCount: 4,
+                  quizCount: 1,
+                  badge: 'Uni'
+                },
+                {
+                  slug: 'comportamento-do-consumidor',
+                  title: 'Comportamento do Consumidor',
+                  tagline: 'Business Administration · Factores de decisão, jornada, segmentação e omnichannel',
+                  description:
+                    'Como e por que os consumidores escolhem, compram e usam produtos: factores culturais, sociais, pessoais e psicológicos, processo de decisão em 5 estágios, segmentação e personas, e comportamento digital.',
+                  icon: '🛍️',
+                  color: '#db2777',
+                  lessonCount: 4,
+                  quizCount: 1,
+                  badge: 'Uni'
+                },
+                {
+                  slug: 'pesquisa-de-marketing',
+                  title: 'Pesquisa de Marketing',
+                  tagline: 'Business Administration · Tipos de pesquisa, métodos qualitativos e quantitativos, amostragem e relatórios',
+                  description:
+                    'Como planear, conduzir e interpretar pesquisa de mercado: exploratória vs descritiva vs causal, qualitativa vs quantitativa, amostragem e desenho de questionário, análise de dados e relatório executivo.',
+                  icon: '🔬',
+                  color: '#7c3aed',
+                  lessonCount: 4,
+                  quizCount: 1,
+                  badge: 'Uni'
+                }
+              ];
 </script>
 
 <svelte:head>
