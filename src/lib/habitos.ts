@@ -22,6 +22,7 @@
 
 import { format, subDays } from 'date-fns';
 import { db } from './state/db';
+import { awardXP } from './state/xp-actions';
 import type { HabitoRow, HabitLogRow } from './state/db';
 
 // ---------------------------------------------------------------------------
@@ -84,7 +85,10 @@ export async function addHabito(input: NewHabitInput): Promise<number> {
     cadence: input.cadence || 'daily',
     createdAt: Date.now()
   };
-  return await db().habitos.add(row) as number;
+  const id = (await db().habitos.add(row)) as number;
+  // M0-S2: award XP for creating a new habit
+  await awardXP('habito_create');
+  return id;
 }
 
 /**
@@ -97,6 +101,8 @@ export async function deleteHabito(id: number): Promise<void> {
     await db().habit_logs.where('habitId').equals(id).delete();
     await db().habitos.delete(id);
   });
+  // M0-S2: small XP penalty to discourage accidental deletes
+  await awardXP('habito_delete');
 }
 
 // ---------------------------------------------------------------------------
