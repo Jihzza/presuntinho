@@ -49,6 +49,9 @@
     activeProfile = getSession()?.profile ?? null;
     void (async () => {
       await initStores();
+      // After hydration, mirror the latest XP value once.
+      currentXp = get(xp);
+      // Then keep it in sync if XP changes while the hub is mounted.
       xp.subscribe((v) => (currentXp = v));
     })();
   });
