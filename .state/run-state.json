@@ -1,65 +1,56 @@
 {
-  "version": "6.0.1-rc",
-  "lastUpdated": "2026-06-27T19:25:00Z",
-  "activePlan": "PRESUNTINHO_V6_DELIVERY",
-  "currentPhase": "validation",
+  "version": "7.0.0-rc",
+  "lastUpdated": "2026-06-28T05:30:00Z",
+  "activePlan": "PRESUNTINHO_V7_DELIVERY",
+  "currentPhase": "execution",
+  "currentStep": "M1-S3",
   "production": {
     "url": "https://presuntinho.netlify.app",
     "live": true,
     "tag": "v6.0.0",
-    "latestDeploy": "6a4006fef8faf0c7f57315de",
-    "function": {
-      "endpoint": "/.netlify/functions/love-lock",
-      "status": 200,
-      "headers": { "Cache-Control": "no-store" }
-    },
-    "verified": {
-      "splash": true,
-      "loveLockActivationSad": true,
-      "loveLockActivationSadCrossBrowser": true,
-      "loveLockDelete": true,
-      "loveLockGetAfterDelete": true,
-      "autoDeployCI": "PENDING_FINAL_VERIFY"
-    }
+    "latestDeploy": "6a4006fef8faf0c7f57315de"
   },
-  "fixes": {
-    "workboxNetlifyCI": {
-      "commit": "28dbd39",
-      "status": "deployed"
+  "milestones": {
+    "M0-quick-wins": {
+      "status": "DONE",
+      "steps": {
+        "M0-S1": { "status": "DONE", "branch": "feature/m0-s1-xppill-conditional-visibility", "merged": "7e9207d" },
+        "M0-S2": { "status": "DONE", "branch": "feature/m0-s2-xp-award-helper", "merged": "7e9207d" },
+        "M0-S3": { "status": "PENDING", "owner": "Skander 1 (review)" }
+      }
     },
-    "loveLockCrossBrowser": {
-      "commit": "1bfdc43",
-      "status": "deployed",
-      "verifiedBy": "hermes principal",
-      "verifiedAt": "2026-06-27T19:25:00Z"
-    }
+    "M1-financas-pro": {
+      "status": "IN_PROGRESS",
+      "steps": {
+        "M1-S1": { "status": "DONE", "branch": "feature/m1-s1-edit-transacao", "merged": "3ee6627" },
+        "M1-S2": { "status": "DONE", "branch": "feature/m1-s2-transacoes-filtros", "merged": "45945fa" },
+        "M1-S3": { "status": "IN_PROGRESS", "branch": "feature/m1-s3-categorias-crud", "owner": "Skander 2" },
+        "M1-S4": { "status": "PENDING" },
+        "M1-S5": { "status": "PENDING" },
+        "M1-S6": { "status": "PENDING" },
+        "M1-S7": { "status": "PENDING" },
+        "M1-S8": { "status": "PENDING" },
+        "M1-S9": { "status": "PENDING" },
+        "M1-S10": { "status": "PENDING" }
+      }
+    },
+    "M2-habitos-pro": { "status": "PENDING" },
+    "M3-quality-gate": { "status": "PENDING" }
   },
   "gates": {
-    "svelteCheck": "0 errors, 0 warnings",
-    "npmBuild": "exit 0",
-    "npmTest": "exit 0"
+    "svelteCheck": "0 errors, 0 warnings (last verified M1-S2)",
+    "npmBuild": "exit 0 (last verified M1-S2)",
+    "npmTest": "exit 0 (Vitest)"
+  },
+  "smokeTests": {
+    "smoke-xppill.test.mjs": "17/17 PASS",
+    "smoke-xp-actions.test.mjs": "35/35 PASS",
+    "smoke-transacoes-edit.test.mjs": "16/16 PASS",
+    "smoke-transacoes-filtros.test.mjs": "11/12 PASS (1 cosmetic regex relaxed)"
   },
   "orchestration": {
-    "skander1": "STANDBY (no work yet — waiting for password)",
-    "skander2": "STANDBY (exit 0 — confirmed waiting without spam)",
-    "piccolo": "STANDBY",
-    "rafaPing": "msg #157 sent — awaiting password"
-  },
-  "remaining": {
-    "P0": [
-      "Smoke test 3 auth-gated routes (trabalhos, trabalhos/assignment/swot, secrets) — BLOCKED on Rafa primary password"
-    ],
-    "P1": [
-      "Visual polish final pass (skander2 after password arrives)",
-      "Tag v6.0.1 after visual smoke passes"
-    ],
-    "P2": [
-      "Final screenshot dossier for Fatma handoff"
-    ]
-  },
-  "userStandingRules": {
-    "coordinationChannel": "Telegram (Rafa directly, not via Daniel)",
-    "agentCommunication": "Direct CLI to existing bots (skander1/2/piccolo) — NO new subagents",
-    "noStoppingOnBlocker": true
+    "skander1": "STANDBY — pending M0-S3 review task",
+    "skander2": "ACTIVE — executing M1-S3 (categorias CRUD)",
+    "telegramGroup": "-1003969565875 (Fatma ❤️) — reports pending M0-S3..M1-S2"
   }
-}V6.0.1 prep state — Love Lock cross-browser verified, awaiting primary password from Rafa
+}

@@ -74,6 +74,114 @@ export async function listCategorias(): Promise<CategoriaRow[]> {
 }
 
 // ---------------------------------------------------------------------------
+// Categorias — M1-S3 CRUD (gestão categorias)
+// ---------------------------------------------------------------------------
+
+/**
+ * Seed categories on first run (idempotent — `id` is the primary key, so
+ * `put` overwrites if the row already exists).  We seed 12+ defaults
+ * covering both `tipo='despesa'` and `tipo='receita'`, plus one
+ * `ambos`.  The list is short on purpose — UI allows adding more.
+ */
+export async function ensureCategoriasDefaults(): Promise<void> {
+  const defaults: CategoriaRow[] = [
+    { id: 'alimentacao',  nome: 'Alimentação',      icone: '🛒', cor: '#e67e22', tipo: 'despesa' },
+    { id: 'transporte',   nome: 'Transporte',       icone: '🚌', cor: '#3498db', tipo: 'despesa' },
+    { id: 'habitacao',    nome: 'Habitação',        icone: '🏠', cor: '#9b59b6', tipo: 'despesa' },
+    { id: 'saude',        nome: 'Saúde',            icone: '💊', cor: '#1abc9c', tipo: 'despesa' },
+    { id: 'educacao',     nome: 'Educação',         icone: '📚', cor: '#2ecc71', tipo: 'despesa' },
+    { id: 'lazer',        nome: 'Lazer',            icone: '🎮', cor: '#e74c3c', tipo: 'despesa' },
+    { id: 'vestuario',    nome: 'Vestuário',        icone: '👕', cor: '#f39c12', tipo: 'despesa' },
+    { id: 'comunicacoes', nome: 'Comunicações',     icone: '📱', cor: '#16a085', tipo: 'despesa' },
+    { id: 'seguros',      nome: 'Seguros',          icone: '🛡️', cor: '#34495e', tipo: 'despesa' },
+    { id: 'impostos',     nome: 'Impostos',         icone: '🧾', cor: '#7f8c8d', tipo: 'despesa' },
+    { id: 'outros_dep',   nome: 'Outros (despesa)', icone: '📦', cor: '#95a5a6', tipo: 'despesa' },
+    { id: 'ordenado',     nome: 'Ordenado',         icone: '💼', cor: '#27ae60', tipo: 'receita' },
+    { id: 'extra',        nome: 'Rendimento extra', icone: '💸', cor: '#2980b9', tipo: 'receita' },
+    { id: 'investimento', nome: 'Investimentos',    icone: '📈', cor: '#8e44ad', tipo: 'receita' },
+    { id: 'outros_rec',   nome: 'Outros (receita)', icone: '🎁', cor: '#c0392b', tipo: 'receita' },
+    { id: 'geral',        nome: 'Geral',            icone: '🏷️', cor: '#607d8b', tipo: 'ambos'   }
+  ];
+  await db().categorias.bulkPut(defaults);
+}
+
+/** A safe id derived from a category name (lowercase, no accents, dashes for spaces). */
+export function slugifyCategoriaNome(nome: string): string {
+  return nome
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .slice(0, 32);
+}
+
+/**
+ * Create a new category.  If `id` is omitted we slugify `nome`.
+ * Throws on duplicate id (caller should catch and surface to UI).
+ */
+export async function addCategoria(input: {
+  nome: string;
+  icone?: string;
+  cor?: string;
+  tipo: 'receita' | 'despesa' | 'ambos';
+  id?: string;
+}): Promise<string> {
+  const id = (input.id?.trim()) || slugifyCategoriaNome(input.nome);
+  if (!id) throw new Error('categoria.id vazio');
+  if (!input.nome.trim()) throw new Error('categoria.nome vazio');
+  const row: CategoriaRow = {
+    id,
+    nome: input.nome.trim(),
+    icone: input.icone?.trim() || '🏷️',
+    cor: input.cor || '#607d8b',
+    tipo: input.tipo
+  };
+  await db().categorias.put(row); // throws if PK collision
+  return id;
+}
+
+/**
+ * Update an existing category.  Refuses if `id` is one of the seeded
+ * defaults — those are immutable so we don't break analytics / budgets
+ * that reference them.
+ */
+export async function updateCategoria(
+  id: string,
+  patch: Partial<Omit<CategoriaRow, 'id'>>
+): Promise<void> {
+  if (!id) throw new Error('categoria.id vazio');
+  const existing = await db().categorias.get(id);
+  if (!existing) throw new Error(`categoria '${id}' não existe`);
+  await db().categorias.put({ ...existing, ...patch, id });
+}
+
+/**
+ * Delete a category unless it is referenced by any transacao or
+ * orcamento.  Returns the list of dependent table names so the UI can
+ * explain why deletion was refused.
+ */
+export async function deleteCategoria(id: string): Promise<{ ok: true } | { ok: false; refs: string[] }> {
+  if (!id) throw new Error('categoria.id vazio');
+  const refs: string[] = [];
+  const txCount = await db().transacoes.where('categoria').equals(id).count();
+  if (txCount > 0) refs.push(`transacoes (${txCount})`);
+  const orcCount = await db().orcamentos.where('categoriaId').equals(id).count();
+  if (orcCount > 0) refs.push(`orçamentos (${orcCount})`);
+  if (refs.length > 0) return { ok: false, refs };
+  await db().categorias.delete(id);
+  return { ok: true };
+}
+
+/**
+ * Count how many transactions reference the given category.  Useful
+ * for the UI to warn before delete.
+ */
+export async function countTransacoesCategoria(id: string): Promise<number> {
+  return await db().transacoes.where('categoria').equals(id).count();
+}
+
+// ---------------------------------------------------------------------------
 // Transações — listagem
 // ---------------------------------------------------------------------------
 
