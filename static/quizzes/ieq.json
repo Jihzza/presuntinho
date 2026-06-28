@@ -1,0 +1,107 @@
+{
+  "id": "ieq",
+  "title": "Quiz: Inovação e Empreendedorismo",
+  "description": "Mindset, design thinking, validação e financiamento.",
+  "questions": [
+    {
+      "q": "Qual destas características NÃO faz parte do mindset empreendedor clássico?",
+      "opts": [
+        "Tolerância à ambiguidade",
+        "Orientação para a acção",
+        "Aversão total ao risco",
+        "Aprendizagem contínua"
+      ],
+      "a": 2
+    },
+    {
+      "q": "A primeira fase do Design Thinking, segundo o modelo da Stanford d.school, é:",
+      "opts": [
+        "Ideação",
+        "Empatia",
+        "Prototipagem",
+        "Definição"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Num protótipo de baixa-fidelidade, a principal vantagem é:",
+      "opts": [
+        "Produzir um produto acabado",
+        "Ser barato e rápido de construir, encorajando iteração",
+        "Replicar 100% do produto final",
+        "Substituir o produto final"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Qual é a causa número um de morte das startups segundo o estudo CB Insights (2019)?",
+      "opts": [
+        "Equipa fraca",
+        "Falta de capital",
+        "Construir algo que ninguém quer",
+        "Má estratégia de marketing"
+      ],
+      "a": 2
+    },
+    {
+      "q": "O exemplo clássico do Dropbox, que usou um vídeo de 3 minutos como MVP, corresponde a que tipo de MVP?",
+      "opts": [
+        "Concierge MVP",
+        "Wizard of Oz MVP",
+        "Video MVP",
+        "Landing page MVP"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Qual das seguintes NÃO é uma hipótese a testar no Customer Development (Steve Blank)?",
+      "opts": [
+        "Hipótese de problema",
+        "Hipótese de solução",
+        "Hipótese de design gráfico",
+        "Hipótese de crescimento"
+      ],
+      "a": 2
+    },
+    {
+      "q": "A sigla TAM/SAM/SOM representa:",
+      "opts": [
+        "Total Annual Market / Segmented Annual Market / Specific Operational Market",
+        "Total Addressable Market / Serviceable Available Market / Serviceable Obtainable Market",
+        "Top Annual Market / Sample Annual Market / Specific Open Market",
+        "Target Audience Map / Sample Audience Map / Specific Outreach Map"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Em SaaS, a regra de ouro para LTV/CAC é:",
+      "opts": [
+        "≥ 1",
+        "≥ 3",
+        "≥ 10",
+        "≥ 100"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Qual destas fontes de financiamento DILUI menos o equity do fundador?",
+      "opts": [
+        "Venture Capital",
+        "Business Angel",
+        "Empréstimo bancário (debt)",
+        "Crowdfunding de equity"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Ao abordar business angels, qual estratégia tem maior taxa de sucesso?",
+      "opts": [
+        "Enviar cold emails genéricos em massa",
+        "Publicar em redes sociais e esperar",
+        "Pedir warm intros (recomendações directas) a contactos partilhados",
+        "Contactar directamente o CEO por telefone sem contexto"
+      ],
+      "a": 2
+    }
+  ]
+}

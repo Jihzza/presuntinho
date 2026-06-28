@@ -1,0 +1,80 @@
+{
+  "id": "4-financiamento-e-pitch",
+  "courseSlug": "inovacao-empreendedorismo",
+  "title": "Financiamento e Pitch",
+  "audio": "Lição sobre financiamento e pitch.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "De validação a financiamento" },
+    { "type": "p", "text": "Validar uma ideia não chega — para a maioria das startups chega o momento em que precisam de capital para crescer mais depressa do que o cash-flow permite. A escolha entre fontes de financiamento define quanto controlo o fundador mantém, quanto diluição aceita e quanta pressão externa passa a existir. Não há fonte 'certa' universal: há fontes adequadas a cada fase, sector e ambição." },
+    { "type": "h3", "text": "As fontes de capital" },
+    { "type": "ul", "items": [
+      "Bootstrapping: usar receitas, poupanças pessoais, cartão de crédito do fundador. Mantém 100% do equity e do controlo. Limite: o crescimento é limitado pelo cash-flow.",
+      "Friends, Family & Fools (FFF): empréstimo ou investimento de pessoas próximas. Tolerante a estádios iniciais, sem métricas formais. Risco: danificar relações pessoais se o negócio falhar.",
+      "Business Angels: investidores individuais que apostam capital próprio (tipicamente 25k–250k€) em troca de equity (5%–25%). Ajudam também com mentoria e rede de contactos.",
+      "Venture Capital (VC): fundos profissionais que investem em startups com alto potencial de crescimento (500k€–10M€+ por ronda). Exigem equity significativa, participação na decisão estratégica e, normalmente, uma saída (exit) em 5–7 anos.",
+      "Crowdfunding: muitas pessoas contribuem com pequenas quantias via plataformas (Kickstarter, Indiegogo, GoFundMe, PPL). Pode ser de recompensa, equity, dívida ou donativo.",
+      "Empréstimo (debt): bancos, linhas de crédito público (Portugal 2030, Startup Portugal), ou fintechs. Não dilui equity, mas exige fluxos de caixa previsíveis para pagar juros + capital."
+    ] },
+    { "type": "h3", "text": "Qual usar em cada fase?" },
+    { "type": "p", "text": "Fase de ideia → bootstrapping + FFF. Fase de MVP com primeiros clientes → business angels + grants públicos. Fase de tração (10k+ utilizadores ou 100k€ ARR) → VC seed/Series A. Fase de escala → VC Series B/C+. Não é regra rígida, mas é o padrão observado em Silicon Valley e replicado nos ecossistemas europeus (Lisboa, Londres, Berlim)." },
+    { "type": "callout", "variant": "example", "text": "A Mailchimp cresceu 20 anos inteiramente bootstrapped (sem investimento externo) e acabou vendida à Intuit por 12 mil milhões de dólares em 2021. Já a Uber queimou centenas de milhões em VC antes de gerar lucro. Ambos os caminhos são válidos — escolhe-se consoante o modelo de negócio e a ambição de escala." },
+    { "type": "h2", "text": "O que é um pitch" },
+    { "type": "p", "text": "Pitch é a apresentação curta e estruturada de uma oportunidade de negócio. O objectivo não é 'vender a ideia' — é gerar interesse suficiente para que o investidor queira ver mais (deck, demo, métricas, reunião). Um bom pitch conta uma história convincente em poucos minutos, com clareza, números e prova social." },
+    { "type": "h3", "text": "Os 6 blocos clássicos" },
+    { "type": "ul", "items": [
+      "Problem: que dor existe, quem a sente, qual o custo actual de a resolver mal.",
+      "Solution: o que o produto faz, em linguagem simples e orientada a benefício (não a features).",
+      "Market: TAM (Total Addressable Market), SAM (Serviceable Available Market), SOM (Serviceable Obtainable Market) — quantos clientes existem e quanto valem.",
+      "Traction: evidência de progresso — utilizadores, receita, retenção, NRR, logos de clientes, parcerias.",
+      "Team: porque é que ESTA equipa (e não outra) vai conseguir executar a visão.",
+      "Ask: quanto se procura, em que ronda (seed/Series A), para que vai ser usado (hiring, marketing, produto), qual a runway esperado."
+    ] },
+    { "type": "h2", "text": "Formatos de pitch" },
+    { "type": "h3", "text": "Pitch deck (10–15 slides)" },
+    { "type": "p", "text": "Formato standard para reuniões formais com investidores. 10–15 slides, lidos em 10–20 minutos. Segue habitualmente os 6 blocos acima. Ferramentas: PowerPoint, Keynote, Google Slides, Figma. Cada slide = uma ideia, com pouco texto e visual forte. Sequência típica: capa → problem → solution → market → product demo → traction → business model → competition → team → ask → appendix." },
+    { "type": "h3", "text": "Elevator pitch (60 segundos)" },
+    { "type": "p", "text": "Resposta curta para a pergunta 'o que faz a tua empresa?'. Estrutura clássica: 'Ajudamos [cliente-alvo] a [resolver problema X] usando [abordagem Y]. Ao contrário de [alternativa actual], nós [diferenciador único].' Cabe em 60 segundos e gera curiosidade suficiente para o investidor pedir um deck." },
+    { "type": "h3", "text": "Demo (5–10 minutos)" },
+    { "type": "p", "text": "Mostrar o produto a funcionar é mais convincente do que slides. A demo conta a história do utilizador: 'imagina que és a Sara, tens este problema, abres a app, clicas aqui, e em 30 segundos resolveste.' Funciona especialmente bem em SaaS e ferramentas técnicas onde o produto é a vantagem competitiva." },
+    { "type": "callout", "variant": "tip", "text": "Antes de enviar o deck a investidores, pratica 10+ vezes em voz alta. Cronometra cada slide. Corta tudo o que não seja essencial. Investidores VC vêem centenas de decks por mês — clareza e concisão são activos escassos." },
+    { "type": "h2", "text": "Métricas que investidores querem ver" },
+    { "type": "ul", "items": [
+      "TAM / SAM / SOM: tamanho do mercado em euros ou número de clientes; mostra que o 'bolo é grande' o suficiente para justificar um investimento de milhões.",
+      "LTV (Lifetime Value): quanto um cliente paga em média durante todo o seu ciclo de vida na empresa.",
+      "CAC (Customer Acquisition Cost): quanto custa adquirir um cliente (marketing + vendas / novos clientes). LTV/CAC ≥ 3 é regra de ouro para SaaS.",
+      "Burn rate: quanto dinheiro se gasta por mês. Gross burn é o total de despesas; net burn desconta receitas.",
+      "Runway: quantos meses de operação restam com o caixa actual. Abaixo de 6 meses = alarme vermelho, é altura de levantar mais capital.",
+      "MRR / ARR: receita mensal/anual recorrente (para SaaS). Crescimento de 10–20% MoM é o 'sweet spot' para Series A.",
+      "Net Revenue Retention (NRR): receita que reténs dos clientes existentes após expansão menos churn. >100% é excelente.",
+      "Unit economics positivos: cada transacção gera margem positiva depois de todas as variáveis."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Métricas de vaidade (downloads totais, page views, utilizadores registados) não impressionam investidores. O que importa são métricas que demonstram valor criado e sustentabilidade: receita, retenção, payback period, payback, gross margin. Sê rigoroso a distinguir." },
+    { "type": "h2", "text": "Como abordar business angels" },
+    { "type": "h3", "text": "Warm intros > cold emails" },
+    { "type": "p", "text": "Business angels recebem dezenas de pitches por semana. Emails não solicitados têm taxa de resposta < 5%. Uma warm intro (recomendação directa de alguém que o investidor conhece) aumenta a taxa para 30–60%. Estratégia: identificar 2–3 pessoas na tua rede que conheçam investidores-alvo; pedir uma recomendação concreta ('podes apresentar-me ao X por email?'); nunca enviar o deck frio." },
+    { "type": "h3", "text": "One-pager e teaser" },
+    { "type": "p", "text": "Documento de uma página (PDF) com: problema, solução, mercado, métricas-chave, ask, foto da equipa. Envia-se antes da reunião para o investidor entrar na call já com contexto. Mais rápido de ler do que um deck e força-te a ser conciso." },
+    { "type": "h3", "text": "Term sheet — o básico" },
+    { "type": "p", "text": "Term sheet é o documento não-vinculativo que resume os termos do investimento. Cláusulas-chave: pre-money valuation (quanto vale a empresa ANTES do investimento), post-money (depois), equity oferecida (% da empresa vendida), tipo de acções (ordinárias vs. preferentes), direitos de governance (lugar no board), anti-dilution, vesting do fundador, opção de pool adicional para hires futuros, e exit clauses. Não aceites sem consultar advogado." },
+    { "type": "callout", "variant": "example", "text": "Pitch e financiamento não terminam quando se recebe o cheque — começam. Após o investimento, o founder passa a ter um patrão colectivo que exige reporting mensal, milestones trimestrais e, por vezes, substituição se a performance for fraca. Levantem capital com a consciência de que estão a vender tempo e atenção, não só equity." },
+    { "type": "h2", "text": "Erros clássicos a evitar" },
+    { "type": "ul", "items": [
+      "Pedir dinheiro sem tração clara: 'preciso de 500k€ para construir o produto' sem métricas de validação é red flag.",
+      "Não saber os próprios números: valuation, CAC, LTV, runway — o founder deve responder sem hesitar.",
+      "Subestimar dilution: vender 30% na seed + 25% na Series A deixa o fundador com ~50% — e o board mudou.",
+      "Ignorar alignment: aceitar dinheiro de alguém que não conhece o sector, ou que tem expectativa de retorno incompatível com o ritmo do negócio.",
+      "Pitch demasiado longo, demasiado técnico, ou sem história. Investidores investem em equipas e visões, não em features."
+    ] }
+  ],
+  "keyPoints": [
+    "Fontes de capital: bootstrapping, FFF, business angels, VC, crowdfunding, debt — cada uma com trade-offs de controlo, diluição e pressão.",
+    "Pitch clássico = problem + solution + market + traction + team + ask.",
+    "Formatos: deck (10–15 slides), elevator pitch (60s), demo (5–10 min).",
+    "Métricas que importam: TAM/SAM/SOM, LTV, CAC, burn rate, runway, MRR/ARR.",
+    "Warm intros superam cold emails. Term sheet não se aceita sem advogado."
+  ],
+  "quizSlug": "ieq",
+  "nextLesson": null,
+  "prevLesson": "3-validacao-de-ideias"
+}

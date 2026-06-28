@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T17:00:00+02:00",
+  "lastUpdated": "2026-06-28T18:18:35+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -291,6 +291,12 @@
       "description": "Verificado: 8 default habits já são seeded em ensureDefaults() via bulkPut(DEFAULT_HABITOS) quando count===0. Source-of-truth: src/lib/state/db.ts:557. Lista aparece pré-populada em app fresh sem user input.",
       "sha": "44eeb33",
       "closed_at": "2026-06-28T17:00:00+02:00"
+    },
+    {
+      "id": "gap-046",
+      "description": "gap-042 follow-up: course 'Inovação e Empreendedorismo' was advertised as 4 lessons + 1 quiz in escola/+page.svelte and curso/[slug]/+page.svelte but only had 3 lessons and 0 quiz (lessonCount: 3, quizCount: 0, missing ieq quiz). Created static/lessons/inovacao-empreendedorismo/4-financiamento-e-pitch.json (32 sections covering financiamento: bootstrapping/FFF/BA/VC/crowdfunding/debt; pitch deck 10-15 slides vs elevator pitch 60s vs demo; TAM/SAM/SOM, LTV/CAC, burn rate, runway; warm intros + one-pager + term sheet basics; real examples Mailchimp/Uber/Dropbox). Created static/quizzes/ieq.json (10 Qs covering mindset + design thinking + validation + financing). Updated escola/+page.svelte (lessonCount 3→4, quizCount 0→1, tagline + description). Updated curso/[slug]/+page.svelte (added 4th lesson entry with quizSlug ieq). Extended i18n 5 locales (pt-PT/en/tn/fr/ar) with inovacao-empreendedorismo.tagline + lessons.4-financiamento-e-pitch.{title,summary}. npm run check + npm run build green.",
+      "sha": "41cebe3",
+      "closed_at": "2026-06-28T18:18:35+02:00"
     }
   ]
 }

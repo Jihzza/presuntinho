@@ -394,14 +394,15 @@
                         'inovacao-empreendedorismo': {
                           slug: 'inovacao-empreendedorismo',
                           title: 'Inovação e Empreendedorismo',
-                          tagline: 'Universidade · Mindset, design thinking e validação de ideias',
-                          description: 'De ideia a negócio: mindset empreendedor (resiliência, orientação para oportunidades), design thinking como método de inovação centrada no utilizador, e validação de ideias com MVP, customer development e lean startup.',
+                          tagline: 'Universidade · Mindset, design thinking, validação e financiamento',
+                          description: 'De ideia a negócio: mindset empreendedor (resiliência, orientação para oportunidades), design thinking como método de inovação centrada no utilizador, validação de ideias com MVP, customer development e lean startup, e financiamento + pitch para escalar.',
                           icon: '💡',
                           color: '#ca8a04',
                           lessons: [
                             { slug: '1-mindset-empreendedor', title: '1. Mindset Empreendedor', summary: 'Resiliência, tolerância ao risco e orientação para oportunidades.', estMinutes: 7 },
                             { slug: '2-design-thinking', title: '2. Design Thinking', summary: 'Empatia, definição, ideação, prototipagem e teste.', estMinutes: 8 },
-                            { slug: '3-validacao-de-ideias', title: '3. Validação de Ideias', summary: 'MVP, customer development e ciclos build-measure-learn.', estMinutes: 8 }
+                            { slug: '3-validacao-de-ideias', title: '3. Validação de Ideias', summary: 'MVP, customer development e ciclos build-measure-learn.', estMinutes: 8 },
+                            { slug: '4-financiamento-e-pitch', title: '4. Financiamento e Pitch', summary: 'Fontes de capital, pitch deck, métricas para investidores e como abordar business angels.', quizSlug: 'ieq', quizTitle: 'Quiz: Inovação e Empreendedorismo', estMinutes: 9 }
                           ]
                         }
                       };

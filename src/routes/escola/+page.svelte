@@ -298,13 +298,13 @@
                                 {
                                   slug: 'inovacao-empreendedorismo',
                                   title: 'Inovação e Empreendedorismo',
-                                  tagline: 'Universidade · Mindset, design thinking e validação de ideias',
+                                  tagline: 'Universidade · Mindset, design thinking, validação e financiamento',
                                   description:
-                                    'De ideia a negócio: mindset empreendedor (resiliência, orientação para oportunidades), design thinking como método de inovação centrada no utilizador, e validação de ideias com MVP, customer development e lean startup.',
+                                    'De ideia a negócio: mindset empreendedor (resiliência, orientação para oportunidades), design thinking como método de inovação centrada no utilizador, validação de ideias com MVP, customer development e lean startup, e financiamento + pitch para escalar.',
                                   icon: '💡',
                                   color: '#ca8a04',
-                                  lessonCount: 3,
-                                  quizCount: 0,
+                                  lessonCount: 4,
+                                  quizCount: 1,
                                   badge: 'Uni'
                                 }
                               ];
