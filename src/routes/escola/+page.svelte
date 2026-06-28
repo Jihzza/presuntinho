@@ -224,18 +224,42 @@
                   badge: 'Uni'
                 },
                 {
-                  slug: 'pesquisa-de-marketing',
-                  title: 'Pesquisa de Marketing',
-                  tagline: 'Business Administration · Tipos de pesquisa, métodos qualitativos e quantitativos, amostragem e relatórios',
-                  description:
-                    'Como planear, conduzir e interpretar pesquisa de mercado: exploratória vs descritiva vs causal, qualitativa vs quantitativa, amostragem e desenho de questionário, análise de dados e relatório executivo.',
-                  icon: '🔬',
-                  color: '#7c3aed',
-                  lessonCount: 4,
-                  quizCount: 1,
-                  badge: 'Uni'
-                }
-              ];
+                                  slug: 'pesquisa-de-marketing',
+                                  title: 'Pesquisa de Marketing',
+                                  tagline: 'Business Administration · Tipos de pesquisa, métodos qualitativos e quantitativos, amostragem e relatórios',
+                                  description:
+                                    'Como planear, conduzir e interpretar pesquisa de mercado: exploratória vs descritiva vs causal, qualitativa vs quantitativa, amostragem e desenho de questionário, análise de dados e relatório executivo.',
+                                  icon: '🔬',
+                                  color: '#7c3aed',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
+                                },
+                                {
+                                  slug: 'gestao-mudanca',
+                                  title: 'Gestão da Mudança Organizacional',
+                                  tagline: 'Business Administration · Modelos de Kotter, ADKAR, resistência e cultura',
+                                  description:
+                                    'Como planear, conduzir e ancorar a mudança em organizações: tipos de mudança, modelo de 8 passos de Kotter, ADKAR da Prosci, fontes de resistência (Kotter-Schlesinger) e cultura organizacional segundo Schein.',
+                                  icon: '🔄',
+                                  color: '#14b8a6',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
+                                },
+                                {
+                                  slug: 'negociacao',
+                                  title: 'Técnicas de Negociação Empresarial',
+                                  tagline: 'Business Administration · BATNA, ZOPA, negociação de princípios e cross-cultural',
+                                  description:
+                                    'Como negociar de forma eficaz em contexto empresarial: fundamentos, BATNA e ZOPA, negociação baseada em princípios de Fisher & Ury, comunicação (escuta activa e CNV) e negociação internacional cross-cultural (Hofstede, Hall).',
+                                  icon: '🤝',
+                                  color: '#0369a1',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
+                                }
+                              ];
 </script>
 
 <svelte:head>

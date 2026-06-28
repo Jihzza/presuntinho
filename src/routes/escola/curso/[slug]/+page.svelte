@@ -308,20 +308,48 @@
                   ]
                 },
                 'pesquisa-de-marketing': {
-                  slug: 'pesquisa-de-marketing',
-                  title: 'Pesquisa de Marketing',
-                  tagline: 'Business Administration · Explorar, descrever e testar em marketing',
-                  description: 'Pesquisa de mercado do planeamento ao relatório — exploratória, descritiva, causal e análise de dados.',
-                  icon: '🔬',
-                  color: '#7c3aed',
-                  lessons: [
-                    { slug: '01-tipos-pesquisa', title: '1. Tipos de Pesquisa (Exploratória, Descritiva, Causal)', summary: 'Quando usar cada tipo e como se encadeiam.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 8 },
-                    { slug: '02-metodos-qualitativos-quantitativos', title: '2. Métodos Qualitativos vs Quantitativos', summary: 'Focus groups, entrevistas, surveys e métodos mistos.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 8 },
-                    { slug: '03-amostragem-questionario', title: '3. Amostragem e Desenho de Questionário', summary: 'Probabilística vs não-probabilística, margem de erro e boas práticas.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 8 },
-                    { slug: '04-analise-relatorio', title: '4. Análise de Dados e Relatório', summary: 'Da limpeza dos dados às recomendações accionáveis.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 9 }
-                  ]
-                }
-              };
+                          slug: 'pesquisa-de-marketing',
+                          title: 'Pesquisa de Marketing',
+                          tagline: 'Business Administration · Tipos de pesquisa, métodos qualitativos e quantitativos, amostragem e relatórios',
+                          description: 'Como planear, conduzir e interpretar pesquisa de mercado: exploratória vs descritiva vs causal, qualitativa vs quantitativa, amostragem e desenho de questionário, análise de dados e relatório executivo.',
+                          icon: '🔬',
+                          color: '#7c3aed',
+                          lessons: [
+                            { slug: '01-tipos-pesquisa', title: '1. Tipos de Pesquisa (Exploratória, Descritiva, Causal)', summary: 'Quando usar cada tipo e como se encadeiam.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 8 },
+                            { slug: '02-metodos-qualitativos-quantitativos', title: '2. Métodos Qualitativos vs Quantitativos', summary: 'Focus groups, entrevistas, surveys e métodos mistos.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 8 },
+                            { slug: '03-amostragem-questionario', title: '3. Amostragem e Desenho de Questionário', summary: 'Probabilística vs não-probabilística, margem de erro e boas práticas.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 8 },
+                            { slug: '04-analise-relatorio', title: '4. Análise de Dados e Relatório', summary: 'Da limpeza dos dados às recomendações accionáveis.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 9 }
+                          ]
+                        },
+                        'gestao-mudanca': {
+                          slug: 'gestao-mudanca',
+                          title: 'Gestão da Mudança Organizacional',
+                          tagline: 'Business Administration · Modelos de Kotter, ADKAR, resistência e cultura',
+                          description: 'Como planear, conduzir e ancorar a mudança em organizações: tipos de mudança, modelo de 8 passos de Kotter, ADKAR da Prosci, fontes de resistência (Kotter-Schlesinger) e cultura organizacional segundo Schein.',
+                          icon: '🔄',
+                          color: '#14b8a6',
+                          lessons: [
+                            { slug: '1-conceitos-mudanca', title: '1. Conceitos Fundamentais de Mudança', summary: 'O que é mudança organizacional, tipos e porque 70% falham.', quizSlug: 'gmq', quizTitle: 'Quiz: Gestão da Mudança Organizacional', estMinutes: 8 },
+                            { slug: '2-modelos-mudanca', title: '2. Modelos de Mudança (Kotter 8 + ADKAR)', summary: 'Sequência de Kotter e letras do ADKAR.', quizSlug: 'gmq', quizTitle: 'Quiz: Gestão da Mudança Organizacional', estMinutes: 9 },
+                            { slug: '3-resistencia-mudanca', title: '3. Resistência à Mudança', summary: 'Quatro fontes e 8 estratégias de Kotter-Schlesinger.', quizSlug: 'gmq', quizTitle: 'Quiz: Gestão da Mudança Organizacional', estMinutes: 8 },
+                            { slug: '4-cultura-organizacional', title: '4. Cultura Organizacional e Ancoragem', summary: 'Três níveis de Schein e passo 8 de Kotter.', quizSlug: 'gmq', quizTitle: 'Quiz: Gestão da Mudança Organizacional', estMinutes: 9 }
+                          ]
+                        },
+                        'negociacao': {
+                          slug: 'negociacao',
+                          title: 'Técnicas de Negociação Empresarial',
+                          tagline: 'Business Administration · BATNA, ZOPA, princípios e cross-cultural',
+                          description: 'Como negociar de forma eficaz: fundamentos, BATNA e ZOPA, negociação baseada em princípios de Fisher & Ury, comunicação (escuta activa e CNV) e negociação internacional cross-cultural (Hofstede, Hall).',
+                          icon: '🤝',
+                          color: '#0369a1',
+                          lessons: [
+                            { slug: '1-fundamentos-negociacao', title: '1. Fundamentos de Negociação', summary: 'Distributiva vs integrativa, três pilares da preparação.', quizSlug: 'neq', quizTitle: 'Quiz: Técnicas de Negociação Empresarial', estMinutes: 8 },
+                            { slug: '2-estilos-negociacao', title: '2. BATNA, ZOPA e Estilos', summary: 'BATNA forte, ZOPA, 5 estilos de Thomas-Kilmann e Fisher & Ury.', quizSlug: 'neq', quizTitle: 'Quiz: Técnicas de Negociação Empresarial', estMinutes: 9 },
+                            { slug: '3-comunicacao-negociacao', title: '3. Comunicação Eficaz em Negociação', summary: 'Escuta activa, CNV, silêncio e gestão de emoções.', quizSlug: 'neq', quizTitle: 'Quiz: Técnicas de Negociação Empresarial', estMinutes: 8 },
+                            { slug: '4-negociacao-internacional', title: '4. Negociação Internacional Cross-Cultural', summary: 'Hofstede, Hall high/low-context, gestão de tempo.', quizSlug: 'neq', quizTitle: 'Quiz: Técnicas de Negociação Empresarial', estMinutes: 9 }
+                          ]
+                        }
+                      };
 
   let courseSlug = $derived(page.params.slug ?? '');
   let course = $derived<CourseDetail | undefined>(CATALOGUE[courseSlug]);
