@@ -348,6 +348,61 @@
                             { slug: '3-comunicacao-negociacao', title: '3. Comunicação Eficaz em Negociação', summary: 'Escuta activa, CNV, silêncio e gestão de emoções.', quizSlug: 'neq', quizTitle: 'Quiz: Técnicas de Negociação Empresarial', estMinutes: 8 },
                             { slug: '4-negociacao-internacional', title: '4. Negociação Internacional Cross-Cultural', summary: 'Hofstede, Hall high/low-context, gestão de tempo.', quizSlug: 'neq', quizTitle: 'Quiz: Técnicas de Negociação Empresarial', estMinutes: 9 }
                           ]
+                        },
+                        'introducao-ao-direito': {
+                          slug: 'introducao-ao-direito',
+                          title: 'Introdução ao Direito',
+                          tagline: 'Universidade · Fontes, pessoa, obrigações e responsabilidade civil',
+                          description: 'Fundamentos jurídicos para gestores: fontes do Direito (Constituição, lei, costume, jurisprudência), pessoa e capacidade, obrigações e contratos, e responsabilidade civil. Essencial para contratos, riscos e compliance.',
+                          icon: '⚖️',
+                          color: '#7c2d12',
+                          lessons: [
+                            { slug: '1-fontes-do-direito', title: '1. Fontes do Direito', summary: 'Constituição, lei, costume, jurisprudência e pirâmide de Kelsen.', quizSlug: 'idq', quizTitle: 'Quiz: Introdução ao Direito', estMinutes: 8 },
+                            { slug: '2-pessoa-e-capacidade', title: '2. Pessoa e Capacidade', summary: 'Personalidade jurídica, capacidade de gozo e de exercício.', quizSlug: 'idq', quizTitle: 'Quiz: Introdução ao Direito', estMinutes: 8 },
+                            { slug: '3-obrigacoes-e-contratos', title: '3. Obrigações e Contratos', summary: 'Fontes das obrigações, elementos do contrato e regimes.', quizSlug: 'idq', quizTitle: 'Quiz: Introdução ao Direito', estMinutes: 9 },
+                            { slug: '4-responsabilidade-civil', title: '4. Responsabilidade Civil', summary: 'Responsabilidade contratual e extracontratual, nexo causal e dano.', quizSlug: 'idq', quizTitle: 'Quiz: Introdução ao Direito', estMinutes: 9 }
+                          ]
+                        },
+                        'logistica': {
+                          slug: 'logistica',
+                          title: 'Logística',
+                          tagline: 'Universidade · Cadeia de suprimentos, stocks, transporte e internacional',
+                          description: 'Gestão logística e da cadeia de suprimentos: supply chain end-to-end, gestão de estoques (just-in-time, EOQ), transporte e distribuição, e logística internacional (incoterms, alfândega).',
+                          icon: '🚚',
+                          color: '#0f766e',
+                          lessons: [
+                            { slug: '1-cadeia-de-suprimentos', title: '1. Cadeia de Suprimentos', summary: 'Supply chain end-to-end: fornecedores, produção, distribuição, cliente final.', quizSlug: 'lgq', quizTitle: 'Quiz: Logística', estMinutes: 8 },
+                            { slug: '2-gestao-de-estoques', title: '2. Gestão de Estoques', summary: 'JIT, EOQ, stock de segurança e ponto de encomenda.', quizSlug: 'lgq', quizTitle: 'Quiz: Logística', estMinutes: 8 },
+                            { slug: '3-transporte-e-distribuicao', title: '3. Transporte e Distribuição', summary: 'Modais, roteirização e otimização da distribuição.', quizSlug: 'lgq', quizTitle: 'Quiz: Logística', estMinutes: 9 },
+                            { slug: '4-logistica-internacional', title: '4. Logística Internacional', summary: 'Incoterms, alfândega, documentos e câmbios.', quizSlug: 'lgq', quizTitle: 'Quiz: Logística', estMinutes: 9 }
+                          ]
+                        },
+                        'sistemas-de-informacao': {
+                          slug: 'sistemas-de-informacao',
+                          title: 'Sistemas de Informação',
+                          tagline: 'Universidade · Tipos de SI, ERP, CRM, BI e segurança da informação',
+                          description: 'Sistemas de Informação nas empresas: tipos de SI (TPS, MIS, DSS, ESS), ERP e CRM como plataformas de integração, Business Intelligence para decisão, e segurança da informação (confidencialidade, integridade, disponibilidade).',
+                          icon: '💻',
+                          color: '#1e40af',
+                          lessons: [
+                            { slug: '1-tipos-de-si', title: '1. Tipos de Sistemas de Informação', summary: 'TPS, MIS, DSS, ESS — quem usa e para quê.', quizSlug: 'siq', quizTitle: 'Quiz: Sistemas de Informação', estMinutes: 8 },
+                            { slug: '2-erp-crm', title: '2. ERP e CRM', summary: 'Plataformas de integração: processos, dados, pessoas.', quizSlug: 'siq', quizTitle: 'Quiz: Sistemas de Informação', estMinutes: 8 },
+                            { slug: '3-business-intelligence', title: '3. Business Intelligence', summary: 'Data warehouse, ETL, dashboards e decisão data-driven.', quizSlug: 'siq', quizTitle: 'Quiz: Sistemas de Informação', estMinutes: 9 },
+                            { slug: '4-seguranca-da-informacao', title: '4. Segurança da Informação', summary: 'CIA triad, GDPR, criptografia e gestão de risco.', quizSlug: 'siq', quizTitle: 'Quiz: Sistemas de Informação', estMinutes: 9 }
+                          ]
+                        },
+                        'inovacao-empreendedorismo': {
+                          slug: 'inovacao-empreendedorismo',
+                          title: 'Inovação e Empreendedorismo',
+                          tagline: 'Universidade · Mindset, design thinking e validação de ideias',
+                          description: 'De ideia a negócio: mindset empreendedor (resiliência, orientação para oportunidades), design thinking como método de inovação centrada no utilizador, e validação de ideias com MVP, customer development e lean startup.',
+                          icon: '💡',
+                          color: '#ca8a04',
+                          lessons: [
+                            { slug: '1-mindset-empreendedor', title: '1. Mindset Empreendedor', summary: 'Resiliência, tolerância ao risco e orientação para oportunidades.', estMinutes: 7 },
+                            { slug: '2-design-thinking', title: '2. Design Thinking', summary: 'Empatia, definição, ideação, prototipagem e teste.', estMinutes: 8 },
+                            { slug: '3-validacao-de-ideias', title: '3. Validação de Ideias', summary: 'MVP, customer development e ciclos build-measure-learn.', estMinutes: 8 }
+                          ]
                         }
                       };
 

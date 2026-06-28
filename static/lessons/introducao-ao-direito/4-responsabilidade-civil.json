@@ -1,0 +1,50 @@
+{
+  "id": "4-responsabilidade-civil",
+  "courseSlug": "introducao-ao-direito",
+  "title": "Responsabilidade Civil",
+  "audio": "Lição sobre responsabilidade civil.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "O que é responsabilidade civil?" },
+    { "type": "p", "text": "Responsabilidade civil é o dever jurídico de reparar o dano causado a outrem, seja por acção voluntária, por negligência ou por actividade de risco. Tem uma função tríplice: reparatória (compensar o lesado), punitiva (dissuasão leve) e preventiva (incentivar comportamentos cuidadosos). Para um gestor, é a base jurídica de decisões como contratar seguros, definir procedimentos internos e avaliar risco operacional." },
+    { "type": "h3", "text": "Dois grandes regimes" },
+    { "type": "ul", "items": [
+      "Responsabilidade subjectiva (delito e quase-delito, art. 483.º e 485.º CC): exige culpa — dolo ou negligência — para haver dever de indemnizar.",
+      "Responsabilidade objectiva (sem culpa): prevista em legislação especial para actividades de risco elevado (acidentes nucleares, produtos defeituosos, acidentes de trabalho, animais perigosos, quedas de edifícios).",
+      "Responsabilidade contratual (art. 798.º CC): assenta no incumprimento ou cumprimento defeituoso de uma obrigação assumida por contrato — não exige culpa mas presume-a."
+    ] },
+    { "type": "h2", "text": "Pressupostos da responsabilidade subjectiva" },
+    { "type": "p", "text": "Para que se verifique responsabilidade civil subjectiva, é necessário provar (cumulativamente) quatro elementos: conduta voluntária do agente, ilicitude (violação de um dever jurídico), culpa (dolo ou negligência), dano (ofensa a bens jurídicos como vida, integridade física, propriedade, crédito) e nexo causal entre a conduta e o dano. A prova da culpa é, em regra, do lesado, mas há presunções de culpa em várias situações — por exemplo, o médico presume-se negligente se o resultado for absolutamente anormal." },
+    { "type": "h3", "text": "Danos indemnizáveis" },
+    { "type": "ul", "items": [
+      "Danos patrimoniais: danos emergentes (despesas feitas) e lucros cessantes (ganhos perdidos).",
+      "Danos não patrimoniais: dor, sofrimento, perda de qualidade de vida, afectação da reputação.",
+      "Danos corporais: despesas médicas, incapacidade permanente, morte — valorizam-se com base em tabelas e jurisprudência.",
+      "Danos morais: indemnização autónoma, em montantes que variam entre centenas e dezenas de milhares de euros."
+    ] },
+    { "type": "callout", "variant": "example", "text": "Um fornecedor entrega produtos alimentares contaminados que causam intoxicação a 50 clientes. Tem responsabilidade contratual perante o comprador e responsabilidade extracontractual perante os consumidores finais. As indemnizações podem ser pesadas: despesas médicas, dias de trabalho perdidos, dor e sofrimento." },
+    { "type": "h2", "text": "Causas de exclusão da ilicitude e da culpa" },
+    { "type": "p", "text": "Há situações em que, mesmo havendo dano, o agente não é responsável. As principais causas de exclusão são: legítima defesa, estado de necessidade, exercício de um direito, cumprimento de um dever imposto por lei, caso fortuito ou de força maior, e facto exclusivo de terceiro. Em cada caso, o ónus da prova recai sobre quem invoca a excludente." },
+    { "type": "h3", "text": "Responsabilidade civil no contexto empresarial" },
+    { "type": "ul", "items": [
+      "D&O (Directors and Officers): seguro de responsabilidade civil dos administradores — cobre decisões de gestão.",
+      "Responsabilidade profissional: médicos, advogados, engenheiros, contabilistas certificados respondem pelos erros técnicos.",
+      "Responsabilidade ambiental: regimes especiais obrigam à reparação de danos ecológicos.",
+      "Produtos defeituosos: Directiva 85/374/CEE transposta em Portugal; produtor responde por defeitos que afectem a segurança.",
+      "RGPD: violações de protecção de dados geram coimas até 20M€ ou 4% do volume de negócios anual."
+    ] },
+    { "type": "h2", "text": "Como mitigar o risco" },
+    { "type": "p", "text": "Empresários prudentes adoptam três linhas de defesa: prevenção (formação, procedimentos, due diligence), transferência (seguros adequados) e provisionamento (fundos para contingências). A análise de risco jurídico é tão importante como a análise de risco financeiro." },
+    { "type": "callout", "variant": "tip", "text": "Antes de lançar um produto ou abrir um mercado novo, consulta um advogado. Uma hora de consultoria pode evitar anos de litígio. A regra prática é: quanto maior o risco, maior o investimento em due diligence." }
+  ],
+  "keyPoints": [
+    "Responsabilidade civil é o dever de reparar o dano causado a outrem.",
+    "Regime subjectivo exige conduta, ilicitude, culpa, dano e nexo causal.",
+    "Regime objectivo aplica-se a actividades de risco elevado, sem culpa.",
+    "Danos indemnizáveis: patrimoniais, não patrimoniais, corporais e morais.",
+    "Mitigação: prevenção, transferência por seguros e provisionamento."
+  ],
+  "quizSlug": "idq",
+  "nextLesson": null,
+  "prevLesson": "3-obrigacoes-e-contratos"
+}

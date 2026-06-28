@@ -1,0 +1,62 @@
+{
+  "id": "2-gestao-de-estoques",
+  "courseSlug": "logistica",
+  "title": "Gestão de Estoques",
+  "audio": "Lição sobre gestão de estoques.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "Porque é que os estoques são críticos" },
+    { "type": "p", "text": "Estoques representam capital parado, espaço ocupado, risco de obsolescência e custos operacionais. Mas também protegem contra variabilidade da procura, permitem economias de escala na produção e reduzem roturas que custam clientes. O dilema da gestão de estoques é o equilíbrio entre ter demais (custo) e ter de menos (perda de vendas). Encontra-se o ponto óptimo com modelos quantitativos e bom julgamento." },
+    { "type": "h3", "text": "Tipos de estoque" },
+    { "type": "ul", "items": [
+      "Matérias-primas e componentes: input para produção.",
+      "Produtos em curso (WIP): parcialmente transformados, no chão de fábrica.",
+      "Produtos acabados: prontos para venda.",
+      "Mercadorias: artigos comprados para revenda (retalho).",
+      "MRO: maintenance, repair, operations — consumíveis, peças de reposição.",
+      "Estoque de segurança (buffer): para proteger contra variabilidade.",
+      "Estoque em trânsito: em camiões, contentores, navios."
+    ] },
+    { "type": "h2", "text": "Custos do estoque" },
+    { "type": "p", "text": "Há três famílias de custos que se对立 e devem ser balanceadas:" },
+    { "type": "ul", "items": [
+      "Custo de posse (holding): capital empatado, armazenagem, seguros, deterioração, obsolescência.",
+      "Custo de encomenda (ordering): processamento, transporte de entrada, recepção.",
+      "Custo de ruptura (stockout): perda de vendas, atrasos, clientes insatisfeitos, paragens de produção."
+    ] },
+    { "type": "h2", "text": "Modelos clássicos de gestão de estoques" },
+    { "type": "p", "text": "Os modelos matemáticos de inventário ajudam a encontrar o ponto óptimo. Os mais conhecidos:" },
+    { "type": "h3", "text": "EOQ — Economic Order Quantity (Wilson, 1913)" },
+    { "type": "p", "text": "O modelo EOQ responde à pergunta: qual a quantidade óptima a encomendar de cada vez para minimizar o custo total (posse + encomenda)? A fórmula clássica ignora descontos por quantidade e variabilidade da procura. Q* = √(2DS/H), em que D = procura anual, S = custo de encomenda, H = custo de posse anual por unidade." },
+    { "type": "callout", "variant": "example", "text": "Uma empresa vende 10.000 unidades/ano de um produto, custa 50€ encomendar cada lote e 5€ manter cada unidade em stock um ano. Q* = √(2×10.000×50 / 5) = √200.000 ≈ 447 unidades por encomenda. Resultado: ~22 encomendas por ano, em intervalos regulares." },
+    { "type": "h3", "text": "Reorder Point (ROP) e Safety Stock" },
+    { "type": "p", "text": "O ponto de encomenda é o nível de stock que dispara uma nova ordem: ROP = procura média durante lead time + stock de segurança. O stock de segurança absorve variabilidade da procura e do lead time. Fórmula comum: SS = z × σ × √L, onde z é o factor de serviço desejado, σ o desvio padrão da procura e L o lead time em dias." },
+    { "type": "h3", "text": "Modelo ABC — classificação de Pareto" },
+    { "type": "p", "text": "Nem todos os SKUs merecem a mesma atenção. A classificação ABC ordena os itens por valor de consumo anual (procura × custo):" },
+    { "type": "ul", "items": [
+      "Classe A: 20% dos itens, 80% do valor — controlo rigoroso, contagens frequentes.",
+      "Classe B: 30% dos itens, 15% do valor — controlo moderado, contagens periódicas.",
+      "Classe C: 50% dos itens, 5% do valor — controlo simples, contagens esporádicas."
+    ] },
+    { "type": "h2", "text": "Sistemas de controlo de estoques" },
+    { "type": "p", "text": "Os dois sistemas clássicos são opostos:" },
+    { "type": "ul", "items": [
+      "Sistema de revisão contínua (s,Q): monitoriza o stock continuamente; quando atinge o ROP, encomenda-se a quantidade fixa Q. Ideal para itens A com procura estável.",
+      "Sistema de revisão periódica (R,S): conta-se o stock periodicamente (semanal, mensal); encomenda-se até ao nível S. Bom quando há economias de escala no transporte.",
+      "Min-Max: variante simples — define-se mínimo (ponto de encomenda) e máximo (nível a repor); revê-se periodicamente."
+    ] },
+    { "type": "h2", "text": "Técnicas avançadas" },
+    { "type": "p", "text": "Empresas modernas adoptam técnicas mais sofisticadas: Just-in-Time (JIT) — receber componentes exactamente quando são precisos, reduzindo stock a quase zero; Vendor-Managed Inventory (VMI) — o fornecedor gere o stock do cliente; Cross-docking — mercadoria não entra em armazém, é transferida directamente entre camiões; Drop-shipping — fornecedor envia directamente ao cliente final." },
+    { "type": "callout", "variant": "tip", "text": "Em PME, começa com um sistema simples: contagem ABC dos SKUs, ROP calculado para itens A, revisão periódica para B e C. ERP ou ferramentas como o Odoo tornam a operação exequível sem grande investimento." }
+  ],
+  "keyPoints": [
+    "Estoques representam capital parado, mas protegem contra variabilidade e roturas.",
+    "Custos: posse, encomenda e ruptura — devem ser balanceados.",
+    "EOQ responde à quantidade óptima de encomenda para minimizar custo total.",
+    "ROP e safety stock protegem contra variabilidade de procura e lead time.",
+    "ABC classifica SKUs: classe A (20% dos itens, 80% do valor) merece controlo rigoroso."
+  ],
+  "quizSlug": "lgq",
+  "nextLesson": "3-transporte-e-distribuicao",
+  "prevLesson": "1-cadeia-de-suprimentos"
+}

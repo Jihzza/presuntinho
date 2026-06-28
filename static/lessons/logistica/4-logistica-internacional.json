@@ -1,0 +1,74 @@
+{
+  "id": "4-logistica-internacional",
+  "courseSlug": "logistica",
+  "title": "Logística Internacional",
+  "audio": "Lição sobre logística internacional.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "Porque é que a logística internacional é diferente" },
+    { "type": "p", "text": "Operar além-fronteiras multiplica a complexidade: regimes aduaneiros distintos, documentação em várias línguas, câmbios, regras sanitárias e fitossanitárias, sanções e embargos, Incoterms, tributação indirecata, tratados de livre comércio. Para uma PME que pretende exportar ou importar, dominar este vocabulário é tão importante como o produto em si." },
+    { "type": "h3", "text": "Três pilares da logística internacional" },
+    { "type": "ul", "items": [
+      "Aduaneira: classificação pautal, direitos aduaneiros, IVA à importação, regimes especiais.",
+      "Documental: certificados, licenças, declarações de origem, facturas e documentos de transporte.",
+      "Operacional: escolha de operadores, consolidação, armazenagem em zona franca, seguros de carga."
+    ] },
+    { "type": "h2", "text": "Classificação pautal e códigos HS" },
+    { "type": "p", "text": "O Sistema Harmonizado (HS) da Organização Mundial das Alfândegas classifica todas as mercadorias em cerca de 5.000 linhas tarifárias de seis dígitos (que podem ser expandidas por cada país). Cada código determina o direito aduaneiro aplicável, os requisitos sanitários e os acordos preferenciais que podem reduzir a taxa." },
+    { "type": "ul", "items": [
+      "Capítulo: 01-97 — categoria geral (animais, vegetais, têxteis, máquinas).",
+      "Posição (4 dígitos): família de produtos (ex: 6204 — vestuário feminino).",
+      "Subposição (6 dígitos): produto específico (ex: 6204.42 — vestidos de algodão).",
+      "Tarifas nacionais (8-10 dígitos): cada país acrescenta dígitos para uso interno."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Erros na classificação pautal podem ter consequências graves: direitos subavaliados (multa e cobrança retroactiva), direitos sobreavaliados (custos desnecessários), sanções por subfacturação. Em caso de dúvida, consulta um despachante ou a AT (Autoridade Tributária e Aduaneira)." },
+    { "type": "h2", "text": "Tratados de livre comércio e origem" },
+    { "type": "p", "text": "Os acordos de livre comércio reduzem ou eliminam direitos aduaneiros entre países signatários. Os mais relevantes para a UE e Portugal:" },
+    { "type": "ul", "items": [
+      "Mercado Único da UE: livre circulação de mercadorias entre Estados-membros (sem direitos, com IVA e formalidades).",
+      "EFTA: Acordo com Islândia, Liechtenstein, Noruega e Suíça.",
+      "CETA: UE-Canadá (aplicação provisória desde 2017).",
+      "EU-Japan EPA: UE-Japão (desde 2019).",
+      "Mercosul: UE-Mercosul (em ratificação em 2024-2025).",
+      "Acordos com África: ACP (Cotonou), SADC, CEDEAO/Ecowas.",
+      "Acordos com a Ásia: Coreia do Sul, Singapura, Vietname, Tailândia."
+    ] },
+    { "type": "h3", "text": "Regras de origem" },
+    { "type": "p", "text": "Para beneficiar de preferência, o produto tem de cumprir regras de origem. Há duas famílias:" },
+    { "type": "ul", "items": [
+      "Origem preferencial: baseada em acordos de livre comércio — para obter isenção ou redução de direitos.",
+      "Origem não-preferencial: regra geral OMC — produto inteiramente obtido num país, ou sofreu transformação substancial nesse país.",
+      "Documentos: EUR.1 (declaração de origem para acordos), Declaração de Origem em factura, Form A (sistema generalizado de preferências)."
+    ] },
+    { "type": "h2", "text": "Regimes aduaneiros especiais" },
+    { "type": "p", "text": "Para além do regime normal (importação definitiva), há regimes que permitem diferir ou suspender direitos:" },
+    { "type": "ul", "items": [
+      "Entreposto aduaneiro: armazém sob controlo aduaneiro; mercadoria não paga direitos até à saída.",
+      "Perfeccionamento activo: importação temporária para transformação e reexportação — direitos suspensos.",
+      "Perfeccionamento passivo: exportação temporária para transformação e reimportação — paga-se apenas o valor acrescentado no exterior.",
+      "Trânsito aduaneiro (T1/T2): mercadoria em trânsito por um país sem aí ser importada — exige garantia.",
+      "Zonas francas: áreas com regime fiscal e aduaneiro favorável."
+    ] },
+    { "type": "h2", "text": "Compliance e gestão de risco" },
+    { "type": "p", "text": "Operar internacionalmente exige due diligence reforçada: lista de sancionados (OFAC, UE, ONU), regras anti-corrupção (FCPA, UK Bribery Act), requisitos ambientais (CBAM — Carbon Border Adjustment Mechanism da UE), regras de origem, conformidade do produto (CE marking, conformidade técnica). A não conformidade pode levar a pesadas multas, apreensão de mercadoria e exclusão de mercados." },
+    { "type": "h3", "text": "Recomendação prática para PME" },
+    { "type": "ul", "items": [
+      "Contrata um despachante certificado — custo de 100-300€ por operação, poupa milhares em multas.",
+      "Mantém arquivo digital de todos os documentos por pelo menos 5 anos (fiscal e aduaneiro).",
+      "Verifica regularmente listas de sancionados — clientes, fornecedores, parceiros.",
+      "Forma-se em Incoterms — uma escolha mal feita pode custar 5-15% do valor da mercadoria.",
+      "Investe em seguro de carga (All Risks) — cobre perdas, danos e avarias em trânsito."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Para exportar pela primeira vez, começa por mercados da UE (sem direitos aduaneiros dentro do mercado único). Depois diversifica para países com acordos bilaterais (Reino Unido pós-Brexit, Marrocos, Angola). A AICEP (Agência para o Investimento e Comércio Externo) oferece consultoria gratuita." }
+  ],
+  "keyPoints": [
+    "Logística internacional combina complexidade aduaneira, documental e operacional.",
+    "Sistema Harmonizado (HS) classifica mercadorias e define direitos aplicáveis.",
+    "Tratados de livre comércio (CETA, EU-Japão, Mercosul) reduzem direitos com regras de origem.",
+    "Regimes especiais: entreposto, aperfeiçoamento activo/passivo, trânsito, zonas francas.",
+    "Compliance: listas de sancionados, CBAM, regras de origem e conformidade técnica."
+  ],
+  "quizSlug": "lgq",
+  "nextLesson": null,
+  "prevLesson": "3-transporte-e-distribuicao"
+}

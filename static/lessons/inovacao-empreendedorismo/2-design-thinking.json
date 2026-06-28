@@ -1,0 +1,66 @@
+{
+  "id": "2-design-thinking",
+  "courseSlug": "inovacao-empreendedorismo",
+  "title": "Design Thinking",
+  "audio": "Lição sobre Design Thinking.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "O que é Design Thinking" },
+    { "type": "p", "text": "Design Thinking é uma abordagem para inovação centrada no utilizador, que integra as necessidades das pessoas, as possibilidades tecnológicas e os requisitos do negócio. Foi popularizada pela IDEO e pela Stanford d.school, mas tem raízes em décadas de prática em design industrial, arquitectura e ciências cognitivas. Não é um processo rígido — é uma mentalidade iterativa e experimental." },
+    { "type": "h3", "text": "Os cinco estágios do Design Thinking" },
+    { "type": "ul", "items": [
+      "Empatia (Empathize): compreender profundamente os utilizadores — observar, entrevistar, imergir no contexto.",
+      "Definição (Define): sintetizar as observações em problemas claros e humanos (point-of-view statements).",
+      "Ideação (Ideate): gerar muitas ideias sem julgamento — brainstorming, SCAMPER, brainwriting.",
+      "Protótipo (Prototype): construir versões simples e baratas das melhores ideias — quanto mais cedo, melhor.",
+      "Teste (Test): validar protótipos com utilizadores reais, aprender, iterar."
+    ] },
+    { "type": "h2", "text": "Ferramentas essenciais" },
+    { "type": "p", "text": "O Design Thinking tem um conjunto de ferramentas testadas. As mais úteis em contexto empresarial:" },
+    { "type": "h3", "text": "Personas e Empathy Maps" },
+    { "type": "p", "text": "Personas são personagens fictícias que representam segmentos de utilizadores. Têm nome, idade, profissão, objectivos, frustrações, comportamentos. Empathy Maps dividem o que o utilizador diz, pensa, faz e sente num único quadro visual — ajudam a equipa a lembrar-se que está a servir pessoas reais." },
+    { "type": "h3", "text": "Point-of-View (POV) Statements" },
+    { "type": "p", "text": "Um POV sintetiza o problema numa frase: '[Utilizador] precisa de [necessidade] porque [insight surpreendente]'. Força a equipa a articular quem, o quê e porquê antes de saltar para soluções." },
+    { "type": "h3", "text": "How-Might-We (HMW) Questions" },
+    { "type": "p", "text": "Converter um problema em questões optimistas: 'Como poderíamos ajudar viajantes frequentes a poupar tempo no aeroporto?'. O formato HMW abre portas em vez de fechar — não sugere logo a solução." },
+    { "type": "h3", "text": "Prototipagem rápida" },
+    { "type": "p", "text": "Um protótipo pode ser um esboço em papel, um wireframe em Figma, uma maquete em cartão, um vídeo, um role-play. A regra é: protótipos baratos, rápidos e descartáveis. A função é aprender, não impressionar." },
+    { "type": "callout", "variant": "example", "text": "A Airbnb começou com um protótipo ultra-simples: três fundadores alugaram colchões de ar na sua própria sala e tiraram fotos com uma câmara digital de baixa qualidade. Foi assim que perceberam que as fotos profissionais eram o principal factor de conversão — não a plataforma." },
+    { "type": "h2", "text": "Design Thinking vs. processo tradicional" },
+    { "type": "p", "text": "No processo tradicional, começamos pela solução técnica, construímos um plano detalhado e lançamos. No Design Thinking, começamos pelo utilizador, iteramos rapidamente e lançamos para aprender. Não é melhor ou pior em absoluto — são abordagens complementares." },
+    { "type": "h3", "text": "Quando usar Design Thinking" },
+    { "type": "ul", "items": [
+      "Problemas mal definidos: quando não sabemos bem o que estamos a tentar resolver.",
+      "Inovação centrada no utilizador: quando o sucesso depende da adopção e satisfação.",
+      "Ambientes complexos: muitos stakeholders, requisitos contraditórios.",
+      "Sectores tradicionais a digitalizar: bancos, seguros, saúde, administração pública."
+    ] },
+    { "type": "h2", "text": "Críticas e limites" },
+    { "type": "p", "text": "Design Thinking não é panaceia. As críticas mais frequentes:" },
+    { "type": "ul", "items": [
+      "Pode levar a soluções simpáticas mas não escaláveis ou rentáveis.",
+      "Risco de foco excessivo no utilizador individual, ignorando tendências sistémicas.",
+      "Subestima a importância da execução técnica e do timing.",
+      "Workshops pontuais sem continuidade não mudam a cultura organizacional."
+    ] },
+    { "type": "h3", "text": "Como implementar Design Thinking numa organização" },
+    { "type": "ul", "items": [
+      "Começar com um sprint curto (1-2 semanas) num problema concreto e visível.",
+      "Garantir diversidade na equipa: diferentes idades, áreas, senioridade, backgrounds.",
+      "Reservar tempo para empatia: pelo menos 30% do esforço inicial.",
+      "Tornar os protótipos visíveis: paredes cobertas de post-its, salas de protótipos.",
+      "Celebrar iterações, não perfeição: cada teste é uma vitória de aprendizagem."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Para uma PME que nunca praticou Design Thinking, começa por um workshop de 1 dia com um problema real. Em 6 horas, a equipa percorre empatia → definição → protótipo. A energia que se gera costuma ser maior do que meses de PowerPoint." }
+  ],
+  "keyPoints": [
+    "Design Thinking centra-se nas necessidades humanas e integra tecnologia e negócio.",
+    "Cinco estágios: Empatia → Definição → Ideação → Protótipo → Teste.",
+    "Ferramentas-chave: Personas, Empathy Maps, POV, How-Might-We, prototipagem rápida.",
+    "Críticas: pode subestimar execução técnica e timing; workshops pontuais raramente mudam cultura.",
+    "Implementação eficaz: sprints curtos, equipas diversas, foco em iteração visível."
+  ],
+  "quizSlug": "ieq",
+  "nextLesson": "3-validacao-de-ideias",
+  "prevLesson": "1-mindset-empreendedor"
+}

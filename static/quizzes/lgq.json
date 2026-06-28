@@ -1,0 +1,107 @@
+{
+  "id": "lgq",
+  "title": "Quiz: Logística",
+  "description": "Cadeia de suprimentos, estoques, transporte e logística internacional.",
+  "questions": [
+    {
+      "q": "O modelo SCOR divide a cadeia em quantos processos principais?",
+      "opts": [
+        "3",
+        "5",
+        "7",
+        "10"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Num sistema pull, a produção é desencadeada por:",
+      "opts": [
+        "Previsão de vendas",
+        "Pedido real do cliente",
+        "Plano do marketing",
+        "Sugestão do CEO"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Na classificação ABC, os itens de classe A representam:",
+      "opts": [
+        "20% dos itens e 80% do valor",
+        "50% dos itens e 50% do valor",
+        "80% dos itens e 20% do valor",
+        "100% dos itens e 0% do valor"
+      ],
+      "a": 0
+    },
+    {
+      "q": "A fórmula EOQ (Economic Order Quantity) calcula:",
+      "opts": [
+        "O preço óptimo de venda",
+        "A quantidade óptima de encomenda para minimizar custos totais",
+        "O número de colaboradores",
+        "A distância de entrega"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Qual é o modo de transporte mais usado no comércio internacional em volume?",
+      "opts": [
+        "Aéreo",
+        "Rodoviário",
+        "Marítimo",
+        "Ferroviário"
+      ],
+      "a": 2
+    },
+    {
+      "q": "O documento B/L (Bill of Lading) é usado em transporte:",
+      "opts": [
+        "Aéreo",
+        "Rodoviário internacional",
+        "Marítimo",
+        "Ferroviário"
+      ],
+      "a": 2
+    },
+    {
+      "q": "O Incoterm CIF significa que o vendedor paga:",
+      "opts": [
+        "Tudo, incluindo direitos",
+        "Transporte e seguro até porto destino; risco transfere-se no embarque",
+        "Apenas o transporte interno",
+        "Nada"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O Sistema Harmonizado (HS) classifica mercadorias em:",
+      "opts": [
+        "3 categorias",
+        "Cerca de 5.000 linhas de seis dígitos",
+        "Uma única categoria",
+        "12 categorias"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O regime de entreposto aduaneiro permite:",
+      "opts": [
+        "Pagar direitos antecipadamente",
+        "Armazenar mercadoria sob controlo aduaneiro sem pagar direitos imediatamente",
+        "Exportar tudo sem taxas",
+        "Importar sem factura"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O CBAM da UE é:",
+      "opts": [
+        "Um imposto sobre publicidade",
+        "Um mecanismo de ajuste de carbono nas fronteiras",
+        "Um subsídio à exportação",
+        "Uma licença de importação"
+      ],
+      "a": 1
+    }
+  ]
+}

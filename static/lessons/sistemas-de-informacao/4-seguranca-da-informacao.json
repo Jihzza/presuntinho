@@ -1,0 +1,66 @@
+{
+  "id": "4-seguranca-da-informacao",
+  "courseSlug": "sistemas-de-informacao",
+  "title": "Segurança da Informação",
+  "audio": "Lição sobre segurança da informação.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "Porque é que a segurança da informação é crítica" },
+    { "type": "p", "text": "Em 2024, o custo médio de uma violação de dados foi de 4,88 milhões de dólares a nível global (relatório IBM Cost of a Data Breach). Mais grave: a maioria das empresas afectadas não tinha um plano de resposta testado. Para um gestor, segurança deixou de ser tema exclusivo de TI — é risco operacional, reputacional, legal e financeiro. Uma empresa pode falir por um único incidente mal gerido." },
+    { "type": "h3", "text": "A tríade CIA — Confidencialidade, Integridade, Disponibilidade" },
+    { "type": "ul", "items": [
+      "Confidencialidade: garantir que a informação só é acedida por quem tem autorização. Criptografia, controlos de acesso, classificação.",
+      "Integridade: assegurar que a informação não é alterada de forma não autorizada. Hashes, assinaturas digitais, logs imutáveis.",
+      "Disponibilidade: garantir que os sistemas e dados estão acessíveis quando necessário. Redundância, backups, planos de continuidade."
+    ] },
+    { "type": "h2", "text": "Ameaças e vectores de ataque" },
+    { "type": "p", "text": "As ameaças evoluem constantemente, mas há padrões que se repetem. Conhecer o vocabulário é o primeiro passo para defender a empresa." },
+    { "type": "h3", "text": "Tipos de ameaça mais comuns" },
+    { "type": "ul", "items": [
+      "Phishing: emails fraudulentos que imitam entidades legítimas para roubar credenciais ou instalar malware. É o vector n.º 1 de ataque.",
+      "Ransomware: software que cifra dados e exige resgate. Empresas inteiras paradas durante dias.",
+      "Engenharia social: manipulação psicológica de pessoas para obter acesso ou informação.",
+      "Ataques de password: força bruta, credential stuffing, password spraying.",
+      "Insider threats: colaboradores mal-intencionados ou descuidados que comprometem a segurança.",
+      "DDoS: ataque que torna um serviço indisponível por sobrecarga de tráfego.",
+      "Vulnerabilidades de software: exploração de bugs conhecidos em sistemas não actualizados."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Mais de 80% dos incidentes de segurança envolvem o factor humano. Um clique num link de phishing é, estatisticamente, mais provável do que uma exploração técnica de uma vulnerabilidade." },
+    { "type": "h2", "text": "Frameworks e normas" },
+    { "type": "p", "text": "Vários frameworks orientam a gestão de segurança da informação. Os principais:" },
+    { "type": "ul", "items": [
+      "ISO/IEC 27001: norma internacional para Sistema de Gestão de Segurança da Informação (SGSI). Base para certificação reconhecida globalmente.",
+      "NIST Cybersecurity Framework: estrutura americana com cinco funções (Identify, Protect, Detect, Respond, Recover).",
+      "CIS Controls: 18 controlos prioritários de segurança, do básico ao avançado.",
+      "PCI-DSS: obrigatório para empresas que processam pagamentos com cartão.",
+      "RGPD / GDPR: protecção de dados pessoais na União Europeia.",
+      "NIS2: directiva europeia de segurança de redes e sistemas de informação, em transposição."
+    ] },
+    { "type": "h2", "text": "Gestão de risco de segurança" },
+    { "type": "p", "text": "O risco de segurança combina probabilidade e impacto. Aceitar, mitigar, transferir (seguro) ou evitar são as quatro estratégias possíveis. A maioria das empresas depara-se com riscos que aceita informalmente — sem documentação nem plano. Identificá-los formalmente é o primeiro passo para uma gestão profissional." },
+    { "type": "h3", "text": "Controlos essenciais para PME" },
+    { "type": "ul", "items": [
+      "Autenticação forte (MFA) em todas as contas, especialmente email e acessos remotos.",
+      "Backups regulares, testados, com regra 3-2-1 (3 cópias, 2 mídias, 1 offsite).",
+      "Patches automáticos em sistemas operativos e aplicações.",
+      "Antivírus e EDR em todos os endpoints.",
+      "Formação contínua de colaboradores em phishing e boas práticas.",
+      "Política de password com gestor centralizado (1Password, Bitwarden, Keycloak).",
+      "Logs centralizados e monitorização de acessos anómalos.",
+      "Plano de resposta a incidentes testado anualmente."
+    ] },
+    { "type": "h2", "text": "Plano de resposta a incidentes" },
+    { "type": "p", "text": "Quando o incidente acontece (e vai acontecer), ter um plano reduz drasticamente o impacto. O plano define: quem é notificado e em que ordem, quem toma decisões, como se preserva evidência, como se comunica a clientes e reguladores, e como se recupera a operação. Em Portugal, a APAE (autoridade nacional) e o CNCS devem ser notificados em incidentes graves, em prazos definidos pelo RGPD (72 horas) e pela NIS2." },
+    { "type": "callout", "variant": "tip", "text": "Faz um tabletop exercise anual: senta a equipa de gestão à volta de uma mesa e simula um ataque de ransomware. Verifica quem sabe o que fazer, quanto tempo demora a detectar e a responder. É melhor descobrir lacunas em simulação do que em crise real." }
+  ],
+  "keyPoints": [
+    "Segurança da informação é responsabilidade de gestão, não só de TI.",
+    "Tríade CIA: confidencialidade, integridade, disponibilidade.",
+    "Phishing, ransomware e engenharia social são as ameaças mais comuns.",
+    "Frameworks: ISO 27001, NIST CSF, CIS Controls, PCI-DSS, RGPD, NIS2.",
+    "Controlos essenciais: MFA, backups 3-2-1, patches, EDR, formação, plano de resposta."
+  ],
+  "quizSlug": "siq",
+  "nextLesson": null,
+  "prevLesson": "3-business-intelligence"
+}

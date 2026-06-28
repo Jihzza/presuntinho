@@ -1,0 +1,69 @@
+{
+  "id": "1-mindset-empreendedor",
+  "courseSlug": "inovacao-empreendedorismo",
+  "title": "Mindset Empreendedor",
+  "audio": "Lição sobre mindset empreendedor.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "O que distingue um empreendedor de um gestor?" },
+    { "type": "p", "text": "Nem todo o gestor é empreendedor, e nem todo o empreendedor é gestor. O gestor optimiza recursos existentes para cumprir objectivos definidos. O empreendedor identifica oportunidades onde outros veem problemas, assume riscos calculados e mobiliza recursos para criar algo novo. O mindset empreendedor pode ser ensinado e praticado — não é dom inato. Cada vez mais, as empresas procuram colaboradores com mentalidade empreendedora: intrapreneurs." },
+    { "type": "h3", "text": "As sete características do mindset empreendedor" },
+    { "type": "ul", "items": [
+      "Tolerância à ambiguidade: conforto com cenários incertos e decisões incompletas.",
+      "Orientação para a acção: tendência para fazer, experimentar, iterar — não esperar pela certeza.",
+      "Aprendizagem contínua: tratar cada erro como hipótese a testar, não como derrota.",
+      "Visão sistémica: ver padrões, conexões e efeitos de segunda ordem.",
+      "Empatia radical: compreender profundamente o cliente antes de vender.",
+      "Resiliência: capacidade de recuperar de fracassos sem desistir.",
+      "Coragem para desafiar o status quo: desconforto com soluções medíocres."
+    ] },
+    { "type": "h2", "text": "Tipos de empreendedorismo" },
+    { "type": "p", "text": "O empreendedorismo não é uma coisa única. Identificam-se várias formas:" },
+    { "type": "ul", "items": [
+      "Empreendedorismo de necessidade: pessoas que criam negócio porque não têm alternativa de emprego — comum em economias em desenvolvimento.",
+      "Empreendedorismo de oportunidade: identificado um gap no mercado, alguém cria negócio para o explorar — é o modelo dominante em economias maduras.",
+      "Empreendedorismo social: missão de impacto social ou ambiental, não de lucro para o fundador.",
+      "Intra-empreendedorismo (intrapreneurship): dentro de uma empresa existente, alguém actua como empreendedor.",
+      "Empreendedorismo digital / tech: foco em software, plataformas, SaaS — escalável com pouco capital.",
+      "Empreendedorismo de franchise: replicar um modelo de negócio validado mediante pagamento de royalties."
+    ] },
+    { "type": "h2", "text": "Os grandes equívocos" },
+    { "type": "p", "text": "Há mitos perigosos sobre o empreendedorismo que desanimam iniciantes bem preparados e encorajam erros de principiante. Vale a pena desconstruir os principais:" },
+    { "type": "h3", "text": "Cinco mitos a desconstruir" },
+    { "type": "ul", "items": [
+      "Mito 1: 'Basta uma boa ideia'. Falso — execução é 90% do valor. Ideias são baratas; execução é cara e rara.",
+      "Mito 2: 'Empreendedores nascem feitos'. Falso — habilidades podem ser aprendidas. Pesquisa de Sarasvathy, Dew e Read.",
+      "Mito 3: 'O fracasso é o fim'. Falso — nos EUA, 65% das startups de sucesso são fundadas por empreendedores que já tinham falhado antes (Estudo Harvard).",
+      "Mito 4: 'É preciso muito dinheiro'. Falso — bootstrapping é a norma. A maioria das PMEs começa com menos de 25.000€.",
+      "Mito 5: 'O sector tecnológico é o mais lucrativo'. Falso — restauração, serviços, retalho e construção têm taxas de retorno igualmente atractivas quando bem geridos."
+    ] },
+    { "type": "callout", "variant": "example", "text": "Sara Blakely fundou a Spanx com 5.000 dólares economizados, sem investidores, sem MBA. Steve Jobs foi despedido da própria empresa antes de voltar e a tornar a Apple a maior do mundo. O mindset importa mais do que o ponto de partida." },
+    { "type": "h2", "text": "Effectuation — lógica dos empreendedores" },
+    { "type": "p", "text": "Saras Sarasvathy (2001) propõe que empreendedores experientes raciocinam por 'effectuation', e não por 'causation':" },
+    { "type": "ul", "items": [
+      "Causation: dado um objectivo, procuro os meios. Pensar do efeito para a causa.",
+      "Effectuation: dados os meios disponíveis (quem sou, o que sei, quem conheço), que efeitos posso criar? Pensar dos meios para efeitos possíveis.",
+      "Princípios da effectuation: affordable loss (perder o que posso perder), crazy quilt (construir parcerias), lemonade (fazer limonada com os limões), pilot-in-the-plane (controlar o controlável)."
+    ] },
+    { "type": "h3", "text": "Como desenvolver o mindset" },
+    { "type": "ul", "items": [
+      "Lê biografias de empreendedores: Sara Blakely, Richard Branson, Inditex (Amancio Ortega).",
+      "Procura mentores: alguém que já fez o caminho que queres fazer.",
+      "Aceita projectos laterais: cria side projects onde podes testar hipóteses sem risco grande.",
+      "Leva um caderno de ideias: regista observações, perguntas, problemas. Steve Jobs e Richard Branson têm-no.",
+      "Procura feedback cedo: mostra o trabalho a clientes reais, não a amigos.",
+      "Aprende a vender: empreendedores que sabem vender sobrevivem; os que não sabem, normalmente não."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Empreendedorismo é músculo que se treina. Não esperes pela 'ideia perfeita' — escolhe um problema que te irrite pessoalmente, fala com 30 pessoas que o têm, e começa a experimentar soluções. O resto virá." }
+  ],
+  "keyPoints": [
+    "Empreendedor identifica oportunidades e assume riscos calculados para criar algo novo.",
+    "Sete características: tolerância à ambiguidade, acção, aprendizagem, visão sistémica, empatia, resiliência, coragem.",
+    "Mitos a desconstruir: ideia ≠ sucesso, fracasso ≠ fim, sector tech ≠ único lucrativo.",
+    "Effectuation raciocina dos meios disponíveis para efeitos possíveis — não ao contrário.",
+    "Mindset empreendedor desenvolve-se com prática, mentores e feedback cedo."
+  ],
+  "quizSlug": "ieq",
+  "nextLesson": "2-design-thinking",
+  "prevLesson": null
+}

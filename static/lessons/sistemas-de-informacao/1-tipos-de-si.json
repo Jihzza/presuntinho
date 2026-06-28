@@ -1,0 +1,53 @@
+{
+  "id": "1-tipos-de-si",
+  "courseSlug": "sistemas-de-informacao",
+  "title": "Tipos de Sistemas de Informação",
+  "audio": "Lição sobre tipos de sistemas de informação.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "O que é um Sistema de Informação?" },
+    { "type": "p", "text": "Um Sistema de Informação (SI) é o conjunto organizado de componentes inter-relacionados que recolhem, processam, armazenam e distribuem informação para apoiar a tomada de decisão, a coordenação, o controlo, a análise e a visualização numa organização. Não se limita à tecnologia — inclui pessoas, processos, dados e infraestrutura. Um SI bem desenhado transforma dados em decisões; um SI mal desenhado afoga a empresa em relatórios inúteis." },
+    { "type": "h3", "text": "Os três componentes clássicos" },
+    { "type": "ul", "items": [
+      "Tecnologia: hardware, software, redes, bases de dados, cloud.",
+      "Pessoas: utilizadores finais, programadores, analistas, gestores, técnicos de suporte.",
+      "Processos: regras de negócio, fluxos de trabalho, procedimentos, políticas de aprovação."
+    ] },
+    { "type": "h2", "text": "Os seis tipos principais de SI" },
+    { "type": "p", "text": "Os SI são tipicamente classificados pelo nível hierárquico que servem na organização. Esta taxonomia, proposta por Kenneth e Jane Laudon, é a mais usada em programas de Business Administration a nível mundial." },
+    { "type": "h3", "text": "TPS — Transaction Processing Systems" },
+    { "type": "p", "text": "Sistemas de processamento de transacções. Operacionais, registam o dia-a-dia: vendas, pagamentos, encomendas, movimentos de stock. Volume elevado, regras fixas, baixa margem de erro. Exemplos: sistema de caixa de supermercado, ERP no registo de facturas." },
+    { "type": "h3", "text": "MIS — Management Information Systems" },
+    { "type": "p", "text": "Sistemas de informação de gestão. Produzem relatórios periódicos para middle management: vendas mensais por região, evolução de stocks, comparativo orçado/real. Estruturados, com periodicidade fixa, baseados em dados do TPS." },
+    { "type": "h3", "text": "DSS — Decision Support Systems" },
+    { "type": "p", "text": "Sistemas de apoio à decisão. Semi-estruturados, interactivos, ajudam gestores a explorar cenários: what-if analysis, simulações, comparação de alternativas. Um DSS de pricing permite testar cinco cenários de desconto e prever o impacto no volume e margem." },
+    { "type": "h3", "text": "ESS — Executive Support Systems" },
+    { "type": "p", "text": "Sistemas de apoio à gestão de topo. Visão agregada, dashboards executivos, indicadores externos (mercado, concorrentes, regulação). Foco em decisões estratégicas e no acompanhamento do plano." },
+    { "type": "h3", "text": "KMS — Knowledge Management Systems" },
+    { "type": "p", "text": "Sistemas de gestão do conhecimento. Ajudam a criar, organizar, partilhar e aplicar conhecimento tácito e explícito: wikis internas, repositórios de lições aprendidas, bases de FAQs, ferramentas de comunidade de prática." },
+    { "type": "h3", "text": "ES — Expert Systems / AI Systems" },
+    { "type": "p", "text": "Sistemas peritos ou de inteligência artificial. Emulam o raciocínio de um especialista humano em domínios delimitados: diagnóstico médico, análise de crédito, detecção de fraude, recomendação de produtos." },
+    { "type": "callout", "variant": "example", "text": "Uma empresa de retalho moderno opera com: TPS para registar cada venda no POS, MIS para relatórios diários aos gerentes de loja, DSS para decidir o layout e promoções, ESS para o CEO ver KPIs em tempo real, KMS para partilhar procedimentos entre lojas e ES/AI para recomendar produtos online." },
+    { "type": "h2", "text": "Como escolher o SI adequado" },
+    { "type": "p", "text": "O ponto de partida é sempre o problema de negócio, não a tecnologia. Pergunte: que decisão precisa de ser tomada? Quem a toma? Com que periodicidade? Que dados são necessários? Quem os produz? Só depois se escolhe o tipo de SI mais adequado. Muitas empresas investem em soluções caras quando bastaria repensar o processo." },
+    { "type": "h3", "text": "Critérios de avaliação" },
+    { "type": "ul", "items": [
+      "Adequação ao nível de decisão: operacional, táctico ou estratégico?",
+      "Estruturação do problema: rotineiro, semi-estruturado ou não-estruturado?",
+      "Custo total de propriedade (TCO): licença, implementação, formação, manutenção, suporte.",
+      "Integração com sistemas existentes: APIs, formatos, qualidade dos dados.",
+      "Segurança e compliance: RGPD, sectoriais (PCI-DSS para pagamentos)."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Antes de comprar um SI novo, faz um levantamento dos sistemas existentes. Em 70% dos casos, o problema não é falta de sistema — é falta de uso, dados errados ou processos mal definidos." }
+  ],
+  "keyPoints": [
+    "Sistema de Informação combina tecnologia, pessoas e processos para transformar dados em decisões.",
+    "TPS regista transacções operacionais; MIS gera relatórios de gestão.",
+    "DSS apoia decisões semi-estruturadas com simulações e what-if.",
+    "ESS fornece visão agregada para a gestão de topo; KMS gere conhecimento; ES/IA emula peritos.",
+    "A escolha do SI começa no problema de negócio, não na tecnologia."
+  ],
+  "quizSlug": "siq",
+  "nextLesson": "2-erp-crm",
+  "prevLesson": null
+}

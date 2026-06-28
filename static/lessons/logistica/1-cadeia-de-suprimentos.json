@@ -1,0 +1,61 @@
+{
+  "id": "1-cadeia-de-suprimentos",
+  "courseSlug": "logistica",
+  "title": "Cadeia de Suprimentos (Supply Chain)",
+  "audio": "Lição sobre cadeia de suprimentos.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "O que é uma cadeia de suprimentos?" },
+    { "type": "p", "text": "A cadeia de suprimentos (supply chain) é a rede de organizações, pessoas, actividades, informação e recursos envolvida no fornecimento de um produto ou serviço ao consumidor final. Inclui fornecedores de matérias-primas, fabricantes, armazéns, transportadoras, centros de distribuição, retalhistas e o cliente final. A logística é a parte operacional que planeia, implementa e controla o fluxo e armazenamento eficiente de bens, serviços e informação." },
+    { "type": "h3", "text": "Os três fluxos fundamentais" },
+    { "type": "ul", "items": [
+      "Fluxo de materiais: matérias-primas → produtos em curso (WIP) → produtos acabados → cliente.",
+      "Fluxo de informação: encomendas, previsões, níveis de stock, transporte, pagamento.",
+      "Fluxo financeiro: crédito, pagamentos, cobranças, descontos, devoluções, moeda."
+    ] },
+    { "type": "h2", "text": "Os elos da cadeia" },
+    { "type": "p", "text": "A cadeia é tão forte quanto o seu elo mais fraco. Um problema num fornecedor de nível 3 (subcomponentes) pode parar toda a produção. A grande lição do séc. XXI: gestão da cadeia é tão importante quanto a gestão da própria fábrica." },
+    { "type": "h3", "text": "Componentes essenciais" },
+    { "type": "ul", "items": [
+      "Fornecedores de 1.ª linha (Tier 1): directos — quem nos vende ou é nosso fornecedor imediato.",
+      "Fornecedores de 2.ª, 3.ª linha: indirectos — subcomponentes, matérias-primas dos nossos fornecedores.",
+      "Centro de produção / montagem: transformação ou assemblagem.",
+      "Armazenagem e gestão de stocks: buffers entre produção e distribuição.",
+      "Distribuição: transporte, cross-docking, last-mile.",
+      "Retalho e cliente final: ponto de consumo."
+    ] },
+    { "type": "h2", "text": "Modelo SCOR — Supply Chain Operations Reference" },
+    { "type": "p", "text": "O modelo SCOR (do Supply Chain Council, hoje parte do ASCM) é a referência metodológica mais usada globalmente para descrever, avaliar e comparar cadeias de suprimentos. Estrutura os processos em cinco grandes blocos:" },
+    { "type": "ul", "items": [
+      "Plan: planeamento de procura, oferta e recursos.",
+      "Source: aquisição de bens e serviços — desde a identificação até ao pagamento.",
+      "Make: transformação de produtos — desde a matéria-prima até ao produto acabado.",
+      "Deliver: gestão de encomendas, armazenagem e transporte ao cliente.",
+      "Return: logística inversa — devoluções, reparações, reciclagem."
+    ] },
+    { "type": "h3", "text": "Métricas SCOR nível 1 (performance)" },
+    { "type": "ul", "items": [
+      "Reliability: Perfect Order Fulfillment (entrega certa, na quantidade, no prazo, com a documentação correcta).",
+      "Responsiveness: Order Fulfillment Cycle Time.",
+      "Agility: Upside Supply Chain Flexibility / Adaptability.",
+      "Costs: Total Supply Chain Management Cost / Cash-to-Cash Cycle Time.",
+      "Asset Management Efficiency: Return on Fixed Assets / Inventory Days of Supply."
+    ] },
+    { "type": "h2", "text": "Push vs. Pull — estratégias de fluxo" },
+    { "type": "p", "text": "Numa cadeia push, a produção é baseada em previsões: fabrico o que acredito que vou vender. Consequência: risco de excesso de stock e obsolescência. Numa cadeia pull, a produção é desencadeada pelo pedido real do cliente: só produzo o que foi encomendado. Consequência: baixo stock mas maior risco de rotura se o lead time for longo. A maioria das empresas opera modelos híbridos: pull no curto prazo, push no longo prazo." },
+    { "type": "callout", "variant": "example", "text": "A Zara é o exemplo clássico de cadeia pull: o stock em loja é reposto duas vezes por semana com base em vendas reais. Isso permite responder rapidamente à procura e reduzir quebras de stock em mais de 50% face à concorrência." },
+    { "type": "h2", "text": "Riscos da cadeia de suprimentos" },
+    { "type": "p", "text": "A pandemia de COVID-19 expôs a fragilidade das cadeias globais: paragem de fábricas em Wuhan, escassez de semicondutores, bloqueio do Suez. Hoje, falar de supply chain é falar de gestão de risco. As empresas estão a diversificar fornecedores (China + Vietnam + México), a aumentar stocks de segurança, a investir em nearshoring e a digitalizar com sensores IoT para visibilidade em tempo real." },
+    { "type": "callout", "variant": "tip", "text": "Mapeia a tua cadeia até ao nível Tier 3 (subcomponentes). Se não consegues, tens uma vulnerabilidade cega. Ferramentas como o Resilinc Risk Lens ajudam a monitorizar disrupções em tempo real." }
+  ],
+  "keyPoints": [
+    "Supply chain é a rede que leva o produto do fornecedor ao cliente final.",
+    "Três fluxos: materiais, informação e financeiro.",
+    "Modelo SCOR: Plan, Source, Make, Deliver, Return.",
+    "Push baseia-se em previsão; pull em procura real. Modelos híbridos dominam.",
+    "Gestão de risco da cadeia é prioridade estratégica pós-COVID."
+  ],
+  "quizSlug": "lgq",
+  "nextLesson": "2-gestao-de-estoques",
+  "prevLesson": null
+}

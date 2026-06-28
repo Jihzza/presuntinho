@@ -1,0 +1,61 @@
+{
+  "id": "3-business-intelligence",
+  "courseSlug": "sistemas-de-informacao",
+  "title": "Business Intelligence e Analytics",
+  "audio": "Lição sobre Business Intelligence e analytics.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "O que é Business Intelligence?" },
+    { "type": "p", "text": "Business Intelligence (BI) é o conjunto de processos, ferramentas e práticas que transformam dados brutos em informação accionável para a tomada de decisão. Inclui extracção, transformação e carregamento de dados (ETL), armazenamento em data warehouses ou data lakes, modelação, análise e visualização. O BI moderno combina técnicas clássicas (dashboards, relatórios) com analytics avançado (machine learning, previsão)." },
+    { "type": "h3", "text": "Os quatro tipos de analytics" },
+    { "type": "ul", "items": [
+      "Descritivo: o que aconteceu? KPIs, dashboards, relatórios mensais. É o ponto de partida clássico.",
+      "Diagnóstico: por que aconteceu? Análise de causa-raiz, drill-down, correlações.",
+      "Preditivo: o que vai provavelmente acontecer? Modelos estatísticos, machine learning, forecasting.",
+      "Prescritivo: o que devemos fazer? Optimização, simulação, recommendation engines."
+    ] },
+    { "type": "h2", "text": "Arquitectura de um sistema de BI" },
+    { "type": "p", "text": "A arquitectura típica segue um pipeline: fontes de dados (ERP, CRM, bases operacionais, APIs externas, IoT) são extraídas para um armazém central (data warehouse em SQL, data lake em object storage) através de processos ETL/ELT. Aí, são modeladas em esquemas dimensionais (star schema, snowflake) e expostas a ferramentas de visualização e análise." },
+    { "type": "h3", "text": "Componentes essenciais" },
+    { "type": "ul", "items": [
+      "Fontes de dados: bases transaccionais, ficheiros, APIs, web scraping, IoT.",
+      "Staging area: zona temporária para limpeza e validação.",
+      "Data warehouse: repositório estruturado, optimizado para análise.",
+      "Catálogo de dados: inventário do que existe, com lineage e glossário.",
+      "Ferramentas de análise: SQL, Python/R, ferramentas self-service.",
+      "Camada de visualização: dashboards, relatórios, alertas."
+    ] },
+    { "type": "h2", "text": "Ferramentas de BI no mercado" },
+    { "type": "p", "text": "O ecossistema BI é vasto. As ferramentas enterprise dominantes incluem Microsoft Power BI, Tableau, Qlik Sense, Looker (Google) e SAP Analytics Cloud. Para PME e uso self-service, há alternativas gratuitas ou de baixo custo: Metabase, Apache Superset, Google Data Studio (agora Looker Studio). No lado da engenharia de dados: dbt, Snowflake, BigQuery, Databricks, Airflow." },
+    { "type": "callout", "variant": "tip", "text": "Para uma PME, a combinação Looker Studio + BigQuery (camada gratuita generosa) é um excelente ponto de partida: 0€ de licença, escalável, com conectores a quase tudo." },
+    { "type": "h3", "text": "KPIs essenciais por área" },
+    { "type": "ul", "items": [
+      "Vendas: receita, taxa de conversão, ticket médio, CAC, LTV, pipeline coverage.",
+      "Marketing: CPL, CTR, CPL/CAC ratio, ROAS, share of voice.",
+      "Operações: OEE, lead time, taxa de defeitos, NPS, tempo médio de resolução.",
+      "Financeiros: margem bruta, margem líquida, EBITDA, ciclo de caixa, working capital.",
+      "RH: turnover voluntário, tempo médio de recrutamento, absentismo, eNPS."
+    ] },
+    { "type": "h2", "text": "Do BI tradicional à IA generativa" },
+    { "type": "p", "text": "A nova geração de BI integra modelos de linguagem (LLMs) para permitir consultas em linguagem natural, geração automática de relatórios, explicações narrativas de gráficos e alertas contextuais. Ferramentas como Microsoft Copilot for Power BI, Tableau GPT e ChatGPT com conectores de dados democratizam o acesso à análise. O gestor moderno deve saber pedir a análise certa — em vez de pedir um gráfico, pede a resposta." },
+    { "type": "h3", "text": "Cuidados e armadilhas" },
+    { "type": "ul", "items": [
+      "Garbage in, garbage out: dashboards bonitos com dados errados são perigosos.",
+      "Confundir correlação com causalidade: dois indicadores a subir juntos não significa que um cause o outro.",
+      "Sobrecarregar utilizadores com KPI: o poder está no foco, não no volume.",
+      "Ignorar a governação de dados: quem é dono de cada dataset? Qual a definição de receita?",
+      "Privacidade: RGPD exige cuidado com dados pessoais identificáveis em BI."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Antes de mostrar um dashboard a um director, certifica-te que os dados estão actualizados, a metodologia é clara e as definições são consensuais. Um número contestado destrói a credibilidade de todo o relatório." }
+  ],
+  "keyPoints": [
+    "BI transforma dados em informação accionável para decisão.",
+    "Quatro tipos de analytics: descritivo, diagnóstico, preditivo e prescritivo.",
+    "Arquitectura típica: fontes → ETL → data warehouse → ferramentas de visualização.",
+    "KPIs certos por área orientam decisões e tornam a organização data-driven.",
+    "Cuidados: qualidade de dados, correlações vs causalidade, governação e privacidade."
+  ],
+  "quizSlug": "siq",
+  "nextLesson": "4-seguranca-da-informacao",
+  "prevLesson": "2-erp-crm"
+}

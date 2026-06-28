@@ -1,0 +1,107 @@
+{
+  "id": "siq",
+  "title": "Quiz: Sistemas de Informação",
+  "description": "Tipos de SI, ERP, CRM, BI e segurança da informação.",
+  "questions": [
+    {
+      "q": "Qual destes NÃO é um componente de um Sistema de Informação?",
+      "opts": [
+        "Tecnologia",
+        "Pessoas",
+        "Processos",
+        "Sorte"
+      ],
+      "a": 3
+    },
+    {
+      "q": "Um sistema que regista cada venda no caixa de um supermercado é:",
+      "opts": [
+        "DSS",
+        "MIS",
+        "TPS",
+        "ESS"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Um DSS (Decision Support System) é mais usado para:",
+      "opts": [
+        "Registar transacções operacionais",
+        "Criar dashboards para o CEO",
+        "Explorar cenários what-if e simulações",
+        "Substituir gestores"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Qual a função principal de um ERP?",
+      "opts": [
+        "Gerir redes sociais",
+        "Integrar todos os processos de negócio numa única plataforma",
+        "Substituir a contabilidade",
+        "Vender online"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O CRM divide-se em três dimensões. Quais?",
+      "opts": [
+        "Hardware, software, redes",
+        "Operacional, analítico, colaborativo",
+        "Pessoas, processos, tecnologia",
+        "Marketing, vendas, serviço"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Qual é o tipo de analytics que responde à pergunta 'o que vai acontecer'?",
+      "opts": [
+        "Descritivo",
+        "Diagnóstico",
+        "Preditivo",
+        "Prescritivo"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Qual ferramenta é tipicamente usada como ponto de partida gratuito para BI em PME?",
+      "opts": [
+        "SAP S/4HANA",
+        "Oracle Hyperion",
+        "Looker Studio + BigQuery",
+        "Bloomberg Terminal"
+      ],
+      "a": 2
+    },
+    {
+      "q": "A tríade CIA da segurança da informação refere-se a:",
+      "opts": [
+        "CIA americana",
+        "Confidencialidade, Integridade, Disponibilidade",
+        "Cloud, IoT, AI",
+        "Compliance, Inspeção, Auditoria"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Qual é o vector de ataque mais comum actualmente?",
+      "opts": [
+        "Ataque nuclear",
+        "Phishing",
+        "Saturação física",
+        "Hackers em películas"
+      ],
+      "a": 1
+    },
+    {
+      "q": "A regra 3-2-1 de backups significa:",
+      "opts": [
+        "3 backups por dia, 2 por semana, 1 por mês",
+        "3 cópias, 2 mídias, 1 offsite",
+        "3 passwords, 2 chaves, 1 token",
+        "3 empresas, 2 datacenters, 1 cloud"
+      ],
+      "a": 1
+    }
+  ]
+}

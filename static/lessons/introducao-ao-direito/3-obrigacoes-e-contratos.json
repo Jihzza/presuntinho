@@ -1,0 +1,52 @@
+{
+  "id": "3-obrigacoes-e-contratos",
+  "courseSlug": "introducao-ao-direito",
+  "title": "Obrigações e Contratos",
+  "audio": "Lição sobre obrigações e contratos.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "O que é uma obrigação jurídica?" },
+    { "type": "p", "text": "Obrigação é o vínculo jurídico por força do qual uma pessoa (devedor) é constrangida a dar, fazer ou não fazer alguma coisa a favor de outra (credor). As obrigações são o motor da vida económica: praticamente toda a actividade empresarial — comprar, vender, contratar, empregar, emprestar — gera obrigações. Saber como se formam, se cumprem e se extinguem é essencial para evitar litígios." },
+    { "type": "h3", "text": "Fontes das obrigações" },
+    { "type": "ul", "items": [
+      "Contratos: acordo de vontades para criar, modificar ou extinguir obrigações (art. 405.º do Código Civil). É a fonte mais frequente.",
+      "Gestão de negócios: alguém administra interesses alheios sem mandato, com proveito para o dono.",
+      "Enriquecimento sem causa: transferência injustificada de valor entre patrimónios.",
+      "Responsabilidade civil: obrigação de indemnizar por acto ilícito (delito ou quase-delito).",
+      "Lei: obrigações que nascem directamente da lei, como a obrigação de alimentos entre parentes."
+    ] },
+    { "type": "h2", "text": "Elementos do contrato" },
+    { "type": "p", "text": "Para ser válido, um contrato precisa de quatro requisitos essenciais: capacidade dos contraentes (vimos na lição anterior), objecto possível e lícito, forma legal ou convencional (quando exigida) e, sobretudo, consentimento livre, esclarecido e de boa-fé. A falta de qualquer um destes requisitos pode gerar anulabilidade (contrato pode ser desfeito) ou nulidade (contrato é considerado inexistente)." },
+    { "type": "h3", "text": "Vícios da vontade" },
+    { "type": "ul", "items": [
+      "Erro: falsa representação da realidade sobre elemento essencial do contrato (art. 247.º CC).",
+      "Dolo: engano intencional de uma parte para induzir a outra a contratar.",
+      "Coacção (moral ou física): violência que elimina a liberdade de decisão.",
+      "Estado de perigo: aproveitamento de situação de necessidade para obter condições injustas."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Um contrato celebrado sob coacção é anulável. O prazo para a acção é de seis meses a contar da cessação da coacção. Providência: guardar documentação que demonstre a livre decisão." },
+    { "type": "h2", "text": "Princípio da boa-fé" },
+    { "type": "p", "text": "O Código Civil português consagra o princípio da boa-fé objectiva (art. 762.º): o devedor e o credor devem actuar com lealdade, cooperação e respeito pelos legítimos interesses da contraparte, antes, durante e depois do contrato. Este princípio é hoje fonte autónoma de deveres: o dever de informar, de aviso, de protecção, de sigilo, mesmo quando não estão escritos." },
+    { "type": "h3", "text": "Cumprimento e incumprimento" },
+    { "type": "ul", "items": [
+      "Cumprimento exacto: o devedor entrega o que foi acordado, no tempo e lugar certos (art. 762.º).",
+      "Mora: atraso imputável ao devedor, que continua vinculado e responde por perdas e danos.",
+      "Incumprimento definitivo: impossibilidade total de cumprimento, com responsabilidade integral.",
+      "Cumprimento parcial defeituoso: quando a prestação não corresponde ao acordado.",
+      "Impossibilidade objectiva: caso fortuito ou de força maior, que exonera o devedor."
+    ] },
+    { "type": "h2", "text": "Remédios para o credor" },
+    { "type": "p", "text": "Perante o incumprimento, o credor tem várias opções. Pode exigir o cumprimento coercivo (obrigação fungível), pedir a resolução do contrato com indemnização, recorrer ao tribunal para uma indemnização substitutiva ou exigir a execução específica. A escolha depende da natureza da obrigação e da estratégia negocial." },
+    { "type": "callout", "variant": "tip", "text": "Em contratos comerciais, inclui-se quase sempre uma cláusula penal: valor pré-acordado que será devido em caso de incumprimento. Funciona como incentivo e facilita a quantificação dos danos em tribunal." }
+  ],
+  "keyPoints": [
+    "Obrigação é o vínculo jurídico que constrange o devedor a satisfazer o credor.",
+    "Fontes das obrigações: contratos, gestão de negócios, enriquecimento sem causa, responsabilidade civil, lei.",
+    "Requisitos do contrato: capacidade, objecto lícito, forma e consentimento livre.",
+    "Vícios da vontade: erro, dolo, coacção e estado de perigo.",
+    "Boa-fé objectiva impõe deveres de lealdade antes, durante e após o contrato."
+  ],
+  "quizSlug": "idq",
+  "nextLesson": "4-responsabilidade-civil",
+  "prevLesson": "2-pessoa-e-capacidade"
+}

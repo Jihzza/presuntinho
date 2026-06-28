@@ -1,0 +1,65 @@
+{
+  "id": "3-validacao-de-ideias",
+  "courseSlug": "inovacao-empreendedorismo",
+  "title": "Validação de Ideias",
+  "audio": "Lição sobre validação de ideias.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "Porque é que validar antes é crítico" },
+    { "type": "p", "text": "A causa número um de morte das startups não é equipa fraca, falta de capital ou ideia má — é construir algo que ninguém quer (segundo o estudo CB Insights de 2019, em 35% dos casos). Validar antes de construir é a disciplina que separa fundadores que aprendem depressa dos que gastam dinheiro a descobrir o que deviam ter perguntado." },
+    { "type": "h3", "text": "Customer Development vs. Product Development" },
+    { "type": "p", "text": "Steve Blank (Customer Development, 2012) defende que startups devem seguir dois processos paralelos: Product Development (construir o produto) e Customer Development (validar clientes). O segundo vem PRIMEIRO — antes de gastar tempo e dinheiro em código, fala com clientes." },
+    { "type": "h2", "text": "Hipóteses a testar" },
+    { "type": "p", "text": "Toda a ideia de negócio assenta em hipóteses. Validá-las significa transformá-las em afirmações testáveis e conceber experiências para as confirmar ou refutar." },
+    { "type": "ul", "items": [
+      "Hipótese de problema: o problema existe e é doloroso para o cliente?",
+      "Hipótese de solução: a nossa solução resolve efectivamente o problema?",
+      "Hipótese de mercado: o mercado é grande e está a crescer?",
+      "Hipótese de modelo de negócio: o cliente paga, e o que paga cobre os custos?",
+      "Hipótese de crescimento: conseguimos escalar a aquisição de clientes de forma rentável?"
+    ] },
+    { "type": "h2", "text": "Métodos de validação" },
+    { "type": "p", "text": "Há um espectro de métodos, dos mais baratos aos mais caros. A regra é começar pelo mais barato e iterar." },
+    { "type": "h3", "text": "Customer Discovery — entrevistas exploratórias" },
+    { "type": "p", "text": "Conversas 1-1 com potenciais clientes (15-30 entrevistas) para validar o problema. Regras de ouro: não vender; ouvir 80%, falar 20%; perguntar sobre passado e hábitos, não sobre futuro hipotético; gravar (com autorização). A pergunta mais útil é 'Conta-me a última vez que tiveste este problema' — não 'Usarias este produto?'" },
+    { "type": "h3", "text": "Landing pages e smoke tests" },
+    { "type": "p", "text": "Criar uma página web que descreve o produto (ainda inexistente) e medir tráfego, taxa de conversão e inscrições. Pode incluir um botão 'Reservar agora' que, ao ser clicado, mostra uma mensagem de 'brevemente disponível' — mede interesse real, não declarado." },
+    { "type": "h3", "text": "MVP — Minimum Viable Product" },
+    { "type": "p", "text": "MVP é a versão mais simples do produto que ainda gera valor e permite aprender. Pode ser um mockup, um vídeo explicativo, um serviço manual, um formulário, um protótipo funcional. Eric Ries define três tipos: video MVP (Dropbox), concierge MVP (assistência pessoal), wizard of oz (humano faz o trabalho, máquina finge)." },
+    { "type": "callout", "variant": "example", "text": "O Zappos começou sem stock: Nick Swinmurn fotografou sapatos em lojas locais e publicou online. Quando alguém comprava, ele ia à loja, comprava e enviava. Validou a procura antes de investir em armazém." },
+    { "type": "h3", "text": "A/B tests e experimentação" },
+    { "type": "p", "text": "Quando já há produto e tráfego, testa-se com A/B testing rigoroso. Duas versões (A e B) são mostradas aleatoriamente a utilizadores semelhantes; mede-se uma métrica (taxa de conversão, retenção, ARPU); testa-se com tamanho de amostra suficiente (calcula-se previamente); itera-se com base nos resultados. Empresas data-driven testam dezenas de hipóteses por mês." },
+    { "type": "h2", "text": "Pivotar ou perseverar" },
+    { "type": "p", "text": "Quando a validação mostra que a hipótese é falsa, há duas opções: pivotar (mudar de direcção mantendo a aprendizagem) ou perseverar (reforçar a crença e tentar de novo). Pivotar não é admitir fracasso — é manter o que se aprendeu e mudar o que precisa de mudar." },
+    { "type": "h3", "text": "Tipos de pivot (Eric Ries, The Lean Startup)" },
+    { "type": "ul", "items": [
+      "Zoom-in pivot: foco num sub-segmento mais atractivo do público-alvo.",
+      "Zoom-out pivot: alargamento para um mercado maior onde o produto é feature, não produto.",
+      "Customer segment pivot: manter produto, mudar público.",
+      "Customer need pivot: manter público, mudar problema resolvido.",
+      "Platform pivot: transformar a aplicação em plataforma para terceiros.",
+      "Business architecture pivot: mudar de B2C para B2B (ou vice-versa).",
+      "Value capture pivot: manter benefício, mudar modelo de receita.",
+      "Engine of growth pivot: mudar o motor de crescimento (viral → pago → sticky)."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Não confundir persistência com teimosia. Persistência é continuar depois de aprender e adaptar. Teimosia é continuar depois de a evidência mostrar que o caminho não leva a lado nenhum. Bons fundadores sabem distinguir." },
+    { "type": "h2", "text": "Métricas de validação" },
+    { "type": "ul", "items": [
+      "Problem-Solution Fit: 30%+ dos inquiridos em entrevistas diz 'eu pagaria por isto' (sem perguntar directamente).",
+      "Product-Market Fit: retenção de utilizadores >40% após 1 mês; NPS >40; curva de retenção plana.",
+      "Repeatable Sales: vendas repetíveis sem esforço desproporcionado de marketing.",
+      "Growth: motor de crescimento identificável (viral, sticky, paid) com unit economics positivos."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Em vez de gastar 50.000€ a construir uma app, gasta 5.000€ a fazer 50 entrevistas, 3 landing pages e 1 MVP manual. Se nenhuma hipótese validar, poupas 45.000€ e passas à próxima ideia. A informação que ganhas é valiosa." }
+  ],
+  "keyPoints": [
+    "Validar antes de construir é a disciplina central do lean startup.",
+    "Cinco hipóteses a testar: problema, solução, mercado, modelo de negócio, crescimento.",
+    "Métodos: Customer Discovery, landing pages, MVP, A/B testing.",
+    "Pivotar é mudar direcção mantendo a aprendizagem, não desistir.",
+    "Métricas: problem-solution fit, product-market fit, vendas repetíveis, crescimento escalável."
+  ],
+  "quizSlug": "ieq",
+  "nextLesson": "4-financiamento-e-pitch",
+  "prevLesson": "2-design-thinking"
+}

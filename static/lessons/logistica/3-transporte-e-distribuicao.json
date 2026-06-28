@@ -1,0 +1,73 @@
+{
+  "id": "3-transporte-e-distribuicao",
+  "courseSlug": "logistica",
+  "title": "Transporte e Distribuição",
+  "audio": "Lição sobre transporte e distribuição.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "O papel do transporte na logística" },
+    { "type": "p", "text": "O transporte é normalmente o componente com maior peso no custo logístico — pode representar entre 30% e 60% do total. Desempenha também um papel crítico na experiência do cliente: prazos de entrega fiáveis são hoje um factor de decisão de compra tão importante como o preço. Para o gestor, optimizar transporte significa escolher o modo certo, desenhar rotas eficientes e consolidar volumes." },
+    { "type": "h3", "text": "Os cinco modos de transporte" },
+    { "type": "ul", "items": [
+      "Rodoviário: flexível, porta-a-porta, ideal para curtas-médias distâncias e last-mile. Camionagem na Europa e EUA responde por >70% das toneladas-quilómetro.",
+      "Ferroviário: eficiente em volume e energia, melhor para granéis sólidos e líquidos, contentores em rotas longas.",
+      "Marítimo: o mais económico para grandes volumes e longas distâncias (>90% do comércio internacional em volume). Lento mas barato.",
+      "Aéreo: rápido e caro; usado para produtos de alto valor, perecíveis e urgentes (eletrónica, moda rápida, vacinas).",
+      "Fluvial / Pipeline: granéis líquidos (petróleo, gás) e algumas mercadorias a granel em países com hidrovias."
+    ] },
+    { "type": "h2", "text": "Intermodalidade e multimodalidade" },
+    { "type": "p", "text": "Na prática, as mercadorias viajam em mais do que um modo. Há duas formas de combinar:" },
+    { "type": "ul", "items": [
+      "Intermodal: uso de dois ou mais modos com um contrato único; cada transportadora é responsável pelo seu segmento.",
+      "Multimodal: um único operador (MTO — Multimodal Transport Operator) é responsável pela totalidade do percurso, mesmo com vários modos."
+    ] },
+    { "type": "h3", "text": "Escolha do modo — decisão tradeoff" },
+    { "type": "ul", "items": [
+      "Custo vs. tempo: marítimo é barato mas lento; aéreo é rápido mas caro.",
+      "Capacidade: contentor marítimo standard (TEU) = ~33m³. Limitações de peso e dimensões.",
+      "Confiabilidade: rodoviário varia com tráfego e clima; marítimo varia com clima e portos.",
+      "Frequência: ferroviário e marítimo operam por horários fixos; rodoviário está sempre disponível.",
+      "Tipo de produto: perecíveis → aéreo; granéis → marítimo; e-commerce B2C → rodoviário/parcel."
+    ] },
+    { "type": "h2", "text": "Documentação essencial" },
+    { "type": "p", "text": "O transporte internacional exige documentação rigorosa. Os principais documentos:" },
+    { "type": "ul", "items": [
+      "Conhecimento de embarque (Bill of Lading / B/L) — marítimo: título de propriedade da mercadoria.",
+      "CMR (Carta de Porte por Estrada) — rodoviário internacional (Convenção CMR de 1956).",
+      "AWB (Air Waybill) — aéreo.",
+      "CIM (Conhecimento Ferroviário Internacional) — ferroviário.",
+      "Fatura comercial, packing list, certificado de origem, documentos aduaneiros (DAU na UE)."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "O B/L é um título de endosso — quem o detém é dono da mercadoria. Endossá-lo sem cuidado é transferir propriedade. Em pagamento à vista, nunca envie o original por email sem garantia." },
+    { "type": "h2", "text": "Incoterms — quem paga o quê" },
+    { "type": "p", "text": "Os Incoterms (International Commercial Terms), definidos pela Câmara de Comércio Internacional (ICC), são 11 termos padronizados que definem responsabilidades entre comprador e vendedor em transacções internacionais. Os mais usados em 2024:" },
+    { "type": "ul", "items": [
+      "EXW (Ex Works): comprador assume todos os riscos e custos a partir da fábrica.",
+      "FCA (Free Carrier): vendedor entrega ao transportador indicado pelo comprador.",
+      "FOB (Free On Board): vendedor assume custos e riscos até a mercadoria estar a bordo do navio.",
+      "CIF (Cost, Insurance and Freight): vendedor paga transporte e seguro até porto destino; risco transfere-se no embarque.",
+      "DAP (Delivered At Place): vendedor entrega no destino indicado; risco transfere-se na chegada.",
+      "DDP (Delivered Duty Paid): vendedor paga tudo incluindo direitos aduaneiros — máxima obrigação."
+    ] },
+    { "type": "h3", "text": "Distribuição física e last-mile" },
+    { "type": "p", "text": "A última milha — entrega do centro de distribuição ao cliente final — é tipicamente 40% do custo total de transporte. Estratégias para a optimizar:" },
+    { "type": "ul", "items": [
+      "Cross-docking: transferência entre camiões no armazém sem armazenamento prolongado.",
+      "Hubs urbanos (micro-fulfillment): pequenos armazéns perto do cliente para entregas rápidas.",
+      "Lockers e pickup points: reduzem entregas falhadas e custos de re-entrega.",
+      "Routing dinâmico: optimização de rotas com software (OptimoRoute, Routific) considerando tráfego em tempo real.",
+      "Crowdshipping: estafetas independentes (Glovo, Uber Direct) para picos de procura."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Empresas que controlam o last-mile (Amazon, DHL, FedEx) constroem vantagem competitiva: promessas de entrega em 24h, rastreio preciso, devoluções gratuitas. Para PME, parcerias com transportadoras last-mile (CTT Expresso, Chronopost, Mondial Relay) são essenciais." }
+  ],
+  "keyPoints": [
+    "Transporte é o maior custo logístico (30-60% do total).",
+    "Cinco modos: rodoviário, ferroviário, marítimo, aéreo, fluvial/pipeline.",
+    "Incoterms (ICC) padronizam responsabilidades: EXW, FCA, FOB, CIF, DAP, DDP.",
+    "Documentos: B/L (marítimo), CMR (rodoviário), AWB (aéreo), fatura comercial, DAU.",
+    "Last-mile representa 40% do custo total; cross-docking e hubs urbanos optimizam-no."
+  ],
+  "quizSlug": "lgq",
+  "nextLesson": "4-logistica-internacional",
+  "prevLesson": "2-gestao-de-estoques"
+}

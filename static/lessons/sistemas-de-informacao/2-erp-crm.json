@@ -1,0 +1,54 @@
+{
+  "id": "2-erp-crm",
+  "courseSlug": "sistemas-de-informacao",
+  "title": "ERP e CRM",
+  "audio": "Lição sobre ERP e CRM.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "ERP — Enterprise Resource Planning" },
+    { "type": "p", "text": "ERP é um sistema integrado que suporta todos os processos de negócio de uma organização numa única plataforma: finanças, contabilidade, recursos humanos, produção, logística, vendas, compras, projectos. Em vez de dezenas de sistemas desligados, há uma base de dados única que alimenta todos os módulos, garantindo coerência e eliminando retrabalho de reconciliação." },
+    { "type": "h3", "text": "Módulos típicos de um ERP" },
+    { "type": "ul", "items": [
+      "Finanças: contabilidade geral, contas a pagar/receber, tesouraria, consolidação.",
+      "Compras: requisições, cotações, ordens de compra, recepção, avaliação de fornecedores.",
+      "Vendas: orçamentos, encomendas, facturação, comissões, devoluções.",
+      "Stock: gestão de armazém, inventário, FIFO/LIFO, custos médios.",
+      "Produção: lista técnica (BOM), plano de produção, ordens de fabrico, controlo de qualidade.",
+      "Recursos Humanos: cadastro, processamento salarial, férias, avaliação, formação.",
+      "Projectos: WBS, planeamento, custos, facturação por projecto.",
+      "BI / Reporting: dashboards, KPI, relatórios ad-hoc, exportação para ferramentas externas."
+    ] },
+    { "type": "h2", "text": "Principais ERPs no mercado" },
+    { "type": "p", "text": "Os ERPs dividem-se em três faixas. Tier 1 (grandes empresas, milhares de utilizadores): SAP S/4HANA, Oracle ERP Cloud, Microsoft Dynamics 365 Finance. Tier 2 (médias empresas): SAP Business One, Microsoft Dynamics 365 Business Central, Oracle NetSuite. Tier 3 (PME e micro): Primavera, PHC, Sage, Odoo, Moloni. A escolha depende da dimensão, sector, orçamento e ambição de crescimento." },
+    { "type": "callout", "variant": "warning", "text": "Um projecto de ERP mal conduzido pode custar 2-3x o orçamento inicial e falhar. Razões típicas: objectivos vagos, escolha inadequada, subestimação da mudança organizacional, dados-mestre de má qualidade. Mitigação: sponsor executivo forte, equipa dedicada, faseamento claro e gestão da mudança." },
+    { "type": "h2", "text": "CRM — Customer Relationship Management" },
+    { "type": "p", "text": "CRM é a estratégia e o conjunto de tecnologias para gerir todas as interacções da empresa com clientes actuais e potenciais. Vai muito além do software: é uma filosofia de colocar o cliente no centro, sistematizando processos de marketing, vendas e serviço para criar relações lucrativas e duradouras." },
+    { "type": "h3", "text": "Os três grandes blocos de um CRM" },
+    { "type": "ul", "items": [
+      "CRM Operacional: automatiza processos de negócio — gestão de contactos, oportunidades, ordens, casos de suporte.",
+      "CRM Analítico: transforma dados de clientes em insights — segmentação RFM, propensão à compra, valor do tempo de vida (CLV), cohort analysis.",
+      "CRM Colaborativo: integra canais e equipas — email, chat, redes sociais, telefone; garante visão única do cliente em todos os pontos de contacto."
+    ] },
+    { "type": "h2", "text": "ERP vs. CRM: diferentes, complementares" },
+    { "type": "p", "text": "O ERP gere a empresa internamente — finanças, operações, recursos. O CRM gere a relação com o cliente — da prospecção ao pós-venda. Em conjunto, formam a espinha dorsal digital: o ERP diz quanto custa servir o cliente, o CRM diz quanto o cliente gera e qual a experiência que tem. Os líderes de mercado (SAP, Salesforce, Microsoft, Oracle) oferecem suites que aproximam os dois mundos." },
+    { "type": "h3", "text": "Implementação bem-sucedida" },
+    { "type": "ul", "items": [
+      "Começar pelo processo: mapear o processo actual (as-is) e desenhar o futuro (to-be) antes de tocar no software.",
+      "Definir KPIs claros: tempo de fecho de vendas, taxa de conversão, NPS, custo de aquisição (CAC).",
+      "Adoptar faseadamente: começar pelo core, expandir por ondas, evitar big-bang.",
+      "Investir em dados-mestre: clientes, produtos, fornecedores limpos e consistentes.",
+      "Capacitar utilizadores: formação contínua, champions internos, gamificação."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Em PME, começa por um CRM SaaS simples (HubSpot Free, Pipedrive, Zoho CRM) e por um ERP leve (Odoo Community, PHC CS). A integração via Zapier ou Make permite ligar os dois sem desenvolvimento pesado." }
+  ],
+  "keyPoints": [
+    "ERP integra todos os processos numa única plataforma com base de dados comum.",
+    "CRM gere interacções com clientes em três dimensões: operacional, analítica e colaborativa.",
+    "ERP e CRM são complementares: um olha para dentro, o outro para fora.",
+    "Implementação exige processo claro, KPIs, dados-mestre de qualidade e gestão da mudança.",
+    "A escolha depende da dimensão, sector, orçamento e ambição de crescimento."
+  ],
+  "quizSlug": "siq",
+  "nextLesson": "3-business-intelligence",
+  "prevLesson": "1-tipos-de-si"
+}

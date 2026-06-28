@@ -258,6 +258,54 @@
                                   lessonCount: 4,
                                   quizCount: 1,
                                   badge: 'Uni'
+                                },
+                                {
+                                  slug: 'introducao-ao-direito',
+                                  title: 'Introdução ao Direito',
+                                  tagline: 'Universidade · Fontes, pessoa, obrigações e responsabilidade civil',
+                                  description:
+                                    'Fundamentos jurídicos para gestores: fontes do Direito (Constituição, lei, costume, jurisprudência), pessoa e capacidade, obrigações e contratos, e responsabilidade civil. Essencial para contratos, riscos e compliance.',
+                                  icon: '⚖️',
+                                  color: '#7c2d12',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
+                                },
+                                {
+                                  slug: 'logistica',
+                                  title: 'Logística',
+                                  tagline: 'Universidade · Cadeia de suprimentos, stocks, transporte e operações internacionais',
+                                  description:
+                                    'Gestão logística e da cadeia de suprimentos: supply chain end-to-end, gestão de estoques (just-in-time, EOQ), transporte e distribuição, e logística internacional (incoterms, alfândega).',
+                                  icon: '🚚',
+                                  color: '#0f766e',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
+                                },
+                                {
+                                  slug: 'sistemas-de-informacao',
+                                  title: 'Sistemas de Informação',
+                                  tagline: 'Universidade · Tipos de SI, ERP, CRM, BI e segurança da informação',
+                                  description:
+                                    'Sistemas de Informação nas empresas: tipos de SI (TPS, MIS, DSS, ESS), ERP e CRM como plataformas de integração, Business Intelligence para decisão, e segurança da informação (confidencialidade, integridade, disponibilidade).',
+                                  icon: '💻',
+                                  color: '#1e40af',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
+                                },
+                                {
+                                  slug: 'inovacao-empreendedorismo',
+                                  title: 'Inovação e Empreendedorismo',
+                                  tagline: 'Universidade · Mindset, design thinking e validação de ideias',
+                                  description:
+                                    'De ideia a negócio: mindset empreendedor (resiliência, orientação para oportunidades), design thinking como método de inovação centrada no utilizador, e validação de ideias com MVP, customer development e lean startup.',
+                                  icon: '💡',
+                                  color: '#ca8a04',
+                                  lessonCount: 3,
+                                  quizCount: 0,
+                                  badge: 'Uni'
                                 }
                               ];
 </script>

@@ -1,0 +1,50 @@
+{
+  "id": "2-pessoa-e-capacidade",
+  "courseSlug": "introducao-ao-direito",
+  "title": "Pessoa e Capacidade Jurídica",
+  "audio": "Lição sobre pessoa e capacidade jurídica.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "O conceito de pessoa em Direito" },
+    { "type": "p", "text": "Em Direito, pessoa é todo o ente susceptível de ser titular de direitos e obrigações. Distinguem-se duas categorias: pessoas singulares (indivíduos humanos) e pessoas colectivas (sociedades, associações, fundações). A personalidade jurídica começa com o nascimento completo com vida e extingue-se com a morte — mas há efeitos jurídicos que persistem após a morte, como os direitos sucessórios e a defesa da honra póstuma." },
+    { "type": "h3", "text": "Atributos da personalidade" },
+    { "type": "ul", "items": [
+      "Nome: identifica a pessoa na vida civil e social; obrigatório para pessoas singulares e colectivas.",
+      "Estado: situação jurídica familiar (solteiro, casado, divorciado, viúvo) que condiciona regimes patrimoniais.",
+      "Capacidade jurídica: aptidão para ser titular de direitos e obrigações.",
+      "Domicílio: sede da pessoa para efeitos de notificações e cumprimento de obrigações."
+    ] },
+    { "type": "h2", "text": "Capacidade jurídica vs. capacidade de exercício" },
+    { "type": "p", "text": "A capacidade jurídica é a aptidão para ter direitos — todas as pessoas a têm desde o nascimento. A capacidade de exercício (ou capacidade de agir) é a aptidão para exercer esses direitos por si próprio, celebrando actos válidos. O Código Civil português estabelece que têm plena capacidade de exercício os maiores de 18 anos que não sofram de qualquer anomalia psíquica que os impeça de reger a sua pessoa e bens." },
+    { "type": "h3", "text": "Incapacidades e suprimentos" },
+    { "type": "ul", "items": [
+      "Menores (menos de 18 anos): capacidade limitada; actos jurídicos necessitam de representação ou autorização dos pais ou tutores.",
+      "Interdição / inabilitação: quando anomalia psíquica grave impede o exercício pleno; o tribunal nomeia um tutor ou curador.",
+      "Prodígos: pessoa que gasta imoderadamente; pode ser inibida de praticar certos actos de disposição.",
+      "Surdos-mudos sem instrução adequada: podem ter limitações especiais."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Um contrato celebrado por menor sem representação é anulável — pode ser desfeito enquanto o menor não confirmar o acto após atingir a maioridade. Atenção: quem contrata com menores assume risco significativo." },
+    { "type": "h2", "text": "Pessoas colectivas: empresas, associações e fundações" },
+    { "type": "p", "text": "As pessoas colectivas são organizações com personalidade jurídica própria, distinta dos seus membros. Em Portugal, adquirem personalidade pelo registo (nas conservatórias dos registos civil, comercial ou predial, conforme o tipo). Incluem sociedades comerciais (Lda., SA), cooperativas, associações privadas sem fins lucrativos, fundações e até igrejas e partidos políticos." },
+    { "type": "h3", "text": "Capacidade das pessoas colectivas" },
+    { "type": "ul", "items": [
+      "Capacidade genérica: têm os direitos e obrigações necessários à prossecução do seu fim estatutário.",
+      "Capacidade específica: actos que excedem o objecto social podem ser válidos internamente mas vincular a sociedade aos terceiros de boa-fé.",
+      "Órgãos: a vontade da pessoa colectiva manifesta-se pelos seus órgãos (geralmente assembleia geral, administração / conselho de administração, fiscalização).",
+      "Representação: a vinculação opera-se pelas pessoas singulares que ocupam os cargos sociais (gerentes, administradores)."
+    ] },
+    { "type": "h2", "text": "Implicações práticas para o gestor" },
+    { "type": "p", "text": "Quando uma empresa assina um contrato, está a agir pela pessoa colectiva, não pelo gerente individualmente — salvo abuso de representação. Saber distinguir quem é parte no contrato é essencial para perceber quem pode ser demandado em tribunal e quem responde por dívidas. Uma sociedade limitada responde até ao limite do capital social; o gerente pode responder pessoalmente em caso de insolvência dolosa ou administração ruinosa." },
+    { "type": "callout", "variant": "tip", "text": "Antes de contratar com uma empresa, verifica o objecto social e os poderes de representação no registo comercial. Em caso de dúvida, exige-se cópia da certidão do registo comercial actualizada." }
+  ],
+  "keyPoints": [
+    "Pessoa é todo o ente susceptível de ser titular de direitos e obrigações — singulares e colectivas.",
+    "Capacidade jurídica: aptidão para ter direitos; capacidade de exercício: aptidão para os exercer por si.",
+    "Maiores de 18 anos sem anomalia psíquica têm plena capacidade de exercício.",
+    "Menores têm capacidade limitada e precisam de representação.",
+    "Pessoas colectivas adquirem personalidade pelo registo e actuam pelos seus órgãos."
+  ],
+  "quizSlug": "idq",
+  "nextLesson": "3-obrigacoes-e-contratos",
+  "prevLesson": "1-fontes-do-direito"
+}

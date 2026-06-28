@@ -1,0 +1,107 @@
+{
+  "id": "idq",
+  "title": "Quiz: Introdução ao Direito",
+  "description": "Fontes, pessoa e capacidade, obrigações e responsabilidade civil.",
+  "questions": [
+    {
+      "q": "Qual é a fonte suprema do Direito em Portugal?",
+      "opts": [
+        "A lei ordinária",
+        "A Constituição da República Portuguesa",
+        "O costume",
+        "A doutrina"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Quando duas normas de igual hierarquia colidem, aplica-se o critério:",
+      "opts": [
+        "Da cronologia (lei posterior revoga anterior)",
+        "Da autoridade do autor",
+        "Da opinião popular",
+        "Da língua em que está escrita"
+      ],
+      "a": 0
+    },
+    {
+      "q": "A personalidade jurídica de uma pessoa singular termina com:",
+      "opts": [
+        "Os 70 anos de idade",
+        "A reforma",
+        "A morte",
+        "A mudança de residência"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Têm plena capacidade de exercício em Portugal:",
+      "opts": [
+        "Todos os cidadãos",
+        "Os maiores de 18 anos sem anomalia psíquica",
+        "Apenas homens casados",
+        "Apenas quem tem curso universitário"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Uma sociedade comercial adquire personalidade jurídica:",
+      "opts": [
+        "Com a assinatura do contrato de sociedade",
+        "Com o início da actividade",
+        "Com o registo na conservatória do registo comercial",
+        "Com o pagamento do imposto"
+      ],
+      "a": 2
+    },
+    {
+      "q": "São fontes das obrigações, EXCEPTO:",
+      "opts": [
+        "Contratos",
+        "Enriquecimento sem causa",
+        "Responsabilidade civil",
+        "A opinião dos accionistas"
+      ],
+      "a": 3
+    },
+    {
+      "q": "Um contrato celebrado sob coacção é:",
+      "opts": [
+        "Sempre válido",
+        "Sempre nulo",
+        "Anulável",
+        "Considerado crime"
+      ],
+      "a": 2
+    },
+    {
+      "q": "O princípio da boa-fé objectiva impõe deveres:",
+      "opts": [
+        "Apenas durante a vigência do contrato",
+        "Apenas depois do contrato",
+        "Antes, durante e depois do contrato",
+        "Apenas no momento da assinatura"
+      ],
+      "a": 2
+    },
+    {
+      "q": "A responsabilidade civil subjectiva exige:",
+      "opts": [
+        "Apenas dano",
+        "Conduta, ilicitude, culpa, dano e nexo causal",
+        "Apenas nexo causal",
+        "Apenas intenção"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Qual destas é uma causa de exclusão da responsabilidade civil?",
+      "opts": [
+        "A incompetência técnica",
+        "A força maior",
+        "A boa-fé do agente",
+        "A inexperiência"
+      ],
+      "a": 1
+    }
+  ]
+}
