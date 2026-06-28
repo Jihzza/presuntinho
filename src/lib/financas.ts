@@ -138,6 +138,60 @@ export async function deleteTransacao(id: number): Promise<void> {
   await awardXP('transacao_delete');
 }
 
+/**
+ * Fetch a single transaction by id. Returns null if not found.
+ * Used by the edit page (M1-S1) to pre-fill the form.
+ */
+export async function getTransacao(id: number): Promise<Transacao | null> {
+  const row = (await db().transacoes.get(id)) as Transacao | undefined;
+  return row ?? null;
+}
+
+/**
+ * Update an existing transaction. M1-S1 (Daniel's P3: edit transactions).
+ * Accepts the same fields as addTransacao minus `createdAt` (preserved).
+ * Returns the updated row, or null if the id doesn't exist.
+ *
+ * Validates: valor > 0, categoria presente, data em formato YYYY-MM-DD,
+ * descricao trimmed (max 120 chars).
+ *
+ * Awards +1 XP via `transacao_edit` (idempotent at reason level — the
+ * awardXP debounce avoids double-fires if the user mashes Save).
+ */
+export async function updateTransacao(
+  id: number,
+  patch: Partial<NovaTransacaoInput>
+): Promise<Transacao | null> {
+  const existing = (await db().transacoes.get(id)) as Transacao | undefined;
+  if (!existing) return null;
+
+  // Normalize incoming fields (same rules as addTransacao)
+  const updated: Transacao = {
+    ...existing,
+    tipo: (patch.tipo ?? existing.tipo) as 'receita' | 'despesa',
+    valor: Number(patch.valor ?? existing.valor),
+    categoria: patch.categoria ?? existing.categoria,
+    descricao: (patch.descricao ?? existing.descricao ?? '').trim().slice(0, 120),
+    data: patch.data ?? existing.data
+  };
+
+  // Validate
+  if (!Number.isFinite(updated.valor) || updated.valor <= 0) {
+    throw new Error('valor_invalido');
+  }
+  if (!updated.categoria) {
+    throw new Error('categoria_obrigatoria');
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(updated.data)) {
+    throw new Error('data_invalida');
+  }
+
+  await db().transacoes.put(updated);
+  // M1-S1: +1 XP for editing a transaction
+  await awardXP('transacao_edit');
+  return updated;
+}
+
 // ---------------------------------------------------------------------------
 // Agregações
 // ---------------------------------------------------------------------------
