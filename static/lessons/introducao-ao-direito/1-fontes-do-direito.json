@@ -1,0 +1,52 @@
+{
+  "id": "1-fontes-do-direito",
+  "courseSlug": "introducao-ao-direito",
+  "title": "Fontes do Direito",
+  "audio": "Lição sobre as fontes do Direito.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "O que é o Direito e por que tem fontes" },
+    { "type": "p", "text": "Direito é o conjunto de normas que regulam a convivência social, criadas ou reconhecidas pelo Estado, com capacidade de serem impostas coercivamente. Não basta saber quais são as regras — para um gestor é essencial perceber de onde vêm e qual a hierarquia entre elas, porque um contrato pode ser válido pela lei civil e nulo por uma norma europeia sem que o empresário se aperceba." },
+    { "type": "h3", "text": "As fontes do Direito em Portugal" },
+    { "type": "ul", "items": [
+      "Lei: principal fonte escrita, produzida pela Assembleia da República (lei), pelo Governo (decreto-lei) ou por regiões autónomas (decreto legislativo regional).",
+      "Constituição da República Portuguesa (CRP): lei suprema, com primazia sobre todas as outras. Qualquer norma contrária é inconstitucional.",
+      "Costume: prática reiterada com convicção jurídica (opinio juris). É fonte subsidiária — só se aplica quando a lei é omissa.",
+      "Jurisprudência: decisões dos tribunais, vinculativas quando superiores (Supremo Tribunal de Justiça, Tribunal Constitucional, acórdãos de uniformização).",
+      "Doutrina: opinião dos juristas; não vincula, mas influencia a interpretação.",
+      "Direito europeu e internacional: regulamentos da UE têm aplicação directa; directivas precisam de transposição. Convenções internacionais prevalecem sobre a lei interna depois de ratificadas."
+    ] },
+    { "type": "h3", "text": "Hierarquia das normas (pirâmide de Kelsen)" },
+    { "type": "p", "text": "A pirâmide de Kelsen mostra que as normas se organizam por graus: no topo está a Constituição, seguida das leis, depois os regulamentos e, por fim, os actos administrativos e contratos. Uma norma inferior não pode contradizer uma superior — se o fizer, é inválida. Este princípio, designado hierarquia normativa, é a base do Estado de Direito." },
+    { "type": "callout", "variant": "tip", "text": "Quando duas normas colidem, aplica-se o critério cronológico (lei posterior revoga anterior) ou o critério da especialidade (lei especial prevalece sobre geral). Em caso de conflito com a Constituição, qualquer lei cede." },
+    { "type": "h3", "text": "Ramos do Direito relevantes para empresas" },
+    { "type": "ul", "items": [
+      "Direito Civil: pessoas, bens, obrigações e contratos. Base da vida privada e comercial.",
+      "Direito Comercial: actos de comércio, sociedades, títulos de crédito.",
+      "Direito do Trabalho: contrato de trabalho, férias, despedimento, segurança social.",
+      "Direito Fiscal: IRS, IRC, IVA, contribuições especiais.",
+      "Direito Penal: crimes (burla, fraude fiscal, corrupção) e respectivas penas.",
+      "Direito Administrativo: licenças, concursos públicos, regulamentos sectoriais."
+    ] },
+    { "type": "h3", "text": "Como aplicar o Direito ao negócio" },
+    { "type": "p", "text": "Um gestor não precisa de saber todas as leis, mas tem de saber pedir ajuda especializada nos momentos certos: redacção de contratos, recrutamento internacional, questões fiscais transfronteiriças, defesa em processos judiciais. A regra prática é: se uma decisão pode custar mais de 5.000€ ou afectar a reputação da empresa, consulta-se um advogado." },
+    { "type": "callout", "variant": "warning", "text": "Ignorar uma lei não a torna inaplicável. O desconhecimento não desculpa o incumprimento — em Direito, vigora o princípio da ignorância da lei não aproveita ao infractor." },
+    { "type": "h2", "text": "Checklist do gestor" },
+    { "type": "ul", "items": [
+      "Identifica as fontes que afectam o teu sector: lei civil, fiscal, laboral, regulamento europeu?",
+      "Mantém um arquivo das leis relevantes actualizado (Diário da República é fonte oficial).",
+      "Cria um protocolo de revisão jurídica antes de assinar contratos acima de um certo valor.",
+      "Quando houver conflito de normas, consulta o critério hierárquico antes de agir."
+    ] }
+  ],
+  "keyPoints": [
+    "Direito é o sistema de normas coercivamente imposto pelo Estado para regular a vida em sociedade.",
+    "Fontes principais em Portugal: lei, Constituição, costume (subsidiário), jurisprudência, doutrina, direito europeu.",
+    "Hierarquia normativa: Constituição no topo, seguida das leis e regulamentos.",
+    "Ramos essenciais para empresas: civil, comercial, laboral, fiscal, penal, administrativo.",
+    "Em caso de conflito aplica-se hierarquia, cronologia ou especialidade."
+  ],
+  "quizSlug": "idq",
+  "nextLesson": "2-pessoa-e-capacidade",
+  "prevLesson": null
+}

@@ -283,7 +283,7 @@
     {
       "id": "gap-043",
       "description": "Seed Finanças com 6 transações exemplo (1 receita Salário + 5 despesas: Habitação, Alimentação, Transporte, Saúde, Lazer) distribuídas pelos últimos 14 dias. Adicionado em ensureDefaults() em src/lib/state/db.ts com guard `if (count===0)`. Categorias (11) já eram seeded em gap-003.",
-      "sha": "watchdog-tick-2026-06-28-17",
+      "sha": "1d94db5",
       "closed_at": "2026-06-28T17:00:00+02:00"
     },
     {
