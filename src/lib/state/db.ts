@@ -563,4 +563,27 @@ export async function ensureDefaults(profile: ProfileId = activeProfile): Promis
     }));
     await d.habitos.bulkPut(seeded);
   }
+  // Seed a handful of example transactions (gap-043) so the /financas
+  // dashboard is not blank on first open.  Five despesas spanning the
+  // main categories + one receita Salário — distributed across the
+  // last 14 days to give the chart and totals realistic numbers.  Only
+  // runs when the table is empty, so users who have already added their
+  // own transactions will never see their list stomped.
+  const existingTransacaoCount = await d.transacoes.count();
+  if (existingTransacaoCount === 0) {
+    const day = 24 * 60 * 60 * 1000;
+    const today = new Date();
+    const iso = (offsetDays: number) => {
+      const d2 = new Date(today.getTime() - offsetDays * day);
+      return d2.toISOString().slice(0, 10);
+    };
+    await d.transacoes.bulkPut([
+      { tipo: 'receita',  valor: 2200,  categoria: 'salario',     descricao: 'Salário mensal',                 data: iso(3),  createdAt: now + 100 },
+      { tipo: 'despesa',  valor: 750,   categoria: 'habitacao',   descricao: 'Renda do apartamento',            data: iso(5),  createdAt: now + 101 },
+      { tipo: 'despesa',  valor: 95,    categoria: 'alimentacao', descricao: 'Supermercado da semana',          data: iso(2),  createdAt: now + 102 },
+      { tipo: 'despesa',  valor: 38,    categoria: 'transporte',  descricao: 'Cartão de transporte mensal',     data: iso(8),  createdAt: now + 103 },
+      { tipo: 'despesa',  valor: 24,    categoria: 'saude',       descricao: 'Farmácia',                        data: iso(11), createdAt: now + 104 },
+      { tipo: 'despesa',  valor: 45,    categoria: 'lazer',       descricao: 'Cinema com amigos',               data: iso(6),  createdAt: now + 105 }
+    ]);
+  }
 }

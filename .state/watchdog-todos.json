@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T16:30:00+02:00",
+  "lastUpdated": "2026-06-28T17:00:00+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -44,26 +44,18 @@
     {
       "id": "gap-042",
       "category": "feature-pedida-pelo-Daniel",
-      "description": "gap-034 escalado: 16 cursos BA prontos; Daniel pede 'tudo que souber a cadeiras da universidade'. Próxima vaga: cadeiras da EU Business School (BA) — Introdução ao Direito / Direito Empresarial (já existe) / Comportamento Organizacional (já existe) / Ética Empresarial / Sistemas de Informação / Logística / Inovação e Empreendedorismo. Foco: 4-8 cursos novos com 4 lições + 1 quiz cada, adicionados ao CATALOGUE em escola/+page.svelte + aulas/+page.server.ts.",
+      "description": "gap-034 escalado: 20 cursos BA prontos; Daniel pede 'tudo que souber a cadeiras da universidade'. Delegado a Skander 2: 4 cadeiras novas (Introdução ao Direito / Sistemas de Informação / Logística / Inovação e Empreendedorismo) × 4 lições + 1 quiz cada. Foco: adicionar ao CATALOGUE em escola/+page.svelte + aulas/+page.server.ts + curso/[slug]/+page.svelte.",
       "severity": "alta",
       "source": "audio-Daniel-2026-06-28-cadeiras",
       "created_at": "2026-06-28T16:30:00+02:00"
     },
     {
-      "id": "gap-043",
+      "id": "gap-045",
       "category": "empty-area",
-      "description": "APS Finanças (gap-003 fechou empty-state mas área continua 'vazia' para quem não criou categorias). Adicionar 3-5 categorias de exemplo + 3-5 transações de exemplo no seed (categoria:Habitação, Alimentação, Transportes, Saúde, Lazer; 1 transação por categoria nos últimos 30 dias) para Fatma não ver ecrã em branco no primeiro arranque.",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-28-15",
-      "created_at": "2026-06-28T16:30:00+02:00"
-    },
-    {
-      "id": "gap-044",
-      "category": "empty-area",
-      "description": "APS Hábitos (gap-004 fechou 8 default habits mas pode estar só no seed estático). Verificar se hábitos aparecem sem o user criar manualmente — abrir app fresh e ver /habitos/. Se aparecer lista pré-populada OK; senão, mover defaults para dentro de initSeed().",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-28-15",
-      "created_at": "2026-06-28T16:30:00+02:00"
+      "description": "NOVO: smoke real em /financas em app fresh para confirmar dashboard mostra totais + transações seed (gap-043 fix). Browser smoke pendente — código OK mas live-fire bloqueado por auth gating.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-28-17",
+      "created_at": "2026-06-28T17:00:00+02:00"
     }
   ],
   "closedItems": [
@@ -287,6 +279,18 @@
       "description": "2 quizzes novos: static/quizzes/gmq.json (Gestão da Mudança Organizacional, 10 perguntas — Beckhard-Harris, Kotter 8, ADKAR, Kotter-Schlesinger, Schein, ancoragem, Kübler-Ross) + static/quizzes/neq.json (Técnicas de Negociação Empresarial, 10 perguntas — BATNA, ZOPA, Thomas-Kilmann, Fisher & Ury, CNV, Hofstede, Hall, âncoras). Smoke: /escola/quiz/gmq e /escola/quiz/neq retornam 200 em produção; JSONs com 10 questions cada.",
       "sha": "cd52f32",
       "closed_at": "2026-06-28T16:30:00+02:00"
+    },
+    {
+      "id": "gap-043",
+      "description": "Seed Finanças com 6 transações exemplo (1 receita Salário + 5 despesas: Habitação, Alimentação, Transporte, Saúde, Lazer) distribuídas pelos últimos 14 dias. Adicionado em ensureDefaults() em src/lib/state/db.ts com guard `if (count===0)`. Categorias (11) já eram seeded em gap-003.",
+      "sha": "watchdog-tick-2026-06-28-17",
+      "closed_at": "2026-06-28T17:00:00+02:00"
+    },
+    {
+      "id": "gap-044",
+      "description": "Verificado: 8 default habits já são seeded em ensureDefaults() via bulkPut(DEFAULT_HABITOS) quando count===0. Source-of-truth: src/lib/state/db.ts:557. Lista aparece pré-populada em app fresh sem user input.",
+      "sha": "44eeb33",
+      "closed_at": "2026-06-28T17:00:00+02:00"
     }
   ]
 }
