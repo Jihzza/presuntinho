@@ -306,12 +306,25 @@
   // SEO — used by <svelte:head> below.  The catalogue is hardcoded so
   // the title is stable per slug; falls back to a generic literal
   // until the catalogue loads.
-  let pageTitle = $derived(
-    course ? `${course.title} · Curso · Escola` : 'Curso · Escola'
-  );
-  let description = $derived(
-    course?.description?.slice(0, 160) || 'Curso e lições'
-  );
+  // i18n: wrap catalogue literals in $t() with PT fallback so that future
+    // locales can override them via routes.escola.curso.<slug>.{title,description,tagline}
+    // without touching the CATALOGUE constant.
+    let courseTitle = $derived(
+      course ? $t(`routes.escola.curso.${course.slug}.title`, { default: course.title }) : ''
+    );
+    let courseTagline = $derived(
+      course ? $t(`routes.escola.curso.${course.slug}.tagline`, { default: course.tagline }) : ''
+    );
+    let courseDescription = $derived(
+      course ? $t(`routes.escola.curso.${course.slug}.description`, { default: course.description }) : ''
+    );
+
+    let pageTitle = $derived(
+      course ? `${courseTitle} · Curso · Escola` : 'Curso · Escola'
+    );
+    let description = $derived(
+      courseDescription?.slice(0, 160) || 'Curso e lições'
+    );
 </script>
 
 <svelte:head>
@@ -337,17 +350,17 @@
       <p class="breadcrumb">
         <a href="/escola/">{$t('lesson.breadcrumb.escola', { default: 'Escola' })}</a>
         <span class="sep">›</span>
-        <span>{course.title}</span>
+        <span>{courseTitle}</span>
       </p>
       <div class="title-row">
         <span class="icon" aria-hidden="true">{course.icon}</span>
         <div>
           <span class="tag">{$t('escola.curso.slug.tag', { default: 'Curso' })}</span>
-          <h1>{course.title}</h1>
-          <p class="tagline">{course.tagline}</p>
-        </div>
-      </div>
-      <p class="desc">{course.description}</p>
+          <h1>{courseTitle}</h1>
+                    <p class="tagline">{courseTagline}</p>
+                  </div>
+                </div>
+                <p class="desc">{courseDescription}</p>
       <p class="meta">
         <span>📚 {course.lessons.length} lições</span>
         <span>⏱ ~{course.lessons.reduce((a, l) => a + l.estMinutes, 0)} min no total</span>
