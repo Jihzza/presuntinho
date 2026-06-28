@@ -1,0 +1,48 @@
+{
+  "slug": "externalidades",
+  "title": "7. Externalidades e Falhas de Mercado",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Quando o Mercado Falha"
+    },
+    {
+      "type": "p",
+      "text": "Externalidade é um efeito (positivo ou negativo) que uma transação tem sobre terceiros sem ser refletido no preço."
+    },
+    {
+      "type": "h3",
+      "text": "Tipos"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Negativa: poluição, ruído, congestionamento",
+        "Positiva: vacinação, educação, I&D"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Soluções possíveis"
+    },
+    {
+      "type": "p",
+      "text": "Impostos pigouvianos (negativas), subsídios (positivas), regulação, mercados de direitos (ex: carbono)."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🌱 Externalidade negativa clássica: a fábrica polui, mas o preço do produto não reflete o custo ambiental."
+    }
+  ],
+  "keyPoints": [
+    "Externalidade = custo ou benefício de terceiros",
+    "Mercado sozinho não a internaliza",
+    "Estado pode corrigir com impostos/subsídios"
+  ],
+  "quizSlug": "meq2",
+  "prevLesson": "teoria-producao",
+  "nextLesson": "bens-publicos"
+}

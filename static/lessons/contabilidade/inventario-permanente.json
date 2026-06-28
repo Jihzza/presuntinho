@@ -1,0 +1,49 @@
+{
+  "slug": "inventario-permanente",
+  "title": "6. Inventário Permanente",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Controlo de Existências (Inventário Permanente)"
+    },
+    {
+      "type": "p",
+      "text": "Sistema que mantém os stocks atualizados em tempo real, registando cada entrada e saída."
+    },
+    {
+      "type": "h3",
+      "text": "Métodos de valorização"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "FIFO (First In, First Out): sai o que entrou primeiro",
+        "LIFO (Last In, First Out): sai o que entrou por último",
+        "Custo Médio Ponderado: média dos custos"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Por que importa"
+    },
+    {
+      "type": "p",
+      "text": "Em inflação, FIFO dá CMV menor e lucro maior. Em deflação, inverte-se. Impacta diretamente o resultado e os impostos."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "⚖️ A escolha do método afeta o resultado. Portugal e a UE preferem FIFO ou CMP."
+    }
+  ],
+  "keyPoints": [
+    "FIFO, LIFO e Custo Médio são os métodos principais",
+    "Método afeta lucro e impostos",
+    "Inventário permanente = controlo contínuo"
+  ],
+  "quizSlug": "ctq2",
+  "prevLesson": "balancete-razonetes",
+  "nextLesson": "fecho-exercicio"
+}

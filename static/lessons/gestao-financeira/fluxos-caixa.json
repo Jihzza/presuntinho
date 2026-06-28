@@ -1,0 +1,49 @@
+{
+  "slug": "fluxos-caixa",
+  "title": "5. Demonstração de Fluxos de Caixa",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Demonstração de Fluxos de Caixa (Cash Flow Statement)"
+    },
+    {
+      "type": "p",
+      "text": "Mostra de onde veio e para onde foi o dinheiro. Diferente do lucro (que é um conceito contabilístico), o caixa é fato: entrou ou saiu dinheiro da conta?"
+    },
+    {
+      "type": "h3",
+      "text": "Três grandes blocos"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Atividades operacionais: o negócio principal gera caixa?",
+        "Atividades de investimento: compra/venda de ativos",
+        "Atividades de financiamento: empréstimos, dividendos, capital"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Lucro ≠ Caixa"
+    },
+    {
+      "type": "p",
+      "text": "Uma empresa pode ter lucro alto e caixa negativo (vendeu muito a prazo, não recebeu). Daí a importância desta demonstração."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🔑 O cash flow é o 'oxigénio' da empresa. Sem caixa, mesmo com lucro, a empresa morre."
+    }
+  ],
+  "keyPoints": [
+    "Caixa ≠ lucro",
+    "Três blocos: operacional, investimento, financiamento",
+    "Free Cash Flow = caixa operacional − investimento em capex"
+  ],
+  "quizSlug": "gfq2",
+  "prevLesson": "orcamento-empresarial",
+  "nextLesson": "ponto-equilibrio"
+}

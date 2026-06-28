@@ -1,0 +1,50 @@
+{
+  "slug": "bem-estar-organizacional",
+  "title": "8. Bem-Estar e Saúde Mental no Trabalho",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Pessoas Antes da Performance"
+    },
+    {
+      "type": "p",
+      "text": "Burnout, ansiedade e depressão são a principal causa de absentismo na UE. Empresas líderes tratam saúde mental como prioridade estratégica."
+    },
+    {
+      "type": "h3",
+      "text": "Sinais de alerta"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Exaustão persistente",
+        "Cinismo/descengajamento",
+        "Queda de performance",
+        "Absentismo crescente"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Ações concretas"
+    },
+    {
+      "type": "p",
+      "text": "Limites saudáveis ao horário, pausas reais, apoio psicológico (EAP), cultura de não-resposta fora de horas, workload realista."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🧘 Empresas que cuidam da saúde mental têm menor rotatividade e maior produtividade sustentável."
+    }
+  ],
+  "keyPoints": [
+    "Burnout é realidade crescente",
+    "Limites ao horário protegem a equipa",
+    "Saúde mental é responsabilidade do líder"
+  ],
+  "quizSlug": "coq2",
+  "prevLesson": "poder-politica",
+  "nextLesson": null
+}

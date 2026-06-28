@@ -1,0 +1,57 @@
+{
+  "id": "rhq2",
+  "title": "Quiz: Recursos Humanos — Avançado",
+  "description": "T&D, compensação total, engajamento e relações laborais.",
+  "questions": [
+    {
+      "q": "O modelo de Kirkpatrick mede:",
+      "opts": [
+        "Apenas satisfação",
+        "Reação, aprendizagem, comportamento e resultados",
+        "Só retenção",
+        "Apenas absentismo"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Compensação total inclui:",
+      "opts": [
+        "Só salário-base",
+        "Salário + variáveis + benefícios + flexibilidade",
+        "Apenas benefícios",
+        "Só bónus"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Engajamento é:",
+      "opts": [
+        "O mesmo que clima",
+        "O comprometimento emocional com a empresa",
+        "Apenas assiduidade",
+        "Apenas pontualidade"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Um contrato coletivo de trabalho é:",
+      "opts": [
+        "Individual entre empresa e trabalhador",
+        "Negociação entre sindicato(s) e entidade empregadora",
+        "Apenas para cargos de chefia",
+        "Sempre anual"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Driver de engajamento inclui:",
+      "opts": [
+        "Apenas salário",
+        "Propósito, reconhecimento, desenvolvimento",
+        "Só benefícios",
+        "Só horário"
+      ],
+      "a": 1
+    }
+  ]
+}

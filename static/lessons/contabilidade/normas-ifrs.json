@@ -1,0 +1,49 @@
+{
+  "slug": "normas-ifrs",
+  "title": "8. Normas Contabilísticas (IFRS/SNC)",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Padrões Contabilísticos: SNC e IFRS"
+    },
+    {
+      "type": "p",
+      "text": "Em Portugal aplica-se o SNC (Sistema de Normalização Contabilística), alinhado com as IFRS internacionais. Definem como reconhecer, medir e divulgar."
+    },
+    {
+      "type": "h3",
+      "text": "Por que existem normas"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Comparabilidade entre empresas e países",
+        "Transparência para investidores",
+        "Confiança nos mercados financeiros"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Princípios fundamentais"
+    },
+    {
+      "type": "p",
+      "text": "Competência (quando acontece o facto), substância sobre forma,prudência, materialidade."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🌍 Sem normas comuns, comparar contas de uma empresa portuguesa com uma francesa seria caótico."
+    }
+  ],
+  "keyPoints": [
+    "SNC em Portugal, IFRS no plano internacional",
+    "Garantem comparabilidade e transparência",
+    "Princípio da substância sobre forma é central"
+  ],
+  "quizSlug": "ctq2",
+  "prevLesson": "fecho-exercicio",
+  "nextLesson": null
+}

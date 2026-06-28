@@ -1,0 +1,49 @@
+{
+  "slug": "valorizacao-empresa",
+  "title": "8. Valorização de Empresas (Valuation)",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Quanto vale uma empresa? (Valuation básico)"
+    },
+    {
+      "type": "p",
+      "text": "Valuation é o processo de estimar o valor justo de uma empresa. Existem várias abordagens."
+    },
+    {
+      "type": "h3",
+      "text": "Métodos principais"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "DCF (Discounted Cash Flow): projeta fluxos futuros e desconta a valor presente",
+        "Múltiplos de mercado: EBITDA, vendas, lucro",
+        "Valor patrimonial: ativos − passivos"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Quando usar cada um"
+    },
+    {
+      "type": "p",
+      "text": "DCF para empresas com fluxos previsíveis. Múltiplos para comparações rápidas. Valor patrimonial para empresas com muitos ativos físicos."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "💎 Valuation não é ciência exata. Varia muito com premissas (crescimento, WACC, taxa terminal)."
+    }
+  ],
+  "keyPoints": [
+    "DCF, múltiplos e valor patrimonial são os três métodos",
+    "DCF é o mais usado em M&A e private equity",
+    "Premissas certas > modelo bonito"
+  ],
+  "quizSlug": "gfq2",
+  "prevLesson": "custo-capital",
+  "nextLesson": null
+}

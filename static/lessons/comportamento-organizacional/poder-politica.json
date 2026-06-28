@@ -1,0 +1,51 @@
+{
+  "slug": "poder-politica",
+  "title": "7. Poder e Política nas Organizações",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Como Funciona o Poder"
+    },
+    {
+      "type": "p",
+      "text": "Poder é a capacidade de influenciar decisões. Pode ser formal (cargo) ou informal (expertise, relação, carisma)."
+    },
+    {
+      "type": "h3",
+      "text": "Fontes de poder"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Coercitivo: baseado em medo",
+        "Recompensa: baseado em benefício",
+        "Legítimo: do cargo/hierarquia",
+        "Especialista: do conhecimento",
+        "Referência: da admiração/relação"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Política organizacional"
+    },
+    {
+      "type": "p",
+      "text": "Comportamentos informais para ganhar influência. Pode ser construtiva (alinhamento) ou destrutiva (jogos de poder). Líderes maduros distinguem uma da outra."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "⚖️ O melhor líder combina poder legítimo + especialista + referência. Sustenta-se no mérito."
+    }
+  ],
+  "keyPoints": [
+    "Poder formal vem do cargo; informal, do mérito",
+    "Especialista e referência são sustentáveis",
+    "Política não é inerentemente má — depende do uso"
+  ],
+  "quizSlug": "coq2",
+  "prevLesson": "conflito-negociacao",
+  "nextLesson": "bem-estar-organizacional"
+}

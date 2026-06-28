@@ -1,0 +1,49 @@
+{
+  "slug": "utilidade-escolha",
+  "title": "5. Teoria do Consumidor: Utilidade e Escolha",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Como Decidem os Consumidores?"
+    },
+    {
+      "type": "p",
+      "text": "O consumidor racional escolhe o cabaz que maximiza a sua utilidade (satisfação), dado o seu rendimento e os preços."
+    },
+    {
+      "type": "h3",
+      "text": "Conceitos-chave"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Utilidade total: satisfação acumulada",
+        "Utilidade marginal: satisfação adicional de uma unidade extra",
+        "Curva de indiferença: combinações que dão igual satisfação"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Lei da Utilidade Marginal Decrescente"
+    },
+    {
+      "type": "p",
+      "text": "Cada unidade extra de um bem dá menos satisfação que a anterior. Explica por que razão raramente queremos 'tudo' de algo."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🍕 A primeira fatia de pizza é óptima. A quinta já custa. Utilidade marginal decrescente."
+    }
+  ],
+  "keyPoints": [
+    "Consumidor maximiza utilidade dado o orçamento",
+    "Utilidade marginal decrescente",
+    "Curvas de indiferença mostram preferências"
+  ],
+  "quizSlug": "meq2",
+  "prevLesson": "custos-producao",
+  "nextLesson": "teoria-producao"
+}

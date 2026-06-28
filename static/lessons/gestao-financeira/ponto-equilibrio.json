@@ -1,0 +1,45 @@
+{
+  "slug": "ponto-equilibrio",
+  "title": "6. Break-even e Margem de Segurança",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Ponto de Equilíbrio (Break-even Point)"
+    },
+    {
+      "type": "p",
+      "text": "É o volume de vendas a partir do qual a empresa deixa de ter prejuízo e começa a ter lucro."
+    },
+    {
+      "type": "h3",
+      "text": "Fórmula"
+    },
+    {
+      "type": "p",
+      "text": "Break-even = Custos Fixos / Margem de Contribuição unitária"
+    },
+    {
+      "type": "h3",
+      "text": "Margem de Segurança"
+    },
+    {
+      "type": "p",
+      "text": "Quanto as vendas podem cair antes de a empresa entrar em prejuízo. Quanto maior, mais resiliente."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "💡 Margem de segurança baixa = empresa frágil. Qualquer queda nas vendas leva-a a prejuízo."
+    }
+  ],
+  "keyPoints": [
+    "Break-even = quando receitas = custos totais",
+    "Margem de segurança = resiliência da empresa",
+    "Custos fixos altos = break-even mais alto"
+  ],
+  "quizSlug": "gfq2",
+  "prevLesson": "fluxos-caixa",
+  "nextLesson": "custo-capital"
+}

@@ -1,0 +1,50 @@
+{
+  "slug": "relacoes-laborais",
+  "title": "8. Relações Laborais e Sindicalismo",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Diálogo Social e Representação"
+    },
+    {
+      "type": "p",
+      "text": "Relações laborais tratam da relação entre trabalhadores, empregadores e seus representantes (sindicatos, comissões de trabalhadores)."
+    },
+    {
+      "type": "h3",
+      "text": "Instrumentos"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Contrato coletivo de trabalho",
+        "Negociação salarial anual",
+        "Comissões de trabalhadores",
+        "Direito à greve e lockout"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Tendências atuais"
+    },
+    {
+      "type": "p",
+      "text": "Sindicalização decresce em muitos setores, mas renasce em tech e logística. O diálogo social continua essencial para coesão."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🤝 Boa relação laboral constrói-se no dia-a-dia, não apenas na negociação anual."
+    }
+  ],
+  "keyPoints": [
+    "Sindicatos e comissões representam trabalhadores",
+    "Contratos coletivos regulam condições",
+    "Diálogo social permanente é mais eficaz que confronto"
+  ],
+  "quizSlug": "rhq2",
+  "prevLesson": "clima-engajamento",
+  "nextLesson": null
+}

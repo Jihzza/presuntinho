@@ -1,0 +1,49 @@
+{
+  "slug": "teoria-producao",
+  "title": "6. Teoria da Produção e Rendimentos",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Como Decidem os Produtores?"
+    },
+    {
+      "type": "p",
+      "text": "A empresa combina inputs (trabalho, capital, matérias) para produzir output. A análise centra-se na produtividade de cada factor."
+    },
+    {
+      "type": "h3",
+      "text": "Rendimentos de escala"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Constantes: duplicar inputs duplica output",
+        "Crescentes (economias de escala): output mais que proporcional",
+        "Decrescentes (deseconomias): output menos que proporcional"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Curto vs longo prazo"
+    },
+    {
+      "type": "p",
+      "text": "No curto prazo há pelo menos um factor fixo. No longo prazo, todos são variáveis — a empresa pode escalar."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "📈 Economias de escala explicam porque é que muitas indústrias se concentram (poucos grandes players)."
+    }
+  ],
+  "keyPoints": [
+    "Rendimentos crescentes = economias de escala",
+    "Curto prazo: fator fixo; longo prazo: todos variáveis",
+    "Produtividade marginal decrescente a partir de certo ponto"
+  ],
+  "quizSlug": "meq2",
+  "prevLesson": "utilidade-escolha",
+  "nextLesson": "externalidades"
+}

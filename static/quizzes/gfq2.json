@@ -1,0 +1,57 @@
+{
+  "id": "gfq2",
+  "title": "Quiz: Gestão Financeira — Avançado",
+  "description": "Testa conceitos avançados: fluxos de caixa, break-even, WACC e valuation.",
+  "questions": [
+    {
+      "q": "A demonstração de fluxos de caixa divide-se em:",
+      "opts": [
+        "Apenas operacional",
+        "Operacional, investimento e financiamento",
+        "Apenas receitas e despesas",
+        "Ativo e passivo"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O free cash flow é:",
+      "opts": [
+        "Lucro líquido do ano",
+        "Caixa operacional menos capex",
+        "Total do ativo",
+        "Capital próprio"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O break-even é o ponto em que:",
+      "opts": [
+        "Receitas = custos totais",
+        "Lucro é máximo",
+        "Ativo = passivo",
+        "Vendas duplicam"
+      ],
+      "a": 0
+    },
+    {
+      "q": "O WACC serve para:",
+      "opts": [
+        "Calcular impostos",
+        "Definir a taxa mínima de retorno dos projetos",
+        "Fixar salários",
+        "Pagar dividendos"
+      ],
+      "a": 1
+    },
+    {
+      "q": "DCF é:",
+      "opts": [
+        "Discounted Cash Flow — descontar fluxos futuros a valor presente",
+        "Direct Cost Formula",
+        "Daily Cash Forecast",
+        "Debt-to-Cash Factor"
+      ],
+      "a": 0
+    }
+  ]
+}

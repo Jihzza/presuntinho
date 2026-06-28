@@ -1,0 +1,50 @@
+{
+  "slug": "treinamento-desenvolvimento",
+  "title": "5. Treinamento e Desenvolvimento (T&D)",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Investir nas Pessoas"
+    },
+    {
+      "type": "p",
+      "text": "T&D visa desenvolver competências atuais e futuras dos colaboradores. Não é custo: é investimento com retorno mensurável."
+    },
+    {
+      "type": "h3",
+      "text": "Tipos de formação"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Onboarding: integração de novos colaboradores",
+        "Hard skills: competências técnicas",
+        "Soft skills: comunicação, liderança, gestão de tempo",
+        "Liderança e gestão: preparar sucessores"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Medir o impacto"
+    },
+    {
+      "type": "p",
+      "text": "Modelo de Kirkpatrick: reação, aprendizagem, comportamento, resultados. O último é o mais difícil e o mais valioso."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "📚 Formação sem avaliação de impacto é despesa, não investimento."
+    }
+  ],
+  "keyPoints": [
+    "T&D desenvolve competências atuais e futuras",
+    "Modelo de Kirkpatrick mede impacto",
+    "Formação contínua retém talento"
+  ],
+  "quizSlug": "rhq2",
+  "prevLesson": "cultura-organizacional",
+  "nextLesson": "remuneracao-beneficios"
+}

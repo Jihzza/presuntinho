@@ -1,0 +1,57 @@
+{
+  "id": "meq2",
+  "title": "Quiz: Microeconomia — Avançado",
+  "description": "Utilidade, produção, externalidades e bens públicos.",
+  "questions": [
+    {
+      "q": "A lei da utilidade marginal decrescente diz que:",
+      "opts": [
+        "Cada unidade extra dá mais satisfação",
+        "Cada unidade extra dá menos satisfação adicional",
+        "A satisfação é constante",
+        "Só se aplica a bens de luxo"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Economias de escala são:",
+      "opts": [
+        "Custos médios crescentes com o volume",
+        "Custos médios decrescentes com o volume",
+        "Custos fixos independentes",
+        "Custos variáveis constantes"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Uma externalidade negativa é:",
+      "opts": [
+        "Um benefício para terceiros",
+        "Um custo imposto a terceiros não refletido no preço",
+        "Um subsídio estatal",
+        "Um imposto pigouviano"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Um bem público é:",
+      "opts": [
+        "Rival e exclusivo",
+        "Não-rival e não-exclusivo",
+        "Sempre gratuito",
+        "Produzido apenas pelo Estado"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O problema do free-rider aplica-se a:",
+      "opts": [
+        "Bens privados",
+        "Bens públicos",
+        "Apenas monopolios",
+        "Mercados de concorrência perfeita"
+      ],
+      "a": 1
+    }
+  ]
+}

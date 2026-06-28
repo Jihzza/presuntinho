@@ -1,0 +1,49 @@
+{
+  "slug": "custo-capital",
+  "title": "7. Custo de Capital e WACC",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Custo Médio Ponderado de Capital (WACC)"
+    },
+    {
+      "type": "p",
+      "text": "É o custo médio que a empresa paga para financiar as suas atividades, considerando dívida e capital próprio."
+    },
+    {
+      "type": "h3",
+      "text": "Componentes"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Custo da dívida (Kd): taxa de juro paga aos credores",
+        "Custo do capital próprio (Ke): retorno exigido pelos sócios",
+        "Pesos: proporção de cada fonte no financiamento"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Por que é importante"
+    },
+    {
+      "type": "p",
+      "text": "Projetos devem render acima do WACC para criar valor. Se render menos, destroem valor."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🎯 WACC é a 'taxa de hurdle' mínima. Se o teu projeto não a supera, não vale a pena."
+    }
+  ],
+  "keyPoints": [
+    "WACC = média ponderada de Kd e Ke",
+    "Quanto maior o risco do negócio, maior o Ke",
+    "Projetos com retorno < WACC destroem valor"
+  ],
+  "quizSlug": "gfq2",
+  "prevLesson": "ponto-equilibrio",
+  "nextLesson": "valorizacao-empresa"
+}

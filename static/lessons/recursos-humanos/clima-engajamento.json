@@ -1,0 +1,50 @@
+{
+  "slug": "clima-engajamento",
+  "title": "7. Clima e Engajamento",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Como Se Sentem as Pessoas?"
+    },
+    {
+      "type": "p",
+      "text": "Clima é a perceção coletiva do ambiente de trabalho. Engajamento é o comprometimento emocional com a empresa. Os dois correlacionam-se, mas não são iguais."
+    },
+    {
+      "type": "h3",
+      "text": "Drivers de engajamento"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Propósito: acreditar no que a empresa faz",
+        "Reconhecimento: sentir que o trabalho importa",
+        "Desenvolvimento: ver futuro na empresa",
+        "Relação com liderança: confiança e abertura"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Medir e agir"
+    },
+    {
+      "type": "p",
+      "text": "Pesquisas anónimas, pulse surveys, 1:1s,exit interviews. Medir sem agir é pior do que não medir — gera cinismo."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "❤️ Pessoas engajadas produzem mais, faltam menos e ficam mais tempo."
+    }
+  ],
+  "keyPoints": [
+    "Clima = ambiente; engajamento = comprometimento",
+    "Propósito e reconhecimento são top drivers",
+    "Medir sem agir é contraproducente"
+  ],
+  "quizSlug": "rhq2",
+  "prevLesson": "remuneracao-beneficios",
+  "nextLesson": "relacoes-laborais"
+}

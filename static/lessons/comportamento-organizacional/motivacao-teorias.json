@@ -1,0 +1,50 @@
+{
+  "slug": "motivacao-teorias",
+  "title": "5. Teorias da Motivação nas Organizações",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Porque Trabalhamos?"
+    },
+    {
+      "type": "p",
+      "text": "Compreender o que motiva é essencial para qualquer líder. As teorias ajudam a desenhar sistemas de incentivos eficazes."
+    },
+    {
+      "type": "h3",
+      "text": "Teorias principais"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Maslow: hierarquia de necessidades (fisiológicas → realização)",
+        "Herzberg: dois fatores (higiênicos vs motivacionais)",
+        "McGregor: Teoria X (preguiçoso) vs Y (autónomo)",
+        "Auto-determinação: autonomia, mestria, propósito"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Aplicação prática"
+    },
+    {
+      "type": "p",
+      "text": "Dinheiro motiva até certo ponto. Reconhecimento, autonomia e propósito motivam de forma sustentada."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "💡 Dinheiro é um higiênico (ausência gera insatisfação; presença não motiva muito). Herzberg."
+    }
+  ],
+  "keyPoints": [
+    "Maslow, Herzberg e McGregor são clássicos",
+    "Autonomia, mestria, propósito (Daniel Pink)",
+    "Reconhecimento > salário para engajamento sustentado"
+  ],
+  "quizSlug": "coq2",
+  "prevLesson": "gestao-mudanca",
+  "nextLesson": "conflito-negociacao"
+}

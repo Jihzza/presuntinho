@@ -1,0 +1,57 @@
+{
+  "id": "ctq2",
+  "title": "Quiz: Contabilidade — Avançado",
+  "description": "Balancete, inventário, fecho de exercício e normas SNC/IFRS.",
+  "questions": [
+    {
+      "q": "O balancete serve para verificar:",
+      "opts": [
+        "Apenas saldos bancários",
+        "Que débitos = créditos no total",
+        "Só contas de resultado",
+        "Impostos a pagar"
+      ],
+      "a": 1
+    },
+    {
+      "q": "FIFO significa:",
+      "opts": [
+        "First In, First Out — sai o que entrou primeiro",
+        "Final Inventory Fixed Order",
+        "Financial Input-Output Formula",
+        "Full Income Factor Option"
+      ],
+      "a": 0
+    },
+    {
+      "q": "O fecho do exercício encerra:",
+      "opts": [
+        "Apenas o caixa",
+        "Todas as contas de resultado",
+        "Só o balanço",
+        "Apenas vendas"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O SNC está alinhado com:",
+      "opts": [
+        "GAAP americano",
+        "IFRS internacionais",
+        "Apenas legislação portuguesa sem paralelo",
+        "Sistema russo"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O princípio da substância sobre forma significa:",
+      "opts": [
+        "A forma legal prevalece sempre",
+        "A realidade económica prevalece sobre a forma legal",
+        "Só importa o documento",
+        "Não se aplica em Portugal"
+      ],
+      "a": 1
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "slug": "fecho-exercicio",
+  "title": "7. Fecho do Exercício e Apuramento de Resultados",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Fecho de Contas no Final do Ano"
+    },
+    {
+      "type": "p",
+      "text": "Processo de encerrar todas as contas de resultado (receitas, custos, despesas) e transferir o saldo para a conta de resultados do exercício."
+    },
+    {
+      "type": "h3",
+      "text": "Etapas"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Lançamentos de regularização (amortizações, provisões)",
+        "Apuramento do resultado líquido",
+        "Distribuição de resultados (reservas, dividendos)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Demonstrações finais"
+    },
+    {
+      "type": "p",
+      "text": "Balanço, Demonstração de Resultados e Fluxos de Caixa são as peças que resultam do fecho."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "📅 O fecho é anual, mas a regularização pode ser mensal para maior controlo de gestão."
+    }
+  ],
+  "keyPoints": [
+    "Apurar resultado = fechar receitas e despesas",
+    "Resultado pode ser distribuído ou ficar em reservas",
+    "Demonstrações finais derivam do fecho"
+  ],
+  "quizSlug": "ctq2",
+  "prevLesson": "inventario-permanente",
+  "nextLesson": "normas-ifrs"
+}

@@ -1,0 +1,48 @@
+{
+  "slug": "balancete-razonetes",
+  "title": "5. Balancete e Razonetes",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Balancete de Verificação"
+    },
+    {
+      "type": "p",
+      "text": "Lista todas as contas com os seus saldos (devedor e credor) num determinado momento. Serve para verificar se a escrituração está correta."
+    },
+    {
+      "type": "h3",
+      "text": "Regra de ouro"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Total a Débito = Total a Crédito (sempre)",
+        "Se não bate, há erro na escrituração"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Razonetes (Contas T)"
+    },
+    {
+      "type": "p",
+      "text": "Representação gráfica simplificada de cada conta. Lado esquerdo = débitos, lado direito = créditos. O saldo é a diferença."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "📋 O balancete é o 'raio-X' da contabilidade: mostra onde estás e se tudo bate certo."
+    }
+  ],
+  "keyPoints": [
+    "Total débitos = total créditos",
+    "Razonetes facilitam visualização de cada conta",
+    "Balancete é ponto de partida para as demonstrações"
+  ],
+  "quizSlug": "ctq2",
+  "prevLesson": "iva",
+  "nextLesson": "inventario-permanente"
+}

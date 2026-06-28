@@ -77,13 +77,17 @@
       icon: '💰',
       color: '#059669',
       lessons: [
-        { slug: 'demonstracao-resultados', title: '1. Demonstração de Resultados', summary: 'Receitas, custos, lucro bruto, operacional e líquido.', quizSlug: 'gfq', quizTitle: 'Quiz: Gestão Financeira', estMinutes: 7 },
-        { slug: 'balanco', title: '2. Balanço Patrimonial', summary: 'Ativo, Passivo e Capital Próprio — a equação fundamental.', quizSlug: 'gfq', quizTitle: 'Quiz: Gestão Financeira', estMinutes: 7 },
-        { slug: 'racios-financeiros', title: '3. Rácios Financeiros', summary: 'Liquidez, rentabilidade e endividamento.', quizSlug: 'gfq', quizTitle: 'Quiz: Gestão Financeira', estMinutes: 7 },
-        { slug: 'orcamento-empresarial', title: '4. Orçamento e Gestão de Caixa', summary: 'Fluxo de caixa, break-even e reserva de emergência.', quizSlug: 'gfq', quizTitle: 'Quiz: Gestão Financeira', estMinutes: 7 }
+        { slug: 'demonstracao-resultados', title: '1. Demonstração de Resultados', summary: 'Receitas, custos, lucro bruto, operacional e líquido.', quizSlug: 'gfq', quizTitle: 'Quiz: Gestão Financeira — Base', estMinutes: 7 },
+        { slug: 'balanco', title: '2. Balanço Patrimonial', summary: 'Ativo, Passivo e Capital Próprio — a equação fundamental.', quizSlug: 'gfq', quizTitle: 'Quiz: Gestão Financeira — Base', estMinutes: 7 },
+        { slug: 'racios-financeiros', title: '3. Rácios Financeiros', summary: 'Liquidez, rentabilidade e endividamento.', quizSlug: 'gfq', quizTitle: 'Quiz: Gestão Financeira — Base', estMinutes: 7 },
+        { slug: 'orcamento-empresarial', title: '4. Orçamento e Gestão de Caixa', summary: 'Fluxo de caixa, break-even e reserva de emergência.', quizSlug: 'gfq', quizTitle: 'Quiz: Gestão Financeira — Base', estMinutes: 7 },
+        { slug: 'fluxos-caixa', title: '5. Demonstração de Fluxos de Caixa', summary: 'Operacional, investimento e financiamento — caixa ≠ lucro.', quizSlug: 'gfq2', quizTitle: 'Quiz: Gestão Financeira — Avançado', estMinutes: 8 },
+        { slug: 'ponto-equilibrio', title: '6. Break-even e Margem de Segurança', summary: 'Volume mínimo e resiliência a quedas de vendas.', quizSlug: 'gfq2', quizTitle: 'Quiz: Gestão Financeira — Avançado', estMinutes: 8 },
+        { slug: 'custo-capital', title: '7. Custo de Capital e WACC', summary: 'Taxa de hurdle mínima para projetos criarem valor.', quizSlug: 'gfq2', quizTitle: 'Quiz: Gestão Financeira — Avançado', estMinutes: 8 },
+        { slug: 'valorizacao-empresa', title: '8. Valorização de Empresas (Valuation)', summary: 'DCF, múltiplos e valor patrimonial.', quizSlug: 'gfq2', quizTitle: 'Quiz: Gestão Financeira — Avançado', estMinutes: 9 }
       ]
     },
-    contabilidade: {
+        contabilidade: {
       slug: 'contabilidade',
       title: 'Contabilidade',
       tagline: 'Business Administration · Sistemas contabilísticos',
@@ -91,13 +95,17 @@
       icon: '📊',
       color: '#2563eb',
       lessons: [
-        { slug: 'partida-dobrada', title: '1. Sistema de Partida Dobrada', summary: 'Débito = Crédito. A base de toda a contabilidade.', quizSlug: 'ctq', quizTitle: 'Quiz: Contabilidade', estMinutes: 7 },
-        { slug: 'lancamentos-contabeis', title: '2. Lançamentos e Diário', summary: 'Do diário ao razão: registar operações.', quizSlug: 'ctq', quizTitle: 'Quiz: Contabilidade', estMinutes: 7 },
-        { slug: 'amortizacoes', title: '3. Amortizações e Provisões', summary: 'Distribuir custos ao longo da vida útil.', quizSlug: 'ctq', quizTitle: 'Quiz: Contabilidade', estMinutes: 7 },
-        { slug: 'iva', title: '4. IVA e Impostos', summary: 'IVA liquidado vs. dedutível, taxas e contabilização.', quizSlug: 'ctq', quizTitle: 'Quiz: Contabilidade', estMinutes: 7 }
+        { slug: 'partida-dobrada', title: '1. Sistema de Partida Dobrada', summary: 'Débito = Crédito. A base de toda a contabilidade.', quizSlug: 'ctq', quizTitle: 'Quiz: Contabilidade — Base', estMinutes: 7 },
+        { slug: 'lancamentos-contabeis', title: '2. Lançamentos e Diário', summary: 'Do diário ao razão: registar operações.', quizSlug: 'ctq', quizTitle: 'Quiz: Contabilidade — Base', estMinutes: 7 },
+        { slug: 'amortizacoes', title: '3. Amortizações e Provisões', summary: 'Distribuir custos ao longo da vida útil.', quizSlug: 'ctq', quizTitle: 'Quiz: Contabilidade — Base', estMinutes: 7 },
+        { slug: 'iva', title: '4. IVA e Impostos', summary: 'IVA liquidado vs. dedutível, taxas e contabilização.', quizSlug: 'ctq', quizTitle: 'Quiz: Contabilidade — Base', estMinutes: 7 },
+        { slug: 'balancete-razonetes', title: '5. Balancete e Razonetes', summary: 'Verificação débitos = créditos e representação em T.', quizSlug: 'ctq2', quizTitle: 'Quiz: Contabilidade — Avançado', estMinutes: 8 },
+        { slug: 'inventario-permanente', title: '6. Inventário Permanente', summary: 'FIFO, LIFO e custo médio ponderado.', quizSlug: 'ctq2', quizTitle: 'Quiz: Contabilidade — Avançado', estMinutes: 8 },
+        { slug: 'fecho-exercicio', title: '7. Fecho do Exercício', summary: 'Apuramento de resultados e demonstrações finais.', quizSlug: 'ctq2', quizTitle: 'Quiz: Contabilidade — Avançado', estMinutes: 8 },
+        { slug: 'normas-ifrs', title: '8. Normas SNC e IFRS', summary: 'Padrões contabilísticos que garantem comparabilidade.', quizSlug: 'ctq2', quizTitle: 'Quiz: Contabilidade — Avançado', estMinutes: 9 }
       ]
     },
-    microeconomia: {
+        microeconomia: {
       slug: 'microeconomia',
       title: 'Microeconomia',
       tagline: 'Business Administration · Mercados e preços',
@@ -105,13 +113,17 @@
       icon: '📉',
       color: '#dc2626',
       lessons: [
-        { slug: 'oferta-procura', title: '1. Oferta e Procura', summary: 'A lei fundamental dos mercados.', quizSlug: 'meq', quizTitle: 'Quiz: Microeconomia', estMinutes: 7 },
-        { slug: 'elasticidade', title: '2. Elasticidade Preço', summary: 'Sensibilidade da procura ao preço.', quizSlug: 'meq', quizTitle: 'Quiz: Microeconomia', estMinutes: 7 },
-        { slug: 'estruturas-mercado', title: '3. Estruturas de Mercado', summary: 'Concorrência perfeita, monopolística, oligopólio, monopólio.', quizSlug: 'meq', quizTitle: 'Quiz: Microeconomia', estMinutes: 7 },
-        { slug: 'custos-producao', title: '4. Custos de Produção', summary: 'Fixos, variáveis, marginais e economias de escala.', quizSlug: 'meq', quizTitle: 'Quiz: Microeconomia', estMinutes: 7 }
+        { slug: 'oferta-procura', title: '1. Oferta e Procura', summary: 'A lei fundamental dos mercados.', quizSlug: 'meq', quizTitle: 'Quiz: Microeconomia — Base', estMinutes: 7 },
+        { slug: 'elasticidade', title: '2. Elasticidade Preço', summary: 'Sensibilidade da procura ao preço.', quizSlug: 'meq', quizTitle: 'Quiz: Microeconomia — Base', estMinutes: 7 },
+        { slug: 'estruturas-mercado', title: '3. Estruturas de Mercado', summary: 'Concorrência perfeita, monopolística, oligopólio, monopólio.', quizSlug: 'meq', quizTitle: 'Quiz: Microeconomia — Base', estMinutes: 7 },
+        { slug: 'custos-producao', title: '4. Custos de Produção', summary: 'Fixos, variáveis, marginais e economias de escala.', quizSlug: 'meq', quizTitle: 'Quiz: Microeconomia — Base', estMinutes: 7 },
+        { slug: 'utilidade-escolha', title: '5. Teoria do Consumidor', summary: 'Utilidade, curvas de indiferença e utilidade marginal.', quizSlug: 'meq2', quizTitle: 'Quiz: Microeconomia — Avançado', estMinutes: 8 },
+        { slug: 'teoria-producao', title: '6. Teoria da Produção', summary: 'Rendimentos de escala, curto vs longo prazo.', quizSlug: 'meq2', quizTitle: 'Quiz: Microeconomia — Avançado', estMinutes: 8 },
+        { slug: 'externalidades', title: '7. Externalidades e Falhas de Mercado', summary: 'Custos e benefícios não refletidos nos preços.', quizSlug: 'meq2', quizTitle: 'Quiz: Microeconomia — Avançado', estMinutes: 8 },
+        { slug: 'bens-publicos', title: '8. Bens Públicos e Comuns', summary: 'Não-rivais, não-exclusivos e o problema do free-rider.', quizSlug: 'meq2', quizTitle: 'Quiz: Microeconomia — Avançado', estMinutes: 9 }
       ]
     },
-    'recursos-humanos': {
+        'recursos-humanos': {
       slug: 'recursos-humanos',
       title: 'Gestão de Recursos Humanos',
       tagline: 'Business Administration · Gestão de pessoas',
@@ -119,13 +131,17 @@
       icon: '👥',
       color: '#7c3aed',
       lessons: [
-        { slug: 'recrutamento-selecao', title: '1. Recrutamento e Seleção', summary: 'Encontrar as pessoas certas para o cargo.', quizSlug: 'rhq', quizTitle: 'Quiz: Recursos Humanos', estMinutes: 7 },
-        { slug: 'motivacao', title: '2. Teorias de Motivação', summary: 'Maslow, Herzberg e McGregor.', quizSlug: 'rhq', quizTitle: 'Quiz: Recursos Humanos', estMinutes: 7 },
-        { slug: 'avaliacao-desempenho', title: '3. Avaliação de Desempenho', summary: '360°, MBO e objetivos SMART.', quizSlug: 'rhq', quizTitle: 'Quiz: Recursos Humanos', estMinutes: 7 },
-        { slug: 'cultura-organizacional', title: '4. Cultura Organizacional', summary: 'Valores, rituais e liderança pelo exemplo.', quizSlug: 'rhq', quizTitle: 'Quiz: Recursos Humanos', estMinutes: 7 }
+        { slug: 'recrutamento-selecao', title: '1. Recrutamento e Seleção', summary: 'Encontrar as pessoas certas para o cargo.', quizSlug: 'rhq', quizTitle: 'Quiz: Recursos Humanos — Base', estMinutes: 7 },
+        { slug: 'motivacao', title: '2. Teorias de Motivação', summary: 'Maslow, Herzberg e McGregor.', quizSlug: 'rhq', quizTitle: 'Quiz: Recursos Humanos — Base', estMinutes: 7 },
+        { slug: 'avaliacao-desempenho', title: '3. Avaliação de Desempenho', summary: '360°, MBO e objetivos SMART.', quizSlug: 'rhq', quizTitle: 'Quiz: Recursos Humanos — Base', estMinutes: 7 },
+        { slug: 'cultura-organizacional', title: '4. Cultura Organizacional', summary: 'Valores, rituais e liderança pelo exemplo.', quizSlug: 'rhq', quizTitle: 'Quiz: Recursos Humanos — Base', estMinutes: 7 },
+        { slug: 'treinamento-desenvolvimento', title: '5. Treinamento e Desenvolvimento', summary: 'T&D e o modelo de Kirkpatrick para medir impacto.', quizSlug: 'rhq2', quizTitle: 'Quiz: Recursos Humanos — Avançado', estMinutes: 8 },
+        { slug: 'remuneracao-beneficios', title: '6. Remuneração e Benefícios', summary: 'Compensação total: salário, variáveis, benefícios, flexibilidade.', quizSlug: 'rhq2', quizTitle: 'Quiz: Recursos Humanos — Avançado', estMinutes: 8 },
+        { slug: 'clima-engajamento', title: '7. Clima e Engajamento', summary: 'Drivers de comprometimento e como medir com responsabilidade.', quizSlug: 'rhq2', quizTitle: 'Quiz: Recursos Humanos — Avançado', estMinutes: 8 },
+        { slug: 'relacoes-laborais', title: '8. Relações Laborais e Sindicalismo', summary: 'Contratos coletivos, comissões e diálogo social.', quizSlug: 'rhq2', quizTitle: 'Quiz: Recursos Humanos — Avançado', estMinutes: 9 }
       ]
     },
-    'comportamento-organizacional': {
+        'comportamento-organizacional': {
       slug: 'comportamento-organizacional',
       title: 'Comportamento Organizacional',
       tagline: 'Business Administration · Comportamento nas organizações',
@@ -133,10 +149,14 @@
       icon: '🧠',
       color: '#0891b2',
       lessons: [
-        { slug: 'lideranca', title: '1. Estilos de Liderança', summary: 'Autocrático, democrático, situacional, transformacional.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional', estMinutes: 7 },
-        { slug: 'trabalho-equipa', title: '2. Dinâmica de Equipas', summary: 'Tuckman: Forming → Storming → Norming → Performing.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional', estMinutes: 7 },
-        { slug: 'comunicacao', title: '3. Comunicação e Negociação', summary: 'Escuta ativa, win-win e BATNA.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional', estMinutes: 7 },
-        { slug: 'gestao-mudanca', title: '4. Gestão da Mudança', summary: 'Modelo Kotter (8 passos) e curva da mudança.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional', estMinutes: 7 }
+        { slug: 'lideranca', title: '1. Estilos de Liderança', summary: 'Autocrático, democrático, situacional, transformacional.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional — Base', estMinutes: 7 },
+        { slug: 'trabalho-equipa', title: '2. Dinâmica de Equipas', summary: 'Tuckman: Forming → Storming → Norming → Performing.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional — Base', estMinutes: 7 },
+        { slug: 'comunicacao', title: '3. Comunicação e Negociação', summary: 'Escuta ativa, win-win e BATNA.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional — Base', estMinutes: 7 },
+        { slug: 'gestao-mudanca', title: '4. Gestão da Mudança', summary: 'Modelo Kotter (8 passos) e curva da mudança.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional — Base', estMinutes: 7 },
+        { slug: 'motivacao-teorias', title: '5. Teorias da Motivação', summary: 'Maslow, Herzberg, McGregor e auto-determinação.', quizSlug: 'coq2', quizTitle: 'Quiz: Comportamento Organizacional — Avançado', estMinutes: 8 },
+        { slug: 'conflito-negociacao', title: '6. Conflito e Negociação', summary: 'Tipos de conflito, negociação integrativa e BATNA.', quizSlug: 'coq2', quizTitle: 'Quiz: Comportamento Organizacional — Avançado', estMinutes: 8 },
+        { slug: 'poder-politica', title: '7. Poder e Política nas Organizações', summary: 'Fontes de poder formais e informais.', quizSlug: 'coq2', quizTitle: 'Quiz: Comportamento Organizacional — Avançado', estMinutes: 8 },
+        { slug: 'bem-estar-organizacional', title: '8. Bem-Estar e Saúde Mental', summary: 'Sinais de burnout e ações concretas do líder.', quizSlug: 'coq2', quizTitle: 'Quiz: Comportamento Organizacional — Avançado', estMinutes: 9 }
       ]
     },
     equivalenza: {
@@ -155,7 +175,7 @@
           quizSlug: 'q1',
           quizTitle: 'Q1 — SWOT (Verdadeiro/Falso)',
           estMinutes: 8
-        },
+    },
         {
           slug: 'persona',
           title: '2. Buyer Persona',
@@ -163,7 +183,7 @@
           quizSlug: 'q4',
           quizTitle: 'Q4 — Buyer Persona',
           estMinutes: 7
-        },
+    },
         {
           slug: 'problem',
           title: '3. Problema de Marketing (SCQA)',
@@ -171,7 +191,7 @@
           quizSlug: 'q3',
           quizTitle: 'Q3 — Case Knowledge',
           estMinutes: 6
-        },
+    },
         {
           slug: 'tows',
           title: '4. Matriz TOWS',
@@ -179,7 +199,7 @@
           quizSlug: 'q2',
           quizTitle: 'Q2 — TOWS Quadrants',
           estMinutes: 7
-        },
+    },
         {
           slug: 'recommendation',
           title: '5. Recomendação Estratégica',
@@ -263,7 +283,7 @@
               </div>
               <span class="lesson-cta" aria-hidden="true">→</span>
             </a>
-            {#if lesson.quizSlug}
+    {#if lesson.quizSlug}
               <a
                 class="quiz-link"
                 href={`/escola/quiz/${lesson.quizSlug}/`}
@@ -271,7 +291,7 @@
               >
                 📝 {lesson.quizTitle ?? 'Quiz'}
               </a>
-            {/if}
+    {/if}
           </li>
         {/each}
       </ol>

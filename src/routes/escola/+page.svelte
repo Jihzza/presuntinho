@@ -87,8 +87,8 @@
         'Aprende a ler as contas de uma empresa: demonstração de resultados, balanço patrimonial, rácios financeiros e gestão de caixa. Conteúdo universitário de Business Administration.',
       icon: '💰',
       color: '#059669',
-      lessonCount: 4,
-      quizCount: 1,
+      lessonCount: 8,
+      quizCount: 2,
       badge: 'Uni'
     },
     {
@@ -99,8 +99,8 @@
         'Domina os fundamentos da contabilidade: partida dobrada, lançamentos no diário, amortizações e provisões, IVA e impostos. Conceitos essenciais para qualquer gestor.',
       icon: '📊',
       color: '#2563eb',
-      lessonCount: 4,
-      quizCount: 1,
+      lessonCount: 8,
+      quizCount: 2,
       badge: 'Uni'
     },
     {
@@ -111,8 +111,8 @@
         'Compreende como os mercados funcionam: oferta e procura, elasticidade-preço, estruturas de mercado (monopólio, oligopólio, concorrência) e custos de produção.',
       icon: '📉',
       color: '#dc2626',
-      lessonCount: 4,
-      quizCount: 1,
+      lessonCount: 8,
+      quizCount: 2,
       badge: 'Uni'
     },
     {
@@ -123,8 +123,8 @@
         'Tudo sobre gestão de pessoas: recrutamento e seleção, teorias de motivação (Maslow, Herzberg, McGregor), avaliação de desempenho e cultura organizacional.',
       icon: '👥',
       color: '#7c3aed',
-      lessonCount: 4,
-      quizCount: 1,
+      lessonCount: 8,
+      quizCount: 2,
       badge: 'Uni'
     },
     {
@@ -135,10 +135,10 @@
         'Estuda o comportamento nas organizações: estilos de liderança, dinâmica de equipas (Tuckman), comunicação e negociação (BATNA), e gestão da mudança (Kotter).',
       icon: '🧠',
       color: '#0891b2',
-      lessonCount: 4,
-      quizCount: 1,
+      lessonCount: 8,
+      quizCount: 2,
       badge: 'Uni'
-    }
+      }
   ];
 </script>
 

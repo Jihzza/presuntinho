@@ -1,0 +1,48 @@
+{
+  "slug": "bens-publicos",
+  "title": "8. Bens Públicos e Comuns",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Bens que o Mercado Não Fornece Bem"
+    },
+    {
+      "type": "p",
+      "text": "Bens públicos são não-rivais (o uso de um não impede o de outro) e não-exclusivos (ninguém pode ser impedido de usar)."
+    },
+    {
+      "type": "h3",
+      "text": "Exemplos"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Defesa nacional, farol, iluminação pública: bens públicos puros",
+        "Pesca em alto mar, pastagens comuns: recursos comuns (rivais mas não exclusivos)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Problema do free-rider"
+    },
+    {
+      "type": "p",
+      "text": "Como todos beneficiam independentemente de pagarem, há incentivo a não pagar. O Estado tende a financiar bens públicos via impostos."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🛡️ Defesa nacional: todos protegidos, mesmo quem não paga impostos. Não-rival e não-exclusivo."
+    }
+  ],
+  "keyPoints": [
+    "Bens públicos: não-rivais + não-exclusivos",
+    "Tragedia dos comuns: sobre-exploração de recursos comuns",
+    "Free-rider justifica provisão estatal"
+  ],
+  "quizSlug": "meq2",
+  "prevLesson": "externalidades",
+  "nextLesson": null
+}

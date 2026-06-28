@@ -1,0 +1,50 @@
+{
+  "slug": "remuneracao-beneficios",
+  "title": "6. Remuneração e Benefícios",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Compensação Total"
+    },
+    {
+      "type": "p",
+      "text": "Remuneração vai muito além do salário. Compensação total inclui salário-base, variáveis, benefícios e desenvolvimento."
+    },
+    {
+      "type": "h3",
+      "text": "Componentes"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Salário-base: fixo mensal",
+        "Variáveis: bónus, comissões, participação nos lucros",
+        "Benefícios: seguros, saúde, alimentação, carro",
+        "Flexibilidade: trabalho remoto, horários, dias extra de férias"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Equidade interna vs competitividade externa"
+    },
+    {
+      "type": "p",
+      "text": "Equidade interna: salários justos dentro da empresa. Competitividade: alinhamento com o mercado para atrair e reter."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "💰 Os millenials/Gen Z valorizam flexibilidade tanto quanto salário. Revê os teus pacotes."
+    }
+  ],
+  "keyPoints": [
+    "Compensação total = salário + variáveis + benefícios",
+    "Equidade interna vs competitividade externa",
+    "Benefícios não monetários são cada vez mais valorizados"
+  ],
+  "quizSlug": "rhq2",
+  "prevLesson": "treinamento-desenvolvimento",
+  "nextLesson": "clima-engajamento"
+}
