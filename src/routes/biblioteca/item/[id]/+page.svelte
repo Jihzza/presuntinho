@@ -94,11 +94,11 @@
     deleting = true;
     try {
       await deleteItem(item.id);
-      showToast('Marcador removido');
+      showToast($t('biblioteca.item.toast.removido', { default: 'Marcador removido' }));
       await goto('/biblioteca/');
     } catch (e) {
       console.error('[biblioteca] delete failed', e);
-      showToast('Erro a remover marcador');
+      showToast($t('biblioteca.item.toast.erro_remover', { default: 'Erro a remover marcador' }));
       deleting = false;
       confirmingDelete = false;
     }
@@ -125,10 +125,12 @@
   // `item` resolves.  Falling back to a static literal keeps the
   // initial render SEO-safe.
   let pageTitle = $derived(
-    item?.title ? `${item.title} · Marcador · Biblioteca` : 'Marcador · Biblioteca'
+    item?.title
+      ? ($t('biblioteca.item.seo.title_com_nome', { values: { title: item.title }, default: `${item.title} · Marcador · Biblioteca` }) as string)
+      : ($t('biblioteca.item.seo.title_fallback', { default: 'Marcador · Biblioteca' }) as string)
   );
   let description = $derived(
-    item?.description?.slice(0, 160) || 'Detalhe do marcador'
+    item?.description?.slice(0, 160) || $t('biblioteca.item.seo.description', { default: 'Detalhe do marcador' })
   );
 </script>
 
@@ -224,10 +226,14 @@
         class="delete-btn"
         onclick={confirmDelete}
         disabled={deleting}
-        aria-label={confirmingDelete ? 'Confirmar remoção' : 'Apagar marcador'}
+        aria-label={confirmingDelete ? $t('biblioteca.item.btn.confirmar', { default: 'Confirmar remoção' }) : $t('a11y.aria.apagar_marcador', { default: 'Apagar marcador' })}
         data-confirming={confirmingDelete}
       >
-        {confirmingDelete ? 'Confirmar apagar?' : deleting ? 'A apagar…' : '🗑️ ' + $t('common.delete')}
+        {confirmingDelete
+          ? $t('biblioteca.item.btn.confirmar_apagar', { default: 'Confirmar apagar?' })
+          : deleting
+            ? $t('biblioteca.item.btn.apagando', { default: 'A apagar…' })
+            : '🗑️ ' + $t('common.delete')}
       </button>
     </section>
   {/if}

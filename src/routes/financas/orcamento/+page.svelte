@@ -95,7 +95,7 @@
         await setOrcamento(categoriaId, 0, mesFiltro);
       } catch (e) {
         console.error('[financas/orcamento] save failed', e);
-        showToast('Erro a gravar limite');
+        showToast($t('financas.orcamento.erro.gravar', { default: 'Erro a gravar limite' }));
       } finally {
         saving = null;
       }
@@ -112,7 +112,7 @@
       await setOrcamento(categoriaId, num, mesFiltro);
     } catch (e) {
       console.error('[financas/orcamento] save failed', e);
-      showToast('Erro a gravar limite');
+      showToast($t('financas.orcamento.erro.gravar', { default: 'Erro a gravar limite' }));
     } finally {
       saving = null;
     }

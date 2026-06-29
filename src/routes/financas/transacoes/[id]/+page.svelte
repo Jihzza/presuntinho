@@ -70,7 +70,7 @@
         descricao = trans.descricao ?? '';
         data = trans.data;
       } catch (e) {
-        error = e instanceof Error ? e.message : 'Erro a carregar transação.';
+        error = e instanceof Error ? e.message : $t('financas.transacoes.editar.erro.carregar', { default: 'Erro a carregar transação.' }) as string;
       } finally {
         loading = false;
       }
@@ -84,15 +84,15 @@
 
     const valorNum = Number(valorStr.trim().replace(',', '.'));
     if (!Number.isFinite(valorNum) || valorNum <= 0) {
-      error = 'O valor tem de ser maior que zero.';
+      error = $t('financas.transacoes.editar.erro.valor_zero', { default: 'O valor tem de ser maior que zero.' }) as string;
       return;
     }
     if (!categoria) {
-      error = 'Escolhe uma categoria.';
+      error = $t('financas.transacoes.editar.erro.sem_categoria', { default: 'Escolhe uma categoria.' }) as string;
       return;
     }
     if (!data) {
-      error = 'Indica uma data.';
+      error = $t('financas.transacoes.editar.erro.sem_data', { default: 'Indica uma data.' }) as string;
       return;
     }
 
@@ -109,9 +109,9 @@
       await goto('/financas/transacoes');
     } catch (err) {
       error =
-        err instanceof Error && err.message === 'valor_invalido'
-          ? 'O valor tem de ser maior que zero.'
-          : 'Erro a guardar a transação.';
+        valorNum <= 0
+          ? ($t('financas.transacoes.editar.erro.valor_zero', { default: 'O valor tem de ser maior que zero.' }) as string)
+          : ($t('financas.transacoes.editar.erro.guardar', { default: 'Erro a guardar a transação.' }) as string);
     } finally {
       submitting = false;
     }

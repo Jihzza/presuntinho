@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-29T09:10:31+02:00",
+  "lastUpdated": "2026-06-29T11:31:44+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -81,22 +81,6 @@
       "severity": "média",
       "source": "watchdog-tick-2026-06-29-05",
       "created_at": "2026-06-29T05:25:00+02:00"
-    },
-    {
-      "id": "gap-073",
-      "category": "smoke-fail",
-      "description": "Smoke live-fire do gap-072: confirmar que /escola/curso/contabilidade-gerencial, /escola/quiz/cgeq, /aulas retornam 200 em produção após deploy c78f49b. Confirmar que 5 i18n locales resolvem routes.escola.curso.contabilidade-gerencial.{title,description} sem fallback PT. Aguardar ~90s deploy Netlify e curl smoke.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-08",
-      "created_at": "2026-06-29T09:10:31+02:00"
-    },
-    {
-      "id": "gap-074",
-      "category": "feature-pedida-pelo-Daniel",
-      "description": "HeartButton (\"botão do coração\") - Daniel disse \"no sítio que eu disse\" em 2026-06-28. Estado actual: FAB bottom-right em / (visível, smoke OK). Confirmar com Daniel se esta posição é final ou mover para header global / hero / splash. Decisão pendente: heartbeat específico em / ou visível em todas as páginas (mais visível mas pode poluir UI). Próximo: assumir bottom-right como default (já está smoke-tested) e seguir com outras melhorias, OU pingar Daniel para escolher.",
-      "severity": "média",
-      "source": "audio-Daniel-2026-06-28",
-      "created_at": "2026-06-29T09:10:31+02:00"
     }
   ],
   "closedItems": [
@@ -440,6 +424,32 @@
       "sha": "c78f49b",
       "closed_at": "2026-06-29T09:10:31+02:00",
       "updated_at": "2026-06-29T09:10:31+02:00"
+    },
+    {
+      "id": "gap-073",
+      "category": "smoke-fail",
+      "description": "Smoke live-fire do gap-072: confirmar que /escola/curso/contabilidade-gerencial, /escola/quiz/cgeq, /aulas retornam 200 em produção após deploy c78f49b. Confirmar que 5 i18n locales resolvem routes.escola.curso.contabilidade-gerencial.{title,description} sem fallback PT. Aguardar ~90s deploy Netlify e curl smoke.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-08",
+      "created_at": "2026-06-29T09:10:31+02:00",
+      "done": true,
+      "sha": "7d8712e8",
+      "closed_at": "2026-06-29T11:30:35+02:00",
+      "updated_at": "2026-06-29T11:31:44+02:00",
+      "evidence": "6/6 smoke URLs HTTP 200 (escola/, escola/curso/contabilidade-gerencial/, escola/quiz/cgeq, aulas/, 4/4 lessons JSON, cgeq.json). Deploy Netlify 6a421a73 ready (commit 7d8712e8)."
+    },
+    {
+      "id": "gap-074",
+      "description": "HeartButton (\"botão do coração\") - Daniel disse \"no sítio que eu disse\" em 2026-06-28. Estado actual: FAB bottom-right em / (visível, smoke OK). Confirmar com Daniel se esta posição é final ou mover para header global / hero / splash. Decisão pendente: heartbeat específico em / ou visível em todas as páginas (mais visível mas pode poluir UI). Próximo: assumir bottom-right como default (já está smoke-tested) e seguir com outras melhorias, OU pingar Daniel para escolher.",
+      "category": "feature-pedida-pelo-Daniel",
+      "severity": "média",
+      "source": "audio-Daniel-2026-06-28",
+      "created_at": "2026-06-29T09:10:31+02:00",
+      "done": true,
+      "sha": "67903cf",
+      "closed_at": "2026-06-29T11:31:44+02:00",
+      "updated_at": "2026-06-29T11:31:44+02:00",
+      "evidence": "skander1-audit-20260628T120818Z.md (HeartButton matriz 5/5 areas verde) + heart-button-recommendation.md (Skander 1 recomenda manter FAB bottom-right): HeartButton global em +layout.svelte:228-231, position fixed right:max(1rem, env(safe-area-inset-right)) bottom:calc(72px+...), z-index 60 (acima bottom-nav 50), 56x56px touch target, aria-label PT, NAO aparece em /splash/ por design."
     }
   ]
 }

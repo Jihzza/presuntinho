@@ -80,11 +80,11 @@
         description: trimmedDesc,
         tags: parsedTags
       });
-      showToast('Marcador criado');
+      showToast($t('biblioteca.novo.toast.criado', { default: 'Marcador criado' }));
       goto('/biblioteca/');
     } catch (e) {
       console.error('[biblioteca] addItem failed', e);
-      error = e instanceof Error ? e.message : 'Erro a criar marcador';
+      error = e instanceof Error ? e.message : $t('biblioteca.novo.erro.criar', { default: 'Erro a criar marcador' });
       submitting = false;
     }
   }

@@ -77,7 +77,7 @@
       heatmap = h;
     } catch (e) {
       console.error('[habitos] reloadAll failed', e);
-      error = e instanceof Error ? e.message : 'Erro a carregar hábito';
+      error = e instanceof Error ? e.message : $t('habitos.habit.erro_carregar', { default: 'Erro a carregar hábito' }) as string;
     } finally {
       loading = false;
     }
@@ -109,7 +109,7 @@
         showToast($t('toast.marcacao_removida', { default: 'Marcação removida' }));
       } else {
         await logHabit(habit.id, today);
-        showToast('Marcado como feito ✅');
+        showToast($t('habitos.habit.toast.marcado', { default: 'Marcado como feito ✅' }));
       }
       // Refresh streak + heatmap from DB.
       const [s, h] = await Promise.all([
@@ -120,24 +120,26 @@
       heatmap = h;
     } catch (e) {
       console.error('[habitos] toggle failed', e);
-      showToast('Erro a atualizar');
+      showToast($t('habitos.habit.toast.erro', { default: 'Erro a atualizar' }));
     } finally {
       ticking = false;
     }
   }
 
   function streakMessage(s: number): string {
-    if (s === 0) return 'Começa hoje — carrega em "Marcar como feito"';
-    if (s === 1) return '1 dia seguido. Continua!';
-    return `${s} dias seguidos.`;
+    if (s === 0) return $t('habitos.habit.streak.zero', { default: 'Começa hoje — carrega em "Marcar como feito"' }) as string;
+    if (s === 1) return $t('habitos.habit.streak.um_dia', { default: '1 dia seguido. Continua!' }) as string;
+    return $t('habitos.habit.streak.n_dias', { values: { n: s }, default: `${s} dias seguidos.` }) as string;
   }
 
   // SEO — used by <svelte:head> below.  We build the title from the
   // loaded habit name when available, falling back to a literal.
   let pageTitle = $derived(
-    habit ? `${habit.name} · Hábitos` : 'Hábito · Hábitos'
+    habit
+      ? ($t('habitos.habit.seo.title_template', { values: { name: habit.name }, default: `${habit.name} · Hábitos` }) as string)
+      : ($t('habitos.habit.seo.title_fallback', { default: 'Hábito · Hábitos' }) as string)
   );
-  let description = $derived('Detalhe do hábito');
+  let description = $derived($t('habitos.habit.seo.description', { default: 'Detalhe do hábito' }) as string);
 </script>
 
 <svelte:head>
@@ -160,18 +162,18 @@
   </nav>
 
   {#if loading}
-    <p class="empty">A carregar…</p>
+    <p class="empty">{$t('habitos.habit.carregando', { default: 'A carregar…' })}</p>
   {:else if error || !habit}
     <p class="empty error" role="alert">
-      ⚠️ {error ?? 'Hábito não encontrado.'}
+      ⚠️ {error ?? $t('habitos.habit.nao_encontrado', { default: 'Hábito não encontrado.' })}
     </p>
-    <p class="back-row"><a href="/habitos/">← Voltar aos hábitos</a></p>
+    <p class="back-row"><a href="/habitos/">{$t('habitos.habit.back.voltar', { default: '← Voltar aos hábitos' })}</a></p>
   {:else}
     <header class="hero" style="--accent: {habit.color}">
       <div class="hero-icon" aria-hidden="true">{habit.icon}</div>
       <h1>{habit.name}</h1>
       <p class="sub">
-        {habit.cadence === 'daily' ? 'Hábito diário' : habit.cadence}
+        {habit.cadence === 'daily' ? $t('habitos.habit.cadencia.diaria', { default: 'Hábito diário' }) : habit.cadence}
       </p>
     </header>
 
@@ -202,7 +204,7 @@
         aria-pressed={todayLogged}
         style="--accent: {habit.color}"
       >
-        {todayLogged ? '✓ Feito hoje — desfazer' : 'Marcar como feito hoje'}
+        {todayLogged ? $t('habitos.habit.btn.desfazer', { default: '✓ Feito hoje — desfazer' }) : $t('habitos.habit.btn.feito_hoje', { default: 'Marcar como feito hoje' })}
       </button>
       <p class="streak-msg">{streakMessage(streak)}</p>
     </section>

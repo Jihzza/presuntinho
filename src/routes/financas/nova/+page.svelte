@@ -87,15 +87,15 @@
 
     const valorNum = Number(valorStr.trim().replace(',', '.'));
     if (!Number.isFinite(valorNum) || valorNum <= 0) {
-      error = 'O valor tem de ser maior que zero.';
+      error = $t('financas.nova.erro.valor_zero', { default: 'O valor tem de ser maior que zero.' });
       return;
     }
     if (!categoria) {
-      error = 'Escolhe uma categoria.';
+      error = $t('financas.nova.erro.sem_categoria', { default: 'Escolhe uma categoria.' });
       return;
     }
     if (!data) {
-      error = 'Indica uma data.';
+      error = $t('financas.nova.erro.sem_data', { default: 'Indica uma data.' });
       return;
     }
     if (descricao.length > 120) {
