@@ -712,5 +712,19 @@
   "a11y.aria.prazo": "الموعد النهائي",
   "a11y.aria.recursos": "الموارد",
   "a11y.aria.tags": "الوسوم",
-  "a11y.aria.url": "الرابط"
+  "a11y.aria.url": "الرابط",
+  "a11y": {
+    "aria": {
+      "change_language": "تغيير اللغة — الحالية: {native}",
+      "choose_language": "اختر اللغة",
+      "progresso_de": "تقدّم {label}: {percent}٪",
+      "disponivel_em_breve": "قريباً"
+    }
+  },
+  "placeholder": {
+    "zero_zero": "0.00",
+    "em_dash": "—",
+    "emoji_check": "✅",
+    "limite_para": "حدّ لـ {nome}"
+  }
 }

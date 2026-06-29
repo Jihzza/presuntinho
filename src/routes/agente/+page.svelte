@@ -241,7 +241,7 @@
       class="icon-btn"
       onclick={triggerFilePicker}
       aria-label="{$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}"
-      title="Anexar ficheiro"
+      title={$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}
     >
       📎
     </button>

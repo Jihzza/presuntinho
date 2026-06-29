@@ -712,5 +712,19 @@
   "a11y.aria.prazo": "Deadline",
   "a11y.aria.recursos": "Resources",
   "a11y.aria.tags": "Tags",
-  "a11y.aria.url": "URL"
+  "a11y.aria.url": "URL",
+  "a11y": {
+    "aria": {
+      "change_language": "Change language — current: {native}",
+      "choose_language": "Choose language",
+      "progresso_de": "Progress of {label}: {percent}%",
+      "disponivel_em_breve": "Coming soon"
+    }
+  },
+  "placeholder": {
+    "zero_zero": "0.00",
+    "em_dash": "—",
+    "emoji_check": "✅",
+    "limite_para": "Limit for {nome}"
+  }
 }

@@ -13,6 +13,8 @@
    * animation flag on the inline style.
    */
 
+  import { t } from 'svelte-i18n';
+
   interface Props {
     label: string;
     current: number;
@@ -52,7 +54,7 @@
   class="card"
   style="--accent: {accent};"
   role="group"
-  aria-label="Progresso de {label}: {percent}%"
+  aria-label={$t('a11y.aria.progresso_de', { values: { label, percent }, default: 'Progresso de {label}: {percent}%' })}
 >
   {#if icon}
     <div class="icon" aria-hidden="true">{icon}</div>

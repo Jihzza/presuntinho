@@ -134,7 +134,7 @@
           type="text"
           bind:value={icon}
           maxlength="4"
-          placeholder="✅"
+          placeholder={$t('placeholder.emoji_check', { default: '✅' })}
           aria-describedby="icon-hint"
         />
         <div class="suggestions" role="group" aria-label="{$t('a11y.aria.sugestoes_de_icones', { default: 'Sugestões de ícones' })}">
@@ -176,7 +176,7 @@
           <input type="radio" name="cadence" value="daily" bind:group={cadence} />
           <span>{$t('habitos.novo.cadence.daily', { default: 'Diário' })}</span>
         </label>
-        <label class="radio disabled" title="Disponível em breve">
+        <label class="radio disabled" title={$t('a11y.aria.disponivel_em_breve', { default: 'Disponível em breve' })}>
           <input type="radio" name="cadence" value="weekly" bind:group={cadence} disabled />
           <span>{$t('habitos.novo.cadence.weekly', { default: 'Semanal (brevemente)' })}</span>
         </label>

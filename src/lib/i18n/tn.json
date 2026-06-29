@@ -712,5 +712,19 @@
   "a11y.aria.prazo": "Deadline",
   "a11y.aria.recursos": "Resources",
   "a11y.aria.tags": "Tags",
-  "a11y.aria.url": "URL"
+  "a11y.aria.url": "URL",
+  "a11y": {
+    "aria": {
+      "change_language": "Badel lougha — actuali: {native}",
+      "choose_language": "Ikhtar lougha",
+      "progresso_de": "Taqaddom {label}: {percent}%",
+      "disponivel_em_breve": "Ghi jay"
+    }
+  },
+  "placeholder": {
+    "zero_zero": "0.00",
+    "em_dash": "—",
+    "emoji_check": "✅",
+    "limite_para": "Hadd l-{nome}"
+  }
 }

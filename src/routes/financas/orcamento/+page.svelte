@@ -209,14 +209,14 @@
             </span>
             <span class="cat-name">{c.nome}</span>
             <label class="limite-input">
-              <span class="sr-only">Limite para {c.nome}</span>
+              <span class="sr-only">{$t('placeholder.limite_para', { values: { nome: c.nome }, default: 'Limite para {nome}' })}</span>
               <input
                 type="number"
                 min="0"
                 step="0.01"
                 inputmode="decimal"
                 value={limite || ''}
-                placeholder="—"
+                placeholder={$t('placeholder.em_dash', { default: '—' })}
                 disabled={saving === c.id}
                 aria-label={`Limite (€) para ${c.nome}`}
                 onblur={(e) => saveLimite(c.id, (e.currentTarget as HTMLInputElement).value)}

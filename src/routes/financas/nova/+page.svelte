@@ -194,7 +194,7 @@
           inputmode="decimal"
           bind:value={valorStr}
           required
-          placeholder="0,00"
+          placeholder={$t('placeholder.zero_zero', { default: '0,00' })}
           autocomplete="off"
         />
         <span class="euro" aria-hidden="true">€</span>

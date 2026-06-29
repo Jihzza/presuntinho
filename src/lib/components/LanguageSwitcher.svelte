@@ -17,14 +17,14 @@
 -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { locale, waitLocale } from 'svelte-i18n';
-  import {
-    LOCALES,
-    LOCALE_META,
-    setLocale,
-    type Locale
-  } from '$lib/i18n';
-  import { tick } from 'svelte';
+    import { locale, waitLocale, t } from 'svelte-i18n';
+    import {
+      LOCALES,
+      LOCALE_META,
+      setLocale,
+      type Locale
+    } from '$lib/i18n';
+    import { tick } from 'svelte';
 
   type Variant = 'compact' | 'full';
 
@@ -102,7 +102,7 @@
     class="ls-trigger"
     aria-haspopup="menu"
     aria-expanded={open}
-    aria-label="Change language — current: {meta.native}"
+    aria-label={$t('a11y.aria.change_language', { values: { native: meta.native }, default: 'Change language — current: {native}' })}
     title={meta.native}
     onclick={onTriggerClick}
   >
@@ -130,7 +130,7 @@
   </button>
 
   {#if open}
-    <ul class="ls-menu" role="menu" aria-label="Choose language">
+    <ul class="ls-menu" role="menu" aria-label={$t('a11y.aria.choose_language', { default: 'Choose language' })}>
       {#each LOCALES as loc (loc)}
         {@const m = LOCALE_META[loc]}
         <li role="none">
