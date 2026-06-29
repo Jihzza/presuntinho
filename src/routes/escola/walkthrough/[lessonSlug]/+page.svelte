@@ -170,7 +170,7 @@
       {#if audioSrc}
         <div class="audio-icon" aria-hidden="true">🎧</div>
         <div class="audio-meta">
-          <p class="audio-title">Audio walkthrough</p>
+          <p class="audio-title">{$t('walkthrough.audio.title', { default: 'Audio walkthrough' })}</p>
           <audio
             controls
             preload="metadata"
@@ -185,7 +185,7 @@
           </p>
         </div>
       {:else}
-        <p class="audio-missing">Sem ficheiro de áudio para esta lição.</p>
+        <p class="audio-missing">{$t('walkthrough.audio.missing', { default: 'Sem ficheiro de áudio para esta lição.' })}</p>
       {/if}
     </section>
 

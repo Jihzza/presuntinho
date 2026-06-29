@@ -100,7 +100,7 @@
 <div class="novo">
   <header class="hero">
     <h1>➕ Novo hábito</h1>
-    <p class="sub">Define um hábito diário para acompanhares com streaks.</p>
+    <p class="sub">{$t('habitos.novo.sub', { default: 'Define um hábito diário para acompanhares com streaks.' })}</p>
   </header>
 
   <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
@@ -148,7 +148,7 @@
           {/each}
         </div>
       </div>
-      <span class="hint" id="icon-hint">Emoji curto (até 4 caracteres).</span>
+      <span class="hint" id="icon-hint">{$t('habitos.novo.iconHint', { default: 'Emoji curto (até 4 caracteres).' })}</span>
     </div>
 
     <div class="field">

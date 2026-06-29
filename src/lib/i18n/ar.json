@@ -726,5 +726,21 @@
     "em_dash": "—",
     "emoji_check": "✅",
     "limite_para": "حدّ لـ {nome}"
-  }
+  },
+  "walkthrough.audio.title": "شرح صوتي",
+  "walkthrough.audio.missing": "لا يوجد ملف صوتي لهذا الدرس.",
+  "habitos.novo.sub": "حدد عادة يومية لتتبعها مع سلاسل.",
+  "habitos.novo.iconHint": "رمز قصير (حتى 4 أحرف).",
+  "financas.orcamento.sub": "حدود الفئات — {mes}",
+  "financas.orcamento.empty": "لا توجد فئات نفقات مُكوَّنة.",
+  "financas.transacoes.filtros.pesquisar": "بحث",
+  "financas.transacoes.filtros.de": "من",
+  "financas.transacoes.filtros.ate": "إلى",
+  "trabalhos.assignment.o_que_fazer": "ما يجب فعله",
+  "trabalhos.assignment.prazo": "الموعد النهائي",
+  "trabalhos.assignment.recursos": "الموارد",
+  "habitos.streak.atual": "السلسلة الحالية",
+  "habitos.streak.nos_ultimos": "في آخر 90 يوماً",
+  "financas.orcamento.mes_label": "الشهر",
+  "financas.orcamento.carregando": "جارٍ التحميل…"
 }

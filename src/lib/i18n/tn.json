@@ -726,5 +726,21 @@
     "em_dash": "—",
     "emoji_check": "✅",
     "limite_para": "Hadd l-{nome}"
-  }
+  },
+  "walkthrough.audio.title": "Audio walkthrough",
+  "walkthrough.audio.missing": "Makan fichier audio l hadhi l-derja.",
+  "habitos.novo.sub": "Defini 'adet youmi bsh ttab3ou b des séries.",
+  "habitos.novo.iconHint": "Emoji qsir (7ta 4 7rouf).",
+  "financas.orcamento.sub": "L7oudod par catégorie — {mes}",
+  "financas.orcamento.empty": "Makan katégories de dépenses configurés.",
+  "financas.transacoes.filtros.pesquisar": "9alleb",
+  "financas.transacoes.filtros.de": "Men",
+  "financas.transacoes.filtros.ate": "7ta",
+  "trabalhos.assignment.o_que_fazer": "Chnowa t3mel",
+  "trabalhos.assignment.prazo": "Date limite",
+  "trabalhos.assignment.recursos": "Mawad",
+  "habitos.streak.atual": "Série actuelle",
+  "habitos.streak.nos_ultimos": "fi les 90 youm li fatou",
+  "financas.orcamento.mes_label": "Chhor",
+  "financas.orcamento.carregando": "Am tsena…"
 }

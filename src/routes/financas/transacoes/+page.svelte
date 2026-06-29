@@ -281,7 +281,7 @@
         </select>
       </label>
       <label class="field grow">
-        <span class="field-label">Pesquisar</span>
+        <span class="field-label">{$t('financas.transacoes.filtros.pesquisar', { default: 'Pesquisar' })}</span>
         <input
           type="search"
           bind:value={pesquisa}
@@ -292,11 +292,11 @@
     </div>
     <div class="filters-row">
       <label class="field">
-        <span class="field-label">De</span>
+        <span class="field-label">{$t('financas.transacoes.filtros.de', { default: 'De' })}</span>
         <input type="date" bind:value={dataDe} aria-label="{$t('a11y.aria.data_inicial', { default: 'Data inicial' })}" />
       </label>
       <label class="field">
-        <span class="field-label">Até</span>
+        <span class="field-label">{$t('financas.transacoes.filtros.ate', { default: 'Até' })}</span>
         <input type="date" bind:value={dataAte} aria-label="{$t('a11y.aria.data_final', { default: 'Data final' })}" />
       </label>
       {#if temFiltroAtivo}

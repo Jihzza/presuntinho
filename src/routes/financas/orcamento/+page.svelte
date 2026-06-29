@@ -158,7 +158,7 @@
 <div class="orcamento-page">
   <header class="hero">
     <h1>📊 Orçamento</h1>
-    <p class="sub">Limites por categoria — <strong>{formatMes(mesFiltro)}</strong></p>
+    <p class="sub">{$t('financas.orcamento.sub', { default: 'Limites por categoria — {mes}' }).replace('{mes}', formatMes(mesFiltro))}</p>
   </header>
 
   <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
@@ -171,17 +171,17 @@
 
   <section class="controls" aria-label="{$t('a11y.aria.filtros', { default: 'Filtros' })}">
     <label class="field">
-      <span class="field-label">Mês</span>
+      <span class="field-label">{$t('financas.orcamento.mes_label', { default: 'Mês' })}</span>
       <input type="month" bind:value={mesFiltro} aria-label="{$t('a11y.aria.mes_do_orcamento', { default: 'Mês do orçamento' })}" />
     </label>
   </section>
 
   {#if loading}
-    <p class="empty">A carregar…</p>
+    <p class="empty">{$t('financas.orcamento.carregando', { default: 'A carregar…' })}</p>
   {:else if error}
     <p class="empty error" role="alert">⚠️ {error}</p>
   {:else if categoriasDespesa.length === 0}
-    <p class="empty">Sem categorias de despesa configuradas.</p>
+    <p class="empty">{$t('financas.orcamento.empty', { default: 'Sem categorias de despesa configuradas.' })}</p>
   {:else}
     <section class="summary" aria-label="{$t('a11y.aria.resumo_do_orcamento', { default: 'Resumo do orçamento' })}">
       <div class="summary-row">
@@ -282,17 +282,12 @@
     color: var(--txt, #fff);
   }
   .sub {
-    color: var(--txt2, #cbd5e1);
-    margin: 0;
-    font-size: 1rem;
-  }
-  .sub strong {
-    color: var(--txt, #fff);
-    font-weight: 600;
-    text-transform: capitalize;
-  }
-  .crumbs {
-    display: flex;
+      color: var(--txt2, #cbd5e1);
+      margin: 0;
+      font-size: 1rem;
+    }
+    .crumbs {
+      display: flex;
     gap: 0.5rem;
     align-items: center;
     font-size: 0.875rem;

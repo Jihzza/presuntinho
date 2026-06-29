@@ -136,12 +136,12 @@
       </header>
 
       <section class="description-block" aria-label="{$t('a11y.aria.descricao_do_trabalho', { default: 'Descrição do trabalho' })}">
-        <h2 class="block-title">O que fazer</h2>
+        <h2 class="block-title">{$t('trabalhos.assignment.o_que_fazer', { default: 'O que fazer' })}</h2>
         <p class="description">{descriptionText}</p>
       </section>
 
       <section class="meta-block" aria-label="{$t('a11y.aria.prazo', { default: 'Prazo' })}">
-        <h2 class="block-title">Prazo</h2>
+        <h2 class="block-title">{$t('trabalhos.assignment.prazo', { default: 'Prazo' })}</h2>
         <div class="deadline-row">
           {#if pack?.deadline}
             <Countdown deadline={pack.deadline} />
@@ -150,7 +150,7 @@
       </section>
 
       <section class="recursos-block" aria-label="{$t('a11y.aria.recursos', { default: 'Recursos' })}">
-        <h2 class="block-title">Recursos</h2>
+        <h2 class="block-title">{$t('trabalhos.assignment.recursos', { default: 'Recursos' })}</h2>
         <ul class="recursos">
           {#if assignment.lessonSlug}
             <li>

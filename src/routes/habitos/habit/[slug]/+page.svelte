@@ -178,11 +178,11 @@
     <section class="stats" aria-label="{$t('a11y.aria.estatisticas', { default: 'Estatísticas' })}">
       <div class="stat">
         <span class="stat-value" style="color: {habit.color}">{streak}</span>
-        <span class="stat-label">Streak atual</span>
+        <span class="stat-label">{$t('habitos.streak.atual', { default: 'Streak atual' })}</span>
       </div>
       <div class="stat">
         <span class="stat-value">{recentCount}</span>
-        <span class="stat-label">nos últimos 90 dias</span>
+        <span class="stat-label">{$t('habitos.streak.nos_ultimos', { default: 'nos últimos 90 dias' })}</span>
       </div>
       <div class="stat">
         <span class="stat-value" class:done={todayLogged} class:todo={!todayLogged}>

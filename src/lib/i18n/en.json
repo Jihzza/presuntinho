@@ -726,5 +726,21 @@
     "em_dash": "—",
     "emoji_check": "✅",
     "limite_para": "Limit for {nome}"
-  }
+  },
+  "walkthrough.audio.title": "Audio walkthrough",
+  "walkthrough.audio.missing": "No audio file for this lesson.",
+  "habitos.novo.sub": "Define a daily habit to track with streaks.",
+  "habitos.novo.iconHint": "Short emoji (up to 4 characters).",
+  "financas.orcamento.sub": "Category limits — {mes}",
+  "financas.orcamento.empty": "No expense categories configured.",
+  "financas.transacoes.filtros.pesquisar": "Search",
+  "financas.transacoes.filtros.de": "From",
+  "financas.transacoes.filtros.ate": "To",
+  "trabalhos.assignment.o_que_fazer": "What to do",
+  "trabalhos.assignment.prazo": "Deadline",
+  "trabalhos.assignment.recursos": "Resources",
+  "habitos.streak.atual": "Current streak",
+  "habitos.streak.nos_ultimos": "in the last 90 days",
+  "financas.orcamento.mes_label": "Month",
+  "financas.orcamento.carregando": "Loading…"
 }
