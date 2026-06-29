@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-29T21:35:00+02:00",
+  "lastUpdated": "2026-06-29T21:50:00+02:00",
   "openItems": [
     {
       "id": "gap-091",
@@ -9,14 +9,6 @@
       "source": "watchdog-tick-2026-06-29-20",
       "created_at": "2026-06-29T21:05:00+02:00",
       "updated_at": "2026-06-29T21:35:00+02:00"
-    },
-    {
-      "id": "gap-092",
-      "category": "lição/curso",
-      "description": "Cadeira BA #38: Gestão da Inovação e Tecnologia (slug gestao-inovacao). Despachado para Skander 2 em background (deleg_08fc5ffb). 4 lições + giq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired em 3 routes (escola/+page.svelte, escola/curso/[slug], aulas/+page.server.ts). Conteúdo: Drucker sources, Christensen sustaining vs disruptive, Foster S-curve, tipos incremental/adjacent/transformational/breakthrough, open innovation Chesbrough, Stage-Gate Cooper; design thinking Brown + Double Diamond + lean startup Ries + MVPs; portfolio exploitation vs exploration March, Stage-Gate gating, BCG growth-share, real options thinking; platform thinking Parker/Van Alstyne, ecossistemas (Silicon Valley/Israel/Shenzhen), IP strategy, digital transformation Kane Phillips, Rogers adoption curve.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-21",
-      "created_at": "2026-06-29T21:35:00+02:00"
     },
     {
       "id": "gap-083-pending-ba35",
@@ -67,33 +59,41 @@
       "source": "watchdog-tick-2026-06-28-23",
       "created_at": "2026-06-28T23:25:00+02:00",
       "updated_at": "2026-06-29T04:35:00+02:00"
-          }
-        ],
-        "closedItems": [
-        {
-          "id": "gap-090",
-          "category": "smoke-fail",
-          "description": "Smoke live-fire do gap-088 (Comportamento Organizacional BA #37) — verificado via curl HTTP 200 em todos os URLs em produção após deploy 6a42c198 (commit 238a4dc8).",
-          "sha": "238a4dc",
-          "closed_at": "2026-06-29T21:35:00+02:00",
-          "evidence": "Smoke 4/4 URLs HTTP 200 em produção: /escola/curso/comportamento-organizacional/ 200, /escola/quiz/coq 200, /static/lessons/comportamento-organizacional/01-comportamento-individual.json 200, /aulas 200 (com trailing-slash redirect). Deploy 6a42c198 ready (commit 238a4dc8)."
-        },
-        {
-          "id": "gap-089",
-          "category": "smoke-fail",
-          "description": "Smoke live-fire de gap-087 (Análise de Investimentos BA #36) — verificado via curl HTTP 200 em produção após deploy 6a42a817 (commit fb810cd).",
-          "sha": "fb810cd",
-          "closed_at": "2026-06-29T21:35:00+02:00",
-          "evidence": "Smoke URLs HTTP 200 já verificadas em tick anterior: /escola/curso/analise-investimentos/ 200, /escola/quiz/aiq 200, /aulas 200, 4/4 lessons JSON 200, aiq.json 200. Deploy 6a42a817 ready."
-        },
-        {
-          "id": "gap-088",
-          "category": "lição/curso",
-          "description": "Cadeira BA #37: Comportamento Organizacional (slug comportamento-organizacional). 4 lições + coq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired. Conteúdo: Big Five, Maslow, Herzberg, McGregor, SDT; Tuckman, Belbin, groupthink, social loafing; Mintzberg, Schein, Hofstede, French-Raven; Path-Goal, empowerment, Thomas-Kilmann, BATNA/ZOPA.",
-          "sha": "238a4dc",
-          "closed_at": "2026-06-29T21:35:00+02:00",
-          "evidence": "npm run check 0/0; npm run build green; 4 lessons JSON (01-comportamento-individual, 02-dinamica-grupo-equipas, 03-estrutura-organizacional-cultura-poder, 04-lideranca-poder-conflitos) + course.json + coq.json criados; 5 i18n locales têm comportamento-organizacional.{title,description,tagline}; CATALOGUE wired em 3 routes; commit 238a4dc pushed; deploy 6a42c198 ready."
-        },
+    },
+    {
+      "id": "gap-093",
+      "category": "licao/curso",
+      "description": "Cadeira BA #39: Comercio Internacional (slug comercio-internacional). Despachada para Skander 2 (deleg_64b0b5f5). 4 licoes + ciq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired. Conteudo: Smith/Ricardo/Heckscher-Ohlin/GATT, Uppsala/born global, Incoterms 2020 + L/C trade finance, marketing internacional 4Ps + Hofstede + CISG/arbitragem.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-22",
+      "created_at": "2026-06-29T21:50:00+02:00"
+    }
+  ],
+  "closedItems": [
+    {
+      "id": "gap-090",
+      "category": "smoke-fail",
+      "description": "Smoke live-fire do gap-088 (Comportamento Organizacional BA #37) — verificado via curl HTTP 200 em todos os URLs em produção após deploy 6a42c198 (commit 238a4dc8).",
+      "sha": "238a4dc",
+      "closed_at": "2026-06-29T21:35:00+02:00",
+      "evidence": "Smoke 4/4 URLs HTTP 200 em produção: /escola/curso/comportamento-organizacional/ 200, /escola/quiz/coq 200, /static/lessons/comportamento-organizacional/01-comportamento-individual.json 200, /aulas 200 (com trailing-slash redirect). Deploy 6a42c198 ready (commit 238a4dc8)."
+    },
+    {
+      "id": "gap-089",
+      "category": "smoke-fail",
+      "description": "Smoke live-fire de gap-087 (Análise de Investimentos BA #36) — verificado via curl HTTP 200 em produção após deploy 6a42a817 (commit fb810cd).",
+      "sha": "fb810cd",
+      "closed_at": "2026-06-29T21:35:00+02:00",
+      "evidence": "Smoke URLs HTTP 200 já verificadas em tick anterior: /escola/curso/analise-investimentos/ 200, /escola/quiz/aiq 200, /aulas 200, 4/4 lessons JSON 200, aiq.json 200. Deploy 6a42a817 ready."
+    },
+    {
+      "id": "gap-088",
+      "category": "lição/curso",
+      "description": "Cadeira BA #37: Comportamento Organizacional (slug comportamento-organizacional). 4 lições + coq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired. Conteúdo: Big Five, Maslow, Herzberg, McGregor, SDT; Tuckman, Belbin, groupthink, social loafing; Mintzberg, Schein, Hofstede, French-Raven; Path-Goal, empowerment, Thomas-Kilmann, BATNA/ZOPA.",
+      "sha": "238a4dc",
+      "closed_at": "2026-06-29T21:35:00+02:00",
+      "evidence": "npm run check 0/0; npm run build green; 4 lessons JSON (01-comportamento-individual, 02-dinamica-grupo-equipas, 03-estrutura-organizacional-cultura-poder, 04-lideranca-poder-conflitos) + course.json + coq.json criados; 5 i18n locales têm comportamento-organizacional.{title,description,tagline}; CATALOGUE wired em 3 routes; commit 238a4dc pushed; deploy 6a42c198 ready."
+    },
     {
       "id": "gap-082",
       "category": "lição/curso",
@@ -647,6 +647,14 @@
       "sha": "audit-2026-06-29-19",
       "closed_at": "2026-06-29T19:18:33+02:00",
       "evidence": "Audit 2026-06-29 19h — gap-065 (Daniel \"faz cursos sobretudo / aulas sobretudo\") tracking contínuo. Já entregues desde gap-034 (28 cursos BA+Uni+Advanced iniciais): gap-051 (4 advanced), gap-063 (BA #29 GFE), gap-072 (BA #31 CG), gap-078 (BA #32 Emp), gap-079 (BA #33 GQT), gap-082 (BA #34 L&C), gap-084 (BA #35 GO), gap-087 (BA #36 AI). Total CATALOGUE agora: 36 cadeiras BA+Uni+Advanced. gap-088 (BA #37 Comportamento Organizacional) em curso. Continua a despachar mais cadeiras a cada tick."
+    },
+    {
+      "id": "gap-092",
+      "category": "licao/curso",
+      "description": "Cadeira BA #38: Gestao da Inovacao e Tecnologia (slug gestao-inovacao). 4 licoes + giq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired. Conteudo: Drucker sources, Christensen sustaining vs disruptive, Foster S-curve, tipos incremental/adjacent/transformational/breakthrough, open innovation Chesbrough, Stage-Gate Cooper; design thinking Brown + Double Diamond + lean startup Ries + MVPs; portfolio exploitation vs exploration March, Stage-Gate gating, BCG growth-share, real options thinking; platform thinking Parker/Van Alstyne, ecossistemas (Silicon Valley/Israel/Shenzhen), IP strategy, digital transformation Kane Phillips, Rogers adoption curve.",
+      "sha": "b123043",
+      "closed_at": "2026-06-29T21:50:00+02:00",
+      "evidence": "Smoke 4/4 URLs HTTP 200 em producao: /escola/curso/gestao-inovacao/ 200, /escola/quiz/giq 200, /static/lessons/gestao-inovacao/01-inovacao-estrategica.json 200, /static/quizzes/giq.json 200. Deploy 6a42d37b ready (commit b123043)."
     }
   ]
 }
