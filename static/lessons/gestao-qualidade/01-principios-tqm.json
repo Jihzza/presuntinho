@@ -1,0 +1,212 @@
+{
+  "id": "01-principios-tqm",
+  "title": "1. Princípios da TQM: Deming, Juran, Ishikawa e o Custo da Não-Qualidade",
+  "courseSlug": "gestao-qualidade",
+  "lessonNumber": 1,
+  "description": "Os quatro gurus da qualidade e os princípios que fundaram a Total Quality Management: os 14 pontos de Deming, a trilogia de Juran, o diagrama de Ishikawa e o conceito de zero defeitos de Crosby. Mais o modelo ISO 9000 e o custo da não-qualidade (COPQ).",
+  "audio": "Nesta primeira lição vamos conhecer os quatro gurus da qualidade — Deming, Juran, Ishikawa e Crosby — e os princípios que lançaram a Gestão da Qualidade Total no pós-guerra japonês. Vamos perceber a diferença entre qualidade de conformação e qualidade de concepção, o que é a COPQ — o custo da não-qualidade, como a ISO 9000 estrutura um sistema de gestão, e como aplicar tudo isto numa PME que quer subir de patamar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["TQM", "Deming", "Juran", "Ishikawa", "Crosby", "COPQ", "ISO 9000"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é a Gestão da Qualidade Total (TQM)"
+    },
+    {
+      "type": "p",
+      "text": "A TQM — Total Quality Management — é uma filosofia de gestão que parte de uma premissa simples: a qualidade não é responsabilidade de um departamento, é de toda a organização. Nascida do trabalho dos consultores americanos que ajudaram o Japão a reconstruir-se após 1945 — Deming, Juran e mais tarde Ishikawa e Crosby — a TQM exige o comprometimento da gestão de topo e uma mudança cultural profunda: do inspeccionar no fim para prevenir desde o início."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "TQM não é uma técnica — é uma cultura organizacional com foco no cliente e melhoria contínua",
+        "Três pilares: satisfação do cliente, melhoria contínua (kaizen), envolvimento de todos",
+        "Diferença para controlo de qualidade tradicional: este detecta defeitos no fim; TQM previne no início",
+        "Aplicação universal: funciona em manufactura, serviços, saúde, educação, administração pública",
+        "Mede-se com indicadores (CTQ — Critical to Quality), não com discursos de missão"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Curiosidade histórica: o prémio Deming foi criado no Japão em 1951 — antes da maioria dos países ocidentais sequer ouvir falar de qualidade. Toyota, Sony e Canon são produtos dessa filosofia. Deming morreu em 1993 como herói nacional japonês."
+    },
+    {
+      "type": "h2",
+      "text": "W. Edwards Deming e os 14 pontos"
+    },
+    {
+      "type": "p",
+      "text": "Deming, estatístico americano, foi o pai intelectual do milagre industrial japonês. Os seus 14 pontos condensam a filosofia de gestão que ele acreditava ser a única forma sustentável de criar qualidade a longo prazo. O ponto central é a responsabilidade da gestão: a maioria dos problemas de qualidade tem raízes no sistema, não nas pessoas."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Ponto 1: Criar constância de propósito para a melhoria de produto e serviço",
+        "Ponto 2: Adoptar a nova filosofia — não aceitar erros e atrasos como inevitáveis",
+        "Ponto 3: Acabar com a dependência de inspecção em massa — construir qualidade no processo",
+        "Ponto 4: Acabar com a prática de adjudicar contratos apenas pelo preço (incluir qualidade)",
+        "Ponto 5: Melhorar constantemente cada processo de planeamento, produção e serviço",
+        "Ponto 6: Instituir formação no trabalho (job training) para todos",
+        "Ponto 7: Instituir liderança — o papel do supervisor é ajudar as pessoas a fazer melhor",
+        "Ponto 8: Afastar o medo — para que todos possam trabalhar eficazmente",
+        "Ponto 9: Eliminar barreiras entre departamentos — trabalho de equipa",
+        "Ponto 10: Acabar com slogans e exortações que não dizem como agir",
+        "Ponto 11: Eliminar quotas numéricas e gestão por objectivos sem método",
+        "Ponto 12: Remover barreiras ao orgulho do trabalho — relógio de ponto, avaliação anual de mérito",
+        "Ponto 13: Instituir um programa vigoroso de formação e auto-melhoria",
+        "Ponto 14: Envolver toda a organização na transformação"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "O Ciclo PDCA (Plan-Do-Check-Act) de Deming"
+    },
+    {
+      "type": "p",
+      "text": "Também conhecido por ciclo de Shewhart (Walter Shewhart foi o mestre de Deming), o PDCA é a ferramenta universal de melhoria contínua. Aplicar uma mudança em pequena escala, medir o efeito, padronizar se funciona, e voltar a aplicar. É a base de qualquer iniciativa de qualidade — do kaizen japonês aos projectos Six Sigma ocidentais."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Plan (planear): definir o problema, analisar dados, identificar causa-raiz, planear acção",
+        "Do (executar): implementar em pequena escala (pilot), recolher dados",
+        "Check (verificar): comparar resultado obtido com o previsto — análise de desvios",
+        "Act (agir): se funcionou, padronizar; se não, voltar a Plan com nova hipótese"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Joseph Juran e a Trilogia da Qualidade"
+    },
+    {
+      "type": "p",
+      "text": "Juran, romeno-americano contemporâneo de Deming, via a qualidade como um processo de gestão com três pilares: planeamento da qualidade, controlo da qualidade e melhoria da qualidade. A sua contribuição prática é o princípio de Pareto aplicado à qualidade — a regra dos 80/20 diz que a maioria dos defeitos (80%) vem de poucas causas (20%)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Planeamento da qualidade: identificar clientes e as suas necessidades (CTQ — Critical to Quality)",
+        "Controlo da qualidade: avaliar o desempenho real contra objectivos e actuar sobre desvios",
+        "Melhoria da qualidade: estabelecer a infraestrutura para melhoria contínua ano após ano",
+        "Diferença para Deming: Juran é mais prático e orientado ao gestor, Deming é mais filosófico e estatístico",
+        "Aplicação: Juran é a base dos modernos sistemas de gestão da qualidade (QMS) em ISO 9001"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Kaoru Ishikawa e o Diagrama Causa-Efeito"
+    },
+    {
+      "type": "p",
+      "text": "Ishikawa, engenheiro químico japonês, criou uma das ferramentas mais usadas em qualidade: o diagrama de espinha de peixe (fishbone), também chamado diagrama de Ishikawa. Ishikawa acreditava que a qualidade começa com a educação — e daí as suas 7 ferramentas básicas de qualidade, que se ensinam a qualquer operador."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Fishbone (causa-efeito): categorizar potenciais causas de um problema em 6M (Método, Mão-de-obra, Máquina, Material, Medição, Meio-ambiente)",
+        "As 7 ferramentas: fluxograma, folha de verificação, histograma, Pareto, fishbone, carta de controlo, diagrama de dispersão",
+        "Foco na qualidade em toda a empresa — incluindo escritório, não só fábrica (QC circulou por toda a Toyota)",
+        "Filosofia: 'qualidade é responsabilidade de todos, do CEO ao porteiro'"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Philip Crosby e o Custo da Não-Qualidade"
+    },
+    {
+      "type": "p",
+      "text": "Crosby, americano que nos anos 70 liderou o movimento da qualidade nas empresas americanas, trouxe uma abordagem pragmática e orientada ao custo. O conceito central é COPQ — Cost of Poor Quality, o custo da não-qualidade. Crosby dizia que a qualidade é grátis: o que custa é a não-qualidade."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Os 4 absolutos da qualidade: definição = conformidade com requisitos; sistema = prevenção; padrão = zero defeitos; medição = preço da não-conformidade",
+        "COPQ divide-se em custos de falhas internas (retrabalho, sucata, retrabalho) e externas (garantias, devoluções, reclamações)",
+        "Estudos típicos: COPQ representa 15-40% do volume de negócios em empresas não-maduras; baixar para <5% é a meta",
+        "Princípio 'fazer bem à primeira' (do it right the first time) é a base da prevenção de defeitos",
+        "Crosby é o pai do conceito 'qualidade é investimento, não custo' — qualidade paga-se a si própria"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Atenção: 'zero defeitos' de Crosby não significa objectivo impossível — significa mudar a mentalidade de 'algum defeito é aceitável' para 'prevenção sempre'. A melhoria contínua é o caminho, não a perfeição absoluta."
+    },
+    {
+      "type": "h2",
+      "text": "Qualidade de concepção vs qualidade de conformação"
+    },
+    {
+      "type": "p",
+      "text": "Distinção fundamental para qualquer profissional de qualidade. Qualidade de concepção é o quanto o produto/serviço corresponde ao que o cliente precisa. Qualidade de conformação é o quanto o produto/serviço cumpre as especificações do design. As duas são independentes — pode-se ter alta conformação num produto mal desenhado (o chamado 'defeito de ouro')."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Qualidade de concepção: market research, QFD (Quality Function Deployment), voz do cliente",
+        "Qualidade de conformação: SPC, controlo de processo, auditorias internas",
+        "Exemplo clássico: smartphone com bateria que explode (concepção fraca, conformação boa até falhar)",
+        "Exemplo contrário: carro robusto mas sem Bluetooth (concepção fraca, excelente fabrico)",
+        "TQM aborda as duas — não basta inspeccionar, é preciso desenhar certo"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "ISO 9000 como Sistema de Gestão da Qualidade (QMS)"
+    },
+    {
+      "type": "p",
+      "text": "A família ISO 9000 é o framework mais usado no mundo para implementar QMS. A norma central é a ISO 9001:2015, com os seus 10 cláusulas (estrutura de alto nível HLS — High Level Structure, comum a todas as normas de sistemas de gestão ISO). A certificação ISO 9001 é voluntária, mas em muitos sectores (automóvel, aeronáutica, saúde) é praticamente obrigatória para fazer negócio."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "ISO 9000: vocabulário e fundamentos (a base teórica)",
+        "ISO 9001: requisitos — o que a organização tem de cumprir para se certificar",
+        "ISO 9004: gestão para o sucesso sustentado (linha orientadora, não-certificável)",
+        "Abordagem por processos: mapear, medir, melhorar",
+        "Abordagem por risco: a versão 2015 introduziu pensamento baseado em risco (risk-based thinking)",
+        "Ciclo PDCA aplicado a todo o QMS: planificar, implementar, verificar, melhorar"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: Como aplicar a TQM na prática"
+    },
+    {
+      "type": "p",
+      "text": "Uma PME que queira implementar TQM começa por três movimentos: (1) comprometer a gestão de topo com a visão e os recursos; (2) mapear os processos críticos e os CTQs do cliente; (3) implementar PDCA em pelo menos um processo-piloto. A partir daí, escala-se para toda a organização e mede-se com indicadores de qualidade (taxa de defeitos, lead time, NPS, COPQ)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Passo 1: Compromisso da liderança (Deming ponto 1)",
+        "Passo 2: Educação e formação de todos — não só dos engenheiros",
+        "Passo 3: Identificar clientes internos e externos, ouvir a voz do cliente (VOC)",
+        "Passo 4: Mapear processos críticos (SIPOC, value stream mapping)",
+        "Passo 5: Medir baseline (defeitos, tempo, custo), definir metas SMART",
+        "Passo 6: Aplicar PDCA em projectos-piloto (3-6 meses)",
+        "Passo 7: Padronizar sucessos, comunicar, escalar",
+        "Passo 8: Auditorias internas e revisão pela gestão (requisitos ISO 9001)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Key takeaway: TQM não é inspeccionar melhor — é prevenir melhor. A mudança de mentalidade de detectar para prevenir é o coração da cultura de qualidade. Deming dizia: 'a qualidade não é um acto, é um hábito'."
+    }
+  ],
+  "keyPoints": [
+    "TQM é filosofia de gestão, não técnica — exige comprometimento da liderança e cultura de melhoria contínua",
+    "Deming: 14 pontos + ciclo PDCA — base filosófica e estatística da qualidade",
+    "Juran: trilogia (planear, controlar, melhorar) + princípio de Pareto 80/20",
+    "Ishikawa: fishbone (6M) e 7 ferramentas — qualidade para todos, do CEO ao operador",
+    "Crosby: COPQ e zero defeitos — qualidade como investimento, não custo",
+    "Qualidade de concepção vs conformação — duas dimensões independentes",
+    "ISO 9001:2015 é o framework mais usado, com 10 cláusulas e abordagem por processos + risco"
+  ],
+  "quizSlug": "gqq",
+  "nextLesson": "02-ferramentas-qualidade",
+  "prevLesson": null
+}

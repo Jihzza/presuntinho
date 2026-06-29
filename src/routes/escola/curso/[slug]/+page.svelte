@@ -488,6 +488,20 @@
                             { slug: '03-orcamento-industrial-e-custos-padrao', title: '3. Orçamento Industrial e Custos-Padrão: Planear, Comparar, Corrigir', summary: 'Ciclo orçamental anual, orçamento flexível, custos-padrão e análise de desvios (variance analysis).', quizSlug: 'cgeq', quizTitle: 'Quiz: Contabilidade Gerencial', estMinutes: 10 },
                             { slug: '04-custeio-baseado-em-atividades-abc', title: '4. Custeio Baseado em Actividades (ABC) e Balanced Scorecard', summary: 'ABC como alternativa ao absorption costing, drivers de custo, e o BSC como complemento da contabilidade de gestão.', quizSlug: 'cgeq', quizTitle: 'Quiz: Contabilidade Gerencial', estMinutes: 10 }
                           ]
+                        },
+                        'gestao-qualidade': {
+                          slug: 'gestao-qualidade',
+                          title: 'Gestão da Qualidade Total',
+                          tagline: 'Business Administration · TQM, ferramentas, ISO 9001 e excelência em serviços',
+                          description: 'Como construir uma cultura de qualidade que atravessa toda a organização: princípios de Deming, Juran, Ishikawa e Crosby, ferramentas (Pareto, fishbone, SPC, FMEA), sistemas de gestão ISO 9001/14001/45001 com PDCA e auditorias, e qualidade em serviços via ServQual, lean services, six sigma e modelo EFQM.',
+                          icon: '🎯',
+                          color: '#0ea5e9',
+                          lessons: [
+                            { slug: '01-principios-tqm', title: '1. Princípios da TQM: Deming, Juran, Ishikawa e o Custo da Não-Qualidade', summary: 'Os 4 gurus da qualidade, trilogia de Juran, kaizen, COPQ e ISO 9000 como sistema.', quizSlug: 'gqq', quizTitle: 'Quiz: Gestão da Qualidade Total', estMinutes: 9 },
+                            { slug: '02-ferramentas-qualidade', title: '2. Ferramentas da Qualidade: Pareto, Ishikawa, SPC, FMEA e Análise de Causa Raiz', summary: 'As 7 ferramentas de Ishikawa, SPC com cartas de controlo, FMEA, 5 Whys e estudo de caso.', quizSlug: 'gqq', quizTitle: 'Quiz: Gestão da Qualidade Total', estMinutes: 10 },
+                            { slug: '03-sistemas-gestao-iso', title: '3. Sistemas de Gestão ISO: ISO 9001, ISO 14001, PDCA, Auditorias e Integração', summary: 'ISO 9001:2015 (10 cláusulas), PDCA, ISO 14001, ISO 45001, integração SIG e auditorias de certificação.', quizSlug: 'gqq', quizTitle: 'Quiz: Gestão da Qualidade Total', estMinutes: 10 },
+                            { slug: '04-qualidade-servicos-excelencia', title: '4. Qualidade em Serviços e Excelência Operacional: ServQual, Lean Services, Six Sigma e EFQM', summary: 'IHIP, ServQual, 5 gaps de Parasuraman, lean services, DMAIC, six sigma e modelo EFQM.', quizSlug: 'gqq', quizTitle: 'Quiz: Gestão da Qualidade Total', estMinutes: 10 }
+                          ]
                         }
                       };
 

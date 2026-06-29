@@ -825,5 +825,9 @@
   "routes.escola.curso.empreendedorismo.tagline": "Business Administration · Mindset, BMC, MVP, pitch investisseurs",
   "routes.escola.quiz.epq.title": "Quiz : Entrepreneuriat et Plan d’Affaires",
   "routes.escola.quiz.epq.description": "Testez vos connaissances sur l’état d’esprit entrepreneurial, le Business Model Canvas, la validation de problème, le MVP, le business plan et le pitch investisseurs. 10 questions, 4 options, explication détaillée.",
-  "routes.aulas.curso.empreendedorismo": "Entrepreneuriat et Plan d’Affaires"
+  "routes.aulas.curso.empreendedorismo": "Entrepreneuriat et Plan d’Affaires",
+  "routes.escola.curso.gestao-qualidade.title": "Gestion de la Qualité Totale",
+  "routes.escola.curso.gestao-qualidade.description": "Comment bâtir une culture de la qualité dans toute l'organisation : principes de Deming, Juran, Ishikawa et Crosby, outils (Pareto, fishbone, SPC, FMEA), systèmes de management ISO 9001/14001/45001 avec PDCA et audits, et qualité de service via ServQual, lean services, six sigma et modèle EFQM.",
+  "routes.escola.curso.gestao-qualidade.tagline": "Business Administration · TQM, outils, ISO 9001 et excellence de service",
+  "routes.aulas.curso.gestao-qualidade": "Gestion de la Qualité Totale"
 }

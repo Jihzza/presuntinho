@@ -1,0 +1,254 @@
+{
+  "id": "03-sistemas-gestao-iso",
+  "title": "3. Sistemas de Gestão ISO: ISO 9001, ISO 14001, PDCA, Auditorias e Integração",
+  "courseSlug": "gestao-qualidade",
+  "lessonNumber": 3,
+  "description": "A família de normas ISO para sistemas de gestão: ISO 9001 (qualidade), ISO 14001 (ambiente), ISO 45001 (segurança), com a estrutura HLS comum, PDCA, e o caminho para integração num Sistema Integrado de Gestão (SIG). Mais o processo de certificação e auditorias.",
+  "audio": "Nesta terceira lição vamos ao mundo das normas ISO — o framework mais usado globalmente para implementar sistemas de gestão. Vamos dissecar a ISO 9001:2015 com as suas 10 cláusulas, perceber a abordagem por processos e por risco, distinguir auditorias internas de externas, e ver como integrar ISO 9001 + 14001 + 45001 num único Sistema Integrado de Gestão. Tudo com um caso prático de uma metalúrgica que queria certificar-se em 12 meses.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["ISO 9001", "ISO 14001", "ISO 45001", "PDCA", "auditoria", "certificação", "HLS"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "A Família ISO e o conceito de Sistema de Gestão"
+    },
+    {
+      "type": "p",
+      "text": "ISO — International Organization for Standardization — é uma federação de organismos nacionais de normalização fundada em 1946 (Suíça). Tem mais de 165 países membros e publicou mais de 25.000 normas. Para sistemas de gestão, o foco não é o produto (isso são normas técnicas tipo ISO 9002 para software) — é como a organização gere os seus processos para atingir objectivos."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Sistema de Gestão (SG): conjunto de políticas, processos e procedimentos para atingir objectivos",
+        "ISO 9001: Sistema de Gestão da Qualidade (SGQ) — satisfação do cliente, conformidade",
+        "ISO 14001: Sistema de Gestão Ambiental (SGA) — prevenção de poluição, conformidade legal",
+        "ISO 45001: Sistema de Gestão de Segurança e Saúde Ocupacional — prevenção de acidentes",
+        "ISO 27001: Sistema de Gestão de Segurança da Informação — protecção de dados",
+        "ISO 50001: Sistema de Gestão de Energia — eficiência energética",
+        "HLS (High Level Structure): estrutura comum desde 2012 — 10 cláusulas idênticas em todas"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "HLS mudou tudo: a partir de 2012-2015, todas as normas ISO de sistemas de gestão partilham a mesma estrutura de 10 cláusulas. Isto permite integração fácil — uma organização pode ter um manual, procedimentos e auditorias partilhadas."
+    },
+    {
+      "type": "h2",
+      "text": "ISO 9001:2015 — Estrutura das 10 cláusulas"
+    },
+    {
+      "type": "p",
+      "text": "A versão actual (ISO 9001:2015) abandonou o modelo de 'documentos obrigatórios' (manual, procedimentos, registos) e adoptou uma abordagem por processos com pensamento baseado em risco. As 10 cláusulas seguem a estrutura PDCA em alto nível: cláusulas 4-7 são Plan, cláusula 8 é Do, cláusula 9 é Check, cláusula 10 é Act."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Cláusula 1: Objectivo e campo de aplicação",
+        "Cláusula 2: Referências normativas",
+        "Cláusula 3: Termos e definições",
+        "Cláusula 4: Contexto da organização (partes interessadas, âmbito do SGQ)",
+        "Cláusula 5: Liderança (compromisso da gestão de topo, política da qualidade, papéis)",
+        "Cláusula 6: Planeamento (riscos, oportunidades, objectivos da qualidade)",
+        "Cláusula 7: Apoio (recursos, competência, comunicação, informação documentada)",
+        "Cláusula 8: Operação (planeamento operacional, requisitos do produto, design, produção)",
+        "Cláusula 9: Avaliação do desempenho (monitorização, medição, análise, avaliação, auditorias internas)",
+        "Cláusula 10: Melhoria (não-conformidades, acções correctivas, melhoria contínua)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Abordagem por processos e pensamento baseado em risco"
+    },
+    {
+      "type": "p",
+      "text": "Duas grandes mudanças da versão 2015. Abordagem por processos significa mapear, medir e melhorar processos individuais (entrada → actividades → saída → cliente) em vez de tratar a organização por funções estanques. Pensamento baseado em risco (risk-based thinking) obriga a organização a identificar preventivamente o que pode correr mal (cláusula 6.1) e aplanar tratamento antes do problema acontecer — em vez de esperar pela auditoria."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Mapa de processos: estratégico + operacionais + apoio",
+        "Cada processo: dono (owner), entradas, saídas, indicadores (KPIs), riscos e oportunidades",
+        "Ciclo de gestão de risco: identificação → análise → avaliação → tratamento → monitorização",
+        "Ferramentas comuns: SWOT, FMEA, análise Bow-Tie, heat map",
+        "Diferença para versões anteriores: deixa de haver 'acção preventiva' separada — prevenção está embebida em todos os processos"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Documentação obrigatória vs informação documentada"
+    },
+    {
+      "type": "p",
+      "text": "A ISO 9001:2015 aboliu a famosa lista de '6 documentos obrigatórios' (manual, 6 procedimentos, 17 registos). Agora fala de 'informação documentada' que a organização deve manter — o tipo, formato e suporte são decisão da empresa. A regra é: mantenha o que precisa para que o processo funcione, e o que prova a conformidade. Auditor já não pede manual — pede evidência."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Informação documentada mínima típica: política da qualidade, objectivos da qualidade, âmbito do SGQ, mapa de processos, plano de auditorias, evidências de revisão pela gestão, evidências de competência, registos de calibração",
+        "Suporte: papel, digital, nuvem, ERP — a organização escolhe",
+        "Retenção: conforme necessidade do processo e requisitos legais",
+        "Controlo: distribuição, acesso, recuperação, preservação, eliminação"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "ISO 14001 — Sistema de Gestão Ambiental"
+    },
+    {
+      "type": "p",
+      "text": "Publicada em 1996 (versão actual: ISO 14001:2015), é a norma de gestão ambiental mais usada no mundo (mais de 300.000 organizações certificadas). Estrutura HLS idêntica à ISO 9001, mas o foco é o desempenho ambiental: identificar aspectos ambientais (consumo de recursos, emissões, resíduos), impactos associados, e obrigações de conformidade legal."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Aspecto ambiental: elemento das actividades, produtos ou serviços que pode interagir com o ambiente",
+        "Impacto ambiental: qualquer mudança no ambiente, adversa ou benéfica, resultante do aspecto",
+        "Exemplos de aspectos: consumo de água, emissões de CO2, geração de resíduos perigosos, ruído",
+        "Avaliação de significância: combina severidade do impacto × frequência × capacidade de controlo",
+        "Ciclo de vida: abordagem da ISO 14001:2015 — pensar desde aquisição de matérias-primas até fim de vida do produto"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Ferramentas ambientais úteis"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Pegada de carbono: GHG Protocol, ISO 14064",
+        "Análise de ciclo de vida (ACV): ISO 14040/14044",
+        "Rotulagem ambiental: ISO 14020/14021 (autodeclarações), Tipo I (rótulos oficiais — EU Ecolabel, Blue Angel)",
+        "Compras sustentáveis: ISO 20400"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "ISO 45001 — Segurança e Saúde Ocupacional"
+    },
+    {
+      "type": "p",
+      "text": "Substituiu em 2018 a antiga OHSAS 18001. É a norma de SST (Segurança e Saúde no Trabalho) mais adoptada globalmente. Mantém HLS, adiciona foco em 'consulta e participação dos trabalhadores' e na 'eliminação de perigos' em vez de apenas 'mitigação de riscos'. Em Portugal, é particularmente relevante pelo enquadramento legal (Lei 102/2009 e alterações)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Perigo: fonte com potencial para causar dano (máquina sem protecção, substância química)",
+        "Risco: combinação da probabilidade de ocorrência e da severidade do dano",
+        "Hierarquia de controlo: eliminar → substituir → controlos de engenharia → controlos administrativos → EPI",
+        "Participação dos trabalhadores: princípio da ISO 45001 — delegados de SST, comités, sugestões",
+        "Investigação de incidentes: near-misses, primeiros socorros, acidentes com baixa — todos contam"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Auditorias — internas e externas"
+    },
+    {
+      "type": "p",
+      "text": "Auditoria é o processo de obter evidência e avaliá-la objectivamente para determinar o grau de conformidade com critérios (a norma). Existem três tipos principais: auditoria interna (1ª parte) feita pela própria organização, auditoria de fornecedor/cliente (2ª parte), e auditoria de certificação (3ª parte) feita por organismo de certificação acreditado."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Auditoria interna: obrigatória pelo menos uma vez por ano, abrange todo o SGQ",
+        "Auditor líder: pessoa com formação ISO 19011, independente do processo auditado",
+        "Não-conformidade (NC) maior: ausência total de um requisito, ou múltiplas NC menores num só requisito",
+        "Não-conformidade menor: falha pontual que não afecta a capacidade do SGQ",
+        "Acção correctiva: tratar a NC + causa-raiz (5 Whys) + verificar eficácia",
+        "Prazo típico para fechar NC: 60-90 dias (depende do organismo certificador)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "O processo de certificação"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "1. Implementar SGQ (6-18 meses conforme complexidade)",
+        "2. Auditoria interna + revisão pela gestão (formal, documentada)",
+        "3. Escolher organismo certificador acreditado (IPAC em Portugal)",
+        "4. Fase 1 (auditoria documental): confirmar que o SGQ está pronto para fase 2",
+        "5. Fase 2 (auditoria no terreno): confirmar implementação efectiva",
+        "6. Decisão de certificação por comité independente do auditor",
+        "7. Emissão do certificado (válido por 3 anos, com auditorias de seguimento anuais)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Sistema Integrado de Gestão (SIG)"
+    },
+    {
+      "type": "p",
+      "text": "Quando uma organização implementa várias normas (ISO 9001 + 14001 + 45001, por exemplo), pode — e deve — integrá-las num Sistema Integrado de Gestão. A vantagem é eliminar duplicação de procedimentos, unificar auditorias e ter uma visão holística do desempenho. A estrutura HLS facilita isto enormemente."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Documentos comuns: política integrada, manual, mapa de processos, plano de auditorias",
+        "Processos integrados: gestão de documentos, competências, comunicação, auditorias internas, revisão pela gestão",
+        "Auditoria integrada: um auditor (ou equipa) avalia todas as normas no mesmo dia",
+        "Benefícios: redução de custos (até 30%), coerência de informação, visão sistémica",
+        "Cuidados: não sacrificar especificidades de cada norma; matriz de conformidades cruzadas"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Casos reais de integração: metalúrgica certificada em 9001+14001+45001; hospital em 9001+14001+45001+27001 (privacidade); construtora em 9001+14001+45001+50001 (energia). A integração é o estado-da-arte actual da gestão."
+    },
+    {
+      "type": "h2",
+      "text": "Revisão pela gestão — o momento de topo"
+    },
+    {
+      "type": "p",
+      "text": "A revisão pela gestão (cláusula 9.3 da ISO 9001) é o momento formal em que a gestão de topo se reúne (tipicamente anual ou semestral) para avaliar o desempenho do SGQ. Não é uma reunião de informação — é uma reunião de decisão. Tem entradas obrigatórias e saídas obrigatórias."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Entradas obrigatórias: estado de acções da revisão anterior, resultados de auditorias, retorno do cliente, desempenho de processos, não-conformidades, acções correctivas, alterações em contexto, riscos e oportunidades, adequação de recursos",
+        "Saídas obrigatórias: oportunidades de melhoria, necessidades de mudança no SGQ, necessidade de recursos",
+        "Frequência: pelo menos anual; pode ser mais frequente se o sector for regulamentado",
+        "Participantes: gestão de topo — não é delegável",
+        "Acta: documento formal (não-relatório) com decisões, responsáveis e prazos"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: o caminho da certificação"
+    },
+    {
+      "type": "p",
+      "text": "Implementar um sistema de gestão ISO é um projecto de transformação organizacional, não um projecto documental. Demora entre 6 e 18 meses conforme a dimensão e maturidade da organização. O erro mais comum é tratar como 'projecto do departamento da qualidade' — sem o comprometimento activo da gestão de topo, o SGQ morre após a auditoria de certificação. O segredo é integrar a qualidade no trabalho diário de todos."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Passo 1: Diagnóstico inicial (gap analysis) vs requisitos da norma",
+        "Passo 2: Planeamento (12 meses típico) com milestones claros",
+        "Passo 3: Formação (gestão de topo + auditores internos + todos)",
+        "Passo 4: Documentação alinhada com processos reais (não o contrário)",
+        "Passo 5: Implementação faseada com KPIs desde dia 1",
+        "Passo 6: Auditoria interna antes da certificação — para encontrar NCs primeiro",
+        "Passo 7: Revisão pela gestão formal",
+        "Passo 8: Certificação + melhoria contínua ano após ano"
+      ]
+    }
+  ],
+  "keyPoints": [
+    "ISO publica normas para sistemas de gestão — foco em processos, não em produtos",
+    "HLS (High Level Structure): 10 cláusulas comuns a todas as normas ISO desde 2012-2015",
+    "ISO 9001:2015: abordagem por processos + pensamento baseado em risco, sem lista rígida de documentos",
+    "ISO 14001:2015: aspectos e impactos ambientais, ciclo de vida, conformidade legal",
+    "ISO 45001:2018: SST, hierarquia de controlo, participação dos trabalhadores",
+    "Auditoria interna obrigatória anual; certificação por organismo acreditado (IPAC em PT)",
+    "Sistema Integrado de Gestão (SIG): unir 9001+14001+45001 partilhando processos e auditorias",
+    "Revisão pela gestão é o momento formal de decisão — não pode ser delegada"
+  ],
+  "quizSlug": "gqq",
+  "nextLesson": "04-qualidade-servicos-excelencia",
+  "prevLesson": "02-ferramentas-qualidade"
+}

@@ -825,5 +825,9 @@
   "routes.escola.curso.empreendedorismo.tagline": "إدارة الأعمال · العقلية، BMC، MVP، عرض المستثمرين",
   "routes.escola.quiz.epq.title": "اختبار: ريادة الأعمال وخطة العمل",
   "routes.escola.quiz.epq.description": "اختبر معرفتك بعقلية ريادة الأعمال، BMC، التحقق من المشكلة، MVP، خطة العمل وعرض المستثمرين. 10 أسئلة.",
-  "routes.aulas.curso.empreendedorismo": "ريادة الأعمال وخطة العمل"
+  "routes.aulas.curso.empreendedorismo": "ريادة الأعمال وخطة العمل",
+  "routes.escola.curso.gestao-qualidade.title": "إدارة الجودة الشاملة",
+  "routes.escola.curso.gestao-qualidade.description": "كيف تبني ثقافة جودة عبر كامل المنظمة: مبادئ ديمينغ وجوران وإيشيكاوا وكروسبي، الأدوات (باريتو، إيشيكاوا، SPC، FMEA)، أنظمة إدارة ISO 9001/14001/45001 مع PDCA والتدقيق، وجودة الخدمات عبر ServQual وlean services وsix sigma ونموذج EFQM.",
+  "routes.escola.curso.gestao-qualidade.tagline": "إدارة الأعمال · TQM، الأدوات، ISO 9001 والتميز في الخدمات",
+  "routes.aulas.curso.gestao-qualidade": "إدارة الجودة الشاملة"
 }

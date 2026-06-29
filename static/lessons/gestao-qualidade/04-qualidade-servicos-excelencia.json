@@ -1,0 +1,288 @@
+{
+  "id": "04-qualidade-servicos-excelencia",
+  "title": "4. Qualidade em Serviços e Excelência Operacional: ServQual, Lean Services, Six Sigma e EFQM",
+  "courseSlug": "gestao-qualidade",
+  "lessonNumber": 4,
+  "description": "Como aplicar qualidade ao sector dos serviços, onde o 'produto' é intangível, heterogéneo e produzido/consumido em simultâneo. Modelo ServQual, 5 gaps de Parasuraman, lean services, Six Sigma com DMAIC, e o modelo EFQM de excelência europeia.",
+  "audio": "Nesta quarta e última lição vamos sair da fábrica e entrar no mundo dos serviços — onde 70% do PIB das economias modernas está. Vamos perceber porque é que os serviços são diferentes dos produtos (intangibilidade, heterogeneidade, simultaneidade), aplicar o modelo ServQual com os seus 5 gaps, levar o lean para serviços via mapeamento de valor, e usar DMAIC para resolver problemas complexos. Vamos também conhecer o modelo EFQM, o padrão europeu de excelência organizacional.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["ServQual", "lean services", "Six Sigma", "DMAIC", "EFQM", "5 gaps", "intangibilidade"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Por que os Serviços são Diferentes dos Produtos"
+    },
+    {
+      "type": "p",
+      "text": "Os serviços têm três características que os distinguem dos produtos manufacturados, e que tornam a qualidade mais difícil de garantir: intangibilidade (não se pode tocar ou ver antes da compra), heterogeneidade (variação entre prestações, mesmo do mesmo serviço pelo mesmo prestador) e simultaneidade (produção e consumo ocorrem ao mesmo tempo — não há stock). Estas três características exigem abordagens específicas."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Intangibilidade: cliente não consegue testar antes de comprar — confiança e reputação são tudo",
+        "Heterogeneidade: cada momento do serviço é único (médico, empregado de balcão, professor — todos variam)",
+        "Simultaneidade: produção e consumo ao mesmo tempo — não se corrige depois",
+        "Perishability: serviço não-produzido perde-se (assento de avião vazio nunca mais é vendido)",
+        "Estatísticas: 70-80% do PIB das economias desenvolvidas vem de serviços",
+        "Implicação: as ferramentas da qualidade industrial (SPC, FMEA) aplicam-se mas precisam de adaptação"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Qualidade de Serviço — definições e modelos"
+    },
+    {
+      "type": "p",
+      "text": "Qualidade de serviço é a diferença entre expectativas e percepções do cliente. Se o serviço supera as expectativas, é surpresa positiva. Se fica aquém, é falha. Parasuraman, Berry e Zeithaml publicaram em 1988 o modelo SERVQUAL (Service Quality) com 5 dimensões e 22 itens — tornou-se a referência mundial para medir qualidade percebida em serviços."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Tangibilidade: aparência física das instalações, equipamento, pessoal, materiais",
+        "Confiabilidade (reliability): capacidade de prestar o serviço prometido de forma fiável e cuidadosa",
+        "Capacidade de resposta (responsiveness): disposição para ajudar o cliente e fornecer o serviço prontamente",
+        "Garantia (assurance): competência e cortesia dos funcionários, segurança, inspiração de confiança",
+        "Empatia (empathy): cuidado individualizado, atenção ao cliente"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Os 5 Gaps do Modelo ServQual"
+    },
+    {
+      "type": "p",
+      "text": "Parasuraman identificou 5 gaps que explicam por que razão a qualidade percebida pelos clientes frequentemente fica aquém das expectativas. O Gap 5 (qualidade percebida vs esperada) é o resultado — os outros 4 são causas geríveis pela gestão."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Gap 1: Expectativas dos gestores vs expectativas dos clientes (a gestão não percebe o que o cliente quer)",
+        "Gap 2: Especificações da qualidade vs expectativas dos clientes (normas internas não captam o cliente)",
+        "Gap 3: Serviço prestado vs especificações (operacional — falha de execução)",
+        "Gap 4: Comunicação externa vs serviço prestado (promessas exageradas — marketing vs realidade)",
+        "Gap 5: Qualidade percebida vs esperada (gap final — síntese de todos os anteriores)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Gap 5 = f(Gap 1, Gap 2, Gap 3, Gap 4). A gestão tem 4 alavancas para reduzir o gap final. Pesquisar regularmente o cliente (Gap 1), definir standards claros (Gap 2), treinar e motivar equipas (Gap 3), ser honesto nas promessas (Gap 4)."
+    },
+    {
+      "type": "h2",
+      "text": "ServQual em Prática — Implementação"
+    },
+    {
+      "type": "p",
+      "text": "ServQual clássico usa 22 itens (5-6 por dimensão), pedindo ao cliente para avaliar importância e desempenho em escala Likert 1-7. A diferença (percepção - expectativa) é o gap em cada item. Alternativa mais usada hoje: SERVPERF (só percepção, sem expectativas) — mais simples e igualmente preditivo."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "ServQual: 22 itens, avalia expectativa E percepção, score = percepção - expectativa",
+        "SERVPERF: 22 itens, só percepção — mais usado por ser mais curto",
+        "NPS (Net Promoter Score): pergunta única 'recomendaria?' de 0-10, complementa ServQual",
+        "Mistery shopping: avaliação por observador treinado como cliente",
+        "Análise de reclamações: ouvir a 'voz do cliente' em texto livre",
+        "Frequência: pelo menos semestral em serviços com alto contacto (hotelaria, saúde, retalho)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Lean Services — Lean para Serviços"
+    },
+    {
+      "type": "p",
+      "text": "Lean Thinking, nascido na Toyota (Womack & Jones publicaram em 1996 'Lean Thinking'), aplica-se perfeitamente aos serviços com algumas adaptações. O conceito central é o mesmo: criar valor para o cliente e eliminar tudo o que é desperdício (muda em japonês). Os 8 tipos de desperdício aplicam-se, com tradução específica para serviços."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "1. Defeitos: retrabalho, correcções, reclamações",
+        "2. Sobreprodução: produzir mais do que o cliente precisa (em serviços: tempos vazios de staff)",
+        "3. Esperas: cliente espera ou funcionário espera por informação/decisão",
+        "4. Talento não utilizado: subaproveitar competências das pessoas",
+        "5. Transporte: movimento desnecessário de informação, papéis, pessoas",
+        "6. Movimento: deslocações desnecessárias (procura de ficheiros, sistemas)",
+        "7. Sobreprocessamento: fazer mais do que o cliente valoriza (relatórios que ninguém lê)",
+        "8. Inventário: em serviços aplica-se a informação por processar, pedidos em fila"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Ferramentas lean em serviços"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Value Stream Mapping (VSM): mapear o fluxo do cliente de ponta a ponta",
+        "5S: Seiri (organizar), Seiton (ordenar), Seiso (limpar), Seiketsu (padronizar), Shitsuke (disciplinar)",
+        "Kanban: sistema visual de puxar trabalho (ex: fila de processos visível)",
+        "Kaizen: melhoria contínua com workshops rápidos (3-5 dias)",
+        "Gemba walks: gestão vai ao 'terreno' observar e ouvir — não investigar por relatórios",
+        "Poka-yoke: mecanismos anti-erro (em serviços: validações automáticas, checklists obrigatórios)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Six Sigma e DMAIC"
+    },
+    {
+      "type": "p",
+      "text": "Six Sigma, criado pela Motorola em 1985 e celebrizado pela GE com Jack Welch, é uma metodologia de melhoria baseada em estatística. O objectivo é reduzir a variação dos processos a um nível em que existam 3.4 defeitos por milhão de oportunidades (DPMO) — o nível '6 sigma'. A metodologia padrão é DMAIC — Define, Measure, Analyze, Improve, Control — aplicada a problemas complexos que precisam de análise quantitativa."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Define (definir): âmbito do projecto, voz do cliente (VOC), CTQs, SIPOC",
+        "Measure (medir): baseline do problema, validar sistema de medição (MSA), recolha de dados",
+        "Analyze (analisar): análise de causa-raiz com ferramentas estatísticas (regressão, ANOVA, testes de hipótese)",
+        "Improve (melhorar): experimentar soluções, DOE se necessário, seleccionar a melhor, pilot",
+        "Control (controlar): padronizar (procedimentos, formação), SPC, plano de monitorização",
+        "Belts: Yellow (básico), Green (lidera projectos locais), Black (projectos complexos, mentores), Master Black (programa organizacional)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Lean Six Sigma — a integração"
+    },
+    {
+      "type": "p",
+      "text": "Lean Six Sigma combina o melhor dos dois mundos: a velocidade do lean para eliminar desperdício e a profundidade estatística do Six Sigma para resolver variação. Em serviços, é a metodologia mais usada para projectos de melhoria de média-alta complexidade. Aplica-se bem a processos administrativos, financeiros, saúde, hotelaria, logística."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Lean para: identificar desperdício visível, reduzir lead time, melhorar fluxo",
+        "Six Sigma para: entender variação, identificar causa-raiz estatística, optimizar",
+        "DMAIC + VSM: VSM para mapear estado actual e futuro; DMAIC para resolver problemas específicos",
+        "Ferramentas comuns: SIPOC, mapa de fluxo, fishbone, FMEA, DOE, SPC",
+        "Exemplo: reduzir tempo de aprovação de crédito de 7 para 2 dias (lean + Six Sigma)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Modelo EFQM de Excelência"
+    },
+    {
+      "type": "p",
+      "text": "A European Foundation for Quality Management (EFQM) criou em 1991 o Modelo de Excelência, usado actualmente por mais de 30.000 organizações na Europa. É o equivalente europeu do Baldrige americano e do Deming japonês. O modelo actualizado (2025) tem 8 critérios — 5 'enablers' (como faz) e 3 'results' (o que alcança) — e baseia-se na RADAR: Results, Approach, Deploy, Assess, Refine."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Enabler 1: Liderança e propósito",
+        "Enabler 2: Estratégia e plano de transformação",
+        "Enabler 3: Cultura e engagement das pessoas",
+        "Enabler 4: Partnerships e recursos",
+        "Enabler 5: Processos, produtos e serviços",
+        "Result 1: Resultados nos clientes",
+        "Result 2: Resultados nas pessoas",
+        "Result 3: Resultados no negócio e na sociedade"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Lógica RADAR"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "R — Results: definir resultados aspiracionais, ambiciosos e relevantes",
+        "A — Approach: definir abordagem sólida, com fundamento e lógica clara",
+        "D — Deploy: implementar a abordagem de forma estruturada e consistente",
+        "A — Assess: monitorizar e analisar resultados vs objectivos",
+        "R — Refine: aprender com a análise e refinar a abordagem continuamente"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Customer Journey e Momentos da Verdade"
+    },
+    {
+      "type": "p",
+      "text": "Customer Journey Map é uma representação visual da experiência completa do cliente, do primeiro contacto ao pós-venda. Identifica os 'momentos da verdade' — momentos críticos onde o cliente forma ou confirma a sua percepção de qualidade. Jan Carlzon, CEO da SAS Airlines, popularizou o conceito: 'um momento da verdade negativo apaga dez positivos'."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Etapas: awareness, consideration, purchase, onboarding, uso, suporte, advocacy",
+        "Touchpoints: canais onde há interacção (site, app, telefone, balcão, email)",
+        "Momentos da verdade ZMOT (Zero Moment of Truth): pesquisa online ANTES de comprar",
+        "FMOT (First Moment of Truth): primeiro contacto com o produto/serviço",
+        "SMOT (Second Moment of Truth): uso efectivo",
+        "UMOT (Ultimate Moment of Truth): partilha com outros (boca-a-boca, reviews)",
+        "TMOT (Third Moment of Truth): pós-venda, suporte"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Gestão da Experiência do Cliente (CX)"
+    },
+    {
+      "type": "p",
+      "text": "CX — Customer Experience — vai além da qualidade do serviço: engloba toda a experiência, incluindo emoções. Uma viagem pode ter qualidade técnica perfeita (avião no horário, comida boa, limpeza) e ter uma péssima experiência (atendente rude, sistema confuso, atraso sem comunicação). As empresas líderes medem CX com NPS, CES (Customer Effort Score) e CSAT (Customer Satisfaction)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "CSAT (Customer Satisfaction): avaliação directa da satisfação — 'quão satisfeito ficou?'",
+        "NPS (Net Promoter Score): 'recomendaria?' de 0-10 — promotores (9-10) menos detractores (0-6)",
+        "CES (Customer Effort Score): 'quão fácil foi resolver?' — serviços com baixo esforço têm maior lealdade",
+        "Customer Effort: pesquisa da Gartner mostra que 94% dos clientes com baixa-fricção voltam a comprar",
+        "VoC (Voice of Customer): integrar todos os canais de feedback num dashboard único"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Insight de CX: reduzir esforço do cliente (CES) tem correlação mais forte com lealdade do que aumentar satisfação (CSAT). Investir em auto-serviço, FAQ claras, first-contact resolution compensa mais do que brindes."
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: o profissional de qualidade em serviços"
+    },
+    {
+      "type": "p",
+      "text": "Trabalhar qualidade em serviços exige um perfil diferente do profissional industrial: forte componente de análise de dados do cliente, capacidade de ouvir activamente, entendimento do factor humano, e visão sistémica. As ferramentas são as mesmas (Pareto, Ishikawa, FMEA) mas aplicadas com lentes de serviço. O objectivo é o mesmo: entregar valor ao cliente de forma consistente e melhorável continuamente."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Perfil desejável: analista de dados + comunicador + facilitador + visionário",
+        "Ferramentas core: ServQual, NPS/CES, Lean, DMAIC, customer journey mapping",
+        "Frameworks de excelência: EFQM, Baldrige, Deming Prize",
+        "KPIs típicos: CSAT, NPS, CES, first-contact resolution, tempo médio de resposta, COPQ",
+        "Cultura: cliente no centro, dados nas decisões, melhoria contínua como hábito"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Onde aplicar este conhecimento"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Hotelaria e turismo: ServQual + customer journey + momento da verdade",
+        "Saúde: ISO 9001 + segurança do doente + lean healthcare",
+        "Retalho: NPS + mystery shopping + lean operations",
+        "Serviços financeiros: Six Sigma + lean + compliance ISO 27001",
+        "Administração pública: EFQM + lean + simplificação administrativa",
+        "Educação: ISO 21001 (sistemas de gestão para organizações de educação)"
+      ]
+    }
+  ],
+  "keyPoints": [
+    "Serviços: intangibilidade + heterogeneidade + simultaneidade — exigem abordagens específicas",
+    "ServQual 5 dimensões: tangibilidade, confiabilidade, capacidade de resposta, garantia, empatia",
+    "5 Gaps de Parasuraman: gestão→cliente, normas→cliente, execução, comunicação, percepção",
+    "Lean Services: 8 desperdícios adaptados + VSM, 5S, kanban, kaizen, gemba, poka-yoke",
+    "Six Sigma DMAIC: Define-Measure-Analyze-Improve-Control + belts (Yellow/Green/Black)",
+    "EFQM 2025: 8 critérios (5 enablers + 3 results), lógica RADAR",
+    "CX: CSAT + NPS + CES — CES (esforço) tem maior correlação com lealdade",
+    "Momentos da verdade: ZMOT (pesquisa) + FMOT (compra) + SMOT (uso) + UMOT (advocacy)"
+  ],
+  "quizSlug": "gqq",
+  "nextLesson": null,
+  "prevLesson": "03-sistemas-gestao-iso"
+}

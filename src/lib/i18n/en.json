@@ -825,5 +825,9 @@
   "routes.escola.curso.empreendedorismo.tagline": "Business Administration · Mindset, BMC, MVP, investor pitch",
   "routes.escola.quiz.epq.title": "Quiz: Entrepreneurship and Business Plan",
   "routes.escola.quiz.epq.description": "Test your knowledge on entrepreneurial mindset, Business Model Canvas, problem validation, MVP, business plan and investor pitch. 10 questions, 4 options each, with detailed explanation.",
-  "routes.aulas.curso.empreendedorismo": "Entrepreneurship and Business Plan"
+  "routes.aulas.curso.empreendedorismo": "Entrepreneurship and Business Plan",
+  "routes.escola.curso.gestao-qualidade.title": "Total Quality Management",
+  "routes.escola.curso.gestao-qualidade.description": "How to build a quality culture across the entire organisation: Deming, Juran, Ishikawa and Crosby principles, tools (Pareto, fishbone, SPC, FMEA), ISO 9001/14001/45001 management systems with PDCA and audits, and service quality via ServQual, lean services, six sigma and the EFQM model.",
+  "routes.escola.curso.gestao-qualidade.tagline": "Business Administration · TQM, tools, ISO 9001 and service excellence",
+  "routes.aulas.curso.gestao-qualidade": "Total Quality Management"
 }

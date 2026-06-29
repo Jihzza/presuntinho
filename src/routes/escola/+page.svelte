@@ -390,6 +390,18 @@
                                   lessonCount: 4,
                                   quizCount: 1,
                                   badge: 'Uni'
+                                },
+                                {
+                                  slug: 'gestao-qualidade',
+                                  title: 'Gestão da Qualidade Total',
+                                  tagline: 'Business Administration · TQM, ferramentas, ISO 9001 e excelência em serviços',
+                                  description:
+                                    'Como construir uma cultura de qualidade que atravessa toda a organização: princípios de Deming, Juran, Ishikawa e Crosby, ferramentas (Pareto, fishbone, SPC, FMEA), sistemas de gestão ISO 9001/14001/45001 com PDCA e auditorias, e qualidade em serviços via ServQual, lean services, six sigma e modelo EFQM.',
+                                  icon: '🎯',
+                                  color: '#0ea5e9',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
                                 }
                               ];
 </script>

@@ -1,0 +1,119 @@
+{
+  "id": "gqq",
+  "title": "Quiz: Gestão da Qualidade Total",
+  "description": "Testa os teus conhecimentos sobre TQM, gurus da qualidade, ferramentas (Pareto, Ishikawa, SPC, FMEA, 5 Whys), ISO 9001/14001/45001, ServQual, lean services, Six Sigma DMAIC e modelo EFQM. 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "courseSlug": "gestao-qualidade",
+  "questions": [
+    {
+      "q": "Qual é a contribuição central de W. Edwards Deming para a Gestão da Qualidade Total?",
+      "opts": [
+        "Os 14 pontos da gestão pela qualidade e o ciclo PDCA",
+        "A Trilogia da Qualidade (planear, controlar, melhorar)",
+        "O conceito de Custo da Não-Qualidade (COPQ)",
+        "O Diagrama de Causa-Efeito (fishbone)"
+      ],
+      "correct": 0,
+      "explanation": "Deming contribuiu com os 14 pontos para a gestão da qualidade e o ciclo PDCA (Plan-Do-Check-Act), herdado de Walter Shewhart. Juran criou a Trilogia, Crosby o COPQ, e Ishikawa o fishbone."
+    },
+    {
+      "q": "Numa carta de controlo SPC, um ponto que cai fora dos limites de controlo (±3σ) indica:",
+      "opts": [
+        "Que o processo está estável e a variar normalmente",
+        "Que existe uma causa especial a investigar imediatamente",
+        "Que os limites estão mal definidos",
+        "Que a amostra é demasiado pequena"
+      ],
+      "correct": 1,
+      "explanation": "Pontos fora dos limites de controlo (±3σ) indicam variação por causa especial — algo atribuível e anormal que requer investigação imediata. Quando todos os pontos estão dentro, a variação é só por causas comuns (inerentes ao sistema)."
+    },
+    {
+      "q": "Qual é o RPN (Risk Priority Number) de um modo de falha com Severidade=8, Ocorrência=5 e Detecção=6?",
+      "opts": [
+        "19",
+        "120",
+        "240",
+        "360"
+      ],
+      "correct": 2,
+      "explanation": "RPN = S × O × D = 8 × 5 × 6 = 240. Tipicamente, considera-se prioridade de actuação quando RPN > 100 ou quando Severidade > 8 (independentemente do RPN total)."
+    },
+    {
+      "q": "A versão actual da ISO 9001 (2015) introduziu qual grande mudança em relação à versão 2008?",
+      "opts": [
+        "Voltou a exigir um manual de qualidade obrigatório",
+        "Adoptou a estrutura HLS e o pensamento baseado em risco",
+        "Eliminou a abordagem por processos",
+        "Tornou a certificação obrigatória para todas as empresas"
+      ],
+      "correct": 1,
+      "explanation": "A ISO 9001:2015 adoptou a High Level Structure (HLS) de 10 cláusulas — comum a todas as normas ISO de gestão — e introduziu o pensamento baseado em risco (risk-based thinking). Aboliu a lista rígida de '6 documentos obrigatórios'."
+    },
+    {
+      "q": "No modelo ServQual de Parasuraman, Berry e Zeithaml, quantas dimensões tem e quais são?",
+      "opts": [
+        "3 dimensões: produto, preço, distribuição",
+        "5 dimensões: tangibilidade, confiabilidade, capacidade de resposta, garantia, empatia",
+        "7 dimensões: as 7 ferramentas de Ishikawa",
+        "10 dimensões: as 10 cláusulas da ISO 9001"
+      ],
+      "correct": 1,
+      "explanation": "ServQual tem 5 dimensões (22 itens no total): Tangibilidade, Confiabilidade, Capacidade de Resposta, Garantia (Assurance) e Empatia. Tornou-se o padrão global para medir qualidade percebida em serviços."
+    },
+    {
+      "q": "Qual é o Gap 5 do modelo ServQual?",
+      "opts": [
+        "Expectativas dos gestores vs expectativas dos clientes",
+        "Especificações da qualidade vs expectativas dos clientes",
+        "Serviço prestado vs especificações",
+        "Qualidade percebida vs qualidade esperada (gap final)"
+      ],
+      "correct": 3,
+      "explanation": "Gap 5 = qualidade percebida MENOS qualidade esperada pelo cliente. É o gap final, síntese dos outros 4 (gestão→cliente, normas→cliente, execução, comunicação). É o gap que o cliente sente."
+    },
+    {
+      "q": "No método DMAIC do Six Sigma, em que fase se realizam testes de hipótese, ANOVA e regressão para identificar a causa-raiz estatística?",
+      "opts": [
+        "Define",
+        "Measure",
+        "Analyze",
+        "Improve"
+      ],
+      "correct": 2,
+      "explanation": "Na fase Analyze (Analisar) aplicam-se ferramentas estatísticas para identificar causa-raiz: testes de hipótese, ANOVA, regressão, análise de variabilidade, entre outras. Define é âmbito, Measure é baseline, Improve é solução."
+    },
+    {
+      "type": "regular",
+      "q": "Qual é a hierarquia correcta de controlos em segurança e saúde ocupacional (ISO 45001)?",
+      "opts": [
+        "EPI → controlos engenharia → eliminar → controlos administrativos → substituir",
+        "Eliminar → substituir → controlos engenharia → controlos administrativos → EPI",
+        "Controlos administrativos → EPI → eliminar → substituir → controlos engenharia",
+        "Substituir → eliminar → EPI → controlos engenharia → controlos administrativos"
+      ],
+      "correct": 1,
+      "explanation": "A hierarquia ISO 45001 é: 1) Eliminar o perigo; 2) Substituir por algo menos perigoso; 3) Controlos de engenharia (proteções físicas); 4) Controlos administrativos (procedimentos, formação); 5) EPI (último recurso). EPI sozinho é insuficiente."
+    },
+    {
+      "q": "Quantas cláusulas tem a estrutura HLS (High Level Structure) comum a todas as normas ISO de sistemas de gestão?",
+      "opts": [
+        "5",
+        "7",
+        "10",
+        "14"
+      ],
+      "correct": 2,
+      "explanation": "A estrutura HLS tem 10 cláusulas (4-10 obrigatórias, 1-3 introdutórias). É comum a ISO 9001, 14001, 45001, 27001, 50001 e outras. Permite integração fácil de múltiplas normas num Sistema Integrado de Gestão (SIG)."
+    },
+    {
+      "q": "No modelo EFQM 2025, quantos critérios tem no total e qual é a lógica de avaliação?",
+      "opts": [
+        "5 critérios, lógica PDCA",
+        "7 critérios, lógica DMAIC",
+        "8 critérios (5 enablers + 3 results), lógica RADAR",
+        "14 critérios, lógica dos 14 pontos de Deming"
+      ],
+      "correct": 2,
+      "explanation": "O modelo EFQM 2025 tem 8 critérios: 5 enablers (Liderança, Estratégia, Cultura, Partnerships, Processos) e 3 results (Clientes, Pessoas, Negócio/Sociedade). A lógica de avaliação é RADAR: Results, Approach, Deploy, Assess, Refine."
+    }
+  ]
+}

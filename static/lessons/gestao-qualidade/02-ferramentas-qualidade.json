@@ -1,0 +1,226 @@
+{
+  "id": "02-ferramentas-qualidade",
+  "title": "2. Ferramentas da Qualidade: Pareto, Ishikawa, SPC, FMEA e Análise de Causa Raiz",
+  "courseSlug": "gestao-qualidade",
+  "lessonNumber": 2,
+  "description": "As ferramentas essenciais que qualquer profissional de qualidade deve dominar: as 7 ferramentas clássicas de Ishikawa, cartas de controlo SPC, FMEA, 5 Whys, e como combiná-las para resolver problemas complexos. Estudo de caso prático de uma linha de produção.",
+  "audio": "Nesta segunda lição vamos abrir a caixa de ferramentas do profissional de qualidade. Vamos percorrer as 7 ferramentas clássicas de Ishikawa, perceber como uma carta de controlo SPC detecta quando um processo está fora de controlo, construir um FMEA peça por peça, e usar os 5 Whys para chegar à causa-raiz. Tudo com um caso prático de uma linha de produção avícola no norte de Portugal — falhas em embalagem que vamos resolver com Pareto + Ishikawa + SPC.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Pareto", "Ishikawa", "SPC", "FMEA", "5 Whys", "7 ferramentas"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "As 7 Ferramentas Clássicas da Qualidade"
+    },
+    {
+      "type": "p",
+      "text": "Ishikawa definiu em 1968 as 7 ferramentas que qualquer operador, supervisor ou engenheiro de qualidade deve dominar. São ferramentas estatísticas e visuais simples, que não exigem software caro — papel, lápis e pensamento claro bastam para começar. A vantagem é que tornam problemas complexos visíveis e partilháveis."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "1. Fluxograma (flowchart): mapear o processo passo a passo, identificar esperas, reprocessos, gargalos",
+        "2. Folha de verificação (check sheet): tabela estruturada para recolha de dados — quem, o quê, quando, onde",
+        "3. Histograma: distribuição de frequência de uma variável — mostra variação e centralidade",
+        "4. Diagrama de Pareto: barras ordenadas por frequência + linha cumulativa — focar nos 'poucos vitais'",
+        "5. Diagrama de causa-efeito (Ishikawa/fishbone): categorizar causas potenciais em 6M",
+        "6. Carta de controlo (control chart): série temporal com limites superior/inferior para detectar variação anormal",
+        "7. Diagrama de dispersão (scatter): correlação entre duas variáveis — preço vs qualidade, temperatura vs defeitos"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Estas 7 ferramentas resolvem 90% dos problemas práticos. Quando não chegam, passamos para ferramentas avançadas como FMEA, DOE (Design of Experiments) ou análise de regressão."
+    },
+    {
+      "type": "h2",
+      "text": "Diagrama de Pareto — focar nos 'poucos vitais'"
+    },
+    {
+      "type": "p",
+      "text": "O Princípio de Pareto, herdado da economia (Vilfredo Pareto observou em 1906 que 80% da riqueza estava em 20% da população), aplica-se à maioria dos fenómenos em qualidade: 80% dos defeitos vêm de 20% das causas. O diagrama de Pareto ordena categorias por frequência e adiciona uma linha cumulativa — quando a linha cruza os 80%, identificámos os 'poucos vitais' onde devemos actuar primeiro."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Eixo X: categorias do problema (tipos de defeito, áreas, máquinas, turnos)",
+        "Eixo Y esquerdo: frequência absoluta de cada categoria",
+        "Eixo Y direito: percentagem cumulativa (0-100%)",
+        "Ordenar sempre da maior para a menor frequência",
+        "Actuar nos 2-3 primeiros (que tipicamente somam 70-80% do problema)",
+        "NÃO tentar resolver tudo de uma vez — atacar os poucos vitais, voltar a medir, iterar"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Exemplo prático: defeitos numa linha de produção avícola"
+    },
+    {
+      "type": "p",
+      "text": "Numa linha de embalagem de frango numa fábrica do norte de Portugal, durante uma semana foram registados 500 defeitos. As categorias e frequências: rótulo mal colado (180), pacote furado (110), peso incorrecto (90), código de barras ilegível (60), cor alterada (40), outros (20). O Pareto mostra que rótulo + pacote = 58% do problema. Foco: por que razão o rótulo está a descolar?"
+    },
+    {
+      "type": "h2",
+      "text": "Diagrama de Ishikawa (espinha de peixe) — categorizar causas"
+    },
+    {
+      "type": "p",
+      "text": "Quando identificámos o problema (rótulo descola), o próximo passo é listar todas as causas potenciais. O fishbone categoriza em 6M (ou 4M em serviços): Método, Mão-de-obra, Máquina, Material, Medição, Meio-ambiente. Cada categoria vira uma 'espinha' do diagrama, e dentro listamos as causas. No fim, escolhemos as 3-5 mais prováveis e validamos com dados."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Método: procedimento de colagem está correcto? Tempo de pressão? Temperatura?",
+        "Mão-de-obra: operadores treinados? Hábitos diferentes entre turnos? Fadiga?",
+        "Máquina: aplicador de rótulos calibrado? Pressão uniforme? Velocidade excessiva?",
+        "Material: tipo de rótulo adequado à temperatura do produto? Cola com prazo válido? Superfície do pacote limpa?",
+        "Medição: como se detecta descolamento? Inspecção visual a olho nu? Amostragem?",
+        "Meio-ambiente: humidade da sala? Temperatura ambiente? Poeira?"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Os 5 Whys — chegar à causa-raiz"
+    },
+    {
+      "type": "p",
+      "text": "Técnica da Toyota Production System: perguntar 'porquê?' cinco vezes (ou até encontrar a causa-raiz sistémica). Não é uma regra rígida — às vezes a resposta vem em 3 porquês, outras precisa de 7. O objectivo é não parar em sintomas."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Problema: rótulo descola 180 vezes por semana",
+        "Porquê? A cola não adere",
+        "Porquê? O tipo de cola é sensível à humidade",
+        "Porquê? Comprámos cola mais barata no início do ano (decisão comercial)",
+        "Porquê? O fornecedor mudou de fórmula sem avisar",
+        "Porquê? Não temos procedimento de qualificação de fornecedores críticos",
+        "Causa-raiz: falta de controlo de fornecedores — a solução é implementar qualificação, não comprar cola diferente"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Regra de ouro dos 5 Whys: a primeira causa que parece 'a razão' raramente é a causa-raiz. Continue a perguntar até chegar a uma falha sistémica (falta de procedimento, falta de formação, falha de design) — não até uma pessoa."
+    },
+    {
+      "type": "h2",
+      "text": "SPC — Statistical Process Control"
+    },
+    {
+      "type": "p",
+      "text": "Walter Shewhart, nos anos 20, separou dois tipos de variação nos processos: variação por causas comuns (inerente ao sistema) e variação por causas especiais (atribuíveis, anormais). O SPC usa cartas de controlo para distinguir os dois. Se todos os pontos estão dentro dos limites de controlo, o processo está 'estável' — a variação é só por causas comuns. Se um ponto cai fora, há uma causa especial a investigar imediatamente."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Limite superior de controlo (LSC) = média + 3 × desvio padrão",
+        "Limite inferior de controlo (LIC) = média − 3 × desvio padrão",
+        "Zona C: entre média e média ± 1σ (68% dos pontos em distribuição normal)",
+        "Zona B: entre média ± 1σ e média ± 2σ (95%)",
+        "Zona A: entre média ± 2σ e média ± 3σ (99.7%)",
+        "Regras de Western Electric (ou Nelson): 1 ponto fora de 3σ, 7 pontos consecutivos do mesmo lado, 2 de 3 na zona A, etc."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Tipos de cartas de controlo"
+    },
+    {
+      "type": "p",
+      "text": "A escolha da carta depende do tipo de dados. Para variáveis contínuas (peso, temperatura, comprimento) usam-se cartas X-barra (médias de subgrupos), R (amplitude) ou I-MR (indivíduos e amplitude móvel). Para atributos (passa/falha, número de defeitos) usam-se cartas p (proporção), c (contagem) ou u (taxa por unidade)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "X-barra e R: subgrupos de 2-5 medições, fabricados em condições similares",
+        "I-MR: produção lenta ou em lotes únicos (cada peça é um subgrupo)",
+        "p-chart: proporção de defeituosos em amostras de tamanho variável",
+        "c-chart: número de defeitos por unidade (área, comprimento fixo)",
+        "u-chart: taxa de defeitos por unidade variável"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "FMEA — Failure Mode and Effects Analysis"
+    },
+    {
+      "type": "p",
+      "text": "Análise de Modos de Falha e seus Efeitos, criada pela NASA nos anos 60 para o programa Apollo, é uma ferramenta sistemática para identificar antecipadamente formas como um produto ou processo pode falhar, e priorizar acções de mitigação. Calcula-se o RPN — Risk Priority Number — como produto de Severidade × Ocorrência × Detecção."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Severidade (S): 1 (sem efeito) a 10 (perigo para segurança)",
+        "Ocorrência (O): 1 (muito raro) a 10 (muito frequente)",
+        "Detecção (D): 1 (muito detectável) a 10 (impossível detectar antes de chegar ao cliente)",
+        "RPN = S × O × D (range típico: 1-1000)",
+        "Acção prioritária em modos com RPN > 100 ou S > 8 (independentemente do RPN)",
+        "Reavaliar FMEA sempre que há mudança de design, processo ou fornecedor — é um documento vivo"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Exemplo FMEA numa linha de montagem"
+    },
+    {
+      "type": "p",
+      "text": "Modo de falha: parafuso não apertado. Efeito: peças soltas em uso, risco para o cliente. Severidade: 7. Causa: operador distraído, sequência incorrecta. Ocorrência: 4. Detecção actual: controlo visual a 10% — difícil. Detecção: 7. RPN = 7×4×7 = 196. Acção: investir em chave de torque com controlo automático (Detecção 7→2) e checklist visual obrigatório (Ocorrência 4→2). RPN re-calculado: 7×2×2 = 28."
+    },
+    {
+      "type": "h2",
+      "text": "Combinação prática das ferramentas"
+    },
+    {
+      "type": "p",
+      "text": "As ferramentas não competem — compõem-se. Um fluxo típico: (1) Folha de verificação para recolher dados → (2) Pareto para priorizar → (3) Ishikawa para brainstorm de causas → (4) 5 Whys para causa-raiz → (5) FMEA para priorizar riscos da solução → (6) SPC para verificar se a acção estabilizou o processo. Este é o método 8D profissional de resolução de problemas, usado em todas as indústrias regulamentadas."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "8D (Eight Disciplines): padrão da indústria automóvel (Ford, GM, Toyota)",
+        "D1-D2: constituir equipa, definir problema",
+        "D3-D5: implementar contenção, causa-raiz, acção correctiva permanente",
+        "D6-D8: implementar, prevenir recorrência, reconhecer equipa"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Erro comum: usar Ishikawa sem dados. Brainstorm sem evidência gera soluções caras que não resolvem. Faça sempre Pareto ANTES de Ishikawa — comece pelos problemas que têm impacto real."
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: o kit de ferramentas do profissional de qualidade"
+    },
+    {
+      "type": "p",
+      "text": "Dominar as 7 ferramentas clássicas é o chão de qualquer profissional de qualidade. Sobre elas constrói-se: SPC para monitorização contínua, FMEA para prevenção de design, DOE (Design of Experiments) para optimizar processos complexos, e análise de regressão para entender relações entre variáveis. A ferramenta certa depende do problema — mas todas elas partilham o mesmo princípio: dados, não palpites."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Pareto: priorizar",
+        "Ishikawa: brainstorming estruturado",
+        "5 Whys: causa-raiz",
+        "SPC: monitorização",
+        "FMEA: prevenção",
+        "DOE: optimização",
+        "Regressão: correlação"
+      ]
+    }
+  ],
+  "keyPoints": [
+    "As 7 ferramentas clássicas (fluxograma, folha verificação, histograma, Pareto, Ishikawa, carta controlo, dispersão) resolvem 90% dos problemas",
+    "Pareto: focar nos 'poucos vitais' (80/20)",
+    "Ishikawa fishbone: categorizar causas em 6M",
+    "5 Whys: chegar à causa-raiz sistémica, não sintomática",
+    "SPC separa variação por causas comuns (sistémicas) de causas especiais (atribuíveis)",
+    "FMEA prioriza por RPN = S × O × D; actuar quando RPN > 100 ou S > 8",
+    "Combinação prática: folha verificação → Pareto → Ishikawa → 5 Whys → FMEA → SPC (método 8D)"
+  ],
+  "quizSlug": "gqq",
+  "nextLesson": "03-sistemas-gestao-iso",
+  "prevLesson": "01-principios-tqm"
+}
