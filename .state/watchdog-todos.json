@@ -1,14 +1,30 @@
 {
-  "lastUpdated": "2026-06-29T22:55:51+01:00",
+  "lastUpdated": "2026-06-30T00:30:36.698748+02:00",
   "openItems": [
+    {
+      "id": "gap-096",
+      "category": "lição/curso",
+      "description": "Próxima cadeira BA: dispachable para Skander 2. Continua a entrega do 'faz cursos sobretudo / aulas sobretudo' do Daniel. Próximas cadeiras candidatas por relevância: BA #41 Estratégia de Marketing Internacional (já temos Comércio Internacional BA #39, próxima camada é Estratégia de Marketing Internacional); BA #42 Marketing Digital / E-Commerce; BA #43 Comportamento do Consumidor. Despachar gap-097 com conteúdo denso (4 lições + quiz 10 perguntas + i18n 5 locales + CATALOGUE wired) e smoke 9/9 URLs HTTP 200.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-30-00",
+      "created_at": "2026-06-30T00:30:36.698748+02:00"
+    },
+    {
+      "id": "gap-097",
+      "category": "i18n",
+      "description": "Pre-existing parity gap: write.head.title present only in pt-PT and ar. Missing in en/fr/tn. Provavelmente de uma feature antiga (write app) que foi traduzida em pt-PT/ar mas não propagada. Quick fix: dispatch para Skander 2 mechanical para adicionar em en/fr/tn (1 key × 3 locales = 3 entries).",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-30-00-i18n-audit",
+      "created_at": "2026-06-30T00:30:36.698748+02:00"
+    },
     {
       "id": "gap-091",
       "category": "i18n",
-      "description": "Auditoria sistemática de PT hardcoded em .svelte files — agora gap-093 (deleg_bc4ed9b3 Skander 1). Vai produzir .state/i18n-audit-gap-093.md com priorização (alta/média/baixa) + chaves i18n sugeridas. Depois de receber o relatório, despachar fixes gap-094a/b/c por prioridade.",
+      "description": "Auditoria sistemática de PT hardcoded em .svelte files — agora gap-093 (deleg_bc4ed9b3 Skander 1). Vai produzir .state/i18n-audit-gap-093.md com priorização (alta/média/baixa) + chaves i18n sugeridas. Depois de receber o relatório, despachar fixes gap-094a/b/c por prioridade. [tick-24: pt-PT fix de 2 aulas.curso keys + BadgeGrid i18n keys delivered em gap-095; gap-091 Skander 1 audit pendente de análise do i18n-audit-raw.json]",
       "severity": "média",
       "source": "watchdog-tick-2026-06-29-20",
       "created_at": "2026-06-29T21:05:00+02:00",
-      "updated_at": "2026-06-29T21:35:00+02:00"
+      "updated_at": "2026-06-30T00:30:36.698748+02:00"
     },
     {
       "id": "gap-028",
@@ -50,6 +66,21 @@
       "source": "watchdog-tick-2026-06-28-23",
       "created_at": "2026-06-28T23:25:00+02:00",
       "updated_at": "2026-06-29T04:35:00+02:00"
+    }
+  ],
+  "closedItems": [
+    {
+      "id": "gap-095",
+      "category": "i18n",
+      "description": "BadgeGrid 8 badges (16 strings name+description) hardcoded em BADGE_CATALOG. Despachada para Skander 2 (deleg_a2e4822f). Vai criar components.badge.catalog.{b7..b15}.{name,description} × 5 locales (80 entries) e refactor BadgeGrid para usar $t().",
+      "severity": "alta",
+      "source": "watchdog-tick-2026-06-29-23",
+      "created_at": "2026-06-29T22:55:51+01:00",
+      "done": true,
+      "sha": "d161df3",
+      "closed_at": "2026-06-30T00:30:36.698748+02:00",
+      "evidence": "fix(i18n): BadgeGrid.svelte removed hard-coded name/description; uses $t('components.badge.catalog.${id}.name') with PT_NAMES/PT_DESCRIPTIONS fallback. 5 locales (pt-PT/en/fr/tn/ar) now have 16 catalog keys (b7 Porquinha/Pig, b8 Coração/Heart, b9 Konami, b10 Palavra Mágica, b12 Pé/Foot, b13 Sala Secreta, b14 Leitor, b15 Quizzmaster × name+description). pt-PT also got routes.aulas.curso.gestao-qualidade + lideranca-coaching (parity fix). npm run check 0/0; i18n parity: only write.head.title gap remains (pre-existing).",
+      "updated_at": "2026-06-30T00:30:36.698748+02:00"
     },
     {
       "id": "gap-094",
@@ -57,18 +88,13 @@
       "description": "Cadeira BA #40: Estratégia Corporativa Avançada (slug estrategia-corporativa). Despachada para Skander 2 (deleg_e8f6de5b). 4 lições (PESTEL+Porter Five Forces+VRIO+SWOT+Ansoff+BCG+BSC+OKRs) + ecq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired.",
       "severity": "baixa",
       "source": "watchdog-tick-2026-06-29-23",
-      "created_at": "2026-06-29T22:55:51+01:00"
+      "created_at": "2026-06-29T22:55:51+01:00",
+      "done": true,
+      "sha": "d161df3",
+      "closed_at": "2026-06-30T00:30:36.698748+02:00",
+      "evidence": "feat(escola): BA #40 Estrategia Corporativa: 4 lessons (01-analise-externa-pestel-five-forces, 02-analise-interna-vrio-swot, 03-estrategias-corporativas, 04-implementacao-estrategica) + course.json (order:40) + ecq quiz 10 perguntas. CATALOGUE wired em escola/+page.svelte (slug), escola/curso/[slug] (4 lessons), aulas/+page.server.ts (icon+color). i18n 5 locales: routes.escola.curso.estrategia-corporativa.{title,description,tagline} + routes.aulas.curso.estrategia-corporativa.{title,tagline} + routes.escola.quiz.ecq.{title,description}. npm run check 0/0; /escola/curso/estrategia-corporativa/ → 200. Pushed fda921e..d161df3.",
+      "updated_at": "2026-06-30T00:30:36.698748+02:00"
     },
-    {
-      "id": "gap-095",
-      "category": "i18n",
-      "description": "BadgeGrid 8 badges (16 strings name+description) hardcoded em BADGE_CATALOG. Despachada para Skander 2 (deleg_a2e4822f). Vai criar components.badge.catalog.{b7..b15}.{name,description} × 5 locales (80 entries) e refactor BadgeGrid para usar $t().",
-      "severity": "alta",
-      "source": "watchdog-tick-2026-06-29-23",
-      "created_at": "2026-06-29T22:55:51+01:00"
-    }
-  ],
-  "closedItems": [
     {
       "id": "gap-083-pending-ba35",
       "category": "lição/curso",
