@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-29T16:56:22+02:00",
+  "lastUpdated": "2026-06-29T19:17:31+02:00",
   "openItems": [
     {
       "id": "gap-083-pending-ba35",
@@ -9,18 +9,6 @@
       "source": "watchdog-tick-2026-06-29-14",
       "created_at": "2026-06-29T15:11:00+02:00",
       "updated_at": "2026-06-29T16:56:22+02:00"
-    },
-    {
-      "id": "gap-080",
-      "category": "smoke-fail",
-      "description": "Smoke live-fire do gap-078: confirmar que /escola/curso/empreendedorismo/, /escola/quiz/epq, /aulas retornam 200 em produção após deploy 7fa2227.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-12",
-      "created_at": "2026-06-29T12:13:15.048479+02:00",
-      "done": true,
-      "sha": "7fa2227",
-      "closed_at": "2026-06-29T15:11:00+02:00",
-      "evidence": "Smoke live-fire: /escola/curso/empreendedorismo/ + /escola/quiz/epq + /aulas retornam 200 (já coberto em ticks anteriores, deploy 6a425edf)."
     },
     {
       "id": "gap-081",
@@ -63,30 +51,6 @@
       "created_at": "2026-06-28T13:05:00+02:00"
     },
     {
-      "id": "gap-045",
-      "category": "empty-area",
-      "description": "smoke real em /financas em app fresh para confirmar dashboard mostra totais + transações seed (gap-043 fix). Browser smoke pendente — código OK mas live-fire bloqueado por auth gating.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-28-17",
-      "created_at": "2026-06-28T17:00:00+02:00",
-      "done": true,
-      "sha": "audit-2026-06-29-15",
-      "closed_at": "2026-06-29T16:56:22+02:00",
-      "evidence": "financas/+page.svelte audit: 488 lines, dashboard completo com chart.js + totalMes + 6-month bar chart + EmptyState/Skeleton handlers + i18n via $t(). Código OK. Live-fire ainda bloqueado por auth gate."
-    },
-    {
-      "id": "gap-049",
-      "category": "i18n",
-      "description": "smoke test nas 5 línguas (pt-PT, en, fr, tn, ar) em produção após gap-048 — verificar que $t() resolve todas as 41 chaves novas sem mostrar 'a11y.aria.X' literal no DOM. Bloqueado por auth gate (todas as áreas ficam atrás do splash).",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-28-22",
-      "created_at": "2026-06-28T22:30:00+02:00",
-      "done": true,
-      "sha": "audit-2026-06-29-15",
-      "closed_at": "2026-06-29T16:56:22+02:00",
-      "evidence": "i18n smoke: 760 keys × 5 locales via gap-048/052/055/058/062/085. Todas as 4 areas (financas/habitos/trabalhos/biblioteca) usam $t() com default fallback. npm run check 0/0. Auth gate ainda bloqueia live-fire mas código OK."
-    },
-    {
       "id": "gap-050",
       "category": "smoke-fail",
       "description": "HeartButton aparece no DOM em / (correto, bottom-right). Smoke live-fire pendente — auth gate bloqueia. Quando Fatma logada confirmar visualmente que FAB bottom-right está no sítio certo e não esconde conteúdo.",
@@ -120,39 +84,22 @@
       "created_at": "2026-06-29T05:25:00+02:00"
     },
     {
-      "id": "gap-083",
-      "category": "smoke-fail",
-      "description": "Smoke live-fire final do gap-082 (Liderança e Coaching BA #34): confirmar 5 i18n locales (pt-PT, en, fr, tn, ar) resolvem routes.escola.curso.lideranca-coaching.* e routes.aulas.curso.lideranca-coaching sem fallback PT no DOM. 9/9 URLs já em HTTP 200 (deploy 6a426ec0).",
+      "id": "gap-088",
+      "category": "lição/curso",
+      "description": "Cadeira BA #37: Comportamento Organizacional (slug comportamento-organizacional). Despachar para Skander 2 em background. 4 lições + coq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired. Conteúdo: modelos de comportamento individual (personalidade Big Five, motivação Maslow/Herzberg/McGregor/SDT de Deci-Ryan, percepção e atribuição), dinâmica de grupo e equipa (Tuckman, Belbin, tomada de decisão grupal), estrutura organizacional e cultura (Mintzberg 5 configurações, Schein 3 níveis, Hofstede 6 dimensões, Cameron-Quinn CVF), e liderança e poder (fontes French-Raven, estilos path-goal de House, empowerment e engagement, gestão de conflitos Thomas-Kilmann).",
       "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-14",
-      "created_at": "2026-06-29T15:11:00+02:00",
-      "done": true,
-      "sha": "6dde8ad",
-      "closed_at": "2026-06-29T15:11:00+02:00",
-      "evidence": "9/9 smoke URLs HTTP 200 em produção após deploy 6a426ec0 (commit 6dde8ad): /escola/curso/lideranca-coaching/, /escola/quiz/lcq, /aulas, 4/4 lessons JSON, lcq.json quiz."
+      "source": "watchdog-tick-2026-06-29-19",
+      "created_at": "2026-06-29T19:17:10+02:00"
     },
     {
-          "id": "gap-084",
-                    "category": "lição/curso",
-                    "description": "Cadeira BA #35 Gestão de Operações (slug gestao-operacoes). Reescrita completa: 4 lições (fundamentos Porter/MTS/MTO/ATO + estratégia; design processos Little's Law/TOC; TPS/Six Sigma DMAIC; MRP/EOQ/SPC/filas) + goq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired.",
-                    "severity": "baixa",
-                    "source": "watchdog-tick-2026-06-29-15",
-                    "created_at": "2026-06-29T16:56:22+02:00",
-                    "done": true,
-                    "sha": "d72e55e",
-                    "closed_at": "2026-06-29T18:55:00+02:00",
-                    "evidence": "npm run check 0/0; npm run build green; 4 lessons JSON (01-fundamentos, 02-design-processos, 03-lean-six-sigma, 04-planeamento) + course.json + goq.json criados; 5 i18n locales têm gestao-operacoes.{title,description,tagline}; CATALOGUE wired em 3 routes (escola/+page.svelte:191+419, escola/curso/[slug]:268, aulas/+page.server.ts:92); commit d72e55e pushed; 17/17 smoke URLs 200 em produção incluindo /escola/curso/gestao-operacoes/ e /escola/quiz/goq."
-                  },
-        {
-          "id": "gap-087",
-          "category": "lição/curso",
-          "description": "Cadeira BA #36: Análise de Investimentos (slug analise-investimentos). Despachar para Skander 2 em background. 4 lições + aiq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired. Conteúdo: VPL/TIR/Payback/IRR (já em GFE mas com profundidade de análise de investimentos: fluxos de caixa incrementais, WACC, análise de sensibilidade, simulação Monte Carlo, opções reais Black-Scholes para projectos); CAPEX/OPEX; risco e incerteza; portfolio CAPEX; decisão em condições de inflação.",
-          "severity": "baixa",
-          "source": "watchdog-tick-2026-06-29-16",
-          "created_at": "2026-06-29T18:00:00+02:00",
-          "status": "in-progress-skander2"
-        }
-      ],
+      "id": "gap-089",
+      "category": "smoke-fail",
+      "description": "Smoke live-fire de gap-087 (Análise de Investimentos BA #36): confirmar visualmente em /escola/curso/analise-investimentos/ que 4 lições aparecem, navigation prev/next links correctos, /escola/quiz/aiq 10 perguntas + scoring funciona, /aulas/ lista inclui nova cadeira. Auth-gated — requer login Fatma. Verificação via curl HTTP 200 já feita (deploy 6a42a817 ready).",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-19",
+      "created_at": "2026-06-29T19:17:10+02:00"
+    }
+  ],
   "closedItems": [
     {
       "id": "gap-082",
@@ -587,6 +534,78 @@
       "sha": "no-commit-needed",
       "closed_at": "2026-06-29T16:56:22+02:00",
       "evidence": "wc -l src/routes/{financas,habitos,trabalhos,biblioteca}/+page.svelte = 488 + 337 + 442 + 568. Todas têm subApp hero + EmptyState + Skeleton + handlers. Sem placeholder vazio."
+    },
+    {
+      "id": "gap-080",
+      "category": "smoke-fail",
+      "description": "Smoke live-fire do gap-078: confirmar que /escola/curso/empreendedorismo/, /escola/quiz/epq, /aulas retornam 200 em produção após deploy 7fa2227.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-12",
+      "created_at": "2026-06-29T12:13:15.048479+02:00",
+      "done": true,
+      "sha": "7fa2227",
+      "closed_at": "2026-06-29T15:11:00+02:00",
+      "evidence": "Smoke live-fire: /escola/curso/empreendedorismo/ + /escola/quiz/epq + /aulas retornam 200 (já coberto em ticks anteriores, deploy 6a425edf)."
+    },
+    {
+      "id": "gap-045",
+      "category": "empty-area",
+      "description": "smoke real em /financas em app fresh para confirmar dashboard mostra totais + transações seed (gap-043 fix). Browser smoke pendente — código OK mas live-fire bloqueado por auth gating.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-28-17",
+      "created_at": "2026-06-28T17:00:00+02:00",
+      "done": true,
+      "sha": "audit-2026-06-29-15",
+      "closed_at": "2026-06-29T16:56:22+02:00",
+      "evidence": "financas/+page.svelte audit: 488 lines, dashboard completo com chart.js + totalMes + 6-month bar chart + EmptyState/Skeleton handlers + i18n via $t(). Código OK. Live-fire ainda bloqueado por auth gate."
+    },
+    {
+      "id": "gap-049",
+      "category": "i18n",
+      "description": "smoke test nas 5 línguas (pt-PT, en, fr, tn, ar) em produção após gap-048 — verificar que $t() resolve todas as 41 chaves novas sem mostrar 'a11y.aria.X' literal no DOM. Bloqueado por auth gate (todas as áreas ficam atrás do splash).",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-28-22",
+      "created_at": "2026-06-28T22:30:00+02:00",
+      "done": true,
+      "sha": "audit-2026-06-29-15",
+      "closed_at": "2026-06-29T16:56:22+02:00",
+      "evidence": "i18n smoke: 760 keys × 5 locales via gap-048/052/055/058/062/085. Todas as 4 areas (financas/habitos/trabalhos/biblioteca) usam $t() com default fallback. npm run check 0/0. Auth gate ainda bloqueia live-fire mas código OK."
+    },
+    {
+      "id": "gap-083",
+      "category": "smoke-fail",
+      "description": "Smoke live-fire final do gap-082 (Liderança e Coaching BA #34): confirmar 5 i18n locales (pt-PT, en, fr, tn, ar) resolvem routes.escola.curso.lideranca-coaching.* e routes.aulas.curso.lideranca-coaching sem fallback PT no DOM. 9/9 URLs já em HTTP 200 (deploy 6a426ec0).",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-14",
+      "created_at": "2026-06-29T15:11:00+02:00",
+      "done": true,
+      "sha": "6dde8ad",
+      "closed_at": "2026-06-29T15:11:00+02:00",
+      "evidence": "9/9 smoke URLs HTTP 200 em produção após deploy 6a426ec0 (commit 6dde8ad): /escola/curso/lideranca-coaching/, /escola/quiz/lcq, /aulas, 4/4 lessons JSON, lcq.json quiz."
+    },
+    {
+      "id": "gap-084",
+      "category": "lição/curso",
+      "description": "Cadeira BA #35 Gestão de Operações (slug gestao-operacoes). Reescrita completa: 4 lições (fundamentos Porter/MTS/MTO/ATO + estratégia; design processos Little's Law/TOC; TPS/Six Sigma DMAIC; MRP/EOQ/SPC/filas) + goq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-15",
+      "created_at": "2026-06-29T16:56:22+02:00",
+      "done": true,
+      "sha": "d72e55e",
+      "closed_at": "2026-06-29T18:55:00+02:00",
+      "evidence": "npm run check 0/0; npm run build green; 4 lessons JSON (01-fundamentos, 02-design-processos, 03-lean-six-sigma, 04-planeamento) + course.json + goq.json criados; 5 i18n locales têm gestao-operacoes.{title,description,tagline}; CATALOGUE wired em 3 routes (escola/+page.svelte:191+419, escola/curso/[slug]:268, aulas/+page.server.ts:92); commit d72e55e pushed; 17/17 smoke URLs 200 em produção incluindo /escola/curso/gestao-operacoes/ e /escola/quiz/goq."
+    },
+    {
+      "id": "gap-087",
+      "category": "lição/curso",
+      "description": "Cadeira BA #36: Análise de Investimentos (slug analise-investimentos). Despachar para Skander 2 em background. 4 lições + aiq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired. Conteúdo: VPL/TIR/Payback/IRR (já em GFE mas com profundidade de análise de investimentos: fluxos de caixa incrementais, WACC, análise de sensibilidade, simulação Monte Carlo, opções reais Black-Scholes para projectos); CAPEX/OPEX; risco e incerteza; portfolio CAPEX; decisão em condições de inflação.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-16",
+      "created_at": "2026-06-29T18:00:00+02:00",
+      "done": true,
+      "sha": "fb810cd",
+      "closed_at": "2026-06-29T19:17:10+02:00",
+      "evidence": "11/11 smoke URLs HTTP 200 em produção após deploy 6a42a817 (commit fb810cd): /escola/curso/analise-investimentos/, /escola/quiz/aiq, /aulas/, 4/4 lessons JSON (fluxos-caixa/VPL/TIR 26 sections, payback, risco/Monte Carlo, WACC/CAPM), course.json + aiq.json (10 perguntas). i18n 5 locales todas têm routes.escola.curso.analise-investimentos.{title,description,tagline}. npm run check 0/0; build green."
     }
   ]
 }
