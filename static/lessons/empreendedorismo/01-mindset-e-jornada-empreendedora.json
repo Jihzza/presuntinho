@@ -1,0 +1,133 @@
+{
+  "id": "01-mindset-e-jornada-empreendedora",
+  "title": "1. Mindset Empreendedor e a Jornada do Fundador",
+  "courseSlug": "empreendedorismo",
+  "lessonNumber": 1,
+  "description": "O ponto de partida: o que distingue um empreendedor de um gestor, os estágios da jornada (idea → startup → scale-up), as armadilhas mentais mais comuns (sunk cost, confirmation bias) e como construir resiliência. Inclui o perfil de risco-retorno e o conceito de effectuation.",
+  "audio": "Nesta primeira lição vamos olhar para o mindset do empreendedor — não como uma personalidade mágica, mas como um conjunto de decisões, hábitos e leituras da realidade que se podem treinar. Vamos falar de effectuation versus causation, dos quatro tipos de capital que um fundador precisa activar (conhecimento, social, financeiro e cultural), e dos sinais típicos de cada fase da jornada — desde a ideia solitária até ao scale-up comequipa e funding. No fim tens um pequeno teste: com que perfil de fundador te identificas mais?",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["empreendedorismo", "mindset", "effectuation", "jornada", "fundador"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é (e o que não é) um empreendedor"
+    },
+    {
+      "type": "p",
+      "text": "Um empreendedor não é alguém que 'tem uma ideia'. É alguém que transforma uma ideia numa realidade sustentável — geralmente criando valor para clientes, empregos para pessoas e retorno para investidores. A definição clássica de Schumpeter é clara: o empreendedor é quem pratica 'destruição criadora', ou seja, cria novos produtos, novos mercados e novos métodos que tornam obsoletos os anteriores. Hoje, empreendedorismo inclui startups tecnológicas, PME familiares, intra-empreendedorismo em grandes empresas, e projectos sociais."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Empreendedor ≠ inventor. A invenção é técnica; o empreendedorismo é económico e social — coloca a invenção no mercado",
+        "Empreendedor ≠ chefe. O chefe gere processos repetíveis; o empreendedor navega incerteza",
+        "Empreendedor ≠ apostador. Arrisca, sim, mas calcula — e está disposto a perder o investimento, não a família",
+        "O factor mais estudado não é criatividade nem inteligência — é resiliência e capacidade de aprender com feedback rápido"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Os quatro capitais do fundador"
+    },
+    {
+      "type": "p",
+      "text": "Sarasvathy e outros investigadores da área identificaram quatro tipos de capital que um fundador precisa activar ao longo da jornada: conhecimento (saber técnico e de mercado), social (rede de contactos e mentores), financeiro (poupanças, crédito, ou capital de risco) e cultural (permissão social, língua, costumes). Ninguém nasce com os quatro — a jornada é, em parte, o processo de os ir acumulando."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Capital de conhecimento: pode acumular-se com cursos, livros, estágios e experimentação",
+        "Capital social: constrói-se com mentores, conferências, alumni, comunidades locais e online",
+        "Capital financeiro: começa com poupança pessoal, depois bootstrapping, depois funding externo",
+        "Capital cultural: é o mais invisível e por vezes o mais bloqueador — família, sociedade, contexto imigrante"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Effectuation vs. Causation: duas lógicas de decisão"
+    },
+    {
+      "type": "p",
+      "text": "Empresários experientes não seguem planos rígidos — seguem princípios. A lógica causal parte de um objectivo definido e procura os meios para o atingir (primeiro o 'onde quero chegar', depois o 'como'). A lógica effectuation parte dos meios disponíveis (o que sei, quem conheço, quanto tenho, com quem posso contar) e imagina múltiplos fins possíveis. Empreendedores de sucesso misturam as duas lógicas: causation para definir metas claras, effectuation para navegar incerteza."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Causation: 'quero lançar uma marca de perfumaria em 18 meses, eis o plano'",
+        "Effectuation: 'tenho formação em química, conheço dois retalhistas em Sousse, e tenho 5.000€ — o que posso criar?'",
+        "Em fases de alta incerteza (idea, MVP), effectuation domina — porque não há dados suficientes para causation",
+        "Em fases de escala (crescimento, optimização), causation volta a dominar — já há dados, plano e equipa"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Os cinco princípios da effectuation"
+    },
+    {
+      "type": "ol",
+      "items": [
+        "Bird-in-hand: começa com o que tens, não com o que gostarias de ter",
+        "Affordable loss: arrisca só o que podes perder, não o que podes ganhar",
+        "Crazy quilt: forma parcerias com quem se compromete primeiro, mesmo que informalmente",
+        "Lemonade: trata surpresas como dados — umaCancellation transforma-se em nova oportunidade",
+        "Pilot-in-the-plane: o futuro é construído pelas tuas acções, não previsto por análise externa"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Os estágios da jornada empreendedora"
+    },
+    {
+      "type": "p",
+      "text": "Não há uma única 'fase inicial'. Estudos empíricos (especialmente o trabalho do Endeavor Institute) mostram que startups passam por quatro estágios distintos, cada um com métricas, erros típicos e saídas previsíveis. Confundir os estágios é uma das causas mais frequentes de burnout e falência: fundadores a usar métricas de scale-up quando ainda estão a validar o problema, ou a usar intuição de founder quando já gerem 30 pessoas."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Idea: tenho uma hipótese, ainda não tenho cliente. Métrica: quantas conversas tive com o segmento-alvo",
+        "Startup: tenho um MVP, primeiros clientes pagantes. Métrica: retenção a 30 dias, LTV/CAC",
+        "Growth: o produto vende, mas a aquisição ainda não é repetível. Métrica: unit economics positivo",
+        "Scale-up: o modelo repete-se, posso investir agressivamente em crescimento. Métrica: ARR, NRR, EBITDA"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Curiosidade: 80% das startups que sobrevivem ao primeiro ano continuam pequenas durante 5–10 anos antes de crescer. O sucesso de uma startup não é 'crescer depressa', é 'não morrer antes de encontrar um modelo que repita'."
+    },
+    {
+      "type": "h3",
+      "text": "Os vieses cognitivos que mais matam startups"
+    },
+    {
+      "type": "p",
+      "text": "O cérebro humano evoluiu para tomar decisões rápidas, não decisões certas. Empreendedores precisam de reconhecer e contrariar os vieses que os empurram para más decisões. Os três mais perigosos são: sunk cost (continuar a investir num projecto porque já se investiu muito), confirmation bias (procurar informação que confirma a nossa hipótese) e survivorship bias (estudar só quem teve sucesso, ignorando os 90% que falharam da mesma forma)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Sunk cost: 'já gastei 3 anos nisto, não posso desistir' — mesmo quando os dados mostram que a hipótese original está errada",
+        "Confirmation bias: 'os meus 5 amigos adoraram a ideia' — mas os 50陌生人 que nunca ouviram dela é que interessam",
+        "Survivorship bias: 'o Steve Jobs largou a faculdade' — mas a maioria dos que largaram não criaram a Apple",
+        "Ferramenta: pedir feedback a estranhos pagantes, não a amigos; matar feature mau cedo; fazer retrospectives mensais"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Resiliência e saúde do fundador"
+    },
+    {
+      "type": "p",
+      "text": "A taxa de burnout em fundadores de startups é 2–3x superior à da população em geral. Isto não é fraqueza — é o resultado de operar durante anos em ambientes de alta incerteza, sem feedback claro, e com responsabilidade pessoal total. A boa notícia: resiliência não é um traço, é uma prática. Inclui sono, exercício, socialização fora do trabalho, e uma rede de pares (não só mentores) que vivem o mesmo."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Sono: <6h/noite durante 2 anos reduz capacidade de decisão em ~30% (estudo da HBS)",
+        "Comunidade: founders isolados falham mais; grupos de 4–8 pares que se encontram quinzenalmente melhoram sobrevivência",
+        "Identidade separada: 'eu não sou a minha empresa' — manter hobbies, família e actividades não relacionadas",
+        "Aceitar que falhar é parte do processo: 1 em cada 3 founders bem-sucedidos já tinha falhado antes"
+      ]
+    }
+  ]
+}

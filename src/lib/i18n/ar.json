@@ -819,5 +819,11 @@
   "financas.nova.erro.valor_zero": "يجب أن يكون المبلغ أكبر من صفر.",
   "financas.nova.erro.sem_categoria": "اختر فئة.",
   "financas.nova.erro.sem_data": "حدد تاريخًا.",
-  "financas.orcamento.erro.gravar": "خطأ في حفظ الميزانية"
+  "financas.orcamento.erro.gravar": "خطأ في حفظ الميزانية",
+  "routes.escola.curso.empreendedorismo.title": "ريادة الأعمال وخطة العمل",
+  "routes.escola.curso.empreendedorismo.description": "المادة الأكثر عملية في إدارة الأعمال: كيف تحول فكرة إلى عمل مستدام. تشمل عقلية ريادة الأعمال (effectuation، الرحلة، التحيزات)، BMC، التحقق من المشكلة و MVP (4 أنواع)، خطة عمل كاملة وعرض 3-5 دقائق للمستثمرين.",
+  "routes.escola.curso.empreendedorismo.tagline": "إدارة الأعمال · العقلية، BMC، MVP، عرض المستثمرين",
+  "routes.escola.quiz.epq.title": "اختبار: ريادة الأعمال وخطة العمل",
+  "routes.escola.quiz.epq.description": "اختبر معرفتك بعقلية ريادة الأعمال، BMC، التحقق من المشكلة، MVP، خطة العمل وعرض المستثمرين. 10 أسئلة.",
+  "routes.aulas.curso.empreendedorismo": "ريادة الأعمال وخطة العمل"
 }

@@ -1,0 +1,173 @@
+{
+  "id": "03-validacao-e-mvp",
+  "title": "3. Validação de Problema e Produto Mínimo Viável (MVP)",
+  "courseSlug": "empreendedorismo",
+  "lessonNumber": 3,
+  "description": "Como testar se a sua ideia tem mercado antes de investir meses em desenvolvimento. Cobre o processo de validação de problema (problem interviews, jobs-to-be-done), a tipologia de MVPs (concierge, wizard-of-oz, landing page, protótipo) e os indicadores que mostram que está na hora de pivotar ou perseverar.",
+  "audio": "Nesta terceira lição vamos abordar o tema que mais salva startups de morrerem: a validação. A maioria das startups não morre porque o produto é mau — morre porque constrói algo que ninguém quer. Vamos ver como validar o problema antes de construir a solução, os quatro tipos principais de MVP, e os sinais claros que indicam se estamos no caminho certo (perseverar) ou se devemos mudar (pivotar). No fim terás um plano de validação de 4 semanas pronto a aplicar à tua ideia.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["mvp", "validação", "pivotar", "perseverar", "lean-startup"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O princípio: problema antes da solução"
+    },
+    {
+      "type": "p",
+      "text": "O erro mais caro do empreendedorismo é apaixonar-se pela solução antes de validar o problema. Steve Blank, mentor de硅谷 e autor de 'The Four Steps to the Epiphany', chama a isto 'product-led thinking' — e é a causa de morte #1 de startups. O oposto é 'customer-led thinking': primeiro confirmar que o problema existe e que as pessoas estão dispostas a pagar para vê-lo resolvido, e só depois construir a solução. Esta inversão poupa, em média, 6-12 meses de desenvolvimento inútil."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "80% das startups não morrem por 'falta de produto' — morrem por 'falta de mercado' (CB Insights, 2024)",
+        "Construir o que ninguém quer é o desperdício mais caro que existe",
+        "Validação não é pesquisa de mercado académica — são conversas reais com quem paga",
+        "O processo: 5-10 entrevistas exploratórias → 20-30 entrevistas de validação → MVP → métricas → pivotar ou perseverar"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "As 5 perguntas de validação de problema"
+    },
+    {
+      "type": "p",
+      "text": "Antes de construir qualquer coisa, queremos responder a cinco perguntas críticas sobre o problema. Cada pergunta é testável com 5-10 conversas com potenciais clientes. Se a resposta a qualquer delas for 'não', temos um sinal forte de que o problema não é relevante — ou de que precisamos de redefinir o segmento."
+    },
+    {
+      "type": "ol",
+      "items": [
+        "Quem? — Quem é que sofre deste problema? (segmento específico, com nome e idade, não 'jovens')",
+        "O quê? — O que é que ele/ela está a tentar fazer? (job-to-be-done, não 'necessidade')",
+        "Quando? — Com que frequência este problema aparece? (diário, semanal, mensal, anual)",
+        "Quanto custa? — Quanto tempo/dinheiro perde por causa do problema? (magnitude, não só 'incomoda')",
+        "O que faz hoje? — Que soluções alternativas usa actualmente? (concorrentes, workarounds, status quo)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Jobs-to-Be-Done: a framework que revela o problema real"
+    },
+    {
+      "type": "p",
+      "text": "Tony Ulwick (Strategyn) e Clayton Christensen (HBS) popularizaram a ideia de que as pessoas não compram produtos — 'contratam' produtos para fazer um trabalho. Uma mãe não compra uma máquina de lavar roupa — contrata-a para 'ter a roupa lavada e seca com qualidade e baixo custo'. Quando percebemos o job-to-be-done, percebemos o que os clientes realmente valorizam, e que soluções alternativas (mesmo inesperadas) já usam para esse mesmo job."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Funcional: 'quero ir do ponto A ao ponto B em menos de 30 minutos' (não 'quero um carro')",
+        "Social: 'quero que os meus colegas me vejam como bem informado' (não 'quero um jornal')",
+        "Emocional: 'quero sentir-me menos ansioso com o futuro' (não 'quero um plano de poupança')",
+        "Job switching: 'quando vou a uma entrevista, visto-me de uma forma específica' — o job é 'passar a entrevista', não 'comprar roupa'"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Como conduzir entrevistas de validação"
+    },
+    {
+      "type": "p",
+      "text": "A entrevista de validação é uma arte. Não é um questionário — é uma conversa onde o entrevistador ouve 80% e fala 20%. O objectivo não é confirmar a nossa hipótese, é aprender o que o cliente realmente sente, faz, e quer. As melhores entrevistas duram 30-45 minutos, seguem o método 'mom test' de Rob Fitzpatrick (perguntar sobre factos passados, não opiniões futuras), e gravam-se com autorização."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Perguntar sobre factos passados: 'da última vez que X aconteceu, o que fez?'",
+        "Nunca perguntar 'usaria o nosso produto?' — a resposta é sempre 'sim, parece fixe'",
+        "Procurar sinais emocionais: 'como se sentiu quando isso aconteceu?'",
+        "Procurar workarounds: 'que soluções alternativas já experimentou?'",
+        "Gravar e transcrever — a memória do entrevistador é selectiva"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Os 4 tipos de MVP"
+    },
+    {
+      "type": "p",
+      "text": "MVP significa Minimum Viable Product — a versão mais simples do produto que nos permite aprender sobre o problema e a solução. O erro é confundir MVP com 'versão lite do produto final'. Na verdade, um MVP pode ser uma página web, um vídeo, um protótipo no Figma, um serviço manual, ou um wizard-of-oz. O critério é simples: o que nos dá a maior aprendizagem com o menor investimento de tempo e dinheiro."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Concierge MVP: entregamos o serviço manualmente, sem automação. Útil para validar processos e ver o que os clientes realmente precisam",
+        "Wizard-of-Oz MVP: a interface parece completa mas por trás estamos a fazer tudo manualmente. Valida UX sem construir backend",
+        "Landing page MVP: página web que descreve o produto, com botão 'comprar'. Mede interesse real (taxa de conversão)",
+        "Protótipo MVP: demo no Figma ou vídeo interativo. Valida fluxo sem código"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Concierge MVP: o exemplo Zappos"
+    },
+    {
+      "type": "p",
+      "text": "Antes de ter um único par de sapatos em armazém, Nick Swinmurn (fundador do Zappos) testou a ideia criando uma landing page com fotos de sapatos de lojas locais. Quando alguém comprava, ele ia à loja, comprava o sapato e enviava ao cliente. Em 10 meses validou que o mercado existia — e só depois construiu armazéns e logística. O custo de validação foi zero; o custo de ter construído tudo errado seria de milhões."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Quando usar: quando o risco principal é o modelo operacional, não o produto",
+        "Exemplos: hotel que vende estadias sem quartos próprios, serviço de refeições entregue por estafetas próprios",
+        "Limitação: não escala — se a hipótese se confirmar, precisamos de construir o sistema real",
+        "Lição: a primeira iteração serve para aprender, não para vender"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Pivotar ou Perseverar: o comité de decisão"
+    },
+    {
+      "type": "p",
+      "text": "Eric Ries, no livro 'The Lean Startup', cunhou o conceito de 'pivotar ou perseverar'. Pivotar é mudar uma hipótese fundamental (segmento, problema, solução) sem mudar a visão. Perseverar é continuar a executar a mesma hipótese, iterando dentro dela. A decisão exige métricas claras, não feeling. O comité (fundadores + 1-2 mentores) reúne-se a cada 4-6 semanas para analisar os dados e decidir."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Pivotar: quando o problema existe mas a solução não convence, ou quando o segmento não está a responder",
+        "Perseverar: quando o problema está confirmado, há sinais de pagamento, e as métricas melhoram consistentemente",
+        "Sinal amarelo: o problema existe mas a magnitude é pequena (pouca dor, pouco dinheiro envolvido)",
+        "Sinal vermelho: o segmento não quer falar connosco, ou diz 'sim' mas não paga, ou paga uma vez e não volta"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Cuidado com 'falsa validação': amigos, família e early adopters são os piões. Se os primeiros 10 clientes são todos pessoas que te conhecem, ainda não validámos nada. A validação só conta quando vêm陌生人 que pagam sem desconto e por iniciativa própria."
+    },
+    {
+      "type": "h3",
+      "text": "Métricas de validação: o que medir"
+    },
+    {
+      "type": "p",
+      "text": "As métricas de validação são diferentes das métricas de escala. Em validação, queremos saber: (1) o cliente tem o problema? (2) está disposto a pagar? (3) paga mais do que custa servir? (4) volta a comprar ou recomenda? Quando estas 4 perguntas respondem 'sim' de forma consistente em 20+ clientes, passamos de validação a crescimento. Antes disso, otimizar CAC ou LTV é um erro — são métricas de outro estágio."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Conversão de trial: % de utilizadores que experimentam e convertem (target: >5% para B2C, >15% para B2B)",
+        "Retenção: % de utilizadores que voltam 30 dias depois (target: >40% SaaS, >60% marketplace)",
+        "NPS: Net Promoter Score — % promotores - % detractores (target: >30 para validar product-market fit)",
+        "Payback period: meses para recuperar CAC (target: <12 meses para SaaS)",
+        "Organic growth: % de novos clientes que vêm sem marketing pago (target: >40% em PMF)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Plano de validação de 4 semanas"
+    },
+    {
+      "type": "p",
+      "text": "Para terminar a lição, deixo um plano prático de validação que qualquer founder pode executar em 4 semanas, com um orçamento inferior a 500€. Não é teórico — é o que equipas de Y Combinator, Techstars e Antler usam com os seus founders. O objectivo: no fim de 4 semanas, ter dados reais para decidir entre pivotar, perseverar ou desistir."
+    },
+    {
+      "type": "ol",
+      "items": [
+        "Semana 1 — Problem interviews: 15 conversas de 30 min com potenciais clientes, focadas em jobs-to-be-done e workarounds",
+        "Semana 2 — Solution sketches: 2-3 sketches do produto (papel ou Figma), testados em 10 das conversas da semana 1",
+        "Semana 3 — MVP mínimo: 1 landing page + 1 concierge ou 1 wizard-of-oz, com tracking de conversões e feedback",
+        "Semana 4 — Análise e decisão: analisar conversões, NPS, e feedback; decidir pivotar/perseverar/desistir em comité"
+      ]
+    }
+  ]
+}

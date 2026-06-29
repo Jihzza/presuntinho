@@ -1,0 +1,117 @@
+{
+  "id": "epq",
+  "title": "Quiz: Empreendedorismo e Plano de Negócios",
+  "description": "Testa os teus conhecimentos sobre mindset empreendedor, Business Model Canvas, validação de problema, MVP, plano de negócios e pitch para investidores. 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "questions": [
+    {
+      "q": "A definição clássica de empreendedor segundo Schumpeter é:",
+      "opts": [
+        "Alguém que tem uma boa ideia e arrisca o seu dinheiro",
+        "Alguém que pratica 'destruição criadora' — criando novos produtos, mercados e métodos que tornam obsoletos os anteriores",
+        "Alguém que gere uma empresa de forma mais eficiente que os concorrentes",
+        "Alguém que inventa uma nova tecnologia"
+      ],
+      "a": 1,
+      "exp": "Schumpeter definiu o empreendedor como alguém que pratica 'destruição criadora' — criando novos produtos, novos mercados, novos métodos de produção e novas formas de organizar o trabalho que tornam obsoletos os anteriores. É uma definição económica, não técnica — distingue claramente o inventor (cria a tecnologia) do empreendedor (coloca-a no mercado)."
+    },
+    {
+      "q": "Na framework de Effectuation (Sarasvathy), os cinco princípios são:",
+      "opts": [
+        "Planeamento, análise, execução, controlo, feedback",
+        "Bird-in-hand, Affordable loss, Crazy quilt, Lemonade, Pilot-in-the-plane",
+        "Visão, missão, valores, estratégia, execução",
+        "Hipótese, teste, dados, iteração, decisão"
+      ],
+      "a": 1,
+      "exp": "Os cinco princípios da effectuation são: (1) Bird-in-hand — começa com o que tens, não com o que gostarias; (2) Affordable loss — arrisca só o que podes perder; (3) Crazy quilt — forma parcerias com quem se compromete primeiro; (4) Lemonade — trata surpresas como dados; (5) Pilot-in-the-plane — o futuro é construído pelas tuas acções, não por análise externa."
+    },
+    {
+      "q": "Qual é a sequência recomendada para preencher o Business Model Canvas?",
+      "opts": [
+        "Recursos → Actividades → Proposta de Valor → Clientes",
+        "Clientes → Proposta de Valor → Canais/Relação → Receitas → Recursos/Actividades/Parcerias → Custos",
+        "Tecnologia → Produto → Marketing → Vendas",
+        "Visão → Missão → Objectivos → Estratégia"
+      ],
+      "a": 1,
+      "exp": "A sequência lógica é: (1) Segmentos de Cliente — quem; (2) Proposta de Valor — o quê; (3) Canais + Relação — como; (4) Fontes de Receita — quanto; (5) Recursos + Actividades + Parcerias — com quê; (6) Estrutura de Custos — quanto custa. Começar pelos clientes (lado esquerdo) antes do produto evita o erro de construir algo que ninguém quer."
+    },
+    {
+      "q": "No método de validação de problema, qual é a pergunta MAIS importante a fazer nas primeiras entrevistas?",
+      "opts": [
+        "Gostaria de usar o nosso produto quando estiver pronto?",
+        "Da última vez que este problema aconteceu, o que fez para o resolver?",
+        "Acha que o nosso produto é uma boa ideia?",
+        "Quanto pagaria por uma solução?"
+      ],
+      "a": 1,
+      "exp": "A pergunta mais útil é sobre factos passados, não opiniões futuras ('Mom Test' de Rob Fitzpatrick). 'Da última vez que isto aconteceu, o que fez?' revela o comportamento real — que soluções alternativas usa, com que frequência, quanto investiu. Perguntas sobre o futuro ('usaria?') geram 'sim' educados que não preveem comportamento."
+    },
+    {
+      "q": "Qual é a diferença entre TAM, SAM e SOM?",
+      "opts": [
+        "TAM é o mercado de amanhã, SAM o de hoje, SOM o de ontem",
+        "TAM é o mercado total teórico, SAM é o sub-mercado que podemos servir com o nosso modelo actual, SOM é o que realisticamente podemos capturar em 3-5 anos",
+        "TAM é a receita anual, SAM a trimestral, SOM a mensal",
+        "Não há diferença — são sinónimos"
+      ],
+      "a": 1,
+      "exp": "TAM (Total Addressable Market) é o mercado total teórico. SAM (Serviceable Addressable Market) é o sub-mercado que podemos servir com o nosso modelo actual (geografia + segmento). SOM (Serviceable Obtainable Market) é o que realisticamente podemos capturar em 3-5 anos. Para a Equivalenza: TAM = €50B (perfumaria global), SAM = €2B (low-cost Europa+Médio Oriente), SOM = €50M (quota realista em 5 anos)."
+    },
+    {
+      "q": "O que é um 'Concierge MVP'?",
+      "opts": [
+        "Um hotel que tem um concierge automatizado por IA",
+        "Um MVP em que entregamos o serviço manualmente, sem automação, para validar o modelo operacional",
+        "Um produto de luxo com serviço personalizado",
+        "Um website com formulário de contacto"
+      ],
+      "a": 1,
+      "exp": "Concierge MVP é um tipo de MVP em que entregamos o serviço manualmente, sem automação. Útil para validar processos complexos e perceber o que os clientes realmente precisam antes de investir em tecnologia. O exemplo clássico é o Zappos: Nick Swinmurn vendia sapatos online e ia ele próprio à loja comprá-los e enviá-los ao cliente. Em 10 meses validou o modelo antes de construir armazéns."
+    },
+    {
+      "q": "Na decisão de 'pivotar ou perseverar', qual é o sinal mais forte de que se deve PIVOTAR?",
+      "opts": [
+        "O número de clientes está a crescer 5% ao mês",
+        "Os clientes dizem 'sim' na conversa mas não pagam, ou pagam uma vez e não voltam",
+        "Temos um NPS de 50",
+        "O custo de aquisição de cliente é de 20€"
+      ],
+      "a": 1,
+      "exp": "O sinal mais forte de pivot é a 'falsa validação' — clientes que dizem sim na conversa mas não pagam, ou pagam uma vez e não voltam. Isto indica que o problema pode existir, mas a solução não convence (ou a magnitude do problema é pequena). Quando os primeiros 10 clientes são todos amigos/família, ou quando ninguém volta, é hora de pivotar."
+    },
+    {
+      "q": "Na estrutura de um pitch deck de 10 slides, qual é a ordem correcta?",
+      "opts": [
+        "Solução → Problema → Mercado → Produto → Traction → Team → Ask",
+        "Problema → Solução → Mercado → Produto → Traction → Modelo de Negócio → Competition → Team → Ask",
+        "Mercado → Problema → Solução → Team → Traction → Ask",
+        "Title → Tecnologia → Features → Roadmap → Ask"
+      ],
+      "a": 1,
+      "exp": "A sequência vencedora segue a lógica 'porque existe, como resolve, quanto vale, quem o faz, o que pedimos': Title → Problem → Solution → Market → Product → Traction → Business model → Competition → Team → Ask. Começar pelo problema (não pela solução) é o erro #1 que mais mata pitches. Investidores querem saber a dor antes da tecnologia."
+    },
+    {
+      "q": "Qual é a principal causa de morte de startups segundo o estudo do CB Insights?",
+      "opts": [
+        "Falta de capital",
+        "Falta de produto tecnicamente bom",
+        "Falta de mercado — constrói-se algo que ninguém quer",
+        "Má gestão de equipa"
+      ],
+      "a": 2,
+      "exp": "O estudo do CB Insights (2024) mostra que 80% das startups não morrem por 'falta de produto' ou 'falta de capital' — morrem por 'falta de mercado'. Construem um produto tecnicamente interessante que resolve um problema que ninguém tem (ou que ninguém paga para resolver). É por isso que a validação de problema ANTES de construir é a prática que mais startups salva."
+    },
+    {
+      "q": "Qual é a pergunta que o pitch deck deve SEMPRE terminar com um ASK claro e específico?",
+      "opts": [
+        "Sim — porque sem o ask, o investidor não sabe se vale a pena continuar a conversa",
+        "Não — o ask é implícito; o importante é o produto",
+        "Apenas se o pitch for bom o suficiente",
+        "Apenas para investidores anjo, não para VCs"
+      ],
+      "a": 0,
+      "exp": "O ask é o slide mais importante do pitch para o investidor — sem ele, a conversa não tem próximo passo. O ask deve ser específico: quanto (€X em ronda seed), em que instrumento (equity, SAFE, convertível), para quê (3-4 usos prioritários do capital), e qual a valuation esperada. Vaguezas como 'procuramos parceiros estratégicos' matam pitches que, de resto, seriam bons."
+    }
+  ]
+}

@@ -819,5 +819,11 @@
   "financas.nova.erro.valor_zero": "Le montant doit être supérieur à zéro.",
   "financas.nova.erro.sem_categoria": "Choisis une catégorie.",
   "financas.nova.erro.sem_data": "Indique une date.",
-  "financas.orcamento.erro.gravar": "Erreur d'enregistrement du budget"
+  "financas.orcamento.erro.gravar": "Erreur d'enregistrement du budget",
+  "routes.escola.curso.empreendedorismo.title": "Entrepreneuriat et Plan d’Affaires",
+  "routes.escola.curso.empreendedorismo.description": "La matière la plus pratique de BA : transformer une idée en entreprise durable. Couvre l’état d’esprit entrepreneurial (effectuation, journey, biais), Business Model Canvas, validation du problème et MVP (4 types), business plan complet et pitch de 3-5 minutes.",
+  "routes.escola.curso.empreendedorismo.tagline": "Business Administration · Mindset, BMC, MVP, pitch investisseurs",
+  "routes.escola.quiz.epq.title": "Quiz : Entrepreneuriat et Plan d’Affaires",
+  "routes.escola.quiz.epq.description": "Testez vos connaissances sur l’état d’esprit entrepreneurial, le Business Model Canvas, la validation de problème, le MVP, le business plan et le pitch investisseurs. 10 questions, 4 options, explication détaillée.",
+  "routes.aulas.curso.empreendedorismo": "Entrepreneuriat et Plan d’Affaires"
 }

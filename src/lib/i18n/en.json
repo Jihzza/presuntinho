@@ -819,5 +819,11 @@
   "financas.nova.erro.valor_zero": "Amount must be greater than zero.",
   "financas.nova.erro.sem_categoria": "Choose a category.",
   "financas.nova.erro.sem_data": "Pick a date.",
-  "financas.orcamento.erro.gravar": "Error saving budget"
+  "financas.orcamento.erro.gravar": "Error saving budget",
+  "routes.escola.curso.empreendedorismo.title": "Entrepreneurship and Business Plan",
+  "routes.escola.curso.empreendedorismo.description": "The most practical BA course: how to turn an idea into a sustainable business. Covers entrepreneurial mindset (effectuation, journey, biases), Business Model Canvas, problem validation and MVP (4 types), full business plan and 3-5 minute pitch to investors.",
+  "routes.escola.curso.empreendedorismo.tagline": "Business Administration · Mindset, BMC, MVP, investor pitch",
+  "routes.escola.quiz.epq.title": "Quiz: Entrepreneurship and Business Plan",
+  "routes.escola.quiz.epq.description": "Test your knowledge on entrepreneurial mindset, Business Model Canvas, problem validation, MVP, business plan and investor pitch. 10 questions, 4 options each, with detailed explanation.",
+  "routes.aulas.curso.empreendedorismo": "Entrepreneurship and Business Plan"
 }

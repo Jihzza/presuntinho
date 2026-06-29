@@ -1,0 +1,227 @@
+{
+  "id": "04-plano-de-negocios-e-pitch",
+  "title": "4. Plano de Negócios e Pitch para Investidores",
+  "courseSlug": "empreendedorismo",
+  "lessonNumber": 4,
+  "description": "A última peça da cadeira: como escrever um plano de negócios completo (sumário executivo, mercado, produto,运营, equipa, finanças, riscos) e como fazer um pitch de 3-5 minutos que conquista investidores. Cobre a estrutura do pitch deck (problem, solution, market, traction, team, ask) e os erros que mais matam pitches.",
+  "audio": "Na quarta e última lição desta cadeira vamos juntar tudo: o plano de negócios completo e a arte do pitch. O plano de negócios é o documento de 15-30 páginas que um banco, investidor ou parceiro pede antes de decidir. O pitch é a versão em 10 slides que se apresenta em 3-5 minutos. Vamos ver a estrutura de ambos, com exemplos práticos, e os erros mais comuns que vejo em founders — slides demasiado técnicos, foco em features em vez de mercado, e a falta de uma pergunta clara. No fim terás um template completo de plano de negócios + um pitch deck pronto a usar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["plano-de-negócios", "pitch", "investidores", "deck", "business-plan"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Plano de negócios vs. Business Model Canvas: qual usar?"
+    },
+    {
+      "type": "p",
+      "text": "São ferramentas diferentes para públicos diferentes. O Business Model Canvas cabe numa página A3 e é perfeito para uso interno, equipas pequenas, e iteração rápida. O plano de negócios é um documento de 15-30 páginas, formal, dirigido a entidades externas (bancos, investidores institucionais, programas de subsídio). Um founder que vai pedir um empréstimo bancário de 50 mil euros precisa do plano; um founder a iterar com a sua equipa precisa do Canvas. Idealmente, ambos coexistem."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Canvas: uso interno, iteração semanal, hipoteses vivas",
+        "Plano: uso externo, actualização trimestral, documento formal",
+        "Tamanho: Canvas = 1 página; Plano = 15-30 páginas",
+        "Audiência: Canvas = equipa e mentores; Plano = bancos, investidores, grants"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Estrutura padrão do plano de negócios"
+    },
+    {
+      "type": "p",
+      "text": "Há muitas variantes, mas a estrutura mais aceite internacionalmente (e a que bancos/investidores esperam) tem 8 secções: sumário executivo, descrição da empresa, análise de mercado, organização e gestão, produto/serviço, estratégia de marketing e vendas, projeções financeiras, e pedido de financiamento. Vamos ver cada uma em detalhe."
+    },
+    {
+      "type": "ol",
+      "items": [
+        "Sumário executivo: 1 página que resume o todo — a parte mais importante, lida por 95% dos leitores",
+        "Descrição da empresa: missão, visão, forma legal, localização, história",
+        "Análise de mercado: TAM/SAM/SOM, segmentação, concorrência, tendências",
+        "Organização e gestão: organograma, equipa fundadora, advisors, hiring plan",
+        "Produto/serviço: descrição técnica, IP, roadmap, estado de desenvolvimento",
+        "Marketing e vendas: ICP, posicionamento, canais, modelo de aquisição, funil",
+        "Projeções financeiras: 3-5 anos de P&L, cash flow, balanço, métricas chave",
+        "Pedido de financiamento: quanto, em que ronda, para quê, valuation esperada"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Sumário executivo: a porta de entrada"
+    },
+    {
+      "type": "p",
+      "text": "O sumário executivo é a parte mais importante do plano — é a única que a maioria dos leitores vai ler na íntegra. Tem 1 página (máximo 2), segue uma estrutura clara, e responde a 4 perguntas: (1) o que é a empresa? (2) que problema resolve? (3) que tamanho tem o mercado? (4) que retorno posso esperar? Se estas 4 perguntas não ficarem respondidas em 60 segundos, o leitor vai para o próximo plano. Exemplos reais a analisar: Airbnb (2008), Uber (2009), Dropbox (2007)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Parágrafo 1: One-liner — 'X para Y' (ex: 'Uber para táxis pretos de luxo')",
+        "Parágrafo 2: Problema — qual a dor, quem a sente, quanto custa",
+        "Parágrafo 3: Solução — o que fazemos, que tecnologia/Modelo usamos",
+        "Parágrafo 4: Mercado — TAM/SAM/SOM em €",
+        "Parágrafo 5: Traction — onde estamos hoje (clientes, receita, parcerias)",
+        "Parágrafo 6: Equipa — 2-3 frases sobre os fundadores",
+        "Parágrafo 7: Pedido — quanto queremos, em que ronda, valuation"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Análise de mercado: TAM, SAM, SOM"
+    },
+    {
+      "type": "p",
+      "text": "A análise de mercado usa três métricas: TAM (Total Addressable Market — todo o mercado teórico), SAM (Serviceable Addressable Market — o sub-mercado que podemos servir com o nosso modelo actual), e SOM (Serviceable Obtainable Market — o sub-mercado que realisticamente podemos capturar em 3-5 anos). Founders caem em dois erros opostos: TAM demasiado grande (parece irrealista) ou TAM demasiado pequeno (não atrai investidores). O truque é o SAM + SOM serem críveis, e o TAM mostrar o upside."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "TAM: '€50B — mercado global de perfumaria' (todos os perfumes do mundo)",
+        "SAM: '€2B — mercado de perfumaria low-cost em Europa e Médio Oriente' (geografia + segmento)",
+        "SOM: '€50M — quota realista em 5 anos se mantivermos 25% de crescimento anual'",
+        "Método top-down: começar pelo TAM global, segmentar até ao SOM",
+        "Método bottom-up: começar pelo SOM real (clientes × preço × frequência) e crescer para SAM"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Projeções financeiras: 3-5 anos de P&L"
+    },
+    {
+      "type": "p",
+      "text": "As projeções financeiras são onde 80% dos founders perdem credibilidade. O erro clássico é subestimar custos e superestimar receita, criando um P&L que 'dá certo' no Excel mas é irrealista no mercado. A solução é o método 'bottom-up': cada linha de receita é construída a partir de premissas operacionais verificáveis (número de clientes × preço unitário × frequência). Cada linha de custo é construída a partir de headcount × salário, ou de operações reais."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Receita: (clientes novos por mês × ARPU) + (churn) — não 'crescimento de 100% ao ano' sem base",
+        "COGS: matérias-primas, hosting, customer support, transacções",
+        "S&M (Sales & Marketing): CAC × clientes novos + overhead de marketing",
+        "R&D: equipa de produto × salário, ferramentas, infra",
+        "G&A: administrativo, escritório, legal, accounting",
+        "EBITDA: receita − todos os custos operacionais (excluindo depreciação e juros)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Cenário base vs. cenário optimista"
+    },
+    {
+      "type": "p",
+      "text": "Investidores experientes não acreditam em projeções lineares. Pedem sempre 3 cenários: pessimista (o que acontece se o mercado não responde?), base (o que achamos que vai acontecer) e optimista (e se tudo correr bem?). O cenário base é o que usaremos para decisões; o pessimista para stress-test; o optimista para mostrar o upside. A diferença entre base e optimista é, normalmente, a métrica de captura de mercado (SOM)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Cenário pessimista: 30% do SOM, break-even no ano 4",
+        "Cenário base: 60% do SOM, break-even no ano 2",
+        "Cenário optimista: 100% do SOM, break-even no ano 1 (apenas se houver sinais fortes de product-market fit)",
+        "Mostrar os 3 no plano: 'se X, então Y; se Z, então W'",
+        "Regra: se o cenário pessimista ainda é viável, o plano é robusto"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Pitch deck: 10 slides, 3-5 minutos"
+    },
+    {
+      "type": "p",
+      "text": "O pitch deck é a versão do plano de negócios para investidores. A regra é simples: 10 slides, 3-5 minutos, 1 mensagem central. Cada slide responde a uma pergunta, e a sequência segue a lógica 'porque existe, como resolve, quanto vale, quem o faz, o que pedimos'. Os investidores de VC vêem 100+ pitches por semana — os que sobrevivem são os que comunicam clareza e confiança, não os que têm mais slides."
+    },
+    {
+      "type": "ol",
+      "items": [
+        "Slide 1 — Title: nome + one-liner + logo +联系人",
+        "Slide 2 — Problem: a dor, com números e exemplos",
+        "Slide 3 — Solution: o que fazemos, com 1-2 screenshots",
+        "Slide 4 — Market: TAM/SAM/SOM com visual claro",
+        "Slide 5 — Product: 3-4 screenshots do produto, fluxo principal",
+        "Slide 6 — Traction: onde estamos hoje, com números reais",
+        "Slide 7 — Business model: como ganhamos dinheiro, com unit economics",
+        "Slide 8 — Competition: matriz 2x2 ou tabela, com vantagem clara",
+        "Slide 9 — Team: 3 fotos, 1 linha sobre cada, advisors",
+        "Slide 10 — Ask: quanto queremos, em que ronda, próximos 18 meses"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Os 5 erros que matam pitches"
+    },
+    {
+      "type": "p",
+      "text": "Em 8 anos a avaliar pitches, identifiquei cinco padrões que se repetem em 80% das apresentações que rejeito: (1) começar pela solução em vez do problema, (2) focar em features técnicas em vez de mercado e traction, (3) TAM inflado e irrealista, (4) métricas bonitas mas sem unit economics, (5) 'pedido' vago ('procuramos parceiros estratégicos'). Os pitches vencedoes resolvem cada um destes com clareza e humildade."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Erro 1: 'A nossa plataforma X usa blockchain e IA...' — investir 30s em tecnologia, sem dizer o problema",
+        "Erro 2: 'O produto tem 47 features...' — foco em features, não em benefício",
+        "Erro 3: 'O mercado é de 5 biliões de euros' — irrealista, o VC para de ouvir",
+        "Erro 4: 'Temos 10.000 utilizadores' — mas quanto paga cada um? E quanto custou trazê-los?",
+        "Erro 5: 'Procuramos investidores' — quanto, em que ronda, para quê, e qual a valuation?"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Dica de ouro: gravar o pitch em vídeo, ver 10 vezes, e cortar 1 slide de cada vez. O pitch perfeito é o pitch que sobrevive à edição. Se o pitch não cabe em 5 minutos, é porque há informação a mais — não a menos."
+    },
+    {
+      "type": "h2",
+      "text": "Como responder às perguntas dos investidores"
+    },
+    {
+      "type": "p",
+      "text": "A parte mais importante do pitch não é a apresentação — são os 10-15 minutos de perguntas a seguir. Investidores experientes usam este tempo para testar três coisas: (1) a fundo de conhecimento do fundador sobre o mercado; (2) honestidade intelectual — admite o que não sabe?; (3) velocidade de raciocínio — consegue pensar em voz alta? As melhores respostas são curtas, directas, e admitidas. 'Não sei, mas vou descobrir' é melhor que uma resposta inventada."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Pergunta difícil: 'Porque não vos copia um incumbente?' — responder com barreiras à entrada reais (rede, dados, marca, capital)",
+        "Pergunta difícil: 'Qual é o vosso CAC?' — responder com número real + benchmark da indústria",
+        "Pergunta difícil: 'Porque vão conseguir?' — equipa, track record, ou unfair advantage",
+        "Sempre terminar com uma pergunta: 'Há algum aspecto que gostariam de explorar mais?'",
+        "Mandar follow-up em 24h com: actualização, dados pedidos, próximos passos"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Tipos de financiamento: bootstrapping, debt, equity, grants"
+    },
+    {
+      "type": "p",
+      "text": "Nem todo o financiamento é igual. Bootstrapping (poupanças pessoais + reinvestimento) preserva controlo mas limita crescimento. Dívida (empréstimo bancário) é barata mas exige garantias e现金流. Equity (capital de risco) é o mais caro em equity mas o mais rápido em capital. Grants (subsídios) são gratuitos mas exigem tempo de candidatura. A escolha depende do estágio, do setor, e do perfil de risco do fundador."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Bootstrapping: 0-50k€, preservar equity, ideal para serviços e PMEs locais",
+        "Dívida: 50k-500k€, ideal para PMEs com fluxo de caixa previsível",
+        "Equity (pre-seed/seed): 100k-2M€, ideal para tech startups com upside",
+        "Equity (Series A+): 2M-50M+, ideal para scale-ups com tração",
+        "Grants: 10k-500k€, ideal para I&D, biotech, impacto social"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Checklist final: o que levar para a primeira reunião"
+    },
+    {
+      "type": "p",
+      "text": "Para fechar a cadeira, deixo uma checklist concreta do que preparar antes da primeira reunião com um investidor. Não é sobre quantidade de informação — é sobre qualidade e clareza. O objectivo é responder a 95% das perguntas previsíveis para que a conversa possa ir para o que realmente importa: visão, equipa, e timing de mercado."
+    },
+    {
+      "type": "ol",
+      "items": [
+        "Sumário executivo de 1 página, imprimido, 5 cópias",
+        "Pitch deck de 10 slides, em PDF, projetado em ecrã",
+        "Demo do produto (link ou vídeo de 60s)",
+        "Projeções financeiras: 3 cenários, 3-5 anos, em Excel ou PDF",
+        "One-pager de traction: 5 KPIs mais importantes, com histórico",
+        "Resposta a 10 perguntas previsíveis (TAM, CAC, LTV, etc.) preparada",
+        "Lista de 3 referências: 1 cliente, 1 parceiro, 1 advisor"
+      ]
+    }
+  ]
+}

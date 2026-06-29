@@ -378,6 +378,18 @@
                                   lessonCount: 4,
                                   quizCount: 1,
                                   badge: 'Uni'
+                                },
+                                {
+                                  slug: 'empreendedorismo',
+                                  title: 'Empreendedorismo e Plano de Negócios',
+                                  tagline: 'Business Administration · Mindset, BMC, MVP, pitch a investidores',
+                                  description:
+                                    'A cadeira mais prática da BA: como transformar uma ideia num negócio sustentável. Cobre mindset empreendedor (effectuation, journey, biases), Business Model Canvas, validação de problema e MVP (4 tipos), plano de negócios completo e pitch de 3-5 minutos para investidores.',
+                                  icon: '🚀',
+                                  color: '#e11d48',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
                                 }
                               ];
 </script>

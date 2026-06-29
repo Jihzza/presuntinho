@@ -1,0 +1,14 @@
+{
+  "id": "empreendedorismo",
+  "title": "Empreendedorismo e Plano de Negócios",
+  "description": "A cadeira mais prática da BA: como transformar uma ideia num negócio sustentável. Cobre mindset empreendedor, modelos de negócio (Business Model Canvas), validação de problema-solução, plano de negócios completo (operacional, financeiro, marketing) e pitch para investidores.",
+  "icon": "🚀",
+  "color": "rose",
+  "lessons": [
+    "01-mindset-e-jornada-empreendedora",
+    "02-business-model-canvas",
+    "03-validacao-e-mvp",
+    "04-plano-de-negocios-e-pitch"
+  ],
+  "quizSlug": "epq"
+}

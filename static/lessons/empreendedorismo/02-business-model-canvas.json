@@ -1,0 +1,175 @@
+{
+  "id": "02-business-model-canvas",
+  "title": "2. Business Model Canvas: Estruturar o Negócio numa Página",
+  "courseSlug": "empreendedorismo",
+  "lessonNumber": 2,
+  "description": "A ferramenta mais usada no mundo para visualizar e desenhar um modelo de negócio. Cobre os 9 blocos do Canvas (segmentos de cliente, proposta de valor, canais, relação, fontes de receita, recursos, actividades, parcerias, estrutura de custos), o processo prático de preenchê-lo, e dois exemplos completos (Equivalenza e Nubank).",
+  "audio": "Nesta segunda lição vamos dominar o Business Model Canvas — a ferramenta criada por Alexander Osterwalder que cabe numa página e mostra como uma empresa cria, entrega e captura valor. Vamos percorrer os nove blocos um a um, entender a sequência lógica de preenchimento (começar pelos clientes, não pelo produto), e aplicar tudo a dois casos reais: o relançamento da Equivalenza e a entrada do Nubank no Brasil. No fim terás um Canvas completo que podes usar para qualquer ideia.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["business-model-canvas", "osterwalder", "proposta-valor", "segmentos", "receitas"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é o Business Model Canvas"
+    },
+    {
+      "type": "p",
+      "text": "O Business Model Canvas (BMC) é uma ferramenta visual que descreve como uma organização cria, entrega e captura valor. Foi popularizado por Alexander Osterwalder e Yves Pigneur no livro 'Business Model Generation' (2010) e é hoje usado por mais de 5 milhões de empresas em todo o mundo — de startups em Silicon Valley a PMEs em Marraquexe. A grande vantagem é que cabe numa folha A3, é fácil de partilhar, e força o fundador a ser concreto e coerente."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "9 blocos que cobrem todas as decisões fundamentais de um negócio",
+        "1 página A3: suficiente para ver o todo sem se perder em detalhe",
+        "Não é estático: revê-se a cada 3-6 meses ou a cada grande pivot",
+        "Não substitui um plano de negócios completo — é um ponto de partida para conversas"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Os 9 blocos do Canvas"
+    },
+    {
+      "type": "ol",
+      "items": [
+        "Segmentos de Cliente (CS): para quem criamos valor? quem são os nossos clientes mais importantes?",
+        "Proposta de Valor (VP): que bundle de produtos/serviços criamos para cada segmento? que problema resolvemos?",
+        "Canais (CH): como chegamos aos clientes? como os informamos, vendemos e entregamos?",
+        "Relação com Cliente (CR): que tipo de relação cada segmento espera? pessoal, automatizada, self-service?",
+        "Fontes de Receita (R$): pelo que pagam os clientes? como pagam? quanto contribuem para o total?",
+        "Recursos-Chave (KR): que activos físicos, intelectuais, humanos e financeiros são indispensáveis?",
+        "Actividades-Chave (KA): que actividades我们需要 para entregar a proposta de valor?",
+        "Parcerias-Chave (KP): quem são os nossos fornecedores e aliados estratégicos?",
+        "Estrutura de Custos (C$): quais são os custos mais importantes? que recursos/actividades são mais caros?"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Sequência de preenchimento: começar pelos clientes"
+    },
+    {
+      "type": "p",
+      "text": "O erro mais comum de fundadores é começar pelo meio do Canvas — 'qual é a minha tecnologia?' ou 'qual é o meu produto?' — e só depois pensar em quem paga. O Canvas funciona melhor quando seguimos uma sequência: primeiro o cliente (CS), depois a sua dor/desejo, depois a nossa solução (VP), depois como chegamos a ele (CH, CR), e só depois o que custa e o que rende. A parte direita do Canvas (custos, recursos) só faz sentido depois de sabermos a parte esquerda (clientes e proposta de valor)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Passo 1: Segmentos de Cliente — quem?",
+        "Passo 2: Proposta de Valor — o quê?",
+        "Passo 3: Canais + Relação — como?",
+        "Passo 4: Fontes de Receita — quanto?",
+        "Passo 5: Recursos + Actividades + Parcerias — com quê?",
+        "Passo 6: Estrutura de Custos — quanto custa?"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Proposta de Valor: o coração do Canvas"
+    },
+    {
+      "type": "p",
+      "text": "A Proposta de Valor é o que faz o cliente escolher-vos a vós em vez de ao concorrente. Não é 'ser o melhor do mundo' — é um pacote concreto de benefícios que resolve um job-to-be-done específico para um segmento específico. A framework clássica é a Value Proposition Canvas: do lado do cliente, listamos as suas tarefas (jobs), as suas dores (pains) e os seus ganhos desejados (gains). Do lado do produto, listamos como os nossos produtos/serviços aliviam essas dores e criam esses ganhos."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Jobs: o que o cliente está a tentar fazer? (funcional, social, emocional)",
+        "Pains: o que o incomoda, custa, ou preocupa antes, durante e depois do job?",
+        "Gains: o que o faria sorrir, poupar tempo, ou sentir-se bem?",
+        "Products/Services: o nosso portfólio concreto (não 'uma plataforma inovadora' — sim 'app iOS com 5 funções X, Y, Z')",
+        "Pain Relievers: como cada produto alivia uma dor específica",
+        "Gain Creators: como cada produto cria um ganho específico"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Caso prático 1: Equivalenza — reestruturação pós-queda"
+    },
+    {
+      "type": "p",
+      "text": "Vamos aplicar o Canvas à Equivalenza, a marca espanhola de perfumaria low-cost. Em 2018, as suas vendas em Espanha caíram de €22M para €14M, forçando uma reestruturação completa. O Canvas permite perceber onde a proposta de valor falhou e onde pode ser reconstruída."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Segmentos: mulheres 25-45 low-cost, turistas (especialmente no Médio Oriente), retalhistas independentes",
+        "Proposta de Valor original: 'perfume de marca branca a 1/10 do preço de luxo' — forte em 2010, fraca em 2020 (concorrentes directos)",
+        "Canais: loja física própria + franchising + website (fraco mobile)",
+        "Receitas: venda directa (70%) + franchising (25%) + wholesale B2B (5%)",
+        "Recursos: fórmulas próprias, 400 lojas próprias, marca reconhecida, rede de franchisados",
+        "Custos: marketing (alto), imobiliário comercial, I&D de fórmulas, rede de distribuição"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Diagnóstico do Canvas original"
+    },
+    {
+      "type": "p",
+      "text": "O Canvas revela três problemas estruturais: (1) a proposta de valor 'preço baixo' já não diferencia — Primor, Mercadona e YesFuture fazem o mesmo; (2) o canal digital é fraco comparando com a concorrência, que apostou em TikTok e influencers; (3) a relação com o cliente é transaccional — não há loyalty program, não há personalização. O relanço exige mover o Canvas para o quadrante 'experiência + comunidade'."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Pivotar proposta de valor: de 'preço baixo' para 'identidade olfativa personalizada'",
+        "Pivotar canais: de loja física + website para omnichannel com app mobile-first",
+        "Pivotar relação: de transacção para membership (público-alvo leal)",
+        "Novos recursos: equipa digital, app de personalização, programa de fidelidade",
+        "Novos custos: marketing digital, desenvolvimento de app, programa de loyalty"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Caso prático 2: Nubank — como desenhar a partir do zero"
+    },
+    {
+      "type": "p",
+      "text": "O Nubank entrou no Brasil em 2013 com um Canvas que viria a redefinir o sector bancário sul-americano. Vamos ver como David Vélez e equipa usaram a ferramenta para chegar ao Canvas que, em 2025, serve mais de 100 milhões de clientes."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Segmentos: brasileiros não-bancarizados e sub-bancarizados (~50M de pessoas que pagavam spreads de 400% ao ano em cartão de crédito)",
+        "Proposta de Valor: 'conta digital sem tarifas, cartão de crédito sem anuidade, app intuitiva'",
+        "Canais: app mobile + redes sociais + boca-a-boca (zero balcões físicos)",
+        "Relação: self-service digital + chatbot + suporte via app",
+        "Receitas: spread de cartão de crédito (principal), interchange, fees de antecipação",
+        "Recursos: software, equipa de engenheiros, dados, marca",
+        "Actividades: desenvolvimento de produto, marketing digital, análise de risco de crédito",
+        "Parcerias: Visa/Mastercard (rede), bancos liquidantes",
+        "Custos: engenharia, marketing de aquisição, infraestrutura cloud, risco de crédito"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Lições do Canvas do Nubank"
+    },
+    {
+      "type": "p",
+      "text": "Três decisões de Canvas foram decisivas: (1) eliminar balcões físicos — libertou estrutura de custos e permitiu conta sem tarifas; (2) apostar tudo em app mobile — em 2013, o mobile era arriscado no Brasil, mas o Nubank construiu marca a partir daí; (3) construir equipa interna de engenharia em vez de subcontratar — controlo de produto e velocidade de iteração. O Canvas ajudou a tornar estas decisões explícitas e testáveis."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Erro comum: tratar o Canvas como um documento em vez de uma hipótese. Um Canvas só tem valor se for testado no mercado — conversas com 30 clientes potenciais revelam mais do que 30 iterações internas."
+    },
+    {
+      "type": "h2",
+      "text": "Como validar e iterar o Canvas"
+    },
+    {
+      "type": "p",
+      "text": "O Canvas não é um documento final — é uma hipótese visual. A primeira versão deve ser desenhada em 1-2 horas, depois testada com 20-30 conversas com clientes potenciais, e iterada 3-4 vezes antes de se investir dinheiro significativo. As iterações mais úteis acontecem quando pomos números reais no Canvas: qual é o CAC (custo de aquisição de cliente)? Qual é o LTV (lifetime value)? Qual é a margem de contribuição?"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Versão 1: 1-2h de sketch, hipóteses brutes",
+        "Versão 2: após 10-15 entrevistas, ajustada com feedback real",
+        "Versão 3: após primeiros clientes pagantes, ajustada com dados",
+        "Versão 4: após 6-12 meses de operação, ajustada com métricas de mercado",
+        "Ferramenta: usar a Business Model Canvas Toolbox (Strategyzer) para formato A3"
+      ]
+    }
+  ]
+}
