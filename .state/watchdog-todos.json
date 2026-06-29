@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-29T05:25:00+02:00",
+  "lastUpdated": "2026-06-29T07:35:00+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -81,9 +81,23 @@
       "severity": "média",
       "source": "watchdog-tick-2026-06-29-05",
       "created_at": "2026-06-29T05:25:00+02:00"
+    },
+    {
+      "id": "gap-072",
+      "category": "lição/curso",
+      "description": "Executar plano .state/gap-071-plan.md (28 KB) — cadeira BA #31 Contabilidade Gerencial. 4 lições + 1 quiz + i18n 5 locales + CATALOGUE wired. Plano já estruturado no repo.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-07",
+      "created_at": "2026-06-29T07:35:00+02:00"
     }
   ],
   "closedItems": [
+    {
+      "id": "gap-068",
+      "description": "fix(i18n): gap-068 — final audit pass: 16 PT strings wrapped in $t() across 10 routes (pt/financas/habitos/escola/secrets/write/course/dl/trabalhos). 24 chaves × 5 locales = 120 entries (753→873). Audit doc .state/i18n-audit-final.md lista como extended sweep; agora 100% coberto.",
+      "sha": "f115576",
+      "closed_at": "2026-06-29T07:35:00+02:00"
+    },
     {
       "id": "gap-054",
       "description": "2nd round de polish tick: forms audit + HeartButton posicionamento — fundido com gap-066. Estado em tick-29: edge cases em forms, validação URL biblioteca, max lengths, error messages localizados (muitos resolvidos em gap-058/059/060/061).",
