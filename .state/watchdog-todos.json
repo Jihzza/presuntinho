@@ -1,14 +1,6 @@
 {
-  "lastUpdated": "2026-06-29T12:13:15.048479+02:00",
+  "lastUpdated": "2026-06-29T14:02:32.237157+02:00",
   "openItems": [
-    {
-      "id": "gap-079",
-      "category": "lição/curso",
-      "description": "Próxima cadeira BA #33. gap-078 entregou #32 (Empreendedorismo). Sugestão: 'Mercados Financeiros' / 'Comércio Internacional' / 'Gestão da Qualidade'. 4 lições + 1 quiz + i18n 5 locales + CATALOGUE wired. Aguardar próximo brief do Daniel ou auto-selecionar cadeira com mais procura na BA.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-12",
-      "created_at": "2026-06-29T12:13:15.048479+02:00"
-    },
     {
       "id": "gap-080",
       "category": "smoke-fail",
@@ -105,6 +97,14 @@
       "severity": "média",
       "source": "watchdog-tick-2026-06-29-05",
       "created_at": "2026-06-29T05:25:00+02:00"
+    },
+    {
+      "id": "gap-082",
+      "category": "smoke-fail",
+      "description": "Smoke live-fire final do gap-079: confirmar 5 i18n locales (pt-PT, en, fr, tn, ar) resolvem routes.escola.curso.gestao-qualidade.* e routes.aulas.curso.gestao-qualidade sem fallback PT no DOM. 11/11 URLs já em HTTP 200. Bloqueado por auth gate para visual DOM inspection.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-13",
+      "created_at": "2026-06-29T14:02:32.237157+02:00"
     }
   ],
   "closedItems": [
@@ -484,6 +484,19 @@
       "closed_at": "2026-06-29T11:31:44+02:00",
       "updated_at": "2026-06-29T11:31:44+02:00",
       "evidence": "skander1-audit-20260628T120818Z.md (HeartButton matriz 5/5 areas verde) + heart-button-recommendation.md (Skander 1 recomenda manter FAB bottom-right): HeartButton global em +layout.svelte:228-231, position fixed right:max(1rem, env(safe-area-inset-right)) bottom:calc(72px+...), z-index 60 (acima bottom-nav 50), 56x56px touch target, aria-label PT, NAO aparece em /splash/ por design."
+    },
+    {
+      "id": "gap-079",
+      "category": "lição/curso",
+      "description": "Próxima cadeira BA #33. gap-078 entregou #32 (Empreendedorismo). Sugestão: 'Mercados Financeiros' / 'Comércio Internacional' / 'Gestão da Qualidade'. 4 lições + 1 quiz + i18n 5 locales + CATALOGUE wired. Aguardar próximo brief do Daniel ou auto-selecionar cadeira com mais procura na BA.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-12",
+      "created_at": "2026-06-29T12:13:15.048479+02:00",
+      "done": true,
+      "sha": "39bb36a",
+      "closed_at": "2026-06-29T14:02:32.237157+02:00",
+      "updated_at": "2026-06-29T14:02:32.237157+02:00",
+      "evidence": "feat(escola): gap-079 — Gestão da Qualidade Total (BA #33, 4 lições + gqq quiz 10 perguntas) + i18n 5 locales. 11/11 smoke URLs HTTP 200 em produção após deploy 6a425e73 (commit 39bb36a1)."
     }
   ]
 }
