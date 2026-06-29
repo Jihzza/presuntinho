@@ -84,7 +84,8 @@ const COURSE_META: Record<string, CourseMeta> = {
             'international-business': { slug: 'international-business', title: 'International Business', icon: '🌐', color: '#2563eb' },
             'supply-chain': { slug: 'supply-chain', title: 'Supply Chain Management', icon: '📦', color: '#b45309' },
             'data-analytics': { slug: 'data-analytics', title: 'Data Analytics for Business', icon: '📊', color: '#7c3aed' },
-            'project-management': { slug: 'project-management', title: 'Project Management', icon: '📋', color: '#0d9488' }
+            'project-management': { slug: 'project-management', title: 'Project Management', icon: '📋', color: '#0d9488' },
+            'gestao-financeira-empresarial': { slug: 'gestao-financeira-empresarial', title: 'Gestão Financeira Empresarial', icon: '💼', color: '#0e7490' }
           };
 
 /** Turn "blue-ocean-strategy" → "Blue Ocean Strategy". */

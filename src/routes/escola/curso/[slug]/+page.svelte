@@ -460,6 +460,20 @@
                             { slug: '3-metodologias-ageis', title: '3. Metodologias Ágeis', summary: 'Scrum, Kanban, sprints e cerimónias ágeis.', estMinutes: 7 },
                             { slug: '4-risk-e-stakeholders', title: '4. Gestão de Risco e Stakeholders', summary: 'Risk register, matrizes de probabilidade/impacto e plano de comunicação.', quizSlug: 'pmq', quizTitle: 'Quiz: Project Management', estMinutes: 8 }
                           ]
+                        },
+                        'gestao-financeira-empresarial': {
+                          slug: 'gestao-financeira-empresarial',
+                          title: 'Gestão Financeira Empresarial',
+                          tagline: 'Business Administration · Demonstrações financeiras, rácios, orçamento de capital e WACC',
+                          description: 'Finanças corporativas na prática: como ler e construir as três demonstrações financeiras (DRE, Balanço, DFC), analisar rácios de liquidez, rentabilidade e endividamento, avaliar projectos de investimento com VPL/TIR/payback e decidir a melhor estrutura de capital (WACC, equity vs. dívida).',
+                          icon: '💼',
+                          color: '#0e7490',
+                          lessons: [
+                            { slug: '01-demonstracoes-financeiras', title: '1. Demonstrações Financeiras: DRE, Balanço e Fluxo de Caixa', summary: 'As três peças que contam a história da empresa: performance, posição e liquidez.', quizSlug: 'gfeq', quizTitle: 'Quiz: Gestão Financeira Empresarial', estMinutes: 9 },
+                            { slug: '02-analise-de-indices', title: '2. Análise de Índices: Liquidez, Rentabilidade e Endividamento', summary: 'Rácios para medir solvência, criação de valor e estrutura de capital (DuPont).', quizSlug: 'gfeq', quizTitle: 'Quiz: Gestão Financeira Empresarial', estMinutes: 9 },
+                            { slug: '03-orcamento-de-capital', title: '3. Orçamento de Capital: CAPEX/OPEX, VPL, TIR e Payback', summary: 'Decidir se um investimento cria valor: DCF, VPL, TIR, payback e análise de cenários.', quizSlug: 'gfeq', quizTitle: 'Quiz: Gestão Financeira Empresarial', estMinutes: 10 },
+                            { slug: '04-estrutura-de-capital', title: '4. Estrutura de Capital: WACC, Equity vs. Dívida', summary: 'Optimizar a ponderação entre capitais próprios e dívida — CAPM, trade-off e pecking order.', quizSlug: 'gfeq', quizTitle: 'Quiz: Gestão Financeira Empresarial', estMinutes: 10 }
+                          ]
                         }
                       };
 

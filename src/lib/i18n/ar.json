@@ -497,6 +497,8 @@
   "routes.escola.curso.comportamento-do-consumidor.title": "سلوك المستهلك",
   "routes.escola.curso.direito-empresarial.description": "أنواع الشركات والعقود التجارية والملكية الفكرية والتحكيم في البرتغال.",
   "routes.escola.curso.direito-empresarial.title": "قانون الأعمال",
+  "routes.escola.curso.gestao-financeira-empresarial.description": "التمويل المؤسسي عملياً: قراءة وبناء القوائم المالية الثلاث (حساب النتائج، الميزانية، التدفقات النقدية)، تحليل نسب السيولة والربحية والمديونية، تقييم المشاريع الاستثمارية بـ VAN/TIR/payback، واختيار الهيكل الأمثل للتمويل (WACC، حقوق ملكية vs. ديون).",
+  "routes.escola.curso.gestao-financeira-empresarial.title": "الإدارة المالية للشركات",
   "routes.escola.curso.gestao-mudanca.description": "نموذج كوتر المكون من 8 خطوات، ونموذج ADKAR من Prosci، وإدارة المقاومة وثقافة المنظمة وفق شاين.",
   "routes.escola.curso.gestao-mudanca.title": "إدارة التغيير التنظيمي",
   "routes.escola.curso.gestao-operacoes.description": "العمليات والجودة والقدرة وسلسلة التوريد — تحويل المدخلات إلى مخرجات بكفاءة.",

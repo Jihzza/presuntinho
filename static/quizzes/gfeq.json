@@ -1,0 +1,87 @@
+{
+  "id": "gfeq",
+  "title": "Quiz: Gestão Financeira Empresarial",
+  "description": "Testa os teus conhecimentos sobre demonstrações financeiras, rácios, orçamento de capital e estrutura de capital.",
+  "questions": [
+    {
+      "q": "A demonstração de fluxos de caixa divide-se em três grandes blocos:",
+      "opts": [
+        "Receitas, custos e resultados",
+        "Ativo, passivo e capital próprio",
+        "Operacional, investimento e financiamento",
+        "Margem bruta, EBIT e resultado líquido"
+      ],
+      "a": 2
+    },
+    {
+      "q": "A equação fundamental do balanço é:",
+      "opts": [
+        "Receita − Custos = Lucro",
+        "Ativo = Passivo + Capital Próprio",
+        "Caixa = EBITDA − impostos",
+        "ROE = Margem × Rotação × Alavancagem"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Se uma empresa tem Ativo corrente = 1.000k€, Passivo corrente = 500k€ e Inventário = 200k€, qual é a Liquidez Reduzida?",
+      "opts": [
+        "0,5",
+        "1,6",
+        "2,0",
+        "5,0"
+      ],
+      "a": 1
+    },
+    {
+      "q": "A decomposição DuPont mostra que o ROE é o produto de:",
+      "opts": [
+        "Margem × Rotação × Alavancagem",
+        "Liquidez × Solvência × Rentabilidade",
+        "Ativo × Passivo × Capital Próprio",
+        "Receita × Custo × Lucro"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Um projecto exige 100k€ à cabeça e gera FCF de 30k€ durante 5 anos. A taxa de desconto é 10%. O VPL é:",
+      "opts": [
+        "−13,7k€ (rejeitar)",
+        "+13,7k€ (aceitar)",
+        "0k€ (indiferente)",
+        "+50k€ (aceitar)"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Qual a principal diferença entre a TIR e o VPL?",
+      "opts": [
+        "A TIR ignora o valor do dinheiro no tempo",
+        "O VPL ignora a escala do projecto, a TIR não",
+        "A TIR é uma percentagem, o VPL é um valor absoluto; a TIR ignora escala e duração",
+        "Não há diferença — são duas formas de chamar ao mesmo conceito"
+      ],
+      "a": 2
+    },
+    {
+      "q": "A fórmula do WACC é:",
+      "opts": [
+        "WACC = Ke + Kd",
+        "WACC = (E/V)×Ke + (D/V)×Kd×(1−t)",
+        "WACC = EBIT / Juros",
+        "WACC = Resultado líquido / Vendas"
+      ],
+      "a": 1
+    },
+    {
+      "q": "A trade-off theory da estrutura de capital sustenta que:",
+      "opts": [
+        "Quanto mais dívida, melhor — não há limite teórico",
+        "A estrutura de capital é completamente irrelevante para o valor",
+        "Existe um nível óptimo de dívida, onde o benefício fiscal iguala os custos de dificuldade financeira",
+        "As empresas preferem emitir acções antes de endividar-se"
+      ],
+      "a": 2
+    }
+  ]
+}

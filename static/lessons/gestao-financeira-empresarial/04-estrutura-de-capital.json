@@ -1,0 +1,129 @@
+{
+  "id": "04-estrutura-de-capital",
+  "title": "4. Estrutura de Capital: WACC, Equity vs. Dívida",
+  "courseSlug": "gestao-financeira-empresarial",
+  "lessonNumber": 4,
+  "description": "Como financiar a empresa: a ponderação óptima entre capitais próprios e dívida, o custo médio ponderado de capital (WACC) e a teoria que liga estrutura de capital ao valor da empresa.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["WACC", "estrutura de capital", "CAPM", "dívida", "equity", "alavancagem"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Equity vs. Dívida — duas formas de financiar"
+    },
+    {
+      "type": "p",
+      "text": "Toda a empresa tem duas grandes fontes de capital: capitais próprios (equity) — dinheiro dos sócios e accionistas, que é permanente e remunerado via dividendos e valorização; e dívida (debt) — dinheiro emprestado, que tem de ser devolvido e paga juros. A estrutura de capital é a ponderação entre estas duas fontes. A pergunta central é: qual é a mistura óptima que minimiza o custo de capital e maximiza o valor da empresa?"
+    },
+    {
+      "type": "h3",
+      "text": "Vantagens e custos de cada fonte"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Equity: não tem de ser devolvido, é flexível, não obriga a pagamentos fixos. Custo: diluição de propriedade, expectativas de retorno mais altas (acionistas exigem mais que credores).",
+        "Dívida: juros são dedutíveis em IRC (tax shield), credores exigem retorno mais baixo, não dilui a propriedade. Custos: tem de ser paga (juros fixos), risco de insolvência, covenants bancários limitam decisões.",
+        "A teoria fiscal explica porque é que alguma dívida é boa: cada euro de juros pagos poupa €×taxa IRC em impostos. Mas o benefício é decrescente — demasiada dívida aumenta o risco de falência e o custo de capital volta a subir."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Custo Médio Ponderado de Capital (WACC)"
+    },
+    {
+      "type": "p",
+      "text": "O WACC é o custo médio que a empresa paga para financiar os seus activos, ponderado pela proporção de cada fonte. É a taxa de desconto natural para avaliar projectos — usar o WACC garante consistência: aceitar projectos que rendam acima do custo do capital que os financia."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "WACC = (E/V) × Ke + (D/V) × Kd × (1−t)",
+        "E = valor de mercado dos capitais próprios, D = valor de mercado da dívida",
+        "V = E + D (capital total investido)",
+        "Ke = custo do equity (geralmente calculado via CAPM)",
+        "Kd = custo da dívida (taxa de juro após impostos)",
+        "t = taxa de imposto sobre lucros"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "CAPM — o custo do capital próprio"
+    },
+    {
+      "type": "p",
+      "text": "O Capital Asset Pricing Model é a forma mais usada de estimar o custo do equity. Diz que o retorno exigido pelos accionistas é a taxa sem risco (juro de obrigações do Estado) mais um prémio pelo risco de mercado, escalado pelo beta da empresa — uma medida de quanto o seu preço oscila com o mercado."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Ke = Rf + β × (Rm − Rf)",
+        "Rf = taxa sem risco (ex: Obrigações do Tesouro a 10 anos)",
+        "β = sensibilidade da ação ao mercado (1 = segue o mercado; > 1 = mais volátil; < 1 = menos volátil)",
+        "Rm − Rf = prémio de risco de mercado (históricamente 5-7% nas economias desenvolvidas)",
+        "Setores com β alto (tecnologia, biotech) → Ke alto; sectores estáveis (utilities, bens de consumo) → Ke mais baixo"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Teorias de estrutura de capital"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Modigliani-Miller (MM, sem impostos): irrelevante. Em mercados perfeitos, o valor da empresa não depende da estrutura de capital. Serve como base teórica.",
+        "MM com impostos: a dívida cria valor (tax shield). Quanto mais dívida, maior o valor — sem limites teóricos.",
+        "Trade-off theory: há um ponto óptimo. Os benefícios fiscais da dívida são contrabalançados pelos custos de dificuldade financeira (insolvência, custos de agência).",
+        "Pecking order theory: empresas preferem financiar-se internamente (lucros retidos), depois com dívida, e só em último caso com novo equity (porque emitir ações é mau sinal)."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Alavancagem e ROE — a dupla face"
+    },
+    {
+      "type": "p",
+      "text": "Já vimos em DuPont que a alavancagem financeira amplifica o ROE. Mas o mesmo mecanismo amplifica o risco: se o EBIT cai, o resultado líquido cai mais do que proporcionalmente (juros são fixos). Em sectores estáveis (utilities, imobiliário) aceita-se alavancagem alta; em sectores cíclicos ou em fase inicial (tecnologia, biotech) prefere-se equity. O CFO e o CEO têm de calibrar este trade-off constantemente — porque a estrutura de capital não é uma decisão única, é um equilíbrio dinâmico."
+    },
+    {
+      "type": "h3",
+      "text": "Sinais de estrutura de capital problemática"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Cobertura de juros (EBIT/Juros) < 2 — desconfortável",
+        "D/E > 3 (em sectores não estáveis) — alarme",
+        "Dívida de curto prazo superior a caixa + recebíveis — risco de refinanciamento",
+        "Ratings de crédito em downgrade — custo da dívida vai subir",
+        "Vendas em queda com alavancagem alta — espiral de destruição de valor"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "⚠️ Mais dívida não é sempre melhor. A regra empírica: a maioria das empresas maximiza valor com D/E entre 0,3 e 1,0 — dependendo do sector. Acima disso, o benefício fiscal é comido pelo aumento do risco."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: o WACC não é só um número — é a fronteira entre projectos que criam valor e projectos que o destroem. Disciplina de capital = usar o WACC consistentemente em todas as decisões de investimento."
+    },
+    {
+      "type": "exercise",
+      "question": "Empresa: E=600k€ (Ke=12%), D=400k€ (Kd=6%), t=25%. Qual é o WACC? E se a empresa emitir 200k€ de dívida para recomprar ações, com Kd a subir para 7% e Ke a subir para 13%?",
+      "answer": "Cenário 1: V=1000k. WACC = (600/1000)×12% + (400/1000)×6%×(1−0,25) = 7,2% + 1,8% = 9,0%. Cenário 2: E=400, D=600, V=1000. WACC = (400/1000)×13% + (600/1000)×7%×0,75 = 5,2% + 3,15% = 8,35% — desce, indicando que mais alavancagem reduz o custo médio de capital neste exemplo (efeito fiscal domina o aumento de risco). Mas o risco de insolvência também subiu — ver trade-off theory."
+    }
+  ],
+  "keyPoints": [
+    "Equity é permanente, dilui, mas é flexível; dívida é dedutível, tem retorno exigido menor, mas tem de ser paga.",
+    "WACC = (E/V)×Ke + (D/V)×Kd×(1−t) — a taxa de desconto natural da empresa.",
+    "CAPM: Ke = Rf + β×(Rm−Rf). O beta mede sensibilidade ao mercado.",
+    "Trade-off theory: há um nível óptimo de dívida. Acima, o risco de insolvência ultrapassa o benefício fiscal.",
+    "Mais alavancagem amplifica ROE nos dois sentidos — não é grátis."
+  ],
+  "quizSlug": "gfeq",
+  "nextLesson": null,
+  "prevLesson": "03-orcamento-de-capital"
+}

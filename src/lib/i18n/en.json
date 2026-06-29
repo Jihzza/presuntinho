@@ -497,6 +497,8 @@
   "routes.escola.curso.comportamento-do-consumidor.title": "Consumer Behavior",
   "routes.escola.curso.direito-empresarial.description": "Company types, commercial contracts, intellectual property and arbitration in Portugal.",
   "routes.escola.curso.direito-empresarial.title": "Business Law",
+  "routes.escola.curso.gestao-financeira-empresarial.description": "Corporate finance in practice: how to read and build the three financial statements (Income Statement, Balance Sheet, Cash Flow Statement), analyze liquidity, profitability and leverage ratios, evaluate investment projects with NPV/IRR/payback, and decide the optimal capital structure (WACC, equity vs. debt).",
+  "routes.escola.curso.gestao-financeira-empresarial.title": "Corporate Financial Management",
   "routes.escola.curso.gestao-mudanca.description": "Kotter 8-step model, Prosci ADKAR, resistance management and Schein organizational culture.",
   "routes.escola.curso.gestao-mudanca.title": "Organizational Change Management",
   "routes.escola.curso.gestao-operacoes.description": "Processes, quality, capacity and supply chain — turning inputs into outputs efficiently.",

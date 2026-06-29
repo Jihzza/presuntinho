@@ -1,0 +1,119 @@
+{
+  "id": "03-orcamento-de-capital",
+  "title": "3. Orçamento de Capital: CAPEX/OPEX, VPL, TIR e Payback",
+  "courseSlug": "gestao-financeira-empresarial",
+  "lessonNumber": 3,
+  "description": "Como decidir se um investimento vale a pena: distinguir custos operacionais de investimento, descontar fluxos futuros, e usar VPL, TIR e payback como filtros de decisão.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["CAPEX", "OPEX", "VPL", "TIR", "payback", "investimento", "DCF"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "CAPEX vs. OPEX — duas naturezas de custo"
+    },
+    {
+      "type": "p",
+      "text": "Antes de decidir qualquer investimento, é essencial distinguir dois tipos de despesa. CAPEX (Capital Expenditure) são investimentos em activos de longa duração: uma máquina, um edifício, uma licença de software, uma aquisição. Reconhecidos no balanço, depreciam-se ao longo de anos. OPEX (Operational Expenditure) são custos do dia-a-dia: salários, rendas, marketing, electricidade. Reconhecidos na DRE do período em que ocorrem. A distinção importa fiscalmente (CAPEX é depreciável; OPEX é totalmente deduível no ano), contabilmente (vai para lados diferentes das demonstrações) e estrategicamente (CAPEX é compromisso de longo prazo; OPEX é flexível)."
+    },
+    {
+      "type": "h3",
+      "text": "Decisões de orçamento de capital"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Lançar uma nova linha de produto?",
+        "Construir ou comprar uma nova fábrica?",
+        "Expandir para outro país?",
+        "Substituir equipamento obsoleto?",
+        "Investir em I&D para uma nova tecnologia?",
+        "Adquirir um concorrente (M&A)?"
+      ]
+    },
+    {
+      "type": "p",
+      "text": "Todas estas decisões exigem uma resposta à mesma pergunta: o valor que este investimento vai gerar ao longo da sua vida justifica o desembolso inicial? Para responder, usamos técnicas de fluxos de caixa descontados (DCF)."
+    },
+    {
+      "type": "h2",
+      "text": "Valor Presente Líquido (VPL)"
+    },
+    {
+      "type": "p",
+      "text": "O VPL é o método teoricamente mais correcto. Calcula o valor presente de todos os fluxos de caixa futuros esperados do projecto, descontados a uma taxa que reflecte o risco (custo de capital ou hurdle rate), e subtrai o investimento inicial. Se o VPL for positivo, o projecto cria valor. Se for negativo, destrói valor."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "VPL = Σ [FCFt / (1+r)^t] − Investimento inicial",
+        "FCFt = fluxo de caixa livre no ano t",
+        "r = taxa de desconto (custo de oportunidade do capital)",
+        "Decisão: VPL > 0 aceita-se; VPL < 0 rejeita-se",
+        "VPL > 0 significa que o projecto rende mais do que a hurdle rate — está a criar valor acima do custo de capital"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Taxa Interna de Retorno (TIR)"
+    },
+    {
+      "type": "p",
+      "text": "A TIR é a taxa de desconto que torna o VPL exactamente zero — a 'rentabilidade intrínseca' do projecto. Se a TIR for superior ao custo de capital, o projecto é atrativo. É muito usada em conversas de gestão porque se apresenta como uma percentagem (familiar) — mas tem armadilhas: para projectos com fluxos não convencionais, podem existir múltiplas TIR; ignora a escala (um projecto pode ter TIR de 50% mas VPL de 5k€); e ignora a duração."
+    },
+    {
+      "type": "h3",
+      "text": "Payback e Payback Descontado"
+    },
+    {
+      "type": "p",
+      "text": "O payback simples responde: 'em quantos anos recupero o investimento?'. É intuitivo e focado em risco, mas ignora o valor do dinheiro no tempo. O payback descontado aplica a taxa de desconto aos fluxos — é mais rigoroso. Crítica: ignora o que acontece depois do período de payback (um projecto pode ter payback de 3 anos e gerar 10 anos adicionais de cash-flow forte — o payback ignora isso)."
+    },
+    {
+      "type": "h2",
+      "text": "Critérios de decisão — qual usar?"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "VPL: teoricamente superior, maximiza criação de valor. Usar como critério principal.",
+        "TIR: boa para comunicação e comparação com hurdle rate. Usar como confirmação.",
+        "Payback: útil para projectos arriscados em ambientes incertos, ou para colocar um tecto ao risco. Usar como filtro secundário.",
+        "Regra prática: se VPL e TIR discordarem, o VPL tem razão — porque a TIR ignora escala e duration."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Análise de sensibilidade e cenários"
+    },
+    {
+      "type": "p",
+      "text": "Um único número de VPL é frágil. As projeções raramente se confirmam — o custo é 20% maior, as vendas demoram mais, o desconto do cliente vem no fim. A análise de sensibilidade pergunta: 'quanto pode o input mudar antes do VPL se tornar negativo?'. Os cenários (pessimista, base, optimista) obrigam a pensar em ranges, não em pontos. É onde a gestão de risco encontra as finanças."
+    },
+    {
+      "type": "callout",
+      "variant": "example",
+      "text": "Exemplo: investir 100k€ numa máquina que gera 35k€/ano durante 5 anos. A uma taxa de desconto de 10%: VPL = 35k × [1−(1,10)^−5] / 0,10 − 100k = 132,6k − 100k = +32,6k€. Aceitar. TIR ≈ 22% (acima do custo de capital)."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: não confundir o VPL com 'quanto vou ganhar'. O VPL é uma medida de criação de valor acima do custo de capital — é riqueza adicional para o accionista. A TIR é a rentabilidade; o VPL é a criação absoluta de riqueza."
+    },
+    {
+      "type": "exercise",
+      "question": "Um projecto exige investimento de 200k€ e gera FCF de 80k€ nos próximos 4 anos. Custo de capital = 8%. Calcula o VPL e decide.",
+      "answer": "VPL = 80k × [1−(1,08)^−4] / 0,08 − 200k = 80k × 3,3121 − 200k = 264,97k − 200k = +64,97k€. VPL positivo — aceitar. TIR ≈ 22% (acima do custo de capital de 8%)."
+    }
+  ],
+  "keyPoints": [
+    "CAPEX = investimento de longo prazo (balanço); OPEX = custo operacional (DRE).",
+    "VPL = valor presente dos FCF futuros descontados a r, menos investimento inicial.",
+    "TIR é a taxa que zera o VPL — usar como complemento do VPL, não como critério único.",
+    "Payback é filtro de risco, não medida de criação de valor.",
+    "Sempre que VPL e TIR discordarem, o VPL tem razão."
+  ],
+  "quizSlug": "gfeq",
+  "nextLesson": "04-estrutura-de-capital",
+  "prevLesson": "02-analise-de-indices"
+}

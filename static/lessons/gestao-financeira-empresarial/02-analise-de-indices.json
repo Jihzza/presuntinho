@@ -1,0 +1,110 @@
+{
+  "id": "02-analise-de-indices",
+  "title": "2. Análise de Índices: Liquidez, Rentabilidade e Endividamento",
+  "courseSlug": "gestao-financeira-empresarial",
+  "lessonNumber": 2,
+  "description": "Os rácios que transformam números absolutos em proporções comparáveis — como medir se a empresa paga as contas, se é rentável e se está demasiado endividada.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["rácios", "liquidez", "rentabilidade", "endividamento", "ROE", "ROA"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Porquê usar rácios em vez de números absolutos"
+    },
+    {
+      "type": "p",
+      "text": "Uma empresa com 10M€ de lucro é boa? Depende. Se fatura 1.000M€, a margem é de 1% — péssimo. Se fatura 12M€, a margem é 83% — excelente. Os rácios colocam os números em proporção, permitindo comparar a empresa com ela própria no tempo, com concorrentes do mesmo sector e com benchmarks de mercado. São a ferramenta básica de qualquer analista financeiro."
+    },
+    {
+      "type": "h3",
+      "text": "Rácios de Liquidez — capacidade de curto prazo"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Liquidez geral = Ativo corrente / Passivo corrente. Mede se os activos de curto prazo cobrem as dívidas de curto prazo. Saudável: ≥ 1,5. Acima de 2 pode indicar activos ociosos.",
+        "Liquidez reduzida = (Ativo corrente − Inventários) / Passivo corrente. Exclui inventário (menos líquido). Saudável: ≥ 1,0.",
+        "Liquidez imediata = Caixa e equivalentes / Passivo corrente. O teste mais conservador — 'quanto do que devo posso pagar já em dinheiro?'. Saudável: ≥ 0,2–0,3."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Rácios de Endividamento — estrutura de capital"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Endividamento total = Passivo total / Ativo total. Acima de 0,6 (60%) é elevado na maioria dos sectores.",
+        "Autonomia financeira = Capital próprio / Ativo total. O complemento do anterior. Ideal: ≥ 0,3.",
+        "Debt-to-equity (D/E) = Passivo total / Capital próprio. Industriais aceitam até 2; utilities toleram mais; startups tech menos.",
+        "Cobertura de juros = EBIT / Juros. Mede se o resultado operacional cobre os juros. Abaixo de 1,5 é zona de perigo."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Rácios de Rentabilidade — quanto rende o capital"
+    },
+    {
+      "type": "p",
+      "text": "Aqui mede-se o retorno que a empresa gera sobre o capital investido. São os rácios que mais importam para investidores — porque revelam se o negócio está a criar valor ou a destruir valor."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "ROA (Return on Assets) = Resultado líquido / Ativo total. Mede eficiência global dos activos. Bom: > 5%.",
+        "ROE (Return on Equity) = Resultado líquido / Capital próprio. Mede retorno para o accionista. Bom: > 15%; excelente: > 20%.",
+        "Margem líquida = Resultado líquido / Receita. Quanto sobra de cada euro vendido. Varia muito por sector: 2-5% retalho, 20%+ software, 30%+ luxo.",
+        "Margem operacional = EBIT / Receita. Exclui efeitos financeiros e fiscais — mede a eficiência do core business."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "A decomposição DuPont — porque é que o ROE varia"
+    },
+    {
+      "type": "p",
+      "text": "O ROE pode subir de três formas: maior margem (vender mais caro ou gastar menos), maior rotação (vender mais com os mesmos activos) ou maior alavancagem (endividar-se mais). DuPont decompõe: ROE = Margem líquida × Rotação do Ativo × Alavancagem financeira. Esta decomposição é poderosa porque revela QUAL alavanca está a ser puxada — e cada uma tem implicações diferentes de risco."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Subir margem: sustentável, mas limitado pelo mercado",
+        "Subir rotação: exige eficiência operacional",
+        "Subir alavancagem: amplifica ganhos mas também perdas — aumento de risco"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Benchmarks sectoriais — não comparar laranjas com maçãs"
+    },
+    {
+      "type": "p",
+      "text": "Uma construtora com D/E = 2,5 está saudável (obra em curso demora anos). Uma cadeia de restaurantes com D/E = 2,5 está em perigo (inventário gira rápido, mas o negócio é sensível). Por isso, ao analisar rácios, pergunta sempre 'comparado com quê?'. O ideal é ter séries históricas de 5 anos e 3-5 concorrentes directos para triangular."
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "⚠️ Cuidado com rácios isolados. Um rácio 'bom' no abstracto pode ser péssimo no contexto — e vice-versa. Sector, momento do ciclo, estratégia e estágio da empresa são tudo variáveis que pesam na interpretação."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: lembra-te que a alavancagem amplifica o ROE nos dois sentidos. Uma empresa com ROE 25% pode estar a criar valor genuíno (margem alta) ou a esconder risco (dívida alta). DuPont ajuda a distinguir."
+    },
+    {
+      "type": "exercise",
+      "question": "Empresa A: Margem líquida 5%, Rotação 1,5x, Ativo/Capital Próprio = 2. Qual é o ROE? E se a margem cai para 3% mas a alavancagem sobe para 3, o ROE sobe ou desce?",
+      "answer": "ROE = 5% × 1,5 × 2 = 15%. Cenário 2: 3% × 1,5 × 3 = 13,5%. Desce, mesmo com mais alavancagem — porque a margem caiu mais do que a alavancagem compensou. Lição: alavancagem só ajuda se a margem se mantiver saudável."
+    }
+  ],
+  "keyPoints": [
+    "Rácios de liquidez medem capacidade de curto prazo; endividamento mede risco; rentabilidade mede criação de valor.",
+    "ROE = Margem × Rotação × Alavancagem (DuPont) — três alavancas diferentes.",
+    "Alavancagem amplifica ganhos E perdas — não é grátis.",
+    "Rácios isolados valem pouco; comparar sempre com sector e histórico."
+  ],
+  "quizSlug": "gfeq",
+  "nextLesson": "03-orcamento-de-capital",
+  "prevLesson": "01-demonstracoes-financeiras"
+}

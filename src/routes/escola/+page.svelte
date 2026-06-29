@@ -354,6 +354,18 @@
                                   lessonCount: 4,
                                   quizCount: 1,
                                   badge: 'Uni'
+                                },
+                                {
+                                  slug: 'gestao-financeira-empresarial',
+                                  title: 'Gestão Financeira Empresarial',
+                                  tagline: 'Business Administration · Demonstrações financeiras, rácios, orçamento de capital e WACC',
+                                  description:
+                                    'Finanças corporativas na prática: como ler e construir as três demonstrações financeiras (DRE, Balanço, DFC), analisar rácios de liquidez, rentabilidade e endividamento, avaliar projectos de investimento com VPL/TIR/payback e decidir a melhor estrutura de capital (WACC, equity vs. dívida).',
+                                  icon: '💼',
+                                  color: '#0e7490',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
                                 }
                               ];
 </script>

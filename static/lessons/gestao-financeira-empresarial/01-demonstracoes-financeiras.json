@@ -1,0 +1,105 @@
+{
+  "id": "01-demonstracoes-financeiras",
+  "title": "1. Demonstrações Financeiras: DRE, Balanço e Fluxo de Caixa",
+  "courseSlug": "gestao-financeira-empresarial",
+  "lessonNumber": 1,
+  "description": "As três grandes peças que qualquer gestor tem de saber ler e montar: demonstração de resultados, balanço patrimonial e demonstração de fluxos de caixa — a fotografia da empresa em três ângulos diferentes.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["DRE", "balanço", "fluxo de caixa", "demonstrações financeiras", "contas"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Porque é que as demonstrações financeiras importam"
+    },
+    {
+      "type": "p",
+      "text": "Nenhuma decisão estratégica de uma empresa — investir, contratar, financiar, expandir, cortar — se toma sem olhar para as demonstrações financeiras. São três relatórios que, juntos, contam a história completa: a Demonstração de Resultados (DRE) mostra se a empresa está a ganhar dinheiro, o Balanço Patrimonial mostra o que ela tem e o que deve num instante, e a Demonstração de Fluxos de Caixa mostra de onde veio e para onde foi o dinheiro. Sem estas três peças, qualquer decisão é às cegas."
+    },
+    {
+      "type": "h3",
+      "text": "A Demonstração de Resultados (DRE)"
+    },
+    {
+      "type": "p",
+      "text": "É a peça que mostra a performance ao longo de um período (trimestre, ano). Tem uma estrutura vertical: começa nas receitas, vai subtraindo custos até chegar ao resultado líquido. É, por isso, o 'filme' da empresa — o que aconteceu ao longo do tempo."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Receita (vendas) — quanto entrou",
+        "− Custos das mercadorias vendidas (CMVMC) = Lucro bruto",
+        "− Despesas operacionais (salários, marketing, rendas) = EBITDA (se juntarmos amortizações) ou EBIT",
+        "− Amortizações e depreciações = EBIT (resultado operacional)",
+        "− Juros e impostos = Resultado líquido"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "O Balanço Patrimonial"
+    },
+    {
+      "type": "p",
+      "text": "É a fotografia num instante: o que a empresa tem (ativo), o que deve (passivo) e qual a diferença (capital próprio). A equação fundamental é sempre verdadeira: Ativo = Passivo + Capital Próprio. Divide-se em corrente (curto prazo, até 12 meses) e não corrente (longo prazo). É o 'retrato' — o estado num momento."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Ativo corrente: caixa, clientes a receber, inventário, despesas antecipadas",
+        "Ativo não corrente: imobilizado (máquinas, edifícios), intangível (marcas, patentes), investimentos",
+        "Passivo corrente: fornecedores, empréstimos curto prazo, salários a pagar",
+        "Passivo não corrente: empréstimos longo prazo, obrigações",
+        "Capital próprio: ações, reservas, resultados transitados, resultado do exercício"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "A Demonstração de Fluxos de Caixa (DFC)"
+    },
+    {
+      "type": "p",
+      "text": "Mostra a outra metade da história: o lucro não é caixa. Uma empresa pode ter lucro e mesmo assim falir por falta de liquidez. A DFC reconcilia o resultado líquido com a variação de caixa, dividindo os movimentos em três grandes blocos: operacional, de investimento e de financiamento. É o 'fluxo' — o movimento ao longo do tempo."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Atividades operacionais: recebimentos de clientes, pagamentos a fornecedores e colaboradores — o dia-a-dia do negócio",
+        "Atividades de investimento: compra e venda de ativos (CAPEX), fusões e aquisições",
+        "Atividades de financiamento: novos empréstimos, amortizações, emissão de ações, dividendos pagos"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Lucro vs. caixa — a confusão mais cara"
+    },
+    {
+      "type": "p",
+      "text": "Regra de ouro: o lucro é uma opinião; o caixa é um facto. Uma vendede de software SaaS reconhece a receita dos 12 meses à cabeça (lucro) mas o caixa só entra ao longo do ano — e os salários saem todos os meses. Outra empresa vende a 90 dias: a receita entra na DRE, mas o caixa demora três meses. A leitura conjunta das três demonstrações é o que protege destas armadilhas."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "📊 A DRE mede performance. O Balanço mede posição. A DFC mede liquidez. Juntas, contam a história completa de uma empresa — vistas em conjunto, são imbatíveis."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: nunca analises só uma demonstração. A DRE pode dizer 'lucro de 1M€' enquanto a DFC mostra 'caixa consumido em 800k€'. As três peças contam a história — mas só se as leres em conjunto."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma empresa tem: Receita 1.000k€, CMVMC 600k€, despesas operacionais 200k€, amortizações 50k€, juros 30k€, imposto 30k€. Qual é o resultado líquido? E o EBIT?",
+      "answer": "Lucro bruto = 1.000 − 600 = 400k€. EBIT = 400 − 200 − 50 = 150k€. Resultado antes de impostos = 150 − 30 = 120k€. Resultado líquido = 120 − 30 = 90k€. (EBIT = 150k€, Resultado líquido = 90k€.)"
+    }
+  ],
+  "keyPoints": [
+    "DRE mostra performance (o filme); Balanço mostra posição (a foto); DFC mostra liquidez (o fluxo).",
+    "Equação fundamental: Ativo = Passivo + Capital Próprio.",
+    "Estrutura DRE: Receita → Lucro bruto → EBIT → Resultado líquido.",
+    "Lucro não é caixa — é a DFC que reconcilia os dois.",
+    "As três demonstrações são interdependentes: ler só uma é ler a história pela metade."
+  ],
+  "quizSlug": "gfeq",
+  "nextLesson": "02-analise-de-indices",
+  "prevLesson": null
+}

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-28T23:25:00+02:00",
+  "lastUpdated": "2026-06-29T04:35:00+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -20,7 +20,7 @@
     {
       "id": "gap-034",
       "category": "feature-pedida-pelo-Daniel",
-      "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Já temos 24 cursos BA+Uni+Advanced, 119+16 lições, 32+4 quizzes. Próximo round se Daniel pedir mais.",
+      "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Já temos 28 cursos BA+Uni+Advanced, 119+16 lições, 32+4 quizzes. Skander 2 a criar #29 (gestao-financeira-empresarial) em background. Próximo round se Daniel pedir mais.",
       "severity": "baixa",
       "source": "audio-Daniel-2026-06-27",
       "created_at": "2026-06-28T13:05:00+02:00"
@@ -60,10 +60,11 @@
     {
       "id": "gap-053",
       "category": "smoke-fail",
-      "description": "Smoke i18n real nas 5 línguas (pt-PT, en, fr, tn, ar) em produção após deploy 92ba6eb — confirmar que () resolve 714 chaves sem mostrar fallbacks PT no DOM. Bloqueado por auth gate (splash). Estratégia: build um script que usa curl + parse do HTML para extrair aria-labels visíveis após auth bypass via cookies, OU pedir ao Daniel/Rafa a password de teste uma vez.",
+      "description": "Smoke i18n real nas 5 línguas (pt-PT, en, fr, tn, ar) em produção após deploy 92ba6eb — confirmar que $t() resolve 753 chaves sem mostrar fallbacks PT no DOM. Bloqueado por auth gate (splash). Estratégia: build um script que usa curl + parse do HTML para extrair aria-labels visíveis após auth bypass via cookies, OU pedir ao Daniel/Rafa a password de teste uma vez.",
       "severity": "média",
       "source": "watchdog-tick-2026-06-28-23",
-      "created_at": "2026-06-28T23:25:00+02:00"
+      "created_at": "2026-06-28T23:25:00+02:00",
+      "updated_at": "2026-06-29T04:35:00+02:00"
     },
     {
       "id": "gap-054",
@@ -72,6 +73,22 @@
       "severity": "média",
       "source": "watchdog-tick-2026-06-28-23",
       "created_at": "2026-06-28T23:25:00+02:00"
+    },
+    {
+      "id": "gap-063",
+      "category": "lição/curso",
+      "description": "Cadeira BA #29: 'Gestão Financeira Empresarial' (Corporate Finance) — 4 lições (DRE/balanço, índices financeiros, orçamento capital VPL/TIR, estrutura capital WACC) + 1 quiz 8 perguntas. Skander 2 em background a criar static/lessons/gestao-financeira-empresarial/. Aguardar resultado deleg_9f181491.",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-29-04",
+      "created_at": "2026-06-29T04:35:00+02:00"
+    },
+    {
+      "id": "gap-064",
+      "category": "i18n",
+      "description": "Próxima ronda i18n: continuar audit a componentes (SecretModal pode ter PT hardcoded em facts/quiz/options; OfflineIndicator; InstallButton). Alvo: encontrar últimas 5-10 strings PT hardcoded em src/lib/components/*.svelte que não passam por $t().",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-04",
+      "created_at": "2026-06-29T04:35:00+02:00"
     }
   ],
   "closedItems": [
@@ -331,6 +348,54 @@
       "description": "i18n aria-labels: 12 chaves a11y.aria.* em falta × 5 locales (60 entries) adicionadas (702→714). 21 routes patched com $t() + default fallback. npm run check 0/0, build green, push done, deploy 6a41a828 ready.",
       "sha": "92ba6eb",
       "closed_at": "2026-06-28T23:25:00+02:00"
+    },
+    {
+      "id": "gap-055",
+      "description": "i18n aria-labels + placeholders: 4 placeholders PT hardcoded (0,00 / — / ✅ / Anexar ficheiro) + 3 aria-labels PT (LanguageSwitcher × 2, ProgressBar × 1) + sr-only 'Limite para X' (finanças/orçamento). Total 8 chaves × 5 locales = 40 entries (714→722). 6 ficheiros Svelte patched com $t() + default fallback. Tipo MessageObject corrigido (values: { ... }). npm run check 0/0, build green, push done. SHA ab9d070.",
+      "sha": "ab9d070",
+      "closed_at": "2026-06-29T03:00:00+02:00"
+    },
+    {
+      "id": "gap-056",
+      "description": "i18n aria-labels finais: cobertos no gap-055 (LanguageSwitcher + ProgressBar) — fecho confirmado em ab9d070.",
+      "sha": "ab9d070",
+      "closed_at": "2026-06-29T03:00:00+02:00"
+    },
+    {
+      "id": "gap-057",
+      "description": "sr-only 'Limite para X' em finanças/orçamento patched com $t() + values { nome }. Coberto no gap-055.",
+      "sha": "ab9d070",
+      "closed_at": "2026-06-29T03:00:00+02:00"
+    },
+    {
+      "id": "gap-058",
+      "description": "i18n: 9 PT strings hardcoded em walkthrough/habitos.novo/financas.orcamento/financas.transacoes → $t() with default fallback. 9 chaves × 5 locales = 45 entries (722→731). 5 ficheiros Svelte patched. npm run check 0/0, build green, push done. SHA 3dad3db.",
+      "sha": "3dad3db",
+      "closed_at": "2026-06-29T03:30:00+02:00"
+    },
+    {
+      "id": "gap-059",
+      "description": "i18n: trabalhos.assignment.{o_que_fazer,prazo,recursos} PT → $t(). 3 chaves × 5 locales = 15 entries. Coberto em 3dad3db.",
+      "sha": "3dad3db",
+      "closed_at": "2026-06-29T03:30:00+02:00"
+    },
+    {
+      "id": "gap-060",
+      "description": "i18n: habitos.streak.{atual,nos_ultimos} + financas.orcamento.{mes_label,carregando} PT → $t(). 4 chaves × 5 locales = 20 entries. Coberto em 3dad3db.",
+      "sha": "3dad3db",
+      "closed_at": "2026-06-29T03:30:00+02:00"
+    },
+    {
+      "id": "gap-061",
+      "description": "i18n: trabalhos.assignment.{o_que_fazer,prazo,recursos} + habitos.streak.* + financas.orcamento.* — 16 strings PT totais → $t() across 5 ficheiros. Coberto em 3dad3db (746 chaves totais).",
+      "sha": "3dad3db",
+      "closed_at": "2026-06-29T03:30:00+02:00"
+    },
+    {
+      "id": "gap-062",
+      "description": "i18n: EasterEggsCard.svelte (4 PT strings: aria-label 'Segredo descoberto/por descobrir' + status '🔓 UNLOCKED/🔒 LOCKED') + agente/+page.svelte (4 PT strings: aria/title 'Parar gravação/Gravar áudio' + error message 'Desculpa, tive um erro...'). Total 7 chaves × 5 locales = 35 entries (746→753). 2 ficheiros Svelte patched com $t() + import { t } adicionado em EasterEggsCard. npm run check 0/0, build green, push done. SHA 6d49d36.",
+      "sha": "6d49d36",
+      "closed_at": "2026-06-29T04:35:00+02:00"
     }
   ]
 }
