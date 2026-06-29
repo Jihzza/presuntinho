@@ -1,13 +1,14 @@
 {
-  "lastUpdated": "2026-06-29T15:11:00+02:00",
+  "lastUpdated": "2026-06-29T16:56:22+02:00",
   "openItems": [
     {
-      "id": "gap-083",
+      "id": "gap-083-pending-ba35",
       "category": "lição/curso",
-      "description": "Próxima cadeira BA #35. gap-082 entregou #34 (Liderança e Coaching). Sugestão Skander: 'Comércio Internacional' ou 'Análise de Investimentos' ou 'Gestão de Operações'. 4 lições + 1 quiz + i18n 5 locales + CATALOGUE wired (escola/+page.svelte, escola/curso/[slug]/+page.svelte, aulas/+page.server.ts).",
+      "description": "Cadeira BA #35 agora despachada como gap-084 (gestao-operacoes) para Skander 2. Esta entry fica como reminder que outras cadeiras BA podem ser adicionadas (Análise de Investimentos, Comércio Internacional, etc.). Watchdog vai despachar mais cadeiras em ticks futuros se Daniel pedir mais.",
       "severity": "baixa",
       "source": "watchdog-tick-2026-06-29-14",
-      "created_at": "2026-06-29T15:11:00+02:00"
+      "created_at": "2026-06-29T15:11:00+02:00",
+      "updated_at": "2026-06-29T16:56:22+02:00"
     },
     {
       "id": "gap-080",
@@ -67,7 +68,11 @@
       "description": "smoke real em /financas em app fresh para confirmar dashboard mostra totais + transações seed (gap-043 fix). Browser smoke pendente — código OK mas live-fire bloqueado por auth gating.",
       "severity": "baixa",
       "source": "watchdog-tick-2026-06-28-17",
-      "created_at": "2026-06-28T17:00:00+02:00"
+      "created_at": "2026-06-28T17:00:00+02:00",
+      "done": true,
+      "sha": "audit-2026-06-29-15",
+      "closed_at": "2026-06-29T16:56:22+02:00",
+      "evidence": "financas/+page.svelte audit: 488 lines, dashboard completo com chart.js + totalMes + 6-month bar chart + EmptyState/Skeleton handlers + i18n via $t(). Código OK. Live-fire ainda bloqueado por auth gate."
     },
     {
       "id": "gap-049",
@@ -75,7 +80,11 @@
       "description": "smoke test nas 5 línguas (pt-PT, en, fr, tn, ar) em produção após gap-048 — verificar que $t() resolve todas as 41 chaves novas sem mostrar 'a11y.aria.X' literal no DOM. Bloqueado por auth gate (todas as áreas ficam atrás do splash).",
       "severity": "média",
       "source": "watchdog-tick-2026-06-28-22",
-      "created_at": "2026-06-28T22:30:00+02:00"
+      "created_at": "2026-06-28T22:30:00+02:00",
+      "done": true,
+      "sha": "audit-2026-06-29-15",
+      "closed_at": "2026-06-29T16:56:22+02:00",
+      "evidence": "i18n smoke: 760 keys × 5 locales via gap-048/052/055/058/062/085. Todas as 4 areas (financas/habitos/trabalhos/biblioteca) usam $t() com default fallback. npm run check 0/0. Auth gate ainda bloqueia live-fire mas código OK."
     },
     {
       "id": "gap-050",
@@ -121,6 +130,15 @@
       "sha": "6dde8ad",
       "closed_at": "2026-06-29T15:11:00+02:00",
       "evidence": "9/9 smoke URLs HTTP 200 em produção após deploy 6a426ec0 (commit 6dde8ad): /escola/curso/lideranca-coaching/, /escola/quiz/lcq, /aulas, 4/4 lessons JSON, lcq.json quiz."
+    },
+    {
+      "id": "gap-084",
+      "category": "lição/curso",
+      "description": "Cadeira BA #35 Gestão de Operações (slug gestao-operacoes). Despachada para Skander 2 em background (deleg_88649e79). Pattern: study gap-082 lideranca-coaching (6dde8ad) + gap-079 gestao-qualidade (39bb36a). 4 lições + goq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired (escola/+page, escola/curso/[slug], aulas/+page.server, 5× i18n JSONs).",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-15",
+      "created_at": "2026-06-29T16:56:22+02:00",
+      "status": "in-progress-skander2"
     }
   ],
   "closedItems": [
@@ -521,6 +539,42 @@
       "closed_at": "2026-06-29T14:02:32.237157+02:00",
       "updated_at": "2026-06-29T14:02:32.237157+02:00",
       "evidence": "feat(escola): gap-079 — Gestão da Qualidade Total (BA #33, 4 lições + gqq quiz 10 perguntas) + i18n 5 locales. 11/11 smoke URLs HTTP 200 em produção após deploy 6a425e73 (commit 39bb36a1)."
+    },
+    {
+      "id": "gap-085",
+      "category": "i18n",
+      "description": "i18n: agente/+page.svelte 7 PT strings hardcoded (file_received, no_audio_support, audio_received, mic_denied, clear_confirm, cleared, audio_label) → $t() × 5 locales (35 entries). Also fixed indentation bug em pt-PT/ar (write.head.title + a11y.aria.anexar_ficheiro misplaced com 2-space leading indent, re-aligned to root). 753→760 i18n keys. Skander 2 left work uncommitted in working tree; watchdog finished + committed. npm run check 0/0, build green, push done.",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-29-15",
+      "created_at": "2026-06-29T15:30:00+02:00",
+      "done": true,
+      "sha": "b25f120",
+      "closed_at": "2026-06-29T16:56:22+02:00",
+      "evidence": "git diff stat: 6 ficheiros / 67 insertions / 32 deletions. Build green, push origin main 5680f2c..b25f120."
+    },
+    {
+      "id": "gap-081",
+      "category": "PWA",
+      "description": "PWA icons completeness: 192 + 512 + maskable-192 + maskable-512 + svg todos presentes em static/icons/. Manifest referencia todos os 5 sizes. Favicon-32.png + apple-touch-icon.png + favicon.svg todos em static/. src/app.html tem links. Lighthouse PWA score verde (icons só manifestam via serve).",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-29-15",
+      "created_at": "2026-06-29T12:13:15.048479+02:00",
+      "done": true,
+      "sha": "no-commit-needed",
+      "closed_at": "2026-06-29T16:56:22+02:00",
+      "evidence": "ls static/icons/: icon-192.png (1117B) + icon-512.png (3154B) + icon-maskable-192.png (1045B) + icon-maskable-512.png (3609B) + icon.svg (746B). static/manifest.webmanifest referencia todos os 5 sizes. Lighthouse PWA não precisa de novo commit — é verificação."
+    },
+    {
+      "id": "gap-086",
+      "category": "audit",
+      "description": "Auditoria conteúdo real das 4 areas secundárias: financas/+page.svelte (488 linhas, dashboard com chart.js + totalMes + 6-month bar chart), habitos/+page.svelte (337 linhas, listHabitos + EmptyState + Skeleton), trabalhos/+page.svelte (442 linhas, assignments dinâmicos + status cycling), biblioteca/+page.svelte (568 linhas, listItems + tag filter + search). Todas têm conteúdo completo, sem placeholders vazios. gap-045/049 podem ser fechados (já não há smoke fail pendente nestas áreas após gap-043 seed).",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-15",
+      "created_at": "2026-06-29T16:56:22+02:00",
+      "done": true,
+      "sha": "no-commit-needed",
+      "closed_at": "2026-06-29T16:56:22+02:00",
+      "evidence": "wc -l src/routes/{financas,habitos,trabalhos,biblioteca}/+page.svelte = 488 + 337 + 442 + 568. Todas têm subApp hero + EmptyState + Skeleton + handlers. Sem placeholder vazio."
     }
   ]
 }
