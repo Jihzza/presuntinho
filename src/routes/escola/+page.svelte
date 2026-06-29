@@ -140,17 +140,29 @@
       badge: 'Uni'
       },
     {
-      slug: 'gestao-inovacao',
-      title: 'Gestão da Inovação e Tecnologia',
-      tagline: 'Business Administration · Inovação, design thinking e ecossistemas',
-      description:
-        'Inovação não é só ideia: é sistema. Aprende gestão de inovação end-to-end — Drucker, Christensen, design thinking, lean startup, funil Stage-Gate, portfolio e ecossistemas.',
-      icon: '💡',
-      color: '#ca8a04',
-      lessonCount: 4,
-      quizCount: 1,
-      badge: 'Uni'
-    },
+          slug: 'gestao-inovacao',
+          title: 'Gestão da Inovação e Tecnologia',
+          tagline: 'Business Administration · Inovação, design thinking e ecossistemas',
+          description:
+            'Inovação não é só ideia: é sistema. Aprende gestão de inovação end-to-end — Drucker, Christensen, design thinking, lean startup, funil Stage-Gate, portfolio e ecossistemas.',
+          icon: '💡',
+          color: '#ca8a04',
+          lessonCount: 4,
+          quizCount: 1,
+          badge: 'Uni'
+        },
+        {
+          slug: 'comercio-internacional',
+          title: 'Comércio Internacional',
+          tagline: 'Business Administration · Teorias do comércio, estratégias de entrada, finanças, logística e marketing internacional',
+          description:
+            'Porque é que os países trocam? Como escolher mercados externos e entrar neles? Como gerir câmbios, Incoterms, cartas de crédito? Como vender além-fronteiras? Teorias (Smith, Ricardo, Heckscher-Ohlin, Stolper-Samuelson), integração económica (OMC, GATT, blocos regionais), cadeias globais de valor (Gereffi), modos de entrada (exportação, licenciamento, franchising, JV, subsidiária, M&A), Uppsala, Born Globals, Incoterms 2020, UCP 600, trade finance, marketing internacional 4Ps, Hofstede, CISG e arbitragem ICC/UNCITRAL.',
+          icon: '🌐',
+          color: '#0e7490',
+          lessonCount: 4,
+          quizCount: 1,
+          badge: 'Uni'
+        },
     {
       slug: 'macroeconomia',
       title: 'Macroeconomia',

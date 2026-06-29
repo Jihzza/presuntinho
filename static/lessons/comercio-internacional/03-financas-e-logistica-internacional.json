@@ -1,0 +1,233 @@
+{
+  "id": "03-financas-e-logistica-internacional",
+  "title": "3. Finanças e Logística Internacional: Câmbios, Risco Cambial, Forwards/Opções/Futuros, Incoterms 2020, Carta de Crédito UCP600 e Trade Finance",
+  "courseSlug": "comercio-internacional",
+  "lessonNumber": 3,
+  "description": "Os instrumentos operacionais do comércio internacional: mercado cambial (spot, forward), risco cambial e gestão com forwards, opções e futuros, Incoterms 2020 (EXW, FCA, FOB, CIF, DAP, DPU, DDP) para dividir responsabilidades entre comprador e vendedor, métodos de pagamento internacional (L/C, CAD, OA), carta de crédito documentário UCP600 e instrumentos de trade finance (factoring, forfaiting, confirming).",
+  "audio": "Nesta terceira lição entramos na operação. Como se paga? Como se cobra? Quem assume o risco? Quem transporta? Começamos pelos câmbios: o mercado cambial é o maior mercado financeiro do mundo, com 7 biliões de dólares transaccionados por dia. Vemos como o risco cambial pode destruir margens de exportadores e importadores, e como geri-lo com forwards, opções e futuros. Passamos depois aos Incoterms 2020 — as 11 regras da Câmara de Comércio Internacional que definem quem paga o transporte, o seguro, os direitos aduaneiros, e em que ponto a mercadoria passa do vendedor para o comprador. Vemos os 7 principais: EXW, FCA, FOB, CIF, DAP, DPU, DDP. Depois os métodos de pagamento: pagamento antecipado (mais seguro para vendedor, mais arriscado para comprador), carta de crédito (L/C — intermediário bancário garante o pagamento), CAD (cash against documents), OA (open account — mais confiança). Aprofundamos a carta de crédito UCP600, o instrumento mais usado em comércio internacional. Terminamos com trade finance: factoring, forfaiting, confirming — ferramentas para financiar o ciclo exportação e reduzir risco. Vamos.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Câmbios", "Risco Cambial", "Forwards", "Futuros", "Opções", "Incoterms 2020", "Carta de Crédito", "UCP600", "L/C", "Trade Finance", "Factoring"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O mercado cambial: o maior mercado do mundo"
+    },
+    {
+      "type": "p",
+      "text": "O mercado cambial (forex, FX) é o maior e mais líquido mercado financeiro do mundo. Volume diário estimado pelo BIS Triennial Survey (2022): 7,5 biliões de dólares (trillion). Os principais intervenientes: bancos centrais (política monetária), bancos comerciais (operações por conta própria e de clientes), empresas multinacionais (pagamentos e hedging), fundos de investimento e especuladores (carry trade, especulação), empresas exportadoras e importadoras (operações comerciais). Os principais pares de moedas: EUR/USD (par mais transaccionado), USD/JPY, GBP/USD, USD/CNY, AUD/USD, USD/CAD, USD/CHF. O mercado funciona 24 horas por dia, 5 dias por semana, em três grandes centros: Londres (centro dominante), Nova Iorque, Tóquio. Cotações: spot (entrega imediata, 2 dias úteis), forward (entrega futura, taxa determinada hoje)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Forex: 7,5 biliões USD por dia (BIS 2022), maior mercado financeiro do mundo",
+        "EUR/USD é o par mais transaccionado (≈30% do volume)",
+        "Centros principais: Londres (≈40%), Nova Iorque (≈17%), Tóquio (≈6%)",
+        "Intervenientes: bancos centrais, bancos, multinacionais, fundos, empresas, especuladores",
+        "Cotações: spot (entrega em T+2) e forward (taxa fixa hoje, entrega futura)",
+        "Determinantes da taxa de câmbio: diferenciais de juro, inflação, balança comercial, expectativas, política monetária, política fiscal, geopolítica",
+        "Regimes cambiais: flutuante (maioria), fixo (peg a uma moeda), banda, dolarização"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "A taxa de câmbio EUR/USD em 2024-2025 tem-se situado na faixa de 1,05-1,10 (EUR mais fraco que nos anos 2010-2020). Factores: BCE mais agressivo a cortar juros que a Fed, crescimento europeu mais fraco, tensões geopolíticas, política comercial EUA. Para exportadores portugueses (que vendem em EUR e podem importar insumos em USD), esta é uma janela competitiva — mas também gera volatilidade que exige gestão activa."
+    },
+    {
+      "type": "h2",
+      "text": "Risco cambial: como os câmbios podem destruir margens"
+    },
+    {
+      "type": "p",
+      "text": "O risco cambial é o risco de perda devido a variações adversas nas taxas de câmbio. Para um exportador português que vende em USD: se o EUR aprecia face ao USD, os USD recebidos valem menos em EUR — a margem comprime-se. Para um importador português que compra em USD: se o EUR depreciar, paga mais EUR pelo mesmo USD — a margem comprime-se. A magnitude pode ser enorme: uma variação de 10% na taxa de câmbio muda a margem em 10 pontos percentuais, ou mais, em sectores com margens baixas (têxteis, calçado, componentes electrónicos). Três tipos de risco cambial: (1) risco de transacção (perdas em contratos individuais já assinados), (2) risco de tradução (impacto nas demonstrações financeiras consolidadas de multinacionais), (3) risco económico (impacto de longo prazo no valor da empresa por mudanças estruturais de competitividade)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Risco de transacção: contratos já assinados em moeda estrangeira (exportação, importação)",
+        "Risco de tradução: consolidação de demonstrações financeiras de subsidiárias",
+        "Risco económico: competitividade de longo prazo por movimentos cambiais estruturais",
+        "Exemplo: exportador vende USD 1M com entrega em 90 dias; se EUR apreciar 5%, perde €50k",
+        "Gestão: hedging natural (matching de receitas e custos em mesma moeda), contratos a prazo, opções",
+        "Política: muitas empresas ignoram o risco cambial até serem mordidas — erro caro"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Caso real: a Tesla reporta em USD mas tem operações na China, Europa e Reino Unido. Variações cambiais podem mudar o resultado trimestral em biliões de dólares — não por mudanças operacionais, mas apenas por tradução. Mesmo empresas 100% domésticas estão expostas se comprarem matérias-primas em moeda estrangeira (petróleo em USD, por exemplo). O risco cambial é mais ubíquo do que parece."
+    },
+    {
+      "type": "h2",
+      "text": "Forwards, opções e futuros: como cobrir o risco"
+    },
+    {
+      "type": "p",
+      "text": "Três instrumentos principais para cobrir (hedge) o risco cambial. (1) Forward cambial: contrato OTC (over-the-counter) com um banco para trocar moeda a uma taxa pré-acordada numa data futura. Não tem custo inicial (a taxa forward reflecte o diferencial de juros entre moedas). É vinculativo — ambas as partes são obrigadas a cumprir. (2) Opção cambial: contrato que dá ao comprador o direito (não obrigação) de comprar/vender moeda a uma taxa pré-acordada até uma data futura, em troca de um prémio pago ao vendedor. Permite beneficiar de movimentos favoráveis e protege de movimentos adversos. (3) Futuro cambial: contrato padronizado em bolsa (CME, EUREX) para trocar moeda a uma taxa pré-acordada numa data futura. Similar ao forward mas padronizado e líquido (mais fácil de desfazer). Para PMEs, forwards com banco são o mais comum; opções são caras mas úteis para cobrir exposições contingentes."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Forward cambial: contrato OTC com banco, sem custo inicial, vinculativo",
+        "Opção cambial: direito (não obrigação) de trocar a taxa pré-acordada, com prémio",
+        "Futuro cambial: contrato padronizado em bolsa, mais líquido",
+        "Forward: barato, simples, mas tira flexibilidade (mesmo se câmbio move a teu favor)",
+        "Opção: cara (prémio 1-5% do valor nocional), mas protege e mantém upside",
+        "Política de cobertura: 50-100% do risco previsível, dependendo da tolerância",
+        "Hedging natural: comprar insumos em USD se vendes em USD (matching de moeda)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Regra prática para PMEs: cobrir 100% do risco previsível (contratos já assinados com entrega em data certa) com forwards. Deixar descoberto o risco incerto (volume de vendas futuras) e gerir com opções ou naturalmente. A tentação de especular ('o EUR vai subir, não vou cobrir') leva muitas empresas a perderem margens significativas em ciclos de volatilidade."
+    },
+    {
+      "type": "h2",
+      "text": "Incoterms 2020: as regras do jogo"
+    },
+    {
+      "type": "p",
+      "text": "Os Incoterms (International Commercial Terms) são 11 regras publicadas pela Câmara de Comércio Internacional (ICC) que definem, em contratos internacionais de venda de mercadorias, quem assume cada custo e cada risco. Versão actual: Incoterms 2020 (a próxima revisão é esperada para 2026). Os 11 termos distribuem-se por grupos de custo e risco crescentes. EXW (Ex Works): o comprador assume tudo a partir da fábrica do vendedor. FCA (Free Carrier): vendedor entrega ao transportador designado pelo comprador. FOB (Free On Board): vendedor entrega a bordo do navio no porto de embarque. CFR (Cost and Freight): vendedor paga frete até porto de destino. CIF (Cost, Insurance and Freight): vendedor paga frete e seguro até porto de destino. DAP (Delivered at Place): vendedor entrega no local de destino. DPU (Delivered at Place Unloaded): vendedor entrega e descarrega no destino. DDP (Delivered Duty Paid): vendedor entrega, com direitos pagos, no destino do comprador."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "EXW (Ex Works): comprador assume tudo a partir da fábrica (mínimo compromisso do vendedor)",
+        "FCA (Free Carrier): vendedor entrega ao transportador (todos os modos)",
+        "FOB (Free On Board): vendedor entrega a bordo do navio (só marítimo)",
+        "CFR (Cost and Freight): vendedor paga frete até porto destino (só marítimo)",
+        "CIF (Cost, Insurance and Freight): vendedor paga frete e seguro (só marítimo)",
+        "DAP (Delivered at Place): vendedor entrega no local combinado, sem descarga",
+        "DPU (Delivered at Place Unloaded): vendedor entrega e descarrega",
+        "DDP (Delivered Duty Paid): vendedor entrega com todos os direitos pagos (máximo compromisso)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Regra de ouro: quanto maior o compromisso do vendedor, maior o preço e menor o controlo do comprador sobre a logística. EXW dá ao comprador controlo total mas obriga-o a tratar de tudo (exportação, transporte, importação, direitos) — ideal para compradores experientes. DDP dá ao vendedor tudo mas tira flexibilidade ao comprador. Para PMEs portuguesas a exportar: FCA ou FOB são os mais comuns — vendem no seu país, comprador trata da logística internacional."
+    },
+    {
+      "type": "h2",
+      "text": "Incoterms na prática: exemplos e armadilhas"
+    },
+    {
+      "type": "p",
+      "text": "Exemplo 1: vendedor português (Lisboa), comprador alemão (Berlim), envio por camião. Termo FCA Lisboa: vendedor entrega ao transportador em Lisboa; comprador paga transporte, seguro, direitos de importação na Alemanha. Termo DAP Berlim: vendedor entrega na fábrica do comprador em Berlim, paga transporte e seguro; comprador paga direitos. Termo DDP Berlim: vendedor entrega com direitos pagos na Alemanha (pode exigir representação fiscal do vendedor na UE). Exemplo 2: vendedor português (Porto), comprador americano (Nova Iorque), envio marítimo. Termo FOB Leixões: vendedor entrega a bordo do navio em Leixões; comprador paga frete marítimo, seguro, direitos nos EUA. Termo CIF Nova Iorque: vendedor paga frete e seguro até Nova Iorque; comprador paga direitos. Armadilha comum: usar CIF para comprador novato, acreditar que o vendedor trata de tudo até à entrega final — não trata, o seguro é mínimo, e o risco transfere-se no porto de embarque."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "FCA + camião + UE: vendedor entrega ao transportador em Portugal, comprador paga o resto",
+        "DAP Berlim: vendedor entrega na fábrica do comprador, paga transporte, comprador paga direitos",
+        "DDP Berlim: vendedor entrega com direitos pagos (requer representante fiscal na Alemanha)",
+        "FOB Leixões: vendedor entrega a bordo do navio, risco passa no momento",
+        "CIF Nova Iorque: vendedor paga frete e seguro marítimo, mas risco passa no embarque",
+        "Armadilha: seguro mínimo em CIF deixa o comprador sub-coberto se a carga se perder",
+        "Documentos chave: fatura comercial, packing list, conhecimento de embarque (B/L), certificado de origem"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Cuidado com as regras de 2020: o termo DAT foi substituído por DPU (Delivered at Place Unloaded) — antes assumia descarga no terminal, agora pode ser em qualquer local. FCA permite emitir B/L onboard (conhecimento de embarque) com nota ao transportador — facilita operações multimodais. Estas mudanças são tecnicamente pequenas mas juridicamente significativas. Verificar sempre se a versão nos contratos é a de 2020 (ou a de 2026 quando sair)."
+    },
+    {
+      "type": "h2",
+      "text": "Métodos de pagamento internacional: L/C, CAD, OA"
+    },
+    {
+      "type": "p",
+      "text": "Os métodos de pagamento internacional distribuem-se num espectro de risco para vendedor e comprador. (1) Pré-pagamento (T/T, wire transfer): comprador paga antes do envio. Mais seguro para vendedor, mais arriscado para comprador. (2) Carta de crédito (L/C, Letter of Credit): banco do comprador garante o pagamento ao vendedor, condicionado à apresentação de documentos conformes. Risco médio para ambos — o banco assume o risco comercial. (3) CAD (Cash Against Documents): vendedor envia documentos ao banco, comprador paga para os levantar. (4) Open Account (OA): vendedor envia mercadoria, comprador paga depois (30, 60, 90 dias). Mais arriscado para vendedor, mais vantajoso para comprador. A escolha depende da relação de poder, da experiência prévia, do país do comprador, e do sector."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Pré-pagamento (T/T): comprador paga 30-100% antes do envio",
+        "Carta de crédito (L/C): banco garante pagamento contra documentos",
+        "CAD (Cash Against Documents): pagamento contra entrega de documentos",
+        "Open Account (OA): pagamento após entrega (30-90 dias)",
+        "Pré-pagamento: risco zero para vendedor, alto para comprador",
+        "OA: risco alto para vendedor, zero para comprador",
+        "L/C: equilíbrio — banco assume risco comercial, custo 1-3% do valor"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Tendência: nos últimos 30 anos, o comércio internacional migrou de L/C para OA em muitas relações de longo prazo. Razões: (1) comércio dentro de blocos económicos (UE) é doméstico em termos de risco; (2) confiança nas cadeias de fornecimento cresceu; (3) L/C é caro e burocrático. Mas em operações de alto valor com compradores novos ou em países de risco, L/C continua a ser o instrumento dominante — protege ambos os lados e dá segurança jurídica."
+    },
+    {
+      "type": "h2",
+      "text": "Carta de Crédito Documentário (L/C) e UCP 600"
+    },
+    {
+      "type": "p",
+      "text": "A carta de crédito documentário (L/C) é o instrumento mais usado em comércio internacional para garantir o pagamento. Mecanismo: o comprador (ordenante) instrui o seu banco (banco emissor) a abrir uma L/C a favor do vendedor (beneficiário), garantindo o pagamento mediante a apresentação de documentos conformes num prazo definido (tipicamente 60-90 dias). O banco emissor pode pedir a outro banco (banco avisador/notificador) no país do vendedor para avisar e/ou confirmar a L/C. As regras internacionais que regem as L/C são as UCP 600 (Uniform Customs and Practice for Documentary Credits), publicadas pela ICC, em vigor desde 2007. Documentos tipicamente exigidos: fatura comercial, packing list, conhecimento de embarque (B/L), certificado de origem, certificado de seguro, lista de marcação, certificados fitossanitários (se aplicável)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "L/C é compromisso irrevogável do banco emissor de pagar contra documentos conformes",
+        "UCP 600 (ICC, 2007): regras internacionais que padronizam as L/C",
+        "Actores: ordenante (comprador), banco emissor, banco avisador, banco confirmador (opcional), beneficiário (vendedor)",
+        "Tipos: revogável (raro, evitável) e irrevogável (padrão)",
+        "Tipos: confirmada (banco no país do vendedor adiciona garantia) e não confirmada",
+        "Documentos: fatura, packing list, B/L, certificado origem, seguro, certificados específicos",
+        "Conformidade documental é crucial: qualquer discrepância pode impedir o pagamento"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Armadilha clássica: a L/C é boa, mas é rígida. Os documentos têm de corresponder exactamente ao que está especificado na L/C — 'B/L made out to order of X' em vez de 'made out to order of Y' pode ser razão para recusa de pagamento. Mais de 60% das L/C têm discrepâncias na primeira apresentação, segundo dados da ICC. Vendedor deve fazer 'pre-flight check' dos documentos com o banco antes de apresentar."
+    },
+    {
+      "type": "h2",
+      "text": "Trade Finance: factoring, forfaiting e confirming"
+    },
+    {
+      "type": "p",
+      "text": "Trade finance é o conjunto de instrumentos financeiros que facilitam o comércio internacional, cobrindo risco de crédito, financiamento e garantia. (1) Factoring: a empresa (cedente) vende as suas facturas a receber a um factor (empresa especializada), recebendo dinheiro imediato (geralmente 80-90% do valor) menos uma comissão. O factor cobra do cliente. Vantagem: sem dívida no balanço, sem risco de incumprimento. (2) Forfaiting: variante para operações internacionais de médio/longo prazo (1-5 anos) com L/C ou aval bancário. O forfaiter compra o crédito a desconto e assume o risco total. Usado em exportações de bens de equipamento. (3) Confirming: serviço bancário em que o banco garante o pagamento ao fornecedor no país do comprador (exportador). (4) Garantias bancárias: performance bonds, advance payment guarantees, bid bonds —instrumentos para cobrir obrigações específicas."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Factoring: vender facturas a receber, receber caixa imediato",
+        "Forfaiting: similar ao factoring mas para prazos longos (1-5 anos) com L/C ou aval",
+        "Confirming: banco garante pagamento ao fornecedor do comprador",
+        "Garantias bancárias: performance bond, advance payment guarantee, bid bond",
+        "Seguro de crédito à exportação: cubre risco de não pagamento por insolvência ou político",
+        "ECAs (Export Credit Agencies): apoiam exportadores com seguros e financiamento (Portugal: AICEP, COSEC)",
+        "Working capital improvement: trade finance liberta caixa do balanço para operações"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Em Portugal, a COSEC (Companhia de Seguro de Créditos) é a ECA nacional que oferece seguros de crédito à exportação e garantías — instrumento importante para PMEs a exportar para mercados de risco. AICEP (Agência para o Investimento e Comércio Externo de Portugal) também apoia exportadores com informação, contactos, e acesso a programas de financiamento. Conhecer estes instrumentos é essencial para PMEs que estão a começar a exportar."
+    },
+    {
+      "type": "h3",
+      "text": "Síntese operacional: do contrato à entrega"
+    },
+    {
+      "type": "p",
+      "text": "Numa exportação típica, a sequência operacional segue estes passos. (1) Negociação e contrato: definir Incoterm, moeda, método de pagamento, calendário. (2) Produção e preparação documental: preparar fatura, packing list, certificados. (3) Logística: reservar transporte (camião, navio, avião), contratar seguro se aplicável, preparar documentação aduaneira. (4) Desalfandegamento de saída: declaração de exportação na alfândega portuguesa (sistema NIF/DAU). (5) Transporte internacional. (6) Desalfandegamento de entrada no destino: importador trata dos direitos e taxas locais. (7) Entrega ao comprador. (8) Pagamento: recebimento via método acordado (L/C, OA, etc.). Cada passo pode falhar — daí a importância de planeamento, documentação cuidada, e gestão de risco com trade finance."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Passo 1: contrato define Incoterm, moeda, pagamento, calendário",
+        "Passo 2: documentação comercial e certificados específicos",
+        "Passo 3: reserva de transporte, seguro, preparação aduaneira",
+        "Passo 4: declaração de exportação (NIF/DAU em Portugal)",
+        "Passo 5: transporte internacional (camião, marítimo, aéreo)",
+        "Passo 6: desalfandegamento de entrada no destino",
+        "Passo 7: entrega ao comprador",
+        "Passo 8: cobrança via método acordado"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "id": "ciq",
+  "title": "Quiz: Comércio Internacional",
+  "description": "Testa os teus conhecimentos sobre comércio internacional: teorias clássicas (vantagens absolutas de Smith, vantagens comparativas de Ricardo, modelo Heckscher-Ohlin, teorema Stolper-Samuelson), integração económica e OMC/GATT, cadeias globais de valor de Gereffi, modos de entrada (exportação, licenciamento, franchising, JV, subsidiária, M&A), modelo de Uppsala, Born Globals e network view de Johanson-Vahlne, câmbios e risco cambial (forwards, opções, futuros), Incoterms 2020 (EXW, FCA, FOB, CIF, DAP, DPU, DDP), carta de crédito UCP600, trade finance, marketing internacional (4Ps), Hofstede (6 dimensões), Trompenaars, CISG (Convenção de Viena) e arbitragem ICC vs UNCITRAL. 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "courseSlug": "comercio-internacional",
+  "questions": [
+    {
+      "q": "Segundo David Ricardo, qual é a condição necessária para que dois países beneficiem do comércio internacional?",
+      "opts": [
+        "Que ambos tenham vantagem absoluta em pelo menos um produto",
+        "Que tenham custos de oportunidade relativos diferentes na produção dos bens",
+        "Que tenham a mesma dotação de factores de produção",
+        "Que não tenham qualquer tipo de barreira comercial"
+      ],
+      "a": 1,
+      "explanation": "David Ricardo (1817, Principles of Political Economy and Taxation) demonstrou que o comércio é mutuamente benéfico mesmo quando um país tem desvantagem absoluta em todos os produtos. O requisito é que os custos de oportunidade relativos sejam diferentes: cada país deve especializar-se no bem em que tem a maior vantagem comparativa (ou a menor desvantagem comparativa). Paul Samuelson chamou-lhe 'a única proposição verdadeiramente não-trivial de toda a economia'. O exemplo clássico: Portugal e Inglaterra em 1817 — Portugal era mais eficiente em vinho e tecido, mas a diferença era maior no vinho; ambos ganhavam com o comércio."
+    },
+    {
+      "q": "No modelo de Heckscher-Ohlin, o padrão de comércio é determinado por:",
+      "opts": [
+        "Diferenças de produtividade absoluta entre países",
+        "Dotações relativas de factores de produção (trabalho, capital, terra)",
+        "Tarifas aduaneiras e quotas de importação",
+        "Custos de transporte e distância geográfica"
+      ],
+      "a": 1,
+      "explanation": "O modelo de Heckscher-Ohlin (Ohlin 1933, baseado em Heckscher 1919) explica o padrão de comércio pelas dotações relativas de factores de produção. Um país exporta bens que são intensivos no factor que tem em abundância relativa e importa bens intensivos no factor escasso. Portugal (abundância de trabalho) exporta têxteis e calçado; Alemanha (abundância de capital) exporta maquinaria. Limitação: o 'Leontief Paradox' (1953) mostrou que os EUA, o país mais capital-intensivo, exportava bens trabalho-intensivos, abrindo caminho para teorias com tecnologia diferenciada (modelo ricardiano moderno de Eaton-Kortum)."
+    },
+    {
+      "q": "O teorema de Stolper-Samuelson (1941) mostra que o comércio internacional:",
+      "opts": [
+        "Sempre melhora a distribuição de rendimentos em todos os países",
+        "Sempre piora a distribuição de rendimentos em todos os países",
+        "Altera a distribuição interna de rendimentos — o factor usado intensivamente no bem exportado ganha, e o factor usado intensivamente no bem importado perde",
+        "Não tem qualquer efeito distributivo, apenas efeitos agregados"
+      ],
+      "a": 2,
+      "explanation": "Stolper e Samuelson (1941, Protection and Real Wages) provaram que o comércio altera a distribuição interna de rendimentos. O factor usado intensivamente no bem que o país exporta vê o seu retorno real aumentar; o factor usado intensivamente no bem importado vê o seu retorno real diminuir. Esta é a base teórica para a resistência política ao comércio: trabalhadores de sectores em concorrência com importações (têxteis, siderurgia) perdem, enquanto capitalistas e proprietários de marcas globais ganham. Explica o backlash populista contra a globalização nos anos 2010-2020 (Trump, Brexit)."
+    },
+    {
+      "q": "No modelo de integração económica de Balassa, qual é a diferença entre uma zona de comércio livre e uma união aduaneira?",
+      "opts": [
+        "Nenhuma — são sinónimos",
+        "Na zona de comércio livre elimina-se tarifas internas e cada membro mantém a sua tarifa externa; na união aduaneira há também uma tarifa externa comum",
+        "Na união aduaneira há moeda única; na zona de comércio livre não",
+        "A zona de comércio livre permite livre circulação de pessoas; a união aduaneira não"
+      ],
+      "a": 1,
+      "explanation": "Balassa (1961) descreveu cinco etapas crescentes de integração. Zona de comércio livre (estágio 1): zero tarifas entre membros, cada um mantém a sua tarifa externa (ex: EFTA). União aduaneira (estágio 2): tarifa externa comum além das tarifas internas zero (ex: Mercosul, União Aduaneira da África Oriental e Austral). Mercados comuns (estágio 3) acrescentam livre circulação de factores. União económica (estágio 4) coordena políticas macro. União política (estágio 5) é integração total (UE avançada com euro)."
+    },
+    {
+      "q": "Segundo Gary Gereffi, as cadeias globais de valor (GVCs) caracterizam-se por:",
+      "opts": [
+        "Cada país produzir bens completos e exportá-los para o resto do mundo",
+        "Produção fragmentada em etapas por diferentes países, com diferentes graus de governação (mercado, modular, relacional, cativa, hierárquica)",
+        "Apenas empresas estatais participarem nas cadeias",
+        "Comércio exclusivo de bens finais"
+      ],
+      "a": 1,
+      "explanation": "Gary Gereffi (1990s-presente) mostrou que a produção internacional é fragmentada em etapas por diferentes países. Em vez de o país produzir o bem completo, cada país participa numa ou mais etapas da cadeia (desenho, componentes, montagem, distribuição). Gereffi identificou cinco tipos de governação: mercado (spot), modular (com especificações detalhadas), relacional (relações de longo prazo), cativa (subordinação a comprador dominante), hierárquica (subsidiária controlada verticalmente). Hoje cerca de 60% do comércio mundial é de bens intermédios dentro de GVCs, não de bens finais."
+    },
+    {
+      "q": "No modelo de Uppsala (Johanson e Vahlne, 1977), a internacionalização é descrita como:",
+      "opts": [
+        "Um processo súbito e radical decidido pela gestão de topo",
+        "Um processo incremental em duas dimensões: distância psíquica e nível de compromisso",
+        "Uma decisão que segue apenas critérios financeiros",
+        "Um processo idêntico para todas as empresas independentemente do sector"
+      ],
+      "a": 1,
+      "explanation": "Johanson e Vahlne (1977, Journal of International Business Studies) propuseram que as empresas internacionalizam de forma incremental. Duas dimensões: espacial (começam por países com menor distância psíquica — língua, cultura, instituições semelhantes) e de compromisso (começam por modos de baixo recurso como exportação indirecta e crescem para modos de alto recurso como subsidiária). A lógica é learning-by-doing: o conhecimento de mercado vem da experiência, e cada etapa constrói sobre a anterior. Funciona bem para PMEs industriais tradicionais, mas não para Born Globals (Spotify, Skype) nem para empresas digitais."
+    },
+    {
+      "q": "Um forward cambial é:",
+      "opts": [
+        "Um contrato vinculativo para trocar moeda a uma taxa pré-acordada numa data futura, sem custo inicial",
+        "Um direito (não obrigação) de trocar moeda a uma taxa pré-acordada, mediante o pagamento de um prémio",
+        "Um contrato padronizado transaccionado em bolsa",
+        "Um empréstimo em moeda estrangeira"
+      ],
+      "a": 0,
+      "explanation": "Um forward cambial é um contrato OTC (over-the-counter) entre uma empresa e um banco para trocar duas moedas a uma taxa pré-acordada (taxa forward) numa data futura específica. Características: (1) vinculativo — ambas as partes são obrigadas a cumprir; (2) sem custo inicial — a taxa forward já reflecte o diferencial de juros entre moedas; (3) customizado — pode ser feito para qualquer valor e data. Diferença para opção cambial: a opção dá o direito (não obrigação) e tem custo (prémio); diferença para futuro cambial: o futuro é padronizado e liquidado em bolsa."
+    },
+    {
+      "q": "No Incoterm DAP (Delivered at Place), o vendedor:",
+      "opts": [
+        "Entrega a mercadoria ao transportador no país de origem",
+        "Entrega a mercadoria a bordo do navio no porto de embarque",
+        "Entrega a mercadoria no local de destino combinado, mas o comprador paga os direitos de importação",
+        "Entrega a mercadoria no local de destino com todos os direitos pagos"
+      ],
+      "a": 2,
+      "explanation": "DAP (Delivered at Place) — o vendedor entrega a mercadoria no local de destino combinado (ex: armazém do comprador em Berlim), pronta para descarga. O vendedor paga o transporte e o seguro até esse ponto. O comprador assume o risco a partir da entrega no local e paga os direitos de importação e o descarregamento (se aplicável). É diferente de DDP (Delivered Duty Paid), em que o vendedor também paga os direitos aduaneiros de importação. DAP é dos Incoterms mais usados em vendas intra-UE e em exportações para mercados onde o vendedor tem representação local."
+    },
+    {
+      "q": "Uma Carta de Crédito (L/C) regida pelas UCP 600:",
+      "opts": [
+        "É uma garantia do banco emissor de pagar ao vendedor contra apresentação de documentos conformes",
+        "É um pagamento imediato em dinheiro sem condições",
+        "É um seguro de carga marítima",
+        "É um título de propriedade sobre a mercadoria"
+      ],
+      "a": 0,
+      "explanation": "A Carta de Crédito (Letter of Credit, L/C) regida pelas UCP 600 (Uniform Customs and Practice for Documentary Credits, ICC 2007) é um compromisso irrevogável do banco emissor de pagar ao vendedor (beneficiário) mediante a apresentação de documentos conformes com os termos da L/C. Os documentos tipicamente exigidos incluem: fatura comercial, packing list, conhecimento de embarque (B/L), certificado de origem, certificado de seguro e certificados específicos do produto. Vantagens: protege vendedor (pagamento garantido pelo banco) e comprador (paga só após verificar documentos). Desvantagens: custo 1-3% do valor, rigidez (qualquer discrepância documental pode impedir pagamento)."
+    },
+    {
+      "q": "Geert Hofstede identificou seis dimensões culturais. Qual das seguintes é uma dimensão de Hofstede?",
+      "opts": [
+        "Power Distance (distância ao poder)",
+        "Strategic Positioning (posicionamento estratégico)",
+        "Brand Equity (valor da marca)",
+        "Market Share (quota de mercado)"
+      ],
+      "a": 0,
+      "explanation": "Geert Hofstede (1980, Culture's Consequences) identificou seis dimensões culturais baseando-se em pesquisa com mais de 100.000 funcionários da IBM em mais de 50 países. As seis dimensões são: (1) Power Distance Index (PDI) — grau de aceitação de desigualdade; (2) Individualism vs Collectivism (IDV) — foco no indivíduo vs grupo; (3) Masculinity vs Femininity (MAS) — assertividade vs cooperação; (4) Uncertainty Avoidance Index (UAI) — tolerância à ambiguidade; (5) Long-Term Orientation (LTO) — foco no futuro vs tradição; (6) Indulgence vs Restraint (IND) — expressão livre de necessidades vs controlo. Estas dimensões são usadas em marketing internacional para adaptar comunicação, produto e estratégia. Portugal: PDI 64, IDV 27, MAS 31, UAI 99 — perfil colectivista, feminino e averso à incerteza."
+    }
+  ]
+}

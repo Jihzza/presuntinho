@@ -1,0 +1,250 @@
+{
+  "id": "01-fundamentos-comercio-internacional",
+  "title": "1. Fundamentos de Comércio Internacional: Smith, Ricardo, Heckscher-Ohlin, Stolper-Samuelson, Integração Económica, OMC/GATT e Global Value Chains",
+  "courseSlug": "comercio-internacional",
+  "lessonNumber": 1,
+  "description": "Porque é que os países trocam? As teorias clássicas e neoclássicas que explicam o comércio internacional — vantagens absolutas (Smith), vantagens comparativas (Ricardo), modelo Heckscher-Ohlin, teorema Stolper-Samuelson, integração económica regional, OMC/GATT e cadeias globais de valor de Gereffi.",
+  "audio": "Nesta primeira lição vamos construir a base teórica do comércio internacional. Começamos com a pergunta fundamental: porque é que Portugal compra vinho do Brasil e vende calçado para a Alemanha? A resposta vem de Adam Smith em 1776: cada país produz o que faz com menor custo absoluto, e troca com os outros. Mas David Ricardo em 1817 mostrou algo mais profundo: mesmo que Portugal produza tudo melhor que o Brasil, ainda há comércio benéfico — basta que o custo relativo seja diferente. Esta é a famosa teoria das vantagens comparativas, que continua a ser o pilar do comércio internacional. Passamos depois ao modelo de Heckscher-Ohlin (1919-1933): os países especializam-se em produtos intensivos no factor que têm em abundência — Portugal tem trabalho, exporta têxteis; Alemanha tem capital, exporta maquinaria. O teorema de Stolper-Samuelson (1941) mostra que o comércio internacional altera a distribuição interna de rendimento. Vemos depois a integração económica (zonas de comércio livre, uniões aduaneiras, mercados comuns) e a OMC/GATT como arquitectura institucional. Terminamos com as cadeias globais de valor de Gereffi, que substituíram o modelo 'país-produz-tudo' por uma divisão do trabalho fragmentada entre países. Vamos.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Comércio Internacional", "Smith", "Ricardo", "Heckscher-Ohlin", "Stolper-Samuelson", "OMC", "GATT", "Gereffi", "Global Value Chains", "Integração Económica"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Porque é que os países trocam entre si?"
+    },
+    {
+      "type": "p",
+      "text": "O comércio internacional existe porque países diferentes têm dotações diferentes de recursos, tecnologias, capacidades e preferências. Trocar com o estrangeiro permite a cada país consumir mais do que seria capaz de produzir sozinho, ultrapassando a restrição imposta pela sua fronteira de possibilidades de produção. Esta ideia simples é a base de toda a teoria do comércio internacional — e da defesa do livre-câmbio. Os mercantilistas (séculos XVI-XVIII) viam o comércio como soma zero: exportar enriquecia, importar empobrecia, e o Estado devia acumular metais preciosos. Adam Smith (1776) e David Ricardo (1817) mostraram que, salvo em casos extremos, o comércio é mutuamente benéfico: ambos os países ganham."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Mercantilismo (séculos XVI-XVIII): comércio é jogo de soma zero, exportar ouro é bom, importar é mau",
+        "Smith (1776): comércio é soma positiva, ambos ganham, baseia-se em produtividade absoluta",
+        "Ricardo (1817): comércio ganha mesmo quando um país é melhor em tudo — é a vantagem comparativa",
+        "Heckscher-Ohlin (1919-1933): países especializam-se em bens intensivos no factor abundante",
+        "Stolper-Samuelson (1941): comércio altera distribuição de rendimentos dentro do país",
+        "OMC/GATT (1947-presente): arquitectura institucional multilateral do comércio",
+        "Gereffi (1990s-presente): cadeias globais de valor — produção fragmentada por país"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "A teoria do comércio internacional é uma das áreas mais antigas e bem testadas da economia. Quase todas as políticas de protecção comercial — tarifas, quotas, subsídios — foram inventadas apesar do que a teoria diz. Estudar estas teorias não é abstracto: é o que te permite distinguir argumentos válidos de falácias políticas quando alguém propõe erguer muros alfandegários."
+    },
+    {
+      "type": "h2",
+      "text": "Adam Smith e a Teoria das Vantagens Absolutas (1776)"
+    },
+    {
+      "type": "p",
+      "text": "Adam Smith, em A Riqueza das Nações (1776), formulou a primeira teoria moderna do comércio internacional. A ideia central: um país tem vantagem absoluta na produção de um bem quando consegue produzi-lo usando menos trabalho (ou menos recursos) por unidade que outro país. Cada país deve especializar-se nos bens em que tem vantagem absoluta e importar os restantes. Smith desmontou o argumento mercantilista: a riqueza de uma nação mede-se pela sua capacidade de produzir e consumir, não pela quantidade de ouro acumulado. A especialização internacional aumenta o output total e o bem-estar de todos. Esta teoria funciona, mas é incompleta: não explica porque é que Portugal importava da Inglaterra mesmo quando Portugal era mais produtivo em quase tudo — e é exactamente aqui que Ricardo entra."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Vantagem absoluta: produzir com menos input (trabalho, capital, recursos) por unidade de output",
+        "Smith: cada país especializa-se no bem em que é absolutamente mais eficiente",
+        "Comércio internacional é mutuamente benéfico (não é jogo de soma zero como pensavam os mercantilistas)",
+        "Smith desmonta o argumento do bullionismo: a riqueza real vem da produção, não do ouro",
+        "Limitação: não explica comércio quando um país é mais eficiente em tudo (o caso real Portugal-Inglaterra em 1817)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Exemplo clássico de Smith: Inglaterra produz tecido com 10 horas de trabalho por unidade; Portugal produz vinho com 8 horas. Portugal tem vantagem absoluta no vinho, Inglaterra no tecido. Ambos ganham com comércio: cada país especializa-se no bem em que é mais eficiente, e o total mundial de output sobe."
+    },
+    {
+      "type": "h2",
+      "text": "David Ricardo e a Teoria das Vantagens Comparativas (1817)"
+    },
+    {
+      "type": "p",
+      "text": "David Ricardo, em Principles of Political Economy and Taxation (1817), deu o salto conceptual que tornou a teoria do comércio realmente robusta. Mostrou que, mesmo quando um país é absolutamente mais eficiente em todos os bens, ainda há comércio mutuamente benéfico — basta que os custos relativos (comparativos) sejam diferentes. A regra ricardiana: cada país deve especializar-se no bem em que tem a maior vantagem comparativa (ou a menor desvantagem comparativa), e importar o resto. A demonstração original usava Portugal e Inglaterra, com vinho e tecido — Portugal era mais eficiente em ambos, mas a diferença era maior no vinho. Resultado: Portugal especializa-se em vinho, Inglaterra em tecido, e ambos ganham. Este princípio é tão poderoso que Paul Samuelson (um dos maiores economistas do século XX) chamou-lhe 'a única proposição da economia verdadeiramente verdadeira e não trivial'."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Vantagem comparativa: custo de oportunidade relativo de produzir um bem versus outro",
+        "Um país pode ter desvantagem absoluta em tudo e ainda assim ter vantagem comparativa em algo",
+        "Cada país especializa-se no bem com menor custo de oportunidade (maior vantagem comparativa)",
+        "Comércio mutuamente benéfico mesmo entre países com productividades muito diferentes",
+        "Samuelson: 'a única proposição verdadeiramente não-trivial de toda a economia'",
+        "Limitação: assume apenas trabalho como factor, custos de transporte zero, concorrência perfeita, pleno emprego"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Exemplo ricardiano clássico: Portugal precisa de 80 horas para produzir 1 unidade de vinho e 90 horas para 1 unidade de tecido. Inglaterra precisa de 120 horas para vinho e 100 para tecido. Portugal é mais eficiente em ambos (vantagem absoluta), mas a diferença é maior no vinho (33% vs 10%) — esse é o bem em que Portugal tem vantagem comparativa. Inglaterra deve especializar-se em tecido. Ambos ganham com o comércio."
+    },
+    {
+      "type": "h2",
+      "text": "Modelo de Heckscher-Ohlin (1919-1933)"
+    },
+    {
+      "type": "p",
+      "text": "Bertil Ohlin (1933, Interregional and International Trade), baseado em trabalho do seu professor Eli Heckscher (1919), deu o passo seguinte: explicou a vantagem comparativa pelas dotações de factores. A hipótese central: os países têm quantidades diferentes de factores de produção (trabalho, capital, terra, recursos naturais), e os diferentes bens requerem diferentes intensidades de factores. Um país exporta os bens que são intensivos no factor que tem em abundância e importa os bens intensivos no factor escasso. Portugal tem abundância relativa de trabalho: exporta têxteis, vestuário, calçado (intensivos em trabalho) e importa maquinaria pesada (intensiva em capital). Alemanha tem abundância relativa de capital: exporta máquinas,化学品, equipamentos de precisão, e importa têxteis, agrícolas, serviços de turismo."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Heckscher-Ohlin: padrão de comércio é determinado pelas dotações relativas de factores",
+        "Bens trabalho-intensivos: produzidos/exportados por países com abundância de trabalho",
+        "Bens capital-intensivos: produzidos/exportados por países com abundância de capital",
+        "País com dotação intermédia: exportação mista, depende do que é intensivo em cada factor",
+        "Exemplos: China e Bangladesh (trabalho) exportam têxteis; Alemanha e Japão (capital) exportam maquinaria",
+        "O modelo explica muito, mas não tudo: o chamado 'Leontief Paradox' (1953) mostrou que os EUA, o país mais capital-intensivo do mundo, exportava bens trabalho-intensivos — o que violava H-O e abriu caminho para teorias com tecnologia diferente (Ricardo moderno)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Aplicação prática em 2026: Portugal continua a exportar bens relativamente trabalho-intensivos para a UE (calçado, têxteis, vinho, cortiça, conservas, moldes para plásticos), enquanto importa bens capital-intensivos (maquinaria industrial, semicondutores, aviões, químicos). A estrutura de comércio reflecte ainda hoje as dotações relativas de factores."
+    },
+    {
+      "type": "h2",
+      "text": "Teorema de Stolper-Samuelson (1941)"
+    },
+    {
+      "type": "p",
+      "text": "Wolfgang Stolper e Paul Samuelson (1941, Protection and Real Wages) provaram que o comércio internacional tem efeitos distributivos internos importantes: aumenta o retorno real do factor usado intensivamente no bem exportado e diminui o retorno real do factor usado intensivamente no bem importado. Em termos simples: se Portugal exporta têxteis (trabalho-intensivos) e importa maquinaria (capital-intensiva), o comércio aumenta os salários reais em Portugal e diminui o retorno real do capital. A implicação política: o comércio internacional cria vencedores e perdedores dentro de cada país — não é uma questão de 'o país todo ganha igual'. Esta é uma das razões pelas quais o livre-câmbio enfrenta resistência política: quem perde (trabalhadores em sectores de bens importados em concorrência com países de baixos salários) tem incentivos para pedir protecção, mesmo que o país como um todo ganhe."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Stolper-Samuelson: comércio altera distribuição interna de rendimentos",
+        "Factor abundante (intensivo no bem exportado) ganha com comércio",
+        "Factor escasso (intensivo no bem importado) perde com comércio",
+        "Implicação política: livre-câmbio cria vencedores e perdedores dentro do país",
+        "Explica resistência ao comércio em sectores específicos (têxtil, calçado, siderurgia)",
+        "Fundamenta argumentos para políticas de ajustamento: formação, mobilidade, redes de segurança social"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Na política dos anos 2010-2020, Stolper-Samuelson explica o backlash populista contra a globalização. O comércio com a China tirou milhões de empregos industriais nos EUA e na Europa, concentrando ganhos em empresas multinacionais e proprietários de capital, e perdas em trabalhadores de baixa qualificação. Trump, Brexit, Sanders são sintomas desta tensão distributiva. Resposta de política: redistribuição, formação profissional, redes de segurança — não protecção."
+    },
+    {
+      "type": "h2",
+      "text": "Integração Económica Regional: de Zona de Comércio Livre a Mercado Comum"
+    },
+    {
+      "type": "p",
+      "text": "A integração económica regional segue, segundo Balassa (1961), cinco etapas crescentes: (1) zona de comércio livre (eliminação de tarifas entre membros, cada um mantém a sua tarifa externa), (2) união aduaneira (tarifa externa comum), (3) mercado comum (livre circulação de factores — trabalho, capital), (4) união económica (harmonização de políticas macro e fiscais), (5) união económica completa (união política com moeda única). Cada etapa adiciona mais barreiras removidas e mais soberania partilhada. A União Europeia é o caso mais avançado: começou como CECA em 1951 (carvão e aço), passou a CEE em 1957 (mercado comum), tornou-se UE em 1993 (Tratado de Maastricht, mercado único), adoptou o euro em 1999/2002 (união monetária). Outras formas incluem o Acordo EUA-México-Canadá (USMCA, ex-NAFTA), o Mercosul, o ASEAN, o RCEP (China-Japão-Coreia-Asean-Australia-NZ)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Estágio 1 — Zona de Comércio Livre: zero tarifas internas, cada membro tem a sua tarifa externa (ex: EFTA, NAFTA pré-1994)",
+        "Estágio 2 — União Aduaneira: tarifa externa comum (ex: Mercosul, União Aduaneira da África Oriental e Austral)",
+        "Estágio 3 — Mercado Comum: livre circulação de pessoas, serviços, capital (ex: UE pré-1993)",
+        "Estágio 4 — União Económica: políticas macro e fiscais coordenadas (ex: zona euro)",
+        "Estágio 5 — Integração total: moeda única, banco central, união política (UE avançada)",
+        "Efeitos: criação de comércio (member A importa mais barato de B) e desvio de comércio (compra de B em vez de C mais barato global)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "A teoria da integração económica tem dois efeitos no bem-estar. (1) Criação de comércio: países-membros trocam mais entre si porque tarifas caem — efeito positivo. (2) Desvio de comércio: as tarifas externas comuns podem levar a comprar de um parceiro menos eficiente em vez de comprar mais barato do resto do mundo — efeito negativo. Se criação > desvio, integração é benéfima. Esta análise foi formalizada por Jacob Viner (1950, The Customs Union Issue) e continua a ser o framework standard."
+    },
+    {
+      "type": "h2",
+      "text": "OMC, GATT e a Arquitectura Multilateral do Comércio"
+    },
+    {
+      "type": "p",
+      "text": "O Acordo Geral sobre Tarifas e Comércio (GATT, 1947) e a Organização Mundial do Comércio (OMC, 1995) são a espinha dorsal institucional do comércio internacional. O GATT nasceu em 1947 com 23 países fundadores (incluindo Portugal) para evitar a repetição do proteccionismo dos anos 30 que, segundo muitos economistas, agravou a Grande Depressão. Funcionou durante quase 50 anos através de 'rounds' de negociações multilaterais (Dillon, Kennedy, Tokyo, Uruguay). O Uruguay Round (1986-1994) criou a OMC, que acrescentou serviços (GATS), propriedade intelectual (TRIPS) e o mecanismo de resolução de litígios vinculativo. Princípios fundamentais do GATT/OMC: nação mais favorecida (NMF — qualquer vantagem dada a um parceiro é estendida a todos), tratamento nacional (produto importado tratado igual ao doméstico depois de passar a alfândega), reciprocidade, redução tarifária por via de negociação, e proibição de quotas (substituídas por tarifas)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "GATT (1947): acordo multilateral original, só bens, sem mecanismos vinculativos",
+        "OMC (1995): substitui GATT, inclui serviços (GATS), propriedade intelectual (TRIPS), resolução de litígios vinculativa",
+        "Princípio da Nação Mais Favorecida: qualquer vantagem a um parceiro é automática para todos",
+        "Tratamento nacional: depois de passar a alfândega, produto importado é tratado como doméstico",
+        "Rounds negociais: Uruguay Round (1986-1994) criou OMC; Doha Round (2001-presente) estagnou",
+        "Órgão de Resolução de Litígios (ORL): painéis e Appellate Body, decisões vinculativas, retaliação autorizada",
+        "Em 2025-2026: OMC em tensão com guerras comerciais unilaterais (EUA-China, tarifas Trump 2018-2020 e 2025)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "A OMC enfrenta em 2025-2026 a maior crise desde a sua criação. O bloqueio do Appellate Body desde 2019 (EUA a recusar nomear juízes), guerras comerciais unilaterais, dúvidas sobre o princípio NMF, e a ascensão de políticas industriais activas (CHIPS Act nos EUA, Made in China 2025, Green Deal Industrial Plan na UE). A multilateralidade está a ser substituída por blocos regionais e acordos bilaterais — o 'GATT à la carte' pode ser o novo normal."
+    },
+    {
+      "type": "h2",
+      "text": "Cadeias Globais de Valor (GVC) — Gereffi"
+    },
+    {
+      "type": "p",
+      "text": "Gary Gereffi (1990s-presente) transformou a teoria e prática do comércio internacional ao mostrar que, na realidade, os países não 'produzem' produtos completos — participam em cadeias globais de valor (GVCs), onde cada país/especializa-se numa etapa ou componente. O iPhone, por exemplo, é desenhado nos EUA (Apple), montado na China (Foxconn), com semicondutores de Taiwan (TSMC), memória da Coreia (Samsung), câmaras do Japão (Sony), vidro da Alemanha (Schott), alumínio e terras raras da Austrália/África. Gereffi distinguiu cinco tipos de governação: (1) mercado (transacções spot), (2) modular (com especificações detalhadas), (3) relacional (relações de longo prazo), (4) cativa (subordinação a um comprador dominante), (5) hierárquica (subsidiária controlada verticalmente). As GVCs explicam porque é que o comércio internacional é hoje muito maior que o PIB mundial (cerca de 60% do PIB global é comércio de bens intermédios, não finais)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Gereffi: produção fragmentada entre países, cada um numa etapa ou componente",
+        "Cinco tipos de governação: mercado, modular, relacional, cativa, hierárquica",
+        "Líderes de GVC: USA, Alemanha, Japão, Coreia do Sul, Taiwan (design, marca, tecnologia core)",
+        "Nós de GVC: China, México, Polónia, Vietnam, Marrocos (montagem, fabrico)",
+        "Matérias-primas: Austrália, Brasil, África do Sul, Chile (commodities)",
+        "Implicação para política industrial: países querem subir na GVC (capturar etapas de maior valor)",
+        "Risco: dependência crítica de poucos fornecedores (semicondutores Taiwan = vulnerabilidade global)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Ferramenta analítica importante: 'smile curve' de Stan Shih (1992, fundador da Acer). Na curva, design/marca/pesquisa ficam nos elos com maior valor adicionado (ponta esquerda), fabrico/montagem no fundo (menor valor), e marketing/distribuição/serviços pós-venda na outra ponta. O objectivo de qualquer país ou empresa na GVC é mover-se para os elos com maior valor adicionado — daí o foco actual em design, software, semicondutores, IA."
+    },
+    {
+      "type": "h3",
+      "text": "Implicações das GVCs para a política económica"
+    },
+    {
+      "type": "p",
+      "text": "As cadeias globais de valor mudaram o cálculo das políticas comerciais. Uma tarifa de 25% sobre aço chinês protege o produtor nacional de aço, mas penaliza todas as empresas a jusante que usam aço como input — carros, máquinas, electrodomésticos. Se a empresa X compra aço chinês barato, transforma-o em peças de carro exportadas para os EUA, e os EUA aplicam tarifa ao carro final, o efeito é duplo. Por isso, em economias profundamente integradas em GVCs, tarifas retaliatórias são particularmente disruptivas — foi o que a guerra comercial EUA-China 2018-2020 demonstrou, com impacto negativo em ambos os países. A nova política industrial (CHIPS Act, IRA nos EUA; Made in China 2025; Green Deal Industrial Plan na UE) tenta explicitamente mover etapas de GVC para dentro de casa — friendshoring, nearshoring, reshoring — com custos de eficiência mas benefícios de segurança geopolítica."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Tarifas são menos eficazes em economias GVC porque protegem um elo mas penalizam muitos outros",
+        "Ambas as partes perdem em guerras comerciais (modelo de redução de bem-estar, Mankiw 2018)",
+        "Política industrial moderna: subsídios a sectores estratégicos (semicondutores, baterias, IA)",
+        "Friendshoring: mover produção para aliados geopolíticos (México para EUA, Marrocos para UE)",
+        "Nearshoring: mover produção para perto (Europa Oriental para Alemanha, México para EUA)",
+        "Reshoring: voltar produção para casa (menos comum por custos elevados, mais por segurança)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "A participação em GVCs é medida pelo indicador 'foreign value added' (FVA) — percentagem do valor acrescentado de um bem que vem do estrangeiro. Portugal, integrado na cadeia europeia, tem FVA superior a 30% nas exportações de bens transformados. México tem cerca de 40% (forte integração com EUA). China cerca de 20% (sobe na curva — passa de montador a designer). Quanto maior o FVA, mais vulnerável a choques externos (COVID-19, guerra na Ucrânia, tarifas)."
+    },
+    {
+      "type": "h3",
+      "text": "Síntese: o que explica o comércio hoje"
+    },
+    {
+      "type": "p",
+      "text": "O comércio internacional contemporâneo é explicado por uma combinação das teorias clássicas e de novos factores. Vantagens comparativas (Ricardo) ainda determinam muito do comércio inter-sectorial. Dotações de factores (Heckscher-Ohlin) ainda moldam o comércio Norte-Sul. Economias de escala e diferenciação de produtos (Krugman, 1979) explicam o comércio intra-sectorial entre países semelhantes (Alemanha-Portugal trocam carros entre si). Tecnologia e custos de transporte (Samuelson, 2004) reduziram as fricções e permitiram as GVCs. Política comercial (tarifas, acordos) molda os padrões. E a geopolítica cada vez mais: as empresas escolhem fornecedores não só pelo custo, mas por alinhamento político, segurança de供应链, e risco de sanções."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Comércio inter-sectorial: vantagens comparativas, dotações de factores (Norte-Sul)",
+        "Comércio intra-sectorial: economias de escala, diferenciação de produto (Norte-Norte)",
+        "Comércio intra-firma: GVCs, transferência de etapas dentro da mesma multinacional",
+        "Determinantes adicionais: distância, língua, instituições, infraestrutura, capital humano",
+        "Modelo gravitacional do comércio: o volume de comércio é proporcional ao PIB dos parceiros e inversamente proporcional à distância",
+        "Política comercial: tarifas, quotas, acordos, sanções, subsídios à exportação",
+        "Geopolítica: segurança energética, tecnológica, alimentar a moldar cadeias de fornecedores"
+      ]
+    }
+  ]
+}

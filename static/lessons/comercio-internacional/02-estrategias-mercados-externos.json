@@ -1,0 +1,257 @@
+{
+  "id": "02-estrategias-mercados-externos",
+  "title": "2. Estratégias para Mercados Externos: Modos de Entrada, Modelo de Uppsala, Born Globals e Network View de Johanson-Vahlne",
+  "courseSlug": "comercio-internacional",
+  "lessonNumber": 2,
+  "description": "Como escolher onde entrar e como entrar: critérios de selecção de mercados externos, modos de entrada (exportação directa e indirecta, licenciamento, franchising, joint venture, subsidiária, greenfield, M&A), modelo incremental de internacionalização de Uppsala, born globals e network view de Johanson-Vahlne.",
+  "audio": "Nesta segunda lição vamos descer da teoria para a prática. Como é que uma empresa decide entrar num mercado externo? E como entra? Começamos com a selecção de mercados: atracção do mercado (tamanho, crescimento, intensidade competitiva), distâncias (geográfica, cultural, institucional) e capacidade da empresa (recursos, experiência, tolerância ao risco). Depois, os modos de entrada: exportação (directa e indirecta), licenciamento, franchising, joint venture, subsidiária greenfield e aquisição (M&A). Cada modo tem trade-offs entre controlo, risco, custo e velocidade de entrada. Vemos o modelo de Uppsala (1977): as empresas internacionalizam-se em etapas incrementais, primeiro países próximos, depois mais distantes, primeiro modos de baixo compromisso (exportação), depois modos de alto compromisso (subsidiária). E os born globals (1990s), empresas que internacionalizam desde o início, contrariando Uppsala. Terminamos com o network view de Johanson-Vahlne (2009): internacionalização não é sobre mercado único, é sobre posições em redes de relacionamento. Vamos.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Estratégia Internacional", "Modos de Entrada", "Uppsala", "Born Globals", "Johanson-Vahlne", "Exportação", "Franchising", "Joint Venture", "Licenciamento", "Network View"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O processo de internacionalização: três decisões"
+    },
+    {
+      "type": "p",
+      "text": "Internacionalizar é um processo de três decisões encadeadas. (1) Porquê internacionalizar? (motivações, pró-activas e reactivas). (2) Onde entrar? (selecção de mercados). (3) Como entrar? (modos de entrada). As três decisões não são independentes: escolher o modo certo depende do mercado escolhido, e a atractividade do mercado depende do modo disponível (ex: não faz sentido licenciamento num mercado pequeno sem parceiros). A decisão de internacionalizar raramente é puramente económica — pesam motivações como saturação do mercado doméstico, pressão competitiva, vontade do fundador, ciclos de vida do produto, e procura de economias de escala. Uma framework útil: motivações pró-activas (ganhos de lucro, vantagem competitiva, economias de escala, sinergias) versus reactivas (mercado doméstico saturado, pressão competitiva, excesso de capacidade, busca de novos clientes)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Decisão 1 — Porquê: motivações pró-activas (procura de lucro, escala, vantagens) vs reactivas (sobrevivência, saturação, pressão)",
+        "Decisão 2 — Onde: selecção de mercados (atracção, distância, capacidade)",
+        "Decisão 3 — Como: modos de entrada (exportação, contratual, investimento directo)",
+        "As três decisões interagem: modo depende do mercado, mercado depende do modo",
+        "Análise SWOT-PESTEL como ponto de partida: o que a empresa tem, o que o mercado pede",
+        "Erro comum: internacionalizar antes de consolidar o mercado doméstico"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Regra prática: muitos consultores recomendam consolidar 60-70% do mercado doméstico antes de internacionalizar. A lógica é simples — se não consegues ser competitivo em casa, com custos e cultura conhecidos, como vais ser competitivo num mercado desconhecido? Há excepções óbvias (empresas de sectores globalizados desde o início, como SaaS), mas para a maioria das PMEs industriais e de consumo, esta regra continua a ser útil."
+    },
+    {
+      "type": "h2",
+      "text": "Selecção de mercados externos: onde entrar"
+    },
+    {
+      "type": "p",
+      "text": "Seleccionar o mercado certo é a primeira decisão estratégica. Três grupos de critérios. (1) Atracção do mercado: tamanho (PIB, população, mercado-alvo), crescimento (tendência do PIB, sector), intensidade competitiva (concentração, players locais, barreiras à entrada), potencial de mercado (taxa de penetração actual do segmento). (2) Distâncias: geográfica (custo de transporte, tempo), cultural (língua, religião, costumes, valores), institucional (sistema legal, estabilidade política, regras alfandegárias). A framework CAGE de Pankaj Ghemawat (2001, Distance Still Matters) operacionaliza isto: Cultural, Administrative, Geographic, Economic distance. (3) Capacidade da empresa: recursos financeiros, competências, marca, capacidade de gestão à distância, tolerância ao risco."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Atracção: PIB, crescimento, dimensão do mercado-alvo, intensidade competitiva, poder de compra",
+        "Distância cultural: língua, religião, valores, costumes (Hofstede veremos na lição 4)",
+        "Distância institucional: sistema legal, burocracia, estabilidade política, regras alfandegárias",
+        "Distância geográfica: custo de transporte, tempo de entrega, presença de hubs logísticos",
+        "Distância económica: nível de desenvolvimento, custo de produção local, custo do trabalho",
+        "Framework CAGE de Ghemawat (2001): operacionaliza as 4 distâncias",
+        "Erro comum: escolher mercado pela afinidade cultural sem analisar atracção real"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Exercício prático: scorecard de selecção de mercados. Liste 5-10 mercados candidatos e pontue cada um em 10 critérios (tamanho, crescimento, distância cultural, distância geográfica, distância institucional, distância económica, intensidade competitiva, regime legal, infra-estrutura, custo de entrada). Some os pontos. Os top 3 são candidatos. Os bottom 3 são descartados. Os do meio precisam de análise mais detalhada. Esta abordagem disciplinada evita decisões emocionais ('o mercado é interessante porque tenho família lá')."
+    },
+    {
+      "type": "h2",
+      "text": "Modos de entrada: exportação, contratual e investimento directo"
+    },
+    {
+      "type": "p",
+      "text": "Os modos de entrada organizam-se em três categorias, com compromisso crescente de recursos e controlo. (1) Exportação: vender para clientes no estrangeiro a partir do país de origem. Pode ser directa (com equipa própria no destino) ou indirecta (via intermediários, agentes, distribuidores, trading houses). É o modo de menor risco e menor compromisso de capital. (2) Acordos contratuais: licenciamento (ceder IP a um parceiro local em troca de royalties), franchising (ceder modelo de negócio completo: marca, processo, formação, em troca de fees e royalties), contract manufacturing (fabricar localmente sob marca do parceiro), gestão de contratos (operar hotéis, hospitais, etc. de terceiros). (3) Investment Directo no Estrangeiro (IDE/FDI): joint venture (parceria com empresa local), subsidiária greenfield (construir do zero), aquisição/M&A (comprar empresa local)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Exportação directa: vendas próprias, equipa comercial no destino, sem presença legal",
+        "Exportação indirecta: via intermediários (agentes, distribuidores, trading houses, e-commerce platforms)",
+        "Licenciamento: ceder tecnologia/marca a parceiro local em troca de royalties",
+        "Contract manufacturing: produzir localmente para parceiro externo (OEM)",
+        "Franchising: modelo de negócio replicável — McDonald's, Zara, Hilton, Subway",
+        "Joint venture: parceria 50/50 ou minoritária com empresa local",
+        "Subsidiária greenfield: construir operação do zero (máximo controlo, máximo risco)",
+        "Aquisição/M&A: comprar empresa existente (rápido, mas integração é difícil)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Trade-off fundamental: controlo vs risco vs recurso. Exportação: baixo controlo, baixo risco, baixo recurso. IDE: alto controlo, alto risco, alto recurso. Acordos contratuais (licenciamento/franchising): controlo médio, risco baixo-médio, recurso médio. A escolha depende da estratégia: se queres proteger IP de alta tecnologia, evita licenciamento; se queres escalar rápido com capital limitado, franchising pode ser ideal."
+    },
+    {
+      "type": "h2",
+      "text": "Exportação: directa e indirecta"
+    },
+    {
+      "type": "p",
+      "text": "A exportação é o modo de entrada mais comum, especialmente para PMEs e em internacionalização inicial. Exportação directa: a empresa vende directamente ao cliente no estrangeiro (B2B via comercial próprio, B2C via e-commerce próprio). Vantagens: controlo total sobre marca, preço, cliente, margens mais altas; conhecimento directo do mercado. Desvantagens: requer equipa no destino, investimento em marketing, gestão logística e aduaneira complexa, risco cambial. Exportação indirecta: a empresa vende a intermediários no país de origem (trading houses, brokers, plataformas B2B) ou no destino (agentes, distribuidores, importadores). Vantagens: zero investimento inicial, intermediário conhece o mercado. Desvantagens: pouco controlo, margens mais baixas, dependência do intermediário, pouco conhecimento do cliente final. Para PMEs que começam a exportar, indirecta via agentes/distribuidores é o caminho mais comum; à medida que crescem no mercado, podem abrir subsidiária comercial e passar a directa."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Exportação directa B2B: equipa comercial própria no destino, feiras, prospecção",
+        "Exportação directa B2C: e-commerce próprio (Shopify, Amazon FBA, site institucional)",
+        "Exportação indirecta via trading house: empresa especializada compra e revende",
+        "Exportação indirecta via agente comercial: procura clientes e fecha vendas em troca de comissão",
+        "Exportação indirecta via distribuidor/importador: compra e revende com margem própria",
+        "Vantagens comuns da indirecta: menor risco, conhecimento local do intermediário",
+        "Desvantagens comuns da indirecta: menor controlo, menor margem, dependência"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Tendência 2020-2026: a exportação directa B2C explodiu com marketplaces globais (Amazon, eBay, Alibaba, Etsy), logística integrada (DHL, FedEx, UPS), e serviços de fulfillment (Amazon FBA permite armazenar produtos em centros logísticos da Amazon e enviar ao cliente final). Isto reduziu drasticamente o custo de exportar para PMEs, mas criou também dependência das plataformas (veremos na lição 4 o tema de marketplaces e poder de mercado)."
+    },
+    {
+      "type": "h2",
+      "text": "Licenciamento e Franchising"
+    },
+    {
+      "type": "p",
+      "text": "Licenciamento: a empresa (licenciante) autoriza outra empresa (licenciado) a usar uma tecnologia, marca, patente ou processo produtivo em troca de royalties (geralmente 3-8% das vendas). Comum em software,化学品, farmacêutica, moda de luxo, tecnologias industriais. Vantagem: quase zero investimento, escalabilidade rápida, risco mínimo. Desvantagem: perda de controlo sobre qualidade, know-how e marca — se o licenciado produzir mal, prejudica a tua reputação. Risco de o licenciado se tornar concorrente após o fim do contrato. Franchising: modelo mais completo — o franquiador cede marca, processo operacional completo, formação, sistema de gestão, marketing centralizado, em troca de fee de entrada + royalties continuas (5-12% das vendas). Comum em restaurantes (McDonald's, Subway), hotelaria (Hilton, Marriott), vestuário (Zara), educação (Kumon), serviços (7-Eleven). Diferença chave: no licenciamento cedes apenas IP; no franchising cedes um sistema de negócio inteiro."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Licenciamento: cede IP (patente, tecnologia, marca) por royalties",
+        "Franchising: cede sistema de negócio completo (marca + processo + formação + suporte)",
+        "Royalties típicos: licenciamento 3-8%, franchising 5-12% + fee de entrada",
+        "Risco do licenciamento: produção de baixa qualidade, apropriação de know-how",
+        "Risco do franchising: dependência do franquiado, conflitos sobre padrões",
+        "Sucesso do franchising depende de: modelo replicável, marca forte, sistema de suporte",
+        "Casos: McDonald's (43k+ restaurantes em 100+ países), Subway, Hilton, Zara, Kumon"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Cuidado com licenciamento em mercados de enforcement fraco. Em países onde a proteção de PI é fraca e os contratos são difíceis de impor, o licenciado pode simplesmente copiar a tecnologia e produzir sem pagar royalties após o fim do contrato. Soluções: contratos curtos com renovação, joint ventures com participação local, know-how mantido em segredo (vs patenteado), auditorias regulares. Mas a regra geral: em mercados de enforcement fraco, prefira IDE (subsidiária) a licenciamento."
+    },
+    {
+      "type": "h2",
+      "text": "Joint Venture, Subsidiária Greenfield e M&A"
+    },
+    {
+      "type": "p",
+      "text": "Investment Directo no Estrangeiro (IDE) é o modo com maior compromisso. Joint Venture (JV): parceria com uma empresa local, geralmente 50/50 mas pode ser minoritária/majoritária. Vantagens: conhecimento local do parceiro, partilha de risco e capital, acesso a redes, em alguns países (China, Índia, Indonésia) é obrigatório para certos sectores. Desvantagens: conflitos de gestão, alinhamento de incentivos, partilha de lucros, dificuldades de saída. Subsidiária Greenfield: construir a operação do zero, com 100% de controlo. Vantagens: controlo total, implementação directa da estratégia. Desvantagens: investimento elevado, lento (1-3 anos para começar), risco elevado, sem conhecimento local. Aquisição/M&A: comprar empresa local existente. Vantagens: rapidez, acesso imediato a clientes/distribuição/equipa, marcas locais. Desvantagens: integração difícil, choque cultural, sobrevalorização, problemas de governação."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Joint Venture: parceria local, partilha de risco, conflitos de gestão",
+        "Subsidiária Greenfield: 100% controlo, alto investimento, alto risco",
+        "Aquisição/M&A: rápido, integração difícil, problemas culturais",
+        "Em mercados emergentes, JV é frequentemente obrigatório (China até 2020 em certos sectores)",
+        "Greenfield preferido em sectores onde a operação core é difícil de replicar (alta tecnologia)",
+        "M&A preferido em mercados consolidados (concorrentes, distribuidores existentes)",
+        "Taxa de insucesso de M&A: 50-70% nos primeiros 5 anos (estudos KPMG, McKinsey)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "M&A internacional tem taxa de insucesso alta. Razões principais: (1) overpayment — sinergias ilusórias, valoriza-se a marca, ignora-se o custo de integração; (2) choque cultural — duas empresas com práticas incompatíveis; (3) perda de talento — os melhores saem após a aquisição; (4) integração mal gerida — sistemas, processos, culturas sobrepostos de forma desastrosa. Lição: M&A é rápido mas perigoso. Greenfield é lento mas com mais controlo sobre a integração."
+    },
+    {
+      "type": "h2",
+      "text": "Modelo de Uppsala: internacionalização incremental (Johanson & Vahlne 1977)"
+    },
+    {
+      "type": "p",
+      "text": "Johanson e Vahlne (1977, Journal of International Business Studies) propuseram o modelo de Uppsala, baseado em pesquisa empírica com empresas suecas. A tese central: as empresas internacionalizam-se de forma incremental, por etapas, em vez de darem saltos. Dimensão espacial: começam por países com menor distância psíquica (língua, cultura, educação, sistema político semelhantes), e depois passam gradualmente a países mais distantes. Dimensão de compromisso: começam por modos de baixo compromisso (exportação indirecta), passam a modos intermédios (exportação directa, JV), e finalmente modos de alto compromisso (subsidiária, greenfield). A lógica subjacente: o conhecimento sobre mercados estrangeiros é obtido pela experiência (learning-by-doing), e cada etapa constrói sobre a anterior. A empresa aprende, ajusta, e expande gradualmente."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Uppsala 1977: internacionalização é processo incremental, em etapas, em duas dimensões",
+        "Dimensão espacial: distância psíquica (cultural, linguística, institucional)",
+        "Dimensão de compromisso: recursos investidos e risco assumido em cada mercado",
+        "Sequência típica: exportação indirecta → exportação directa → JV/licenciamento → subsidiária",
+        "Learning-by-doing: conhecimento do mercado vem da experiência, não do planeamento",
+        "Compromisso com mercado cresce à medida que experiência aumenta",
+        "Implicação para PMEs: começar pequeno, aprender, crescer — não saltar para subsidiária greenfield"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Limitações do modelo de Uppsala: assume empresa industrial tradicional, com experiência doméstica e mercado conhecido. Funciona bem para PMEs industriais europeias nos anos 1970-1990. Funciona mal para empresas digitais, Born Globals (ver abaixo), empresas de sectores globalizados desde o início. Em 2009, Johanson e Vahlne atualizaram o modelo para o 'network view' — internacionalização não é sobre mercados isolados, mas sobre posições em redes de relacionamento."
+    },
+    {
+      "type": "h2",
+      "text": "Born Globals: internacionalização desde o início"
+    },
+    {
+      "type": "p",
+      "text": "Born Globals são empresas que, desde a sua fundação ou pouco depois, operam em mercados internacionais como sua actividade principal — sem passar pelas etapas incrementais de Uppsala. Investigação de McKinsey (1990s) e Knight & Cavusgil (1996) identificou o fenómeno: empresas de sectores como software, biotecnologia, electrónica de consumo, moda, design, SaaS, que nascem globais porque (1) o mercado doméstico é demasiado pequeno (ex: Israel, Estónia, Portugal), (2) o sector é global por natureza (SaaS, e-commerce), (3) os founders têm experiência internacional prévia, (4) a tecnologia permite servir clientes globais desde o dia 1. Exemplos: Spotify (Suécia, fundada em 2006, hoje em 180+ países), Skype (Estónia), Logitech (Suíça), Amyris (EUA), além de muitas PMEs portuguesas em SaaS, design, têxteis técnicos."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Born Global: empresa que se internacionaliza desde a fundação ou nos primeiros 3 anos",
+        "Knight & Cavusgil (1996, International Marketing Review): termo formalizado",
+        "Sectores típicos: software, biotech, electrónica, moda, design, SaaS",
+        "Motivações: mercado doméstico pequeno, sector global, founders com experiência global",
+        "Vantagem competitiva: nichos globais identificáveis desde cedo",
+        "Exemplos: Spotify (Suécia), Skype (Estónia), Logitech (Suíça), Prezi (Hungria)",
+        "Em Portugal: muitas startups SaaS e de design são Born Globals"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Implicação prática: Born Globals precisam de competências internacionais desde o dia 1 — inglês fluente, conhecimento de múltiplos mercados, capacidade de gerir operações distribuídas, marca internacional, presença digital forte. Não podem seguir a sequência tradicional de Uppsala (mercado doméstico primeiro, internacional depois). Os fundadores de Born Globals são tipicamente pessoas com experiência internacional prévia (MBA no estrangeiro, trabalho em multinacionais, dupla nacionalidade)."
+    },
+    {
+      "type": "h2",
+      "text": "Network View de Johanson-Vahlne (2009)"
+    },
+    {
+      "type": "p",
+      "text": "Em 2009, Johanson e Vahlne revisitaram o seu próprio modelo de Uppsala para o actualizar à realidade contemporânea. A nova tese: internacionalização não é sobre mercado único nem sobre distância geográfica, mas sobre posições em redes de relacionamento (business networks). Uma empresa internacionaliza-se entrando, construindo e coordenando posições em redes que envolvem clientes, fornecedores, distribuidores, competidores, institutos de investigação, reguladores, todos espalhados por países. Conhecimento de mercado não vem só da experiência directa — vem também do que se aprende com parceiros de rede. Oportunidades surgem das posições de rede, não da exploração sequencial de mercados. Implicação: a entrada num mercado pode dar-se via um parceiro de rede, sem a distância psíquica ser determinante."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Network view (2009): empresas são nós em redes de relacionamento",
+        "Internacionalização = entrar, construir e coordenar posições em redes",
+        "Conhecimento de mercado vem dos parceiros de rede, não só da experiência directa",
+        "Distância psíquica substituída por 'liability of foreignness' e 'liability of outsidership'",
+        "Oportunidades surgem das posições de rede",
+        "Implicação prática: relações com parceiros (clientes, fornecedores, distribuidores) são o activo estratégico",
+        "Conexão com GVCs de Gereffi: as redes são as cadeias de valor globais"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "O conceito de 'liability of outsidership' substitui 'liability of foreignness'. Antes, o problema era ser estrangeiro (diferente, desconhecido). Agora, o problema é estar fora da rede relevante — e isso pode acontecer dentro do mesmo país, se a empresa não tiver as relações certas. Inversamente, pode-se entrar num mercado distante se já se tiver as conexões certas via rede. Esta mudança conceptual é importante para PMEs: o activo estratégico são as relações, não a marca ou os produtos."
+    },
+    {
+      "type": "h3",
+      "text": "Quadro síntese: escolher o modo de entrada certo"
+    },
+    {
+      "type": "p",
+      "text": "Não há modo 'certo' universal. Depende de (1) objectivos estratégicos da empresa (rapidez, controlo, risco, custo), (2) características do mercado (tamanho, crescimento, risco político, intensidade competitiva, distância), (3) recursos e capacidades da empresa (capital, competências, experiência internacional), (4) sector (digital vs físico, serviços vs indústria). Regra geral: começar pequeno e aprender (exportação indirecta → directa → JV → subsidiária). Mas Born Globals começam directamente com presença em múltiplos mercados via digital. Casos onde greenfield faz sentido: alta tecnologia, vantagens competitivas difíceis de replicar. Casos onde M&A faz sentido: mercados consolidados, marcas locais valiosas, rapidez crítica. Casos onde franchising faz sentido: modelo de negócio replicável, marca forte, sectores de retalho/serviços padronizáveis."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Critério 1 — Objectivos: rapidez, controlo, risco, custo de cada modo",
+        "Critério 2 — Mercado: tamanho, crescimento, risco, distância, intensidade",
+        "Critério 3 — Recursos: capital disponível, competências internacionais, experiência",
+        "Critério 4 — Sector: digital/físico, serviços/indústria, high-tech/standard",
+        "Regra geral: começar pequeno, aprender, crescer (Uppsala)",
+        "Excepção: Born Globals começam globais desde o início",
+        "Sem modo perfeito: cada um tem trade-offs"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,210 @@
+{
+  "id": "04-marketing-e-negocios-internacionais",
+  "title": "4. Marketing e Negócios Internacionais: Mix Marketing 4Ps, Branding Global vs Local, Hofstede, Trompenaars, CISG e Arbitragem ICC/UNCITRAL",
+  "courseSlug": "comercio-internacional",
+  "lessonNumber": 4,
+  "description": "Como vender além-fronteiras: marketing-mix internacional (4Ps adaptado), segmentação inter-cultural, tensão global vs local em branding, comunicação intercultural com modelos de Hofstede (6 dimensões) e Trompenaars (7 dimensões), contratos internacionais (CISG) e resolução de litígios (arbitragem ICC vs UNCITRAL, mediação).",
+  "audio": "Na última lição vamos ao marketing e aos negócios internacionais. Como vender bem além-fronteiras? Começamos com o marketing-mix 4Ps (Produto, Preço, Praça, Promoção) e como cada P muda quando se cruza uma fronteira. Produto: padronizar ou adaptar? Marca global ou local? Preço: PPP (paridade do poder de compra), dumping, transfer pricing. Praça: canais de distribuição locais, e-commerce global. Promoção: comunicação intercultural, Hofstede, Trompenaars. Branding global vs local: tensão que toda a multinacional enfrenta. Vemos o modelo de Hofstede com 6 dimensões culturais (power distance, individualism, masculinity, uncertainty avoidance, long-term orientation, indulgence) e como adaptar a comunicação. Vemos Trompenaars (7 dimensões). Depois os contratos internacionais: a Convenção de Viena (CISG) sobre compra e venda internacional de mercadorias, com as suas regras uniformes aplicáveis em 90+ países. Terminamos com arbitragem: ICC (Câmara Internacional de Comércio, Paris) vs UNCITRAL (Nações Unidas) — duas instituições, regras diferentes, jurisdições diferentes. Vamos.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Marketing Internacional", "4Ps", "Branding Global vs Local", "Hofstede", "Trompenaars", "CISG", "Viena", "Arbitragem", "ICC", "UNCITRAL", "Intercultural"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Marketing internacional: a base"
+    },
+    {
+      "type": "p",
+      "text": "Marketing internacional é a disciplina de planear, implementar e controlar actividades de marketing em mais de um país. A pergunta central é a mesma do marketing doméstico: como criar valor para o cliente de forma rentável? Mas com duas variáveis adicionais: (1) cada país tem características únicas (cultura, economia, instituições, infraestrutura) que afectam o marketing-mix, e (2) as actividades em diferentes países interagem — uma campanha de marca global afecta vendas locais. Theodore Levitt (1983, The Globalization of Markets) defendeu que a globalização estava a homogeneizar os mercados, permitindo marcas globais padronizadas. Esta visão foi parcialmente confirmada (Apple, Coca-Cola, IKEA, Zara) mas também parcialmente refutada — em muitas categorias, a adaptação local continua a ser necessária. Hoje, a abordagem dominante é 'glocalization': pensar global, agir local."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Marketing internacional: planear e implementar marketing em múltiplos países",
+        "Levitt (1983): 'The Globalization of Markets' — defende padronização global",
+        "Realidade: nem tudo é globalizável, sectores e marcas variam",
+        "Abordagem actual: glocalization — global strategy + local execution",
+        "Bartlett & Ghoshal (1989): empresa transnacional combina integração global com resposta local",
+        "Diferença para marketing doméstico: mais variáveis, mais stakeholders, mais risco"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "A grande questão: padronizar ou adaptar? Padronizar economiza custos (produção única, embalagem única, campanha única). Adaptar responde melhor ao local (preferências, cultura, regulamentação). A resposta certa depende do sector e da marca. Marcas de luxo quase sempre padronizam (Louis Vuitton vende a mesma mala em todo o lado). Fast-food adapta mais (McDonald's tem menus vegetarianos na Índia). Tecnologia tende a padronizar (Apple iPhone é igual em todo o lado, excepto legislação local)."
+    },
+    {
+      "type": "h2",
+      "text": "Mix marketing 4Ps internacional"
+    },
+    {
+      "type": "p",
+      "text": "O marketing-mix 4Ps (Produto, Preço, Praça, Promoção) aplica-se internacionalmente com adaptações importantes. Produto: pode ser padronizado (um produto para o mundo) ou adaptado (modificado para cada mercado) ou ainda 'glocal' (produto base com adaptações locais). Exemplos: McDonald's Big Mac (padronizado) com menus vegetarianos na Índia (adaptado); shampoo Head & Shoulders (base global) com ingredientes adaptados ao clima (glocal). Preço: definido por PPP (paridade do poder de compra), concorrência local, custos de importação, tarifas, estratégia premium ou penetração. Praça (distribuição): varia radicalmente — mercados desenvolvidos têm retalho moderno (supermercados, e-commerce), mercados emergentes têm retalho tradicional (pequenas lojas, mercados), exigindo abordagens diferentes. Promoção: comunicação global com adaptação cultural (ver Hofstede abaixo)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Produto: padronizado (igual no mundo todo), adaptado (modificado), glocal (base + adaptação)",
+        "Preço: PPP, concorrência, custos de importação, tarifas, posicionamento",
+        "Praça: retalho moderno vs tradicional, e-commerce vs lojas físicas, distribuição intensiva vs selectiva",
+        "Promoção: comunicação global com adaptação cultural, mensagens e canais",
+        "Decisões interligadas: marca premium exige distribuição selectiva, mass-market exige distribuição intensiva",
+        "Adaptação não é só por país — pode ser por segmento ou região (UE vs resto do mundo)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Exemplo McDonald's India: o Big Mac foi substituído pelo Maharaja Mac (carne de frango) por razões religiosas (hindus não comem vaca, muçulmanos não comem porco). Adaptação extrema. Já o McDonald's Portugal segue menu mais próximo do europeu. Conclusão: o grau de adaptação é proporcional à distância cultural e institucional."
+    },
+    {
+      "type": "h2",
+      "text": "Branding global vs branding local"
+    },
+    {
+      "type": "p",
+      "text": "A tensão entre marca global e marca local é uma das decisões estratégicas mais importantes em marketing internacional. Marca global: uma única marca mundial com posicionamento uniforme (Apple, Google, Tesla, Zara). Vantagens: economias de escala em comunicação, coerência, força da marca global, orgulho de 'pertencer' a uma marca mundial. Desvantagens: insensibilidade a diferenças locais, choques culturais, dificuldades de penetração em segmentos locais. Marca local: marcas diferentes para cada mercado (Unilever tem Omo, Skip, Surf dependendo do país; Procter & Gamble tem Ariel, Tide, etc.). Vantagens: adaptação fina ao mercado, penetração mais rápida, menor risco cultural. Desvantagens: custos mais altos, perda de sinergias. Estratégia mista (brand portfolio): marca global para o produto core, marcas locais para segmentos específicos (ex: Danone tem marcas globais e locais). O modelo 'brand key' de Unilever é um framework útil para decidir."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Marca global: uma marca mundial (Apple, Google, Coca-Cola, Nike)",
+        "Marca local: marcas diferentes por país (Unilever Omo/Skip/Surf)",
+        "Marca regional: mesma marca em região (Omo em África, Skip na Europa)",
+        "Brand portfolio: combinação de marcas globais e locais por segmento",
+        "Vantagens do global: economias de escala, coerência, orgulho de marca",
+        "Vantagens do local: adaptação, penetração, sensibilidade cultural",
+        "Decisão baseada em: categoria (luxo global, FMCG local), cultura (alta vs baixa distância), concorrência, regulamentação"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Anheuser-Busch InBev (AB InBev), a maior cervejeira do mundo, opera mais de 500 marcas — Budweiser, Stella Artois, Corona, Beck's, Sagres, Bohemia, Modelo, etc. Em cada país, uma ou duas marcas locais fortes são mantidas e integradas no portfolio global. Esta estratégia 'multi-brand' maximiza penetração em mercados maduros onde as marcas locais têm valor emocional. Já a Apple mantém uma marca global única — coerência absoluta. As duas estratégias funcionam em categorias diferentes."
+    },
+    {
+      "type": "h2",
+      "text": "Hofstede: 6 dimensões culturais"
+    },
+    {
+      "type": "p",
+      "text": "Geert Hofstede (1980, Culture's Consequences) identificou, com base em pesquisa com 100.000+ funcionários da IBM em 50+ países, seis dimensões que permitem comparar culturas nacionais. (1) Power Distance (PDI): grau em que a sociedade aceita desigualdade de poder — alto na Malásia, baixo na Suécia. (2) Individualism vs Collectivism (IDV): individualidade vs grupo — alto nos EUA, baixo na Guatemala. (3) Masculinity vs Femininity (MAS): assertividade vs cooperação e qualidade de vida — alto no Japão, baixo na Suécia. (4) Uncertainty Avoidance (UAI): tolerância à ambiguidade — alto na Grécia, baixo em Singapura. (5) Long-Term Orientation (LTO): foco no futuro vs tradição — alto na China, baixo nos EUA. (6) Indulgence vs Restraint (IND): expressão livre de necessidades vs controlo — alto nos EUA, baixo na Rússia. As dimensões de Hofstede permitem prever comportamentos de consumo, preferências de comunicação, resistência a marcas globais."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "PDI (Power Distance): aceitação de desigualdade — alta (Malásia, Índia) vs baixa (Suécia, Dinamarca)",
+        "IDV (Individualism): foco no indivíduo vs grupo — alto (EUA, UK) vs baixo (Guatemala, Indonésia)",
+        "MAS (Masculinity): assertividade vs cooperação — alto (Japão, Hungria) vs baixo (Suécia, Noruega)",
+        "UAI (Uncertainty Avoidance): tolerância à ambiguidade — alto (Grécia, Portugal) vs baixo (Singapura, Hong Kong)",
+        "LTO (Long-Term Orientation): visão de longo prazo — alto (China, Japão) vs baixo (EUA, África)",
+        "IND (Indulgence): expressão de necessidades vs controlo — alto (EUA, México) vs baixo (Rússia, Egipto)",
+        "Aplicação: adaptar comunicação, cores, slogans, tamanho de embalagem, canais"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Portugal tem um perfil cultural interessante: PDI médio-alto (64), IDV baixo (27, mais colectivista), MAS baixo (31, mais feminino/cooperativo), UAI alto (99, evita incerteza). Isto explica porque é que marcas portuguesas tendem a enfatizar comunidade, confiança e tradição nas suas comunicações, e porque a relação pessoal (brand community) é tão valorizada. Quando uma marca global entra em Portugal, deve adaptar-se a estes valores para ter sucesso."
+    },
+    {
+      "type": "h2",
+      "text": "Trompenaars: 7 dimensões culturais"
+    },
+    {
+      "type": "p",
+      "text": "Fons Trompenaars (1993, Riding the Waves of Culture) propôs, baseado em pesquisa com 15.000+ managers em 28 países, sete dimensões culturais que complementam Hofstede. (1) Universalism vs Particularism (regras universais vs relações): EUA, Suécia universalistas; China, Coreia mais particularistas. (2) Individualism vs Communitarianism (semelhante a Hofstede IDV). (3) Neutral vs Emotional (emoções visíveis): México, Brasil emocionais; Japão, UK neutros. (4) Specific vs Diffuse (separação vida pessoal/profissional): EUA, UK específicos; muitos países asiáticos difusos. (5) Achievement vs Ascription (status pelo mérito vs por origem): Suécia, EUA achievement; França, Itália ascription. (6) Sequential vs Synchronic (tempo linear vs simultâneo): Anglo-saxónicos sequential; muitas culturas latinas e asiáticas synchronic. (7) Internal vs External Control (acreditar que se controla o destino): EUA internal; muitos países asiáticos external. Aplicação em negócios: gestão de equipas multiculturais, negociação, comunicação."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Universalism vs Particularism: regras universais (EUA) vs relações (China, Coreia)",
+        "Individualism vs Communitarianism: foco individual vs grupo (similar a Hofstede IDV)",
+        "Neutral vs Emotional: emoções contidas (Japão, UK) vs expressivas (Brasil, México)",
+        "Specific vs Diffuse: separar vida pessoal/profissional (EUA) vs misturar (Médio Oriente, Ásia)",
+        "Achievement vs Ascription: status por mérito (EUA) vs por origem (França)",
+        "Sequential vs Synchronic: tempo linear (anglo-saxónicos) vs simultâneo (latinos, asiáticos)",
+        "Internal vs External Control: acredita que controla destino (EUA) vs aceita o destino (muitos asiáticos)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Hofstede e Trompenaars são complementares. Hofstede é mais estatístico, baseado em surveys amplos; Trompenaars é mais qualitativo, baseado em casos. Ambos criticados por simplificarem (as pessoas não são representadas por médias nacionais) mas continuam a ser as ferramentas mais usadas em gestão intercultural. Recurso útil: o livro 'The Culture Map' de Erin Meyer (2014) sintetiza vários modelos em 8 escalas úteis para negócios."
+    },
+    {
+      "type": "h2",
+      "text": "Contratos internacionais e a CISG (Convenção de Viena)"
+    },
+    {
+      "type": "p",
+      "text": "A Convenção das Nações Unidas sobre Contratos de Compra e Venda Internacional de Mercadorias (CISG, 1980, Viena) é o tratado multilateral que uniformiza o direito aplicável a contratos internacionais de compra e venda de mercadorias. Adoptada em 1980 em Viena, em vigor desde 1988, com 90+ países contratantes (incluindo Portugal, Brasil, Alemanha, China, EUA, Japão — excepção notável: Reino Unido não aderiu). A CISG aplica-se automaticamente a contratos entre partes de países contratantes, salvo exclusão expressa. Cobre: formação do contrato (oferta e aceitação), obrigações do vendedor (entrega, conformidade, garantia), obrigações do comprador (pagamento, levantamento), remédios para incumprimento (rejeição, substituição, reparação, indemnização, resolução), e prescrição. Não cobre: serviços, bens imóveis, bens para uso pessoal, vendas em leilão, valores mobiliários."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "CISG (1980, Viena): tratado multilateral sobre compra e venda internacional de mercadorias",
+        "Aplicação: automática a contratos entre países contratantes (salvo exclusão)",
+        "90+ países contratantes: Portugal, Brasil, Alemanha, China, EUA, Japão; UK não aderiu",
+        "Cobre: formação do contrato, obrigações vendedor/comprador, remédios, prescrição",
+        "Não cobre: serviços, imóveis, bens pessoais, vendas em leilão, valores mobiliários",
+        "Princípios: boa-fé, autonomia das partes, comércio internacional uniforme",
+        "Boa prática: incluir cláusula de exclusão da CISG se quiseres aplicar direito nacional específico"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Armadilha CISG: muitos advogados nacionais não conhecem bem a CISG e assumem que se aplica a lei do país do vendedor ou comprador. Mas a CISG é lei internacional e aplica-se por defeito. Se quiseres aplicar direito português a um contrato com comprador alemão, tens de excluir a CISG expressamente. Se não excluir, a CISG aplica-se e os tribunais usam-na — e ela é frequentemente diferente da lei nacional."
+    },
+    {
+      "type": "h2",
+      "text": "Resolução de litígios: arbitragem ICC vs UNCITRAL"
+    },
+    {
+      "type": "p",
+      "text": "Em contratos internacionais, a resolução de litígios pode ser (1) tribunais nacionais, (2) mediação, (3) arbitragem. A arbitragem é o método preferido em contratos internacionais por várias razões: (1) confidencialidade, (2) expertise dos árbitros (escolhidos pelas partes), (3) neutralidade (sede e lei aplicável escolhidos), (4) reconhecimento internacional (Convenção de Nova Iorque, 1958, facilita execução de sentenças em 170+ países), (5) celeridade vs tribunais. As duas principais instituições arbitrais são a ICC (International Chamber of Commerce, sede em Paris) e a UNCITRAL (United Nations Commission on International Trade Law). ICC tem regulamento próprio, administra o processo, tem lista de árbitros, custos elevados mas gestão profissional. UNCITRAL fornece apenas regras (não instituição), as partes escolhem instituição administradora (LCIA, SCC, SIAC, etc.). Outras instituições: LCIA (Londres), SCC (Estocolmo), SIAC (Singapura), HKIAC (Hong Kong), CIArb, ICSID (investimento)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Arbitragem: resolução privada de litígios com árbitros escolhidos pelas partes",
+        "Vantagens: confidencialidade, expertise, neutralidade, reconhecimento (Nova Iorque 1958)",
+        "ICC (Paris): instituição completa, regulamento, lista de árbitros, custos elevados",
+        "UNCITRAL: só regras, sem instituição — partes escolhem administradora",
+        "Outras: LCIA (Londres), SCC (Estocolmo), SIAC (Singapura), HKIAC (Hong Kong)",
+        "ICSID (Washington): arbitragem de investimento Estado-investidor",
+        "Mediação: alternativa menos formal, conduzida por mediador neutro, não vinculativa (salvo acordo)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Em contratos B2B internacionais, a cláusula típica é: 'Any dispute arising out of or in connection with this contract shall be finally settled under the ICC Rules of Arbitration by one or more arbitrators appointed in accordance with the said Rules. Seat of arbitration: [city]. Language of arbitration: [language]. Governing law: [law].' Esta cláusula cobre praticamente tudo: regras processuais, sede, língua, direito aplicável. Custo de arbitragem ICC: tipicamente 1-5% do valor da disputa, dependendo da complexidade."
+    },
+    {
+      "type": "h3",
+      "text": "Força de vendas internacional: como organizar a presença comercial no estrangeiro"
+    },
+    {
+      "type": "p",
+      "text": "A força de vendas internacional pode organizar-se de várias formas. (1) Força doméstica com viagens: equipa comercial no país de origem que viaja regularmente ao destino (sufocante para exportações >10% das vendas). (2) Força de vendas local: equipa comercial fixa no destino, geralmente sob gestão de uma subsidiária comercial. (3) Agentes comerciais independentes: externalizados, pagam-se à comissão, úteis em mercados pequenos. (4) Distribuidores/importadores: compram e revendem, assumem risco de stock e cobrança. (5) Joint venture comercial: parceiro local gere vendas, partilha resultados. (6) E-commerce: vendas directas via site próprio, marketplaces globais (Amazon Business, Alibaba), útil para PMEs. A escolha depende do volume esperado, do tipo de cliente (B2B concentrado vs B2B disperso vs B2C), e do modelo de negócio."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Força doméstica + viagens: adequado para exportações iniciais ou pequenos volumes",
+        "Equipa local: para mercados com volume crítico (>5-10% das vendas)",
+        "Agentes independentes: comissão 3-8% das vendas, especializados por sector/região",
+        "Distribuidores/importadores: compram e revendem, assumem risco",
+        "Joint venture comercial: parceiro local, partilha de margem",
+        "E-commerce B2B: Alibaba, Amazon Business, sites próprios",
+        "E-commerce B2C: sites próprios, Amazon, Etsy, eBay, mercados locais"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "PMI: muitas PMEs portuguesas começam com distribuidores/importadores em mercados externos. Vantagem: zero investimento inicial, conhecimento local do parceiro. Desvantagem: pouco controlo, dependência. Quando o mercado começa a representar 5-10% das vendas, vale a pena abrir subsidiária comercial com equipa própria. Esta transição requer capital mas aumenta controlo, margens e conhecimento do mercado."
+    }
+  ]
+}

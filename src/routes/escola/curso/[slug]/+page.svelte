@@ -158,20 +158,35 @@
               ]
             },
         'gestao-inovacao': {
-              slug: 'gestao-inovacao',
-              title: 'Gestão da Inovação e Tecnologia',
-              tagline: 'Business Administration · Inovação, design thinking e ecossistemas',
-              description:
-                'Inovação não é só ideia: é sistema. Aprende gestão de inovação end-to-end — Drucker, Christensen, design thinking, lean startup, funil Stage-Gate, portfolio e ecossistemas.',
-              icon: '💡',
-              color: '#ca8a04',
-              lessons: [
-                { slug: '01-fundamentos-inovacao', title: '1. Fundamentos de Inovação: Drucker, Christensen, Foster, Chesbrough e Stage-Gate', summary: 'Fontes de inovação de Drucker, sustaining vs disruptive de Christensen, S-curve de Foster, open innovation de Chesbrough e funil Stage-Gate de Cooper.', quizSlug: 'giq', quizTitle: 'Quiz: Gestão da Inovação', estMinutes: 9 },
-                { slug: '02-design-thinking-e-criatividade', title: '2. Design Thinking, Criatividade e Lean Startup: Brown, Double Diamond, Ries e MVPs', summary: '5 fases de Brown (Empathize/Define/Ideate/Prototype/Test), Double Diamond do Design Council, prototipagem e Build-Measure-Learn de Ries com MVPs.', quizSlug: 'giq', quizTitle: 'Quiz: Gestão da Inovação', estMinutes: 9 },
-                { slug: '03-gestao-portfolio-inovacao', title: '3. Gestão de Portfolio de Inovação: Exploitation vs Exploration, Gating, Métricas e Real Options', summary: 'Exploitation vs exploration de March, critérios de seleção strategic fit, gating, métricas (R&D intensity, time-to-market, ROI), matriz BCG e real options.', quizSlug: 'giq', quizTitle: 'Quiz: Gestão da Inovação', estMinutes: 9 },
-                { slug: '04-ecossistemas-e-tecnologia', title: '4. Ecossistemas de Inovação, Plataformas e Transformação Digital: Parker, Rogers e Kane', summary: 'Platform thinking de Parker/Van Alstyne, ecossistemas (Silicon Valley, Israel, Shenzhen), IP strategy, digital transformation de Kane/Phillips e curva de adopção de Rogers.', quizSlug: 'giq', quizTitle: 'Quiz: Gestão da Inovação', estMinutes: 9 }
-              ]
-            },
+                      slug: 'gestao-inovacao',
+                      title: 'Gestão da Inovação e Tecnologia',
+                      tagline: 'Business Administration · Inovação, design thinking e ecossistemas',
+                      description:
+                        'Inovação não é só ideia: é sistema. Aprende gestão de inovação end-to-end — Drucker, Christensen, design thinking, lean startup, funil Stage-Gate, portfolio e ecossistemas.',
+                      icon: '💡',
+                      color: '#ca8a04',
+                      lessons: [
+                        { slug: '01-fundamentos-inovacao', title: '1. Fundamentos de Inovação: Drucker, Christensen, Foster, Chesbrough e Stage-Gate', summary: 'Fontes de inovação de Drucker, sustaining vs disruptive de Christensen, S-curve de Foster, open innovation de Chesbrough e funil Stage-Gate de Cooper.', quizSlug: 'giq', quizTitle: 'Quiz: Gestão da Inovação', estMinutes: 9 },
+                        { slug: '02-design-thinking-e-criatividade', title: '2. Design Thinking, Criatividade e Lean Startup: Brown, Double Diamond, Ries e MVPs', summary: '5 fases de Brown (Empathize/Define/Ideate/Prototype/Test), Double Diamond do Design Council, prototipagem e Build-Measure-Learn de Ries com MVPs.', quizSlug: 'giq', quizTitle: 'Quiz: Gestão da Inovação', estMinutes: 9 },
+                        { slug: '03-gestao-portfolio-inovacao', title: '3. Gestão de Portfolio de Inovação: Exploitation vs Exploration, Gating, Métricas e Real Options', summary: 'Exploitation vs exploration de March, critérios de seleção strategic fit, gating, métricas (R&D intensity, time-to-market, ROI), matriz BCG e real options.', quizSlug: 'giq', quizTitle: 'Quiz: Gestão da Inovação', estMinutes: 9 },
+                        { slug: '04-ecossistemas-e-tecnologia', title: '4. Ecossistemas de Inovação, Plataformas e Transformação Digital: Parker, Rogers e Kane', summary: 'Platform thinking de Parker/Van Alstyne, ecossistemas (Silicon Valley, Israel, Shenzhen), IP strategy, digital transformation de Kane/Phillips e curva de adopção de Rogers.', quizSlug: 'giq', quizTitle: 'Quiz: Gestão da Inovação', estMinutes: 9 }
+                      ]
+                    },
+                'comercio-internacional': {
+                      slug: 'comercio-internacional',
+                      title: 'Comércio Internacional',
+                      tagline: 'Business Administration · Teorias do comércio, estratégias de entrada, finanças, logística e marketing internacional',
+                      description:
+                        'Porque é que os países trocam? Como escolher mercados externos e entrar neles? Como gerir câmbios, Incoterms, cartas de crédito? Como vender além-fronteiras? Teorias (Smith, Ricardo, Heckscher-Ohlin, Stolper-Samuelson), integração económica (OMC, GATT, blocos regionais), cadeias globais de valor (Gereffi), modos de entrada (exportação, licenciamento, franchising, JV, subsidiária, M&A), Uppsala e Born Globals, Incoterms 2020, UCP 600, trade finance, marketing internacional 4Ps, Hofstede, Trompenaars, CISG e arbitragem ICC/UNCITRAL.',
+                      icon: '🌐',
+                      color: '#0e7490',
+                      lessons: [
+                        { slug: '01-fundamentos-comercio-internacional', title: '1. Fundamentos de Comércio Internacional: Smith, Ricardo, Heckscher-Ohlin, Stolper-Samuelson, Integração Económica, OMC/GATT e Global Value Chains', summary: 'Vantagens absolutas (Smith), vantagens comparativas (Ricardo), modelo Heckscher-Ohlin, teorema Stolper-Samuelson, integração económica, OMC/GATT e cadeias globais de valor de Gereffi.', quizSlug: 'ciq', quizTitle: 'Quiz: Comércio Internacional', estMinutes: 10 },
+                        { slug: '02-estrategias-mercados-externos', title: '2. Estratégias para Mercados Externos: Modos de Entrada, Uppsala, Born Globals e Network View', summary: 'Escolha de mercados, modos de entrada (exportação, licenciamento, franchising, subsidiária, JV, greenfield, M&A), modelo Uppsala, Born Globals e network view de Johanson-Vahlne.', quizSlug: 'ciq', quizTitle: 'Quiz: Comércio Internacional', estMinutes: 10 },
+                        { slug: '03-financas-e-logistica-internacional', title: '3. Finanças e Logística Internacional: Câmbios, Risco Cambial, Incoterms 2020, UCP 600 e Trade Finance', summary: 'Câmbios spot/forward, risco cambial e hedging com forwards/opções/futuros, Incoterms 2020 (EXW, FCA, FOB, CIF, DAP, DPU, DDP), carta de crédito UCP 600 e trade finance.', quizSlug: 'ciq', quizTitle: 'Quiz: Comércio Internacional', estMinutes: 10 },
+                        { slug: '04-marketing-e-negocios-internacionais', title: '4. Marketing e Negócios Internacionais: 4Ps, Branding Global vs Local, Hofstede, CISG e Arbitragem', summary: 'Marketing-mix 4Ps internacional, branding global vs local, Hofstede (6 dimensões) e Trompenaars, CISG (Convenção de Viena), arbitragem ICC vs UNCITRAL e força de vendas internacional.', quizSlug: 'ciq', quizTitle: 'Quiz: Comércio Internacional', estMinutes: 10 }
+                      ]
+                    },
     equivalenza: {
       slug: 'equivalenza',
       title: 'Equivalenza — The Scent of a Second Chance',
