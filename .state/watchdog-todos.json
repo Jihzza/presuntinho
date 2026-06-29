@@ -1,6 +1,30 @@
 {
-  "lastUpdated": "2026-06-29T11:31:44+02:00",
+  "lastUpdated": "2026-06-29T12:13:15.048479+02:00",
   "openItems": [
+    {
+      "id": "gap-079",
+      "category": "lição/curso",
+      "description": "Próxima cadeira BA #33. gap-078 entregou #32 (Empreendedorismo). Sugestão: 'Mercados Financeiros' / 'Comércio Internacional' / 'Gestão da Qualidade'. 4 lições + 1 quiz + i18n 5 locales + CATALOGUE wired. Aguardar próximo brief do Daniel ou auto-selecionar cadeira com mais procura na BA.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-12",
+      "created_at": "2026-06-29T12:13:15.048479+02:00"
+    },
+    {
+      "id": "gap-080",
+      "category": "smoke-fail",
+      "description": "Smoke live-fire do gap-078: confirmar que /escola/curso/empreendedorismo/, /escola/quiz/epq, /aulas retornam 200 em produção após deploy 7fa2227. Confirmar 5 i18n locales resolvem routes.escola.curso.empreendedorismo.{title,description,tagline} sem fallback PT. Bloqueado por auth gate — verificar via curl smoke e parse HTML.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-12",
+      "created_at": "2026-06-29T12:13:15.048479+02:00"
+    },
+    {
+      "id": "gap-081",
+      "category": "PWA",
+      "description": "PWA icons completeness check: apple-touch-icon.png (1.1K), favicon.svg (110B), favicon-32.png (313B) presentes. Verificar static/icons/ tem sizes completas (192, 512) e manifest.webmanifest referencia todos os sizes. Lighthouse PWA score re-run para garantir >=95.",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-29-12",
+      "created_at": "2026-06-29T12:13:15.048479+02:00"
+    },
     {
       "id": "gap-010",
       "category": "polish",
@@ -84,6 +108,16 @@
     }
   ],
   "closedItems": [
+    {
+      "id": "gap-078",
+      "category": "lição/curso",
+      "description": "Cadeira BA #32 'Empreendedorismo e Plano de Negócios' — 4 lições (mindset/effectuation, BMC + casos Equivalenza+Nubank, validação+4 tipos MVP, plano+pitch deck) + epq quiz 10 perguntas. 5 JSON + 5 i18n (809→815 chaves × 5 = 30 entries). CATALOGUE wired. Total CATALOGUE: 32 cadeiras. check 0/0, build green, push done. SHA 7fa2227.",
+      "sha": "7fa2227",
+      "closed_at": "2026-06-29T12:13:15.048479+02:00",
+      "done": true,
+      "updated_at": "2026-06-29T12:13:15.048479+02:00",
+      "evidence": "npm run check 0 errors/0 warnings; npm run build green; build/lessons/empreendedorismo/{01-04}*.json + course.json + build/quizzes/epq.json servidos; 5 i18n locales com 815 chaves (zero missing/extra)."
+    },
     {
       "id": "gap-068",
       "description": "fix(i18n): gap-068 — final audit pass: 16 PT strings wrapped in $t() across 10 routes (pt/financas/habitos/escola/secrets/write/course/dl/trabalhos). 24 chaves × 5 locales = 120 entries (753→873). Audit doc .state/i18n-audit-final.md lista como extended sweep; agora 100% coberto.",
