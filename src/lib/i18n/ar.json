@@ -691,8 +691,8 @@
   "walkthrough.verify.exists": "موجود.",
   "walkthrough.verify.text": "تأكد من",
   "write.breadcrumb.home": "← المحور",
-    "write.head.title": "الكتابة · نصائح لمكافحة الذكاء الاصطناعي",
-    "a11y.aria.anexar_ficheiro": "إرفاق ملف",
+  "write.head.title": "الكتابة · نصائح لمكافحة الذكاء الاصطناعي",
+  "a11y.aria.anexar_ficheiro": "إرفاق ملف",
   "a11y.aria.data_final": "تاريخ النهاية",
   "a11y.aria.data_inicial": "تاريخ البداية",
   "a11y.aria.editar_marcador": "تعديل الإشارة",
@@ -834,5 +834,12 @@
   "routes.escola.curso.lideranca-coaching.title": "القيادة والتوجيه",
   "routes.escola.curso.lideranca-coaching.description": "كيف تقود الأشخاص بفعالية في العصر الحديث: أسس نظريات القيادة (السمات، السلوكيات، الموقفية — فيدلر، هيرسي-بلانشارد)، ممارسة التدريب التنفيذي (نموذج GROW لويتمور، ملاحظات SBI)، الذكاء العاطفي للقائد (الركائز الخمس لغولمان وعلوم الأعصاب للتنظيم الذاتي)، وتطوير الخلافة (خطوط أنابيب القيادة، الإرشاد، الرعاية وبرامج المواهب العالية).",
   "routes.escola.curso.lideranca-coaching.tagline": "إدارة الأعمال · القيادة الموقفية، التدريب التنفيذي، الذكاء العاطفي والخلافة",
-  "routes.aulas.curso.lideranca-coaching": "القيادة والتوجيه"
+  "routes.aulas.curso.lideranca-coaching": "القيادة والتوجيه",
+  "agente.chat.file_received": "استلمت الملف \"{filename}\". عندما يكون لدى الوكيل فهرسة الملفات مفعّلة، أستطيع معالجته. الآن، صف لي نصياً ما تريد معرفته عنه.",
+  "agente.chat.no_audio_support": "متصفحك لا يدعم تسجيل الصوت.",
+  "agente.chat.audio_received": "استلمت الصوت. عندما يكون لدى الوكيل النسخ النصي مفعّلاً، أستطيع الرد بناءً على ما قلته. الآن، اكتب لي نصياً.",
+  "agente.chat.mic_denied": "لم أستطع الوصول إلى الميكروفون. تحقق من الأذونات.",
+  "agente.chat.clear_confirm": "مسح كل سجل المحادثة؟",
+  "agente.chat.cleared": "تم مسح السجل. اسألني أي شيء عن تطبيقك.",
+  "agente.chat.audio_label": "🎤 صوت مسجّل"
 }

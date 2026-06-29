@@ -833,5 +833,12 @@
   "routes.escola.curso.lideranca-coaching.title": "Leadership and Coaching",
   "routes.escola.curso.lideranca-coaching.description": "How to lead people effectively in the modern era: foundations of leadership theories (traits, behaviours, situational — Fiedler, Hersey-Blanchard), executive coaching practice (Whitmore's GROW model, SBI feedback), leader emotional intelligence (Goleman's 5 pillars and the neuroscience of self-regulation), and succession development (leadership pipelines, mentoring, sponsorship and high-potential programs).",
   "routes.escola.curso.lideranca-coaching.tagline": "Business Administration · Situational leadership, executive coaching, emotional intelligence and succession",
-  "routes.aulas.curso.lideranca-coaching": "Leadership and Coaching"
+  "routes.aulas.curso.lideranca-coaching": "Leadership and Coaching",
+  "agente.chat.file_received": "I received the file \"{filename}\". When the agent has file indexing enabled, I can process it. For now, describe in text what you want to know about it.",
+  "agente.chat.no_audio_support": "Your browser does not support audio recording.",
+  "agente.chat.audio_received": "I received the audio. When the agent has transcription enabled, I can answer based on what you said. For now, write to me in text.",
+  "agente.chat.mic_denied": "Could not access the microphone. Check permissions.",
+  "agente.chat.clear_confirm": "Clear all chat history?",
+  "agente.chat.cleared": "History cleared. Ask me anything about your app.",
+  "agente.chat.audio_label": "🎤 Audio recorded"
 }

@@ -91,9 +91,9 @@
         blob
       });
       await appendChatMessage(
-        'assistant',
-        `Recebi o ficheiro "${file.name}". Quando o agente tiver indexação de ficheiros ativa, posso processá-lo. Por agora, descreve-me em texto o que queres saber sobre ele.`
-      );
+              'assistant',
+              $t('agente.chat.file_received', { values: { filename: file.name } })
+            );
       messages = await listChatMessages(200);
     } catch (err) {
       console.error('[agente] file upload failed', err);
@@ -115,7 +115,7 @@
       return;
     }
     if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
-      await appendChatMessage('assistant', 'O teu browser não suporta gravação de áudio.');
+      await appendChatMessage('assistant', $t('agente.chat.no_audio_support', { default: 'O teu browser não suporta gravação de áudio.' }));
       messages = await listChatMessages(200);
       return;
     }
@@ -129,16 +129,16 @@
       mr.onstop = async () => {
         const blob = new Blob(recordingChunks, { type: mr.mimeType || 'audio/webm' });
         try {
-          await appendChatMessage('user', '🎤 Áudio gravado', {
-            kind: 'audio',
-            mimeType: mr.mimeType || 'audio/webm',
-            name: `recording-${Date.now()}.webm`,
-            blob
-          });
-          await appendChatMessage(
-            'assistant',
-            'Recebi o áudio. Quando o agente tiver transcrição ativa, posso responder com base no que disseste. Por agora, escreve-me em texto.'
-          );
+          await appendChatMessage('user', $t('agente.chat.audio_label', { default: '🎤 Áudio gravado' }), {
+                      kind: 'audio',
+                      mimeType: mr.mimeType || 'audio/webm',
+                      name: `recording-${Date.now()}.webm`,
+                      blob
+                    });
+                    await appendChatMessage(
+                      'assistant',
+                      $t('agente.chat.audio_received', { default: 'Recebi o áudio. Quando o agente tiver transcrição ativa, posso responder com base no que disseste. Por agora, escreve-me em texto.' })
+                    );
           messages = await listChatMessages(200);
         } catch (e) {
           console.error('[agente] recording save failed', e);
@@ -150,20 +150,20 @@
       recording = true;
     } catch (e) {
       console.error('[agente] getUserMedia failed', e);
-      await appendChatMessage('assistant', 'Não consegui aceder ao microfone. Verifica as permissões.');
+      await appendChatMessage('assistant', $t('agente.chat.mic_denied', { default: 'Não consegui aceder ao microfone. Verifica as permissões.' }));
       messages = await listChatMessages(200);
     }
   }
 
   async function onClearHistory() {
-    if (!confirm('Limpar todo o histórico do chat?')) return;
-    try {
-      await clearChatHistory();
-      messages = [];
-      await appendChatMessage(
-        'assistant',
-        'Histórico limpo. Pergunta-me qualquer coisa sobre o que tens na app.'
-      );
+    if (!confirm($t('agente.chat.clear_confirm', { default: 'Limpar todo o histórico do chat?' }))) return;
+        try {
+          await clearChatHistory();
+          messages = [];
+          await appendChatMessage(
+            'assistant',
+            $t('agente.chat.cleared', { default: 'Histórico limpo. Pergunta-me qualquer coisa sobre o que tens na app.' })
+          );
       messages = await listChatMessages(200);
     } catch (e) {
       console.error('[agente] clear failed', e);

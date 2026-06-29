@@ -833,5 +833,12 @@
   "routes.escola.curso.lideranca-coaching.title": "Leadership et Coaching",
   "routes.escola.curso.lideranca-coaching.description": "Comment diriger des personnes efficacement à l'ère moderne : fondements des théories du leadership (traits, comportements, situationnel — Fiedler, Hersey-Blanchard), pratique du coaching exécutif (modèle GROW de Whitmore, feedback SBI), intelligence émotionnelle du leader (les 5 piliers de Goleman et les neurosciences de l'autorégulation), et développement de la succession (pipelines de leadership, mentoring, sponsorship et programmes high-potential).",
   "routes.escola.curso.lideranca-coaching.tagline": "Business Administration · Leadership situationnel, coaching exécutif, intelligence émotionnelle et succession",
-  "routes.aulas.curso.lideranca-coaching": "Leadership et Coaching"
+  "routes.aulas.curso.lideranca-coaching": "Leadership et Coaching",
+  "agente.chat.file_received": "J'ai reçu le fichier \"{filename}\". Quand l'agent aura l'indexation de fichiers active, je pourrai le traiter. En attendant, décris-moi en texte ce que tu veux savoir.",
+  "agente.chat.no_audio_support": "Ton navigateur ne supporte pas l'enregistrement audio.",
+  "agente.chat.audio_received": "J'ai reçu l'audio. Quand l'agent aura la transcription active, je pourrai répondre en fonction de ce que tu as dit. En attendant, écris-moi en texte.",
+  "agente.chat.mic_denied": "Je n'ai pas pu accéder au microphone. Vérifie les permissions.",
+  "agente.chat.clear_confirm": "Effacer tout l'historique du chat ?",
+  "agente.chat.cleared": "Historique effacé. Demande-moi n'importe quoi sur ton app.",
+  "agente.chat.audio_label": "🎤 Audio enregistré"
 }

@@ -691,8 +691,8 @@
   "walkthrough.verify.exists": "existe.",
   "walkthrough.verify.text": "Verifica que",
   "write.breadcrumb.home": "← Hub",
-    "write.head.title": "Writing · Tips Anti-AI",
-    "a11y.aria.anexar_ficheiro": "Anexar ficheiro",
+  "write.head.title": "Writing · Tips Anti-AI",
+  "a11y.aria.anexar_ficheiro": "Anexar ficheiro",
   "a11y.aria.data_final": "Data final",
   "a11y.aria.data_inicial": "Data inicial",
   "a11y.aria.editar_marcador": "Editar marcador",
@@ -832,5 +832,12 @@
   "routes.escola.curso.gestao-qualidade.tagline": "Business Administration · TQM, ferramentas, ISO 9001 e excelência em serviços",
   "routes.escola.curso.lideranca-coaching.title": "Liderança e Coaching",
   "routes.escola.curso.lideranca-coaching.description": "Como liderar pessoas com eficácia na era moderna: fundamentos das teorias de liderança (traços, comportamentos, situacional — Fiedler, Hersey-Blanchard), prática do coaching executivo (modelo GROW de Whitmore, feedback SBI), inteligência emocional do líder (os 5 pilares de Goleman e a neurociência da auto-regulação), e desenvolvimento de sucessão (pipelines de liderança, mentoring, sponsorship e high-potential programs).",
-  "routes.escola.curso.lideranca-coaching.tagline": "Business Administration · Liderança situacional, coaching executivo, inteligência emocional e sucessão"
+  "routes.escola.curso.lideranca-coaching.tagline": "Business Administration · Liderança situacional, coaching executivo, inteligência emocional e sucessão",
+  "agente.chat.file_received": "Recebi o ficheiro \"{filename}\". Quando o agente tiver indexação de ficheiros ativa, posso processá-lo. Por agora, descreve-me em texto o que queres saber sobre ele.",
+  "agente.chat.no_audio_support": "O teu browser não suporta gravação de áudio.",
+  "agente.chat.audio_received": "Recebi o áudio. Quando o agente tiver transcrição ativa, posso responder com base no que disseste. Por agora, escreve-me em texto.",
+  "agente.chat.mic_denied": "Não consegui aceder ao microfone. Verifica as permissões.",
+  "agente.chat.clear_confirm": "Limpar todo o histórico do chat?",
+  "agente.chat.cleared": "Histórico limpo. Pergunta-me qualquer coisa sobre o que tens na app.",
+  "agente.chat.audio_label": "🎤 Áudio gravado"
 }

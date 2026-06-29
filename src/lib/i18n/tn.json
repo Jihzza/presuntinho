@@ -833,5 +833,12 @@
   "routes.escola.curso.lideranca-coaching.title": "Liderança w Coaching",
   "routes.escola.curso.lideranca-coaching.description": "Kifif tetwejjih l-ashab b-kafa2a f l-3asr l-7adith: assasat nazriyat al-liderança (sifaat, sulukiyat, wad3iyya — Fiedler, Hersey-Blanchard), 3maliyyat l-coaching l-tanfidhy (nama3dj GROW l-Whitmore, feedback SBI), dhaka3 3atify lil qa3id (l-5 aqlamt l-Goleman w 3ilm al-a3sab l-dhati), w tatawor l-khilafet (linat al-qiyada, mentoring, sponsorship w baramej high-potential).",
   "routes.escola.curso.lideranca-coaching.tagline": "Business Administration · Liderança wad3iyya, coaching tanfidhy, dhaka3 3atify w khilafet",
-  "routes.aulas.curso.lideranca-coaching": "Liderança w Coaching"
+  "routes.aulas.curso.lideranca-coaching": "Liderança w Coaching",
+  "agente.chat.file_received": "Jabet el-file \"{filename}\". Ki l-agent ikoun andou file indexing, najem n-traatih. Taw tawa, goul-li bel-kteb chnowa t7eb taaref 3lih.",
+  "agente.chat.no_audio_support": "Browser mte3ek ma y-suppportich l'enregistrement ta3 l-audio.",
+  "agente.chat.audio_received": "Jabet l-audio. Ki l-agent ikoun andou transcription, najem n-jaweb 3la 7seb elli goltoli. Taw tawa,kteb-li.",
+  "agente.chat.mic_denied": "Ma najemch n-dakhel l-micro. Check el-permissions.",
+  "agente.chat.clear_confirm": "Nfassakh kol l-historique ta3 el-chat?",
+  "agente.chat.cleared": "Tfassakh el-historique. Soualni 3la ay 7aja fil-app mte3ek.",
+  "agente.chat.audio_label": "🎤 Audio enregistri"
 }
