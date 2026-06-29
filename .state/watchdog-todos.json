@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-29T21:50:00+02:00",
+  "lastUpdated": "2026-06-29T22:55:51+01:00",
   "openItems": [
     {
       "id": "gap-091",
@@ -9,15 +9,6 @@
       "source": "watchdog-tick-2026-06-29-20",
       "created_at": "2026-06-29T21:05:00+02:00",
       "updated_at": "2026-06-29T21:35:00+02:00"
-    },
-    {
-      "id": "gap-083-pending-ba35",
-      "category": "lição/curso",
-      "description": "Cadeira BA #35 agora despachada como gap-084 (gestao-operacoes) para Skander 2. Esta entry fica como reminder que outras cadeiras BA podem ser adicionadas (Análise de Investimentos, Comércio Internacional, etc.). Watchdog vai despachar mais cadeiras em ticks futuros se Daniel pedir mais.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-14",
-      "created_at": "2026-06-29T15:11:00+02:00",
-      "updated_at": "2026-06-29T16:56:22+02:00"
     },
     {
       "id": "gap-028",
@@ -61,15 +52,48 @@
       "updated_at": "2026-06-29T04:35:00+02:00"
     },
     {
+      "id": "gap-094",
+      "category": "licao/curso",
+      "description": "Cadeira BA #40: Estratégia Corporativa Avançada (slug estrategia-corporativa). Despachada para Skander 2 (deleg_e8f6de5b). 4 lições (PESTEL+Porter Five Forces+VRIO+SWOT+Ansoff+BCG+BSC+OKRs) + ecq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-23",
+      "created_at": "2026-06-29T22:55:51+01:00"
+    },
+    {
+      "id": "gap-095",
+      "category": "i18n",
+      "description": "BadgeGrid 8 badges (16 strings name+description) hardcoded em BADGE_CATALOG. Despachada para Skander 2 (deleg_a2e4822f). Vai criar components.badge.catalog.{b7..b15}.{name,description} × 5 locales (80 entries) e refactor BadgeGrid para usar $t().",
+      "severity": "alta",
+      "source": "watchdog-tick-2026-06-29-23",
+      "created_at": "2026-06-29T22:55:51+01:00"
+    }
+  ],
+  "closedItems": [
+    {
+      "id": "gap-083-pending-ba35",
+      "category": "lição/curso",
+      "description": "Cadeira BA #35 agora despachada como gap-084 (gestao-operacoes) para Skander 2. Esta entry fica como reminder que outras cadeiras BA podem ser adicionadas (Análise de Investimentos, Comércio Internacional, etc.). Watchdog vai despachar mais cadeiras em ticks futuros se Daniel pedir mais.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-14",
+      "created_at": "2026-06-29T15:11:00+02:00",
+      "updated_at": "2026-06-29T16:56:22+02:00",
+      "sha": "d72e55e",
+      "closed_at": "2026-06-29T22:55:51+01:00",
+      "evidence": "STALE REMINDER — BA #35 (gestao-operacoes) já foi gap-084 (sha d72e55e). BA #36/37/38/39 também já entregues (sha fb810cd/238a4dc/b123043/b67ba84). Continuar pipeline BA via gap-094 (BA #40 Estratégia Corporativa — dispatched Skander 2 deleg_e8f6de5b).",
+      "done": true
+    },
+    {
       "id": "gap-093",
       "category": "licao/curso",
       "description": "Cadeira BA #39: Comercio Internacional (slug comercio-internacional). Despachada para Skander 2 (deleg_64b0b5f5). 4 licoes + ciq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired. Conteudo: Smith/Ricardo/Heckscher-Ohlin/GATT, Uppsala/born global, Incoterms 2020 + L/C trade finance, marketing internacional 4Ps + Hofstede + CISG/arbitragem.",
       "severity": "baixa",
       "source": "watchdog-tick-2026-06-29-22",
-      "created_at": "2026-06-29T21:50:00+02:00"
-    }
-  ],
-  "closedItems": [
+      "created_at": "2026-06-29T21:50:00+02:00",
+      "sha": "b67ba84",
+      "closed_at": "2026-06-29T22:55:51+01:00",
+      "evidence": "7/7 smoke URLs HTTP 200 em produção após deploy 6a42e3df (commit b67ba84): /escola/curso/comercio-internacional/ 200, /escola/quiz/ciq 200, 4× lessons JSON 200 (01-teorias-comercio, 02-incoterms-trade-finance, 03-marketing-internacional-cultura, 04-gestao-risco-arbitragem), /static/quizzes/ciq.json 200. i18n 5 locales todas têm routes.escola.curso.comercio-internacional.{title,description,tagline}. npm run check 0/0; build green.",
+      "done": true
+    },
     {
       "id": "gap-090",
       "category": "smoke-fail",
