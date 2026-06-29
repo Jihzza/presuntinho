@@ -13,6 +13,7 @@
   import { handleKonamiKey, logoClick, footerClick } from '$lib/easterEggs';
   import HeartButton from '$lib/components/HeartButton.svelte';
   import XpPill from '$lib/components/XpPill.svelte';
+  import InstallButton from '$lib/components/InstallButton.svelte';
   import { t } from 'svelte-i18n';
   import { onMount } from 'svelte';
   import { pwaInfo } from 'virtual:pwa-info';
@@ -228,6 +229,7 @@
                 <div class="fab-stack" aria-live="polite">
                   <XpPill />
                   <HeartButton />
+                  <InstallButton />
                 </div>
   </div>
 {/if}

@@ -25,6 +25,10 @@
   import ProgressBar from '$lib/components/ProgressBar.svelte';
   import BadgeGrid from '$lib/components/BadgeGrid.svelte';
   import InstallButton from '$lib/components/InstallButton.svelte';
+  // InstallButton is mounted globally in +layout.svelte's fab-stack
+  // (gap-066 polish) so it appears on every authenticated page and never
+  // overlaps content on small screens. Import kept for source-of-truth.
+  void InstallButton;
   import OnboardingModal from '$lib/components/OnboardingModal.svelte';
 
   import { subApps, legacySubApp, v3Content, agentEntry } from '$lib/registry';

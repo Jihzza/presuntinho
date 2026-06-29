@@ -109,12 +109,14 @@
 {/if}
 
 <style>
+  /*
+   * InstallButton is now stackable: it ships with NO own position
+   * fixed/absolute. The parent layout places it inside the .fab-stack
+   * (alongside XpPill and HeartButton) so it cannot overlap content
+   * on small screens and so it shows on every authenticated page,
+   * not just the hub. See src/routes/+layout.svelte for the wrapper.
+   */
   .install-btn {
-    position: fixed;
-    right: max(1rem, env(safe-area-inset-right));
-    bottom: calc(5.25rem + env(safe-area-inset-bottom));
-    z-index: 90;
-
     min-height: 44px;
     min-width: 44px;
     padding: 0.65rem 1.05rem;
@@ -167,17 +169,14 @@
     white-space: nowrap;
   }
 
-  @media (min-width: 760px) {
-    .install-btn {
-      bottom: calc(1.25rem + env(safe-area-inset-bottom));
-      right: max(1.25rem, env(safe-area-inset-right));
-    }
-  }
-
+  /* On very narrow viewports, drop the text label and keep only the icon. */
   @media (max-width: 420px) {
     .install-btn {
       padding: 0.65rem 0.85rem;
       font-size: 0.88rem;
+    }
+    .install-btn .label {
+      display: none;
     }
   }
 
