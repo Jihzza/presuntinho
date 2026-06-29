@@ -1,0 +1,297 @@
+{
+  "id": "02-coaching-executivo",
+  "title": "2. Coaching Executivo: GROW Model, Feedback Eficaz e Perguntas Poderosas (Whitmore, Berg & Starr)",
+  "courseSlug": "lideranca-coaching",
+  "lessonNumber": 2,
+  "description": "Como conduzir conversas de coaching que mudam comportamentos: o modelo GROW (Goal, Reality, Options, Will) de John Whitmore, a estrutura de feedback eficaz (SBI — Situation, Behaviour, Impact), perguntas poderosas que abrem pensamento, e a ética do coaching profissional (ICF). Inclui distinção entre coaching, mentoring, counselling e consultoria.",
+  "audio": "Nesta segunda lição vamos mergulhar na prática do coaching executivo. Vamos começar por distinguir coaching de outras disciplinas afins — mentoring, counselling, consultoria, formação — porque são frequentemente confundidas mas têm regras diferentes. Depois vamos aprender o modelo GROW de John Whitmore, o framework mais usado no mundo para conduzir sessões de coaching: Goal, Reality, Options, Will. Vamos ver como dar feedback eficaz com a estrutura SBI — Situation, Behaviour, Impact — e terminar com um catálogo de perguntas poderosas que desbloqueiam pensamento.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Coaching", "GROW", "Whitmore", "SBI", "Perguntas Poderosas", "ICF", "Feedback"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Coaching não é mentoring, não é terapia, não é consultoria"
+    },
+    {
+      "type": "p",
+      "text": "Coaching executivo é uma disciplina distinta com objectivos, processos e limites éticos próprios. A confusão entre estas disciplinas é fonte de falhas de enquadramento, expectativas erradas e, em casos extremos, danos a pessoas. Antes de avançar, é essencial clarificar o que coaching É e o que NÃO É — pelo menos na tradição profissional do International Coach Federation (ICF), que credencia a maioria dos coaches a nível global."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Coaching: processo de descoberta facilitada para que o coachee encontre as suas próprias respostas. Pressupõe que a pessoa tem capacidade. O coach NÃO diz o que fazer",
+        "Mentoring: relação hierárquica onde o mentor partilha experiência e dá conselhos directos. 'Como é que eu resolvia isto quando fiz...'", "Counselling/Terapia: foco em cura emocional, lidar com trauma, perturbações mentais. Fora do alcance do coach profissional (ICF proíbe)",
+        "Consultoria: o especialista diagnostica e recomenda soluções técnicas (IT, estratégia, etc.)",
+        "Formação: ensinar habilidades ou conteúdos específicos — distinto porque o formador é perito e ensina",
+        "Coaching combina elementos: foco na descoberta (mais próximo de socrática), relação de parceria (mais próximo de mentoring), objectivos de desempenho (mais próximo de consultoria) — mas não é nenhuma destas"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Definição ICF (International Coach Federation, 2023): coaching é uma parceria com clientes que os inspira a maximizar o seu potencial pessoal e profissional, frequentemente descobrindo verdades inexploradas sobre si mesmos. É distinto de terapia, consultoria e formação."
+    },
+    {
+      "type": "h2",
+      "text": "Os princípios fundamentais do coaching"
+    },
+    {
+      "type": "p",
+      "text": "Timothy Gallwey, autor de The Inner Game of Tennis, é considerado o pai do coaching moderno. A sua tese central: o melhor professor não é aquele que mais ensina, mas aquele que melhor desbloqueia o potencial já existente no aluno. John Whitmore, discípulo de Gallwey, sistematizou esta visão em Coaching for Performance (1992) — e daí nasceu o modelo GROW e os princípios da performance coaching. Sir John Whitmore faleceu em 2017, mas o seu modelo é usado em 80% das sessões de coaching executivo em todo o mundo segundo pesquisas do CIPD."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Princípio 1: As pessoas têm dentro de si os recursos para resolver os seus desafios — o papel do coach é desbloqueá-los, não fornecê-los",
+        "Princípio 2: A awareness (consciência) e a responsabilidade (responsibility) são os dois pilares — um coachee sem uma ou outra não pode ser coachado efectivamente",
+        "Princípio 3: O foco no futuro, não no passado — coaching não é psicanálise",
+        "Princípio 4: O coach mantém uma 'mente de principiante' (beginner's mind) — não pressupõe respostas",
+        "Princípio 5: Confiança sobre técnica — sem rapport e confiança, nenhuma técnica funciona",
+        "Princípio 6: O coaching mede-se em resultados do coachee, não em inputs ou técnicas"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "O Modelo GROW — estrutura canónica de uma sessão"
+    },
+    {
+      "type": "p",
+      "text": "O modelo GROW foi publicado por John Whitmore em Coaching for Performance (1992; 3ª edição 2017 com Carol Wilson) e rapidamente se tornou o framework mais usado em sessões de coaching directivo em todo o mundo. A sessão típica dura 30-60 minutos e segue quatro fases sequenciais: Goal (definir o objectivo), Reality (explorar a situação actual), Options (gerar opções), Will (compromisso de acção). Cada fase tem perguntas-tipo e armadilhas comuns que o coach experiente reconhece."
+    },
+    {
+      "type": "h3",
+      "text": "G — Goal (Objectivo)"
+    },
+    {
+      "type": "p",
+      "text": "A fase mais importante — uma sessão sem objectivo claro é como um avião sem destino. O coach ajuda o coachee a definir, com precisão operacional, o que quer alcançar nesta sessão ou neste processo. Bons objectivos são específicos, mensuráveis, em linguagem do coachee, sob o seu controlo (não 'ser promovido' mas 'desenvolver três competências de gestão que me tornem candidatável a promoção no próximo ciclo')."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Perguntas tipo: 'O que queres alcançar nesta sessão? Se fosse resolvido, como saberias? O que está em jogo se não resolveres?'",
+        "Pergunta poderosa: 'Se acordasses amanhã e o problema estivesse resolvido, o que seria diferente?'",
+        "Critério de qualidade SMART: específico, mensurável, alcançável, relevante, com prazo",
+        "Erro comum: confundir objectivo com problema. 'Tenho medo de apresentar em público' é problema; 'Quero apresentar com confiança a 30 pessoas' é objectivo",
+        "Erro comum 2: objectivo sob controlo de outros. Reformular: 'O que é que EU posso fazer para influenciar isto?'"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "R — Reality (Realidade)"
+    },
+    {
+      "type": "p",
+      "text": "Explorar o estado actual sem julgamento, com honestidade radical. O coach usa perguntas abertas para trazer à superfície dados factuais (o que sei, o que observei) e também sentimentos e percepções. Esta fase é onde se 'limpa o campo' antes de gerar opções — frequentemente o coachee mistura facto e interpretação, e a sessão de coaching ajuda a separar."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Perguntas tipo: 'O que está a acontecer agora? O que já tentaste? Onde estás em relação ao objectivo? Que obstáculos vês?'",
+        "Perguntas de zoom: 'A que distância estás do objectivo? Se o objectivo fosse 10, estás em que número?'",
+        "Perguntas de factos vs. interpretação: 'Isso é o que observaste ou o que assumiste? Tem algum dado objectivo?'",
+        "Validação emocional: 'Como te sentes em relação a isto?' — ouvir sem julgar, deixar o coachee sentir-se visto",
+        "Erro comum: saltar cedo para Options. Resistir à tentação — a pressa é inimiga da profundidade"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "O — Options (Opções)"
+    },
+    {
+      "type": "p",
+      "text": "Brainstorming estruturado de opções de acção, sem avaliar nesta fase. O coach convida o coachee a gerar o máximo de opções possíveis — mesmo as que parecem estapafúrdias. Pesquisas de criatividade (Kelley & Littman) mostram que as melhores soluções vêm da fase divergente (muitas opções) antes da fase convergente (escolha). O coach ajuda a separar geração de avaliação — não há ideias más nesta fase."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Perguntas tipo: 'Que opções tens? O que mais poderias fazer? Se tivesses mais recursos, o que farias?'",
+        "Perguntas de desbloqueio: 'Se soubesses que não podias falhar, o que tentarias? O que é que um colega brilhante faria?'",
+        "Técnicas práticas: 10 ideias em 10 minutos (timer), SCAMPER para opções criativas (Substitute, Combine, Adapt, Modify, Put to other uses, Eliminate, Reverse)",
+        "Avaliação diferida: anotar todas as opções no quadro, só depois filtrar, perguntar 'qual destas te atrai mais?'",
+        "Erro comum: o coach opinar sobre as opções. Resistir — a geração é do coachee, a avaliação pode ser compartilhada"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "W — Will (Vontade e Compromisso)"
+    },
+    {
+      "type": "p",
+      "text": "Transformar opções em acção concreta e datada. A fase mais fraca na maioria das sessões de coaching — o coachee sai da sessão com entusiasmo mas sem plano concreto e nada muda. Whitmore insiste: se não há Will, não há coaching — há conversa. A sessão termina com decisões específicas de acção, com prazos e accountability."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Perguntas tipo: 'Que acções concretas vais fazer até quando? Que apoio precisas? Como vais medir progresso?'",
+        "Regra 1-3-5: 1 objectivo prioritário, 3 áreas de foco, 5 acções-tarefa com prazos",
+        "Accountability: 'Quando vamos voltar a falar sobre isto? Posso perguntar-te na próxima reunião?'",
+        "Compromisso explícito: pedir ao coachee para verbalizar — 'Vou fazer X até Y'. Verbalizar reforça",
+        "Erro comum: confundir esforço com resultado. 'Vou tentar' é fraco; 'Vou contactar três clientes potenciais até sexta' é forte"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Perguntas Poderosas — o coração do coaching"
+    },
+    {
+      "type": "p",
+      "text": "A ferramenta mais poderosa do coach é a pergunta. Mas nem todas as perguntas abrem — muitas fecham. A tradição socrática, herdada da maiêutica grega (Mênon de Platão), ensina que a boa pergunta é aquela que o interlocutor NÃO sabe responder imediatamente, mas cuja resposta já tem dentro de si. David Sibbet (2011), autor de Visual Leaders, chama a isto 'perguntas que abrem o campo' — perguntas que abrem novos ângulos em vez de confirmar os existentes."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Perguntas sobre valores: 'O que é mais importante para ti aqui? Se fosses impecável nisso, como te sentirias?'",
+        "Perguntas hipotéticas: 'Se soubesses a resposta, qual seria? Se já tivesses resolvido, como seria o dia-a-dia?'",
+        "Perguntas de perspectiva: 'Como vês isto daqui a 6 meses? Como veria isto uma pessoa que admiras?'",
+        "Perguntas de paradoxo: 'O que é que este problema te tem ensinado sobre o que não queres? O que ganhas em mantê-lo?'",
+        "Perguntas de zoom: 'A que distância estás? Se fosses 10% do caminho, o que terias feito?'",
+        "Perguntas de accountability: 'Onde tens o poder aqui? Qual é o próximo passo que depende só de ti?'",
+        "Errado: perguntas sim/não (fecham). Certo: perguntas abertas terminadas em 'o quê', 'como', 'quando' (abrem)",
+        "Errado: 'porquê' — induz racionalização defensiva. Certo: 'o quê', 'como' — abre exploração"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Atenção à pergunta 'porquê'. Judith Glaser, em Conversational Intelligence, explica que 'porquê' activa o córtex cingulado anterior (região do cérebro associada a julgamento e defesa). Reformule sempre: 'porquê fizeste isso?' → 'o que te levou a fazer isso?'. Pequena diferença, impacto neurológico enorme."
+    },
+    {
+      "type": "h2",
+      "text": "Feedback Eficaz — estrutura SBI"
+    },
+    {
+      "type": "p",
+      "text": "Dar feedback é talvez a tarefa mais difícil e mais importante de um líder. Bem dado, multiplica desempenho; mal dado, mina a confiança e a relação. A maioria dos líderes ainda não recebeu formação estruturada em feedback — baseia-se em intuição, copiando o que viu (mau) dos seus próprios chefes. A estrutura SBI (Situation, Behaviour, Impact) criada pelo Center for Creative Leadership (CCL) é hoje o padrão de referência em organizações como Microsoft, Google e no exército americano."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "S — Situation (situação): específico, datado, observável. 'Na reunião de planeamento de quarta-feira às 10h' (não 'sempre')",
+        "B — Behaviour (comportamento): o que observaste, sem interpretação. 'Interrompeste três vezes o Pedro' (não 'foste agressivo')",
+        "I — Impact (impacto): o efeito real na equipa/resultados. 'O Pedro deixou de apresentar; a equipa perdeu ideias; ficámos com menos minutos para discutir o orçamento'",
+        "Versão positiva: SBI-I + Intent + Next steps — adicionar 'Como interpretei' e 'Sugiro'",
+        "Regra de ouro: feedback imediato, específico e balanceado (3 positivas por 1 correctiva, segundo Losada & Heaphy, 2004)",
+        "Pedir feedback: não é fraqueza. 'Como posso ser melhor líder para ti?' deixa a equipa saber que é seguro falar"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Modelo de Feedback em 4 Passos (CCL)"
+    },
+    {
+      "type": "p",
+      "text": "Stone, Patton e Heen (1999), em Difficult Conversations, propõem uma estrutura mais profunda que SBI. Bom feedback começa dentro do coach, não na boca. Antes de falar, pergunte a si próprio: (1) O que observei? (2) O que interpretei? (3) Que sentimento isso me causa? (4) Que resultado quero?"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Passo 1 — Identificar os factos (não interpretações). Facto: 'chegou 15 minutos atrasado'. Interpretação: 'não se importa connosco'",
+        "Passo 2 — Examinar os sentimentos. Reconhecer a emoção antes de falar — 'estou preocupado, não zangado'",
+        "Passo 3 — Clarificar a intenção. Que resultado quer? 'Quero que a equipa tenha pontualidade, não humilhá-lo'",
+        "Passo 4 — Convidar à conversa, não impor. 'Tenho uma observação para te fazer — podemos falar 5 minutos? Tens outro ângulo?'",
+        "Sobre SBI: é útil para feedback CORRETIVO. Para feedback positivo, modelo é BBB — Behaviour, Benefit, Build-up"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Escuta Activa e Reflexão"
+    },
+    {
+      "type": "p",
+      "text": "A ferramenta mais subestimada do coaching é a escuta profunda. Pesquisas do Center for Creative Leadership (Boyatzis, 2014) mostram que executivos estimam passar 80% do tempo a ouvir — quando, na verdade, passam 80% a falar ou a preparar-se para falar. Carl Rogers, pai do aconselhamento centrado na pessoa, insistia que a qualidade da escuta determina a qualidade da relação. Em coaching, escutar bem é, paradoxalmente, o que mais custa."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Níveis de escuta (Otto Scharmer, Theory U): downloading (escutar para confirmar), factual (escutar factos novos), empática (escutar a perspectiva do outro), generativa (escutar o futuro emergente)",
+        "Coaching opera sobretudo em nível 2-3 —factual e empática",
+        "Empatia: ver o mundo pelo outro sem perder a si próprio. Não confundir com concordância — é ver o mundo pelos olhos dele, não dizer que ele tem razão",
+        "Reflexão: devolver ao coachee o que se ouviu, em poucas palavras. 'Se te ouvi bem, o que te preocupa é X. Correu?'",
+        "Paráfrase, sumarização, validação emocional são as três técnicas de escuta activa",
+        "Erro comum: interromper para 'ajudar' ou para dar conselho. Esperar. Silêncio é ouro em coaching"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Os 8 comportamentos essenciais do coach (ICF Core Competencies)"
+    },
+    {
+      "type": "p",
+      "text": "A International Coach Federation actualizou o seu código de competências (2023) que define oito competências nucleares do coaching profissional. Qualquer coach credenciado ICF (níveis ACC, PCC ou MCC) domina estas competências. Mesmo quem não é coach profissional, ao conhecê-las, internaliza o que é coaching de qualidade."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "1. Demonstrates Ethical Practice — mantém confidencialidade, identifica conflitos, honra as ICF Code of Ethics",
+        "2. Embodies a Coaching Mindset — 'beginner's mind', curiosidade, presença",
+        "3. Establishes and Maintains Agreements — clarifica o contrato de coaching no início",
+        "4. Cultivates Trust and Safety — respeita a dignidade, mostra integridade",
+        "5. Maintains Presence — escuta profunda, intuição, pensamento estratégico",
+        "6. Listens Actively — observa, escuta factos e emoções, pede clarificação",
+        "7. Evokes Awareness — usa perguntas poderosas, silêncio, metáforas para desbloquear insight",
+        "8. Facilitates Client Growth — encoraja accountability, celebra progresso, integra aprendizados"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Key takeaway: coaching é uma prática que se aprende. Não é talento natural — é técnica treinada. Os melhores líderes do mundo dedicam tempo a formar-se como coaches e reservam tempo semanal para conduzir sessões com a sua equipa directa."
+    },
+    {
+      "type": "h2",
+      "text": "Aplicação prática do coaching na gestão"
+    },
+    {
+      "type": "p",
+      "text": "Na vida profissional de um gestor, o coaching aparece em três contextos: (1) sessões estruturadas com elementos da equipa (one-on-ones a cada 2-4 semanas), (2) feedback em tempo real (curto, imediato, específico), (3) conversas difíceis (conflitos, más notícias, realinhamento de carreira). Cada contexto tem técnicas ligeiramente distintas, mas os princípios são os mesmos — curiosidade, não-julgamento, foco na autonomia do outro."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "One-on-ones (recorrentes): estrutura GROW adaptada — começar com o 'state' (como estás), passar para o foco (objectivo desta semana), opções, compromissos",
+        "Feedback em tempo real: técnica FBI (Feedback Breve e Imediato) — uma observação, um comportamento, um impacto, em menos de 60 segundos",
+        "Conversas difíceis: estrutura CIDD — Contexto (fatos), Impacto (efeitos), Desejo (futuro), Decisão (acção)",
+        "Onboarding de novos membros: coaching intensivo nas primeiras 12 semanas, com sessões semanais",
+        "Reuniões de equipa: terminar com uma 'roda de coaching' de 5 minutos — cada elemento escolhe um objectivo para a semana"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Ética e limites do coaching"
+    },
+    {
+      "type": "p",
+      "text": "Coaching não substitui terapia, não faz diagnóstico, e não deve ser conduzido com pessoas que sofrem de condições clínicas activas (depressão major, ansiedade aguda, trauma recente). O ICF e a EMCC (European Mentoring and Coaching Council) definem limites éticos claros. O coach profissional deve conhecer os limites, ter supervisão (coach supervision) e seguro de responsabilidade civil."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Confidencialidade: tudo o que o coachee partilha é confidencial, salvo risco de dano próprio ou a terceiros",
+        "Quando parar e referenciar: se há sinais clínicos (perturbação de humor, ideação suicida, trauma complexo), referenciar para psicólogo/terapeuta",
+        "Conflito de interesses: não coach o seu próprio chefe directo, não coach subordinados que avalia em performance",
+        "ICF Code of Ethics (2023): 5 princípios — competence, integrity, professionalism, legal/ethical compliance, diversity/cultural sensitivity",
+        "Formação ICF: mínimo 60 horas (ACC), 125 horas (PCC), 200 horas (MCC) + 10 horas de mentor coaching + 100 horas de experiência documentada",
+        "Custo típico: 100-400€/sessão em mercados europeus; sessões individuais ou pacotes de 6-12 sessões"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Próxima lição: vamos subir ao nível das competências emocionais do líder. Inteligência emocional (Daniel Goleman) é hoje considerada o predictor mais forte de eficácia em liderança — acima de competências técnicas e até de QI. Vamos ver os seus 5 pilares e como medir/desenvolver cada um."
+    }
+  ],
+  "keyPoints": [
+    "Coaching (ICF): processo facilitado de descoberta — NÃO é mentoring, terapia, consultoria nem formação",
+    "Princípios Whitmore: pessoas já têm os recursos; foco no futuro; awareness e responsabilidade",
+    "Modelo GROW: Goal (objectivo SMART), Reality (exploração sem julgamento), Options (brainstorm divergente), Will (acção com prazos)",
+    "SBI (CCL): Situation + Behaviour + Impact — feedback específico e observável",
+    "Perguntas poderosas: abertas, hipotéticas, sobre valores — evitar 'porquê' (induz defensiva)",
+    "Escuta activa em 4 níveis (Scharmer): downloading, factual, empática, generativa",
+    "ICF 2023: 8 competências nucleares; confidencialidade, ética, formação mínima",
+    "Aplicação prática: one-on-ones (GROW), FBI feedback em tempo real, CIDD em conversas difíceis"
+  ],
+  "quizSlug": "lcq",
+  "nextLesson": "03-inteligencia-emocional-lider",
+  "prevLesson": "01-fundamentos-lideranca"
+}

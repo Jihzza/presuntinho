@@ -72,7 +72,7 @@
 </script>
 
 <svelte:head>
-  <title>Writing · Tips Anti-AI · Presuntinho</title>
+  <title>{$t('write.head.title', { default: 'Writing · Tips Anti-AI' })} · Presuntinho</title>
 </svelte:head>
 
 <div class="write">

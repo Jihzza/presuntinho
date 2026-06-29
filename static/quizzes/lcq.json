@@ -1,0 +1,118 @@
+{
+  "id": "lcq",
+  "title": "Quiz: Liderança e Coaching",
+  "description": "Testa os teus conhecimentos sobre liderança e coaching: teorias situacionais (Fiedler, Hersey-Blanchard), coaching executivo (modelo GROW de Whitmore, feedback SBI, perguntas poderosas), inteligência emocional (5 pilares de Goleman), e desenvolvimento de sucessão (pipelines, mentoring, sponsorship, high-potentials). 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "courseSlug": "lideranca-coaching",
+  "questions": [
+    {
+      "q": "Qual é o resultado da combinação entre o LPC (Least Preferred Co-worker) alto do líder e uma situação moderadamente favorável no modelo de contingência de Fiedler?",
+      "opts": [
+        "Liderança ineficaz — o estilo relacional nunca funciona",
+        "Liderança muito eficaz — o estilo relacional combina com a situação favorável",
+        "Liderança ineficaz — Fiedler recomenda trocar o líder",
+        "Liderança eficaz — mas só se houver poder posicional forte"
+      ],
+      "correct": 1,
+      "explanation": "No modelo de Fiedler, líder com LPC alto (orientado para relações) é eficaz em situações moderadamente favoráveis (boas relações ou tarefas ambíguas), mas não em situações extremas. Em situações muito favoráveis ou muito desfavoráveis, o líder com LPC baixo (tarefa) é mais eficaz. Fiedler argumentava que o LPC é estável — mudar o líder pode ser melhor do que mudar o estilo."
+    },
+    {
+      "q": "Um colaborador é capaz mas inseguro na execução das tarefas. Segundo Hersey e Blanchard, que estilo de liderança é mais adequado?",
+      "opts": [
+        "Directing (tarefa alta, relação baixa)",
+        "Coaching (tarefa alta, relação alta)",
+        "Supporting (tarefa baixa, relação alta)",
+        "Delegating (tarefa baixa, relação baixa)"
+      ],
+      "correct": 2,
+      "explanation": "Nível M3 segundo Hersey-Blanchard: capacidade alta + disposição baixa. Estilo Supporting — baixo foco em tarefa, alto foco em relação, com partilha de decisões e encorajamento. Directing seria para M1 (incapaz+inseguro), Coaching para M2 (incapaz mas disposto), Delegating para M4 (capaz+disposto)."
+    },
+    {
+      "q": "No modelo GROW de coaching executivo (Whitmore), em que fase se clarifica o que o coachee quer alcançar até quando de forma específica?",
+      "opts": [
+        "Goal — definir objectivo SMART",
+        "Reality — explorar a situação actual",
+        "Options — gerar opções de acção",
+        "Will — comprometer com acção datada"
+      ],
+      "correct": 0,
+      "explanation": "Goal é a primeira fase: objectivo específico, mensurável, alcançável, relevante e com prazo (SMART). Segue-se Reality (estado actual), Options (alternativas), Will (compromissos datados). Sem um objectivo bem definido, a sessão vira conversa — Whitmore insiste: Will só faz sentido se a fase Goal for sólida."
+    },
+    {
+      "q": "Qual é a estrutura recomendada de feedback eficaz pelo Center for Creative Leadership (SBI)?",
+      "opts": [
+        "Situation + Behaviour + Impact (situação concreta, comportamento observável, impacto real)",
+        "Strength + Belief + Invitation (força, crença, convite)",
+        "Story + Bridge + Call (história, ponte, chamada à acção)",
+        "See + Feel + Ask (ver, sentir, pedir)"
+      ],
+      "correct": 0,
+      "explanation": "SBI (Situation, Behaviour, Impact) é o framework padrão do CCL: Situation (específico, datado), Behaviour (observável, sem interpretação), Impact (efeito real em equipa/resultados). É diferente de 'sentimentos' — foca em factos e consequências. O 'I' opcional de Intent adiciona interpretação explícita. Stone, Patton & Heen (Difficult Conversations) propõem versão mais aprofundada."
+    },
+    {
+      "q": "Quantos pilares compõem o modelo canónico de Inteligência Emocional de Daniel Goleman (2002)?",
+      "opts": [
+        "3 pilares — autoconsciência, motivação, empatia",
+        "4 pilares — autoconsciência, autogestão, empatia, habilidades sociais",
+        "5 pilares — autoconsciência, autogestão, motivação, empatia, habilidades sociais",
+        "6 pilares — autoconsciência, autogestão, motivação, empatia, habilidades sociais, ética"
+      ],
+      "correct": 2,
+      "explanation": "Goleman (2002) estrutura a EI em 5 pilares agrupados em dois blocos: Competência Pessoal (autoconsciência, autogestão, motivação) e Competência Social (empatia, habilidades sociais). Mayer & Salovey (1990) tinham definido 4 ramos num modelo puramente cognitivo de capacidade; Goleman adicionou motivação como competência distinta."
+    },
+    {
+      "q": "Que estrutura cerebral é responsável pelo 'sequestro emocional' (emotional hijacking) descrito por Goleman, onde respostas emocionais rápidas se sobrepõem ao pensamento racional?",
+      "opts": [
+        "O cerebelo, responsável pela coordenação motora",
+        "A amígdala, que reage a ameaças em milissegundos antes do córtex pré-frontal",
+        "O hipocampo, que consolida memórias de longo prazo",
+        "O tálamo, que retransmite sinais sensoriais"
+      ],
+      "correct": 1,
+      "explanation": "A amígdala, estrutura do sistema límbico, é o 'detector de ameaças' — reage em milissegundos, muito antes de o córtex pré-frontal processar conscientemente (Joseph LeDoux, 1996). Quando dispara sem regulação cortical, o cérebro fica em 'sequestro emocional' (Goleman). Mindfulness e técnicas de respiração treinam a regulação cortical."
+    },
+    {
+      "q": "No modelo Leadership Pipeline de Charan, Drotter e Noel (2001), quantos níveis de contribuição distintos existem, do Managing Self ao Enterprise Manager?",
+      "opts": [
+        "5 níveis",
+        "6 níveis",
+        "7 níveis",
+        "10 níveis"
+      ],
+      "correct": 2,
+      "explanation": "Charan, Drotter e Noel definem 7 níveis de pipeline de liderança: Managing Self (operações individuais), Managing Others, Managing Managers, Functional Manager, Business Manager, Group Manager, Enterprise Manager (CEO/C-suite). Cada transição exige um re-treino substancial — erro clássico é promover pela competência técnica no nível anterior."
+    },
+    {
+      "q": "Segundo o grid 9-box da Korn Ferry, qual caixa corresponde a um colaborador de alto desempenho E alto potencial?",
+      "opts": [
+        "Caixa 1 — Contribuinte Desempenhante (low performer, low potential)",
+        "Caixa 5 — Núcleo (médio desempenho, médio potencial)",
+        "Caixa 8 — Estrela futura (high performer, médio potencial)",
+        "Caixa 9 — Estrela (high performer, high potential)"
+      ],
+      "correct": 3,
+      "explanation": "A caixa 9 (canto superior direito) do 9-box contém os high-desempenho + high-potencial — as 'Estrelas' do pipeline de liderança. Estas são os sucessores a investir em exposição avançada, mentorship e projectos stretch. A caixa 5 é o núcleo fiável (manter e reter). O 9-box é uma FOTO, não destino — pessoas movem-se no grid quando há desenvolvimento activo."
+    },
+    {
+      "q": "Qual é a distinção crítica entre mentoring e sponsorship, segundo Hewlett & Ibarra (HBR, 2010-2013)?",
+      "opts": [
+        "Mentoring é pago, sponsorship é voluntário",
+        "Mentor partilha sabedoria 1-1; sponsor defende activamente a carreira do mentored em reuniões onde este não está presente",
+        "Mentoring é informal, sponsorship é sempre formal",
+        "Mentoring é para mulheres, sponsorship é para homens"
+      ],
+      "correct": 1,
+      "explanation": "Sylvia Ann Hewlett e Herminia Ibarra popularizaram a distinção: mentor partilha conselhos e sabedoria 1-1; sponsor gasta capital político activamente — defende a carreira do mentored em reuniões sem ele. A pesquisa mostra que mulheres recebem mais mentoring mas menos sponsorship, o que explica em parte a sua sub-representação em C-suite. Sponsorship é hoje factor documentado de ascensão a senior leadership."
+    },
+    {
+      "q": "Segundo o modelo 70-20-10 de Lombardo & Eichinger (CCL), quanto do desenvolvimento profissional advém da experiência directa em novos desafios?",
+      "opts": [
+        "10%",
+        "20%",
+        "50%",
+        "70%"
+      ],
+      "correct": 3,
+      "explanation": "Modelo 70-20-10 (Center for Creative Leadership): 70% do desenvolvimento vem de experiência real (job assignments, project work, novos desafios), 20% de relações (mentoring, coaching, networks) e 10% de formação formal (cursos, workshops). A implicação prática: investir em projectos stretch e rotação de funções gera mais desenvolvimento que formação em sala. Kolb (1984) complementa com o ciclo de aprendizagem experiencial."
+    }
+  ]
+}

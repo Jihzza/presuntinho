@@ -402,6 +402,18 @@
                                   lessonCount: 4,
                                   quizCount: 1,
                                   badge: 'Uni'
+                                },
+                                {
+                                  slug: 'lideranca-coaching',
+                                  title: 'Liderança e Coaching',
+                                  tagline: 'Business Administration · Liderança situacional, coaching executivo, inteligência emocional e sucessão',
+                                  description:
+                                    'Como liderar pessoas com eficácia na era moderna: fundamentos das teorias de liderança (traços, comportamentos, situacional — Fiedler, Hersey-Blanchard), prática do coaching executivo (modelo GROW de Whitmore, feedback SBI), inteligência emocional do líder (os 5 pilares de Goleman e a neurociência da auto-regulação), e desenvolvimento de sucessão (pipelines de liderança, mentoring, sponsorship e high-potential programs).',
+                                  icon: '🧭',
+                                  color: '#1e3a8a',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
                                 }
                               ];
 </script>

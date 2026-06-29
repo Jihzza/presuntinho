@@ -829,5 +829,9 @@
   "routes.escola.curso.gestao-qualidade.title": "Total Quality Management",
   "routes.escola.curso.gestao-qualidade.description": "How to build a quality culture across the entire organisation: Deming, Juran, Ishikawa and Crosby principles, tools (Pareto, fishbone, SPC, FMEA), ISO 9001/14001/45001 management systems with PDCA and audits, and service quality via ServQual, lean services, six sigma and the EFQM model.",
   "routes.escola.curso.gestao-qualidade.tagline": "Business Administration · TQM, tools, ISO 9001 and service excellence",
-  "routes.aulas.curso.gestao-qualidade": "Total Quality Management"
+  "routes.aulas.curso.gestao-qualidade": "Total Quality Management",
+  "routes.escola.curso.lideranca-coaching.title": "Leadership and Coaching",
+  "routes.escola.curso.lideranca-coaching.description": "How to lead people effectively in the modern era: foundations of leadership theories (traits, behaviours, situational — Fiedler, Hersey-Blanchard), executive coaching practice (Whitmore's GROW model, SBI feedback), leader emotional intelligence (Goleman's 5 pillars and the neuroscience of self-regulation), and succession development (leadership pipelines, mentoring, sponsorship and high-potential programs).",
+  "routes.escola.curso.lideranca-coaching.tagline": "Business Administration · Situational leadership, executive coaching, emotional intelligence and succession",
+  "routes.aulas.curso.lideranca-coaching": "Leadership and Coaching"
 }

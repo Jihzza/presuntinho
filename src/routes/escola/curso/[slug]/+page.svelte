@@ -502,6 +502,20 @@
                             { slug: '03-sistemas-gestao-iso', title: '3. Sistemas de Gestão ISO: ISO 9001, ISO 14001, PDCA, Auditorias e Integração', summary: 'ISO 9001:2015 (10 cláusulas), PDCA, ISO 14001, ISO 45001, integração SIG e auditorias de certificação.', quizSlug: 'gqq', quizTitle: 'Quiz: Gestão da Qualidade Total', estMinutes: 10 },
                             { slug: '04-qualidade-servicos-excelencia', title: '4. Qualidade em Serviços e Excelência Operacional: ServQual, Lean Services, Six Sigma e EFQM', summary: 'IHIP, ServQual, 5 gaps de Parasuraman, lean services, DMAIC, six sigma e modelo EFQM.', quizSlug: 'gqq', quizTitle: 'Quiz: Gestão da Qualidade Total', estMinutes: 10 }
                           ]
+                        },
+                        'lideranca-coaching': {
+                          slug: 'lideranca-coaching',
+                          title: 'Liderança e Coaching',
+                          tagline: 'Business Administration · Liderança situacional, coaching executivo, inteligência emocional e sucessão',
+                          description: 'Como liderar pessoas com eficácia na era moderna: fundamentos das teorias de liderança (traços, comportamentos, situacional — Fiedler, Hersey-Blanchard), prática do coaching executivo (modelo GROW de Whitmore, feedback SBI), inteligência emocional do líder (os 5 pilares de Goleman e a neurociência da auto-regulação), e desenvolvimento de sucessão (pipelines de liderança, mentoring, sponsorship e high-potential programs).',
+                          icon: '🧭',
+                          color: '#1e3a8a',
+                          lessons: [
+                            { slug: '01-fundamentos-lideranca', title: '1. Fundamentos de Liderança: Traços, Comportamentos e Teorias Situacionais (Fiedler, Hersey-Blanchard)', summary: 'Três tradições (traços, comportamentos, situacional), Fiedler LPC, Hersey-Blanchard maturidade, Kotter gestão vs liderança.', quizSlug: 'lcq', quizTitle: 'Quiz: Liderança e Coaching', estMinutes: 7 },
+                            { slug: '02-coaching-executivo', title: '2. Coaching Executivo: GROW Model, Feedback Eficaz e Perguntas Poderosas (Whitmore, Berg & Starr)', summary: 'GROW de Whitmore, feedback SBI, perguntas poderosas, ICF Core Competencies e distinção mentoring/terapia.', quizSlug: 'lcq', quizTitle: 'Quiz: Liderança e Coaching', estMinutes: 7 },
+                            { slug: '03-inteligencia-emocional-lider', title: '3. Inteligência Emocional do Líder: Os 5 Pilares de Goleman e a Ciência do Self-Management', summary: '5 pilares de Goleman (autoconsciência, autogestão, motivação, empatia, habilidades sociais) e neurociência da auto-regulação.', quizSlug: 'lcq', quizTitle: 'Quiz: Liderança e Coaching', estMinutes: 7 },
+                            { slug: '04-desenvolvimento-sucessao', title: '4. Desenvolvimento de Sucessão: Pipelines de Liderança, Mentoring e High-Potential Programs (Chamorro-Premuzic, Kram, HBR)', summary: 'Pipelines de Charan, 9-box, Hogan assessments, mentoring vs sponsorship (Ibarra/Hewlett), modelo 70-20-10 e sucessão em PME.', quizSlug: 'lcq', quizTitle: 'Quiz: Liderança e Coaching', estMinutes: 7 }
+                          ]
                         }
                       };
 

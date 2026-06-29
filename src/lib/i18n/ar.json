@@ -691,7 +691,8 @@
   "walkthrough.verify.exists": "موجود.",
   "walkthrough.verify.text": "تأكد من",
   "write.breadcrumb.home": "← المحور",
-  "a11y.aria.anexar_ficheiro": "إرفاق ملف",
+    "write.head.title": "الكتابة · نصائح لمكافحة الذكاء الاصطناعي",
+    "a11y.aria.anexar_ficheiro": "إرفاق ملف",
   "a11y.aria.data_final": "تاريخ النهاية",
   "a11y.aria.data_inicial": "تاريخ البداية",
   "a11y.aria.editar_marcador": "تعديل الإشارة",
@@ -829,5 +830,9 @@
   "routes.escola.curso.gestao-qualidade.title": "إدارة الجودة الشاملة",
   "routes.escola.curso.gestao-qualidade.description": "كيف تبني ثقافة جودة عبر كامل المنظمة: مبادئ ديمينغ وجوران وإيشيكاوا وكروسبي، الأدوات (باريتو، إيشيكاوا، SPC، FMEA)، أنظمة إدارة ISO 9001/14001/45001 مع PDCA والتدقيق، وجودة الخدمات عبر ServQual وlean services وsix sigma ونموذج EFQM.",
   "routes.escola.curso.gestao-qualidade.tagline": "إدارة الأعمال · TQM، الأدوات، ISO 9001 والتميز في الخدمات",
-  "routes.aulas.curso.gestao-qualidade": "إدارة الجودة الشاملة"
+  "routes.aulas.curso.gestao-qualidade": "إدارة الجودة الشاملة",
+  "routes.escola.curso.lideranca-coaching.title": "القيادة والتوجيه",
+  "routes.escola.curso.lideranca-coaching.description": "كيف تقود الأشخاص بفعالية في العصر الحديث: أسس نظريات القيادة (السمات، السلوكيات، الموقفية — فيدلر، هيرسي-بلانشارد)، ممارسة التدريب التنفيذي (نموذج GROW لويتمور، ملاحظات SBI)، الذكاء العاطفي للقائد (الركائز الخمس لغولمان وعلوم الأعصاب للتنظيم الذاتي)، وتطوير الخلافة (خطوط أنابيب القيادة، الإرشاد، الرعاية وبرامج المواهب العالية).",
+  "routes.escola.curso.lideranca-coaching.tagline": "إدارة الأعمال · القيادة الموقفية، التدريب التنفيذي، الذكاء العاطفي والخلافة",
+  "routes.aulas.curso.lideranca-coaching": "القيادة والتوجيه"
 }

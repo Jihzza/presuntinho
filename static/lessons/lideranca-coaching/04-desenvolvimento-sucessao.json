@@ -1,0 +1,415 @@
+{
+  "id": "04-desenvolvimento-sucessao",
+  "title": "4. Desenvolvimento de Sucessão: Pipelines de Liderança, Mentoring e High-Potential Programs (Chamorro-Premuzic, Kram, HBR)",
+  "courseSlug": "lideranca-coaching",
+  "lessonNumber": 4,
+  "description": "Como garantir a continuidade do negócio através do planeamento da sucessão. Pipelines de liderança (Charan, Drotter, Noel), programas de identificação de high-potentials (Korn Ferry 9-box, Hogan Assessment), mentoring formal vs informal (Kram, 1985, fases da relação), sponsorship versus mentoring, e gestão de talento em PMEs versus multinacionais.",
+  "audio": "Nesta quarta e última lição vamos descer ao plano organizacional de longo prazo: como garantir que a empresa sobrevive à saída dos seus líderes. Vamos começar pelo planeamento da sucessão — pipelines de liderança segundo Ram Charan, identificação de high-potentials com ferramentas como o 9-box grid, e o modelo de Hogan para distinguir potencial de competência actual. Depois vamos estudar o mentoring, distinguindo mentoring formal e informal, sponsorship e coaching, e as fases da relação segundo Kathy Kram. No final, vamos aplicar tudo isto em PME e analisar quatro casos reais com diferentes estratégias de sucessão.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Sucessão", "Pipelines", "High-Potential", "Mentoring", "Sponsorship", "9-Box", "Chamorro-Premuzic"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Planeamento da sucessão: porque é crítico (e porque a maioria das empresas falha)"
+    },
+    {
+      "type": "p",
+      "text": "Pesquisa do Harvard Business Review (2018): só 13% das empresas têm um plano de sucessão robusto para a sua equipa de liderança C-suite. Mesmo entre as Fortune 500, 86% revelaram situações de crise inesperada por falta de sucessores preparados — quando o CEO sai, o mercado cai 17% em valor (estudo Wruck & Zhao, 2013). A sucessão não é problema de RH — é problema de negócio. Empresas que falham sucessão perdem 25-40% de valor em momentos críticos. Empresas com pipelines robustos têm criação de valor significativamente superior (Schepker et al., 2018)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Estatística global: 86% das empresas não têm sucessores prontos para C-suite (HBR, 2018)",
+        "Custo de falha de sucessão: queda média de 17% em valor de mercado após saída inesperada de CEO (Wruck & Zhao, 2013)",
+        "A sucessão é investimento de médio-longo prazo: 5-10 anos para desenvolver um executivo C-suite",
+        "Caso Facebook (2016): Mark Zuckerberg antecipou a sucessão antecipando Sheryl Sandberg como Chief Operating Officer — protegeu a empresa durante 14 anos",
+        "Caso Apple (2011): Tim Cook foi preparado por Steve Jobs durante 8 anos — a transição demorou 3 meses, sem queda no negócio",
+        "Caso Kodak (2012): falência após falhar transformação digital — em parte por sucessão da direcção para líderes analógicos",
+        "Caso Berkshire Hathaway (2020): Warren Buffett identificou sucessores décadas antes (Greg Abel e Ajit Jain), mercado confirmou confiança"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Atenção: sucessão não é encontrar alguém IGUAL ao actual. Procurar duplicados é miragem — cada empresa precisa de líderes adaptados ao PRÓXIMO contexto competitivo, não ao passado. Steve Jobs dizia: o sucessor não tem de parecer-se comigo, tem de saber fazer o que eu não sei fazer."
+    },
+    {
+      "type": "h2",
+      "text": "Modelo de Pipeline de Liderança (Charan, Drotter & Noel)"
+    },
+    {
+      "type": "p",
+      "text": "Ram Charan (consultor da Booz Allen, autor de 30 livros incluindo The Leadership Pipeline), junto com Stephen Drotter e James Noel, publicou em 2001 The Leadership Pipeline — o livro mais influente sobre desenvolvimento de líderes. A tese central: a empresa tem múltiplos níveis de contribuição; em cada transição, é preciso desenvolver competências MUITO diferentes; muitas empresas falham exactamente no salto entre níveis."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Nível 1 — Managing Self (operações individuais): profissional individual contributor; foco em execução técnica",
+        "Nível 2 — Managing Others (gestor de primeira linha): supervisor/coordenador; foco em supervisão e desenvolvimento",
+        "Nível 3 — Managing Managers (gestor médio): responsável por múltiplos managers; foco em liderança de líderes",
+        "Nível 4 — Functional Manager (responsável de função): responsável por uma função da empresa; foco em integração funcional",
+        "Nível 5 — Business Manager (responsável por unidade de negócio): P&L de uma divisão; foco em negócio competitivo",
+        "Nível 6 — Group Manager (responsável de grupo de negócios): múltiplas unidades; foco em portfolio estratégico",
+        "Nível 7 — Enterprise Manager (CEO/C-suite): responsável pela empresa total; foco em governance e ambiente externo",
+        "Cada transição exige 1-3 anos de preparação; falha típica: promoção demasiado rápida (o pipeline não acompanha)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Trabalhos de liderança em cada nível"
+    },
+    {
+      "type": "p",
+      "text": "Em cada nível do pipeline, o líder precisa dominar TRÊS habilidades: valores + competências + comportamento. Charan identificou 'trabalhos de liderança' específicos para cada nível — listas de comportamentos esperados. Por exemplo: ao passar de Managing Others para Managing Managers, o líder deve trocar a orientação técnica pelo desenvolvimento de gestores — passa a ser chefe de chefes, não chefe de operacionais."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Managing Self → Managing Others: de fazer o trabalho para fazer o trabalho ATRAVÉS de outros",
+        "Managing Others → Managing Managers: de supervisão directa para gestão de gestores",
+        "Managing Managers → Functional Manager: de funcional para integração de funções",
+        "Functional Manager → Business Manager: de funcional para P&L de unidade",
+        "Business Manager → Group Manager: de unitário para portfolio",
+        "Group Manager → Enterprise Manager: de holdings para governance",
+        "Erro clássico: promover pela competência técnica no nível anterior, sem re-treino no novo papel"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Identificação de High-Potentials (High-Po)"
+    },
+    {
+      "type": "p",
+      "text": "High-potentials são pessoas que a empresa identifica como tendo 'o, aqui, melhor que isso' — hoje já produzem bem, mas têm capacidade de subir significativamente mais. Tomas Chamorro-Premuzic, psicólogo organizacional autor de Why Do So Many Incompetent Men Become Leaders? (2013), alerta que a identificação de high-potentials é difícil porque tropeça em três vieses principais: o viés do carisma, o viés do estilo similar e o viés do desempenho passado."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Definição Drotter/Black & Veatch 2014: alto potencial = capacidade de passar pelo menos 2 níveis hierárquicos acima do actual nos próximos 5-7 anos",
+        "Apenas 15-20% da população de profissionais são high-potentials (dados consolidados Korn Ferry, 2020)",
+        "Critérios de identificação (Lombardo & Eichinger, 2000): habilidades cognitivas, sensibilidade, motivação de carreira, learning agility, estabilidade",
+        "Viés do carisma: confunde-se liderança actual com potencial futuro. Pessoas brilhantes mas efémeras",
+        "Viés do estilo similar: escolhemos pessoas parecidas connosco. Resultado: equipas clones, estagnam",
+        "Viés do desempenho passado: desempenho passado garante estabilidade, não ascensão. High-potential precisa de learning agility",
+        "Não confunda high-potential com high-performance — um é promessa futura, o outro é excelência actual"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "O Grid 9-Box (Korn Ferry)"
+    },
+    {
+      "type": "p",
+      "text": "O grid 9-box, desenvolvido por Spencer Stuart e popularizado pela Korn Ferry desde os anos 70, é a ferramenta visual mais usada na identificação e gestão de talento. Mapeia pessoas em duas dimensões: Desempenho (eixo horizontal — actual) e Potencial (eixo vertical — futuro). As 9 caixas geram 3 zonas críticas: estrelas (alto-alto, alto-potencial), núcleo fiável (médio-alto e alto-médio), e atol de desempenho (baixo qualquer)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Caixa 1 (baixo desempenho, baixo potencial) — Contribuinte Desempenhante; manter mas reavaliar",
+        "Caixa 2 (baixo desempenho, médio potencial) — Enigma; investigar mais",
+        "Caixa 3 (baixo desempenho, alto potencial) — Mismatched Analista; investigar desalinhamento",
+        "Caixa 4 (médio desempenho, baixo potencial) — Cumpri-metas; carreira técnica",
+        "Caixa 5 (médio desempenho, médio potencial) — Núcleo (core player); investir em retenção",
+        "Caixa 6 (médio desempenho, alto potencial) — Crescimento; investir em desenvolvimento",
+        "Caixa 7 (alto desempenho, baixo potencial) — Especialista/Profissional de carreira; reter com progressão técnica",
+        "Caixa 8 (alto desempenho, médio potencial) — Estrela futura; desenvolvimento cruzado",
+        "Caixa 9 (alto desempenho, alto potencial) — Estrela verdade; pipeline de liderança; exposição avançada e mentorship",
+        "Cuidados: o 9-box é uma FOTO, não um destino — pessoas deslocam-se no grid quando há desenvolvimento"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Assessment Centers e ferramentas de avaliação"
+    },
+    {
+      "type": "p",
+      "text": "Identificar potencial requer métodos mais robustos que a simples impressão do gestor. Patterson (Patrick), Kausel e Hogan publicaram em 2016 uma meta-análise em Personnel Psychology mostrando que testes de personalidade têm validade preditiva significativa para promoções. Estudos com bases de dados de sucesso de carreira demonstram que combinações de testes cognitivos + de personalidade + assessment centers atingem previsões superiores a 70%."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Hogan Assessments (Robert Hogan, 1980s): HPI (Hogan Personality Inventory), HDS (Hogan Development Survey), MVPI (Motives, Values, Preferences Inventory) — três dimensões, antes, sob pressão, valores",
+        "Brightside (competência normal): desempenho em tarefas quotidianas",
+        "Dark side (sob stress): comportamentos de risco que emergem em momentos críticos (Hogan sugere que a maioria dos CEOs falha por causa destes comportamentos)",
+        "Inside (valores): o que motiva a pessoa nas suas escolhas de carreira",
+        "Assessment Centers (IBM, 1956): simulação de papéis com avaliadores treinados — 2-3 dias de exercícios (role-plays, in-basket, group discussions); validade preditiva alta",
+        "Big Five + IQ: testes de personalidade NEO PI-R + WISC/WAIS têm validade preditiva significativa para desempenho em gestão",
+        "Case studies e business simulations: tarefas estruturadas com métricas de avaliação",
+        "Referral interviews: entrevistas estruturadas com referências profissionais dão insights qualitativos complementares"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Estudo 80 years (Robertson et al, Workplace Genetics): o predictor mais forte de ascensão a C-suite é a inteligência cognitiva (capacidade abstracta) seguida de conscientiousness (conscienciosidade). Carisma conta, mas outros preditores valem mais a longo prazo."
+    },
+    {
+      "type": "h2",
+      "text": "Mentoring: formal vs informal, sponsorship e fases (Kram, 1985)"
+    },
+    {
+      "type": "p",
+      "text": "Kathy Kram, professora em Boston e autora de Mentoring at Work (1985), foi pioneira no estudo sistemático do mentoring. Identificou 4 fases na relação mentor-mentee (Iniciação, Cultivação, Separação, Redefinição) e 4 funções principais (suporte profissional, suporte psicossocial, role modelling, patrocínio/carreira). O mentoring distingue-se de outras relações por combinar desenvolvimento pessoal e profissional ao longo do tempo."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Função 1 — Sponsorship (carreira): abrir portas, criar visibilidade, recomendar activamente — poder político do mentor",
+        "Função 2 — Coaching (desenvolvimento): ensinar competências técnicas e profissionais de gestão",
+        "Função 3 — Protecção (aceitação): defender o mentored em momentos de risco, criar espaço seguro",
+        "Função 4 — Exposure (visibilidade): fornecer exposure a pessoas e tarefas que o mentored não alcançaria sozinho",
+        "Função 5 — Role modelling (identidade): ser exemplo de comportamento ético e profissional",
+        "Fase 1 — Iniciação (6-12 meses): desenvolvimento de confiança, definição de expectativas",
+        "Fase 2 — Cultivação (1-5 anos): profundidade, desafios conjuntos, ganhos de carreira",
+        "Fase 3 — Separação (6-24 meses): o mentored torna-se independente; tensão inerente ao crescimento",
+        "Fase 4 — Redefinição (anos seguintes): relação peer, amizade ou fim"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Sponsorship vs Mentoring: a distinção crítica"
+    },
+    {
+      "type": "p",
+      "text": "Sylvia Ann Hewlett, ex-directora do Center for Talent Innovation, e Herminia Ibarra popularizaram a distinção crucial que pouca gente faz: um mentor dá conselhos e partilha sabedoria; um SPONSOR defende activamente a carreira do mentored em reuniões em que este não está presente. Em Harvard Business Review (2010), Ibarra mostrou que o sponsorship é hoje o factor mais crítico para ascensão de mulheres e minorias — e a razão pela qual poucas atingem C-suite é que recebem muito mentoring (palavras) e pouco sponsorship (acção)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Mentor: partilha sabedoria, faz perguntas, ensina; presença e conselho 1-1",
+        "Sponsor: defende activamente, usa capital político para criar oportunidades e visibilidade; age em sala de reunião",
+        "Mulheres recebem mais mentoring, menos sponsorship — dados Hewlett (2013): 60% mais mulheres com mentores, mas apenas 19% com sponsors activos",
+        "Minorias étnicas recebem 20% do sponsorship recebido por homens brancos equivalentes (Catalyst, 2013)",
+        "Sucessão bem planeada requer SPONSORS, não apenas mentors",
+        "Cuidado com 'mentoring espontâneo' — converter para sponsorship requer consciência e intenção",
+        "Como ser sponsor: não basta ter boas intenções; é preciso gastar capital político activamente"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Programas formais de High-Potential (HiPo)"
+    },
+    {
+      "type": "p",
+      "text": "Empresas grandes operam programas formais para acelerar o desenvolvimento de high-potentials — GE, P&G, McKinsey, Google são reconhecidas por isto. O formato típico: 18-36 meses, com componentes de exposição, coaching, projectos stretch, mentoria/sponsorship, e participação em 'brevets' de elite (conselhos consultivos internos). O objectivo não é só formação; é velocidade — acelerar a curva de aprendizagem por 2-3x."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "GE Leadership Programs: o mais antigo e conhecido (Brennan's program, iniciado nos anos 50); produziu dezenas de CEOs (incluindo Tim Cook, Larry Culp)",
+        "P&G's Brand Management Program (1931): destinado a gerir marcas globais; 3-4 anos de rotação por unidades globais",
+        "McKinsey EM (Engagement Manager) Path: 6-10 anos para Partner; modelo baseado em case interviews e development",
+        "Google's APM (Associate Product Manager) Program: acelerar jovens para gestão de produto; 2 anos",
+        "Estrutura típica: 3 fases — common ground (1-3 meses), experiential learning (12-24 meses), capstone project (3-6 meses)",
+        "Crítica: programas HiPo podem ser 'predadores' (poaching de talento) — risco de pertença a 'tribe' dos especiais, fonte de tensão com resto da empresa",
+        "Long-term tracking: alumni networks mantém-se ligados décadas depois — LinkedIn use cases comuns"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "O modelo 70-20-10 (Lombardo & Eichinger, 1996)"
+    },
+    {
+      "type": "p",
+      "text": "Michael Lombardo e Robert Eichinger, do Center for Creative Leadership, publicaram nos anos 90 o famoso modelo 70-20-10: 70% do desenvolvimento vem de experiência (fazendo), 20% de relações (aprendendo com outros) e 10% de formação formal (sala de aula). Este modelo não é regra absoluta, mas é heurística útil para planear desenvolvimento — porque desloca investimento do formal para o experimental."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "70% experiência — job assignments, project work, new challenges, dealing with people",
+        "20% relações — mentoring, coaching, networks, communities of practice, role models",
+        "10% formação formal — cursos, workshops, MOOCs, certificações, leituras",
+        "Implicação: investir em exposição a novos desafios (não em mais formação) gera mais desenvolvimento",
+        "Cuidado com o exagero: ignorar 100% da formação é prejudicial — saber o que se faz antes de experimentar melhora a absorção",
+        "Project assignments como ferramenta de HiPo: 'stretch roles' (puxar 30% além do nível actual)",
+        "Acção-ação-reflexão: combinação de learning-by-doing com feedback e coaching — modelo Kolb (1984) — Experiência Concreta, Observação Reflexiva, Conceptualização Abstracta, Experimentação Activa"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Successão em PMEs — a versão simplificada"
+    },
+    {
+      "type": "p",
+      "text": "Em pequenas e médias empresas (PMEs), os recursos para sucessão são mais limitados, mas o impacto é maior. Uma empresa familiar onde o fundador não preparou sucessão vê 70% das suas organizações desaparecer após a segunda geração (Nestlé, Banco de Portugal, 2014). PMEs têm três vantagens competitivas: ciclos curtos de decisão, cultura mais tangível, e proximidade interpessoal. Aproveitar estas vantagens é o segredo."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Sucessão em PMEs é mais premente (70% das empresas familiares não sobrevivem à 2ª geração; apenas 12% à 3ª — pesquisa global PwC, 2021)",
+        "Sucessão familiar: começar planeamento 10 anos antes — escolher entre familiar, profissional ou híbrido",
+        "Pró-família: vantagem da continuidade, legado e motivação emocional; risco da incompetência travestida de laços",
+        "Pró-meritocracia: melhor talento possível; risco do choque cultural e ruptura de identidade",
+        "Modelo híbrido (familiar + profissional): empresa familiar com direcção profissional; muito comum em PMEs europeias",
+        "Ferramentas-chave para PME: mentorship informal, rotação entre funções, planeamento escrito anual",
+        "Storytelling e transmissão: contadores histórias da empresa, valores, rituais — fundamentais para passar cultura à geração seguinte",
+        "Investimento típico: 5-10% do orçamento de RH em sucessão (vs. 1-2% na maioria das PMEs despreparadas)",
+        "Programa de governo familiar: conselho familiar, constituição familiar, consenso — institucionalização do processo"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Casos extremos de sucessão em PME"
+    },
+    {
+      "type": "p",
+      "text": "Comparar quatro casos ajuda a perceber escolhas de design de sucessão: Inditex (Amancio Ortega → Pablo Isla), Patagonia (Yvon Chouinard → propriedade partilhada missão), Vanguard (Bogle's trust), e Maria Cadeirinha (familiar-PME estilo tradicional). Cada uma representa uma abordagem diferente a uma das quatro perguntas clássicas: quem, como, quando, e para quê?."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Case 1 — Amancio Ortega (Zara/Inditex): fundador identificou 3 sucessores por 20 anos; Pablo Isla foi escolhido em 2005, testado em CEO em 2011; transição em 5 anos",
+        "Case 2 — Patagonia: Chouinod converteu empresa em trust sem donos (2022) — modelo radical onde lucro vai para combate à crise climática",
+        "Case 3 — Vanguard: Bogle transferiu propriedade para clientes (2019); modelo cooperativa-mutualista; estabilidade comissionada",
+        "Case 4 — PME tradicional portuguesa (tipo saldo, restauração, ou PME industrial): herança patriarcal 80% dos casos; risco máximo",
+        "Lição: investir 5-10% do tempo da liderança em sucessão anual (formalmente) — não informal",
+        "Recomendação: criar 'conselho de sucessão' anual (CEO + CHRO + 2-3 mentores) para rever pipeline de talento crítico"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Diversidade na sucessão — corrigindo os viéses"
+    },
+    {
+      "type": "p",
+      "text": "Hewlett et al (2013) mostraram que mulheres e minorias recebem sponsorship em apenas 19% dos casos analisados, mas são mais propensas a ter excelentes qualificações. McKinsey's Diversity Matters (2015, 2020) correlaciona diversidade nos pipelines de talento com desempenho financeiro: empresas com diversidade étnica e de género nos top 3 níveis de gestão têm ROE 35% superior. Logo, sucessão bem feita não é só equidade — é negócio."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Sponsor systemático: nomear sponsors executivos para mulheres e minorias qualificadas",
+        "Processos cegos no screening inicial: nome, género, etnia removidos em curriculos",
+        "Longlists obrigatórios: incluir mulheres e minorias em todas as listas de sucessores — viés de design combatido",
+        "Programas de desenvolvimento direccionados: talento diverso precisa de mais sponsorship, não mais mentoring",
+        "Métricas de pipeline: monitorizar, publicar, responsabilizar — 'a promessa do pipeline' gera accountability",
+        "Consequência: hoje a pressão ESG inclui métricas de diversidade na sucessão; investidores pedem-nas"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Estudo Sirson/Rebecca (HBR, 2019): o simples facto de uma líder mulher ou minoritário étnico ter um sponsor activo (vs apenas mentor) aumenta em 19% a probabilidade de promoção a C-suite. Sponsorship não é nice-to-have; é factor de ascensão documentado."
+    },
+    {
+      "type": "h2",
+      "text": "Mensuração e métricas de sucessão"
+    },
+    {
+      "type": "p",
+      "text": "Sucessão não pode ser uma 'boa intenção' — tem que se medir. Seth Beier e Kenneth Mølbjerg em Harvard Business Review (2019) identificaram 4 métricas de pipeline de liderança: bench strength (número de candidatos prontos para cada posição crítica), time-to-fill (tempo médio para preencher cargo crítico), retention rate (mantém-se risco de perde high-potenciais após investimento), e diversity (proporção dos sub-representados no pipeline)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Bench strength: para cada cargo crítico, ter no mínimo 3 sucessores prontos",
+        "Ready-now (até 1 ano), Ready-soon (1-3 anos), Ready-later (3-5 anos) — categorias de preparação",
+        "Sucessão interna vs externa: taxa ideal 70-80% interna, 20-30% externa — protege cultura",
+        "Time-to-fill para cargos críticos: alvo <6 meses",
+        "Retention rate de high-potenciais: alvo >85% em 5 anos",
+        "Diversity: alvo proporcional à sociedade (género, etnia, etc.) no pipeline",
+        "Tracking fino: % de high-potenciais que progridem ao próximo nível após 3 anos",
+        "Quando o pipeline falha: crises de sucessão custam 5-10x mais que investimento preventivo"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: o ciclo virtuoso da sucessão"
+    },
+    {
+      "type": "p",
+      "text": "Sucessão eficaz é um ciclo virtuoso: identificar potencial cedo, investir em desenvolvimento (70-20-10), fornecer sponsorship activo, monitorizar progresso, reavaliar. As melhores empresas aprendem a tratar a sucessão como processo contínuo, não projecto one-off. O ciclo virtuoso funciona porque cada geração que sucede bem prepara melhor a seguinte."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Ciclo 1: Identificar Potencial (assessment + observação)",
+        "Ciclo 2: Investir em Desenvolvimento (stretch roles + coaching + formação)",
+        "Ciclo 3: Fornecer Sponsorship (advocate activo em oportunidades)",
+        "Ciclo 4: Exposição Estratégica (projectos visíveis, conselhos, apresentações)",
+        "Ciclo 5: Avaliação Contínua (9-box, feedback 360, performance reviews)",
+        "Ciclo 6: Diversidade e Inclusão (Sponsor systemático, métricas transparentes)",
+        "Ciclo 7: Revisão Anual do Pipeline (conselho de sucessão, simulações de cenários)",
+        "Ciclo 8: Transição Preparada (handoff estruturado, overlap, transição de relações)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Aplicação prática — checklist para um programa de sucessão"
+    },
+    {
+      "type": "p",
+      "text": "Implementar sucessão numa organização exige uma sequência lógica: começar com a visão, mapear cargos críticos, identificar sucessores, investir, monitorizar, ajustar. A checklist abaixo é para PMEs ou multinacionais adaptando o escopo. Comece pelas três primeiras etapas — depois avance."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Passo 1: Definir cargos críticos (top 5-10% das posições onde saída não-prevista gera crise)",
+        "Passo 2: Para cada cargo, identificar 3 sucessores (ready-now / ready-soon / ready-later)",
+        "Passo 3: Avaliar o pipeline usando 9-box e tools de personalidade + assessment centers",
+        "Passo 4: Definir planos de desenvolvimento individual (IDP) para cada high-potential",
+        "Passo 5: Atribuir mentores e sponsors formais (com contract em horas)",
+        "Passo 6: Acompanhar com rituais mensais (1:1 com HR, reviews trimestrais)",
+        "Passo 7: Iterar — após 12-18 meses, medir quem avançou e ajustar",
+        "Passo 8: Partilhar resultados com liderança, manter accountability"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Tendências futuras em sucessão"
+    },
+    {
+      "type": "p",
+      "text": "O mundo da sucessão está a mudar — três tendências são visíveis: sucessão mais cedo (gen Z avança mais cedo em algumas áreas), sucessão mais diversificada (ESG pressiona inclusão), e AI-driven talent analytics (uso de IA para mapear competências, prever ascensão, identificar gaps). Como todas as tendências, exigem sentido crítico — não substituir o julgamento humano por dados."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Tendência 1 — Sucessão gradual: jovens assumem responsabilidades mais cedo (estágios como project leaders)",
+        "Tendência 2 — Diversidade forçada por investidores ESG: fundos de investimento, fundos de pensão, accionistas institucionais pressionam inclusão",
+        "Tendência 3 — Talent analytics: uso de IA para mapear skills, prever sucessão, identificar gaps internos, com caveats éticos",
+        "Tendência 4 — Sucessão não-linear: carreiras em zigue-zague, múltiplos papéis, menos pipelines lineares",
+        "Tendência 5 — Liderança distribuída: equipas de líderes em vez de CEO único — exige sucessão de papéis, não só pessoas"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Conclusão do curso — Liderança e Coaching na prática"
+    },
+    {
+      "type": "p",
+      "text": "Ao longo destas quatro lições, construímos uma visão integrada de liderança. Lição 1 deu-nos os fundamentos teóricos (traços, comportamentos, modelos situacionais). Lição 2 ensinou-nos a prática do coaching executivo (GROW, feedback, perguntas). Lição 3 explorou a inteligência emocional como motor de tudo. Lição 4 mostrou-nos como fazer crescer os outros e preparar sucessão. Os quatro capítulos formam um sistema completo — agora é praticar."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Bloco 1 — Fundamentos: traços, comportamentos, situacional (Fiedler, Hersey-Blanchard)",
+        "Bloco 2 — Coaching: GROW, SBI, perguntas poderosas (Whitmore, ICF)",
+        "Bloco 3 — Inteligência Emocional: 5 pilares de Goleman + neurociência",
+        "Bloco 4 — Sucessão: pipelines, mentoring, sponsorship, diversidade",
+        "Recomendação final: domine um capítulo por trimestre — não tente absorver tudo de uma vez",
+        "Recomendação prática: aplique um modelo por mês — feedback SBI numa equipa; uma sessão GROW num mentoring; um 9-box numa equipa",
+        "Recomendação desenvolvimento: invista 5% do tempo anual de liderança em sucessão — não delegue"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Key takeaway do curso: liderança é uma habilidade que se aprende, uma ciência que se estuda, e uma arte que se pratica. Os modelos são andaimes — contam-nos onde pôr o pé. O subir é seu. Boa sorte!"
+    }
+  ],
+  "keyPoints": [
+    "Apenas 13% das empresas têm planeamento robusto de sucessão C-suite (HBR, 2018)",
+    "Modelo Leadership Pipeline (Charan, 2001): 7 níveis — Managing Self → C-suite — cada transição exige novas competências",
+    "High-potentials: 15-20% da população profissional; critérios = capacidade cognitiva + learning agility + motivação de carreira",
+    "Grid 9-box (Korn Ferry): 9 caixas em Desempenho x Potencial — Estrela = alto-desempenho + alto-potencial",
+    "Hogan Assessments: 3 dimensões (Brightside, Dark side, Inside) — foco no comportamento sob pressão",
+    "Mentoring (Kram 1985): 4 fases (Iniciação, Cultivação, Separação, Redefinição) + 5 funções",
+    "Sponsorship vs Mentoring (Ibarra 2010, Hewlett 2013): sponsor defende activamente; mulher recebe sponsorship em 19% dos casos",
+    "Modelo 70-20-10 (Lombardo & Eichinger): 70% experiência + 20% relações + 10% formação formal",
+    "PMEs: 70% das empresas familiares não sobrevivem à 2ª geração (PwC, 2021) — sucessão é problema de negócio",
+    "Bench strength: 3 sucessores por cargo crítico — ready-now / ready-soon / ready-later"
+  ],
+  "quizSlug": "lcq",
+  "nextLesson": null,
+  "prevLesson": "03-inteligencia-emocional-lider"
+}

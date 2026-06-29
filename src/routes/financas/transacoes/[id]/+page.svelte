@@ -137,7 +137,7 @@
 </script>
 
 <svelte:head>
-  <title>Editar transação — Presuntinho</title>
+  <title>{$t('financas.transacoes.editar.titulo', { default: 'Editar transação' })} · Presuntinho</title>
 </svelte:head>
 
 <main class="container" aria-labelledby="page-title">

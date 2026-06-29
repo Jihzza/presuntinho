@@ -88,7 +88,8 @@ const COURSE_META: Record<string, CourseMeta> = {
             'gestao-financeira-empresarial': { slug: 'gestao-financeira-empresarial', title: 'Gestão Financeira Empresarial', icon: '💼', color: '#0e7490' },
             'contabilidade-gerencial': { slug: 'contabilidade-gerencial', title: 'Contabilidade Gerencial', icon: '📊', color: '#b91c1c' },
             empreendedorismo: { slug: 'empreendedorismo', title: 'Empreendedorismo e Plano de Negócios', icon: '🚀', color: '#e11d48' },
-            'gestao-qualidade': { slug: 'gestao-qualidade', title: 'Gestão da Qualidade Total', icon: '🎯', color: '#0ea5e9' }
+            'gestao-qualidade': { slug: 'gestao-qualidade', title: 'Gestão da Qualidade Total', icon: '🎯', color: '#0ea5e9' },
+            'lideranca-coaching': { slug: 'lideranca-coaching', title: 'Liderança e Coaching', icon: '🧭', color: '#1e3a8a' }
             };
 
 /** Turn "blue-ocean-strategy" → "Blue Ocean Strategy". */

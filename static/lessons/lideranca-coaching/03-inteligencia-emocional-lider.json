@@ -1,0 +1,319 @@
+{
+  "id": "03-inteligencia-emocional-lider",
+  "title": "3. Inteligência Emocional do Líder: Os 5 Pilares de Goleman e a Ciência do Self-Management",
+  "courseSlug": "lideranca-coaching",
+  "lessonNumber": 3,
+  "description": "A inteligência emocional (EI) como predictor dominante da eficácia em liderança. Os 5 pilares de Daniel Goleman: autoconsciência, autogestão, motivação, empatia e habilidades sociais. Neurociência da emoção (amígdala, córtex pré-frontal), auto-regulação, empatia cognitiva vs afectiva, e como desenvolver EI com práticas deliberadas (mindfulness, revisão de pares, feedback 360).",
+  "audio": "Nesta terceira lição vamos entrar na componente da liderança que mais impacto tem sobre resultados — a inteligência emocional. Daniel Goleman popularizou o conceito em 1995 e um estudo da Korn/Ferry de 2018 mostrou que quase 90% dos executivos de topo têm alta inteligência emocional como factor diferenciador. Vamos explorar os cinco pilares de Goleman, o que a neurociência nos ensina sobre a amígdala e o córtex pré-frontal, como medir EI com instrumentos validados como o ECI-2 ou o MSCEIT, e como desenvolver cada pilar com práticas deliberadas. A conclusão vai surpreender: o melhor líder é, antes de tudo, um mestre de si próprio.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Inteligência Emocional", "Goleman", "Autoconsciência", "Empatia", "ECI", "Auto-regulação", "MSCEIT"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é inteligência emocional (EI) e porque importa"
+    },
+    {
+      "type": "p",
+      "text": "Daniel Goleman publicou Emotional Intelligence em 1995, vendendo mais de 5 milhões de cópias em todo o mundo e abrindo uma agenda de investigação que transformou a forma como se estuda liderança. Antes, o consenso era que liderança dependia sobretudo de QI e experiência; depois de Goleman, a evidência mostrou que EI explicava cerca de 58% da variância no desempenho de líderes (Boyatzis, Goleman & Rhee, 2000). Richard Boyatzis, da Case Western Reserve University, e o próprio Goleman identificaram cinco capacidades que agrupam em duas metades: a competência pessoal (autoconsciência, autogestão, motivação) e a competência social (empatia, habilidades sociais)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Definição Mayer & Salovey (1990): capacidade de perceber, usar, compreender e gerir emoções",
+        "Definição Goleman (1995): capacidade de reconhecer os nossos próprios sentimentos e os dos outros, de nos motivarmos e de gerir bem as emoções connosco e nas nossas relações",
+        "EI explica ~58% da variação no desempenho de líderes (Boyatzis et al, 2000, estudo em 200+ empresas globais)",
+        "EI é parcialmente inata mas ~50% é aprendida (estudos de gémeos, Plomin & Colom, 1990)",
+        "Diferença para QI: EI pode crescer ao longo da vida; o QI é mais estável após a adolescência",
+        "Diferença para personalidade (Big Five): EI é mais treinável e mais ligada a comportamento observável"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Estudo Korn/Ferry (2018): quase 90% dos executivos C-suite identificam inteligência emocional como o factor mais crítico para o sucesso. Estudos de Harverker/CCL: líderes com alta EI têm equipas mais comprometidas (76% vs 26%), menos rotatividade e maior produtividade (até 20%)."
+    },
+    {
+      "type": "h2",
+      "text": "O modelo canónico: 5 pilares (Goleman, 2002)"
+    },
+    {
+      "type": "p",
+      "text": "Em 2002, Goleman publicou Working with Emotional Intelligence (com Richard Boyatzis) onde estrutura a EI em cinco competências agrupadas em duas esferas — pessoal (auto-direcção) e social (orientação para os outros). Cada pilar tem comportamentos observáveis que podem ser treinados. Os instrumentos mais usados para medir EI em contexto organizacional são o ECI-2 (Emotional Competence Inventory, Boyatzis/Goleman) e o MSCEIT (Mayer-Salovey-Caruso). Veja-se o capítulo seguinte para o modelo EQ-i 2.0 de Bar-On."
+    },
+    {
+      "type": "h3",
+      "text": "Pilar 1 — Autoconsciência (Self-Awareness)"
+    },
+    {
+      "type": "p",
+      "text": "A base da pirâmide — sem autoconsciência não há autogestão possível. É a capacidade de reconhecer as próprias emoções, forças, fraquezas, motivações e o seu efeito sobre os outros. O líder autoconsciente sabe o que sente, sabe por que sente, e sabe como os outros o percepcionam. Estudos de Tasha Eurich (2018, baseada em 5.000 participantes) mostram que apenas 10-15% das pessoas são verdadeiramente autoconscientes — a maioria julga-se mais autoconsciente do que é."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Sub-componentes: consciência emocional (nomear o que sinto), auto-avaliação precisa (conhecer limites), auto-confiança (confiar nos próprios juízos)",
+        "Teste rápido: consegue nomear a emoção que sentiu nas últimas 24 horas e porquê? Se não, está abaixo do mínimo",
+        "Prática: 5 minutos por dia de check-in — parar 3 vezes e perguntar o que estou a sentir agora",
+        "Como cresce: feedback 360°, journaling de emoções, reflexão pós-acção, mindfulness (Tang et al, 2015)",
+        "Demonstração: pedir feedback a subordinados — como faço a minha gestão? mostra coragem e humildade",
+        "Erro comum: confundir autoconsciência com introversão — pode ser-se autoconsciente E extrovertido"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Pilar 2 — Autogestão (Self-Management)"
+    },
+    {
+      "type": "p",
+      "text": "A capacidade de regular as suas emoções, controlar impulsos, manter a calma sob pressão, e adaptar-se a circunstâncias cambiantes. É a segurança interna que permite ao líder não reagir emocionalmente a cada provocação. Neurologicamente, é a capacidade de o córtex pré-frontal regular a amígdala — uma habilidade que se treina ao longo da vida."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Sub-componentes: auto-controlo emocional, transparência (integridade), adaptabilidade, orientação para a realização, iniciativa, optimismo",
+        "Stress teste: perante uma crise, o que faz? Reage explosivamente? Congela? Resolve? Os mestres em autogestão passam do reagir para o responder (Richard Boyatzis, 2006)",
+        "Ferramenta STOP (mindfulness): Stop, Take a breath, Observe, Proceed — em momentos de tensão",
+        "Técnica 6-segundos (Boffo et al, 2019): aplicar técnica antes de reuniões e decisões importantes — sincroniza córtex e amígdala",
+        "Treino: práticas de mindfulness (Langer, 1989), exercício físico regular, sono consistente, journaling",
+        "Erro comum: confundir auto-controlo com supressão — suprimir emoção custa energia cognitiva; gerir é diferente de esconder"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Pilar 3 — Motivação (Motivation)"
+    },
+    {
+      "type": "p",
+      "text": "Motivação em EI não é a motivação extrínseca da teoria de Maslow — é a motivação intrínseca de fazer coisas por paixão, propósito, desafio. Líderes com alta motivação intrínseca mantêm energia mesmo em tarefas aborrecidas, persistem diante do fracasso e mantêm o optimismo em tempos difíceis. Daniel Pink (Drive, 2009) chamou-lhe motivação 3.0: autonomia, maestria, propósito."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Sub-componentes: paixão pelo trabalho, tenacidade (resiliência), iniciativa, optimismo, orientação para objectivos auto-sustentada",
+        "Distinção crucial: motivação intrínseca (fazer porque quero) vs extrínseca (fazer porque me pagam ou me forçam)",
+        "Auto-concordância (Sheldon & Elliot, 1999): alinhar acções com valores pessoais gera mais persistência",
+        "Estudos de Csikszentmihalyi (Flow, 1990): pessoas em flow são 2-3x mais produtivas — motivação intrínseca activa flow",
+        "Prática: definir propósito pessoal/equipa — a que propósito serve o nosso trabalho? que impacto geramos?",
+        "Erro comum: confundir motivação com pressão. Pressão gera resultados de curto prazo mas queima o combustível da motivação intrínseca"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Pilar 4 — Empatia (Empathy)"
+    },
+    {
+      "type": "p",
+      "text": "A capacidade de compreender a constituição emocional dos outros e tratar cada pessoa de acordo com a sua realidade emocional. Não é simpatia (sentir pelo outro) — é empatia (sentir COM o outro, vendo o mundo pela sua lente). É o pilar mais crítico para líderes de equipas diversas, líderes em situação de conflito, líderes em momentos difíceis. Equipas com líderes empáticos têm menor rotatividade, maior compromisso e melhor desempenho (Sutton, 2007)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Sub-componentes: compreender os outros, desenvolver os outros, orientação para o serviço, alavancar a diversidade, consciência política",
+        "Empatia cognitiva (perspectiva-taking): perceber o que o outro vê e pensa — treinável com técnicas cognitivas",
+        "Empatia afectiva (compaixão): sentir o que o outro sente — parcialmente inata, treinável com práticas contemplativas",
+        "Barreira: o nosso viés de projecção — assumir que o outro vê o mundo como nós (false consensus effect)",
+        "Práticas: escuta de pares com reflexão, role-play reverso, escrever a perspectiva do outro antes de decidir",
+        "Cuidados: empatia excessiva sem limites gera fadiga de compaixão — equilíbrio com auto-cuidado é essencial"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Pilar 5 — Habilidades Sociais (Social Skills)"
+    },
+    {
+      "type": "p",
+      "text": "O pilar que torna os outros quatro visíveis — sem habilidades sociais, a alta EI interna não gera impacto. Inclui capacidade de persuasão, gestão de conflitos, liderança de equipas, inspirar, cultivar relações, colaboração, gestão de mudança. É o pilar mais desenvolvível com prática deliberada — porque opera no mundo exterior, onde há feedback imediato."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Sub-componentes: visão/influência, mentoria/coaching, comunicação persuasiva, gestão de conflito, construção de equipa, gestão de mudança, network",
+        "Estudos de Patterson (2003): mais de 2/3 do sucesso profissional advém de habilidades interpessoais",
+        "Comunicação persuasiva (Cialdini, 2006): reciprocidade, compromisso/consistência, prova social, autoridade, escassez, afecção, união",
+        "Gestão de conflito (Rahim, 2001): 5 estilos — dominating, avoiding, obliging, integrating, compromising — escolher por contingência",
+        "Construção de equipa (Tuckman, 1965): forming, storming, norming, performing — saber em que fase se está e liderar adequadamente",
+        "Prática: círculos de aprendizagem, mentoria cruzada, coaching de pares, role-playing de cenários difíceis"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "A neurociência: amígdala, córtex pré-frontal e auto-regulação"
+    },
+    {
+      "type": "p",
+      "text": "A inteligência emocional tem bases neurobiológicas bem mapeadas. A amígdala, estrutura em forma de amêndoa no sistema límbico, é o detector de ameaças do cérebro — reage em milissegundos a estímulos emocionais, antes de o córtex pré-frontal ter tempo de processar. Joseph LeDoux (1996) chamou-lhe o cérebro emocional — é rápido mas não racional. O córtex pré-frontal, principalmente a sua região ventromedial, é o regulador — processa o contexto, identifica estratégias, e modula a amígdala."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Eixo da regulação: amígdala (emoção rápida) vs córtex pré-frontal (regulação lenta)",
+        "Palestra de Jill Bolte Taylor (1996, neuroanatomista): uma crise começa quando a amígdala dispara e o córtex não regula — o cérebro fica sequestrado (emotional hijacking, Goleman 1995)",
+        "Estado de espírito afecta literalmente o processamento cognitivo: o mesmo problema enfrentado em pessimismo tem menos soluções do que em optimismo (Fredrickson, 2001, broaden-and-build theory)",
+        "Mindfulness transforma o cérebro: estudos de Sara Lazar (2005) mostram que 30 minutos diários durante 8 semanas aumentam densidade de massa cinzenta no córtex pré-frontal",
+        "Práticas de respiração (4-7-8): activar o sistema nervoso parassimpático, baixar cortisol, aumentar coerência cardíaca (HeartMath, 1998)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Atenção: emoção vs razão é uma metáfora enganadora. António Damásio (1994, Descartes' Error) mostrou que pacientes com lesões no córtex ventromedial, incapazes de sentir emoções, tomavam decisões piores — não melhores. A emoção é informação, não inimiga do pensamento."
+    },
+    {
+      "type": "h2",
+      "text": "Medir EI — instrumentos válidos"
+    },
+    {
+      "type": "p",
+      "text": "Medir inteligência emocional é controverso porque emoção parece subjectiva. Mas existem instrumentos com décadas de validação científica. Os três mais usados em contexto profissional: MSCEIT (modelo de capacidade puro), ECI-2 / EQ-i 2.0 (modelo misto de trait e competência). Cada um mede algo diferente — por isso importa escolher o instrumento certo para o propósito."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "MSCEIT (Mayer-Salovey-Caruso, 2002): modelo de capacidade pura — testa se o respondente resolve problemas emocionais",
+        "4 ramos: perceber emoções (faces e imagens), usar emoções (raciocínio facilitado), compreender emoções (linguagem emocional), gerir emoções (acções reguladoras)",
+        "Pontuação 70-130 (média 100); validade interna alta; é o padrão-ouro da EI baseada em capacidade",
+        "ECI-2 (Boyatzis/Goleman, 2002): baseado em competências, auto-questionário + avaliação 360° — usado por consultores",
+        "EQ-i 2.0 (Bar-On, 1997/2004): misto (trait + competência), 5 escalas, 15 sub-escalas, larga evidência",
+        "WLEIS (Wong-Law EI Scale): versão baseada no modelo de Goleman, popular em investigação asiática",
+        "Limitações: o desempenho real pode divergir da auto-avaliação — por isso sempre que possível usar 360°"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Como desenvolver EI na prática"
+    },
+    {
+      "type": "p",
+      "text": "A boa notícia é que EI pode ser desenvolvida com prática deliberada. Richard Boyatzis, da Case Western, descobriu que o cérebro adulto mantém capacidade significativa de aprender novas competências emocionais. O modelo de mudança intencional de Boyatzis (Intentional Change Theory, ICT) tem sete anos de pesquisa longitudinal e mostra que coaching focado na EI gera mudanças duradouras em apenas 12-18 meses."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Prática 1 — Mindfulness diário: 10-15 minutos por dia, idealmente à mesma hora (Tang et al, 2015, meta-análise mostra efeitos em regulação emocional)",
+        "Prática 2 — Journaling emocional: 5 minutos, todos os dias, escrever o que senti, quando, como reagi, que padrões vejo — 6 meses mudam auto-consciência",
+        "Prática 3 — Feedback 360° anual: usar instrumento como o ECI-2 ou EQ360; comparar auto-avaliação vs. avaliação dos outros",
+        "Prática 4 — Coaching profissional: 6-12 sessões com coach certificado ICF/EMCC — acelera o desenvolvimento",
+        "Prática 5 — Pair learning / mentor: encontrar alguém com alta EI para observação e discussão de incidentes críticos",
+        "Prática 6 — Exercício físico: gera BDNF (factor neurotrófico), melhora humor, aumenta capacidade de auto-regulação",
+        "Prática 7 — Sono, alimentação, gestão do tempo: auto-cuidado básico dá capacidade para EI"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Os 4 estilos EI do líder (Boyatzis, 2014)"
+    },
+    {
+      "type": "p",
+      "text": "Estudos de PET scan (fMRI) em centenas de líderes em todo o mundo, conduzidos por Boyatzis e colegas, identificaram quatro padrões neurológicos distintos de liderança sob stress. Cada padrão tem um perfil emocional dominante, visível em áreas cerebrais diferentes, e gera consequências diferentes nas equipas. Conhecer o próprio padrão ajuda a calibrar."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Padrão 1 — Visionário: centros criativos activos (núcleo accumbens), visão e entusiasmo; risco: pouca execução, abstracto demais",
+        "Padrão 2 — Coaching: foco no outro (TPJ, capacidade mentalizing), desenvolvimento de equipas; risco: demora a decidir quando preciso",
+        "Padrão 3 — Affiliative: harmonia, empatia (cortex cingulado anterior); risco: evita conflito necessário, performance sub-óptima",
+        "Padrão 4 — Democratic: collaborator, debata, integra perspectivas (córtex pré-frontal medial); risco: lentidão por excesso de consulta",
+        "Todos os padrões são úteis em diferentes momentos — o problema é quando o líder fica PRESO num padrão (mesmo adequado em alguns contextos)",
+        "Recomendação: activar o visionário em momentos de bússola; coaching quando se desenvolvem pessoas; affiliative em momentos de coesão; democratic em decisões colectivas"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Key takeaway: Inteligência emocional não é uma qualidade espiritual que se tem ou não se tem — é um conjunto de competências treináveis. O investimento vale a pena: a evidência mostra retornos compostos em carreira, relacionamentos, saúde e bem-estar pessoal."
+    },
+    {
+      "type": "h2",
+      "text": "EI e Cultura Organizacional"
+    },
+    {
+      "type": "p",
+      "text": "A inteligência emocional do líder transborda para a equipa — não é só um atributo individual, é um vector cultural. Google Project Aristotle (2015) estudou 180 equipas e identificou os 5 factores de equipa eficaz — o primeiro é segurança psicológica (psicological safety), que depende da EI do líder. Equipas onde líderes exibem alta EI sentem-se seguras para falar, errar, experimentar — porque confiam que o líder não vai reagir emocionalmente."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Amy Edmondson (2018): safety psicológica é a variável #1 de eficácia de equipa — e líderes emocionais inteligentes são o seu principal arquitecto",
+        "Cultura do medo: gerada por líderes com baixa autogestão, evita feedback, gera comportamentos disfuncionalmente conformistas",
+        "Cultura de feedback: gerada por líderes que sabem dar e receber feedback com segurança emocional",
+        "Cultura da aprendizagem: aprendizagem organizacional (Senge, The Fifth Discipline) exige tolerância ao erro, e portanto alta EI",
+        "Diversity & Inclusion: equipas diversas são mais inovadoras se os líderes tiverem alta EI — gerem conflitos com maturidade"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Os riscos do EI mal aplicado"
+    },
+    {
+      "type": "p",
+      "text": "EI é arma carregada: pode ser usada para manipular. Pesquisadores como Dana Cavaleau-White (Oxford Saïd, 2017) e Adam Grant (Wharton) alertaram que dark side EI (manipulação com inteligência emocional) é um padrão real — usam a leitura emocional para manipular outros. A ética exige que EI se conjugue com integridade. Goleman respondeu: EI sem integridade é apenas uma técnica de manipulação."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Manipulação emocional: usar empatia para perceber fraquezas e explorá-las",
+        "Tribalismo de empatia: ter alta empatia só com o nosso grupo e frieza com o de fora — gera divisão",
+        "Empatia excessiva: fadiga de compaixão (Joinson, 1992), burnout — sem auto-cuidado, a empatia destrói",
+        "Auto-controlo excessivo: supressão emocional sem processamento — funciona por fora mas esgota por dentro",
+        "EI teatralizada: fingir emoções (sobretudo positividade obrigatória) gera dismorfia e perda de autenticidade",
+        "Defesa: cultivar a ética em paralelo com a EI — código de conduta, reflexão crítica, supervisão de pares"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "EI nas transições de carreira"
+    },
+    {
+      "type": "p",
+      "text": "Cada promoção profissional exige novas competências EI. Estudo da Korn/Ferry (2019) com 15.000 executivos identificou que cada nível hierárquico exige novas emoções. Por exemplo: gestores que ascendem a C-suite e mantêm o estilo EI de middle-management (autoconsciência forte) tornam-se estagnados. Cada transição exige regressar e aprender a competência do novo nível."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Individual contributor → Manager: aprender a regular emoções para o grupo (autogestão)",
+        "Manager → Senior Manager: aprender a influenciar (habilidades sociais) e não só a executar",
+        "Senior Manager → Director: aprender a dar visão (motivação) e a afastar-se dos detalhes",
+        "Director → VP/SVP: aprender a gerir ambiguidade (autogestão) e equilibrar stakeholders (empatia estratégica)",
+        "VP → C-suite: aprender a gerir poder (autogestão + integridade) sem perder autoconsciência",
+        "CEO/Board: a inteligência emocional é qualidade fundamental — estudos de Kaplan (2019) correlacionam-na com longevidade dos CEOs"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Síntese e aplicação prática"
+    },
+    {
+      "type": "p",
+      "text": "A inteligência emocional do líder é, no fim do dia, o factor multiplicador que transforma estratégia em resultados, talento em desempenho, e cultura em identidade. Não substitui a técnica ou o conhecimento — potencia-os. O líder com alta EI e baixa competência técnica é simpático mas ineficaz; o líder com alta técnica e baixa EI é competente mas isolado. O líder eficaz integra os dois."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Recomendação 1: faça um teste 360° EI (ECI-2 ou EQ360) este ano para calibrar auto-percepção",
+        "Recomendação 2: dedique 10 minutos por dia a mindfulness ou journaling emocional",
+        "Recomendação 3: numa crise, pare 6 segundos antes de reagir — teste do regime emocional",
+        "Recomendação 4: peça feedback explícito: como faço a gestão das minhas emoções? como afecta a equipa?",
+        "Recomendação 5: invista em coaching profissional (6-12 sessões, coach credenciado ICF/EMCC)",
+        "Recomendação 6: leia literatura fundacional: Goleman (1995, 2002), Boyatzis (2006), Davidson (2012)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Próxima lição: vamos descer ao plano organizacional de longo prazo — desenvolvimento de sucessão, pipelines de talento, mentoring e high-potential programs. Toda a inteligência emocional desta lição vira ferramenta quando aplicada a fazer crescer os outros."
+    }
+  ],
+  "keyPoints": [
+    "EI explica ~58% da variância no desempenho de líderes (Boyatzis, Goleman & Rhee, 2000)",
+    "Definição Mayer & Salovey (1990): capacidade de perceber, usar, compreender e gerir emoções",
+    "5 pilares de Goleman (2002): autoconsciência, autogestão, motivação, empatia, habilidades sociais",
+    "Neurociência: amígdala (emoção rápida) vs córtex pré-frontal (regulação lenta) — treinável com prática",
+    "Instrumentos: MSCEIT (capacidade), ECI-2 (competência), EQ-i 2.0 (misto) — sempre 360° quando possível",
+    "Estudos Lazar (2005): mindfulness 30 min/dia, 8 semanas, aumenta massa cinzenta no córtex pré-frontal",
+    "Boyatzis (2014): 4 padrões neurológicos (visionário, coaching, affiliative, democratic) — útil cada um na sua fase",
+    "EI sem ética é manipulação — defesa com integridade, supervisão de pares, código de conduta"
+  ],
+  "quizSlug": "lcq",
+  "nextLesson": "04-desenvolvimento-sucessao",
+  "prevLesson": "02-coaching-executivo"
+}

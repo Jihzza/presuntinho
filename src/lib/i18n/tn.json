@@ -829,5 +829,9 @@
   "routes.escola.curso.gestao-qualidade.title": "Gestao da Qualidade Total",
   "routes.escola.curso.gestao-qualidade.description": "Kifif tabni thaqafa l-qualidade f l-muassassa koulha: mabadi Deming, Juran, Ishikawa w Crosby, adawiyat (Pareto, fishbone, SPC, FMEA), nizam ISO 9001/14001/45001 m3a PDCA w muhasabaat, w qualidajet l-khadamat b-ServQual, lean services, six sigma w model EFQM.",
   "routes.escola.curso.gestao-qualidade.tagline": "Business Administration · TQM, adawiyat, ISO 9001 w tafakkul l-khadamat",
-  "routes.aulas.curso.gestao-qualidade": "Gestao da Qualidade Total"
+  "routes.aulas.curso.gestao-qualidade": "Gestao da Qualidade Total",
+  "routes.escola.curso.lideranca-coaching.title": "Liderança w Coaching",
+  "routes.escola.curso.lideranca-coaching.description": "Kifif tetwejjih l-ashab b-kafa2a f l-3asr l-7adith: assasat nazriyat al-liderança (sifaat, sulukiyat, wad3iyya — Fiedler, Hersey-Blanchard), 3maliyyat l-coaching l-tanfidhy (nama3dj GROW l-Whitmore, feedback SBI), dhaka3 3atify lil qa3id (l-5 aqlamt l-Goleman w 3ilm al-a3sab l-dhati), w tatawor l-khilafet (linat al-qiyada, mentoring, sponsorship w baramej high-potential).",
+  "routes.escola.curso.lideranca-coaching.tagline": "Business Administration · Liderança wad3iyya, coaching tanfidhy, dhaka3 3atify w khilafet",
+  "routes.aulas.curso.lideranca-coaching": "Liderança w Coaching"
 }

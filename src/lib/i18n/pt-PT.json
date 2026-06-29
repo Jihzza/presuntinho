@@ -691,7 +691,8 @@
   "walkthrough.verify.exists": "existe.",
   "walkthrough.verify.text": "Verifica que",
   "write.breadcrumb.home": "← Hub",
-  "a11y.aria.anexar_ficheiro": "Anexar ficheiro",
+    "write.head.title": "Writing · Tips Anti-AI",
+    "a11y.aria.anexar_ficheiro": "Anexar ficheiro",
   "a11y.aria.data_final": "Data final",
   "a11y.aria.data_inicial": "Data inicial",
   "a11y.aria.editar_marcador": "Editar marcador",
@@ -828,5 +829,8 @@
   "routes.aulas.curso.empreendedorismo": "Empreendedorismo e Plano de Negócios",
   "routes.escola.curso.gestao-qualidade.title": "Gestão da Qualidade Total",
   "routes.escola.curso.gestao-qualidade.description": "Como construir uma cultura de qualidade que atravessa toda a organização: princípios de Deming, Juran, Ishikawa e Crosby, ferramentas (Pareto, fishbone, SPC, FMEA), sistemas de gestão ISO 9001/14001/45001 com PDCA e auditorias, e qualidade em serviços via ServQual, lean services, six sigma e modelo EFQM.",
-  "routes.escola.curso.gestao-qualidade.tagline": "Business Administration · TQM, ferramentas, ISO 9001 e excelência em serviços"
+  "routes.escola.curso.gestao-qualidade.tagline": "Business Administration · TQM, ferramentas, ISO 9001 e excelência em serviços",
+  "routes.escola.curso.lideranca-coaching.title": "Liderança e Coaching",
+  "routes.escola.curso.lideranca-coaching.description": "Como liderar pessoas com eficácia na era moderna: fundamentos das teorias de liderança (traços, comportamentos, situacional — Fiedler, Hersey-Blanchard), prática do coaching executivo (modelo GROW de Whitmore, feedback SBI), inteligência emocional do líder (os 5 pilares de Goleman e a neurociência da auto-regulação), e desenvolvimento de sucessão (pipelines de liderança, mentoring, sponsorship e high-potential programs).",
+  "routes.escola.curso.lideranca-coaching.tagline": "Business Administration · Liderança situacional, coaching executivo, inteligência emocional e sucessão"
 }

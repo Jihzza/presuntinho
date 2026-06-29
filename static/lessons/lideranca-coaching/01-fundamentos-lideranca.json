@@ -1,0 +1,248 @@
+{
+  "id": "01-fundamentos-lideranca",
+  "title": "1. Fundamentos de Liderança: Traços, Comportamentos e Teorias Situacionais (Fiedler, Hersey-Blanchard)",
+  "courseSlug": "lideranca-coaching",
+  "lessonNumber": 1,
+  "description": "As três grandes tradições do estudo da liderança: a abordagem dos traços (que procura características pessoais inatas), a abordagem comportamental (o que os líderes fazem) e a abordagem contingencial/situacional (como o contexto determina o estilo eficaz). Inclui o modelo LPC de Fiedler, a matriz de Hersey-Blanchard e a distinção entre liderança e gestão.",
+  "audio": "Nesta primeira lição vamos percorrer as três grandes tradições do estudo da liderança — a teoria dos traços, a teoria dos comportamentos e as teorias situacionais ou contingenciais. Vamos perceber porque é que a pergunta certa não é 'como deve ser um líder' mas sim 'que tipo de liderança é que esta situação exige'. Vamos conhecer os modelos LPC de Fred Fiedler, a matriz situacional de Hersey e Blanchard, e ainda a distinção fundamental entre liderança e gestão segundo Kotter. No fim, vais ter um mapa claro para diagnosticar cada situação e escolher o estilo mais eficaz.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Liderança", "Traços", "Comportamentos", "Fiedler", "Hersey-Blanchard", "LPC", "Contingência"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é liderança (e o que não é)"
+    },
+    {
+      "type": "p",
+      "text": "John Kotter, professor em Harvard e ex-director da Covey Leadership Center, definiu a distinção mais citada: gestão é lidar com a complexidade, liderança é lidar com a mudança. Gestão é sobre processos — planeamento, orçamentação, controlo, resolução de problemas. Liderança é sobre direcção — estabelecer visão, alinhar pessoas, motivá-las para a acção apesar das barreiras. As duas funções coexistem em cargos directivos mas exigem capacidades diferentes: um gestor competente sem visão é um burocrata, um líder visionário sem disciplina operacional é um artista frustrado."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Gestão — lidar com complexidade: planear, orçamentar, organizar, controlar",
+        "Liderança — lidar com mudança: visão, alinhamento, motivação, inspiração",
+        "Peter Drucker: 'a gestão é fazer as coisas bem; a liderança é fazer as coisas certas'",
+        "As duas coexistem em cargos de chefia — bons líderes também gerem, bons gestores também lideram",
+        "Liderança não é posição — é influência. Não é título — é exemplo. (Covey)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Curiosidade: o vocábulo 'líder' vem do inglês lead (conduzir), e desde os estudos de Thomas Carlyle sobre 'os heróis' (1841) atribuiu-se à liderança um carácter quase místico. A ciência moderna libertou-se disso com três tradições de investigação empírica que vamos ver a seguir."
+    },
+    {
+      "type": "h2",
+      "text": "Tradição 1 — Teoria dos Traços (Trait Theory)"
+    },
+    {
+      "type": "p",
+      "text": "A primeira grande tradição, popular nos anos 1940-50, parte de uma pergunta simples: os grandes líderes partilham certas características pessoais? Ralph Stogdill foi pioneiro nesta abordagem — analisou centenas de estudos e identificou traços consistentemente associados a liderança eficaz. Hoje sabemos que traços explicam cerca de 30% da variação no sucesso da liderança — relevante mas não determinante."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Traços de personalidade (Big Five): extroversão (mais forte predictor), consciência, abertura, estabilidade emocional, amabilidade (esta última negativamente correlacionada em certas profissões)",
+        "Traços motivacionais: necessidade de realização (McClelland), motivação para o poder, motivação para a afiliação",
+        "Capacidades cognitivas: inteligência geral (g-factor acima de 120 correlaciona com promoção), pensamento sistémico, capacidade de resolução de problemas sob pressão",
+        "Traços físicos e demográficos: altura (estudos em executivos americanos: ~80% acima da média), energia, aparência",
+        "Capacidades sociais: inteligência emocional (Goleman), empatia, capacidade de comunicação, gestão de impressões",
+        "Limite: traços predizem emergência para posições de liderança mas não tanto a eficácia uma vez no cargo — o contexto importa mais"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "O Big Five e a liderança"
+    },
+    {
+      "type": "p",
+      "text": "A evidência mais robusta da psicologia da personalidade (Costa & McCrae, 1992; Barrick & Mount, 1991) é que o Big Five — extroversão, consciência, abertura, estabilidade, amabilidade — explica parte significativa da variação em desempenho de liderança. Tim Judge e colaboradores (2002) fizeram meta-análise com 222 estudos e concluíram que extroversão é o predictor mais forte de ascensão a posições de liderança, seguido de consciência e abertura. Estabilidade emocional (baixo neuroticismo) importa em contextos de alta pressão."
+    },
+    {
+      "type": "h2",
+      "text": "Tradição 2 — Teoria dos Comportamentos (Behavioral Theory)"
+    },
+    {
+      "type": "p",
+      "text": "A partir dos anos 50, a Universidade de Ohio (Stogdill, Fleishman) e a Universidade de Michigan (Katz, Kahn) estudaram o que os líderes EFECTIVAMENTE FAZEM, mais do que o que são. Estes estudos identificaram duas dimensões comportamentais independentes: consideração (cuidar das pessoas) e iniciação de estrutura (definir tarefas). Quase toda a teoria comportamental moderna assenta nesta matriz."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Consideração (consideration): comportamentos de apoio, confiança, respeito, preocupação com bem-estar dos subordinados",
+        "Iniciação de estrutura (initiating structure): comportamentos de definição de tarefa, organização, planeamento, atribuição de responsabilidades",
+        "Estilos básicos derivados da matriz: alto-alto (líder de equipa), alto-baixo (country club), baixo-alto (autoritário), baixo-baixo (impoverished)",
+        "Estudos da Universidade de Michigan: líder centrado no empregado vs líder centrado na produção (Katz, Kahn & Cartwright)",
+        "Blake & Mouton (1964) Grid Gerencial: 5 estilos (impoverished 1.1, country club 1.9, middle-of-the-road 5.5, authority-compliance 9.1, team 9.9), sendo 9.9 o ideal teórico — elevado foco em pessoas e produção",
+        "Contribuição prática: a formação de líderes pode trabalhar comportamentos (diferente dos traços, que são mais estáveis)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Tradição 3 — Teorias Situacionais e Contingenciais"
+    },
+    {
+      "type": "p",
+      "text": "A viragem conceptual mais importante do século XX em liderança foi perceber que NÃO existe um estilo ideal único — o melhor estilo depende do contexto, do seguidor e da tarefa. As teorias situacionais e contingenciais substituíram a busca do 'melhor líder' pela busca da 'melhor adequação situação-estilo'. Dois modelos são canónicos: Fiedler e Hersey-Blanchard."
+    },
+    {
+      "type": "h3",
+      "text": "O Modelo de Contingência de Fiedler (LPC)"
+    },
+    {
+      "type": "p",
+      "text": "Fred Fiedler (1964; 1967) propôs o primeiro modelo de contingência formal na psicologia das organizações. O líder é classificado pelo seu Least Preferred Co-worker score (LPC) — quanto mais alto o LPC, mais relacional; quanto mais baixo, mais orientado para a tarefa. A eficácia do estilo depende de três variáveis de situação: qualidade da relação líder-membro, estrutura da tarefa e poder posicional do líder."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "LPC alto (relacional): eficaz em situações moderadamente favoráveis — relações boas ou tarefas ambíguas",
+        "LPC baixo (tarefa): eficaz em situações extremas — muito favoráveis (controle total) ou muito desfavoráveis (ambiente hostil)",
+        "Três variáveis situacionais: relação líder-membro (boa/má), estrutura da tarefa (alta/baixa), poder posicional (forte/fraco) — combinadas dão 8 combinações octantes",
+        "LPC é difícil de mudar — Fiedler argumentava que é melhor MUDAR O LÍDER do que mudar o estilo",
+        "Críticas: simplicidade do LPC (um único número para personalidade), validade contestada (em meta-análise de Schriesheim & Kerr, 1977, relações inconsistentes)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "A Matriz Situacional de Hersey e Blanchard"
+    },
+    {
+      "type": "p",
+      "text": "Paul Hersey e Ken Blanchard (1969; 1982; 1996) criaram o modelo mais usado na formação de líderes de PME: o líder deve adaptar o seu estilo ao NÍVEL DE MATURIDADE dos seguidores — capacidade (competência técnica) e disposição (vontade/motivação). Quatro níveis de maturidade (M1-M4) mapeiam para quatro estilos de liderança."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "M1 — Baixa maturidade (incapaz e inseguro): estilo DIRECTING (tarefa alta, relação baixa) — dizer o quê e como",
+        "M2 — Maturidade baixa-média (incapaz mas disposto): estilo COACHING (tarefa alta, relação alta) — explicar decisões, dar direcção com justificação",
+        "M3 — Maturidade média-alta (capaz mas inseguro): estilo SUPPORTING (tarefa baixa, relação alta) — partilhar decisões, encorajar",
+        "M4 — Alta maturidade (capaz e disposto): estilo DELEGATING (tarefa baixa, relação baixa) — confiar, autonomia total",
+        "Princípio central: o diagnóstico do nível de maturidade é mais importante que o estilo em si — diagnosticar correctamente primeiro, ajustar depois",
+        "Quando aplicável: equipas novas, onboarding, transição de funções, projectos especiais — em equipas estáveis o estilo tende para 3 ou 4",
+        "Críticas: simplificação (a maturidade é um contínuo, não categorias discretas), alguma ambiguidade em M2/M3"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Erro frequente: assumir que 'ser coach' é sempre o melhor estilo. Hersey-Blanchard diz precisamente o contrário — o estilo de coaching aplica-se a M2. Para M1, um líder que tente coaching está a frustrar seguidores que precisam de directrizes claras. A chave é diagnosticar a maturidade e adaptar."
+    },
+    {
+      "type": "h2",
+      "text": "Modelo de Path-Goal de House (1971)"
+    },
+    {
+      "type": "p",
+      "text": "Robert House retomou a teoria da expectativa de Vroom e formulou um modelo onde o líder clarifica o caminho (path) para os subordinados alcançarem recompensas (goals). O líder deve seleccionar entre 4 comportamentos: directivo, apoiante, participativo, orientado para a realização. A escolha depende do ambiente (estrutura da tarefa, sistema de autoridade, grupo de trabalho) e das características dos subordinados (locus de controlo, capacidade percebida, necessidade de afiliação)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Comportamento directivo: esclarecer expectativas, dar estrutura, reduzir ambiguidade — útil em tarefas complexas ou stress",
+        "Comportamento apoiante: mostrar preocupação, ser amigável, demonstrar respeito — útil em tarefas stressantes, aborrecidas ou frustrantes",
+        "Comportamento participativo: consultar subordinados, pedir sugestões — útil em subordinados internos (locus de controlo), tarefas não estruturadas",
+        "Comportamento orientado para a realização: estabelecer desafios, esperar excelência — útil em subordinados com alta necessidade de realização",
+        "Teoricamente mais sofisticado que Fiedler (porque permite variação dinâmica do estilo), mas operacionalmente mais complexo"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Modelo de Liderança Carismática e Transformacional"
+    },
+    {
+      "type": "p",
+      "text": "Bernie Bass (1985) e os seus seguidores sintetizaram duas décadas de pesquisa na distinção entre líder transaccional (que negoceia recompensas) e líder transformacional (que inspira a transcender interesses próprios). Robert House (1976) tinha antes teorizado o líder carismático. As três estão correlacionadas mas têm elementos distintos."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Líder transaccional: clarifica expectativas, recompensa desempenho, corrige desvios — útil em rotinas e compliance",
+        "Líder transformacional (Bass): four I's — idealized influence, inspirational motivation, intellectual stimulation, individualized consideration",
+        "Líder carismático (House): visão, sacrifício pessoal, confiança do seguidor, identificação com o líder como quase-deidade",
+        "Diferença: carisma é uma característica pessoal; transformação é um processo (qualquer líder pode aprender a transformar)",
+        "Exemplos clássicos: Steve Jobs (carismático + transformacional), Satya Nadella (transformacional, menos carismático), Abraham Lincoln (ambos)",
+        "MLQ (Multifactor Leadership Questionnaire) é o instrumento de medida padrão — Bass & Avolio"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Key takeaway: nenhum estilo funciona sempre. O melhor líder diagnostica o contexto (quem, o quê, quando) e adapta. Os modelos que vamos ver nas próximas lições (coaching, inteligência emocional, sucessão) são aprofundamentos desta ideia base: liderança é função da situação e do estado do seguidor."
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: como escolher o seu estilo numa dada situação"
+    },
+    {
+      "type": "p",
+      "text": "Na prática, um líder eficaz faz três perguntas antes de escolher o estilo: (1) Qual é a minha tarefa e qual é a competência/humildade da equipa? (2) Qual é o nível de stress e a estrutura da situação? (3) Quanto tempo tenho? Se tiver pouco tempo e a equipa for iniciante, dirigindo. Se tiver tempo e a equipa for experiente, delegue. Tudo o resto é variação entre estes extremos."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Passo 1: Diagnosticar o seguidor — capacidade + vontade (Hersey-Blanchard)",
+        "Passo 2: Diagnosticar a situação — favorabilidade (Fiedler), estrutura da tarefa (House)",
+        "Passo 3: Diagnosticar-se a si próprio — qual é o seu LPC? Os seus traços fortes e fracos?",
+        "Passo 4: Escolher o estilo apropriado ao diagnóstico",
+        "Passo 5: Verificar resultados — se a equipa responde, manter; se não, mudar",
+        "Passo 6: Rever periodicamente — maturidade muda, situações mudam, estilos adaptam-se"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Liderança e Poder (French & Raven, 1959)"
+    },
+    {
+      "type": "p",
+      "text": "John French e Bertram Raven identificaram cinco bases de poder que todo o líder deve saber usar e distinguir. O poder é a capacidade de influenciar comportamentos — e nem todos os poderes são iguais em estabilidade. Um líder que só tem poder posicional é frágil; um líder com poder referente é quase invencível."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Poder coercivo: baseado na capacidade de punir — gera obediência mas nunca compromisso",
+        "Poder de recompensa: baseado em recompensas — gera comportamento, mas pode gerar 'compliance pela recompensa'",
+        "Poder legítimo: vem da posição hierárquica — gera respeito da autoridade mas esvazia-se quando a posição acaba",
+        "Poder de especialista: vem do conhecimento — gera respeito técnico, poderoso em áreas de elevada expertise",
+        "Poder referente: vem da admiração pessoal — gera lealdade profunda, a forma mais sustentável de liderar (Carnegie, Covey)",
+        "Recomendação de Pfeffer (1992): construa múltiplas bases de poder — apenas poder legítimo torna-o dependente do título"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Da tradição à prática: três aprendizados"
+    },
+    {
+      "type": "p",
+      "text": "Dos 70 anos de investigação em liderança, três conclusões são robustas e accionáveis. (1) A liderança tem alguma base em traços estáveis, mas mais em comportamentos que se aprendem. (2) Não existe um estilo óptimo universal — o melhor estilo é função do diagnóstico da situação e da maturidade dos seguidores. (3) A liderança pode ser ensinada e aprendida — a evidência mostra que programas de formação em liderança aumentam efectivamente o desempenho das equipas."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Aprendizado 1: traços importam (30%), mas comportamentos pesam mais (70%) — por isso invista em formação comportamental",
+        "Aprendizado 2: domine dois modelos — Fiedler+LPC para autoconhecimento, Hersey-Blanchard para diagnóstico de seguidores",
+        "Aprendizado 3: invista em inteligência emocional (Goleman, 1995) — é o melhor preditor de eficácia em liderança segundo a evidência recente",
+        "Recomendação prática: peça feedback 360° uma vez por ano, use-o para calibrar auto-percepção vs. percepção dos outros",
+        "Lembre-se: liderança é uma jornada, não um destino — Saturno de Bono: 'a qualidade de um líder não é a ausência de fraqueza mas a presença de força'"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Próxima lição: vamos descer do plano dos modelos de liderança para a prática do coaching executivo — como fazer perguntas poderosas, dar feedback que muda comportamentos, e conduzir uma sessão GROW (Whitmore). É onde a liderança situacional vira técnica profissional."
+    }
+  ],
+  "keyPoints": [
+    "Liderança e gestão são diferentes — Kotter: gestão lida com complexidade, liderança com mudança",
+    "Três tradições: traços (Stogdill, Big Five), comportamentos (Ohio, Michigan, Blake-Mouton), situacional (Fiedler, Hersey-Blanchard, House)",
+    "Traços explicam ~30% da variação — extroversão, consciência e estabilidade emocional são preditores mais robustos",
+    "Fiedler: LPC alto (relacional) eficaz em situações moderadas; LPC baixo (tarefa) em situações extremas",
+    "Hersey-Blanchard: 4 estilos (directing, coaching, supporting, delegating) mapeiam 4 níveis de maturidade dos seguidores",
+    "Path-Goal de House: 4 comportamentos (directivo, apoiante, participativo, realizado) seleccionados por contingência",
+    "Transformacional (Bass) tem 4 I's: idealized influence, inspirational motivation, intellectual stimulation, individualized consideration",
+    "French & Raven: 5 bases de poder (coercivo, recompensa, legítimo, especialista, referente) — quanto mais bases, mais resiliente o líder"
+  ],
+  "quizSlug": "lcq",
+  "nextLesson": "02-coaching-executivo",
+  "prevLesson": null
+}
