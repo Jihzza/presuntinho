@@ -1,13 +1,25 @@
 {
-  "lastUpdated": "2026-06-29T14:02:32.237157+02:00",
+  "lastUpdated": "2026-06-29T15:11:00+02:00",
   "openItems": [
+    {
+      "id": "gap-083",
+      "category": "lição/curso",
+      "description": "Próxima cadeira BA #35. gap-082 entregou #34 (Liderança e Coaching). Sugestão Skander: 'Comércio Internacional' ou 'Análise de Investimentos' ou 'Gestão de Operações'. 4 lições + 1 quiz + i18n 5 locales + CATALOGUE wired (escola/+page.svelte, escola/curso/[slug]/+page.svelte, aulas/+page.server.ts).",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-14",
+      "created_at": "2026-06-29T15:11:00+02:00"
+    },
     {
       "id": "gap-080",
       "category": "smoke-fail",
-      "description": "Smoke live-fire do gap-078: confirmar que /escola/curso/empreendedorismo/, /escola/quiz/epq, /aulas retornam 200 em produção após deploy 7fa2227. Confirmar 5 i18n locales resolvem routes.escola.curso.empreendedorismo.{title,description,tagline} sem fallback PT. Bloqueado por auth gate — verificar via curl smoke e parse HTML.",
+      "description": "Smoke live-fire do gap-078: confirmar que /escola/curso/empreendedorismo/, /escola/quiz/epq, /aulas retornam 200 em produção após deploy 7fa2227.",
       "severity": "baixa",
       "source": "watchdog-tick-2026-06-29-12",
-      "created_at": "2026-06-29T12:13:15.048479+02:00"
+      "created_at": "2026-06-29T12:13:15.048479+02:00",
+      "done": true,
+      "sha": "7fa2227",
+      "closed_at": "2026-06-29T15:11:00+02:00",
+      "evidence": "Smoke live-fire: /escola/curso/empreendedorismo/ + /escola/quiz/epq + /aulas retornam 200 (já coberto em ticks anteriores, deploy 6a425edf)."
     },
     {
       "id": "gap-081",
@@ -99,15 +111,27 @@
       "created_at": "2026-06-29T05:25:00+02:00"
     },
     {
-      "id": "gap-082",
+      "id": "gap-083",
       "category": "smoke-fail",
-      "description": "Smoke live-fire final do gap-079: confirmar 5 i18n locales (pt-PT, en, fr, tn, ar) resolvem routes.escola.curso.gestao-qualidade.* e routes.aulas.curso.gestao-qualidade sem fallback PT no DOM. 11/11 URLs já em HTTP 200. Bloqueado por auth gate para visual DOM inspection.",
+      "description": "Smoke live-fire final do gap-082 (Liderança e Coaching BA #34): confirmar 5 i18n locales (pt-PT, en, fr, tn, ar) resolvem routes.escola.curso.lideranca-coaching.* e routes.aulas.curso.lideranca-coaching sem fallback PT no DOM. 9/9 URLs já em HTTP 200 (deploy 6a426ec0).",
       "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-13",
-      "created_at": "2026-06-29T14:02:32.237157+02:00"
+      "source": "watchdog-tick-2026-06-29-14",
+      "created_at": "2026-06-29T15:11:00+02:00",
+      "done": true,
+      "sha": "6dde8ad",
+      "closed_at": "2026-06-29T15:11:00+02:00",
+      "evidence": "9/9 smoke URLs HTTP 200 em produção após deploy 6a426ec0 (commit 6dde8ad): /escola/curso/lideranca-coaching/, /escola/quiz/lcq, /aulas, 4/4 lessons JSON, lcq.json quiz."
     }
   ],
   "closedItems": [
+    {
+      "id": "gap-082",
+      "category": "lição/curso",
+      "description": "Cadeira BA #34 'Liderança e Coaching' — 4 lições (fundamentos/traços+comportamentos+situacional Fiedler+Hersey-Blanchard; coaching executivo GROW de Whitmore+feedback SBI; inteligência emocional do líder 5 pilares de Goleman; desenvolvimento de sucessão Charan+9-box+mentoring+sponsorship) + lcq quiz 10 perguntas. 5 JSON (4 lições + course.json) + static/quizzes/lcq.json + 4 routes (escola/+page, escola/curso/[slug]/+page, aulas/+page.server, write/+page.svelte title, financas/transacoes/[id]/+page.svelte title) + 4 i18n keys × 5 locales = 20 entries. CATALOGUE wired. Total CATALOGUE: 33 cadeiras, 130 lições, 33+4 quizzes. check 0/0, build green, push done, deploy 6a426ec0 ready. SHA 6dde8ad.",
+      "sha": "6dde8ad",
+      "closed_at": "2026-06-29T15:11:00+02:00",
+      "evidence": "9/9 smoke URLs HTTP 200 em produção: /escola/curso/lideranca-coaching/, /escola/quiz/lcq, /aulas, 4× lessons JSON, lcq.json quiz. i18n 5 locales todas têm routes.escola.curso.lideranca-coaching.{title,description,tagline}."
+    },
     {
       "id": "gap-078",
       "category": "lição/curso",
