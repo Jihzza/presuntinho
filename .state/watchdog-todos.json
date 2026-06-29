@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-29T07:35:00+02:00",
+  "lastUpdated": "2026-06-29T09:10:31+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -83,12 +83,20 @@
       "created_at": "2026-06-29T05:25:00+02:00"
     },
     {
-      "id": "gap-072",
-      "category": "lição/curso",
-      "description": "Executar plano .state/gap-071-plan.md (28 KB) — cadeira BA #31 Contabilidade Gerencial. 4 lições + 1 quiz + i18n 5 locales + CATALOGUE wired. Plano já estruturado no repo.",
+      "id": "gap-073",
+      "category": "smoke-fail",
+      "description": "Smoke live-fire do gap-072: confirmar que /escola/curso/contabilidade-gerencial, /escola/quiz/cgeq, /aulas retornam 200 em produção após deploy c78f49b. Confirmar que 5 i18n locales resolvem routes.escola.curso.contabilidade-gerencial.{title,description} sem fallback PT. Aguardar ~90s deploy Netlify e curl smoke.",
       "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-07",
-      "created_at": "2026-06-29T07:35:00+02:00"
+      "source": "watchdog-tick-2026-06-29-08",
+      "created_at": "2026-06-29T09:10:31+02:00"
+    },
+    {
+      "id": "gap-074",
+      "category": "feature-pedida-pelo-Daniel",
+      "description": "HeartButton (\"botão do coração\") - Daniel disse \"no sítio que eu disse\" em 2026-06-28. Estado actual: FAB bottom-right em / (visível, smoke OK). Confirmar com Daniel se esta posição é final ou mover para header global / hero / splash. Decisão pendente: heartbeat específico em / ou visível em todas as páginas (mais visível mas pode poluir UI). Próximo: assumir bottom-right como default (já está smoke-tested) e seguir com outras melhorias, OU pingar Daniel para escolher.",
+      "severity": "média",
+      "source": "audio-Daniel-2026-06-28",
+      "created_at": "2026-06-29T09:10:31+02:00"
     }
   ],
   "closedItems": [
@@ -420,6 +428,18 @@
       "description": "i18n: EasterEggsCard.svelte (4 PT strings: aria-label 'Segredo descoberto/por descobrir' + status '🔓 UNLOCKED/🔒 LOCKED') + agente/+page.svelte (4 PT strings: aria/title 'Parar gravação/Gravar áudio' + error message 'Desculpa, tive um erro...'). Total 7 chaves × 5 locales = 35 entries (746→753). 2 ficheiros Svelte patched com $t() + import { t } adicionado em EasterEggsCard. npm run check 0/0, build green, push done. SHA 6d49d36.",
       "sha": "6d49d36",
       "closed_at": "2026-06-29T04:35:00+02:00"
+    },
+    {
+      "id": "gap-072",
+      "category": "lição/curso",
+      "description": "Executar plano .state/gap-071-plan.md (28 KB) — cadeira BA #31 Contabilidade Gerencial. 4 lições + 1 quiz + i18n 5 locales + CATALOGUE wired. Plano já estruturado no repo.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-07",
+      "created_at": "2026-06-29T07:35:00+02:00",
+      "done": true,
+      "sha": "c78f49b",
+      "closed_at": "2026-06-29T09:10:31+02:00",
+      "updated_at": "2026-06-29T09:10:31+02:00"
     }
   ]
 }
