@@ -742,5 +742,12 @@
   "habitos.streak.atual": "Série actuelle",
   "habitos.streak.nos_ultimos": "fi les 90 youm li fatou",
   "financas.orcamento.mes_label": "Chhor",
-  "financas.orcamento.carregando": "Am tsena…"
+  "financas.orcamento.carregando": "Am tsena…",
+  "easterEggs.aria.unlocked": "Secret descoberto",
+  "easterEggs.aria.locked": "Secret ainda não descoberto",
+  "agente.aria.gravar": "Gravar áudio",
+  "agente.aria.parar_gravacao": "Parar gravação",
+  "agente.error.send_failed": "Desculpa, tive um erro a processar a mensagem.",
+  "easterEggs.status.unlocked": "🔓 DESCOBERTO",
+  "easterEggs.status.locked": "🔒 POR DESCOBRIR"
 }

@@ -742,5 +742,12 @@
   "habitos.streak.atual": "السلسلة الحالية",
   "habitos.streak.nos_ultimos": "في آخر 90 يوماً",
   "financas.orcamento.mes_label": "الشهر",
-  "financas.orcamento.carregando": "جارٍ التحميل…"
+  "financas.orcamento.carregando": "جارٍ التحميل…",
+  "easterEggs.aria.unlocked": "تم اكتشاف السر",
+  "easterEggs.aria.locked": "السر لم يُكتشف بعد",
+  "agente.aria.gravar": "تسجيل الصوت",
+  "agente.aria.parar_gravacao": "إيقاف التسجيل",
+  "agente.error.send_failed": "آسف، حدث خطأ أثناء معالجة الرسالة.",
+  "easterEggs.status.unlocked": "🔓 مكتشف",
+  "easterEggs.status.locked": "🔒 غير مكتشف"
 }

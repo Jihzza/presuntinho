@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from 'svelte-i18n';
   import type { Secret } from '$lib/easterEggsConfig';
 
   export let secret: Secret;
@@ -14,11 +15,15 @@
   class="secret-card"
   class:unlocked
   class:locked={!unlocked}
-  aria-label={unlocked ? 'Segredo descoberto' : 'Segredo por descobrir'}
+  aria-label={unlocked
+    ? $t('easterEggs.aria.unlocked', { default: 'Segredo descoberto' })
+    : $t('easterEggs.aria.locked', { default: 'Segredo por descobrir' })}
 >
   <header>
     <span class="icon" aria-hidden="true">{secret.icon}</span>
-    <span class="status">{unlocked ? '🔓 UNLOCKED' : '🔒 LOCKED'}</span>
+    <span class="status">{unlocked
+      ? $t('easterEggs.status.unlocked', { default: '🔓 UNLOCKED' })
+      : $t('easterEggs.status.locked', { default: '🔒 LOCKED' })}</span>
   </header>
   <h3>{secret.name}</h3>
   <p class="hint">💡 {secret.hint}</p>

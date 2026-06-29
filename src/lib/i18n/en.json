@@ -742,5 +742,12 @@
   "habitos.streak.atual": "Current streak",
   "habitos.streak.nos_ultimos": "in the last 90 days",
   "financas.orcamento.mes_label": "Month",
-  "financas.orcamento.carregando": "Loading…"
+  "financas.orcamento.carregando": "Loading…",
+  "easterEggs.aria.unlocked": "Secret discovered",
+  "easterEggs.aria.locked": "Secret undiscovered",
+  "agente.aria.gravar": "Record audio",
+  "agente.aria.parar_gravacao": "Stop recording",
+  "agente.error.send_failed": "Sorry, I had an error processing the message.",
+  "easterEggs.status.unlocked": "🔓 UNLOCKED",
+  "easterEggs.status.locked": "🔒 LOCKED"
 }

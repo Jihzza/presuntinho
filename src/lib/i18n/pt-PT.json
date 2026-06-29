@@ -742,5 +742,12 @@
   "habitos.streak.atual": "Streak atual",
   "habitos.streak.nos_ultimos": "nos últimos 90 dias",
   "financas.orcamento.mes_label": "Mês",
-  "financas.orcamento.carregando": "A carregar…"
+  "financas.orcamento.carregando": "A carregar…",
+  "easterEggs.aria.unlocked": "Segredo descoberto",
+  "easterEggs.aria.locked": "Segredo por descobrir",
+  "agente.aria.gravar": "Gravar áudio",
+  "agente.aria.parar_gravacao": "Parar gravação",
+  "agente.error.send_failed": "Desculpa, tive um erro a processar a mensagem.",
+  "easterEggs.status.unlocked": "🔓 DESCOBERTO",
+  "easterEggs.status.locked": "🔒 POR DESCOBRIR"
 }

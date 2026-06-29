@@ -742,5 +742,12 @@
   "habitos.streak.atual": "Série actuelle",
   "habitos.streak.nos_ultimos": "au cours des 90 derniers jours",
   "financas.orcamento.mes_label": "Mois",
-  "financas.orcamento.carregando": "Chargement…"
+  "financas.orcamento.carregando": "Chargement…",
+  "easterEggs.aria.unlocked": "Secret découvert",
+  "easterEggs.aria.locked": "Secret non découvert",
+  "agente.aria.gravar": "Enregistrer l'audio",
+  "agente.aria.parar_gravacao": "Arrêter l'enregistrement",
+  "agente.error.send_failed": "Désolé, j'ai eu une erreur en traitant le message.",
+  "easterEggs.status.unlocked": "🔓 DÉCOUVERT",
+  "easterEggs.status.locked": "🔒 À DÉCOUVRIR"
 }

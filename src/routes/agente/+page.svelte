@@ -55,7 +55,7 @@
       messages = await listChatMessages(200);
     } catch (e) {
       console.error('[agente] send failed', e);
-      await appendChatMessage('assistant', 'Desculpa, tive um erro a processar a mensagem.');
+      await appendChatMessage('assistant', $t('agente.error.send_failed', { default: 'Desculpa, tive um erro a processar a mensagem.' }));
       messages = await listChatMessages(200);
     } finally {
       busy = false;
@@ -230,8 +230,12 @@
       type="button"
       class="icon-btn"
       onclick={toggleRecording}
-      aria-label={recording ? 'Parar gravação' : 'Gravar áudio'}
-      title={recording ? 'Parar gravação' : 'Gravar áudio'}
+      aria-label={recording
+              ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
+              : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
+            title={recording
+              ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
+              : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
       class:recording
     >
       {recording ? '⏹️' : '🎤'}
