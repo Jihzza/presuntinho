@@ -756,5 +756,9 @@
   "agente.aria.parar_gravacao": "Stop recording",
   "agente.error.send_failed": "Sorry, I had an error processing the message.",
   "easterEggs.status.unlocked": "🔓 UNLOCKED",
-  "easterEggs.status.locked": "🔒 LOCKED"
+  "easterEggs.status.locked": "🔒 LOCKED",
+  "agente.cta.o_que_falta": "what's missing?",
+  "agente.cta.resumo_financeiro": "finance summary",
+  "agente.cta.habitos": "habits",
+  "agente.cta.progresso": "progress"
 }

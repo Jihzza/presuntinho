@@ -756,5 +756,9 @@
   "agente.aria.parar_gravacao": "Parar gravação",
   "agente.error.send_failed": "Desculpa, tive um erro a processar a mensagem.",
   "easterEggs.status.unlocked": "🔓 DESCOBERTO",
-  "easterEggs.status.locked": "🔒 POR DESCOBRIR"
+  "easterEggs.status.locked": "🔒 POR DESCOBRIR",
+  "agente.cta.o_que_falta": "ch7al fiha؟",
+  "agente.cta.resumo_financeiro": "résumé financier",
+  "agente.cta.habitos": "les habitudes",
+  "agente.cta.progresso": "progress"
 }

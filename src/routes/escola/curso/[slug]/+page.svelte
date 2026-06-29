@@ -31,15 +31,15 @@
     'marketing-digital': {
       slug: 'marketing-digital',
       title: 'Marketing Digital',
-      tagline: 'Inbound, conteúdo, funis e métricas',
-      description: 'Quatro lições práticas para perceber como atrair, converter e medir clientes online.',
+      tagline: 'SEO, SEM, redes sociais, paid media, funil, analytics e ROI',
+      description: 'Marketing digital na prática: SEO, SEM, redes sociais, email, Google Ads, Meta Ads, funis de conversão e medição de ROI.',
       icon: '📱',
       color: '#06b6d4',
       lessons: [
-        { slug: 'inbound', title: '1. Inbound Marketing', summary: 'Atrair clientes com conteúdo útil em vez de interromper.', quizSlug: 'mdq', quizTitle: 'Quiz: Marketing Digital', estMinutes: 6 },
-        { slug: 'conteudo', title: '2. Marketing de Conteúdo', summary: 'Criar conteúdo útil, consistente e mensurável.', quizSlug: 'mdq', quizTitle: 'Quiz: Marketing Digital', estMinutes: 6 },
-        { slug: 'funis', title: '3. Funis de Conversão', summary: 'Transformar atenção em relação e decisão.', quizSlug: 'mdq', quizTitle: 'Quiz: Marketing Digital', estMinutes: 6 },
-        { slug: 'metricas', title: '4. Métricas Digitais', summary: 'Escolher números que orientam decisões reais.', quizSlug: 'mdq', quizTitle: 'Quiz: Marketing Digital', estMinutes: 6 }
+        { slug: '01-fundamentos-marketing-digital', title: '1. Fundamentos de Marketing Digital: SEO, SEM, Email Marketing', summary: 'Os três pilares do marketing digital: SEO orgânico, SEM pago e email — a base que não muda com os algoritmos.', quizSlug: 'mdq', quizTitle: 'Quiz: Marketing Digital', estMinutes: 8 },
+        { slug: '02-redes-sociais-e-conteudo', title: '2. Redes Sociais e Marketing de Conteúdo', summary: 'Escolher plataformas, planear calendário editorial e construir uma máquina de conteúdo que converte sem virar refém dos algoritmos.', quizSlug: 'mdq', quizTitle: 'Quiz: Marketing Digital', estMinutes: 7 },
+        { slug: '03-publicidade-paga-e-funil', title: '3. Publicidade Paga: Google Ads, Meta Ads e Funil de Conversão', summary: 'Estrutura de campanhas, lances, audiências, creatives e como ligar tudo a um funil que transforma click em cliente.', quizSlug: 'mdq', quizTitle: 'Quiz: Marketing Digital', estMinutes: 8 },
+        { slug: '04-analise-e-roi', title: '4. Analytics, KPIs e ROI em Marketing Digital', summary: 'Google Analytics 4, Meta Pixel, dashboards executivos e a diferença crucial entre métricas de vaidade e métricas de negócio (receita, LTV, ROAS).', quizSlug: 'mdq2', quizTitle: 'Quiz: Marketing Digital — Avançado', estMinutes: 9 }
       ]
     },
     branding: {

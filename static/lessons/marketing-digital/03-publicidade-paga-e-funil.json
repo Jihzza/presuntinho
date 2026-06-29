@@ -1,0 +1,122 @@
+{
+  "id": "03-publicidade-paga-e-funil",
+  "title": "3. Publicidade Paga: Google Ads, Meta Ads e Funil de Conversão",
+  "courseSlug": "marketing-digital",
+  "lessonNumber": 3,
+  "description": "Como gastar dinheiro em Google Ads e Meta Ads de forma inteligente: estrutura de campanhas, lances, audiências, creatives e — crucial — como ligar tudo a um funil que transforma click em cliente.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["Google Ads", "Meta Ads", "Facebook Ads", "funil", "CTR", "CPC", "CAC"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Google Ads vs Meta Ads — quando usar cada um"
+    },
+    {
+      "type": "p",
+      "text": "Google Ads captura intenção existente: a pessoa já está a pesquisar por algo. Meta Ads (Facebook + Instagram) cria interesse: a pessoa nem sabia que precisava, mas vê um anúncio que lhe fala directamente. São armas diferentes para momentos diferentes. A regra prática: Google Ads para conversion (quem quer comprar agora), Meta Ads para awareness + consideration (quem ainda está a descobrir o que quer)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Google Search: intenção imediata. CPC mais alto (concorrência em palavras-chave), conversão mais rápida. Exemplos: 'comprar ténis corrida', 'advogado divorci Lisboa'",
+        "Google Display: banners em milhões de sites. CPM baixo (pagas por mil impressões), conversão baixa. Bom para remarketing",
+        "Google Shopping: e-commerce. Mostra o produto com foto e preço directamente no SERP. CTR 2-3x superior ao Search",
+        "Meta Ads (Feed/Stories/Reels): descoberta. CPC baixo, segmentação rica (interesses, comportamentos, lookalike). Melhor para B2C e D2C",
+        "Meta Ads + Instagram: mesma plataforma, posicionamento diferente — Instagram tende a performar melhor para moda, beleza, lifestyle"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "A estrutura de uma campanha que funciona"
+    },
+    {
+      "type": "p",
+      "text": "Estrutura hierárquica no Google Ads: Conta → Campanhas → Ad Groups → Keywords → Anúncios + Landing Pages. Cada nível tem um propósito: Campanha define objectivo (vendas, leads, tráfego) e orçamento. Ad Group agrupa keywords temáticas próximas. Keyword é o gatilho. Anúncio + landing page são a resposta. A regra: cada ad group deve ter 5-15 keywords muito relacionadas e 3-4 anúncios para A/B testing."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Single Keyword Ad Groups (SKAGs): para keywords com alto volume e intenção clara, isolá-las no próprio ad group dá controlo total",
+        "Single Theme Ad Groups (STAGs): agrupar 2-5 keywords semanticamente próximas (e.g., 'ténis corrida', 'sapatilhas corrida', 'calçado corrida')",
+        "Negative keywords: lista constante a alimentar — pesquisa → termo de pesquisa → se irrelevante, adicionar como negative",
+        "Landing page separada por ad group: quanto mais alinhada com a query, melhor o Quality Score, menor o CPC"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Meta Ads — segmentação e creatives"
+    },
+    {
+      "type": "p",
+      "text": "No Meta Ads, a segmentação define quem vê. As camadas: Core Audiences (idade, localização, género, interesses), Custom Audiences (a tua lista de emails, visitantes do site, viewers de vídeo), Lookalike Audiences (1-10% da tua base que se parecem com o teu melhor cliente). A mágica está em combinar: Custom Audience de compradores → Lookalike 1% → expande para novos potenciais clientes que se parecem com quem já te comprou."
+    },
+    {
+      "type": "h3",
+      "text": "O creative é 70% do resultado"
+    },
+    {
+      "type": "p",
+      "text": "Em Meta Ads, a audiência certa com o creative errado não converte. A audiência errada com o creative certo também não. Os dois precisam de funcionar. O creative precisa de: (1) Hook visual forte nos primeiros 1-2 segundos (Rostos, Movimento, Cores Contrastantes), (2) Texto que responde 'e eu com isso?' em 1 frase, (3) CTA claro (1 por anúncio — não 3). Testar sempre: 3-5 versões de vídeo/imagem por ad set para descobrir o que ressoa."
+    },
+    {
+      "type": "h2",
+      "text": "Funil de Conversão — TOFU, MOFU, BOFU"
+    },
+    {
+      "type": "p",
+      "text": "O funil separa a audiência em três momentos: TOFU (Top of Funnel) — primeiro contacto, não sabe quem és, precisa de ser atraído com valor. MOFU (Middle of Funnel) — já te conhece, está a considerar, precisa de prova social e educação. BOFU (Bottom of Funnel) — pronto para comprar, precisa de oferta clara e remoção de risco. Cada estágio pede mensagem, canal e creative diferentes."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "TOFU: objectivo = alcance, tráfego, engagement. Métricas: CPM, CTR, alcance. Budget: 60-70% do total",
+        "MOFU: objectivo = leads, consideração, listas. Métricas: CPL (custo por lead), opt-in rate, video view-through. Budget: 20-30%",
+        "BOFU: objectivo = vendas, conversões directas. Métricas: CPA, ROAS, conversão. Budget: 10-20%",
+        "Remarketing: quem já visitou o site / abriu email / viu 50%+ do vídeo é BOFU — mostrar oferta directa, com proof (depoimentos, garantias)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "As métricas que importam"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "CTR (Click-Through Rate): cliques / impressões. Search Ads saudável > 3%; Meta Ads saudável > 1%",
+        "CPC (Cost Per Click): quanto pagas por cada clique. Varia muito por sector (10€ advogado, 0,30€ e-commerce)",
+        "CPA (Cost Per Acquisition): quanto pagas por cada conversão/venda. A métrica final",
+        "ROAS (Return on Ad Spend): receita gerada / gasto em ads. > 4x é geralmente saudável para D2C, > 3x para B2B SaaS",
+        "CAC (Customer Acquisition Cost): custo total de adquirir cliente = (gasto ads + salários marketing) / novos clientes"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "⚠️ Sem tracking (Meta Pixel, Google Tag, GA4, server-side conversion API), estás a voar cego. Configura eventos de conversão ANTES de gastar 1€. Sem dados, não há optimização possível."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: começa com 1 canal, 1 campanha, 1 audiência, 2-3 creatives. Mede durante 7-14 dias. Escala o que funciona, mata o que não funciona. Só depois avanças para o próximo canal. O erro é diversificar cedo demais antes de dominar um."
+    },
+    {
+      "type": "exercise",
+      "question": "Tens 2.000€/mês para Google Ads. Como divides entre Search (intent) e Display (remarketing)? Justifica com base na posição do funil.",
+      "answer": "Sugestão: 70% Search (1.400€) para capturar intenção imediata — keywords com alto sinal de compra. 30% Display (600€) para remarketing agressivo — quem visitou mas não comprou, e quem pesquisou sem clicar. Ajustar: se o remarketing converte bem, subir para 40%. Se Search tem CPA melhor, baixar Display para 20%."
+    }
+  ],
+  "keyPoints": [
+    "Google Ads = intenção existente; Meta Ads = criação de interesse. São armas complementares, não concorrentes.",
+    "Estrutura hierárquica: Conta → Campanha → Ad Group → Keyword → Anúncio + Landing Page. SKAGs/STAGs para controlo fino.",
+    "Negative keywords são cruciais — filtrar tráfego irrelevante baixa CPC e sobe Quality Score.",
+    "Meta Ads segmentação em 3 camadas: Core, Custom (email/site), Lookalike. Lookalike 1% é a mina de ouro.",
+    "Creative é 70% do resultado em Meta — hook visual + texto directo + CTA único.",
+    "Funil TOFU/MOFU/BOFU exige mensagem, canal e budget diferentes — não serves a mesma coisa a toda a gente.",
+    "ROAS > 4x saudável para D2C; CAC payback < 12 meses para subscription businesses."
+  ],
+  "summary": "Google Ads (intenção) + Meta Ads (descoberta) compõem a paid media strategy. Estrutura hierárquica no Google (SKAGs/STAGs + negatives), segmentação em 3 camadas na Meta (incluindo Lookalikes). Funil TOFU/MOFU/BOFU adapta mensagem, canal e budget. Métricas finais: CPA, ROAS, CAC.",
+  "quizSlug": "mdq",
+  "nextLesson": "04-analise-e-roi",
+  "prevLesson": "02-redes-sociais-e-conteudo"
+}

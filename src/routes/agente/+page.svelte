@@ -192,11 +192,11 @@
       <div class="empty">
         <p>{$t('agente.empty', { default: 'Pergunta-me o que quiseres saber sobre a app.' })}</p>
         <div class="suggestions">
-          <button type="button" onclick={() => (input = 'o que falta?')}>o que falta?</button>
-          <button type="button" onclick={() => (input = 'resumo financeiro')}>resumo financeiro</button>
-          <button type="button" onclick={() => (input = 'hábitos')}>hábitos</button>
-          <button type="button" onclick={() => (input = 'progresso')}>progresso</button>
-        </div>
+                  <button type="button" onclick={() => (input = 'o que falta?')}>{$t('agente.cta.o_que_falta', { default: 'o que falta?' })}</button>
+                  <button type="button" onclick={() => (input = 'resumo financeiro')}>{$t('agente.cta.resumo_financeiro', { default: 'resumo financeiro' })}</button>
+                  <button type="button" onclick={() => (input = 'hábitos')}>{$t('agente.cta.habitos', { default: 'hábitos' })}</button>
+                  <button type="button" onclick={() => (input = 'progresso')}>{$t('agente.cta.progresso', { default: 'progresso' })}</button>
+                </div>
       </div>
     {/if}
     {#each messages as m (m.id)}

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-29T04:35:00+02:00",
+  "lastUpdated": "2026-06-29T05:25:00+02:00",
   "openItems": [
     {
       "id": "gap-010",
@@ -67,31 +67,41 @@
       "updated_at": "2026-06-29T04:35:00+02:00"
     },
     {
-      "id": "gap-054",
-      "category": "polish",
-      "description": "2nd round de polish: /financas/orcamento (forms), /trabalhos/assignment status (custom event), HeartButton (gap-036 confirmar posição definitiva). Investigar edge cases: validação de URL em biblioteca/novo, max lengths, error messages localizados.",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-28-23",
-      "created_at": "2026-06-28T23:25:00+02:00"
-    },
-    {
-      "id": "gap-063",
+      "id": "gap-065",
       "category": "lição/curso",
-      "description": "Cadeira BA #29: 'Gestão Financeira Empresarial' (Corporate Finance) — 4 lições (DRE/balanço, índices financeiros, orçamento capital VPL/TIR, estrutura capital WACC) + 1 quiz 8 perguntas. Skander 2 em background a criar static/lessons/gestao-financeira-empresarial/. Aguardar resultado deleg_9f181491.",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-29-04",
-      "created_at": "2026-06-29T04:35:00+02:00"
+      "description": "Daniel: 'faz cursos sobretudo' / 'aulas sobretudo'. gap-063 (Gestão Financeira Empresarial) e gap-051 (4 cadeiras advanced) entregaram 5 cursos novos. Continuar: cadeira BA #30 (ex: Marketing Digital / E-Commerce / Gestão de Marca / Comportamento Organizacional) ou nova área (ex: Matemática para Negócios, Estatística Aplicada). 4 lições + 1 quiz + i18n 5 locales. Aguardar próximo brief do Daniel ou auto-selecionar cadeira com mais procura na BA.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-05",
+      "created_at": "2026-06-29T05:25:00+02:00"
     },
     {
-      "id": "gap-064",
-      "category": "i18n",
-      "description": "Próxima ronda i18n: continuar audit a componentes (SecretModal pode ter PT hardcoded em facts/quiz/options; OfflineIndicator; InstallButton). Alvo: encontrar últimas 5-10 strings PT hardcoded em src/lib/components/*.svelte que não passam por $t().",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-04",
-      "created_at": "2026-06-29T04:35:00+02:00"
+      "id": "gap-066",
+      "category": "polish",
+      "description": "2nd round de polish: edge cases em forms (validação URL biblioteca, max lengths, error messages localizados), HeartButton posicionamento final (gap-036), backup/export smoke live. Confetti animation timing tweak. aria-live para toasts em ações críticas. PWA: install prompt timing — actualmente fixed bottom-right mas pode esconder conteúdo em mobile. Investigar.",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-29-05",
+      "created_at": "2026-06-29T05:25:00+02:00"
     }
   ],
   "closedItems": [
+    {
+      "id": "gap-054",
+      "description": "2nd round de polish tick: forms audit + HeartButton posicionamento — fundido com gap-066. Estado em tick-29: edge cases em forms, validação URL biblioteca, max lengths, error messages localizados (muitos resolvidos em gap-058/059/060/061).",
+      "sha": "3dad3db",
+      "closed_at": "2026-06-29T05:25:00+02:00"
+    },
+    {
+      "id": "gap-063",
+      "description": "Cadeira BA #29 'Gestão Financeira Empresarial' (Corporate Finance) — 4 lições (DRE/balanço, índices financeiros DuPont, orçamento capital VPL/TIR, estrutura capital WACC) + gfeq quiz 8 perguntas. 5 ficheiros JSON criados em static/lessons/gestao-financeira-empresarial/, CATALOGUE wired em escola/+page.svelte + aulas/+page.server.ts + escola/curso/[slug]/+page.svelte, i18n 5 locales (routes.escola.curso.gestao-financeira-empresarial.{title,description}). Smoke: 4/4 lições + 1/1 quiz retornam 200 em produção. SHA 1eb6c34.",
+      "sha": "1eb6c34",
+      "closed_at": "2026-06-29T05:25:00+02:00"
+    },
+    {
+      "id": "gap-064",
+      "description": "i18n: SecretModal PERFUME_FACTS 5 PT strings → $t() com 5 chaves × 5 locales = 25 entries. Implementação usa PERFUME_FACT_DEFAULTS: Record<string,string> de fallbacks por key + i18n store. Componentes principais agora 100% i18n: HeartButton, OnboardingModal, Mascot, InstallButton, OfflineIndicator, LoveLock, SecretModal, EasterEggsCard. SHA 6b5f6cf. Deploy ready 03:08:28Z (id 6a41e18e).",
+      "sha": "6b5f6cf",
+      "closed_at": "2026-06-29T05:25:00+02:00"
+    },
     {
       "id": "fix-001",
       "description": "XP mirror sync após hydration",

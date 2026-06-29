@@ -44,17 +44,17 @@
       badge: 'Novo'
     },
     {
-      slug: 'marketing-digital',
-      title: 'Marketing Digital',
-      tagline: 'Inbound, conteúdo, funis e métricas',
-      description:
-        'Quatro lições práticas para perceber como atrair, converter e medir clientes online com linguagem simples e exemplos aplicáveis.',
-      icon: '📱',
-      color: '#06b6d4',
-      lessonCount: 4,
-      quizCount: 1,
-      badge: 'Novo'
-    },
+          slug: 'marketing-digital',
+          title: 'Marketing Digital',
+          tagline: 'Business Administration · SEO, SEM, redes sociais, paid media, funil, analytics e ROI',
+          description:
+            'Marketing digital na prática: como aparecer organicamente (SEO), pagar para aparecer (SEM), construir audiência em redes sociais e email, gerir campanhas pagas (Google Ads + Meta Ads), desenhar funis de conversão e medir tudo com KPIs que importam (CAC, LTV, ROAS).',
+          icon: '📱',
+          color: '#06b6d4',
+          lessonCount: 4,
+          quizCount: 2,
+          badge: 'Uni'
+        },
     {
       slug: 'branding',
       title: 'Branding',

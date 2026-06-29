@@ -1,0 +1,104 @@
+{
+  "id": "02-redes-sociais-e-conteudo",
+  "title": "2. Redes Sociais e Marketing de Conteúdo",
+  "courseSlug": "marketing-digital",
+  "lessonNumber": 2,
+  "description": "Como escolher as plataformas certas, planear um calendário editorial que não te mata e construir uma máquina de conteúdo que educa, entretém e converte — sem virar refém dos algoritmos.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["redes sociais", "conteúdo", "editorial", "Instagram", "LinkedIn", "TikTok"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Redes sociais — onde está a tua audiência?"
+    },
+    {
+      "type": "p",
+      "text": "Cada rede social é um contexto diferente. Instagram é visual e aspiracional. LinkedIn é profissional e racional. TikTok é entretenimento curto e viral. YouTube é profundidade e descoberta. X (Twitter) é conversa em tempo real. O erro clássico é estar em todas — quando deves estar nas 2-3 onde a tua audiência passa tempo E onde consegues manter produção regular com qualidade. Melhor 3 redes bem-feitas do que 6 mal-feitas."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Instagram: B2C, moda, lifestyle, food, beleza. Reels para alcance, Stories para relação, Posts para portfolio, Carrossel para educação",
+        "LinkedIn: B2B, serviços profissionais, recrutamento, thought leadership. Texto longo com gancho + 1 imagem. Pior horário: sexta à tarde. Melhor: terça a quinta, 8-10h",
+        "TikTok: Gen Z + Millennials jovens, educação rápida, behind-the-scenes. Requer autenticidade — produção 'polida demais' não performa",
+        "YouTube: how-to, reviews, deep dives. É o segundo maior搜索引擎 do mundo. Vídeos longos (8-15 min) indexam e geram tráfego durante anos",
+        "X: tech, media, política. Velocidade > profundidade. Threads virais podem dar alcance desproporcionado"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "O algoritmo não é teu inimigo — é o teu filtro"
+    },
+    {
+      "type": "p",
+      "text": "Cada plataforma optimiza para manter utilizadores lá o máximo tempo possível. Isto significa que ela mostra o conteúdo que gera engagement (likes, comentários, partilhas, tempo de visualização, salvamentos) e esconde o resto. A implicação prática: se fazes conteúdo que as pessoas querem parar para ver, partilhar e discutir, o algoritmo distribui. Se fazes conteúdo 'corporativo', fica preso aos teus seguidores."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Hook nos primeiros 2 segundos (vídeo) ou 2 linhas (texto): é o que decide se a pessoa continua",
+        "Salvamentos e partilhas > likes: indicam que o conteúdo tem valor perene, não só aprovação social",
+        "Comentários de qualidade (com pergunta) > quantidade: geram conversa, sinalizam valor",
+        "Consistência > viralidade: 3 posts/semana durante 6 meses ganha a 1 post viral seguido de silêncio"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Marketing de Conteúdo — a estratégia por trás dos posts"
+    },
+    {
+      "type": "p",
+      "text": "Marketing de conteúdo não é postar muito. É criar conteúdo que atrai, envolve e converte a pessoa certa. A regra 80/20 do Gary Vee: 80% do conteúdo educa/entrete/distrai; 20% promove directamente o produto. Inversão para 'tudo venda' queima a audiência; só educativo queima o negócio. O equilíbrio está em cada peça ter valor autónomo — mesmo o post promocional deve ensinar algo antes de pedir a venda."
+    },
+    {
+      "type": "h3",
+      "text": "Os 5 formatos que funcionam em quase todas as redes"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "How-to / Tutorial: 'Como fazer X em 5 passos'. Alto valor de salvamento e pesquisa",
+        "Listicle / Carrossel: '7 ferramentas que…'. Formato ideal para Instagram e LinkedIn",
+        "Behind-the-scenes: humaniza a marca, gera confiança, mostra processo real",
+        "Storytelling pessoal: a tua história, fracassos, aprendizados. Liga emocionalmente",
+        "Opinião forte / Hot take: gera comentários, divide audiências, aumenta alcance (mas arrisca reputação)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Calendário editorial — como não morrer"
+    },
+    {
+      "type": "p",
+      "text": "Sem calendário, publicas quando te lembras — e nunca é consistente. Um bom calendário tem: (1) 1 tema mensal grande, (2) 4 pilares de conteúdo (educação, inspiração, behind-the-scenes, venda), (3) frequência realista (3-5 posts/semana é início saudável para Instagram, 1-2 para YouTube, 2-3 para LinkedIn). Ferramentas: Notion, Trello, Buffer, Later — qualquer uma serve, o que importa é usar."
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "⚠️ Métricas de vaidade (likes, followers) confundem. Foca em: alcance de não-seguidores, salvamentos, partilhas, cliques no link da bio, conversas DM iniciadas. Estas são as métricas que prevêem receita."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: escolhe 2 redes no início, não 6. Conhece a fundo a tua persona: onde está, que problema tem, que formato consome. Produz conteúdo que ela queria ler/ver mesmo que não fosse teu. Os resultados vêm."
+    },
+    {
+      "type": "exercise",
+      "question": "Pensa na tua marca/projecto. Quais são as 2 redes onde a tua audiência passa tempo? Que 4 pilares de conteúdo usarias? Lista 10 ideias concretas para o primeiro mês.",
+      "answer": "Exemplo: marca pessoal de coaching → LinkedIn (B2B) + Instagram (autoridade visual). Pilares: (1) Educação em carreira, (2) Bastidores de sessões, (3) Testemunhos de clientes, (4) Oferta de serviços. 10 ideias: 3 carrosséis educativos, 2 reels de bastidores, 2 posts de opinião, 1 testemunho, 1 anúncio de workshop, 1 post pessoal de vulnerabilidade."
+    }
+  ],
+  "keyPoints": [
+    "Estar em 2-3 redes bem feitas ganha a estar em 6 mal feitas — qualidade > quantidade de canais.",
+    "Algoritmos recompensam engagement (salvamentos, partilhas, comentários), não likes.",
+    "Regra 80/20: 80% conteúdo de valor, 20% venda directa — e mesmo a venda deve ensinar primeiro.",
+    "Os 5 formatos universais: how-to, listicle, behind-the-scenes, storytelling, opinião forte.",
+    "Calendário editorial é inegociável: define tema, pilares e frequência realista.",
+    "Métricas de vaidade confundem; foca em alcance de não-seguidores, salvamentos, cliques, DMs."
+  ],
+  "summary": "Redes sociais são contexto, não plataforma única — escolhe 2-3 onde a tua audiência está. Marketing de conteúdo segue a regra 80/20 (valor/venda), requer calendário editorial e mede-se por engagement real (salvamentos, partilhas, DMs), não likes.",
+  "quizSlug": "mdq",
+  "nextLesson": "03-publicidade-paga-e-funil",
+  "prevLesson": "01-fundamentos-marketing-digital"
+}

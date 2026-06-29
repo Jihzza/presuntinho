@@ -1,0 +1,107 @@
+{
+  "id": "mdq2",
+  "title": "Quiz: Marketing Digital — Avançado",
+  "description": "Testa conceitos avançados: Google Ads (Quality Score, SKAGs, lances), Meta Ads (Lookalikes, attribution), SEO técnico (Core Web Vitals, schema) e email automation (drip campaigns, segmentation).",
+  "questions": [
+    {
+      "q": "O Quality Score do Google Ads (1-10) é influenciado por:",
+      "opts": [
+        "Apenas o orçamento diário da campanha",
+        "CTR esperado, relevância do anúncio, experiência da landing page",
+        "O número de palavras-chave no ad group",
+        "A idade da conta publicitária"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Single Keyword Ad Groups (SKAGs) são úteis porque:",
+      "opts": [
+        "Baixam o CPC automaticamente",
+        "Permitem alinhar anúncios e landing pages 1:1 com cada keyword, maximizando relevância e CTR",
+        "São obrigatórios pelo Google desde 2020",
+        "Eliminam a necessidade de negative keywords"
+      ],
+      "a": 1
+    },
+    {
+      "q": "No Meta Ads, uma Lookalike Audience 1% é criada a partir de:",
+      "opts": [
+        "Todos os utilizadores da plataforma globalmente",
+        "Uma Custom Audience (ex: compradores, leads), identificando o 1% da plataforma que mais se parece com ela",
+        "Interesses que defines manualmente",
+        "Apenas seguidores da tua página"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O algoritmo do Google para SEO actualmente valoriza mais:",
+      "opts": [
+        "Quantidade exacta de keywords no texto",
+        "Autoridade do domínio medida por PageRank simples",
+        "E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness) e intenção de pesquisa",
+        "Meta keywords tag"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Core Web Vitals (LCP, FID/INP, CLS) medem:",
+      "opts": [
+        "Apenas o design visual do site",
+        "Experiência de página real: carregamento, interatividade e estabilidade visual",
+        "O número de backlinks",
+        "Apenas compatibilidade mobile"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Uma drip campaign de email é:",
+      "opts": [
+        "Uma newsletter mensal",
+        "Uma sequência automatizada de emails enviada com timing pré-definido após um trigger (sign-up, purchase, etc.)",
+        "Um email único com desconto",
+        "Um email enviado a todos os contactos em massa"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Em email marketing, qual é geralmente a melhor prática para frequência?",
+      "opts": [
+        "Diariamente, mesmo sem conteúdo novo",
+        "1x por mês para nunca cansar a lista",
+        "Testar frequência óptima para cada segmento — geralmente 1-2x/semana balanceia valor e engajamento",
+        "Apenas em datas comemorativas"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Data-driven attribution (DDA) do Google Ads / Meta atribui crédito:",
+      "opts": [
+        "100% ao último clique",
+        "100% ao primeiro clique",
+        "Igual a todos os touchpoints",
+        "Com base em machine learning, ponderando cada touchpoint pelo seu contributo real para a conversão"
+      ],
+      "a": 3
+    },
+    {
+      "q": "A regra LTV:CAC saudável para um SaaS é:",
+      "opts": [
+        "≥ 1:1 (empatar)",
+        "≥ 3:1 — cliente vale 3x o custo de aquisição",
+        "≥ 10:1 — obrigatório",
+        "Não importa, é só marketing"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Schema markup (JSON-LD) serve para:",
+      "opts": [
+        "Substituir conteúdo HTML",
+        "Fornecer dados estruturados aos搜索引擎 para rich snippets (estrelas, preços, FAQs, eventos) — não afecta ranking directamente mas melhora CTR",
+        "Acelerar o carregamento da página",
+        "Bloquear bots de SEO"
+      ],
+      "a": 1
+    }
+  ]
+}

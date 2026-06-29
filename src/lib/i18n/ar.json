@@ -756,5 +756,9 @@
   "agente.aria.parar_gravacao": "إيقاف التسجيل",
   "agente.error.send_failed": "آسف، حدث خطأ أثناء معالجة الرسالة.",
   "easterEggs.status.unlocked": "🔓 مكتشف",
-  "easterEggs.status.locked": "🔒 غير مكتشف"
+  "easterEggs.status.locked": "🔒 غير مكتشف",
+  "agente.cta.o_que_falta": "ما الناقص؟",
+  "agente.cta.resumo_financeiro": "ملخص مالي",
+  "agente.cta.habitos": "العادات",
+  "agente.cta.progresso": "التقدم"
 }

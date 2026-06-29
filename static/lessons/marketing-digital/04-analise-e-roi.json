@@ -1,0 +1,141 @@
+{
+  "id": "04-analise-e-roi",
+  "title": "4. Analytics, KPIs e ROI em Marketing Digital",
+  "courseSlug": "marketing-digital",
+  "lessonNumber": 4,
+  "description": "Como medir o que importa: Google Analytics 4, Meta Pixel, dashboards executivos e a diferença crucial entre métricas de vaidade (likes, impressões) e métricas de negócio (receita, LTV, ROAS).",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["analytics", "KPIs", "ROI", "GA4", "LTV", "ROAS", "atribuição"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "A diferença entre métricas de vaidade e métricas de negócio"
+    },
+    {
+      "type": "p",
+      "text": "Métricas de vaidade (likes, impressões, alcance) fazem-nos sentir bem mas não pagam contas. Métricas de negócio (receita, lucro, LTV, ROAS, churn) dizem-nos se o negócio está saudável. Um post com 10k likes que gera 0€ em vendas é pior do que um post com 200 likes que gera 5k€ em vendas — porque a primeira desperdiça tempo e a segunda financia o próximo mês. A primeira regra de analytics é: saber quais são as métricas que movem o ponteiro."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "North Star Metric: 1 métrica que, se crescer, o negócio cresce. Exemplos: receita recorrente mensal (SaaS), pedidos completos (e-commerce), horas activas de uso (marketplace)",
+        "Métricas de input: o que fazemos (posts publicados, emails enviados, ads lançados)",
+        "Métricas de output: o que acontece (alcance, opens, cliques)",
+        "Métricas de outcome: o que mudou no negócio (vendas, LTV, churn) — as únicas que importam para decisão"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Google Analytics 4 — a nova baseline"
+    },
+    {
+      "type": "p",
+      "text": "GA4 substituiu o Universal Analytics em 2023. Mudou de modelo baseado em sessões para um modelo baseado em eventos. Cada interacção (page_view, scroll, click, purchase) é um evento com parâmetros. Isto dá-nos flexibility enorme para tracking custom, mas exige configuração cuidada. Sem GA4 + eventos de conversão correctamente configurados, qualquer optimização é palpite."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Eventos recomendados: page_view, scroll, click, view_search_results, add_to_cart, begin_checkout, purchase, sign_up",
+        "Conversões: marcar eventos chave como 'conversions' no admin do GA4 para relatórios dedicados",
+        "Audiences: criar segmentos para remarketing (ex: visitou checkout, não comprou nos últimos 7 dias)",
+        "Explorations: relatórios custom — funnels (onde os utilizadores saem), path exploration (que caminho seguiram), cohort analysis (retenção por mês de aquisição)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "ROI, ROAS, LTV e CAC — as 4 fórmulas que importam"
+    },
+    {
+      "type": "h3",
+      "text": "ROI (Return on Investment)"
+    },
+    {
+      "type": "p",
+      "text": "ROI = (Receita − Custo) / Custo × 100. Exemplo: gastaste 1.000€ em ads, geraste 3.000€ em vendas. ROI = (3000 − 1000) / 1000 = 200%. Marketing ROI saudável varia por sector — B2B serviços > 5x, e-commerce > 3x, app installs varia muito. O ROI é a métrica final, mas precisa de attribution correcto (qual campanha gerou a venda) para ser fiável."
+    },
+    {
+      "type": "h3",
+      "text": "ROAS (Return on Ad Spend)"
+    },
+    {
+      "type": "p",
+      "text": "ROAS = Receita atribuída a ads / Gasto em ads. Mais focado do que ROI — mede especificamente a eficiência da paid media. Crítico: é medido no período do ad click (e.g., se clico num ad hoje e compro daqui a 7 dias, esse 7-day ROAS atribui a venda a hoje). Default 1-day click; recomendado 7-day click. D2C saudável > 4x; B2B SaaS > 3x (considerando ciclos longos)."
+    },
+    {
+      "type": "h3",
+      "text": "LTV (Lifetime Value)"
+    },
+    {
+      "type": "p",
+      "text": "LTV = Receita média por cliente × número médio de compras (ou meses de subscrição). Para um e-commerce: LTV = AOV × frequência anual × anos de retenção. Para SaaS: LTV = MRR × gross margin / churn rate. O LTV é o tecto do CAC — se gastas mais para adquirir cliente do que ele te vai pagar durante a vida, estás a destruir valor."
+    },
+    {
+      "type": "h3",
+      "text": "CAC (Customer Acquisition Cost) e a regra LTV:CAC"
+    },
+    {
+      "type": "p",
+      "text": "CAC = (Gasto em sales + marketing) / Novos clientes. A regra de ouro: LTV:CAC ≥ 3:1. Se LTV = 300€ e CAC = 100€, estás saudável. Se LTV:CAC = 1:1, estás a empatar. Se < 1, estás a perder dinheiro em cada cliente. CAC payback = meses até o cliente pagar o custo de aquisição. Subscription businesses saudáveis: payback < 12 meses."
+    },
+    {
+      "type": "h2",
+      "text": "Modelos de atribuição — o problema do 'último clique'"
+    },
+    {
+      "type": "p",
+      "text": "O modelo default em muitos sistemas é 'last click attribution' — o último canal antes da conversão recebe 100% do crédito. Isto subestima canais de topo de funil (awareness, vídeo) e sobrevaloriza canais de fundo (Google Search branded). Alternativas: First-click (100% ao primeiro), Linear (igual a todos), Time-decay (mais peso aos recentes), Position-based (40% primeiro, 40% último, 20% meio), Data-driven (algoritmo do Google/Meta)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Last-click: subestima brand awareness e top-funnel. Perigoso se cortares o que 'não converte directamente'",
+        "Linear: justo em jornadas curtas (1-2 touchpoints); dilui em jornadas longas (10+ touchpoints)",
+        "Data-driven: usa machine learning para atribuir pesos. Disponível em GA4 e Meta com volume suficiente",
+        "Marketing mix modelling (MMM): análise estatística fora das plataformas. Requer 2+ anos de dados e expertise, mas é o gold standard para budget allocation"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "O dashboard executivo — 5 números"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "1. Receita total (período a período, com comparação YoY/MoM)",
+        "2. CAC blended (custo total de marketing / novos clientes)",
+        "3. LTV (com cohort analysis — o LTV de quem entrou em Jan, em Fev, etc.)",
+        "4. ROAS por canal (Google vs Meta vs email vs SEO)",
+        "5. Pipeline / forecast (quantos leads qualificados, quantas oportunidades, conversão esperada)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "📊 Tracking is the foundation. Sem Meta Pixel + Google Tag + GA4 + server-side conversion API, qualquer decisão de optimização é especulação. Investe 1-2 semanas a configurar correctamente antes de gastar em ads."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: a regra de ouro é LTV:CAC ≥ 3:1. Se está abaixo, há duas alavancas: (1) baixar CAC (melhor targeting, melhores creatives, melhor conversão da landing page), (2) subir LTV (retenção, cross-sell, upsell). A análise diz-te qual atacar primeiro."
+    },
+    {
+      "type": "exercise",
+      "question": "SaaS com LTV = 600€ e CAC = 250€. Está saudável? E se o LTV for 400€ e o CAC 350€? O que fazer em cada caso?",
+      "answer": "Caso 1: LTV:CAC = 2,4:1. Marginal — aceitável mas apertado, ideal ≥ 3:1. Alavancas: melhorar retenção para subir LTV (educação, onboarding) ou melhorar conversão para baixar CAC. Caso 2: LTV:CAC = 1,14:1. Insustentável — a empresa perde dinheiro por cliente. Parar ads, redesenhar targeting/posicionamento, e antes de escalar, validar product-market fit profundo."
+    }
+  ],
+  "keyPoints": [
+    "Métricas de outcome (vendas, LTV) > métricas de output (cliques, impressões) > métricas de vaidade (likes).",
+    "ROI = (Receita − Custo) / Custo. ROAS = Receita de ads / Gasto de ads. São diferentes — ROI é global, ROAS é paid media.",
+    "LTV = receita total esperada de um cliente durante a relação. CAC = custo para o adquirir.",
+    "Regra LTV:CAC ≥ 3:1 para sustentabilidade. Payback < 12 meses para subscription.",
+    "Last-click attribution subestima top-funnel — usar data-driven ou MMM para decisões de budget.",
+    "Dashboard executivo: 5 números — Receita, CAC blended, LTV, ROAS por canal, Pipeline/forecast.",
+    "Sem tracking correcto (Pixel, GA4, conversion API), optimização é especulação."
+  ],
+  "summary": "Métricas de outcome (receita, LTV, ROAS, CAC) > output > vaidade. GA4 + Pixel + conversion API são a baseline de tracking. As 4 fórmulas críticas: ROI, ROAS, LTV, CAC — com regra LTV:CAC ≥ 3:1. Atribuição data-driven supera last-click na maioria dos casos.",
+  "quizSlug": "mdq",
+  "nextLesson": null,
+  "prevLesson": "03-publicidade-paga-e-funil"
+}

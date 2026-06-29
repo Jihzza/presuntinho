@@ -756,5 +756,9 @@
   "agente.aria.parar_gravacao": "Arrêter l'enregistrement",
   "agente.error.send_failed": "Désolé, j'ai eu une erreur en traitant le message.",
   "easterEggs.status.unlocked": "🔓 DÉCOUVERT",
-  "easterEggs.status.locked": "🔒 À DÉCOUVRIR"
+  "easterEggs.status.locked": "🔒 À DÉCOUVRIR",
+  "agente.cta.o_que_falta": "qu'est-ce qui manque ?",
+  "agente.cta.resumo_financeiro": "résumé financier",
+  "agente.cta.habitos": "habitudes",
+  "agente.cta.progresso": "progrès"
 }

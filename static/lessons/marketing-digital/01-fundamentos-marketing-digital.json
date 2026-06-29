@@ -1,0 +1,106 @@
+{
+  "id": "01-fundamentos-marketing-digital",
+  "title": "1. Fundamentos de Marketing Digital: SEO, SEM, Email Marketing",
+  "courseSlug": "marketing-digital",
+  "lessonNumber": 1,
+  "description": "Os três pilares do marketing digital que qualquer negócio tem de dominar antes de gastar um euro em campanhas: aparecer organicamente (SEO), pagar para aparecer no topo (SEM) e construir uma lista própria que ninguém pode tirar (email).",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["SEO", "SEM", "email marketing", "keywords", "marketing digital"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é Marketing Digital (e porque já não é opcional)"
+    },
+    {
+      "type": "p",
+      "text": "Marketing digital é qualquer acção de marketing que usa canais digitais para atingir, engajar e converter clientes —搜索引擎, redes sociais, email, display, vídeo, mobile apps. A diferença para o marketing tradicional não é só o canal: é a medição. No digital, cada clique, cada impressão, cada conversão fica registada. Isto muda o jogo porque transforma a intuição em hipótese testável: lanço A, lanço B, comparo, mantenho o que ganha. Sem digital, estás a decidir às cegas."
+    },
+    {
+      "type": "h3",
+      "text": "SEO — Search Engine Optimization"
+    },
+    {
+      "type": "p",
+      "text": "SEO é o conjunto de técnicas para aparecer nos resultados orgânicos (não pagos) do Google. O objectivo não é 'estar em primeiro' — é estar em primeiro para a pesquisa certa. Uma loja de sapatos não quer aparecer quando alguém pesquisa 'sapatos'; quer aparecer quando alguém pesquisa 'sapatos vegan mulher entrega 24h Lisboa'. A cauda longa (long tail) é onde mora a conversão."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "On-page: título, meta-description, headings (H1/H2), URL amigável, imagens com alt-text, conteúdo que responde à intenção de pesquisa",
+        "Off-page: backlinks de sites relevantes e autoritários (o Google vê cada link como um voto de confiança)",
+        "Técnico: site rápido (Core Web Vitals), mobile-friendly, sitemap.xml, robots.txt, schema markup para rich snippets",
+        "Conteúdo: cluster de páginas que cobrem o tema em profundidade — pillar page + artigos-satélite que linkam entre si"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "SEM — Search Engine Marketing"
+    },
+    {
+      "type": "p",
+      "text": "SEM é aparecer nos resultados pagos do Google (Google Ads). Pagas cada vez que alguém clica no teu anúncio (modelo CPC — Cost Per Click). É o oposto do SEO: rápido, escalável, mas pago. Enquanto SEO demora 3-6 meses a dar resultados, SEM dá resultados hoje — mas só enquanto a carteira aguentar. Por isso, SEO e SEM não competem: complementam-se. SEM valida keywords e mede conversão; SEO escala o que SEM provou funcionar."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Estrutura de campanha: conta → campanhas → ad groups → keywords → anúncios + landing pages",
+        "Tipos de correspondência de keyword: broad, phrase, exact, negative (esta última é crítica para filtrar tráfego irrelevante)",
+        "Lances e Quality Score: o Google recompensa anúncios relevantes e landing pages rápidas com CPC mais baixo",
+        "Extensões: sitelinks, callouts, structured snippets, call extensions — mais 'imobiliário' no SERP, mais cliques"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Email Marketing — o canal que ninguém te pode tirar"
+    },
+    {
+      "type": "p",
+      "text": "Redes sociais mudam os algoritmos. SEO muda os critérios. O email é teu: a lista é um activo na tua base de dados, sem intermediário, sem algoritmo que decide se a tua mensagem chega. É também o canal com maior ROI: estudos setoriais consistently mostram 30-40€ por cada 1€ investido. Não é exagero: depois de alguém dar-te o email, cada euro que envias é comunicação directa."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Construção da lista: lead magnets (e-book, ferramenta gratuita, desconto), opt-in claro (double opt-in em mercados regulados), landing pages dedicadas",
+        "Segmentação: por comportamento (abriu/não abriu, clicou/não clicou), por estágio no funil (frio, morno, quente), por perfil (B2B vs B2C)",
+        "Automação: welcome series (3-5 emails ao subscrever), abandoned cart, pós-compra, win-back para inactivos > 90 dias",
+        "Métricas-chave: open rate (saudável 20-30%), click rate (> 2%), unsubscribe rate (< 0,5%), conversão por email"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "A integração dos três canais"
+    },
+    {
+      "type": "p",
+      "text": "SEO traz tráfego frio qualificado que não te conhece. SEM traz tráfego quente com intenção imediata de compra. Email trabalha a relação ao longo do tempo. Um negócio digital maduro não escolhe um — usa os três, com pesos diferentes conforme o estágio: SEO cresce lentamente mas compõe; SEM acelera testes e picos; email monetiza a audiência que os outros dois construíram."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🔍 SEO = maratona (3-6 meses para resultados). SEM = sprint (resultados hoje, mas pago). Email = compound interest (cada novo subscritor vale durante anos). Os três juntos são imparáveis."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: SEO dá-te sustentabilidade, SEM dá-te velocidade, email dá-te controlo. Antes de gastar 1€ em ads, certifica-te de que tens (1) uma landing page que converte, (2) um lead magnet que justifica o opt-in, (3) uma sequência de boas-vindas que trabalha o lead. Sem isto, vais queimar dinheiro."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma loja online fatura 50k€/mês com margem de 30%. Quer investir 5k€/mês em marketing. Como divides entre SEO, SEM e email? Justifica cada percentagem.",
+      "answer": "Sugestão inicial: 20% SEO (conteúdo + técnico — investimento com retorno a 6-12 meses), 50% SEM (tráfego quente imediato, testa keywords e conversão), 30% email (ferramenta + automações + conteúdo para a lista). Ajustar conforme resultados: se SEM traz CAC mais baixo, realocar de SEO para SEM; se a lista crescer bem, investir mais em email."
+    }
+  ],
+  "keyPoints": [
+    "SEO = aparecer organicamente; SEM = pagar para aparecer; email = canal próprio e directo.",
+    "SEO é maratona (3-6 meses); SEM é sprint (resultados imediatos mas pagos).",
+    "Email marketing tem o maior ROI documentado (~36€ por 1€ investido) e é o único canal 100% teu.",
+    "Long tail keywords convertem mais do que head terms — alvo é a intenção, não o volume.",
+    "Quality Score no Google Ads baixa o CPC: relevância do anúncio + landing page rápida + CTR alto.",
+    "Os três canais não competem — compõem um sistema onde cada um reforça os outros."
+  ],
+  "summary": "Os três pilares do marketing digital: SEO (orgânico, lento, composto), SEM (pago, rápido, escalável) e email (canal próprio, alto ROI, automatizável). Juntos formam a base de qualquer estratégia digital sustentável.",
+  "quizSlug": "mdq",
+  "nextLesson": "02-redes-sociais-e-conteudo",
+  "prevLesson": null
+}
