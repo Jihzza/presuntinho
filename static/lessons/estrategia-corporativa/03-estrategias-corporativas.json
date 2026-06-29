@@ -1,0 +1,222 @@
+{
+  "id": "03-estrategias-corporativas",
+  "title": "3. Estratégias Corporativas: Ansoff, BCG/GE-McKinsey, Integração e Diversificação",
+  "courseSlug": "estrategia-corporativa",
+  "lessonNumber": 3,
+  "description": "Como uma corporação escolhe onde crescer e gere o seu portfolio de negócios: matriz de Ansoff para direcção de crescimento (penetração de mercado, desenvolvimento de produto, desenvolvimento de mercado, diversificação), matrizes de portfolio BCG (crescimento-quota) e GE-McKinsey (atractividade-competitividade), e estratégias corporativas de integração vertical (upstream/downstream), integração horizontal (M&A de concorrentes), diversificação relacionada vs não-relacionada, e o papel do corporate parent para criar valor sinérgico.",
+  "audio": "Nesta terceira lição subimos do nível do negócio individual (L02) para o nível corporativo: como uma empresa com múltiplos negócios decide onde crescer e gere portfolio. A matriz de Ansoff (1957, 'Strategies for Diversification') classifica opções de crescimento em duas dimensões — produtos (existentes vs novos) e mercados (existentes vs novos) — gerando quatro quadrantes: penetração de mercado (menos risco, produto existente em mercado existente), desenvolvimento de produto (novo produto em mercado existente), desenvolvimento de mercado (produto existente em novo mercado geográfico/segmento), e diversificação (novo produto + novo mercado, maior risco). Cobrimos depois as matrizes de portfolio que ajudam a gerir empresas multi-negócio: BCG Matrix (Henderson, 1970) com quatro quadrantes baseados em crescimento do mercado e quota relativa — Stars, Cash Cows, Question Marks, Dogs. Depois a GE-McKinsey (1970s) que melhora a BCG ao substituir crescimento de mercado por 'atractividade da indústria' e quota por 'posição competitiva', com 9 células em vez de 4. Cobrimos integração vertical (backward e forward, para fornecedores e canais) e integração horizontal (M&A de concorrentes para escalar posição). Por fim, diversificação relacionada (sinergias operacionais, transferíveis capabilities) vs não-relacionada (sinergias financeiras, portfolio approach de conglomerates como Berkshire Hathaway). Lição 3: do diagnóstico da L02 à decisão corporativa concreta.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Ansoff", "BCG Matrix", "GE-McKinsey", "Portfolio", "Integração Vertical", "Integração Horizontal", "Diversificação", "M&A", "Corporate Strategy"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Corporate vs Business Strategy: dois níveis de escolha"
+    },
+    {
+      "type": "p",
+      "text": "Michael Porter (1987, 'From Competitive Advantage to Corporate Strategy', HBR) distinguiu dois níveis de estratégia: (1) Business Strategy — como uma unidade de negócio compete no seu mercado (posicionamento, vantagem competitiva, VRIO); (2) Corporate Strategy — como a corporação gere múltiplos negócios (em quais competir, como integrar, quanto investir em cada). Business Strategy é o foco da L02 (VRIO, SWOT, 7S). Corporate Strategy é o foco desta L03: onde investir (Ansoff), qual o mix de portfolio (BCG/GE-McKinsey), e que movimentos estruturais fazer (integração, diversificação, divestiture, M&A). Uma boa Business Strategy em todos os negócios é necessária mas não suficiente — uma corporação pode ter boas unidades de negócio e ainda assim destruir valor se o seu portfolio está mal calibrado (investir demasiado em 'dogs', demasiado pouco em 'stars', manter negócios que não têm sinergia com o resto)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Business Strategy: posicionamento competitivo dentro de um mercado (L02)",
+        "Corporate Strategy: mix de negócios, onde investir, como integrar (L03)",
+        "Value creation corporativo: mais do que soma das partes (sinergia, allocation capital, parenting advantage)",
+        "Erro clássico: boa Business Strategy + portfolio desalinhado = destruição de valor",
+        "Ferramentas L03: Ansoff (crescimento), BCG/GE-McKinsey (portfolio), integração, diversificação",
+        "Contexto histórico: anos 1960-80 conglomerates diversification; anos 1990+ foco e refoco; anos 2020+ ESG + platform plays"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Matriz de Ansoff: quatro direcções de crescimento"
+    },
+    {
+      "type": "p",
+      "text": "Igor Ansoff (1957, 'Strategies for Diversification', Harvard Business Review) propôs uma matriz 2×2 que cruza duas dimensões — produtos (existentes vs novos) e mercados (existentes vs novos) — gerando quatro quadrantes que representam direcções alternativas de crescimento, com graus muito diferentes de risco. (1) Penetração de mercado — vender mais do produto existente no mercado existente (growth hacking, pricing, melhoria de distribuição, comunicação) — risco baixo; (2) Desenvolvimento de produto — novos produtos para mercados existentes (inovação incremental, line extensions) — risco médio; (3) Desenvolvimento de mercado — levar o produto actual a novos mercados geográficos ou segmentos — risco médio a alto; (4) Diversificação — novos produtos para novos mercados — o risco mais alto. A matriz ajudou a popularizar uma visão estruturada das opções e continua a ser usada para comunicação executiva, embora tenha limitações (trata risco como contínuo sem explicar trade-offs, ignora integração vs desinvestimento)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Penetração de mercado: produto actual + mercado actual (ex: mais quota via marketing) — baixo risco",
+        "Desenvolvimento de produto: produto novo + mercado actual (ex: nova feature, line extension) — médio risco",
+        "Desenvolvimento de mercado: produto actual + mercado novo (ex: nova geografia, novo segmento) — médio/alto risco",
+        "Diversificação: produto novo + mercado novo (ex: nova indústria, nova geografia em simultâneo) — alto risco",
+        "Regra prática: começamos em penetração, subimos a quadrante quando o actual saturou",
+        "Limitações: ignora integration/divestiture, modernização recomendada com outras frameworks"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "BCG Matrix: Stars, Cash Cows, Question Marks, Dogs"
+    },
+    {
+      "type": "p",
+      "text": "A matriz BCG foi criada por Bruce Henderson (1970) na Boston Consulting Group e populariza o conceito de 'cash flow' e 'life cycle' na gestão de portfolio. Dois eixos: crescimento do mercado (alto/baixo) e quota de mercado relativa à concorrente principal (>1 = liderança, <1 = seguidora). Os quatro quadrantes: (1) Stars — alta quota + alto crescimento: requer investimento pesado para manter liderança, mas gera grandes retornos no futuro; (2) Cash Cows — alta quota + baixo crescimento: geram cash excedente estável que financia outros negócios; (3) Question Marks — baixa quota + alto crescimento: precisam de decisão (investir para se tornar Star ou harvested/sold antes de se tornar Dog); (4) Dogs — baixa quota + baixo crescimento: candidatos a divestiture ou harvesting mínimo. A regra clássica: equity deve fluir de Cash Cows para Stars e Question Marks promissores; Question Marks sem futuro e Dogs devem ser vendidos."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Eixo Y: crescimento do mercado (alto/baixo)",
+        "Eixo X: quota relativa vs concorrente principal (≥1 = líder)",
+        "Stars: alto/alto — investir para manter liderança, retorno futuro alto",
+        "Cash Cows: baixo/alto — colher cash, financiar Stars e Question Marks",
+        "Question Marks: alto/baixo — decidir rapidamente se vale a pena investir ou vender",
+        "Dogs: baixo/baixo — candidatos naturais a divestiture (evitar 'cash traps')",
+        "Limitações: simplificação binária, ignora sinergia entre negócios, foco em cash flow e não em valor"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "BCG simplifica mas tem limites. Usos legítimos: comunicar visualmente o portfolio a executivos e conselhos; diagnosticar onde está o cashflow da empresa; forçar decisões de investimento/divestimento. Limites críticos: (a) assume que crescimento de mercado é o principal driver de atractividade — ignora estrutura 5 Forças; (b) treats all businesses como unidades independentes, ignora sinergia; (c) quota relativa é um indicador incompleto de vantagem competitiva. Daí a evolução para a GE-McKinsey matrix."
+    },
+    {
+      "type": "h2",
+      "text": "GE-McKinsey Matrix: atractividade × posição competitiva"
+    },
+    {
+      "type": "p",
+      "text": "A matriz GE-McKinsey (desenvolvida nos anos 1970 por consultores da McKinsey para a General Electric e popularizada por Wind/Mahajan, 1981) melhora a BCG ao substituir os dois eixos por critérios multidimensionais. Eixo Y: 'atractividade da indústria' (combina crescimento, dimensão, margem, intensidade concorrencial, factores macro via PESTEL) — alto/médio/baixo. Eixo X: 'posição competitiva da unidade' (combina quota, vantagem relativa, capacidade de execução, VRIO) — forte/média/fraca. Resultado: uma matriz 3×3 = 9 células, agrupadas em três zonas: (1) Investir/Crescer — células alta-alta e adjacentes; (2) Manhar/Cash — atractividade média com posição forte; (3) Divestir/Restruturar — atractividade baixa com posição fraca. Vantagem sobre BCG: mais nuance, melhor capta categorias como 'mature cash generators' (Cow) vs 'future stars' (Star)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Eixo Y: atractividade da indústria (alto/médio/baixo) — usa PESTEL + 5 Forças",
+        "Eixo X: posição competitiva (forte/médio/fraca) — usa VRIO + capacidade",
+        "9 células vs 4 quadrantes da BCG: nuance mais fina",
+        "Zona 1: Investir/Crescer — atractivo + competitivo, ganhar quota",
+        "Zona 2: Manter/Colher — posição forte em mercado maduro, gerar cash para reinvestir",
+        "Zona 3: Desinvestir — atractivo baixo + posição fraca, vender ou fechar",
+        "Limitação: subjectividade na pontuação, requer consenso do top management"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Integração vertical e horizontal"
+    },
+    {
+      "type": "p",
+      "text": "Integração vertical (Coase 1937; Williamson 1985) é o movimento corporativo que expande a fronteira da empresa ao longo da cadeia de valor, internalizando transacções com fornecedores (backward/integration a montante) ou clientes (forward integration a jusante). Razões: reduzir custos de transacção (Coase/Williamson), proteger activos específicos, capturar margem, garantir qualidade, reduzir risco de supply. Crítica: aumentam complexidade organizacional e rigidez de custos. Integração horizontal (Porter 1985) é o movimento que expande a empresa combinando-se com concorrentes no mesmo nível da cadeia de valor, tipicamente via fusões e aquisições (M&A), para ganhar quota de mercado, escala, bargaining power ou eliminar concorrência. Casos típicos: Facebook/Instagram (2012), Disney/Pixar (2006), AB InBev/SABMiller (2016). Os ganhos dependem de sinergias operacionais reais (não apenas contabilísticas) e da qualidade da integração pós-M&A."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Integração vertical backward (montante): internaliza fornecedores, reduz risco de supply",
+        "Integração vertical forward (jusante): internaliza distribuição ou vendas, controla canal",
+        "Integração horizontal: M&A ou fusão com concorrentes para ganhar quota/escala",
+        "Razões para integração: custos de transacção, especificidade dos activos, qualidade, captura de margem",
+        "Razões contra: custos fixos irreversíveis, reduzida flexibilidade, complexidade organizacional",
+        "M&A: distinguir sinergia real vs contabilística; 60-70% das grandes M&A destrói valor",
+        "Due diligence estratégica: 'would we have made this investment without the acquisition?'"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Diversificação relacionada vs não-relacionada"
+    },
+    {
+      "type": "p",
+      "text": "A decisão mais controversa de corporate strategy é a diversificação. Porter (1987) classificou dois tipos: (1) Diversificação relacionada — entrada em novos negócios que partilham recursos, capacidades, ou actividades (mesma cadeia de valor, ou recursos transferíveis como marca, tecnologia, I&D). Exemplos: Samsung entrar em semicondutores, telemóveis, baterias, displays; Johnson & Johnson em saúde, farmacêutica, medical devices. (2) Diversificação não-relacionada — entrada em negócios sem qualquer relação operacional, guiada apenas pelo portfolio approach financeiro. Exemplos: conglomerates mid-20th century (ITT, Gulf+Western), ou Berkshire Hathaway de Buffett. Anos 1990-2000: forte onda de 'back to core' — empresas que se desfocaram começaram a vender divisões não relacionadas. Estudos de Berger & Ofek (1995) e Villalonga (1999) mostram que diversificação não-relacionada tipicamente destrói 5-15% do valor de empresa, enquanto diversificação relacionada pode ser neutra ou ligeiramente positiva."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Diversificação relacionada: novos negócios com sinergias operacionais, transferência de capacidades",
+        "Diversificação não-relacionada: portfolio financeiro puro, sem sinergia operacional",
+        "Sinergias operacionais: partilha de recursos, cross-selling, custos conjuntos, marca transferível",
+        "Sinergias financeiras: diversificação de risco, melhor alocação interna de capital, tax optimization",
+        "Estudos empíricos (Berger & Ofek 1995): diversificação não-relacionada destrói 5-15% do valor",
+        "Exceptions: conglomerates excelentes (Berkshire Hathaway, Danaher) com disciplina de capital allocation",
+        "Regra prática: diversificar apenas quando há sinergia operacional clara —'core adjacency rule'"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Parentagem corporativa: o 'corporate advantage'"
+    },
+    {
+      "type": "p",
+      "text": "Campbell, Goold & Alexander (1995, 'Corporate-Level Strategy') e Williamson (1975) propuseram a pergunta crítica de corporate strategy: o que é que o corporate parent acrescenta que cada unidade isolada não conseguiria replicar sozinha? Sem essa 'parenting advantage' (Goold, Campbell, Alexander) ou 'hold' effect (strategy beyond the sum of parts), o grupo deveria ser dividido. Fontes de valor corporativo: (1) Operating synergies — partilha de fornecedores, I&D, vendas, infraestruturas; (2) Portfolio strategy — alocação de capital entre unidades baseado em performance relativa; (3) Parenting expertise — capacidades de governance, coaching, desenvolvimento de talento que funcionam cross-business; (4) Centre-led services — funções corporativas (IT, RH, legal, fiscal) com escala. Muitas das alegadas sinergias (pre-M&A pitch) nunca se materializam — a corporate strategy moderna insiste em due diligence de synergies antes de qualquer M&A ou integração."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Parenting advantage = valor que o corporate parent adiciona que unidades isoladas não conseguem replicar",
+        "Sem parenting advantage, o grupo deveria ser dividido (Bhagat, Shleifer, Vishny)",
+        "Tipicamente: serviços partilhados (IT, RH, procurement), coaching de management, allocation de capital",
+        "Corporate parenting value-add: identificado via fit/attractiveness/connection framework (Goold et al.)",
+        "M&A pitch tipicamente exageram synergies 30-50%; realized synergies ~10-30% do pitch",
+        "Conclusão: 'good corporate strategy = managing the right businesses + right synergies + right parenting'"
+      ]
+    }
+  ],
+  "keyPoints": [
+    "Corporate Strategy ≠ Business Strategy: nível do portfolio vs nível do negócio individual",
+    "Ansoff (1957): 4 quadrantes de crescimento — penetração, desenvolvimento produto, desenvolvimento mercado, diversificação",
+    "BCG Matrix (Henderson 1970): Stars, Cash Cows, Question Marks, Dogs — cash flow classification",
+    "GE-McKinsey: melhoria BCG com eixos multidimensionais (atractividade × posição) e 9 células",
+    "Zona Investir/Manter/Divestir: usá-las como heurística para decisões de capital allocation",
+    "Integração vertical (backward/forward): internalizar fornecedores ou canais para reduzir custos de transacção",
+    "Integração horizontal: M&A de concorrentes para quota/escala (60-70% destruição de valor — due diligence obrigatória)",
+    "Diversificação relacionada: sinergias operacionais, share-áveis recursos — geralmente neutra ou positiva",
+    "Diversificação não-relacionada: portfolio financial puro — geralmente destrói 5-15% de valor",
+    "Parenting advantage (Campbell, Goold & Alexander 1995): valor que corporate parent adiciona — necessário para justificar integração",
+    "Estudo Berger & Ofek (1995): conglomerates discount típico de 5-15%",
+    "Recomendação: 'core adjacency rule' — diversificar apenas com sinergia operacional clara",
+    "Próxima lição: Balanced Scorecard + OKRs + 7S implementation + change management"
+  ],
+  "exercises": [
+    {
+      "type": "mc",
+      "question": "Uma empresa que vende produtos já existentes em mercados geográficos novos está a fazer (Ansoff):",
+      "options": [
+        "Penetração de mercado",
+        "Desenvolvimento de produto",
+        "Desenvolvimento de mercado",
+        "Diversificação"
+      ],
+      "answer": "C",
+      "explanation": "Ansoff Matrix: desenvolvimento de mercado = levar o produto existente para mercados novos (geografia, segmento, canal). Penetração = mesmo produto + mesmo mercado. Desenvolvimento de produto = produto novo no mercado existente. Diversificação = produto novo + mercado novo."
+    },
+    {
+      "type": "mc",
+      "question": "Uma 'Cash Cow' na BCG Matrix caracteriza-se por:",
+      "options": [
+        "Alto crescimento + baixa quota",
+        "Alto crescimento + alta quota",
+        "Baixo crescimento + alta quota",
+        "Baixo crescimento + baixa quota"
+      ],
+      "answer": "C",
+      "explanation": "Cash Cow = baixa atractividade da indústria (mercado maduro) + posição forte (alta quota). É o quadrante que gera cash excedente estável — cash que tradicionalmente financia 'Stars' e 'Question Marks' promissores."
+    },
+    {
+      "type": "mc",
+      "question": "Por que a GE-McKinsey melhora a BCG Matrix?",
+      "options": [
+        "Tem mais células (9 vs 4) — nuance mais fina",
+        "Não usa cash flow como critério",
+        "Só funciona para uma indústria",
+        "Elimina o conceito de portfolio"
+      ],
+      "answer": "A",
+      "explanation": "A GE-McKinsey substituiu crescimento de mercado (eixo Y) por 'atractividade da indústria' (multidimensional via 5 Forças/PESTEL) e quota relativa (eixo X) por 'posição competitiva' (VRIO + capacidades), produzindo 9 células em vez de 4 — classificações mais nuançadas para decisões estratégicas."
+    },
+    {
+      "type": "mc",
+      "question": "Berger & Ofek (1995) descobriram empiricamente que:",
+      "options": [
+        "Diversificação não-relacionada tipicamente DESTROI 5-15% do valor",
+        "Diversificação sempre cria valor",
+        "Related diversification tipicamente destrói valor",
+        "Portfolio approach não tem efeito no valuation"
+      ],
+      "answer": "A",
+      "explanation": "Berger & Ofek (1995) analisaram milhares de conglomerates nos anos 80-90 e encontraram um 'diversification discount' médio de 5-15%. Isto motivou a onda de 'back-to-core' e focus estratégico nos 90s/2000s."
+    }
+  ],
+  "quizSlug": "ecq",
+  "nextLesson": "04-implementacao-estrategica",
+  "prevLesson": "02-analise-interna-vrio-swot"
+}

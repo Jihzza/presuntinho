@@ -80,6 +80,18 @@
       badge: 'Novo'
     },
     {
+      slug: 'estrategia-corporativa',
+      title: 'Estratégia Corporativa Avançada',
+      tagline: 'Business Administration Avançado · Análise externa (PESTEL, 5 Forces, value chain), análise interna (VRIO, McKinsey 7S), estratégias corporativas (Ansoff, BCG, integração) e implementação (BSC, OKRs)',
+      description:
+        'A cadeira avançada de estratégia para decisores C-level: análise externa profunda (PESTEL, Porter Five Forces, value chain, strategic groups), análise interna baseada em recursos (VRIO, RBV, SWOT estratégico, McKinsey 7S), estratégias corporativas (Ansoff, BCG e GE-McKinsey portfolio, integração vertical/horizontal, diversificação), e implementação (Balanced Scorecard, OKRs, McKinsey 7S, strategic control e change management).',
+      icon: '🧭',
+      color: '#f97316',
+      lessonCount: 4,
+      quizCount: 1,
+      badge: 'Advanced'
+    },
+    {
       slug: 'gestao-financeira',
       title: 'Gestão Financeira',
       tagline: 'Business Administration · Demonstração de resultados, balanço, rácios e caixa',

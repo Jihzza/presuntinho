@@ -187,6 +187,21 @@
                         { slug: '04-marketing-e-negocios-internacionais', title: '4. Marketing e Negócios Internacionais: 4Ps, Branding Global vs Local, Hofstede, CISG e Arbitragem', summary: 'Marketing-mix 4Ps internacional, branding global vs local, Hofstede (6 dimensões) e Trompenaars, CISG (Convenção de Viena), arbitragem ICC vs UNCITRAL e força de vendas internacional.', quizSlug: 'ciq', quizTitle: 'Quiz: Comércio Internacional', estMinutes: 10 }
                       ]
                     },
+        'estrategia-corporativa': {
+              slug: 'estrategia-corporativa',
+              title: 'Estratégia Corporativa Avançada',
+              tagline: 'Business Administration Avançado · Análise externa e interna, estratégias corporativas e implementação',
+              description:
+                'A cadeira avançada de estratégia para decisores C-level: análise externa (PESTEL, Porter Five Forces, value chain, strategic groups), análise interna (VRIO, RBV, SWOT estratégico, McKinsey 7S), estratégias corporativas (Ansoff, BCG e GE-McKinsey portfolio, integração vertical/horizontal, diversificação) e implementação (Balanced Scorecard, OKRs, McKinsey 7S, strategic control e change management).',
+              icon: '🧭',
+              color: '#f97316',
+              lessons: [
+                { slug: '01-analise-externa-pestel-five-forces', title: '1. Análise Externa: PESTEL, Porter Five Forces, Value Chain e Strategic Groups', summary: 'PESTEL (Political/Economic/Social/Tech/Env/Legal), Five Forces de Porter, value chain de Porter e strategic groups mapping para atractividade da indústria.', quizSlug: 'ecq', quizTitle: 'Quiz: Estratégia Corporativa Avançada', estMinutes: 10 },
+                { slug: '02-analise-interna-vrio-swot', title: '2. Análise Interna: VRIO, RBV, SWOT Estratégico e McKinsey 7S', summary: 'RBV de Barney, VRIO (Value/Rarity/Imitability/Organization), SWOT estratégico (SO/ST/WO/WT) e McKinsey 7S para diagnóstico organizacional.', quizSlug: 'ecq', quizTitle: 'Quiz: Estratégia Corporativa Avançada', estMinutes: 10 },
+                { slug: '03-estrategias-corporativas', title: '3. Estratégias Corporativas: Ansoff, BCG/GE-McKinsey, Integração e Diversificação', summary: 'Ansoff (4 direcções), BCG (Stars/CashCows/QuestionMarks/Dogs), GE-McKinsey, integração vertical/horizontal, diversificação relacionada vs não-relacionada.', quizSlug: 'ecq', quizTitle: 'Quiz: Estratégia Corporativa Avançada', estMinutes: 10 },
+                { slug: '04-implementacao-estrategica', title: '4. Implementação Estratégica: BSC, OKRs, McKinsey 7S e Change Management', summary: 'Balanced Scorecard de Kaplan & Norton (4 perspectivas), OKRs de Andy Grove/Doerr, McKinsey 7S aplicado e modelos Kotter/ADKAR de change management.', quizSlug: 'ecq', quizTitle: 'Quiz: Estratégia Corporativa Avançada', estMinutes: 10 }
+              ]
+            },
     equivalenza: {
       slug: 'equivalenza',
       title: 'Equivalenza — The Scent of a Second Chance',

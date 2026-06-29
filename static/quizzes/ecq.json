@@ -1,0 +1,117 @@
+{
+  "id": "ecq",
+  "title": "Quiz: Estratégia Corporativa Avançada",
+  "description": "Testa os teus conhecimentos em estratégia corporativa avançada: análise externa (PESTEL, Porter Five Forces, value chain, strategic groups), análise interna (VRIO, RBV, SWOT estratégico, McKinsey 7S), estratégias corporativas (Ansoff, BCG/GE-McKinsey, integração vertical/horizontal, diversificação) e implementação (Balanced Scorecard, OKRs, change management). 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "questions": [
+    {
+      "q": "Qual das Cinco Forças de Porter analisa a facilidade com que NOVOS concorrentes entram na indústria?",
+      "opts": [
+        "Rivalidade entre concorrentes existentes",
+        "Ameaça de novos entrantes",
+        "Poder de negociação dos fornecedores",
+        "Ameaça de produtos substitutos"
+      ],
+      "a": 1,
+      "explanation": "As Cinco Forças de Porter (1979) incluem: (1) rivalidade entre concorrentes existentes, (2) AMEAÇA de novos entrantes, (3) poder de negociação dos fornecedores, (4) poder de negociação dos clientes, (5) ameaça de produtos substitutos. O nome técnico é 'ameaça de novos entrantes' — quanto maior a barreira de entrada (escala, diferenciação, capital), menor a ameaça e mais atractiva a indústria."
+    },
+    {
+      "q": "O modelo PESTEL cobre seis dimensões. Qual das seguintes NÃO está incluída?",
+      "opts": [
+        "Político, Económico, Social",
+        "Tecnológico, Ambiental, Legal",
+        "Marketing, Operações, Finanças",
+        "Demografia, Cliente, Fornecedor"
+      ],
+      "a": 2,
+      "explanation": "PESTEL = Político, Económico, Social, Tecnológico, Ambiental, Legal — são as seis dimensões do macro-ambiente. O modelo analisa tendências que a empresa não controla mas que afectam a estratégia: política fiscal, ciclo económico, demografia, I&D, ESG, regulação. Marketing/Operações/Finanças são áreas funcionais internas (análise interna), não macro-ambiente."
+    },
+    {
+      "q": "No modelo VRIO de Barney (1991), um recurso que é Valuable, Rare mas IMITÁVEL gera:",
+      "opts": [
+        "Vantagem competitiva sustentável",
+        "Vantagem competitiva temporária",
+        "Paridade competitiva",
+        "Desvantagem competitiva"
+      ],
+      "a": 1,
+      "explanation": "Pelo modelo VRIO (Barney 1991): Valuable+Rare+Imitável gera apenas Vantagem Competitiva Temporária — porque os concorrentes cedo ou tarde conseguem replicar o recurso, e a vantagem dissolve-se. Só recursos que são simultaneamente Valiosos, Raros, Inimitáveis E que a empresa está organizada para explorar (Organization) geram Vantagem Competitiva Sustentável."
+    },
+    {
+      "q": "No SWOT estratégico, uma estratégia 'SO' (Maxi-Maxi) cruza:",
+      "opts": [
+        "Strengths com Opportunities",
+        "Strengths com Threats",
+        "Weaknesses com Opportunities",
+        "Weaknesses com Threats"
+      ],
+      "a": 0,
+      "explanation": "SWOT estratégico gera quatro quadrantes: SO (Maxi-Maxi: Strengths × Opportunities = crescimento ofensivo), ST (Maxi-Mini: Strengths × Threats = defesa), WO (Mini-Maxi: Weaknesses × Opportunities = investimento em capacidades), WT (Mini-Mini: Weaknesses × Threats = harvesting ou divestiture). A resposta correcta é Strengths com Opportunities — usar forças internas para capitalizar oportunidades externas."
+    },
+    {
+      "q": "Na McKinsey 7S, qual dos 7 elementos é tipicamente colocado no CENTRO do modelo como 'cola' das outras seis?",
+      "opts": [
+        "Strategy",
+        "Systems",
+        "Shared values",
+        "Style"
+      ],
+      "a": 2,
+      "explanation": "Shared values são o 'S' central no modelo 7S — representam os valores, crenças e missão partilhadas que dão coesão e coerência às outras seis dimensões. Strategy/Structure/Systems são os 'Hard S' (concretos e tangíveis); Shared values, Skills, Style, Staff são os 'Soft S' (culturais). Shared values no centro significa que toda a organização deve convergir em torno dos mesmos valores."
+    },
+    {
+      "q": "Na matriz Ansoff, uma empresa que lança um produto novo num mercado geográfico novo está no quadrante de:",
+      "opts": [
+        "Penetração de mercado",
+        "Desenvolvimento de produto",
+        "Desenvolvimento de mercado",
+        "Diversificação"
+      ],
+      "a": 3,
+      "explanation": "Ansoff (1957) tem 4 quadrantes: (1) Penetração = produto existente + mercado existente; (2) Desenvolvimento de Produto = produto NOVO + mercado existente; (3) Desenvolvimento de Mercado = produto existente + mercado NOVO; (4) Diversificação = produto NOVO + mercado NOVO. É o quadrante de maior risco — 'double novelty'."
+    },
+    {
+      "q": "Na BCG Matrix, uma 'Cash Cow' é uma unidade de negócio com:",
+      "opts": [
+        "Alto crescimento do mercado + baixa quota relativa",
+        "Alto crescimento do mercado + alta quota relativa",
+        "Baixo crescimento do mercado + alta quota relativa",
+        "Baixo crescimento do mercado + baixa quota relativa"
+      ],
+      "a": 2,
+      "explanation": "BCG Matrix: Eixo Y = crescimento do mercado, Eixo X = quota relativa. Cash Cow = baixo crescimento + ALTA quota. É o quadrante 'gerador de cash' — mercado maduro, posição líder, cash excedente que financia Stars e Question Marks promissores. Stars = alto/alto; Question Marks = alto/baixo; Dogs = baixo/baixo."
+    },
+    {
+      "q": "Berger & Ofek (1995) descobriram empiricamente que a diversificação NÃO-relacionada tipicamente:",
+      "opts": [
+        "Cria 10-20% de valor para shareholders",
+        "Destrói 5-15% do valor da empresa",
+        "Não tem efeito mensurável",
+        "É sempre benéfica em conglomerates disciplinados"
+      ],
+      "a": 1,
+      "explanation": "Berger & Ofek (1995) analisaram portfólios nos anos 80-90 e encontraram um 'diversification discount' médio de 5-15%. Isto motivou a onda de 'back-to-core' e 'focus strategy' dos anos 1990-2000s. Excepções: conglomerates disciplinados (Berkshire Hathaway, Danaher) com parental advantage — onde a estrutura corporativa adiciona valor, mas são casos raros."
+    },
+    {
+      "q": "O Balanced Scorecard de Kaplan & Norton (1996) tem quatro perspectivas. Qual das seguintes NÃO faz parte?",
+      "opts": [
+        "Finance",
+        "Customer",
+        "Innovation Pipeline",
+        "Learning & Growth"
+      ],
+      "a": 2,
+      "explanation": "BSC clássico tem 4 perspectivas: (1) Finance, (2) Customer, (3) Internal Process, (4) Learning & Growth. Inovação pode estar dentro de 'Internal Process', mas não é uma 5ª perspectiva. O Strategic Map mostra cadeia causal: Learning & Growth → Internal Process → Customer → Finance."
+    },
+    {
+      "q": "OKRs (Objectives and Key Results) foram desenvolvidos por Andy Grove na Intel e popularizados por John Doerr. Qual característica define OKRs bem desenhados?",
+      "opts": [
+        "Key Results são qualitativos e inspiradores",
+        "OKRs devem ser TÃO ambiciosos que tipicamente só 30-50% são cumpridos por design",
+        "OKRs são separados da avaliação de desempenho",
+        "OKRs são perenes (não mudam durante anos)"
+      ],
+      "a": 2,
+      "explanation": "OKRs bem desenhados têm 4 propriedades (Grove/Doerr): (1) Objectives qualitativos+inspiradores, (2) Key Results QUANTITATIVOS+mensuráveis, (3) separados da avaliação de desempenho (medem contribuição, não carreira), (4) per-cycle (tipicamente trimestres). Targets de 70-80% achievement são esperados (não 100%); OKRs devem ser ambiciosos mas realistas."
+    }
+  ]
+}

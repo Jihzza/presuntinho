@@ -1,0 +1,199 @@
+{
+  "id": "01-analise-externa-pestel-five-forces",
+  "title": "1. Análise Externa: PESTEL, Porter Five Forces, Value Chain e Strategic Groups",
+  "courseSlug": "estrategia-corporativa",
+  "lessonNumber": 1,
+  "description": "Como o ambiente externo molda a estratégia e o desempenho das empresas: análise do macro-ambiente (PESTEL — Político, Económico, Social, Tecnológico, Ambiental, Legal), análise da indústria com o modelo das cinco forças de Porter (1980), desagregação da cadeia de valor e identificação de strategic groups para encontrar onde competir de forma diferenciada.",
+  "audio": "Nesta primeira lição entramos na análise externa — o lado de fora da empresa. Começamos com o PESTEL, a ferramenta clássica para mapear o macro-ambiente: Político (estabilidade, política fiscal, regulação), Económico (ciclo, juros, câmbio, inflação), Social (demografia, valores, estilos de vida), Tecnológico (I&D, digitalização, IA), Ambiental (clima, ESG, recursos) e Legal (leis, compliance, contratos). Depois passamos para a indústria com o modelo das cinco forças de Porter (1979, How Competitive Forces Shape Strategy): rivalidade entre concorrentes existentes, ameaça de novos entrantes, poder de negociação dos fornecedores, poder de negociação dos clientes, e ameaça de produtos substitutos. Cada força é avaliada em alta/média/baixa e o resultado é uma atractividade da indústria em termos de rendibilidade média no longo prazo. Cobrimos depois a cadeia de valor de Porter (1985, Competitive Advantage) — a desagregação da empresa em actividades primárias (logística interna, operações, logística externa, marketing & vendas, serviço) e de suporte (infraestrutura, RH, tecnologia, procurement) — para identificar onde se cria valor. Por fim, strategic groups: o conceito de grupos de empresas dentro de uma indústria que seguem estratégias similares (ex: luxo vs mass-market, integrado vs especializado). Conhecer o strategic group ajuda a perceber quem são os rivais mais directos e onde há espaços vazios para reposicionar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["PESTEL", "Porter", "Five Forces", "Value Chain", "Strategic Groups", "Macro-environment", "Análise Externa", "Indústria"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Porque a estratégia começa fora da empresa"
+    },
+    {
+      "type": "p",
+      "text": "A análise externa é o primeiro passo do processo estratégico porque a rendibilidade de uma empresa é em grande parte determinada pela estrutura da sua indústria (Michael Porter, 'What Is Strategy?', HBR 1996). Uma empresa média numa indústria atractiva (com barreiras altas, poucos rivais, clientes fragmentados) ganha mais do que uma empresa excelente numa indústria desfavorável (concorrência intensa, baixa diferenciação, fornecedores poderosos). Por isso, antes de diagnosticar a empresa (análise interna) ou escolher onde competir (estratégia), temos de perceber o que o ambiente está a fazer connosco — macro-ambiente (PESTEL) e indústria (Cinco Forças)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Análise externa = macro-ambiente (PESTEL) + indústria (Five Forces) + posição relativa",
+        "Rendibilidade é largamente determinada pela estrutura da indústria, não apenas pela empresa",
+        "Três outputs da análise externa: oportunidades/ameaças (SWOT-O/T), atractividade da indústria, posicionamento relativo",
+        "Ordem recomendada: PESTEL → Five Forces → Value Chain → Strategic Groups",
+        "Complementa-se com a análise interna (VRIO/7S) na Lição 2 e com a escolha estratégica na Lição 3"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Análise PESTEL: o macro-ambiente em seis dimensões"
+    },
+    {
+      "type": "p",
+      "text": "PESTEL (também chamado PESTLE ou STEEP) é a framework mais usada para analisar o macro-ambiente — as forças externas que a empresa não controla mas que afectam profundamente a sua estratégia. Foi popularizada por Aguilar (1967, 'Scanning the Business Environment') como ETPS, depois adaptada para PESTEL. As seis dimensões: (1) Político — estabilidade governamental, política fiscal, trade policy, regulação; (2) Económico — crescimento do PIB, ciclo, taxas de juro, inflação, câmbio, disponibilidade de crédito; (3) Social — demografia (envelhecimento, urbanização), valores, estilos de vida, educação; (4) Tecnológico — I&D, digitalização, IA, automação, plataformas; (5) Ambiental — alterações climáticas, ESG, recursos naturais, regulação ambiental; (6) Legal — leis trabalhistas, propriedade intelectual, antitruste, protecção de dados (GDPR)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "P — Político: estabilidade, política fiscal, comércio internacional, regulação setorial",
+        "E — Económico: PIB, ciclo, juros, inflação, câmbio, investimento, rendimento disponível",
+        "S — Social: demografia, envelhecimento, urbanização, valores, estilos de vida, educação",
+        "T — Tecnológico: I&D, digitalização, IA, cloud, automação, plataformas, conectividade",
+        "A — Ambiental: clima, regulação ambiental, ESG, recursos escassos, economia circular",
+        "L — Legal: leis laborais, propriedade intelectual, antitruste, RGPD/GDPR, compliance",
+        "Uso: identificar tendências que criam oportunidades ou ameaças de 3-10 anos"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Tendências PESTEL dos anos 2020 (centrais para qualquer cadeira actual): transição energética e ESG, fragmentação geoeconómica (US-China decoupling), IA generativa como commodity, envelhecimento demográfico na Europa/Japão, regulamentação digital (Digital Markets Act, AI Act na UE), inflação e taxas de juros persistentemente mais altas pós-pandemia. Cada uma destas tendências muda indústrias inteiras — quem as ler primeiro ganha vantagem."
+    },
+    {
+      "type": "h2",
+      "text": "As cinco forças de Porter (1979): a estrutura da indústria"
+    },
+    {
+      "type": "p",
+      "text": "Michael Porter (1979, 'How Competitive Forces Shape Strategy', Harvard Business Review) propôs que a rivalidade numa indústria é resultado de cinco forças competitivas que, em conjunto, determinam a atractividade estrutural da indústria e a rendibilidade média no longo prazo. As cinco forças são: (1) Rivalidade entre concorrentes existentes — intensidade da competição em preço, produto, marketing; (2) Ameaça de novos entrantes — facilidade de entrada, barreiras existentes,反応 dos incumbentes; (3) Poder de negociação dos fornecedores — concentração, diferenciação, custos de mudança; (4) Poder de negociação dos clientes — concentração, informação, preços relativos; (5) Ameaça de produtos substitutos — disponibilidade de alternativas, propensão dos clientes a mudar. A ferramenta clássica: avaliar cada força em alta/média/baixa, identificar a 'força estrutural dominante' e decidir se a indústria é atractiva para competir."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Força 1 — Rivalidade: aumenta com muitos concorrentes, custos fixos altos, baixa diferenciação, baixo crescimento, altas barreiras de saída",
+        "Força 2 — Novos entrantes: limitada por economias de escala, diferenciação, custos de mudança, capital necessário, acesso a canais, políticas governamentais, retaliação esperada",
+        "Força 3 — Fornecedores: poderosos quando concentrados, quando o input é diferenciado, quando há custos de mudança, quando ameaçam integração a jusante",
+        "Força 4 — Clientes: poderosos quando concentrados, quando o produto é commodity, quando têm informação simétrica, quando ameaçam integração a montante",
+        "Força 5 — Substitutos: alta quando há alternativas funcionais, quando os preços relativos são favoráveis, quando os custos de mudança são baixos",
+        "Output: atractividade global + força estrutural dominante que define o que limitará rendibilidade"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Aplicação directa: ao escolher onde competir, usa as 5 Forças para comparar indústrias candidatas. Exemplo: comparar 'cloud computing' (rivalidade alta mas barreiras de entrada altas, fornecedores de hardware poderosos, clientes fragmentados — atractiva com escala) vs 'comércio retalho tradicional' (rivalidade brutal, poucos Barriers, Amazon como substituto — muito menos atractiva). Cinco Forças é a ferramenta de triagem padrão em due diligence estratégica."
+    },
+    {
+      "type": "h2",
+      "text": "A cadeia de valor de Porter (1985): onde o valor é criado"
+    },
+    {
+      "type": "p",
+      "text": "Michael Porter (1985, 'Competitive Advantage: Creating and Sustaining Superior Performance') introduziu a cadeia de valor como a ferramenta para desagregar a empresa em actividades estrategicamente relevantes, de modo a perceber onde o valor é criado e onde estão os custos. A cadeia divide-se em actividades primárias (logística interna, operações, logística externa, marketing e vendas, serviço pós-venda) e actividades de suporte (infraestrutura da empresa, gestão de RH, desenvolvimento de tecnologia, procurement). Cada actividade tem inputs, outputs, custos e fontes potenciais de diferenciação. O objectivo da análise: (a) identificar a margem (diferença entre o valor total criado e o custo total), (b) perceber quais actividades criam mais valor para o cliente e quais são meros custos, (c) escolher entre competir em custo (todas as actividades optimizadas para eficiência) ou diferenciação (actividades únicas que aumentam willingness-to-pay)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Actividades primárias: logística interna → operações → logística externa → marketing & vendas → serviço",
+        "Actividades de suporte: infraestrutura, RH, tecnologia, procurement — aplicam-se a toda a cadeia",
+        "Margem = valor total criado (preço que o cliente paga) − custo total da cadeia",
+        "Cada actividade tem três alavancas: estrutura de custos, fontes de diferenciação, economia",
+        "Análise típica: mapear a cadeia, identificar quais actividades representam 80% do custo/valor, decidir onde diferenciar",
+        "Sistema de valor: extender a cadeia para incluir fornecedores upstream e canais downstream"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Strategic groups: quem são os teus verdadeiros rivais"
+    },
+    {
+      "type": "p",
+      "text": "O conceito de strategic groups foi formalizado por Hunt (1972) e popularizado por Porter (1980, Competitive Strategy). Um strategic group é um conjunto de empresas dentro de uma indústria que seguem estratégias similares em dimensões chave (preço, qualidade, amplitude, canais, geografia, integração). Nem todas as empresas na mesma indústria competem entre si directamente: dentro da indústria de restaurantes, há o grupo fast-food (McDonald's, Burger King), o grupo casual dining (TGI Fridays), o grupo fine dining e o grupo delivery-only (cloud kitchens) — cada grupo tem estrutura competitiva própria, margens típicas e concorrentes directos diferentes. Mapear os strategic groups ajuda a identificar (a) quem são os rivais mais próximos, (b) quais barreiras de mobilidade existem entre grupos, (c) onde há espaços vazios ou subatendidos onde se pode reposicionar."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Strategic group = empresas com estratégias similares nas mesmas dimensões-chave",
+        "Exemplos: luxo vs mass-market, integrado vs especializado, global vs regional, alta tecnologia vs baixa tecnologia",
+        "Ferramenta: mapa de strategic groups (eixo X = uma dimensão, eixo Y = outra, bolhas = empresas com tamanho = quota)",
+        "Análise de barreiras de mobilidade: o que impede uma empresa de se mover entre grupos",
+        "Espaços vazios no mapa: segmentos descobertos onde se pode reposicionar com vantagem",
+        "Strategic groups diferentes têm estruturas Five Forces diferentes (ex: margems, intensidade concorrencial)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Do output da análise externa ao input estratégico"
+    },
+    {
+      "type": "p",
+      "text": "Da análise externa saem três outputs críticos: (1) a lista de Oportunidades e Ameaças (para a matriz SWOT da Lição 2); (2) a atractividade estrutural da indústria (em termos de rendibilidade média de longo prazo); (3) o mapa de strategic groups (para definir onde competir). Com estes outputs, o gestor pode decidir: (a) entrar ou não na indústria, (b) que segmento / grupo estratégico atacar, (c) que tipo de vantagem competitiva procurar (custo ou diferenciação, gama ampla ou estreita). A análise externa complementa-se com a análise interna (VRIO + 7S, Lição 2) para fechar o diagnóstico estratégico antes de escolher a estratégia (Lição 3) e implementá-la (Lição 4)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Output 1: oportunidades (tendências PESTEL favoráveis, indústria atractiva, espaços vazios em grupos estratégicos)",
+        "Output 2: ameaças (tendências PESTEL desfavoráveis, força estrutural dominante, grupos saturados)",
+        "Output 3: atractividade estrutural da indústria (rendibilidade esperada a 5-10 anos)",
+        "Output 4: mapa de strategic groups (posição relativa, espaços vazios)",
+        "Decisão: entrar/sair, competir em custo vs diferenciação, gama ampla/estreita, escopo geográfico",
+        "Próxima lição: a análise interna (VRIO, 7S) — o complemento necessário antes da escolha estratégica"
+      ]
+    }
+  ],
+  "keyPoints": [
+    "Análise externa precede a interna: estrutura da indústria determina rendibilidade média de longo prazo",
+    "PESTEL: Político, Económico, Social, Tecnológico, Ambiental, Legal — tendências macro 3-10 anos",
+    "Porter Five Forces (1979): rivalidade + novos entrantes + fornecedores + clientes + substitutos = atractividade da indústria",
+    "Força estrutural dominante: a força que mais limita a rendibilidade (típica: rivalidade ou poder de clientes)",
+    "Value Chain (Porter 1985): actividades primárias (logística interna → serviço) + suporte (RH, tecnologia, etc.)",
+    "Strategic Groups: conjuntos de empresas com estratégias similares — mapeamento identifica rivais directos e espaços vazios",
+    "Outputs: O/T para SWOT, atractividade da indústria, mapa de grupos, decisões de entrada/segmento/posicionamento",
+    "Tendências macro dos anos 2020: ESG, IA generativa, fragmentação geoeconómica, digital regulation, aging"
+  ],
+  "exercises": [
+    {
+      "type": "mc",
+      "question": "Qual é a ordem correcta de aplicação das ferramentas de análise externa, da macro para a indústria?",
+      "options": [
+        "Value Chain → Strategic Groups → 5 Forces → PESTEL",
+        "PESTEL → 5 Forces → Strategic Groups → Value Chain",
+        "PESTEL → Value Chain → 5 Forces → Strategic Groups",
+        "5 Forces → PESTEL → Value Chain → Strategic Groups"
+      ],
+      "answer": "B",
+      "explanation": "PESTEL mapeia o macro-ambiente (tendências globais), depois 5 Forces analisa a estrutura da indústria, depois Strategic Groups identifica quem são os rivais dentro da indústria, e finalmente Value Chain desagrega a empresa. Esta sequência vai do mais amplo (macro) para o mais específico (operações da empresa)."
+    },
+    {
+      "type": "mc",
+      "question": "Qual das Cinco Forças tende a ser mais alta na indústria de telefonia móvel paga?",
+      "options": [
+        "Ameaça de novos entrantes (devido a espectro abundante)",
+        "Poder dos clientes (milhões de assinantes fragmentados contra 3-4 operadores)",
+        "Ameaça de produtos substitutos (não há substituto para o telemóvel)",
+        "Poder dos fornecedores de mão-de-obra"
+      ],
+      "answer": "B",
+      "explanation": "Clientes fragmentados enfraquecem o seu poder (não, cada um é pequeno). Mas no caso da telefonia móvel, há uma dimensão adicional: rivalidade oligopolista intensa + ameaça alta de OTTs substitutos (WhatsApp, FaceTime). A força estrutural dominante típica é a rivalidade entre os incumbentes oligopolistas."
+    },
+    {
+      "type": "mc",
+      "question": "O modelo de PESTEL cobre:",
+      "options": [
+        "As 5 forças da indústria",
+        "Análise interna de recursos",
+        "Tendências macro de Político, Económico, Social, Tecnológico, Ambiental e Legal",
+        "Análise de concorrentes directos"
+      ],
+      "answer": "C",
+      "explanation": "PESTEL é a framework clássica para o macro-ambiente. Cobre 6 dimensões: Político, Económico, Social, Tecnológico, Ambiental, Legal — tendências que a empresa não controla mas que afectam a sua estratégia."
+    },
+    {
+      "type": "mc",
+      "question": "Uma empresa que quer analisar a sua margem competitiva começa com:",
+      "options": [
+        "Análise SWOT rápida",
+        "Mapeamento da cadeia de valor",
+        "Pesquisa de motivação",
+        "Análise de stakeholders"
+      ],
+      "answer": "B",
+      "explanation": "A cadeia de valor de Porter é a ferramenta certa: desagrega a empresa em actividades primárias e de suporte, identifica quais actividades criam mais valor e quais são custo puro. A margem = valor criado − custo total da cadeia."
+    }
+  ],
+  "quizSlug": "ecq",
+  "nextLesson": "02-analise-interna-vrio-swot",
+  "prevLesson": null
+}

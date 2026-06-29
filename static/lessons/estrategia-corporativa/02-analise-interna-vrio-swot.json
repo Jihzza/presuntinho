@@ -1,0 +1,191 @@
+{
+  "id": "02-analise-interna-vrio-swot",
+  "title": "2. Análise Interna: VRIO, RBV, SWOT Estratégico e McKinsey 7S",
+  "courseSlug": "estrategia-corporativa",
+  "lessonNumber": 2,
+  "description": "Do ambiente externo para dentro da empresa: Resource-Based View e o modelo VRIO (Value, Rarity, Imitability, Organization) de Barney (1991) para identificar recursos e capacidades que geram vantagem competitiva sustentável; SWOT estratégico cruzando factores internos (Strengths/Weaknesses) com externos (Opportunities/Threats) para gerar opções estratégicas; e o modelo McKinsey 7S (estrutura, estratégia, sistemas, valores compartilhados, skills, estilo e staff) como framework integrado de diagnóstico organizacional.",
+  "audio": "Nesta segunda lição voltamos para dentro da empresa. A pergunta-chave da Resource-Based View de Barney (1991) é: porque é que algumas empresas são rentáveis por longos períodos, mesmo em indústrias atractivas? A resposta não está na indústria (isso é a análise externa) — está nos recursos e capacidades únicos que elas controlam e os concorrentes não conseguem replicar facilmente. O modelo VRIO (1991) operacionaliza esta pergunta em quatro critérios: Value — o recurso cria valor para o cliente? Rarity — poucos concorrentes o têm? Imitability — é caro ou difícil de imitar? Organization — a empresa está organizada para explorar esse recurso? Se as quatro respostas forem Sim, o recurso gera uma vantagem competitiva sustentável. Cobrimos depois o SWOT estratégico (Andrews, 1971), cruzando forças/fraquezas internas com oportunidades/ameaças externas para gerar quatro tipos de estratégia: SO (crescimento ofensivo), WO (correcção de fraquezas), ST (defesa), WT (liquidação/cautela). Por fim, o modelo McKinsey 7S (Tom Peters & Robert Waterman, 1980 'In Search of Excellence') — sete dimensões interligadas: Structure, Strategy, Systems, Shared values (centro), Skills, Style, Staff. O diagnóstico mostra onde os elementos estão desalinhados com a estratégia, predizendo falhas de execução. Lição 02: do que está na empresa para o diagnóstico integrado.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["VRIO", "Resource-Based View", "RBV", "SWOT", "McKinsey 7S", "Barney", "Vantagem Competitiva", "Recursos", "Capacidades"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "A Resource-Based View da empresa: a fonte interna da vantagem"
+    },
+    {
+      "type": "p",
+      "text": "A Resource-Based View (RBV) foi proposta por Birger Wernerfelt (1984, 'A Resource-Based View of the Firm') e sistematicamente formalizada por Jay Barney (1991, 'Firm Resources and Sustained Competitive Advantage', Journal of Management). A pergunta central da RBV: porque é que algumas empresas mantêm rendibilidade superior ao longo de décadas, mesmo em indústrias onde Porter diria que a média é baixa? A resposta: a empresa tem recursos e capacidades valiosos, raros, difíceis de imitar e está organizada para os explorar. Estes recursos geram uma 'Vantagem Competitiva Sustentável' (sustained competitive advantage) — não temporária como uma boa posição em Five Forces, mas persistente. A RBV não substitui Porter — complementa-o. Porter explica a atractividade da indústria; RBV explica porque empresas dentro da mesma indústria têm desempenhos persistentemente diferentes (Lufthansa versus low-cost carriers, Apple versus marcas de smartphones genéricas)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "RBV (1984/1991): a vantagem competitiva sustentável vem de recursos e capacidades únicos da empresa",
+        "Recurso = input tangível ou intangível que a empresa controla (marca, patente, dados, talento)",
+        "Capacidade = habilidade para combinar recursos em processos produtivos (logística, I&D, marketing)",
+        "VRIO (Barney 1991): framework para testar quais recursos são fontes de VCS",
+        "RBV complementa Porter: indústria atractiva + recursos únicos = rendibilidade superior persistente",
+        "Limitação: recursos valiosos mas não raros são apenas 'paridade'; recursos raros mas imitáveis dão apenas VCT temporária"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "O modelo VRIO de Barney: Value, Rarity, Imitability, Organization"
+    },
+    {
+      "type": "p",
+      "text": "O modelo VRIO (Barney 1991) operacionaliza a RBV com quatro perguntas sequenciais sobre cada recurso ou capacidade da empresa: (1) Value — O recurso cria valor para o cliente, reduzindo custos ou aumentando diferenciação? (2) Rarity — Quantos concorrentes controlam este recurso? Se poucos ou nenhum, é raro. (3) Imitability — Os concorrentes podem replicar este recurso a custo razoável? Se não, é difícil de imitar (causas: path dependence, complexidade causal, ambiguidade causal, propriedade intelectual). (4) Organization — A empresa está organizada (estrutura, processos, sistemas, incentivos) para explorar este recurso? Só quando as quatro respostas são 'Sim' o recurso gera Vantagem Competitiva Sustentável. Caso contrário, gera apenas paridade competitiva, vantagem competitiva temporária, ou nada."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "V — Value: cria valor (custos mais baixos OU diferenciação)? Se Não → desvantagem",
+        "R — Rarity: é raro (poucos concorrentes têm)? Se Não → paridade competitiva",
+        "I — Imitability: é caro/difícil de imitar? Se Não → vantagem competitiva temporária",
+        "O — Organization: a empresa está organizada para o explorar? Se Não → recursos não se convertem em desempenho",
+        "4 × Sim = Vantagem Competitiva Sustentável (econ. rent — Ricardian rent)",
+        "Causas de imitação cara: path dependence, complexidade causal, ambiguidade causal, IP, brand heritage",
+        "Recursos 'causamente ambíguos': empresa líder não sabe explicar exactamente porque é melhor"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Exemplos VRIO: a cultura da Pixar (criatividade + excelência + crítica construtiva) é difícil de imitar porque é 'causamente ambígua' — mesmo os fundadores não sabem exactamente o que a torna especial. O algoritmo de busca do Google é raro e proprietário (rarity + imitability), mas o seu valor depende da rede de dados e talento que continuam a reforçá-lo (path dependence). A marca 'Patek Philippe' tem séculos de herança, reputação mecânica e consistência multigeracional — imitável? Não a 100 anos de história."
+    },
+    {
+      "type": "h2",
+      "text": "SWOT estratégico: do diagnóstico às opções estratégicas"
+    },
+    {
+      "type": "p",
+      "text": "A matriz SWOT foi popularizada por Kenneth Andrews (1971, 'The Concept of Corporate Strategy') e é talvez a ferramenta de diagnóstico mais usada em estratégia corporativa. O método é simples: listar Strengths e Weaknesses (internos), Opportunities e Threats (externos), e depois cruzar para gerar opções. A diferença crítica entre SWOT analítico (lista) e SWOT estratégico (gerador de opções) é que o segundo não se limita a listar — cruza explicitamente os quadrantes para gerar quatro tipos de estratégia: (1) SO (Maxi-Maxi) — usar Forças para capitalizar Oportunidades, crescimento agressivo; (2) ST (Maxi-Mini) — usar Forças para evitar Ameaças, defesa e reposicionamento; (3) WO (Mini-Maxi) — superar Fraquezas para aproveitar Oportunidades, melhoria e investimento; (4) WT (Mini-Mini) — minimizar Fraquezas e Ameaças, contenção ou harvesting. Para cada opção é preciso responder: temos os recursos para a executar? É defensável a 5-10 anos? Quantos obstáculos regulatórios ou competitivos?"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "SWOT analítico = inventário de factores (listas de S, W, O, T)",
+        "SWOT estratégico = cruzamento explícito para gerar opções priorizadas com critério",
+        "SO (Maxi-Maxi): crescimento ofensivo, usar Força para capturar Oportunidade",
+        "ST (Maxi-Mini): defesa e diversificação, usar Força para neutralizar Ameaça",
+        "WO (Mini-Maxi): investimento em capacidades, corrigir Fraqueza para aproveitar Oportunidade",
+        "WT (Mini-Mini): contenção, harvesting, divestiture ou reestruturação",
+        "Erros comuns: S/W não ancorados em VRIO; O/T genéricos; SWOT virar lista sem follow-up estratégico",
+        "Output: 3-5 opções estratégicas priorizadas com estimativas rough de impacto/viabilidade"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Para a BA: SWOT é tentador mas perigoso. A maioria das empresas faz SWOT analítico, lista de 4-8 itens por quadrante, paravaí. SWOT estratégico começa com factores ancorados em análise externa (L01: PESTEL + 5 Forças) e interna (L02a: VRIO) — não listas genéricas. Cruzar para gerar 4-6 opções estratégicas viáveis e priorizar com critérios (fit, attractividade, execução) — cada opção precisa de rough sizing de CAPEX, prazo, probabilidade de sucesso. Sem isto, SWOT é só paperware."
+    },
+    {
+      "type": "h2",
+      "text": "McKinsey 7S: diagnóstico integrado organizacional"
+    },
+    {
+      "type": "p",
+      "text": "O modelo McKinsey 7S foi desenvolvido por Tom Peters, Anthony Athos, Robert Waterman e Julien Phillips na McKinsey & Company em 1978-80 e apresentado no livro 'In Search of Excellence' (Peters & Waterman, 1982). É um framework de diagnóstico que identifica sete dimensões organizacionais interligadas que precisam estar alinhadas para a estratégia funcionar. As sete S são: Strategy (como a empresa compete), Structure (organograma, reporting lines, decisões), Systems (processos, IT, rotinas), Shared values (valores e crenças centrais — o 'S' do centro), Skills (capacidades distintivas da organização), Style (estilo de liderança e cultura vivida) e Staff (pessoas, talento, RH). A metáfora: as 7S estão conectadas como uma constelação — se mexer numa, todas as outras têm de ser ajustadas para manter alinhamento."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Strategy: como competimos (posição, escolha de segmentos, vantagem)",
+        "Structure: organograma, reporting, decisões descentralizadas vs centralizadas",
+        "Systems: processos (orçamento, IT, qualidade, RH), rotinas formais",
+        "Shared values: crenças centrais que guiam comportamento (no centro do modelo)",
+        "Skills: capacidades distintivas da organização (dados por pessoas + sistemas + cultura)",
+        "Style: como líderes se comportam, cultura vivida, símbolos",
+        "Staff: talento, recrutamento, desenvolvimento, recompensas",
+        "Hard S: Strategy, Structure, Systems — tangíveis, identificáveis em organograma/IT",
+        "Soft S: Shared values, Skills, Style, Staff — culturais, difíceis de mudar",
+        "Output: identificação de desalinhamentos que predizem falha de execução"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Da análise interna à escolha estratégica"
+    },
+    {
+      "type": "p",
+      "text": "A análise interna (RBV, VRIO) identifica os recursos VRIO da empresa — a base da vantagem. O SWOT estratégico cruza estes com O/T externos para gerar opções concretas. O 7S diagnostica o alinhamento organizacional necessário para a estratégia funcionar. O output integrado da Lição 2: uma lista priorizada de (a) recursos VRIO a explorar e reforçar, (b) opções estratégicas priorizadas (provavelmente 2-3 com rough sizing), (c) gaps de alinhamento organizacional que precisam de ser resolvidos antes da execução. A Lição 3 (estratégias corporativas) toma este output e formaliza-o em movimentos concretos: Ansoff para direcção de crescimento, BCG/GE-McKinsey para portfolio, e integração vertical/horizontal/diversificação para movimentos corporativos. A Lição 4 traduz tudo em Balanced Scorecard, OKRs e gestão da mudança."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Output 1: recursos VRIO identificados e priorizados (3-5 fontes de VCS)",
+        "Output 2: opções estratégicas do SWOT priorizadas (2-3 com sizing rough)",
+        "Output 3: diagnóstico 7S — gaps de alinhamento que bloqueiam execução",
+        "Output 4: 'strategic intent' (Hamel & Prahalad) — visão de onde a empresa quer chegar a 10 anos",
+        "Output 5: lista de capacidades a construir vs reforçar vs descartar",
+        "Próximo passo (L03): escolher direcção de crescimento (Ansoff) e gerir portfolio (BCG/GE-McKinsey)"
+      ]
+    }
+  ],
+  "keyPoints": [
+    "RBV (Wernerfelt 1984; Barney 1991): vantagem sustentável vem de recursos únicos da empresa, não apenas da estrutura da indústria",
+    "VRIO — Value: cria valor (custo baixo ou diferenciação); sem valor → desvantagem",
+    "VRIO — Rarity: poucos concorrentes têm; sem rarity → apenas paridade",
+    "VRIO — Imitability: difícil/caro de imitar; sem imitability → apenas VCT temporária",
+    "VRIO — Organization: empresa organizada para o explorar; sem organização → recursos não convertem em desempenho",
+    "VCS (4×Sim) gera rendas económicas tipo ricardianas; só VCT gera rendas tipo Schumpeterianas (temporárias)",
+    "SWOT (Andrews 1971): cruza S/W internos com O/T externos para gerar 4 quadrantes de estratégia",
+    "SWOT estratégico ≠ SWOT analítico: cruza factores reais com opções, não listas",
+    "McKinsey 7S: Strategy, Structure, Systems, Skills, Style, Staff, Shared values (centro)",
+    "7S como diagnóstico de alinhamento: desalinhamentos predizem falhas de execução",
+    "7S Hard (S4) vs Soft (S3): hard são facilmente identificáveis; soft são difíceis de mudar mas críticas",
+    "Próxima lição: Ansoff, BCG/GE-McKinsey para estratégias de crescimento e gestão de portfolio"
+  ],
+  "exercises": [
+    {
+      "type": "mc",
+      "question": "Um recurso VRIO que seja Valuable, Rare mas Imitável gera:",
+      "options": [
+        "Vantagem competitiva sustentável",
+        "Vantagem competitiva temporária",
+        "Paridade competitiva",
+        "Desvantagem competitiva"
+      ],
+      "answer": "B",
+      "explanation": "Pelo modelo VRIO de Barney: se é valioso e raro mas imita-se facilmente, gera apenas uma Vantagem Competitiva Temporária (Short-term sustained above-normal returns). Os concorrentes cedo ou tarde imitam e a vantagem dissolve-se — é uma 'renda tipo Schumpeteriana'."
+    },
+    {
+      "type": "mc",
+      "question": "A McKinsey 7S distingue 'Hard' (concretos, identificáveis) de 'Soft' (culturais). Qual dos seguintes NÃO é um elemento Soft?",
+      "options": [
+        "Shared values",
+        "Skills",
+        "Strategy",
+        "Style"
+      ],
+      "answer": "C",
+      "explanation": "Strategy, Structure e Systems são os 'Hard S' — facilmente identificáveis em organogramas e balanços. Shared values, Skills, Style e Staff são os 'Soft S' — enraizados na cultura, difíceis de mudar mas críticos para execução."
+    },
+    {
+      "type": "mc",
+      "question": "No SWOT, uma empresa com força em distribuição internacional + oportunidade de mercado asiático emergente deve:",
+      "options": [
+        "Adoptar estratégia WT (minimização de fraquezas)",
+        "Adoptar estratégia SO (crescimento ofensivo)",
+        "Adoptar estratégia ST (diversificação defensiva)",
+        "Adoptar estratégia WO (correcção de fraquezas)"
+      ],
+      "answer": "B",
+      "explanation": "Cruzando Strengths (distribuição internacional) com Opportunities (mercado asiático emergente) — gera estratégia SO (Maxi-Maxi): agressivo crescimento, usar a força interna para capitalizar a oportunidade externa."
+    },
+    {
+      "type": "mc",
+      "question": "Qual NÃO é causa de recurso ser difícil de imitar?",
+      "options": [
+        "Path dependence (dependência histórica)",
+        "Complexidade causal",
+        "Tamanho absoluto da empresa",
+        "Ambiguidade causal"
+      ],
+      "answer": "C",
+      "explanation": "As causas de imitação cara são: (1) path dependence, (2) complexidade causal (muitos factores interligados), (3) ambiguidade causal (empresa não sabe explicar o que a torna boa), (4) protecção legal/patentes. Tamanho absoluto não é causa — apenas estar grande não protege da imitação se o recurso não é raro/copyable."
+    }
+  ],
+  "quizSlug": "ecq",
+  "nextLesson": "03-estrategias-corporativas",
+  "prevLesson": "01-analise-externa-pestel-five-forces"
+}

@@ -62,6 +62,7 @@ const COURSE_META: Record<string, CourseMeta> = {
   'marketing-digital': { slug: 'marketing-digital', title: 'Marketing Digital', icon: '📱', color: '#06b6d4' },
   branding: { slug: 'branding', title: 'Branding', icon: '✨', color: '#a855f7' },
   estrategia: { slug: 'estrategia', title: 'Estratégia', icon: '🧭', color: '#f97316' },
+  'estrategia-corporativa': { slug: 'estrategia-corporativa', title: 'Estratégia Corporativa', icon: '🧭', color: '#f97316' },
   'gestao-financeira': { slug: 'gestao-financeira', title: 'Gestão Financeira', icon: '💰', color: '#059669' },
   contabilidade: { slug: 'contabilidade', title: 'Contabilidade', icon: '📊', color: '#2563eb' },
   microeconomia: { slug: 'microeconomia', title: 'Microeconomia', icon: '📉', color: '#dc2626' },

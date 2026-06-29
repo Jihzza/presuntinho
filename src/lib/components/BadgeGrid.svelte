@@ -29,22 +29,49 @@
   interface BadgeDef {
     id: string;
     icon: string;
-    name: string;
-    description: string;
   }
 
-  // Hard-coded catalog (pt-PT). Order = display order.
-  // IDs match the Dexie `badges` table PKs.
+  // Catalog: only icon is hard-coded (it's a unicode glyph and identical
+  // across locales). Name + description live in the i18n dictionary under
+  // `components.badge.catalog.${id}.{name,description}` — see pt-PT.json
+  // and the other 4 locale files. Order = display order; IDs match the
+  // Dexie `badges` table PKs.
   const BADGE_CATALOG: BadgeDef[] = [
-    { id: 'b7',  icon: '🐷', name: 'Porquinha',     description: 'Clica no logo 3 vezes' },
-    { id: 'b8',  icon: '❤️', name: 'Coração',       description: '5 cliques no coração' },
-    { id: 'b9',  icon: '🎮', name: 'Konami',         description: 'Introduz o código Konami' },
-    { id: 'b10', icon: '⌨️', name: 'Palavra Mágica', description: 'Escreve uma palavra-chave' },
-    { id: 'b12', icon: '🦶', name: 'Pé',            description: 'Clica no footer' },
-    { id: 'b13', icon: '🚪', name: 'Sala Secreta',   description: 'Descobre a sala secreta' },
-    { id: 'b14', icon: '📚', name: 'Leitor',         description: 'Conclui uma lição' },
-    { id: 'b15', icon: '🏆', name: 'Quizzmaster',    description: 'Responde todos os quizzes' }
+    { id: 'b7',  icon: '🐷' },
+    { id: 'b8',  icon: '❤️' },
+    { id: 'b9',  icon: '🎮' },
+    { id: 'b10', icon: '⌨️' },
+    { id: 'b12', icon: '🦶' },
+    { id: 'b13', icon: '🚪' },
+    { id: 'b14', icon: '📚' },
+    { id: 'b15', icon: '🏆' }
   ];
+
+  // pt-PT fallbacks for the catalog (used by $t()'s `default` option and
+  // also rendered directly when the i18n dictionary is missing the key).
+  // Keeping the source-of-truth in pt-PT.json is the long-term goal, but
+  // these local fallbacks guarantee the page never goes blank if a key is
+  // accidentally removed.
+  const PT_NAMES: Record<string, string> = {
+    b7:  'Porquinha',
+    b8:  'Coração',
+    b9:  'Konami',
+    b10: 'Palavra Mágica',
+    b12: 'Pé',
+    b13: 'Sala Secreta',
+    b14: 'Leitor',
+    b15: 'Quizzmaster'
+  };
+  const PT_DESCRIPTIONS: Record<string, string> = {
+    b7:  'Clica no logo 3 vezes',
+    b8:  '5 cliques no coração',
+    b9:  'Introduz o código Konami',
+    b10: 'Escreve uma palavra-chave',
+    b12: 'Clica no footer',
+    b13: 'Descobre a sala secreta',
+    b14: 'Conclui uma lição',
+    b15: 'Responde todos os quizzes'
+  };
 
   // Stats — derived from the catalog + badges prop
   let totalCount = $derived(BADGE_CATALOG.length);
@@ -60,11 +87,18 @@
   </header>
   <div class="grid">
     {#each BADGE_CATALOG as def (def.id)}
+      {@const name = $t(`components.badge.catalog.${def.id}.name`, {
+        default: PT_NAMES[def.id]
+      }) ?? PT_NAMES[def.id]}
+      {@const description = $t(
+        `components.badge.catalog.${def.id}.description`,
+        { default: PT_DESCRIPTIONS[def.id] }
+      ) ?? PT_DESCRIPTIONS[def.id]}
       <div role="listitem">
         <BadgeCard
           id={def.id}
-          name={def.name}
-          description={def.description}
+          {name}
+          {description}
           icon={def.icon}
           unlocked={Boolean(badges[def.id]?.unlocked)}
           unlockedAt={badges[def.id]?.unlockedAt}
