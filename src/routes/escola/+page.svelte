@@ -414,6 +414,18 @@
                                   lessonCount: 4,
                                   quizCount: 1,
                                   badge: 'Uni'
+                                },
+                                {
+                                  slug: 'gestao-operacoes',
+                                  title: 'Gestão de Operações',
+                                  tagline: 'Business Administration · Processos, lean, six sigma, planeamento e controlo',
+                                  description:
+                                    'Como desenhar, operar e melhorar os processos que transformam inputs em outputs: cadeia de valor de Porter e estratégia de operações (trade-offs custo/qualidade/velocidade/flexibilidade), design de processos e análise de fluxo (bottleneck, Little\'s Law, layouts), Toyota Production System e Six Sigma (DMAIC) para excelência operacional, e planeamento e controlo (MRP, EOQ, ABC, SPC, teoria das filas).',
+                                  icon: '⚙️',
+                                  color: '#0891b2',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
                                 }
                               ];
 </script>

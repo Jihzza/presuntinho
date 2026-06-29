@@ -268,15 +268,15 @@
         'gestao-operacoes': {
           slug: 'gestao-operacoes',
           title: 'Gestão de Operações',
-          tagline: 'Business Administration · Processos e supply chain',
-          description: 'Estratégia operacional, qualidade, capacidade e supply chain.',
-          icon: '🏭',
-          color: '#ea580c',
+          tagline: 'Business Administration · Processos, lean, six sigma, planeamento e controlo',
+          description: 'Como desenhar, operar e melhorar os processos que transformam inputs em outputs: cadeia de valor de Porter e estratégia de operações (trade-offs custo/qualidade/velocidade/flexibilidade), design de processos e análise de fluxo (bottleneck, Little\'s Law, layouts), Toyota Production System e Six Sigma (DMAIC) para excelência operacional, e planeamento e controlo (MRP, EOQ, ABC, SPC, teoria das filas).',
+          icon: '⚙️',
+          color: '#0891b2',
           lessons: [
-            { slug: '01-conceitos-e-estrategia-operacional', title: '1. Conceitos e Estratégia de Operações', summary: 'Tipos de processos, prioridades competitivas e servitização.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 8 },
-            { slug: '02-qualidade-e-melhoria-continua', title: '2. Qualidade, Kaizen e Six Sigma', summary: 'Deming, PDCA, DMAIC e ferramentas de melhoria contínua.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 8 },
-            { slug: '03-capacidade-e-planeamento', title: '3. Capacidade, Layout e Planeamento', summary: 'Capacidade efectiva, layouts, MPS/MRP e push vs. pull.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 8 },
-            { slug: '04-supply-chain-e-lean', title: '4. Supply Chain e Lean Management', summary: 'Os sete desperdícios, EOQ e integração Lean/Agile.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 }
+            { slug: '01-fundamentos-gestao-operacoes', title: '1. Fundamentos de Gestão de Operações: Processos, Cadeia de Valor de Porter e Estratégia Operacional', summary: 'Cadeia de valor de Porter, classificação de processos (MTS/MTO/ATO), prioridades competitivas e trade-offs custo/qualidade/velocidade/flexibilidade.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 },
+            { slug: '02-design-processos-layout-flow', title: '2. Design de Processos, Análise de Fluxo e Layout: Bottleneck, Throughput e Gestão de Capacidade', summary: 'SIPOC, BPMN, Little\'s Law, TOC de Goldratt, layouts (producto, processo, fixo, celular), takt time e gestão de capacidade.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 },
+            { slug: '03-lean-toyota-six-sigma', title: '3. Lean Production, Toyota Production System e Six Sigma (DMAIC): Eliminação Sistemática de Desperdício', summary: 'TPS (JIT + Jidoka), 7 wastes TIMWOOD, 5S, kanban, andon, kaizen, Six Sigma DMAIC e integração Lean Six Sigma.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 },
+            { slug: '04-planeamento-controlo-operacoes', title: '4. Planeamento e Controlo de Operações: MRP, EOQ, SPC e Teoria das Filas', summary: 'MPS, MRP, EOQ, safety stock, ABC, cartas Shewhart, Cp/Cpk, Taguchi loss function e teoria das filas M/M/1.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 }
           ]
         },
         'analise-financeira': {

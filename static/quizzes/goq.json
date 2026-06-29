@@ -1,57 +1,118 @@
 {
   "id": "goq",
   "title": "Quiz: Gestão de Operações",
-  "description": "Testa os fundamentos de gestão de operações, qualidade e supply chain.",
+  "description": "Testa os teus conhecimentos sobre gestão de operações: cadeia de valor de Porter e classificação de processos (MTS/MTO/ATO), análise de fluxo e bottlenecks (Little's Law, TOC, layouts), Lean Production (TPS, 7 wastes TIMWOOD, kanban, jidoka, 5S) e Six Sigma (DMAIC), planeamento (MRP, EOQ, ABC), SPC (Shewhart, Cp/Cpk, Taguchi), e teoria das filas (M/M/1, trade-off capacidade vs espera). 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "courseSlug": "gestao-operacoes",
   "questions": [
     {
-      "q": "O Sistema de Produção Toyota (Lean) nasceu para combater o desperdício chamado:",
+      "q": "Qual dos seguintes tipos de processo produtivo tem a maior variedade e o menor volume de produção?",
       "opts": [
-        "Mura",
-        "Muri",
-        "Muda",
-        "Muri-muda"
+        "Linha de montagem (assembly line)",
+        "Job shop / oficina",
+        "Produção contínua",
+        "Produção em lote"
       ],
-      "a": 2
+      "correct": 1,
+      "explanation": "Job shop / oficina é o extremo da flexibilidade: alta variedade, baixo volume — recurso agrupado por função (todas as fresas juntas, todos os tornos juntos), cada job pode seguir sequências diferentes. Linha de montagem é o oposto (baixa variedade, alto volume); contínua é zero variedade, máximo volume 24/7; lote está no meio. Job shops são tipográficos, oficinas de reparação, consultoria técnica, hospital com consultas externas por especialidade."
     },
     {
-      "q": "O ciclo PDCA de Deming tem como sequência:",
+      "q": "Na Cadeia de Valor de Porter, qual destas é uma actividade PRIMÁRIA e não de apoio?",
       "opts": [
-        "Plan-Do-Check-Act",
-        "Define-Measure-Analyze-Control",
-        "Plan-Execute-Review-Adjust",
-        "Analyze-Design-Implement-Operate"
+        "Gestão de recursos humanos",
+        "Desenvolvimento tecnológico (I&D)",
+        "Logística externa (distribuição)",
+        "Procurement (compras)"
       ],
-      "a": 0
+      "correct": 2,
+      "explanation": "As 5 actividades primárias formam a linha de produção do valor: logística interna → operações → logística externa → marketing e vendas → serviço. As 4 de apoio (infraestrutura, RH, tecnologia, procurement) atravessam todas as primárias e alimentam-nas em paralelo. Confundir logística externa com procurement é comum: procurement (compras) é de apoio; logística externa (distribuição) é primária e lida com o produto acabado a caminho do cliente."
     },
     {
-      "q": "Numa fábrica com capacidade teórica de 1000 unid/dia e eficiência de 80%, a capacidade efectiva é:",
+      "q": "Numa linha com tempo de ciclo (cycle time) de 60 segundos por unidade, e com 10 unidades no sistema (WIP), qual é o throughput segundo a Little's Law?",
       "opts": [
-        "200 unidades/dia",
-        "800 unidades/dia",
-        "1000 unidades/dia",
-        "1200 unidades/dia"
+        "0,166 unidades por segundo",
+        "6 unidades por minuto",
+        "10 unidades por minuto",
+        "600 unidades por segundo"
       ],
-      "a": 1
+      "correct": 0,
+      "explanation": "Little's Law: I = R × T, donde R = I / T = 10 unidades / 60 segundos = 0,166 unidades por segundo = 10 unidades/minuto. Atenção: T é cycle time (tempo entre outputs consecutivos, 60s), R é throughput (outputs por unidade de tempo). I = R × T significa que, em steady-state, o WIP = ritmo × tempo por unidade. O equivalente métrico alternativo: 1 unidade / 60s = 0,0166 unid/s, multiplicado pelo tempo total de produção. Erro típico: confundir lead time (tempo desde entrada até saída) com cycle time (tempo entre duas saídas)."
     },
     {
-      "q": "Six Sigma procura atingir o nível de:",
+      "q": "Qual das seguintes NÃO é parte da Theory of Constraints (TOC) de Goldratt?",
       "opts": [
-        "3,4 defeitos por milhão de oportunidades",
-        "34 defeitos por milhão de oportunidades",
-        "6,8 defeitos por milhão de oportunidades",
-        "Zero defeitos absoluto"
+        "Identificar o gargalo do sistema",
+        "Maximizar a utilização de todos os recursos mesmo ociosos",
+        "Subordinar tudo à restrição do gargalo",
+        "Elevar (investir no) o gargalo"
       ],
-      "a": 0
+      "correct": 1,
+      "explanation": "A TOC tem 5 passos: 1) Identificar, 2) Explorar (subutilizar máquinas não-gargalo é desperdício — não!), 3) Subordinar, 4) Elevar, 5) Repetir (porque o gargalo muda). Maximizar a utilização de todos os recursos é exactamente o que Goldratt chama 'eficiência local destruindo eficiência global' — gerar WIP desnecessário e nunca acelerar o throughput real. A regra de ouro: bottleneck resource deve estar 100% ocupado e protegido com buffer à entrada."
     },
     {
-      "q": "O EOQ (Economic Order Quantity) equilibra:",
+      "q": "Qual dos seguintes é considerado por Ohno como o PIOR desperdício (muda) do Sistema de Produção Toyota?",
       "opts": [
-        "Custo de produção e preço de venda",
-        "Custo de encomenda e custo de armazenagem",
-        "Custo de transporte e custo de inventário",
-        "Custo de pessoal e custo de matérias-primas"
+        "Transporte entre localizações",
+        "Espera de pessoas/máquinas",
+        "Sobreprodução (overproduction)",
+        "Defeitos e retrabalho"
       ],
-      "a": 1
+      "correct": 2,
+      "explanation": "Taiichi Ohno insistiu repetidamente: 'overproduction is the worst muda — because it creates the rest'. Quando produzimos mais ou antes do que o cliente pede, geramos inventário (I) que exige transporte (T) e armazenamento; o stock incentiva movimento extra de pessoas (M), o WIP acumula e gera espera (W); os lotes grandes incentivam sobre-processamento (O); e sem pressão JIT há maior probabilidade de defeitos (D). Por isso o TPS começa com heijunka (level scheduling) — nivelar a produção em volume e mix para nunca overproduzir."
+    },
+    {
+      "q": "Qual é a fórmula do EOQ (Economic Order Quantity) de Wilson-Harris?",
+      "opts": [
+        "Q* = √(DS/H)",
+        "Q* = √(2DS/H)",
+        "Q* = DS/H",
+        "Q* = 2DS/H"
+      ],
+      "correct": 1,
+      "explanation": "Q* = √(2DS/H) onde D = annual demand, S = order cost (fixed per order), H = holding cost per unit per year. Vem da minimização de Custo Total = (D/Q)S + (Q/2)H — custo anual de encomenda + custo anual de armazenagem médio. Derivar e igualar a zero: dCT/dQ = −DS/Q² + H/2 = 0 → Q² = 2DS/H. Variantes incluem desconto por quantidade (price-break) e produção simultânea (EPQ)."
+    },
+    {
+      "q": "No Six Sigma, o método DMAIC significa:",
+      "opts": [
+        "Define-Map-Apply-Improve-Control",
+        "Define-Measure-Analyze-Improve-Control",
+        "Design-Measure-Adjust-Implement-Check",
+        "Document-Model-Analyze-Implement-Control"
+      ],
+      "correct": 1,
+      "explanation": "DMAIC é a sigla padrão do Six Sigma (Motorola, 1986): Define (problema, cliente, SIPOC, project charter), Measure (sistema de medida, MSA, capacidade baseline), Analyze (causas-raiz — 5 Whys, fishbone, regressão), Improve (DOE, piloto, padronização), Control (SPC, control plan, SOP). É a aplicação do método científico ao mundo dos processos produtivos: hipótese (analyse), teste (improve), verificação (control)."
+    },
+    {
+      "q": "Numa carta de controlo de Shewhart Xbar-R com limites ±3σ, qual a probabilidade de um ponto fora dos limites quando o processo ESTÁ em controlo estatístico?",
+      "opts": [
+        "0,27% (em qualquer dos lados)",
+        "1%",
+        "5%",
+        "0% — limites 3σ são 100% seguros"
+      ],
+      "correct": 0,
+      "explanation": "Os limites 3σ correspondem a 99,73% dentro da banda (±3 desvios-padrão da distribuição normal), ou seja 0,27% fora em cada lado (0,135% acima + 0,135% abaixo). Daí o critério: 1 ponto fora dos limites = causa especial com ~99,7% de confiança (= significância estatística 0,27% de falso alarme, α). O uso de 3σ (em vez de ±2σ) é uma convenção de Shewhart: maximiza detecção de shifts verdadeiros enquanto aceita 0,27% de falso alarme. Regras auxiliares (Western Electric) amplificam a detecção (ex: 2 de 3 pontos consecutivos além de 2σ no mesmo lado)."
+    },
+    {
+      "q": "Num modelo M/M/1 com taxa de chegada λ = 4 clientes/hora e taxa de serviço μ = 5 clientes/hora, qual é o número médio de clientes na fila (Lq)?",
+      "opts": [
+        "3,2 clientes",
+        "1,6 clientes",
+        "0,8 clientes",
+        "16 clientes"
+      ],
+      "correct": 0,
+      "explanation": "M/M/1 com ρ = λ/μ = 4/5 = 0,8. Lq = ρ²/(1−ρ) = 0,64/0,2 = 3,2 clientes na fila em média. Wq (tempo na fila) = ρ/(μ−λ) = 0,8/1 = 0,8 horas = 48 minutos. W (tempo total no sistema) = 1/(μ−λ) = 1 hora. L (unidades no sistema) = ρ/(1−ρ) = 0,8/0,2 = 4. A regra é: perto da saturação (ρ=0,8 ou mais), pequena subida de λ causa explosão em Lq e Wq — programar em ρ ≤ 0,7 dá margem de segurança."
+    },
+    {
+      "q": "Numa classificação ABC de inventário, se 15% dos SKUs representam 75% do valor de vendas, esses 15% são classificados como:",
+      "opts": [
+        "Classe A — gestão intensiva (revisão semanal, forecast frequente)",
+        "Classe B — gestão moderada (revisão mensal)",
+        "Classe C — gestão simples (revisão anual ou sazonal)",
+        "Classe D — sem controlo (candidatos a eliminação)"
+      ],
+      "correct": 0,
+      "explanation": "Classe A são os 'vital few': típicamente 10-20% dos SKUs com 70-80% do valor. Gestão intensiva: revisão contínua (perpétuo), forecast frequente, contagem cíclica, lead-time mínimo, análise de ruptura, safety stock alvo elevado. Classe B (~30% dos SKUs, 15% valor) tem gestão moderada; Classe C (~50% dos SKUs, 5-10% valor) gestão simples — regras fixas EOQ sem forecast. A regra de Pareto 80/20 determina o que se controla com cuidado."
     }
   ]
 }

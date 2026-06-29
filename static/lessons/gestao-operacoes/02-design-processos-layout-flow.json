@@ -1,0 +1,169 @@
+{
+  "id": "02-design-processos-layout-flow",
+  "title": "2. Design de Processos, Análise de Fluxo e Layout: Bottleneck, Throughput e Gestão de Capacidade",
+  "courseSlug": "gestao-operacoes",
+  "lessonNumber": 2,
+  "description": "Como desenhar processos (SIPOC, flowchart, BPMN), analisar fluxos (bottleneck, throughput time, cycle time, Little's Law), escolher layout (product-oriented, process-oriented, fixed-position, cellular) e gerir capacidade (design capacity, effective capacity, utilisation, efficiency). Inclui a distinção clássica entre linha de montagem e job shop, e a gestão de capacidade via lead-time, M/M/1 e teoria das filas básica.",
+  "audio": "Nesta segunda lição entramos no desenho de processos: como mapear, analisar e redesenhar o fluxo de trabalho. Vamos usar SIPOC, flowchart e BPMN; identificar o bottleneck com a Teoria das Restrições de Goldratt; aplicar Little's Law (Inventário = Throughput × Lead Time) para perceber onde se acumula WIP; e escolher entre layouts por produto, por processo, fixo-posição e celular. No fim, vamos cobrir gestão de capacidade — capacidade teórica vs efectiva, utilização, eficiência — e como esta análise liga à teoria das filas que vamos aprofundar mais tarde.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Layout", "Bottleneck", "Throughput", "Little's Law", "Capacity", "TOC", "BPMN"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Desenho de processos (Process Design)"
+    },
+    {
+      "type": "p",
+      "text": "Desenhar um processo é definir como uma actividade, conjunto de tarefas, será executada por pessoas, máquinas e sistemas. É a decisão mais estrutural da função de operações: afecta custo, capacidade, qualidade, flexibilidade durante anos. O desenho começa pela pergunta 'o que precisa ser feito?' e termina em 'quem faz, onde, com que ferramentas, em que sequência, com que transferências de informação?'. Documenta-se tipicamente via SIPOC (Suppliers-Inputs-Process-Outputs-Customers), flowcharts, BPMN (Business Process Model and Notation) ou value-stream maps (lean)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "SIPOC: Suppliers → Inputs → Process (high-level, 4-7 macro-etapas) → Outputs → Customers",
+        "Flowchart: detalhado, decisão por diamante, processos por rectângulo, início/fim em oval",
+        "BPMN: notação formal com swimlanes, eventos, gateways, mensagens — standard internacional (ISO 19510)",
+        "Value-Stream Map (VSM): visão lean do fluxo, distingue value-added vs. non-value-added time",
+        "Perguntas-guia: que valor? quem o cliente? quais actividades? quantas transferências? onde há espera?"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Análise de valor vs. desperdício"
+    },
+    {
+      "type": "p",
+      "text": "Em qualquer processo, o tempo total (lead time) é a soma de tempo de valor (value-added, VA), tempo que não cria valor mas é necessário (necessary non-value-added, NVA-N) e puro desperdício (pure waste, NVA). Em manufactura típica, 90-95% do lead time é NVA — espera, transporte, fila, re-trabalho. A Toyota Production System ensina: 'os processos existem para criar valor para o cliente — tudo o resto é muda'. A análise começa por separar VA de NVA e atacar o NVA com ferramentas específicas (5 Whys, fishbone, kaizen blitz)."
+    },
+    {
+      "type": "h2",
+      "text": "Análise de fluxo: throughput, cycle time e inventory"
+    },
+    {
+      "type": "p",
+      "text": "Três conceitos interligados governam qualquer sistema de operações. Throughput é o ritmo com que o sistema 'cospe' outputs terminados por unidade de tempo (ex: clientes/hora, carros/dia). Cycle time é o tempo entre outputs consecutivos (cliente a cada 4 segundos, carro a cada 60 segundos). Inventory (WIP — work-in-process) é o número de unidades paradas no sistema em qualquer momento. Little's Law (1961, aplicado a filas por John DC Little) liga os três de forma inviolável para sistemas em estado estacionário: I = R × T (Inventory = Throughput rate × Cycle time)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Throughput (R): outputs por unidade de tempo (vazão, ritmo de saída)",
+        "Cycle time (T): tempo entre dois outputs consecutivos (tempo médio por unidade)",
+        "Inventory (I): unidades paradas no sistema (inclui WIP e stock acabado se contado)",
+        "Little's Law: I = R × T — verdadeira para qualquer sistema estável, sem assumir distribuição",
+        "Implicação prática: baixar I mantendo R exige baixar T; baixar T mantendo R exige baixar I — separação impossível em steady-state"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Bottleneck (gargalo) — Goldratt e a Theory of Constraints"
+    },
+    {
+      "type": "p",
+      "text": "Eliyahu Goldratt (The Goal, 1984) mostrou que, em qualquer sistema de operações, existe uma restrição (gargalo, bottleneck) cuja capacidade limita todo o sistema. O throughput da empresa é exactamente o throughput do gargalo. Cinco passos da Theory of Constraints (TOC): 1) Identificar o gargalo, 2) Decidir como explorá-lo (subutilizar qualquer recurso não-gargalo nunca é desperdício? Sim, é!), 3) Subordinar tudo o resto à decisão acima, 4) Elevar o gargalo (investir), 5) Repetir — se o gargalo mudou (e muda), volte ao passo 1. A regra de ouro do TOC: nunca dar a uma máquina não-gargalo o trabalho que uma máquina gargalo pode fazer mais rapidamente."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Gargalo: o recurso com menor capacidade (tempo mais longo por unidade)",
+        "Throughput da empresa = throughput do gargalo (não da média)",
+        "Não-gargalo ocioso é aceitável; gargalo ocioso é desastroso",
+        "Proteger o gargalo: buffers estratégicos à entrada, manter 100% ocupado, inspecção 100% à entrada",
+        "Drum-Buffer-Rope (DBR): ritmo do gargalo (drum) dita a WIP máxima (buffer) e o ritmo de lançamento (rope)",
+        "Localizar gargalo: medir utilização de cada recurso — utilização >80% por longos períodos geralmente é gargalo"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Erro clássico: optimizar um recurso não-gargalo sem primeiro proteger o gargalo. Foi a descoberta central de The Goal: uma fábrica pode estar a 90% de utilização média e falir por perder 1 minuto por gargalo. Dr Goldratt chamava a isto 'eficiência local destruindo eficiência global'."
+    },
+    {
+      "type": "h2",
+      "text": "Tipos de layout"
+    },
+    {
+      "type": "p",
+      "text": "Layout é a decisão sobre onde colocar recursos físicos no espaço. Quatro tipos canónicos têm implicações muito diferentes. Layout fixo (fixed-position): o produto fica parado e os recursos vêm ter com ele — usado em projectos únicos (construção de avião, navio, edifício). Layout por processo (process-oriented / functional): agrupa recursos similares — todas as fresas juntas, todos os escriturários juntos — flexibilidade alta para variedade baixa de volume (job shop, hospital com departamentos). Layout por produto (product-oriented / line): recursos dispostos na sequência do produto — fluxo linear, eficiência máxima para baixa variedade e alto volume (Ford, McDonald's). Layout celular (cellular): miniatura do layout por produto para uma família de peças — combina alguma flexibilidade com baixa distância percorrida."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Fixo (fixed-position): projectos únicos — Boeing final assembly, estaleiro naval",
+        "Por processo (functional): variedade alta, volume baixo — job shop, hospital com departamentos",
+        "Por produto (line): variedade baixa, volume alto — Ford Model T, McDonald's, IKEA numbering",
+        "Celular (cellular): famílias de peças + linha de produção — reduz transporte e set-up",
+        "Trade-offs: layout por processo tem transporte alto e lead-time longo; layout por produto tem baixa flexibilidade"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Linha de montagem vs. job shop — a dicotomia clássica"
+    },
+    {
+      "type": "p",
+      "text": "Linha de montagem (assembly line) é o extremo da padronização: alto volume, baixa variedade, recursos balanceados por takt time, fluxo linear, baixa habilidade manual necessária (trabalho fragmentado). Job shop é o oposto: baixo volume, alta variedade, recursos agrupados por função, fluxo caótico, alta habilidade manual, lead-times longos e variáveis. A maioria das operações vive no meio — produção em lote com alguma linha. A escolha errada custa milhões: forçar alta variedade numa linha gera gargalos e stress; forçar alto volume num job shop gera WIP descontrolado."
+    },
+    {
+      "type": "h3",
+      "text": "Takt time, balanceamento de linha e SMED"
+    },
+    {
+      "type": "p",
+      "text": "Takt time é o ritmo com que um produto deve sair da linha para satisfazer a procura: Takt = Tempo disponível / Procura diária. Ex: 8h × 3600s = 28800s; procura 240 unidades/dia → Takt = 120s. A linha deve ser balanceada para que cada estação tenha tempo ≤ takt time. O SMED (Single-Minute Exchange of Die) de Shigeo Shingo reduz set-up time abaixo de 10 minutos — permite lotes pequenos mesmo com layouts por produto. Linha balanceada: somam-se tempos das tarefas, divide-se pelo takt, calcula-se o número teórico de estações; o balanceamento procura minimizar o tempo ocioso por estação."
+    },
+    {
+      "type": "h2",
+      "text": "Gestão de capacidade"
+    },
+    {
+      "type": "p",
+      "text": "Capacidade é o output máximo que um sistema pode produzir por unidade de tempo. Distinguem-se três definições: design capacity (capacidade teórica, condições ideias — 24/7, equipamento novo), effective capacity (capacidade efectiva, descontando paragens planeadas — manutenção, mudança de turno, pausas) e actual output (produção real, descontando também paragens não planeadas — avarias, falta de material, absentismo). A eficiência é o rácio entre actual e effective (typicalmente 80-95%); a utilização é o rácio entre effective output e design capacity (typicalmente <100%)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Design Capacity: máxima teórica (24/7, equipamento novo, condições ideias)",
+        "Effective Capacity: design capacity menos paragens planeadas (manutenção, férias, setups)",
+        "Actual Output: capacidade efectiva menos paragens não-planeadas (avarias, absentismo, falta material)",
+        "Eficiência = Actual / Effective (typicalmente 0,80-0,95)",
+        "Utilisation = Effective / Design (perigosamente pode chegar a 100%, perde flexibilidade)",
+        "Capacity cushion / safety capacity: folga entre melhor estimativa de procura e effective capacity"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Decisões de capacidade: curto, médio e longo prazo"
+    },
+    {
+      "type": "p",
+      "text": "Decisões de curto prazo (working shifts, overtime, subcontratação) ajustam a capacidade efectiva dentro do trimestre. Decisões de médio prazo (contratar/despedir, abrir/fechar turnos, ajustar turnos) ajustam-na dentro do ano. Decisões de longo prazo (nova fábrica, novo equipamento, nova localização) levam 2-5 anos a executar e mudam a design capacity. A regra: quanto maior o horizonte, mais irreversível — e maior a necessidade de previsão acertada. Capacity strategy: lead strategy (expandir antes da procura — risco de excesso), lag strategy (expandir depois — risco de stockout), tracking strategy (expandir em pequenos passos atrás da procura — equilibrou) e perfect order (alistamento custom — caro mas exacto)."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: sempre que vires baixa utilização, pensa primeiro 'qual é o gargalo?'. Se ninguém está à espera do gargalo, podes parar a fábrica inteira e a procura semanal não muda — significa que há overcapacity nos não-gargalos."
+    },
+    {
+      "type": "h2",
+      "text": "Aplicação: como analisar o fluxo de uma operação real"
+    },
+    {
+      "type": "p",
+      "text": "Passo a passo para análise de fluxo: 1) Mapear o processo actual (flowchart ou VSM). 2) Medir tempo em cada etapa (VA) e tempo de espera entre etapas (NVA). 3) Identificar o gargalo (etapa com menor capacidade). 4) Calcular o lead-time total e a percentagem VA (muitas operações <5%). 5) Aplicar ferramentas: 5S e ergonomia (organização), SMED (set-up), kanban (WIP control), supermarket (visual management). 6) Re-medir após melhoria. Ciclos PDCA de 4-12 semanas são o padrão lean. Resultado típico em 3-6 meses: redução de 30-50% em lead-time, sem investimento em equipamento novo."
+    }
+  ],
+  "keyPoints": [
+    "Desenho de processos documenta-se via SIPOC, flowchart, BPMN ou Value-Stream Map",
+    "Análise de fluxo separa tempo VA (valor) de NVA (desperdício) — típica manufactura: 90-95% NVA",
+    "Little's Law: I = R × T — verdadeira para qualquer sistema estável, sem assumir distribuição",
+    "TOC (Goldratt): o gargalo dita o throughput da empresa; regra é proteger e elevar o gargalo",
+    "4 tipos de layout: fixo (projectos), por processo (job shop), por produto (linha), celular (famílias)",
+    "Linha vs job shop: alto volume/baixa variedade vs. baixa volume/alta variedade",
+    "Takt = Tempo disponível / Procura; balanceamento aloca tarefas a estações com soma ≤ takt",
+    "SMED (Shingo) reduz set-up <10 min — viabiliza produção em lote pequeno em layouts lineares",
+    "Design capacity ≠ effective capacity ≠ actual output; eficiência típica 80-95%",
+    "Lead/lag/tracking/perfect order são as 4 estratégias de capacidade de longo prazo"
+  ],
+  "quizSlug": "goq",
+  "nextLesson": "03-lean-toyota-six-sigma",
+  "prevLesson": "01-fundamentos-gestao-operacoes"
+}

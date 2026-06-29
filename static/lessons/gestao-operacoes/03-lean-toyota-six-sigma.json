@@ -1,0 +1,183 @@
+{
+  "id": "03-lean-toyota-six-sigma",
+  "title": "3. Lean Production, Toyota Production System e Six Sigma (DMAIC): Eliminação Sistemática de Desperdício",
+  "courseSlug": "gestao-operacoes",
+  "lessonNumber": 3,
+  "description": "O Sistema de Produção Toyota (TPS) na sua totalidade: os 7 desperdícios (TIMWOOD), 5S (Seiri, Seiton, Seiso, Seiketsu, Shitsuke), kanban e Just-in-Time (JIT), jidoka (autonomação), kaizen e melhoria contínua. Six Sigma (Motorola, 1986) e a metodologia DMAIC. A integração Lean Six Sigma como motor contemporâneo de excelência operacional — por que não são filosofias concorrentes mas complementares.",
+  "audio": "Nesta terceira lição vamos mergulhar nas duas grandes filosofias da excelência operacional moderna: o Lean Production nascido na Toyota depois da II Guerra e o Six Sigma nascido na Motorola nos anos 80. Vamos percorrer os 7 desperdícios — TIMWOOD — e como o kanban, o JIT e o jidoka os combatem. Vamos cobrir 5S como base da organização. E vamos analisar a estrutura DMAIC do Six Sigma: Define, Measure, Analyze, Improve, Control. Vamos fechar com a integração Lean Six Sigma e os green belts, black belts e master black belts que sustentam os programas.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Lean", "Toyota", "TPS", "Six Sigma", "DMAIC", "Kaizen", "5S", "Kanban", "JIT", "Jidoka"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Sistema de Produção Toyota (TPS) — origens e os dois pilares"
+    },
+    {
+      "type": "p",
+      "text": "O TPS nasceu em Toyota City entre 1950 e 1975 sob a liderança de Taiichi Ohno. Ohno foi visitar a Ford em 1950 e ficou impressionado com a escala mas viu que não podia aplicar à Toyota o mesmo modelo — volumes muito menores, variedade muito maior. Passou 25 anos a desenhar alternativas, numéricos e documentados em japonês sem livros formais. Quando Jeffrey Liker e Mike Rother consolidaram o sistema, identificaram dois pilares: Just-in-Time (JIT) — produzir apenas o que é necessário, na quantidade necessária, no momento necessário — e Jidoka (autonomação) — parar a linha quando algo está anormal. Sobre estes pilares assentam todas as ferramentas do TPS."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Pilar 1 — Just-in-Time: puxar fluxo da procura real, zero inventário especulativo",
+        "Pilar 2 — Jidoka (autonomação): autoridade à máquina e ao operador para parar tudo se há defeito",
+        "Origens: Ohno (1945-1970), visitas à Ford/Supermarket US anos 1950, deming 1950 tours Toyota",
+        "Surpreendente: nenhuma patente — sistema não protegido juridicamente, copiável mas raramente copiado",
+        "Toyota Production System = casa TPS: telhado (qualidade, custo, entrega), dois pilares (JIT + Jidoka), fundação (base estável — 5S, heijunka, kaizen)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Os 7 desperdícios (TIMWOOD — 'muda' em japonês)"
+    },
+    {
+      "type": "p",
+      "text": "Taiichi Ohno identificou e catalogou sete categorias de desperdício — qualquer actividade que consome recursos sem criar valor para o cliente. Com o tempo, evoluiu-se de 7 para 8 wastes (adicionando o talento não-utilizado). O acrónimo mais usado em inglês é TIMWOOD (Transportation, Inventory, Motion, Waiting, Overproduction, Over-processing, Defects). Software agile adicionou depois um nono (Underutilização do talento). Cada waste é combatido por uma ferramenta específica: transporte → layout celular; inventário → kanban; movimento → 5S ergonomia; espera → balanceamento; sobreprodução → takt + heijunka; sobre-processamento → value analysis; defeitos → jidoka + poka-yoke."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "T (Transportation): mover material entre localizações — combate-se com layout celular",
+        "I (Inventory): inventário de qualquer tipo (WIP, matéria, acabado) — combate-se com kanban e JIT",
+        "M (Motion): movimento de pessoas e equipamento que não cria valor — combate-se com ergonomia e 5S",
+        "W (Waiting): pessoas/máquinas paradas à espera do passo seguinte — combate-se com balanceamento e fluxo",
+        "O (Overproduction): produzir mais ou antes do que o cliente pede — o pior waste (gera todos os outros)",
+        "O (Over-processing): processamento além do que o cliente valoriza — combate-se com value analysis",
+        "D (Defects): retrabalho, sucata, garantia — combate-se com jidoka, poka-yoke, SPC"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Ohno insistia: 'overproduction is the worst muda — it creates the rest'. Se produzires mais do que o cliente pede, vais acumular inventário (I), que gera necessidade de transporte (T), que gera movimento extra (M), que gera espera (W) — uma cascata de waste. Por isso o sistema TPS começa com heijunka (level scheduling) e takt."
+    },
+    {
+      "type": "h2",
+      "text": "5S — a fundação da organização"
+    },
+    {
+      "type": "p",
+      "text": "5S é o programa de organização do espaço de trabalho que sustenta qualquer sistema lean. Os cinco 'S' vêm do japonês: Seiri (organizar — separar necessário de desnecessário), Seiton (ordenar — lugar para cada coisa, cada coisa no seu lugar), Seiso (limpar — inspeccionar durante a limpeza), Seiketsu (padronizar — tornar hábito visual), Shitsuke (disciplina — manter). É literalmente a fundação da casa TPS — sem chão limpo, etiquetas, separadores e procedimentos visuais, kanban e poka-yoke não funcionam. Aplicação real: chão de fábrica marcado a amarelo para passadeiras, vermelho para extintores, ferramentas em placas shadow-board com foto de cada peça. Em escritórios aplica-se igualmente — gavetas etiquetadas, prateleiras normalizadas, e-mail zero, MES digital."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Seiri (整理): distinguir necessário vs. desnecessário; remover o que não tem uso frequente",
+        "Seiton (整頓): lugar para tudo, tudo no seu lugar — identifica-se por sinalização visual",
+        "Seiso (清掃): limpar = inspeccionar. Detectar fontes de sujidade, óleo, partículas",
+        "Seiketsu (清潔): padronizar para que seiri/seiton/seiso sejam hábito (procedimentos visuais)",
+        "Shitsuke (躾): disciplina — auditoria, publicidade dos resultados, reciclagem contínua"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Kanban e Just-in-Time (JIT) — o sistema puxado"
+    },
+    {
+      "type": "p",
+      "text": "Kanban é literalmente 'cartão' (em japonês) e refere-se originalmente ao cartão físico que uma estação usa para pedir material à estação anterior. Na essência, kanban é o mecanismo que torna o Just-in-Time realizável: só se produz quando o cliente puxa (puxar fluxo, não empurrar stock). Em manufactura: cada peça num contentor kanban com cartão; quando o contentor esvazia, vai ao supermercado e troca por cheio, e o cartão regressa ao produtor para autorizar a reposição. O sistema limita WIP (max 3 contentores) e cria pressão imediata para resolver anomalies (faltas, atrasos, defeitos)."
+    },
+    {
+      "type": "h3",
+      "text": "Tipos de kanban: production, withdrawal, signal"
+    },
+    {
+      "type": "p",
+      "text": "Production kanban (P-kanban): autoriza a produção de um lote na estação anterior. Withdrawal kanban (W-kanban): autoriza a retirada de material do supermercado para uma estação a jusante. Signal kanban: usado em casos especiais (produção irregular, lotes longos) — dispara a produção quando o stock cai abaixo de um threshold, em vez de autorização permanente. Electronic kanban (e-kanban) substitui o cartão físico — sistema MES ou MES-lite com tablets — e adiciona tracking em tempo real, integração com MRP e indicadores automáticos."
+    },
+    {
+      "type": "h3",
+      "text": "Jidoka (autonomação) — parar para impedir defeitos"
+    },
+    {
+      "type": "p",
+      "text": "Jidoka — 'autonomação' é a tradução do japonês — significa combinar jido (automação) com hinshitsu (qualidade). O conceito é que, ao detectar uma anomalia, o sistema para automaticamente (ou o operador tem autoridade para parar tudo) e ninguém produz peças defeituosas. Implementações clássicas: máquinas com limit switches que detectam defeito e paragem automática (1936 Toyoda Automatic Loom); linhas com cordão andon que qualquer operador puxa para parar tudo (qualquer pessoa, qualquer motivo). Andon board grande com luz verde/amarela/vermelha por estação é o ícone visual. Jidoka liberta os supervisores da inspecção e devolve dignidade ao operador — que vira dono do processo em vez de robô."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Andon: cordão/botão para parar a linha; visibilidade em tempo real por estação",
+        "Poka-yoke (mistake-proofing): dispositivos mecânicos que tornam erro impossível — USB-C do tipo único, sensores de cor",
+        "À autoridade para parar vem a responsabilidade de parar — não é opcional, é parte do trabalho",
+        "Andon responde-se em 30 segundos — supervisor vai à estação ver o problema",
+        "Puxar o andon várias vezes é sinal de problema sistémico, não de culpa individual — sem shot ad hominem"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Kaizen — melhoria contínua do tipo PDCA"
+    },
+    {
+      "type": "p",
+      "text": "Kaizen (改善) significa literalmente 'mudar para melhor' — melhoria contínua, gradual e diária, envolvendo todos. Difere da melhoria 'inovação' (big bang, salt-breakthrough) tanto no ritmo como na escala: melhoria diária pequena versus projecto transformacional. Kaizen usa o ciclo PDCA de Deming — Plan (definir problema, hipótese), Do (implementar pequeno teste), Check (medir resultado), Act (padronizar se sucesso, ou repetir com novo plano). Eventos kaizen (kaizen blitz / kaizen workshop) juntam equipa multidisciplinar durante 3-5 dias focados num problema concreto — formato muito usado para áreas administrativas."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Kaizen = 'mudar para melhor' — melhoria contínua, gradual, envolvendo todos",
+        "PDCA (Deming) ou PDSA: Plan, Do, Study, Act — versão usada na Toyota",
+        "Kaizen blitz: evento 3-5 dias, equipa multidisciplinar, objectivo concreto (lead-time, qualidade)",
+        "Gemba: o 'chão', onde o trabalho acontece — requisito kaizen é ir ao gemba para observar, não ouvir",
+        "5 Whys: perguntar 5 vezes porquê até chegar à causa raiz (usado em conjunto com kaizen)",
+        "Genchi Genbutsu: ir ver com os próprios olhos, genchi genbutsu"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Six Sigma — DMAIC e o método científico aplicado à variação"
+    },
+    {
+      "type": "p",
+      "text": "Six Sigma nasceu na Motorola em 1986 (Bill Smith) com um objectivo quantitativo: reduzir variabilidade nos processos até que a taxa de defeitos fosse no máximo 3,4 por milhão de oportunidades (DPMO) — correspondendo a 6 desvios-padrão entre a média e o limite de especificação. Para lá da estatística, Six Sigma instala o método científico nas operações: definir o problema (D), medi-lo com dados (M), analisar estatisticamente para encontrar causas-raiz (A), melhorar controlando a variabilidade (I), e controlar para sustentar o ganho (C) — o ciclo DMAIC. A expressão Six Sigma foi popularizada por Jack Welch na GE nos anos 1990, que construiu um exército de green belts, black belts e master black belts."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Six Sigma = 3,4 DPMO (defeitos por milhão de oportunidades) — meta estatística, não processo",
+        "DMAIC: Define (problema, cliente, SIPOC) → Measure (sistema de medida, MSA) → Analyze (causas-raiz) → Improve (experimentos, DOE) → Control (SPC, SOP)",
+        "Estatística subjacente: distribuição normal, capacidade de processo (Cp, Cpk), cartas de controlo Shewhart, Pareto, fishbone, regressão",
+        "Funções Six Sigma: Master Black Belt (programa), Black Belt (projectos), Green Belt (ajuda em projectos), Champion (sponsor executivo)",
+        "DOE (Design of Experiments): variar factores simultaneamente para encontrar o melhor set-point",
+        "MSA (Measurement System Analysis): garante que o sistema de medida não corrompe os dados"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Six Sigma vs. Lean — o falso dilema"
+    },
+    {
+      "type": "p",
+      "text": "Lean reduz waste (muda) — actividades sem valor para o cliente. Six Sigma reduz variação — consistência nos processos. São complementares: enquanto Lean ataca o fluxo e o tempo, Six Sigma ataca a predictibilidade. A integração chama-se Lean Six Sigma (LSS) e tornou-se o paradigma dominante da melhoria operacional nos anos 2000. Ferramentas comuns: VSM + DMAIC, kanban + SPC, kaizen + DOE. Projectos LSS tipicamente começam com VSM (Lean) e terminam com control charts (Six Sigma)."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: a integração Lean Six Sigma resolve 80% dos problemas de uma operação. Lean é a ferramenta quando o problema é 'tempo longo' (lead-time, espera, transporte, inventário). Six Sigma é a ferramenta quando o problema é 'inconsistência' (defeitos, variação, reclamações). Se não sabes por onde começar, observa — se o processo é irregular, Six Sigma; se é regular mas lento, Lean."
+    },
+    {
+      "type": "h2",
+      "text": "Estudos de caso — Toyota, Amazon, McDonald's, hospital lean"
+    },
+    {
+      "type": "p",
+      "text": "A Toyota nunca patenteou o TPS — qualquer empresa o podia copiar. Mas poucas copiaram com sucesso (a Tesla admite-se inspirada, a Hyundai tentará, a Tesla 2010-2020 adoptou controlo estatístico de processo). Razões não-técnicas: gestão de pessoas, sistema de reporting (andon + heijunka), cultura de melhoria contínua, integração com fornecedores. A Amazon FBA inventou o seu próprio sistema com base lean — inventário distribuído por centros próximos do cliente, kanban virtual, kaizen diário no wiki de operações, DMAIC em métricas de entrega. O McDonald's melhorou 30% no tempo médio de serviço após projecto lean nas décadas de 2010-2020. Hospitais como Virginia Mason (Seattle) e ThedaCare (Wisconsin) adoptaram lean services com redução de 50% em tempo de espera em consultas externas e redução de erros de medicação."
+    }
+  ],
+  "keyPoints": [
+    "TPS tem 2 pilares: Just-in-Time (puxar fluxo da procura) + Jidoka (parar a linha em qualquer anomalia)",
+    "7 wastes TIMWOOD: Transporte, Inventário, Movimento, Espera, Sobreprodução, Sobre-processamento, Defeitos",
+    "Overproduction é o pior waste — gera os outros 6 em cascata",
+    "5S: Seiri, Seiton, Seiso, Seiketsu, Shitsuke — fundação do chão organizado",
+    "Kanban: cartão físico ou electrónico que autoriza produção/reposição; limita WIP a max 3 contentores",
+    "Jidoka + Andon: autoridade dada ao operador para parar e resolução de problemas em 30 segundos",
+    "Poka-yoke: dispositivos que tornam o erro fisicamente impossível (mistake-proofing)",
+    "Kaizen: melhoria contínua gradual via PDCA (Deming) ou PDSA",
+    "Six Sigma: ≤3,4 DPMO (defeitos por milhão de oportunidades); metodologia DMAIC",
+    "DMAIC: Define → Measure → Analyze → Improve → Control — método científico para variação",
+    "Lean Six Sigma integra redução de waste (Lean) com redução de variação (Six Sigma)",
+    "Green/Black/Master Black Belts: estrutura hierárquica de gestão de projectos Six Sigma"
+  ],
+  "quizSlug": "goq",
+  "nextLesson": "04-planeamento-controlo-operacoes",
+  "prevLesson": "02-design-processos-layout-flow"
+}

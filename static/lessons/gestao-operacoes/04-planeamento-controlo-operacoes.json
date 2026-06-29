@@ -1,0 +1,219 @@
+{
+  "id": "04-planeamento-controlo-operacoes",
+  "title": "4. Planeamento e Controlo de Operações: MRP, EOQ, SPC e Teoria das Filas",
+  "courseSlug": "gestao-operacoes",
+  "lessonNumber": 4,
+  "description": "Planeamento de operações hierarquizado (longo → médio → curto prazo: aggregate planning, MPS, MRP, ERP), gestão de inventário (EOQ, ROP, safety stock, classificação ABC), controlo estatístico de processo (SPC, cartas de controlo Shewhart, Cp/Cpk, Taguchi loss function) e teoria das filas (M/M/1, M/M/c, trade-off custo de serviço vs custo de espera). Cobre a integração contemporânea ERP + APS + SCADA + BI.",
+  "audio": "Nesta quarta lição cobrimos o lado da gestão planeada e quantitativa da função de operações. Vamos começar pelo planeamento hierarquizado — do agregado anual ao agendamento fino diário — incluindo aggregate planning, MPS (Master Production Schedule) e MRP (Material Requirements Planning), e a evolução para ERP e APS. Vamos cobrir gestão de inventário: EOQ, replenishment point, safety stock e classificação ABC. Vamos ver controlo de qualidade com SPC — cartas de controlo Shewhart, capability indices Cp/Cpk — e a função de perda de Taguchi. Fechamos com teoria das filas (M/M/1) e a relação custo de serviço vs custo de espera.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["MRP", "EOQ", "SPC", "Shewhart", "ABC", "Teoria das Filas", "M/M/1", "Taguchi", "ERP"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Planeamento hierarquizado (longo → médio → curto prazo)"
+    },
+    {
+      "type": "p",
+      "text": "Operações planeia-se em horizontes temporais múltiplos: anual (planeamento agregado), mensal/semanal (MPS), diário (sequenciamento). Cada nível decompõe-se em decisões mais finas, com horizontes mais curtos. As decisões de longo prazo (capacity, location, supply chain design) tomam anos a executar; as de curto prazo (sequenciamento, dispatching) executam-se em horas. Saber qual é qual — e qual ferramenta aplicar a cada nível — é a primeira competência do planeamento de operações."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Longo prazo (anual / 3-5 anos): localização, capacidade, design da supply chain, tecnologia",
+        "Médio prazo (mensal / trimestre): planeamento agregado, budgets, contratos de fornecimento",
+        "Curto prazo (semanal / diário): MPS, sequenciamento, inventory replenishment, expedição",
+        "Operacional (horário): detalhe fino de tarefas, dispatching, monitorização real-time",
+        "Granularidade inversa: quanto maior o horizonte, mais agregados os dados (famílias, regiões)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Planeamento agregado (Aggregate Planning)"
+    },
+    {
+      "type": "p",
+      "text": "Aggregate planning decide, mensal ou trimestralmente, o plano agregado de produção, mão-de-obra e inventário para satisfazer a procura esperada ao menor custo. As variáveis de decisão são: production rate, workforce level, inventory level, backorders rate, subcontracting rate, pricing (procura управляемая). Estratégias: chase (ajustar produção à procura, contratando/despedindo) — elevado custo de RH; level (manter produção constante, deixando inventário absorver variação) — elevado inventário; mixed (combinação das duas); demand management (mudar preço ou marketing para suavizar a procura)."
+    },
+    {
+      "type": "h3",
+      "text": "Custos relevantes no aggregate planning"
+    },
+    {
+      "type": "p",
+      "text": "O aggregate planning optimiza uma função de custo que combina: custo de regular hours, custo de overtime, custo de hiring/firing, custo de inventory carrying, custo de backorders/lost sales, custo de subcontracting, e (no caso de serviços) custo de capacidade ociosa. Excel/Solver ou ferramentas específicas (SAP PP, Oracle Demantra) resolvem o modelo. A solução óptima tipicamente está entre chase puro e level puro — uma curva eficiente onde se escolhe segundo trade-offs estratégicos (ex: evitar layoffs mesmo com maior inventário)."
+    },
+    {
+      "type": "h2",
+      "text": "MPS — Master Production Schedule"
+    },
+    {
+      "type": "p",
+      "text": "O MPS detalha o agregado: por produto acabado individual, diz quantas unidades fabricar em cada semana do horizonte (tipicamente 4-12 semanas à frente). É o input para o MRP e gere três variáveis: quantidades planeadas (planned orders), inventário disponível projectado (PAB — projected available balance), e disponibilidade para promessa (ATP — available to promise). A lógica é 'time-phased': cada semana, MPS calcula quanto do stock existente é consumido pela procura firme e quanto entra por produção nova. O mestre preocupa-se com produtos críticos; o resto deixa-se para produção puxada (kanban, ATO)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Planned order: ordem de produção planeada para uma semana (autorizada ou não)",
+        "PAB (Projected Available Balance): inventário projectado semana a semana = stock inicial + produção – procura",
+        "ATP (Available to Promise): quanto stock pode ser prometido a clientes novos sem atrasar ordens existentes",
+        "Frozen zone: primeiras semanas do MPS — não se pode mudar sem aprovação (clientes comprometidos)",
+        "Slushy zone: zona intermédia — pode mudar com aprovação limitada",
+        "Liquid zone: zona final — pode mudar livremente"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "MRP (Material Requirements Planning) — o cálculo das necessidades"
+    },
+    {
+      "type": "p",
+      "text": "MRP é o sistema que explode a BOM (Bill of Materials) de cada produto do MPS em necessidades de componentes, descontando stock existente e ordens de compra abertas, e reagendando as ordens para a data certa. Lógica do MRP (na sua versão II — MRP II inclui loops de capacity feedback): input = MPS + BOM + inventory file + open purchase orders; output = planned order releases (por componente, com datas). O algoritmo de offset por lead-time asegura que o componente chega quando é preciso — sem inventário especulativo. O MRP clássico baseia-se em procura conhecida (MTS). MRP II adicionou feedback de capacidade, CRP (Capacity Requirements Planning), agora integrado nos ERPs contemporâneos."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Inputs: MPS, BOM (Bill of Materials), Inventory Status File, Open Purchase Orders",
+        "Output: Planned Order Releases por componente, com data de release e due date",
+        "Low-Level Coding: numeração de BOM pelos níveis mais baixos (matéria-prima nível 0, sem componentes)",
+        "Lead-time offset: data release = due date − lead time",
+        "Action messages: ordens a criar, ordens a expedir, ordens a reschedul-ar",
+        "MRP II: MRP + capacity planning (CRP) + shop floor control + financial interface"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "ERP, APS e integração contemporânea"
+    },
+    {
+      "type": "p",
+      "text": "ERP (Enterprise Resource Planning) é a integração dos fluxos de informação de uma empresa via um sistema centralizado: módulos Finance, HR, SCM, Manufacturing, Sales. Os ERPs contemporâneos (SAP S/4HANA, Oracle Cloud, Microsoft Dynamics 365, Infor LN) incluem MRP II, MES e dashboards analíticos. APS (Advanced Planning and Scheduling) é uma camada complementar ao ERP que resolve problemas de optimização mais complexos (sequenciamento, scheduling, network design) com algoritmos de OR — simplex, column generation, heurísticas. Tipicamente, MRP faz-feito o 'planeamento' enquanto APS faz o 'scheduling'."
+    },
+    {
+      "type": "h2",
+      "text": "Gestão de inventário: EOQ, ROP, safety stock, classificação ABC"
+    },
+    {
+      "type": "p",
+      "text": "Inventário tem um custo (capital empatado, armazenagem, seguros,obsolescência, seguro) e um benefício (evitar stockout e ter o produto disponível quando o cliente quer). O equilíbrio entre os dois é o tema da gestão de inventário. Quatro ferramentas dominam o campo: EOQ (Economic Order Quantity) — quanto encomendar de cada vez; ROP (Reorder Point) — quando fazer nova encomenda; safety stock — quanto manter de reserva contra variabilidade; classificação ABC — quanto esforço gerir por SKU."
+    },
+    {
+      "type": "h3",
+      "text": "EOQ — Economic Order Quantity (Wilson, 1913; Harris, 1913)"
+    },
+    {
+      "type": "p",
+      "text": "EOQ minimiza o custo total anual de inventário (custo de encomenda + custo de armazenagem). Assumindo procura constante (D unidades/ano), custo fixo por encomenda (S) e custo de armazenagem por unidade por ano (H), a quantidade óptima de encomenda é Q* = √(2DS/H). A fórmula tem variantes: EOQ com desconto por quantidade (preços diferenciados), EPQ (Economic Production Quantity — produção + consumo simultâneos), EOQ com stockout permitido (custo de stockout) e EOQ com lead-time variável (Q determinada por serviço). É rara na prática exacta (a procura raramente é constante), mas conceitualmente fundadora."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Q* = √(2DS/H) — D = annual demand, S = order cost, H = holding cost per unit per year",
+        "Entre encomendas consecutivas: T* = Q*/D (em anos)",
+        "Número de encomendas/ano: N* = D/Q*",
+        "Pressuposto forte: procura constante, lead-time zero, sem restrição de capacidade",
+        "Variantes: EOQ com desconto, EPQ (Economic Production Quantity), EOQ com stockout",
+        "Na prática: inventário é gerido por safety stock + ROP, EOQ serve como ponto de referência"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Safety stock e Reorder Point (ROP)"
+    },
+    {
+      "type": "p",
+      "text": "Reorder Point (ROP) é o nível de stock que dispara uma nova encomenda. No modelo com lead-time L e procura média d por dia: ROP = d × L + safety stock. O safety stock depende da variabilidade da procura e do lead-time, e do nível de serviço desejado. Fórmula comum: SS = z × σL onde z é o desvio-padrão da procura durante o lead-time (1,65 para 95% service level). Modelos mais sofisticados incorporam fill rate (probabilidade de não-stockout durante o ciclo, em vez de em cada procura)."
+    },
+    {
+      "type": "h3",
+      "text": "Classificação ABC (Pareto aplicado a inventário)"
+    },
+    {
+      "type": "p",
+      "text": "Nem todos os SKUs merecem o mesmo esforço de gestão. A classificação ABC ordena SKUs pela contribuição para o valor ou volume de vendas: classe A — 10-20% dos SKUs, 70-80% do valor (intensivo controlo, revisão semanal); classe B — 30% dos SKUs, 15% do valor (controlo moderado); classe C — 50% dos SKUs, 5-10% do valor (controlo simples). Regras de revisão associadas: A — revisão contínua com forecast frequente; B — revisão periódica; C — revisão anual ou sazonal, regras simples."
+    },
+    {
+      "type": "h2",
+      "text": "Controlo Estatístico de Processo (SPC) e cartas de controlo Shewhart"
+    },
+    {
+      "type": "p",
+      "text": "Walter Shewhart (1924, Bell Labs) intuiu o problema fundamental: nenhum processo consegue reproduzir absolutamente, há sempre variação aleatória (causas comuns) e variação atribuível a causas especiais (ferramenta gasta, novo operador, matéria nova). Distinguir os dois tipos é o objectivo das cartas de controlo: pontos dentro dos limites (3 sigma) = processo estável; pontos fora = causa especial, investigar. Três cartas clássicas: Xbar-R (subgroups contínuos), Xbar-S (subgroups maiores), p-chart (atributo binário — defeituoso/não-defeituoso)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Causas comuns: variação inerente, intratável sem redesign do processo",
+        "Causas especiais: externas, identificáveis e removíveis (avaria, mudança matéria, novo operador)",
+        "Linhas de controlo: UCL = μ + 3σ, LCL = μ − 3σ (limites 3-sigma)",
+        "Cartas Xbar-R: para dados contínuos com subgrupos (mean and range)",
+        "Cartas p: para atributos (proporção defeituosa)",
+        "Cartas CUSUM, EWMA: para detectar drifts lentas (não captadas pela Xbar-R clássica)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Cp, Cpk e capacidade de processo"
+    },
+    {
+      "type": "p",
+      "text": "Cp = (USL − LSL) / (6σ) mede a capacidade potencial do processo — quantos desvios-padrão cabem dentro das especificações. Cpk = min[(USL − μ)/3σ, (μ − LSL)/3σ] — capacidade centrada — penaliza processos descentrados. Six Sigma exige Cpk ≥ 2 (correspondente a 4-5 sigma, ou seja 0-3,4 DPMO). Cpk < 1 indica processo não-capaz: a maioria das unidades cairá fora das especificações mesmo na ausência de causas especiais."
+    },
+    {
+      "type": "h3",
+      "text": "Taguchi Loss Function"
+    },
+    {
+      "type": "p",
+      "text": "Genichi Taguchi (1924-2012) propôs uma visão radical: a perda para a sociedade não começa na unidade fora de especificação, mas continua linearmente do valor nominal até à especificação. L(x) = k(x − T)², onde T é o target, x o valor medido, k = custo/(especificação − target)². Consequência: continuar a produzir dentro dos limites é desperdício de capacidade; o melhor processo é o que centra o output no target com mínima variância. Robustez: Taguchi chama 'robust design' ao processo cujas saídas variam pouco face a 'ruído' (variação nas matérias, ambiente, envelhecimento)."
+    },
+    {
+      "type": "h2",
+      "text": "Teoria das filas (Queueing Theory) — nível de serviço"
+    },
+    {
+      "type": "p",
+      "text": "Fila é o fenómeno universal em operações: chegadas aleatórias (λ) a um servidor (μ), formam uma fila e saem depois de serviço. O modelo M/M/1 (M=Markov, chegadas Poisson, serviço exponencial, 1 servidor) tem soluções fechadas: ρ = λ/μ = utilização (sistema estável exige ρ < 1); L = ρ/(1−ρ) unidades no sistema em média; Lq = ρ²/(1−ρ) na fila; W = 1/(μ−λ) tempo total no sistema; Wq = ρ/(μ−λ) tempo na fila. Variantes: M/M/c (vários servidores), M/G/1 (tempos de serviço gerais), modelos com priorização e com disciplina FIFO/PROP/FILA compartilhada."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "M/M/1: chegadas Poisson (λ), serviço exponencial (μ), 1 servidor, FIFO",
+        "ρ = λ/μ — sistema estável exige ρ < 1",
+        "L (unidades no sistema) = ρ/(1−ρ); Lq (na fila) = ρ²/(1−ρ)",
+        "W (tempo total) = 1/(μ−λ); Wq (tempo na fila) = ρ/(μ−λ)",
+        "P(n unidades no sistema) = (1−ρ)ρⁿ — geométrica",
+        "Trade-off clássico: aumentar capacidade (μ) reduz ρ, W, Lq — mas custa dinheiro"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Trade-off entre custo de serviço e custo de espera"
+    },
+    {
+      "type": "p",
+      "text": "Toda a decisão de capacidade em filas envolve o trade-off entre pagar por capacidade adicional (salários, equipamento) versus o custo de fazer o cliente/paciente/carga esperar. Regra prática: se a elasticidade de ρ for alta perto de 1, pequenas subidas em λ causam explosões em Wq. Sistemas muito carregados (ρ > 0.85) são instáveis — uma ligeira subida da procura paralisa o serviço. Adicionar segundo servidor (M/M/2) dobra a capacidade mas custa — análise custo-benefício determina o ponto óptimo (com frequência muito além de onde a intuição sugeriria)."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Heizer, Render & Munson: 'O dimensionamento da capacidade é o problema mais estratégico da função de operações. O modelo M/M/1, embora simples, dá-nos a primeira estimativa da relação custo de capacidade vs custo de espera'. Use-o como primeira iteração antes de modelos detalhados (simulação)."
+    }
+  ],
+  "keyPoints": [
+    "Planeamento hierarquizado: longo (capacity) → médio (aggregate) → curto (MPS) → operacional (dispatching)",
+    "Aggregate planning: chase, level, mixed ou demand management — função de custo multi-objectivo",
+    "MPS: planned orders, PAB (projected available balance), ATP (available to promise) — 4-12 semanas",
+    "MRP II = MRP (matérias) + CRP (capacidade) + shop floor control — integrado em ERPs contemporâneos",
+    "EOQ: Q* = √(2DS/H) — fórmula clássica Wilson-Harris; variantes incluem desconto e produção",
+    "ROP = d × L + safety stock; SS = z × σL (1,65 para 95% service level)",
+    "Classificação ABC: 10-20% A (70-80% valor) + 30% B (15%) + 50% C (5-10%) — gestão diferenciada",
+    "Cartas de controlo Shewhart: Xbar-R (contínuo), p-chart (atributo) — distinguir variação comum de causa especial",
+    "Cp mede capacidade potencial; Cpk penaliza descentragem — Six Sigma exige Cpk ≥ 2",
+    "Taguchi Loss Function: L(x) = k(x−T)² — perda começa no target, não no limite de especificação",
+    "M/M/1: ρ = λ/μ; L = ρ/(1−ρ); W = 1/(μ−λ) — trade-off entre capacidade e tempo de espera",
+    "Sistemas com ρ > 0,85 são instáveis; subida pequena de procura explode tempo de fila"
+  ],
+  "quizSlug": "goq",
+  "nextLesson": null,
+  "prevLesson": "03-lean-toyota-six-sigma"
+}

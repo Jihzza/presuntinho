@@ -1,0 +1,182 @@
+{
+  "id": "01-fundamentos-gestao-operacoes",
+  "title": "1. Fundamentos de Gestão de Operações: Processos, Cadeia de Valor de Porter e Estratégia Operacional",
+  "courseSlug": "gestao-operacoes",
+  "lessonNumber": 1,
+  "description": "O que é uma operação (bens, serviços e híbridas), como se classificam os processos (projeto → contínuo, make-to-stock / make-to-order / assemble-to-order), a Cadeia de Valor de Porter como instrumento de análise de actividades primárias e de apoio, inputs/outputs materiais e imateriais, e a estratégia de operações alinhada com prioridades competitivas (custo, qualidade, velocidade, flexibilidade) e os trade-offs entre elas.",
+  "audio": "Nesta primeira lição vamos definir o que é gestão de operações — não é só chão de fábrica: aplica-se a hospitais, bancos, software e restaurantes. Vamos percorrer a tipologia de processos, do projecto único ao processo contínuo 24/7, e a distinção entre make-to-stock, make-to-order e assemble-to-order. Vamos aplicar a Cadeia de Valor de Porter para diagnosticar onde uma empresa cria e onde destrói valor — logística interna, operações, logística externa, marketing e vendas, serviço, mais as actividades de apoio. No fim, vamos alinhar a estratégia de operações com prioridades competitivas: nem toda a empresa deve ser excelente em tudo — há trade-offs reais entre custo, qualidade, velocidade e flexibilidade.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Operações", "Estratégia", "Cadeia de Valor", "Porter", "Processos", "MTS", "MTO", "ATO"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é Gestão de Operações (Operations Management)"
+    },
+    {
+      "type": "p",
+      "text": "Gestão de Operações é a área que desenha, opera e melhora os processos que transformam inputs — matérias-primas, trabalho, capital, informação, energia — em outputs — produtos ou serviços. Embora o termo 'operações' evoque fábricas, o domínio é muito mais amplo: abrange bancos (operações financeiras, gestão de risco operacional), hospitais (fluxo de pacientes, gestão de blocos operatórios), restaurantes (gestão de mesas e pedidos), software (DevOps, SRE) e logística (fulfilment, last mile). O ponto comum é sempre o mesmo: criar valor para o cliente de forma eficiente, repetível e continuamente melhorável."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Operations Management (OM) ≠ apenas manufactura — é toda a produção sistemática de valor",
+        "Três revoluções históricas: divisão do trabalho (Smith, 1776), produção em massa (Ford, 1913), produção lean (Toyota, 1950s-80s)",
+        "Hoje: Industry 4.0, IoT, digital twins e AI/ML estão a redesenhar o campo da OM",
+        "Toda a cadeia — fornecedor → transformação → cliente — é responsabilidade das operações",
+        "A função de operações é transversal: compete por recursos, capital e talento com marketing, finanças e TI"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Heizer, Render & Munson (Operations Management, 13ª ed.) definem OM como 'o conjunto de actividades que produzem bens ou serviços através da transformação de inputs em outputs'. A definição parece simples, mas abrange 15-20% do PIB de qualquer economia avançada e emprega directamente 1 em cada 8 trabalhadores nos EUA."
+    },
+    {
+      "type": "h2",
+      "text": "Inputs, outputs e transformação"
+    },
+    {
+      "type": "p",
+      "text": "Todo o processo de operações pode ser visto como uma 'caixa preta' que recebe inputs, aplica uma transformação, e devolve outputs. Os inputs são típicos: matérias-primas (MRO — Maintenance, Repair, Operations), mão-de-obra directa, capital (máquinas, edifícios, software), energia, informação. Os outputs são: produtos tangíveis (carro, pão, parafuso), serviços intangíveis (consulta, transacção, transporte) ou híbridos. A transformação é o que acrescenta valor — e é aqui que a gestão de operações se concentra: pode ser física (montagem, cozinhar), lógica (cálculo, decisão), clínica (diagnóstico, cirurgia) ou informacional (processar um pedido)."
+    },
+    {
+      "type": "h3",
+      "text": "Bens vs. serviços — o espectro da oferta"
+    },
+    {
+      "type": "p",
+      "text": "Bens são tangíveis, armazenáveis, transportáveis. Serviços são intangíveis, perecíveis (não se podem armazenar), inseparáveis do produtor (médico e consulta são a mesma coisa). A maioria das empresas modernas vende uma mistura — é a chamada servitização: a Rolls-Royce vende 'horas de voo do motor' (Power by the Hour) em vez de vender motores; a Michelin vende 'quilómetros de pneu rodado' em frotas de camiões; a Otis vende 'disponibilidade do elevador' e não o elevador. A servitização tem implicações operacionais profundas — foco desloca-se do produto para o uptime, da venda única para o contrato de manutenção, do defeito para o SLA."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Bens: tangíveis, armazenáveis, podem ser inspeccionados antes da entrega (search qualities)",
+        "Serviços: intangíveis, perecíveis (não se inventariam), heterogéneos (cada serviço é único), simultâneos (produção=consumo)",
+        "Híbridos: restaurante (comida tangível + serviço intangível), consultoria (relatório + conselho), SaaS (plataforma + suporte)",
+        "Servitização: deslocar o foco da venda do produto para a venda do resultado (pay-per-use, subscription, outcome-based)",
+        "Implicação: métricas de sucesso mudam — defeitos por milhão → uptime, MTBF, satisfação medida em NPS"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Classificação dos processos: do projecto único à produção contínua"
+    },
+    {
+      "type": "p",
+      "text": "Processos podem ser classificados pelo volume e pela variedade. Cinco tipos canónicos formam o espectro: projecto (único, não-repetitivo, grande duração — construção de uma ponte, filme, evento), job shop (pequenos lotes personalizados — tipografia, consultoria, manutenção), lote (séries intermitentes — padaria, vestuário, mobiliário), linha de montagem / assembly line (alto volume, baixa variedade — Ford, Toyota) e contínuo (24/7, sem paragens — refinaria, electricidade, água). Cada tipo implica layout, mão-de-obra, sistemas de planeamento e métricas de desempenho diferentes."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Projecto (Project): único, longa duração, baixa repetição. Ex: navio, hospital, filme",
+        "Job shop: alta variedade, baixo volume. Layout por função, mão-de-obra qualificada, lead-time longo",
+        "Lote (Batch): variedade média, volume médio. Repetição periódica — set-up change entre lotes",
+        "Linha (Assembly line): baixa variedade, alto volume. Ford Model T, McDonald's, IKEA numbering system",
+        "Contínuo (Continuous): zero variedade, volume máximo 24/7. Refinaria, electricidade, gases industriais"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Make-to-stock (MTS), make-to-order (MTO), assemble-to-order (ATO)"
+    },
+    {
+      "type": "p",
+      "text": "Outra dimensão crítica é quando o produto é fabricado em relação à encomenda do cliente. No make-to-stock (MTS), a empresa produz para inventário com base em previsões — exemplares: bens de grande consumo (Coca-Cola, sabonete), livros best-seller, brinquedos na Black Friday. No make-to-order (MTO), só se produz após encomenda confirmada pelo cliente — customização total, lead-time longo, sem inventário acabado — exemplares: aviões Boeing, iates, prensas industriais. No assemble-to-order (ATO), os componentes são produzidos para stock (MTS) mas a montagem final só ocorre após encomenda — permite personalização sem prazo insuportável — exemplares: Dell (PCs), automóveis com pacotes opcionais, configuradores de servidor."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "MTS (Make-to-Stock): produção para inventário, lead-time curto para o cliente, risco de stockout e excesso",
+        "MTO (Make-to-Order): produção sob encomenda, sem inventário acabado, lead-time longo, alta personalização",
+        "ATO (Assemble-to-Order): componentes em stock, montagem após encomenda, equilíbrio personalização/prazo",
+        "ETO (Engineer-to-Order): engenharia completa após encomenda — subida de escada na cadeia",
+        "Implicação logística: MTS exige previsão fiável e gestão de inventário; MTO exige gestão de capacidade e de backlog"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Cadeia de Valor de Porter (Value Chain)"
+    },
+    {
+      "type": "p",
+      "text": "Michael Porter (Competitive Advantage, 1985) propôs a Cadeia de Valor como instrumento para identificar onde a empresa cria valor — e onde destrói. Divide as actividades em dois blocos. Actividades primárias (linha de produção do valor): logística interna (recepção, armazenagem, gestão de matérias), operações (transformação), logística externa (armazenagem de produto acabado, distribuição), marketing e vendas (comunicação, canal, pricing), serviço (instalação, manutenção, reparação). Actividades de apoio (transversais): infra-estrutura da empresa (finanças, planeamento, jurídico), gestão de recursos humanos, desenvolvimento tecnológico (I&D, automação, IT), procurement (compras, gestão de fornecedores)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Actividades primárias: logística interna → operações → logística externa → marketing e vendas → serviço",
+        "Actividades de apoio: infra-estrutura, RH, tecnologia (I&D), procurement — alimentam todas as primárias",
+        "Margem = diferença entre o valor criado pela cadeia e o custo total das actividades",
+        "Análise tradicional: identificar quais actividades são fontes de diferenciação ou de vantagem de custo",
+        "Cada actividade tem 3 drivers genéricos: estrutura (escala, diversidade, configuração), práticas operacionais, linkages com outras actividades"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Linkage e optimização sistémica"
+    },
+    {
+      "type": "p",
+      "text": "O insight mais subestimado da Cadeia de Valor é que o ganho real vem dos linkages — as interdependências entre actividades — e não da optimização de cada actividade isolada. Exemplos: trocar fornecedores (procurement) para reduzir defeitos a jusante (operações); melhorar a precisão da previsão (marketing) para baixar inventário de segurança (logística); partilhar dados de clientes com I&D (tecnologia) para encurtar o time-to-market. Otimizar uma actividade isoladamente pode até piorar o total se quebrar linkages. É por isto que a Toyota, a Amazon ou a Zara não optimizam cada elo em separado — desenham o sistema inteiro."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: quando vires uma empresa a falhar, não procur o 'departamento problema' — desenha a cadeia de valor completa e identifica onde o linkage está quebrado. A maioria das ineficiências vive nos linkages, não nas actividades."
+    },
+    {
+      "type": "h2",
+      "text": "Estratégia de operações e prioridades competitivas"
+    },
+    {
+      "type": "p",
+      "text": "Hayes e Wheelwright (modelo SandCone) e Terry Hill (ordem de operações) mostraram que nenhuma empresa pode ser excelente em tudo — há trade-offs reais. As quatro prioridades competitivas canónicas são custo (ser o produtor mais barato), qualidade (conformidade ao especificado + adequação ao uso), velocidade (lead-time curto, time-to-market) e flexibilidade (customização, mix-volume, robustez a variações). A 'ordem de operações' de Hill: 1) identificar o que os clientes valorizam (mercado-alvo), 2) ganhar vantagem competitiva em algumas prioridades, 3) traduzir em prioridades operacionais concretas."
+    },
+    {
+      "type": "h3",
+      "text": "Trade-offs entre prioridades competitivas"
+    },
+    {
+      "type": "p",
+      "text": "Os trade-offs clássicos são reais mas podem ser parcialmente quebrados por tecnologia e flexibilidade de processo. Exemplos: minimizar custo exige alta padronização (perde flexibilidade); alta qualidade exige zero-defeitos (custa mais); velocidade exige inventário estratégico (pode subir custo); flexibilidade exige capacidade de reconfiguração (custo de setup). A moderna literatura (modularidade, mass customisation, postponement) mostra que muitos trade-offs podem ser adiados ou quebrados — mas só com investimento em plataformas comuns (design modular) e adiamento da diferenciação final (postponement)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Custo vs. Qualidade: bens de qualidade elevados requerem mais inspecção e melhor material — modelos JIT/lean podem reduzir o trade-off",
+        "Velocidade vs. Custo: inventário de segurança aumenta velocidade mas custa dinheiro — alta disponibilidade tem custo",
+        "Flexibilidade vs. Custo: linhas flexíveis (SMED, quick changeover) custam mais do que linhas dedicadas",
+        "Porter: estratégia deliberada (escolha) vs. estratégia emergente (descoberta pelas operações)",
+        "Trade-off vs. ordem: Hill distingue 'ser excelente em algumas prioridades' (escolha) de 'ser excelente em todas' (impossível)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "SandCone de Hayes & Wheelwright (1979): as prioridades competitivas obedecem a uma ordem hierárquica. Primeiro qualidade, depois velocidade, depois fiabilidade, depois custo — a ordem é invertida em relação à intuição! Não consegues baixar custo se não tiveres qualidade, não consegues aumentar fiabilidade sem velocidade, e por aí fora."
+    },
+    {
+      "type": "h2",
+      "text": "Visões top-down e bottom-up da estratégia de operações"
+    },
+    {
+      "type": "p",
+      "text": "Visão top-down: estratégia de negócio dita prioridades operacionais (estratégia → operações). É o modelo clássico de Porter — escolha estratégica define onde competir, operações é instrumento. Visão bottom-up: operações têm competências únicas que definem o que a empresa pode ser (operações → estratégia). É mais rara mas presente em casos como a Toyota (o TPS viabilizou a qualidade Toyota e isto definiu a estratégia), a FedEx (o sistema de tracking nocturno viabilizou o 'next-day by 10:30' e isto definiu a estratégia), a Zara (o ciclo curto de design-produção-distribuição viabilizou fast fashion). Empresas com esta característica costumam ter alta durabilidade estratégica — a competência operacional é barreira de entrada."
+    }
+  ],
+  "keyPoints": [
+    "Operations Management transforma inputs em outputs — aplica-se a bens, serviços e híbridos",
+    "Processos classificam-se em 5 tipos: projecto → job shop → lote → linha → contínuo",
+    "MTS produz para inventário (previsão), MTO sob encomenda, ATO combina componentes em stock com montagem final",
+    "Cadeia de Valor de Porter: 5 primárias (logística interna → operações → logística externa → M&V → serviço) + 4 de apoio",
+    "Linkages entre actividades são a fonte mais subestimada de optimização sistémica",
+    "4 prioridades competitivas: custo, qualidade, velocidade, flexibilidade — com trade-offs reais (quebras parciais via tecnologia)",
+    "Ordem de Hill: primeiro perceber o que os clientes valorizam, depois escolher algumas prioridades, depois operacionalizar",
+    "SandCone: qualidade vem primeiro, depois velocidade, depois dependability, depois custo",
+    "Top-down: estratégia → operações (Porter); Bottom-up: operações → estratégia (casos Toyota/FedEx/Zara)",
+    "Servitização desloca o foco do produto para o resultado (uptime, SLA, outcome)"
+  ],
+  "quizSlug": "goq",
+  "nextLesson": "02-design-processos-layout-flow",
+  "prevLesson": null
+}
