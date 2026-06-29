@@ -474,6 +474,20 @@
                             { slug: '03-orcamento-de-capital', title: '3. Orçamento de Capital: CAPEX/OPEX, VPL, TIR e Payback', summary: 'Decidir se um investimento cria valor: DCF, VPL, TIR, payback e análise de cenários.', quizSlug: 'gfeq', quizTitle: 'Quiz: Gestão Financeira Empresarial', estMinutes: 10 },
                             { slug: '04-estrutura-de-capital', title: '4. Estrutura de Capital: WACC, Equity vs. Dívida', summary: 'Optimizar a ponderação entre capitais próprios e dívida — CAPM, trade-off e pecking order.', quizSlug: 'gfeq', quizTitle: 'Quiz: Gestão Financeira Empresarial', estMinutes: 10 }
                           ]
+                        },
+                        'contabilidade-gerencial': {
+                          slug: 'contabilidade-gerencial',
+                          title: 'Contabilidade Gerencial',
+                          tagline: 'Business Administration · Custos, CVP, orçamento industrial e ABC',
+                          description: 'Como os gestores usam informação de custos para decidir, planear e controlar: classificação de custos (fixos, variáveis, directos, indirectos), análise custo-volume-lucro (CVP) e break-even, orçamento industrial e controlo orçamental, ABC e Balanced Scorecard.',
+                          icon: '📊',
+                          color: '#b91c1c',
+                          lessons: [
+                            { slug: '01-custos-classificacao-e-comportamento', title: '1. Classificação e Comportamento dos Custos: Fixos, Variáveis, Directos e Indirectos', summary: 'A base da contabilidade gerencial: como os custos se comportam face ao volume e à estrutura da empresa.', quizSlug: 'cgeq', quizTitle: 'Quiz: Contabilidade Gerencial', estMinutes: 9 },
+                            { slug: '02-cvp-e-analise-break-even', title: '2. Análise Custo-Volume-Lucro (CVP) e Decisão de Curto Prazo', summary: 'Break-even point, margem de contribuição, alavancagem operacional e decisão de aceitar ou recusar um pedido.', quizSlug: 'cgeq', quizTitle: 'Quiz: Contabilidade Gerencial', estMinutes: 9 },
+                            { slug: '03-orcamento-industrial-e-custos-padrao', title: '3. Orçamento Industrial e Custos-Padrão: Planear, Comparar, Corrigir', summary: 'Ciclo orçamental anual, orçamento flexível, custos-padrão e análise de desvios (variance analysis).', quizSlug: 'cgeq', quizTitle: 'Quiz: Contabilidade Gerencial', estMinutes: 10 },
+                            { slug: '04-custeio-baseado-em-atividades-abc', title: '4. Custeio Baseado em Actividades (ABC) e Balanced Scorecard', summary: 'ABC como alternativa ao absorption costing, drivers de custo, e o BSC como complemento da contabilidade de gestão.', quizSlug: 'cgeq', quizTitle: 'Quiz: Contabilidade Gerencial', estMinutes: 10 }
+                          ]
                         }
                       };
 

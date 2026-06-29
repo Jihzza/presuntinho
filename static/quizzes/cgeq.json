@@ -1,0 +1,117 @@
+{
+  "id": "cgeq",
+  "title": "Quiz: Contabilidade Gerencial",
+  "description": "Testa os teus conhecimentos sobre classificação de custos, análise CVP, break-even, orçamento industrial, variance analysis, ABC e Balanced Scorecard.",
+  "questions": [
+    {
+      "q": "A principal diferença entre Contabilidade Financeira e Contabilidade Gerencial é:",
+      "opts": [
+        "A Financeira segue as IFRS, a Gerencial segue princípios internos",
+        "A Gerencial serve investidores externos, a Financeira serve gestores internos",
+        "A Gerencial serve gestores internos com informação prospectiva e detalhada; a Financeira serve externos com informação histórica e agregada",
+        "Não há diferença — são apenas nomes diferentes para a mesma disciplina"
+      ],
+      "a": 2,
+      "exp": "A contabilidade financeira é histórica, agregada e desenhada para utilizadores externos (investidores, bancos, fiscalidade), seguindo normas como IFRS/SNC. A contabilidade gerencial é prospectiva, detalhada e desenhada para apoiar decisões internas de gestores."
+    },
+    {
+      "q": "Um custo fixo é definido como:",
+      "opts": [
+        "Um custo que é pago no início do mês",
+        "Um custo cujo total permanece constante dentro de um intervalo relevante de actividade, embora o custo unitário possa variar",
+        "Um custo que varia directamente proporcional ao volume produzido",
+        "Um custo que só existe em empresas industriais"
+      ],
+      "a": 1,
+      "exp": "Custo fixo tem o seu total constante dentro de um intervalo relevante de actividade (ex: 0 a 10.000 unidades/mês). Acima desse intervalo pode haver saltos (nova fábrica, novo turno). O seu custo unitário, no entanto, varia inversamente com o volume."
+    },
+    {
+      "q": "Uma empresa vende um produto a 80€/un e tem custo variável unitário de 50€. Os custos fixos mensais são 12.000€. O break-even em unidades é:",
+      "opts": [
+        "200 unidades",
+        "300 unidades",
+        "400 unidades",
+        "480 unidades"
+      ],
+      "a": 2,
+      "exp": "MCu = 80 − 50 = 30€. BEP = 12.000 / 30 = 400 unidades. Acima de 400 unidades/mês a empresa começa a gerar lucro operacional; abaixo, tem prejuízo."
+    },
+    {
+      "q": "A margem de contribuição unitária de uma empresa é 20€ e os custos fixos são 80.000€. Quantas unidades precisa vender para obter um grau de alavancagem operacional de 2,0?",
+      "opts": [
+        "4.000 unidades",
+        "6.000 unidades",
+        "8.000 unidades",
+        "10.000 unidades"
+      ],
+      "a": 2,
+      "exp": "GAO = MC total / Lucro. Para GAO = 2,0, precisamos que Lucro = MC total / 2. Como Lucro = MC total − CF, igualamos MC total / 2 = MC total − 80.000 → MC total / 2 = 80.000 → MC total = 160.000€. Com MCu = 20€, Q = 160.000 / 20 = 8.000 unidades. Lucro = 80.000, GAO = 160.000 / 80.000 = 2,0. ✓"
+    },
+    {
+      "q": "No CVP multi-produto, qual é a principal limitação do modelo clássico?",
+      "opts": [
+        "Não consegue calcular o break-even",
+        "Assume um mix de vendas fixo e custos perfeitamente lineares",
+        "Só funciona para empresas de serviços",
+        "Requer cálculo de impostos sobre o lucro"
+      ],
+      "a": 1,
+      "exp": "O CVP multi-produto clássico assume um mix de vendas fixo ao longo do período e linearidade perfeita entre custos e volume. Na prática, o mix varia mensalmente e há saltos nos custos fixos a partir de certos níveis de actividade — limitações que devem ser tidas em conta ao interpretar resultados."
+    },
+    {
+      "q": "Numa decisão de aceitar um pedido especial com capacidade ociosa, a regra de curto prazo é:",
+      "opts": [
+        "Rejeitar sempre para proteger o preço de mercado",
+        "Aceitar se o preço cobrir todos os custos fixos atribuídos",
+        "Aceitar se a margem de contribuição for positiva",
+        "Aceitar só se o preço for superior ao custo total"
+      ],
+      "a": 2,
+      "exp": "No curto prazo, com capacidade ociosa, a regra é: aceitar se MCu > 0. Os custos fixos já estão cobertos pelas vendas normais — não precisam de ser cobertos adicionalmente pelo pedido especial. Esta é uma das decisões mais contraintuitivas da contabilidade gerencial."
+    },
+    {
+      "q": "O orçamento de vendas é normalmente o ponto de partida do orçamento operacional porque:",
+      "opts": [
+        "É o único orçamento com dados reais",
+        "Determina a produção, que por sua vez dispara compras, mão-de-obra e GGF",
+        "É obrigatório pelo código comercial",
+        "É o mais fácil de calcular"
+      ],
+      "a": 1,
+      "exp": "Vendas define volume de produção → produção define MP e MOD → MOD e MP definem necessidades de GGF. Toda a cadeia orçamental deriva das vendas. Vendas optimista gera stocks acumulados; pessimista gera ruptura e perda de vendas — a qualidade deste forecast não é trivial."
+    },
+    {
+      "q": "Uma empresa apresenta um desvio de mão-de-obra desfavorável de 4.000€ no mês. Investigar este desvio vale a pena se:",
+      "opts": [
+        "For desfavorável, independentemente do valor",
+        "O benefício esperado da investigação (causa + acção correctiva) exceder o custo de investigar",
+        "For superior a 0,01€",
+        "O director financeiro autorizar"
+      ],
+      "a": 1,
+      "exp": "A regra de ouro da análise de desvios é investigar quando o benefício esperado (causa identificada + acção correctiva viável) for maior que o custo de investigar. Costuma aplicar-se a regra empírica dos 5% (> 5% do padrão) como filtro mínimo, mas o critério fundamental é custo-benefício."
+    },
+    {
+      "q": "No Activity-Based Costing (ABC), o custo é alocado em duas etapas:",
+      "opts": [
+        "Custos fixos → variáveis; variáveis → produtos",
+        "Recursos → actividades (via cost drivers de recurso) → objectos de custo (via cost drivers de actividade)",
+        "Directos → indirectos; indirectos → produtos",
+        "Produção → vendas; vendas → lucro"
+      ],
+      "a": 1,
+      "exp": "ABC aloca em duas etapas: 1) recursos são atribuídos a actividades usando cost drivers de recurso (ex: tempo de operador); 2) actividades são atribuídas a objectos de custo usando cost drivers de actividade (ex: número de setups). Isto corrige a distorção do sistema tradicional baseado apenas em volume."
+    },
+    {
+      "q": "O Balanced Scorecard de Kaplan & Norton complementa os indicadores financeiros com:",
+      "opts": [
+        "Apenas indicadores de quota de mercado",
+        "Três perspectivas adicionais: clientes, processos internos, e aprendizagem/crescimento",
+        "Apenas indicadores não-financeiros, abandonando os financeiros",
+        "Apenas indicadores de RH"
+      ],
+      "a": 1,
+      "exp": "O BSC mantém a perspectiva financeira e adiciona três: cliente (satisfação, quota), processos internos (qualidade, ciclo) e aprendizagem/crescimento (competências, sistemas, clima). Os indicadores das três perspectivas não-financeiras alimentam causalmente o resultado financeiro a prazo."
+    }
+  ]
+}

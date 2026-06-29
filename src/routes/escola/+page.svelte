@@ -366,6 +366,18 @@
                                   lessonCount: 4,
                                   quizCount: 1,
                                   badge: 'Uni'
+                                },
+                                {
+                                  slug: 'contabilidade-gerencial',
+                                  title: 'Contabilidade Gerencial',
+                                  tagline: 'Business Administration · Custos, CVP, orçamento industrial e ABC',
+                                  description:
+                                    'Como os gestores usam informação de custos para decidir, planear e controlar: classificação de custos (fixos, variáveis, directos, indirectos), análise custo-volume-lucro (CVP) e break-even, orçamento industrial e controlo orçamental, ABC e Balanced Scorecard.',
+                                  icon: '📊',
+                                  color: '#b91c1c',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
                                 }
                               ];
 </script>

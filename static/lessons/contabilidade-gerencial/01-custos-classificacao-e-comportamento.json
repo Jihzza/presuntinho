@@ -1,0 +1,122 @@
+{
+  "id": "01-custos-classificacao-e-comportamento",
+  "title": "1. Classificação e Comportamento dos Custos: Fixos, Variáveis, Directos e Indirectos",
+  "courseSlug": "contabilidade-gerencial",
+  "lessonNumber": 1,
+  "description": "A base de toda a contabilidade gerencial: distinguir custos pela sua natureza, função, comportamento face ao volume e relação com o objecto de custo. Sem esta classificação, qualquer análise posterior (CVP, orçamento, ABC) é instável.",
+  "audio": "Nesta primeira lição vamos ver como se classificam os custos em quatro dimensões cruzadas — natureza, função, comportamento face ao volume, e relação com o objecto de custo. Vamos entender por que um custo fixo pode ter um custo unitário variável, o que distingue a contabilidade gerencial da financeira, e fechar com um exemplo prático de uma PME têxtil em Sousse para vermos como tudo se aplica no terreno.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["custos", "classificação", "fixos", "variáveis", "directos", "indirectos"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que distingue Contabilidade Gerencial da Contabilidade Financeira"
+    },
+    {
+      "type": "p",
+      "text": "A contabilidade financeira responde a uma pergunta: a empresa está a cumprir as regras externas (IFRS ou SNC), e o que aconteceu no passado? É olhada por investidores, bancos, administração fiscal. A contabilidade gerencial responde a outra pergunta: o gestor tem a informação certa para decidir, planear e controlar? É olhada por gestores internos. A primeira é retrospectiva e agregada; a segunda é prospectiva e detalhada."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Contabilidade financeira: normas externas (IFRS/SNC), informação histórica, relatório anual, foco em relato",
+        "Contabilidade gerencial: regras internas, informação actual e futura, frequência mensal/semanal, foco em decisão",
+        "Exemplo: a financeira diz 'lucro de 1M€ no ano passado'; a gerencial diz 'o produto X tem margem de 32% e o produto Y só 8% — vamos repensar o mix'",
+        "Não são opostas — são complementares. A financeira dá o enquadramento legal; a gerencial dá o motor de decisão"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Classificação por natureza vs. por função"
+    },
+    {
+      "type": "p",
+      "text": "Por natureza: agrupamos os custos pela sua essência económica — matérias-primas, mão-de-obra directa, gastos gerais de fabrico. Esta visão é típica das indústrias e dá-nos o detalhe do que se consome. Por função: agrupamos os custos pela área onde ocorrem — produção, comercial, administrativa e financeira. Esta visão é típica das demonstrações de resultados e ajuda a perceber onde está o gasto."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Natureza: matérias-primas (MP), mão-de-obra directa (MOD), outros gastos directos, gastos gerais de fabrico (GGF)",
+        "Função industrial: custos de produção (MP + MOD + GGF), custos comerciais (marketing, vendas), custos administrativos (finanças, RH, direcção)",
+        "Empresas de serviços: a maioria dos custos são mão-de-obra e overhead, não há 'matéria-prima'",
+        "Empresas comerciais (retalho): o custo principal é a mercadoria vendida (CMVMC), com menos MOD"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Comportamento dos custos face ao volume de actividade"
+    },
+    {
+      "type": "p",
+      "text": "Esta é a classificação mais útil para a análise CVP e para o orçamento. Um custo é fixo se o seu total não muda com o volume de produção (dentro de um intervalo relevante). É variável se o seu total muda proporcionalmente ao volume. É misto (semi-variável) se tem uma componente fixa mais uma componente variável — como a electricidade, que tem uma parcela fixa (termo) e outra que varia com o consumo."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Custos fixos: renda, salários administrativos, amortizações, seguros. Total constante em € até o nível de actividade mudar de gama",
+        "Custos variáveis: matérias-primas, comissões de vendas, consumíveis. Total cresce linearmente com unidades produzidas",
+        "Custos mistos: electricidade, telefone, água, manutenção. Separáveis em componente fixa + variável via análise de mínimos quadrados ou high-low",
+        "Fórmula geral: y = a + bx, onde a = custo fixo, b = custo variável unitário, x = unidades de actividade"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Custos directos vs. indirectos / custos de produto vs. de período"
+    },
+    {
+      "type": "p",
+      "text": "Directo: custo que conseguimos rastrear sem ambiguidade a um objecto de custo (produto, serviço, cliente). Indirecto: precisa de um critério de imputação (horas-máquina, horas-mão-de-obra, área ocupada). Esta distinção é central para o custeio de produtos. Custos de produto entram no inventário e só vão para a DRE quando o produto é vendido; custos de período vão directos à DRE — independente de existirem unidades em stock."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "MP e MOD são, em regra, custos directos e de produto",
+        "GGF e gastos administrativos são custos indirectos e de período",
+        "Absorption costing inclui todos os custos de produção (fixos e variáveis) no produto; variable costing só inclui os variáveis",
+        "Absorption costing é obrigatório para reportar externamente; variable costing é preferido para decidir internamente"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Exemplo prático: uma confeção têxtil em Sousse"
+    },
+    {
+      "type": "p",
+      "text": "Imaginemos uma PME com 50 trabalhadores que produz t-shirts para o mercado europeu. Os custos fixos mensais somam: renda da fábrica (8.000€), salários administrativos (6.000€), amortização das máquinas (3.000€), seguro (1.000€), logística fixa (2.000€) — total 20.000€. Os custos variáveis por t-shirt: tecido (2,5€), linha e acabamentos (0,5€), mão-de-obra directa (1,5€), embalagem (0,3€) — total 4,8€ por unidade. Qualquer decisão de pricing, mix ou expansão começa aqui."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Preço de venda médio: 12€/t-shirt",
+        "Margem de contribuição unitária: 12 − 4,8 = 7,2€",
+        "Break-even mensal: 20.000€ / 7,2€ = 2.778 t-shirts/mês",
+        "Abaixo de 2.778 unidades/mês, a empresa tem prejuízo; acima, começa a gerar lucro operacional"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "📐 A fórmula y = a + bx está em toda a parte na contabilidade gerencial. Custos totais = custo fixo + (custo variável unitário × quantidade). Receita total = preço × quantidade. Lucro = Receita − Custos. Tudo se monta a partir daqui."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: antes de decidir qualquer coisa numa PME — preço, mix, expansão, fecho — começa por separar fixos de variáveis. Em 15 minutos consegues montar a equação do lucro e saber onde está o teu break-even. Este exercício simples já elimina 80% das más decisões."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma padaria tem custos fixos mensais de 3.500€ e vende pão a 1,20€ com custo variável de 0,40€ por unidade. Quantos pães precisa vender por mês para empatar? E se subir o preço para 1,35€ mantendo o CVu, qual o novo break-even?",
+      "answer": "MC unitária inicial = 1,20 − 0,40 = 0,80€. BEP = 3.500 / 0,80 = 4.375 pães/mês. Cenário 2: MC = 1,35 − 0,40 = 0,95€. BEP = 3.500 / 0,95 ≈ 3.684 pães/mês. Subir o preço baixa o break-even — desde que o volume se mantenha (sensibilidade ao preço da procura)."
+    }
+  ],
+  "keyPoints": [
+    "Contabilidade financeira = relato externo, histórica, normalizada. Gerencial = decisão interna, prospectiva, detalhada.",
+    "Classificação por natureza (MP, MOD, GGF) vs. por função (produção, comercial, administrativo).",
+    "Fixos (total constante), variáveis (total proporcional), mistos (fixo + variável). Fórmula y = a + bx.",
+    "Directos (rastreáveis) vs. indirectos (via critério de imputação); custos de produto (entram no inventário) vs. de período (vão directos à DRE).",
+    "Absorption costing para relato externo; variable costing para decisão interna."
+  ],
+  "quizSlug": "cgeq",
+  "nextLesson": "02-cvp-e-analise-break-even",
+  "prevLesson": null
+}

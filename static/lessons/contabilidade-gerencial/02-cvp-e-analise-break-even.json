@@ -1,0 +1,140 @@
+{
+  "id": "02-cvp-e-analise-break-even",
+  "title": "2. Análise Custo-Volume-Lucro (CVP) e Decisão de Curto Prazo",
+  "courseSlug": "contabilidade-gerencial",
+  "lessonNumber": 2,
+  "description": "A ferramenta por excelência para decidir em horizontes curtos: como a margem de contribuição, o break-even e o grau de alavancagem operacional transformam volumes e preços em decisões accionáveis.",
+  "audio": "Bem-vinda à segunda lição de Contabilidade Gerencial. Hoje vamos dominar a análise Custo-Volume-Lucro, abreviada CVP. Vamos entender porque é que a margem de contribuição é a verdadeira variável-chave para decidir, calcular o break-even em unidades e em valor, ver o impacto do grau de alavancagem operacional e fechar com a regra de ouro para aceitar ou recusar um pedido especial.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["CVP", "break-even", "margem de contribuição", "alavancagem operacional", "ponto crítico"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "A equação do lucro e os seus quatro ingredientes"
+    },
+    {
+      "type": "p",
+      "text": "Toda a análise CVP parte desta equação simples: Lucro = Receita − Custos Variáveis − Custos Fixos. As três variáveis de decisão são o preço de venda, o custo variável unitário e os custos fixos totais. O volume (unidades vendidas) é o motor que liga tudo. Quando aumentamos uma unidade vendida, o lucro cresce exactamente pelo valor da margem de contribuição unitária — e é esta linearidade que faz o CVP funcionar."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Receita = preço × quantidade",
+        "Custos variáveis totais = custo variável unitário × quantidade",
+        "Custos fixos totais = constantes dentro do intervalo relevante",
+        "Lucro = (P − CVu) × Q − CF = MCu × Q − CF"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Margem de contribuição: a variável-chave"
+    },
+    {
+      "type": "p",
+      "text": "A margem de contribuição unitária (MCu) é o que sobra de cada unidade vendida depois de pagar os custos que essa unidade gera directamente. É mais útil que o lucro bruto para decidir porque isola a relação entre volume e rentabilidade, sem o ruído dos custos fixos. Quando uma empresa tem múltiplos produtos, a margem de contribuição ponderada por mix diz-nos quanto cada euro de vendas adicionais contribui para cobrir os custos fixos."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "MCu = Preço de venda − Custo variável unitário",
+        "MC total = MCu × Quantidade vendida",
+        "Índice MC = MC / Preço (quanto sobra por cada euro de vendas)",
+        "Multi-produto: MC ponderada = Σ (MCu do produto × peso no mix de vendas)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Break-even point (ponto crítico)"
+    },
+    {
+      "type": "p",
+      "text": "O break-even é o volume em que o lucro é zero — a empresa cobre todos os custos mas não gera margem. A fórmula em unidades é BEP = Custos Fixos / MCu. Em valor monetário, BEP$ = Custos Fixos / Índice MC. Calcular o break-even é a primeira pergunta a fazer antes de lançar um produto, abrir uma filial ou aceitar um contrato plurianual — porque define o limiar mínimo de viabilidade."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "BEP unidades = CF / MCu",
+        "BEP valor = CF / Índice MC",
+        "Margem de segurança = Vendas previstas − Vendas no break-even (em valor absoluto ou %)",
+        "Exemplo: cafeteria com CF = 12€/dia, café vendido a 1,20€ com CVu = 0,70€ → MCu = 0,50€ → BEP = 24 cafés por dia"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Alavancagem operacional — o multiplicador silencioso"
+    },
+    {
+      "type": "p",
+      "text": "O Grau de Alavancagem Operacional (GAO) mede quanto o lucro operacional varia face a uma variação de 1% nas vendas. GAO = MC total / Lucro operacional. Empresas com custos fixos altos têm GAO elevado — uma pequena queda de vendas traduz-se numa grande queda de lucro (e vice-versa). É a dupla face do custo fixo: alavanca nos bons momentos, espada nos maus."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "GAO = MC total / Lucro operacional = (MCu × Q) / (MCu × Q − CF)",
+        "Perto do break-even, GAO tende para infinito — qualquer variação de vendas é desproporcional",
+        "Bem acima do break-even, GAO aproxima-se de 1 — pouco efeito de alavancagem",
+        "Setores de alto GAO: airlines, telecom, infraestruturas. Baixo GAO: retalho, consulting, serviços digitais"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "CVP multi-produto e limitações do modelo"
+    },
+    {
+      "type": "p",
+      "text": "Empresas com múltiplos produtos precisam de assumir um mix de vendas fixo para calcular o break-even agregado. Isto é uma simplificação forte: na prática, o mix muda mensalmente consoante a procura, promoções, rupturas de stock. Outra limitação: o modelo assume linearidade perfeita de custos e preços, o que não se verifica acima do intervalo relevante (onde os custos fixos dão saltos com novas fábricas, novas equipas)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Pressuposto 1: linearidade — custos e receitas são funções lineares do volume",
+        "Pressuposto 2: custos fixos identificáveis e constantes no intervalo relevante",
+        "Pressuposto 3: sem variação de stocks — tudo o que se produz é vendido",
+        "Pressuposto 4: preço e CVu constantes por unidade (sem descontos por volume)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Decisões de curto prazo: aceitar ou recusar um pedido especial?"
+    },
+    {
+      "type": "p",
+      "text": "Quando aparece um cliente com um pedido adicional a um preço inferior ao preço normal, a intuição diz para rejeitar ('vou vender barato e perder margem'). Mas se há capacidade ociosa e o preço cobre o custo variável da encomenda, aceitar pode aumentar o lucro — porque os custos fixos já estão cobertos. A regra de ouro do curto prazo: aceitar se a margem de contribuição for positiva e a capacidade não comprometer vendas existentes."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Se MCu do pedido > 0 e há capacidade ociosa → aceitar",
+        "Se MCu > 0 mas não há capacidade (pedido canibaliza vendas normais) → comparar MC do pedido com MC perdido das vendas deslocadas",
+        "Se MCu < 0 → rejeitar (mesmo com capacidade ociosa — está a destruir valor)",
+        "Sempre separar decisão de curto prazo (cobre variáveis?) de decisão de longo prazo (cobre todos os custos?)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "📐 A análise CVP funciona porque assume linearidade dentro de um intervalo. Acima desse intervalo, há saltos — uma nova fábrica, uma nova equipa. Se a tua decisão pode levar-te para fora do intervalo, o CVP simples deixa de ser suficiente e precisas de orçamento."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: quando te aparecer um pedido 'especial' ou 'abaixo do preço normal', não peças desculpa a recusar — pede a conta. Calcula a margem de contribuição unitária desse pedido e compara com a hipótese de não fazer nada. Se a MC for positiva e houver folga, aceitas. Esta regra vale ouro nas PME."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma empresa vende um produto a 50€/un com CVu de 30€. Os custos fixos mensais são 8.000€. a) Qual o break-even em unidades? b) Se vender 1.000 unidades/mês, qual o GAO? c) Se um cliente pedir 200 unidades adicionais a 35€/un, devo aceitar?",
+      "answer": "a) MCu = 50 − 30 = 20€. BEP = 8.000 / 20 = 400 unidades. b) MC total = 20 × 1.000 = 20.000€. Lucro operacional = 20.000 − 8.000 = 12.000€. GAO = 20.000 / 12.000 ≈ 1,67. c) MCu do pedido = 35 − 30 = 5€ > 0. Se houver capacidade ociosa (e o orçamento de 1.000 unidades não pressionar a capacidade), aceitar — adiciona 200 × 5 = 1.000€ ao lucro. Mas atenção à canibalização de vendas existentes."
+    }
+  ],
+  "keyPoints": [
+    "MCu = P − CVu é a verdadeira variável-chave para decidir em horizonte curto.",
+    "Break-even: BEP unidades = CF / MCu. BEP valor = CF / Índice MC.",
+    "Margem de segurança = vendas previstas menos vendas no break-even.",
+    "GAO = MC total / Lucro operacional — perto do break-even é explosivo; longe, é próximo de 1.",
+    "Aceitar pedido especial de curto prazo se MCu > 0 e houver capacidade ociosa; rejeitar se MCu < 0.",
+    "Limites do CVP: assume linearidade, mix fixo, ausência de stocks — usar com atenção fora do intervalo relevante."
+  ],
+  "quizSlug": "cgeq",
+  "nextLesson": "03-orcamento-industrial-e-custos-padrao",
+  "prevLesson": "01-custos-classificacao-e-comportamento"
+}

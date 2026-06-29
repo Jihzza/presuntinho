@@ -1,0 +1,143 @@
+{
+  "id": "04-custeio-baseado-em-atividades-abc",
+  "title": "4. Custeio Baseado em Actividades (ABC) e Balanced Scorecard (BSC)",
+  "courseSlug": "contabilidade-gerencial",
+  "lessonNumber": 4,
+  "description": "Ferramentas avançadas para o século XXI: ABC para alocar custos indirectos com precisão, custos-padrão para benchmarking operacional, e Balanced Scorecard para ligar estratégia a indicadores financeiros e não-financeiros.",
+  "audio": "Na quarta e última lição vamos aos temas avançados. Primeiro, o ABC, Activity-Based Costing, que resolve o problema clássico da sub-orçamentação de produtos complexos. Depois, os custos-padrão como ferramenta de controlo operacional. E por fim, o Balanced Scorecard de Kaplan e Norton, que expande a forma como medimos o desempenho para além do financeiro.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["ABC", "Balanced Scorecard", "BSC", "Kaplan", "cost drivers", "atividades"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Limites do sistema tradicional de custos por volume"
+    },
+    {
+      "type": "p",
+      "text": "O sistema clássico aloca custos indirectos (GGF) com base em volume — horas-máquina, horas-mão-de-obra, unidades produzidas. Funciona bem quando há pouca variedade de produtos e os custos indirectos são pequenos. Mas no mundo actual, com produtos heterogéneos e custos indirectos altos (TI, I&D, marketing, logística), este método distorce fortemente: produtos de baixo volume / alta complexidade aparecem sub-orçamentados, e produtos simples em massa aparecem sobre-orçamentados."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Heurística tradicional: se o produto A representa 60% das horas-máquina, fica com 60% dos custos indirectos",
+        "Problema: o produto A pode consumir apenas 10% do tempo de setup, 5% do tempo de desenvolvimento, 8% dos testes de qualidade",
+        "Resultado: o produto A é inflado em custos, e produtos de baixo volume mas alta complexidade são subvalorizados",
+        "Consequência perigosa: decisões de pricing, mix e make-or-buy baseadas em custos errados"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Activity-Based Costing (ABC) — Kaplan & Cooper"
+    },
+    {
+      "type": "p",
+      "text": "O ABC, proposto por Robert Kaplan e Robin Cooper nos anos 80, resolve esta distorção com uma alocação em duas etapas. Primeiro, identificamos as actividades (setup, manutenção, expedição, desenvolvimento, facturação) que consomem recursos — cada recurso é atribuído à actividade via um cost driver de recurso (ex: tempo de operador para setup). Segundo, cada actividade é atribuída aos objectos de custo via cost drivers de actividade (ex: número de setups para setup, número de expedição para expedição)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Etapa 1: Recursos → Actividades. Custo do departamento de manutenção distribuído por horas de intervenção em cada actividade",
+        "Etapa 2: Actividades → Objectos de custo. Custo da actividade 'setup' distribuído pelo número de setups de cada produto",
+        "Cost driver de recurso: mede como o recurso é consumido pela actividade",
+        "Cost driver de actividade: mede como a actividade é consumida pelo objecto de custo",
+        "Resultado: cada produto leva apenas a parte dos custos indirectos que efectivamente consome"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Exemplo prático: uma empresa de software com três produtos"
+    },
+    {
+      "type": "p",
+      "text": "Imaginemos uma empresa de SaaS com três produtos: Empresarial (baixo volume, alta complexidade), PMEs (volume médio, complexidade média), Starter (alto volume, complexidade baixa). O método tradicional diria algo como: os custos indirectos são 3M€/ano, distribuídos por horas de desenvolvimento — Produto Empresarial recebe 60% por ser o mais 'pesado' no desenvolvimento. ABC revela: Empresarial consome 35% de I&D, 50% de suporte técnico, 40% de onboarding. O verdadeiro custo ABC é muito menor do que o tradicional sugeria — e a margem real é maior. Já o Starter, aparentemente 'simples', consome 30% do suporte ao cliente por ser usado por utilizadores menos técnicos."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Com o método tradicional, produtos complexos parecem perder dinheiro e produtos simples parecem altamente lucrativos",
+        "Com ABC, a margem real de cada produto é mais precisa — e podemos tomar decisões de mix informadas",
+        "Pode levar a decisões contraintuitivas: subir o preço do produto simples, descontinuar o complexo, ou reestruturar",
+        "Implementação: 5-10 actividades principais, 1-3 cost drivers por actividade. Complexidade desce rapidamente após os primeiros projectos"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Custos-padrão e análise de desvios avançada"
+    },
+    {
+      "type": "p",
+      "text": "Custos-padrão não servem só para o orçamento — são benchmarks operacionais que permitem comparar a eficiência entre períodos, entre fábricas, entre equipas. A análise de desvios avançada estende a árvore de seis elementos (preço MP, eficiência MP, taxa MOD, eficiência MOD, despesa GGF, volume) com subcomponentes — por exemplo, o desvio de eficiência MOD pode ser de setup vs. operacional vs. reparação."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Variance tree de 6 elementos com sub-análise dentro de cada componente",
+        "Responsabilidade: cada desvio tem um dono (compras, produção, vendas, manutenção)",
+        "Benchmarking interno: comparar fábrica A vs. fábrica B usando os mesmos padrões",
+        "Benchmarking externo: padrões da indústria (quando disponíveis) revelam desvios competitivos"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Balanced Scorecard (Kaplan & Norton) — integrar custos com estratégia"
+    },
+    {
+      "type": "p",
+      "text": "Lançado em 1992 por Robert Kaplan e David Norton, o Balanced Scorecard expande a medição do desempenho para além do financeiro. Reconhece que a criação de valor futuro depende de activos intangíveis — clientes satisfeitos, processos eficientes, pessoas capacitadas — que não aparecem nas demonstrações tradicionais mas que, a prazo, determinam o resultado financeiro. Organiza os indicadores em quatro perspectivas: financeira, do cliente, dos processos internos e da aprendizagem e crescimento."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Perspectiva financeira: ROI, margem operacional, cash flow, crescimento de receita — o que os accionistas querem ver",
+        "Perspectiva do cliente: satisfação (NPS), quota de mercado, retenção, novos clientes — o que cria valor para o cliente",
+        "Perspectiva dos processos internos: qualidade (defeitos), tempo de ciclo, capacidade, inovação — como produzimos excelência",
+        "Perspectiva de aprendizagem e crescimento: competência dos colaboradores, sistemas de informação, clima organizacional — o que sustenta o futuro"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Do BSC à estratégia: como tudo se liga"
+    },
+    {
+      "type": "p",
+      "text": "O BSC funciona quando a estratégia é desdobrada em indicadores alinhados entre as perspectivas e quando a cadeia causa-efeito é explícita: investir em formação (aprendizagem) → processos mais eficientes (processos) → clientes mais satisfeitos (cliente) → maiores receitas e margens (financeira). Esta cadeia permite que cada equipa veja como o seu trabalho diário impacta o resultado final — e onde melhorar."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Mapear a estratégia em 4-5 objectivos por perspectiva",
+        "2-3 KPIs por objectivo — não mais, senão perde foco",
+        "Iniciativas estratégicas específicas para cada objectivo",
+        "Ligação ao sistema de incentivos: cada KPI tem peso na avaliação de quem o influencia",
+        "Revisão mensal/trimestral dos indicadores — não anual, senão perde a função de gestão"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "🎯 O BSC não substitui o orçamento — complementa-o. O orçamento diz-nos se estamos a cumprir o plano operacional do ano. O BSC diz-nos se estamos a construir as capacidades que nos levam ao sucesso a 3-5 anos. As duas lentes juntas dão a fotografia completa."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: quando uma PME te perguntar 'como sei se estou a criar valor de forma sustentável?', não respondas só com EBITDA. Propõe 4-5 KPIs não-financeiros (NPS, taxa de defeito, índice de engajamento de colaboradores, tempo médio de entrega) e mostra como se relacionam com o resultado financeiro. Esta é a diferença entre controlar o trimestre e construir a década."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma empresa tem custos indirectos totais de 1M€ distribuídos em duas actividades: Setup (300k€) e Desenvolvimento (700k€). Em 2025 fez 500 setups para o Produto X e 1500 para o Y. No desenvolvimento, dedicou 4000 horas a X e 8000 a Y. Calcula o custo indirecto total por produto via ABC.",
+      "answer": "Custo por setup = 300.000 / (500 + 1500) = 150€/setup. Custo por hora desenvolvimento = 700.000 / (4000 + 8000) = 58,33€/h. Produto X: 500 × 150 + 4000 × 58,33 = 75.000 + 233.333 = 308.333€. Produto Y: 1500 × 150 + 8000 × 58,33 = 225.000 + 466.667 = 691.667€. Total = 1.000.000€ (verificado)."
+    }
+  ],
+  "keyPoints": [
+    "ABC aloca custos indirectos em duas etapas: Recursos → Actividades → Objectos de custo.",
+    "ABC corrige a sub-orçamentação de produtos complexos e a sobre-orçamentação de produtos simples em massa.",
+    "Custos-padrão são benchmarks operacionais que permitem comparar eficiência entre períodos, fábricas e equipas.",
+    "Variance tree de 6 elementos cobre preço/quantidade de MP, taxa/eficiência de MOD e despesa/volume de GGF.",
+    "BSC tem 4 perspectivas: financeira, cliente, processos internos, aprendizagem e crescimento.",
+    "Cadeia causa-efeito do BSC liga indicadores intangíveis ao resultado financeiro a prazo.",
+    "Orçamento operacional + BSC estratégico = visão completa de curto e longo prazo."
+  ],
+  "quizSlug": "cgeq",
+  "nextLesson": null,
+  "prevLesson": "03-orcamento-industrial-e-custos-padrao"
+}

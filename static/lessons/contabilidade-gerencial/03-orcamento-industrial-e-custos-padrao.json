@@ -1,0 +1,143 @@
+{
+  "id": "03-orcamento-industrial-e-custos-padrao",
+  "title": "3. Orçamento Industrial, Custos-Padrão e Análise de Desvios",
+  "courseSlug": "contabilidade-gerencial",
+  "lessonNumber": 3,
+  "description": "Como planear o ano operacionalmente, traduzir o orçamento em padrões de custo e analisar os desvios para agir durante o ano — não no fim. O orçamento é a ponte entre estratégia e execução.",
+  "audio": "Na terceira lição vamos ao coração da gestão de curto prazo: o orçamento industrial. Vamos percorrer o ciclo orçamental anual, do orçamento de vendas aos orçamentos de produção, matérias, mão-de-obra e gastos gerais, fechar com tesouraria e demonstração de resultados previsionais, e terminar com a análise de desvios — onde tudo se decide na prática.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["orçamento", "custos-padrão", "desvios", "variance analysis", "orçamento industrial", "master budget"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O ciclo orçamental anual: do plano estratégico ao orçamento operacional"
+    },
+    {
+      "type": "p",
+      "text": "O orçamento anual não nasce do zero — é a tradução operacional do plano estratégico. Em primeiro lugar, a direcção define metas (crescimento de 15%, margem de 12%, entrada em dois mercados novos). Depois, a área comercial traduz em volume de vendas por produto, mês e cliente. A produção converte vendas em planos de fabrico. Compras, RH, finanças completam o puzzle. No fim, tudo é consolidado, revisto, aprovado pela gestão — e começa a execução."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Fase 1 (Set–Out): preparação, alinhamento estratégico, calendarização",
+        "Fase 2 (Out–Nov): orçamentos setoriais (vendas, produção, compras, pessoal, GGF)",
+        "Fase 3 (Nov–Dez): consolidação, revisões, negociação de desvios entre áreas",
+        "Fase 4 (Jan do ano seguinte): aprovação pela gestão de topo, comunicação, início da execução",
+        "Fase 5 (mensal): acompanhamento dos desvios, acções correctivas, revisões (rolling forecast)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Orçamento de vendas — o ponto de partida"
+    },
+    {
+      "type": "p",
+      "text": "O orçamento de vendas é o primeiro sub-orçamento porque condiciona todos os outros — define volume de produção, que dispara compras, que dispara pagamento a fornecedores. Assegurar qualidade aqui é crítico: vendas optimista em demasia leva a stocks excedentários e descontos forçados; vendas pessimista deixa a empresa sem produto e perde vendas."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Forecast bottom-up: cada gestor comercial propõe vendas por cliente, produto, mês",
+        "Forecast top-down: a direcção-geral fixa uma meta e as áreas negociam para chegar lá",
+        "Análise histórica: série de 3-5 anos, identificando tendência, sazonalidade, ciclo",
+        "Validação com capacidade: vendas não podem exceder a capacidade produtiva (ou entram aquisições)",
+        "Sazonalidade explícita: muitos negócios têm alta em Dezembro (Natal), baixa em Janeiro"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Orçamentos operacionais: produção, matérias, MOD, GGF"
+    },
+    {
+      "type": "p",
+      "text": "A partir das vendas vem o orçamento de produção: unidades a fabricar por período = vendas previstas + stock final desejado − stock inicial. Daqui derivam três orçamentos materiais. Orçamento de compras de MP: quantidade a comprar × preço médio esperado. Orçamento de MOD: horas necessárias × custo hora. Orçamento de GGF: decomposição por centro de custo (manutenção, electricidade, indirectos) — fixos são fixos; variáveis escalam com a produção."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Orçamento de produção desagua em três: MP (compras), MOD (mão-de-obra), GGF (gastos gerais)",
+        "Inventário desejado: normalmente 10-20% das vendas do mês seguinte como stock de segurança",
+        "Materiais: stock inicial + compras − consumo = stock final",
+        "MOD: horas padrão por unidade × unidades a produzir = horas MOD; multiplicar pelo custo hora médio"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Orçamentos financeiros: tesouraria e demonstração de resultados previsionais"
+    },
+    {
+      "type": "p",
+      "text": "Com os orçamentos operacionais consolidados, construímos os financeiros. O orçamento de tesouraria é o mais crítico: para cada mês, as entradas (vendas, recebimentos de clientes) versus saídas (compras, salários, GGF, impostos, amortização de dívida). A diferença é a variação de caixa — e isto diz-nos se vamos precisar de financiamento ou se vamos gerar caixa excedentária. O orçamento de resultados previsionais junta tudo numa DRE projectada."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Tesouraria: prazo médio de recebimento de clientes (PMR) e prazo médio de pagamento a fornecedores (PMP) decidem o ciclo de caixa",
+        "Se PMR > PMP, a empresa financia clientes — pode precisar de descoberto bancário sazonal",
+        "Investimento em stocks: quando se acumulam MP e produtos acabados, é uma saída de caixa antes da venda",
+        "Resultado operacional previsto = Receita − CMVMC − Despesas operacionais − Amortizações"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Custos-padrão e análise de desvios (variance analysis)"
+    },
+    {
+      "type": "p",
+      "text": "Custos-padrão são valores de referência (preço padrão da MP, hora padrão de MOD, custo padrão de GGF por unidade) usados para duas coisas: simplificar o orçamento e comparar com os custos reais. A análise de desvios decompõe a diferença entre padrão e real em componentes com causa identificada — esta é a parte verdadeiramente útil: não basta saber que gastámos mais, importa saber porquê."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Desvio de preço de MP = (Preço real − Preço padrão) × Quantidade real comprada",
+        "Desvio de quantidade de MP = (Quantidade real − Quantidade padrão) × Preço padrão",
+        "Desvio de taxa de MOD = (Taxa horária real − Taxa padrão) × Horas reais",
+        "Desvio de eficiência de MOD = (Horas reais − Horas padrão) × Taxa padrão",
+        "Desvio de volume = Produção realizada − Produção orçada → impacto nos custos fixos não absorvidos"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Investigação de desvios — a regra dos 5%"
+    },
+    {
+      "type": "p",
+      "text": "Nem todos os desvios merecem investigação: muitos são ruído estatístico, outros são grandes demais para serem corrigidos a tempo. A regra empírica comum é investigar desvios materiais — por norma, mais de 5% do padrão ou mais de um valor absoluto definido pela empresa (ex: 10.000€). Critica-se também se o desvio é desfavorável recorrente — aí indica falha estrutural do padrão."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Investigar desvios: > 5% do padrão ou > valor mínimo definido",
+        "Responsabilidade por desvio: cada desvio liga-se a um centro de responsabilidade (compras, produção, vendas)",
+        "Acções correctivas: Renegociar fornecedor (desvio de preço MP), formação de operadores (eficiência MOD), manutenção (GGF)",
+        "Flexed budget: ajustar o orçamento padrão à produção realmente obtida para comparar apples-to-apples"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "📅 O orçamento anual não é uma camisa-de-onze-varas. Empresas modernas fazem rolling forecast trimestral: actualizam os próximos 12 meses com base no realizado e nas novas informações. Evita o desvio entre orçamento e realidade acumular durante todo o ano."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: o orçamento não é só um exercício anual. O verdadeiro valor está no acompanhamento mensal — comparar orçado vs. realizado, perceber os desvios e agir. Uma PME que faz isto bem detecta problemas 2-3 meses antes; uma que só olha para o realizado no fim já não tem tempo de reagir."
+    },
+    {
+      "type": "exercise",
+      "question": "Numa PME, o padrão de MP é 2 kg por unidade a 5€/kg. Em Janeiro, produziram 1.000 unidades usando 2.100 kg comprados a 5,30€/kg. Calcule o desvio de preço e o desvio de quantidade de MP.",
+      "answer": "Desvio de preço = (5,30 − 5,00) × 2.100 = 0,30 × 2.100 = 630€ desfavorável (gastámos mais por kg). Desvio de quantidade = (2.100 − 2.000) × 5,00 = 100 × 5 = 500€ desfavorável (usámos mais kg do que o padrão). Total MP: 630 + 500 = 1.130€ desfavorável. Investigar com compras (preço) e produção (eficiência)."
+    }
+  ],
+  "keyPoints": [
+    "Ciclo orçamental: estratégia → vendas → produção → MP/MOD/GGF → tesouraria → DRE previsionais.",
+    "Vendas é o ponto de partida — produção, compras e GGF derivam dele.",
+    "Custos-padrão simplificam o orçamento e permitem comparar real vs. padrão.",
+    "Desvios decompõem-se em preço/quantidade, taxa/eficiência — cada um com responsável identificado.",
+    "Flexed budget ajusta o orçado à produção realizada para comparar como-como.",
+    "Rolling forecast trimestral evita que o orçamento desactualize ao longo do ano."
+  ],
+  "quizSlug": "cgeq",
+  "nextLesson": "04-custeio-baseado-em-atividades-abc",
+  "prevLesson": "02-cvp-e-analise-break-even"
+}
