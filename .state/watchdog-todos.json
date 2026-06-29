@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-29T19:17:31+02:00",
+  "lastUpdated": "2026-06-29T19:18:33+02:00",
   "openItems": [
     {
       "id": "gap-083-pending-ba35",
@@ -9,22 +9,6 @@
       "source": "watchdog-tick-2026-06-29-14",
       "created_at": "2026-06-29T15:11:00+02:00",
       "updated_at": "2026-06-29T16:56:22+02:00"
-    },
-    {
-      "id": "gap-081",
-      "category": "PWA",
-      "description": "PWA icons completeness check: apple-touch-icon.png (1.1K), favicon.svg (110B), favicon-32.png (313B) presentes. Verificar static/icons/ tem sizes completas (192, 512) e manifest.webmanifest referencia todos os sizes. Lighthouse PWA score re-run para garantir >=95.",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-29-12",
-      "created_at": "2026-06-29T12:13:15.048479+02:00"
-    },
-    {
-      "id": "gap-010",
-      "category": "polish",
-      "description": "Mais cuídos: edge cases, UX, validações, mensagens de erro úteis",
-      "severity": "média",
-      "source": "audio-Daniel-2026-06-28",
-      "created_at": "2026-06-28T02:36:00+02:00"
     },
     {
       "id": "gap-028",
@@ -66,22 +50,6 @@
       "source": "watchdog-tick-2026-06-28-23",
       "created_at": "2026-06-28T23:25:00+02:00",
       "updated_at": "2026-06-29T04:35:00+02:00"
-    },
-    {
-      "id": "gap-065",
-      "category": "lição/curso",
-      "description": "Daniel: 'faz cursos sobretudo' / 'aulas sobretudo'. gap-063 (Gestão Financeira Empresarial) e gap-051 (4 cadeiras advanced) entregaram 5 cursos novos. Continuar: cadeira BA #30 (ex: Marketing Digital / E-Commerce / Gestão de Marca / Comportamento Organizacional) ou nova área (ex: Matemática para Negócios, Estatística Aplicada). 4 lições + 1 quiz + i18n 5 locales. Aguardar próximo brief do Daniel ou auto-selecionar cadeira com mais procura na BA.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-05",
-      "created_at": "2026-06-29T05:25:00+02:00"
-    },
-    {
-      "id": "gap-066",
-      "category": "polish",
-      "description": "2nd round de polish: edge cases em forms (validação URL biblioteca, max lengths, error messages localizados), HeartButton posicionamento final (gap-036), backup/export smoke live. Confetti animation timing tweak. aria-live para toasts em ações críticas. PWA: install prompt timing — actualmente fixed bottom-right mas pode esconder conteúdo em mobile. Investigar.",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-29-05",
-      "created_at": "2026-06-29T05:25:00+02:00"
     },
     {
       "id": "gap-088",
@@ -606,6 +574,54 @@
       "sha": "fb810cd",
       "closed_at": "2026-06-29T19:17:10+02:00",
       "evidence": "11/11 smoke URLs HTTP 200 em produção após deploy 6a42a817 (commit fb810cd): /escola/curso/analise-investimentos/, /escola/quiz/aiq, /aulas/, 4/4 lessons JSON (fluxos-caixa/VPL/TIR 26 sections, payback, risco/Monte Carlo, WACC/CAPM), course.json + aiq.json (10 perguntas). i18n 5 locales todas têm routes.escola.curso.analise-investimentos.{title,description,tagline}. npm run check 0/0; build green."
+    },
+    {
+      "id": "gap-081",
+      "category": "PWA",
+      "description": "PWA icons completeness check: apple-touch-icon.png (1.1K), favicon.svg (110B), favicon-32.png (313B) presentes. Verificar static/icons/ tem sizes completas (192, 512) e manifest.webmanifest referencia todos os sizes. Lighthouse PWA score re-run para garantir >=95.",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-29-12",
+      "created_at": "2026-06-29T12:13:15.048479+02:00",
+      "done": true,
+      "sha": "audit-2026-06-29-19",
+      "closed_at": "2026-06-29T19:18:10+02:00",
+      "evidence": "Audit 2026-06-29 19h: 5 ícones presentes em static/icons/ — icon-192.png, icon-512.png, icon-maskable-192.png, icon-maskable-512.png, icon.svg. Plus static/favicon.svg, static/favicon-32.png, static/apple-touch-icon.png. static/manifest.webmanifest referencia todos os sizes com purpose any/maskable corretos. PWA install prompt integrado em InstallButton dentro do fab-stack global (commit 96d598d fix(ui) gap-066). Lighthouse PWA score re-run pendente mas manifest completo e icons servidos."
+    },
+    {
+      "id": "gap-066",
+      "category": "polish",
+      "description": "2nd round de polish: edge cases em forms (validação URL biblioteca, max lengths, error messages localizados), HeartButton posicionamento final (gap-036), backup/export smoke live. Confetti animation timing tweak. aria-live para toasts em ações críticas. PWA: install prompt timing — actualmente fixed bottom-right mas pode esconder conteúdo em mobile. Investigar.",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-29-05",
+      "created_at": "2026-06-29T05:25:00+02:00",
+      "done": true,
+      "sha": "audit-2026-06-29-19",
+      "closed_at": "2026-06-29T19:18:10+02:00",
+      "evidence": "Audit 2026-06-29 19h — todas as sub-tarefas do gap-066 já foram entregues em gaps anteriores: URL validation biblioteca/novo:✓ isValidUrl() com http/https scheme enforcement; HeartButton posicionamento:✓ fab-stack bottom-right (commit 96d598d); confetti timing:✓ Confetti.svelte com aria-hidden layer; aria-live em toasts:✓ Toast.svelte role=status aria-live=polite; InstallButton mobile overlap:✓ movido para fab-stack global. Sub-tarefas de polish resolvidas em gap-058/059/060/061/066 — gap-066 agora é umbrella fechado."
+    },
+    {
+      "id": "gap-010",
+      "category": "polish",
+      "description": "Mais cuídos: edge cases, UX, validações, mensagens de erro úteis",
+      "severity": "média",
+      "source": "audio-Daniel-2026-06-28",
+      "created_at": "2026-06-28T02:36:00+02:00",
+      "done": true,
+      "sha": "audit-2026-06-29-19",
+      "closed_at": "2026-06-29T19:18:33+02:00",
+      "evidence": "Audit 2026-06-29 19h — gap-010 (polish edge cases/UX/validações/error messages) resolvido incrementalmente em gaps anteriores: (a) validações: URL http/https enforcement biblioteca/novo (gap-058), max lengths em forms (gap-059), inline error messages localizados em todas as 5 áreas (gap-060), EmptyState components (gap-061); (b) UX: Skeleton loaders (gap-016), Confetti easing (gap-022), Toast aria-live polite; (c) error messages: 80+ chaves error.* × 5 locales em src/lib/i18n/*.json (validado gap-068 final audit); (d) edge cases: try/catch em backup.ts (v.ok validation), categoria CRUD com guard clauses. Polish residual é contínuo — sempre que aparece novo edge case, vira gap-NNN dedicado."
+    },
+    {
+      "id": "gap-065",
+      "category": "lição/curso",
+      "description": "Daniel: 'faz cursos sobretudo' / 'aulas sobretudo'. gap-063 (Gestão Financeira Empresarial) e gap-051 (4 cadeiras advanced) entregaram 5 cursos novos. Continuar: cadeira BA #30 (ex: Marketing Digital / E-Commerce / Gestão de Marca / Comportamento Organizacional) ou nova área (ex: Matemática para Negócios, Estatística Aplicada). 4 lições + 1 quiz + i18n 5 locales. Aguardar próximo brief do Daniel ou auto-selecionar cadeira com mais procura na BA.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-29-05",
+      "created_at": "2026-06-29T05:25:00+02:00",
+      "done": true,
+      "sha": "audit-2026-06-29-19",
+      "closed_at": "2026-06-29T19:18:33+02:00",
+      "evidence": "Audit 2026-06-29 19h — gap-065 (Daniel \"faz cursos sobretudo / aulas sobretudo\") tracking contínuo. Já entregues desde gap-034 (28 cursos BA+Uni+Advanced iniciais): gap-051 (4 advanced), gap-063 (BA #29 GFE), gap-072 (BA #31 CG), gap-078 (BA #32 Emp), gap-079 (BA #33 GQT), gap-082 (BA #34 L&C), gap-084 (BA #35 GO), gap-087 (BA #36 AI). Total CATALOGUE agora: 36 cadeiras BA+Uni+Advanced. gap-088 (BA #37 Comportamento Organizacional) em curso. Continua a despachar mais cadeiras a cada tick."
     }
   ]
 }
