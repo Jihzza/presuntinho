@@ -504,8 +504,8 @@
   "routes.escola.curso.gestao-mudanca.description": "نموذج كوتر المكون من 8 خطوات، ونموذج ADKAR من Prosci، وإدارة المقاومة وثقافة المنظمة وفق شاين.",
   "routes.escola.curso.gestao-mudanca.title": "إدارة التغيير التنظيمي",
   "routes.escola.curso.gestao-operacoes.description": "تصميم وتشغيل وتحسين العمليات التي تحوّل المدخلات إلى مخرجات: سلسلة قيمة بورتر واستراتيجية العمليات (المقايضات بين التكلفة والجودة والسرعة والمرونة)، تصميم العمليات وتحليل التدفق (العنق الزجاجة، قانون ليتل، التخطيطات)، نظام إنتاج تويوتا وسيكس سيغما (DMAIC) لتحقيق التميز التشغيلي، والتخطيط والرقابة (MRP، EOQ، ABC، SPC، نظرية الطوابير).",
-    "routes.escola.curso.gestao-operacoes.tagline": "إدارة الأعمال · العمليات، لين، سيكس سيغما، التخطيط والرقابة",
-    "routes.escola.curso.gestao-operacoes.title": "إدارة العمليات",
+  "routes.escola.curso.gestao-operacoes.tagline": "إدارة الأعمال · العمليات، لين، سيكس سيغما، التخطيط والرقابة",
+  "routes.escola.curso.gestao-operacoes.title": "إدارة العمليات",
   "routes.escola.curso.inovacao-empreendedorismo.description": "العقلية الريادية، التفكير التصميمي كمنهج للابتكار المتمحور حول المستخدم، التحقق من الأفكار عبر MVP وتطوير العملاء والリーン ستارت أب، والتمويل + العرض للتوسع.",
   "routes.escola.curso.inovacao-empreendedorismo.lessons.4-financiamento-e-pitch.summary": "مصادر رأس المال (التمويل الذاتي، ملائكة الأعمال، رأس المال المخاطر)، عرض Pitch مقابل Elevator pitch، مقاييس المستثمرين (TAM/SAM/SOM، LTV/CAC، runway) وكيفية التواصل مع ملائكة الأعمال.",
   "routes.escola.curso.inovacao-empreendedorismo.lessons.4-financiamento-e-pitch.title": "4. التمويل والعرض",
@@ -842,5 +842,8 @@
   "agente.chat.mic_denied": "لم أستطع الوصول إلى الميكروفون. تحقق من الأذونات.",
   "agente.chat.clear_confirm": "مسح كل سجل المحادثة؟",
   "agente.chat.cleared": "تم مسح السجل. اسألني أي شيء عن تطبيقك.",
-  "agente.chat.audio_label": "🎤 صوت مسجّل"
+  "agente.chat.audio_label": "🎤 صوت مسجّل",
+  "routes.escola.curso.analise-investimentos.title": "تحليل الاستثمارات",
+  "routes.escola.curso.analise-investimentos.description": "التقييم الاقتصادي لمشاريع الاستثمار: التدفقات النقدية، صافي القيمة الحالية، معدل العائد الداخلي، فترة الاسترداد، تحليل المخاطر وعدم اليقين (الحساسية، مونت كارلو، الخيارات الحقيقية)، تكلفة رأس المال WACC والهيكل التمويلي الأمثل.",
+  "routes.escola.curso.analise-investimentos.tagline": "إدارة الأعمال · ميزانية رأس المال، صافي القيمة الحالية/معدل العائد الداخلي، المخاطر، تكلفة رأس المال"
 }

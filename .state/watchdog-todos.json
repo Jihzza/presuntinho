@@ -133,16 +133,16 @@
     },
     {
           "id": "gap-084",
-          "category": "lição/curso",
-          "description": "Cadeira BA #35 Gestão de Operações (slug gestao-operacoes). Skander 2 deixou trabalho não-commitado; watchdog fechou: bug-fix em aulas/+page.server.ts (entrada duplicada removida, vírgula a mais corrigida), 5 i18n descriptions atualizadas + 5 i18n taglines adicionadas. Pattern: study gap-082 lideranca-coaching (6dde8ad) + gap-079 gestao-qualidade (39bb36a). 4 lições (fundamentos Porter/MTS/MTO/ATO + estratégia; design processos Little's Law/TOC; TPS/Six Sigma DMAIC; MRP/EOQ/SPC/filas) + goq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired (escola/+page, escola/curso/[slug], aulas/+page.server, 5× i18n JSONs).",
-          "severity": "baixa",
-          "source": "watchdog-tick-2026-06-29-15",
-          "created_at": "2026-06-29T16:56:22+02:00",
-          "done": true,
-          "sha": "pending",
-          "closed_at": "2026-06-29T18:00:00+02:00",
-          "evidence": "npm run check 0/0; npm run build green; build/lessons/gestao-operacoes/{01-04}-*.json + course.json + build/quizzes/goq.json servidos; 5 i18n locales têm gestao-operacoes.{title,description,tagline} actualizadas (760→763 chaves × 5); CATALOGUE wired em 3 routes; duplicado em aulas/+page.server.ts removido; quiz 10 perguntas verificado com explicações detalhadas."
-        },
+                    "category": "lição/curso",
+                    "description": "Cadeira BA #35 Gestão de Operações (slug gestao-operacoes). Reescrita completa: 4 lições (fundamentos Porter/MTS/MTO/ATO + estratégia; design processos Little's Law/TOC; TPS/Six Sigma DMAIC; MRP/EOQ/SPC/filas) + goq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired.",
+                    "severity": "baixa",
+                    "source": "watchdog-tick-2026-06-29-15",
+                    "created_at": "2026-06-29T16:56:22+02:00",
+                    "done": true,
+                    "sha": "d72e55e",
+                    "closed_at": "2026-06-29T18:55:00+02:00",
+                    "evidence": "npm run check 0/0; npm run build green; 4 lessons JSON (01-fundamentos, 02-design-processos, 03-lean-six-sigma, 04-planeamento) + course.json + goq.json criados; 5 i18n locales têm gestao-operacoes.{title,description,tagline}; CATALOGUE wired em 3 routes (escola/+page.svelte:191+419, escola/curso/[slug]:268, aulas/+page.server.ts:92); commit d72e55e pushed; 17/17 smoke URLs 200 em produção incluindo /escola/curso/gestao-operacoes/ e /escola/quiz/goq."
+                  },
         {
           "id": "gap-087",
           "category": "lição/curso",

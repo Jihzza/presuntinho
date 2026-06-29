@@ -1,0 +1,185 @@
+{
+  "id": "04-custo-capital-estrutura",
+  "title": "4. Custo de Capital (WACC, CAPM) e Estrutura Óptima de Financiamento",
+  "courseSlug": "analise-investimentos",
+  "lessonNumber": 4,
+  "description": "Como calcular o custo de oportunidade do capital: CAPM (Rf + β×MRP) para custo de equity, custo da dívida after-tax, WACC ponderado pela estrutura de capital; Capital Asset Pricing Model aprofundado (β, risco sistemático vs não-sistemático, Security Market Line); teorias de estrutura óptima de capital (Modigliani-Miller sem impostos, trade-off com impostos e custos de falência, pecking order de Myers-Majluf); e priorização prática de portfolio de CAPEX.",
+  "audio": "Nesta quarta e última lição vamos ao coração do desconto de cash flows: o custo de capital. Vamos cobrir o CAPM — Capital Asset Pricing Model — que decompõe o custo do capital próprio em taxa sem risco + beta × prêmio de risco de mercado, e porque é que o risco não-sistemático é irrelevante em mercados eficientes. Vamos cobrir o custo da dívida after-tax (tax shield do juro). Vamos combinar tudo no WACC — Weighted Average Cost of Capital — que pondera o custo do equity e da dívida pela estrutura de capital alvo. Vamos discutir a estrutura óptima: porque é que Modigliani-Miller (1958) provaram que, sem impostos e custos de falência, a estrutura é irrelevante, e como a teoria do trade-off e a pecking order de Myers-Majluf (1984) reconstroem a decisão real. Vamos fechar com priorização prática do portfolio de CAPEX e o papel do board nesta decisão.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["WACC", "CAPM", "Custo de Capital", "Estrutura de Capital", "MM", "Trade-off", "Pecking Order", "CAPEX"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O custo de capital como taxa de desconto"
+    },
+    {
+      "type": "p",
+      "text": "O custo de capital é a taxa de retorno mínima exigida pelos financiadores da empresa (accionistas e credores) para fornecer capital. É a 'hurdle rate' dos projectos — se um projecto ganha menos do que o custo de capital, destrói valor. O custo de capital tem duas componentes: custo do capital próprio (equity) — retorno exigido pelos accionistas; e custo da dívida (debt) — juro após imposto pago aos credores. A média ponderada é o WACC (Weighted Average Cost of Capital). Para um projecto puro-equity usa-se o custo do capital próprio como taxa; para um projecto financiado com a estrutura actual da empresa, usa-se o WACC; para projectos com perfil de risco diferente do da empresa (e.g. nova linha de negócio), ajusta-se o WACC para o risco do projecto (e.g. WACC mais alto para países emergentes)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Custo de capital = hurdle rate mínima dos investimentos",
+        "Componentes: custo do capital próprio (Ke) + custo da dívida (Kd, after-tax)",
+        "WACC = (E/V)×Ke + (D/V)×Kd×(1−t) — ponderado pela estrutura de capital",
+        "Para projectos de risco diferente: ajustar o WACC ao risco do projecto",
+        "Hurdle rate tipicamente WACC + spread de risco para projectos novos (ex: +200-500 bp)",
+        "Erro clássico: usar WACC histórico (que mudou) ou o WACC dos concorrentes (estrutura diferente)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "CAPM — Capital Asset Pricing Model"
+    },
+    {
+      "type": "p",
+      "text": "O CAPM (Sharpe, 1964; Lintner, 1965; Mossin, 1966) é o modelo canónico para calcular o custo do capital próprio. Fórmula: Ke = Rf + β × MRP, onde Rf é a taxa sem risco (rendimento de obrigações do Estado a 10 anos), β é o coeficiente de risco sistemático do activo (covariância com o mercado, normalizada), e MRP é o prêmio de risco de mercado (retorno esperado do mercado acima da taxa sem risco, historicamente 4-8% nos mercados desenvolvidos). O CAPM separa risco em sistemático (mercado, não diversificável) — remunerado — e risco não-sistemático (empresa, diversificável) — não remunerado em carteiras bem diversificadas. A implicação prática: o gestor de um projecto só é remunerado pelo risco de mercado que o projecto carrega, não pelo risco específico que pode ser diversificado."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "CAPM: Ke = Rf + β × MRP",
+        "Rf: taxa sem risco — geralmente yield de obrigação do Estado a 10 anos",
+        "β: covariância do activo com o mercado (β=1 média, β>1 mais volátil, β<1 menos volátil)",
+        "MRP: prêmio de risco de mercado — histórico 4-8% nos EUA, ajustável para PT/EU",
+        "Risco sistemático: mercado, não diversificável — remunerado",
+        "Risco não-sistemático: empresa/indústria, diversificável — não remunerado em carteiras",
+        "Limitação: CAPM é modelo de um período, assume variância constante, betas podem mudar"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Security Market Line (SML) e o gráfico do CAPM"
+    },
+    {
+      "type": "p",
+      "text": "A Security Market Line (SML) é a representação gráfica do CAPM — linha que relaciona retorno esperado e beta. Activos plotados acima da SML estão sub-avaliados (retorno superior ao esperado para o seu risco — oportunidade de compra); abaixo da SML estão sobre-avaliados. O portfólio de mercado (todas as acções, ponderadas por capitalização) está exactamente na SML. Na prática, a SML é usada para benchmarking de carteiras e para avaliar se um activo está a entregar retorno ajustado ao risco adequado. Críticas empíricas: o modelo explica ~70% da variação cross-sectional de retornos; o beta explica pouco individualmente em horizontes curtos (Fama-French, 1993, identificaram factores adicionais: tamanho e valor)."
+    },
+    {
+      "type": "h2",
+      "text": "Custo da dívida after-tax"
+    },
+    {
+      "type": "p",
+      "text": "O custo da dívida (Kd) é o juro que a empresa paga aos credores, ajustado pelo efeito fiscal (tax shield). Como o juro da dívida é dedutível no imposto sobre o rendimento, o custo efectivo é menor: Kd × (1 − t), onde t é a taxa marginal de imposto. Exemplo: empresa emite dívida a 5% e tem taxa marginal de imposto 25%. Custo efectivo da dívida = 5% × (1 − 0,25) = 3,75%. Para empresas com rating baixo (BB ou abaixo), o juro exigido é maior — spread sobre a curva swap ou sobre obrigações do Estado. Para empresas muito endividadas, o custo da dívida sobe significativamente porque o risco de falência aumenta."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Kd = juro pago pela dívida (yield to maturity das obrigações)",
+        "Custo after-tax: Kd × (1 − t), onde t = taxa marginal de imposto",
+        "Tax shield do juro: benefício fiscal que torna dívida mais barata que equity",
+        "Spread sobre Rf depende do rating de crédito (investment grade vs high yield)",
+        "Empresas com alavancagem alta pagam spreads maiores — risco de falência",
+        "Pagar 8% com t=25% tem custo efectivo 6% — equivalente a equity de 6% pre-tax"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "WACC — Weighted Average Cost of Capital"
+    },
+    {
+      "type": "p",
+      "text": "O WACC combina Ke e Kd(1−t) ponderados pela estrutura de capital alvo: WACC = (E/V)×Ke + (D/V)×Kd×(1−t), onde E é o valor de mercado do capital próprio, D é o valor de mercado da dívida, V = E + D é o valor total da empresa. A estrutura usada é tipicamente a estrutura alvo de longo prazo (não a actual, que pode flutuar). Exemplo: empresa com E = 600M, D = 400M, Ke = 10%, Kd = 5%, t = 25%. WACC = (600/1000)×10% + (400/1000)×5%×(1−0,25) = 6% + 1,5% = 7,5%. O WACC é a taxa de desconto correcta para projectos com risco médio similar ao da empresa."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "WACC = (E/V)×Ke + (D/V)×Kd×(1−t)",
+        "E, D em valor de mercado (não valor contabilístico — frequentemente diferente)",
+        "Estrutura alvo de longo prazo, não estrutura actual — evita ciclos de feedback",
+        "WACC tipicamente 6-10% para grandes empresas em mercados desenvolvidos",
+        "Ajustar WACC ao risco do projecto: projectos de países emergentes +300-500 bp",
+        "Project finance usa WACC específico do projecto (debt sculpting, equity IRR alvo)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Limitações do WACC e do CAPM"
+    },
+    {
+      "type": "p",
+      "text": "Críticas ao CAPM: assume mercados eficientes e investidores racionais com expectativas homogéneas; beta é estimado com erros; o modelo foi desenvolvido num período específico. Críticas ao WACC: assume estrutura de capital estável (pode não ser); usa uma média ponderada para projectos que podem ter perfis de risco distintos (e.g. um projecto high-tech numa empresa industrial — usar WACC industrial subestima o risco). Alternativas: Adjusted Present Value (APV — separar efeitos da estrutura de capital), Flow to Equity (FTE — descontar só ao Ke), WACC por divisão (segmentar a empresa por risco), e modelos multifactor (Fama-French, q-factor de Hou-Xue-Zhang). Na prática, o WACC + CAPM domina pela simplicidade, mas devem ser usados com consciência das suas limitações."
+    },
+    {
+      "type": "h2",
+      "text": "Estrutura óptima de capital: MM, trade-off e pecking order"
+    },
+    {
+      "type": "p",
+      "text": "A pergunta 'quanto endividar?' é uma das mais estudadas em finanças. Três grandes teorias dão respostas diferentes. Modigliani-Miller (1958, sem impostos): em mercados de capitais perfeitos, o valor da empresa é independente da estrutura de capital — a irrelevância da estrutura. Trade-off theory (com impostos e custos de falência): existe um óptimo onde o benefício fiscal da dívida (Kd × t) equilibra os custos esperados de falência financeira (directos: legal; indirectos: perda de clientes, fornecedores, trabalhadores, desconto de produto) e os custos de agência entre accionistas e credores. Pecking order (Myers-Majluf, 1984): empresas preferem financiamento interno → dívida → equity, por ordem de menor assimetria de informação."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "MM (1958): sem impostos, sem custos de falência, estrutura é irrelevante — VPL constante",
+        "Trade-off: óptimo onde benefício fiscal marginal = custo de falência marginal esperado",
+        "Pecking order (Myers-Majluf): financiamento interno → dívida → equity — ordem de preferência",
+        "Trade-off é a teoria dominante em corporate finance — explica alavancagem por indústria",
+        "Pecking order explica comportamento real — empresas evitam emissões de equity",
+        "Implicação prática: cada empresa tem estrutura óptima diferente por sector, ciclo, activos"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Modigliani-Miller (1958) é o teorema mais elegante e contraintuitivo das finanças. Se o valor da empresa é independente da estrutura de capital, então todas as escolhas entre dívida e equity são irrelevantes para a riqueza total. Mas — e há um 'mas' gigante — o modelo pressupõe mercados perfeitos: sem impostos, sem custos de falência, sem custos de transacção, informação simétrica. Quando se relaxa cada pressuposto, a estrutura passa a importar. É a base de toda a corporate finance moderna."
+    },
+    {
+      "type": "h2",
+      "text": "Priorização prática do portfolio de CAPEX"
+    },
+    {
+      "type": "p",
+      "text": "Na prática, empresas têm centenas de oportunidades de investimento a cada ano mas orçamento limitado. A priorização do portfolio de CAPEX combina critérios quantitativos (VPL, TIR, PI) com qualitativos (alinhamento estratégico, dependências, risco). Processo típico: (1) gerar lista de projectos por unidade de negócio; (2) cada projecto passa por business case com VPL, TIR, Payback, sensibilidade; (3) comité de investimento avalia e prioriza — frequentemente com scorecard estratégico; (4) board aprova top-N por orçamento; (5) pós-auditoria compara VPL previsto com realizado. O board tem papel crítico: aprovar a estratégia de capital, definir o apetite ao risco (qual hurdle rate, qual tolerância a VPL negativo), e supervisionar a execução."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Pipeline de projectos: gerar muito, filtrar muito, aprovar pouco",
+        "Business case padrão: VPL, TIR, Payback, sensibilidade a cenários",
+        "Scorecard estratégico: alinhamento com plano, competitividade, risco, sustentabilidade",
+        "Comité de investimento: CFO + CEO + business unit heads — revisões mensais/trimestrais",
+        "Board aprova top-N por orçamento: foco no portfolio, não em projectos individuais",
+        "Post-auditoria anual: comparar VPL previsto com realizado — calibra o processo",
+        "Capital rationing pode justificar PI (ordenar projectos por PI e aceitar até esgotar)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Hurdle rates por tipo de projecto"
+    },
+    {
+      "type": "p",
+      "text": "A moderna prática usa hurdle rates diferenciadas por risco de projecto, não um WACC único. Exemplos: manutenção (substituição de equipamento existente) → WACC + 0%; expansão dentro do core business → WACC + 1-2%; novos produtos/mercados → WACC + 3-5%; projectos em países emergentes → WACC + 5-8%; venture capital/M&A → hurdle rate de 25-30% (modelo power-law). Esta diferenciação reflecte o princípio: o desconto deve corresponder ao risco do cash flow específico, não ao risco médio da empresa. Brigham: 'using the firm's overall cost of capital for all projects understates the discount rate for risky projects and overstates it for safe ones'."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: a regra de ouro é nunca usar o WACC médio para todos os projectos. Um projecto de expansão numa nova geografia tem mais risco do que a média da empresa — descontar ao WACC médio sobrestima o valor. A prática é ajustar a hurdle rate ao risco específico (país, sector, tecnologia, cliente). Projectos arriscados precisam de hurdle mais alto; projectos seguros (manutenção) podem aceitar hurdle mais baixo. Esta diferenciação é o que separa empresas que alocam capital bem das que o desperdiçam."
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: investimento, risco e estrutura"
+    },
+    {
+      "type": "p",
+      "text": "As quatro lições cobrem o ciclo completo da análise de investimentos: (1) cash flows e VPL/TIR como ferramenta primária; (2) critérios complementares (Payback, PI, EAC, MIRR) para风险的 diferentes dimensões; (3) análise de incerteza (sensibilidade, cenários, Monte Carlo, árvores de decisão, opções reais); (4) custo de capital (CAPM, WACC) e estrutura óptima (MM, trade-off, pecking order). Uma análise de investimento profissional integra todas estas camadas — VPL pontual raramente é suficiente; decisões de grande capital exigem análise robusta a múltiplos cenários e integração da estratégia de financiamento da empresa."
+    }
+  ],
+  "keyPoints": [
+    "Custo de capital = hurdle rate; WACC = (E/V)×Ke + (D/V)×Kd×(1−t)",
+    "CAPM: Ke = Rf + β × MRP — risco sistemático remunerado, não-sistemático não",
+    "Custo da dívida after-tax: Kd × (1−t), onde t é taxa marginal de imposto",
+    "WACC = média ponderada pela estrutura de capital alvo (não actual)",
+    "Estrutura alvo: valor de mercado (não contabilístico); usar LT target",
+    "MM (1958): sem impostos e custos de falência, estrutura é irrelevante",
+    "Trade-off theory: óptimo onde benefício fiscal = custo de falência marginal",
+    "Pecking order (Myers-Majluf): financiamento interno → dívida → equity",
+    "Hurdle rates diferenciadas: manutenção (WACC+0%), expansão (WACC+1-2%), novos mercados (WACC+3-5%), venture (25-30%)",
+    "Limitações: CAPM é modelo de um período; WACC assume estrutura estável; ajustar por risco do projecto"
+  ],
+  "quizSlug": "aiq",
+  "nextLesson": null,
+  "prevLesson": "03-analise-incerteza-risco"
+}

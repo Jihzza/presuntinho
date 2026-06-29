@@ -277,8 +277,22 @@
             { slug: '02-design-processos-layout-flow', title: '2. Design de Processos, Análise de Fluxo e Layout: Bottleneck, Throughput e Gestão de Capacidade', summary: 'SIPOC, BPMN, Little\'s Law, TOC de Goldratt, layouts (producto, processo, fixo, celular), takt time e gestão de capacidade.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 },
             { slug: '03-lean-toyota-six-sigma', title: '3. Lean Production, Toyota Production System e Six Sigma (DMAIC): Eliminação Sistemática de Desperdício', summary: 'TPS (JIT + Jidoka), 7 wastes TIMWOOD, 5S, kanban, andon, kaizen, Six Sigma DMAIC e integração Lean Six Sigma.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 },
             { slug: '04-planeamento-controlo-operacoes', title: '4. Planeamento e Controlo de Operações: MRP, EOQ, SPC e Teoria das Filas', summary: 'MPS, MRP, EOQ, safety stock, ABC, cartas Shewhart, Cp/Cpk, Taguchi loss function e teoria das filas M/M/1.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 }
-          ]
-        },
+                      ]
+                    },
+                    'analise-investimentos': {
+                      slug: 'analise-investimentos',
+                      title: 'Análise de Investimentos',
+                      tagline: 'Business Administration · Capital budgeting, VPL/TIR, risco, custo de capital',
+                      description: 'Avaliação económica de projectos de investimento: cash flows, VPL, TIR, payback, análise de risco e incerteza (sensibilidade, Monte Carlo, opções reais), custo de capital WACC e estrutura óptima de financiamento.',
+                      icon: '💰',
+                      color: '#059669',
+                      lessons: [
+                        { slug: '01-fluxos-caixa-e-vpl-tir', title: '1. Fluxos de Caixa, Valor Actual Líquido (VPL) e Taxa Interna de Rendibilidade (TIR)', summary: 'Projecção de FCF, VPL/NPV com regra de decisão VPL>0, TIR/IRR, perfil de VPL, análise incremental para mutuamente exclusivos e inflação nominal vs real (regra de Fischer).', quizSlug: 'aiq', quizTitle: 'Quiz: Análise de Investimentos', estMinutes: 9 },
+                        { slug: '02-payback-e-indicadores-complementares', title: '2. Payback, Payback Descontado, Índice de Rendibilidade, EAC e MIRR', summary: 'Payback simples e descontado, Profitability Index em racionamento de capital, Equivalent Annual Cost para vidas diferentes e Modified IRR (MIRR).', quizSlug: 'aiq', quizTitle: 'Quiz: Análise de Investimentos', estMinutes: 9 },
+                        { slug: '03-analise-incerteza-risco', title: '3. Análise de Incerteza e Risco: Sensibilidade, Cenários, Monte Carlo, Árvores de Decisão e Opções Reais', summary: 'Tornado diagrams (OVAT), cenários base/best/worst, simulação Monte Carlo com 10k iterações, árvores de decisão com EMV, e opções reais com intuição Black-Scholes.', quizSlug: 'aiq', quizTitle: 'Quiz: Análise de Investimentos', estMinutes: 9 },
+                        { slug: '04-custo-capital-estrutura', title: '4. Custo de Capital (WACC, CAPM) e Estrutura Óptima de Financiamento', summary: 'CAPM (Ke = Rf + β×MRP), custo da dívida after-tax, WACC ponderado, Modigliani-Miller, trade-off theory e pecking order de Myers-Majluf.', quizSlug: 'aiq', quizTitle: 'Quiz: Análise de Investimentos', estMinutes: 9 }
+                      ]
+                    },
         'analise-financeira': {
                   slug: 'analise-financeira',
                   title: 'Análise Financeira',

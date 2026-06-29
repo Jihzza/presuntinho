@@ -504,8 +504,8 @@
   "routes.escola.curso.gestao-mudanca.description": "Modèle de Kotter en 8 étapes, ADKAR de Prosci, gestion de la résistance et culture organisationnelle de Schein.",
   "routes.escola.curso.gestao-mudanca.title": "Gestion du changement organisationnel",
   "routes.escola.curso.gestao-operacoes.description": "Comment concevoir, exploiter et améliorer les processus qui transforment les intrants en extrants : chaîne de valeur de Porter et stratégie opérationnelle (arbitrages coût/qualité/vitesse/flexibilité), conception de processus et analyse de flux (goulot d'étranglement, loi de Little, layouts), Toyota Production System et Six Sigma (DMAIC) pour l'excellence opérationnelle, et planification/contrôle (MRP, EOQ, ABC, SPC, théorie des files d'attente).",
-    "routes.escola.curso.gestao-operacoes.tagline": "Business Administration · Processus, lean, six sigma, planification et contrôle",
-    "routes.escola.curso.gestao-operacoes.title": "Gestion des opérations",
+  "routes.escola.curso.gestao-operacoes.tagline": "Business Administration · Processus, lean, six sigma, planification et contrôle",
+  "routes.escola.curso.gestao-operacoes.title": "Gestion des opérations",
   "routes.escola.curso.inovacao-empreendedorismo.description": "État d'esprit entrepreneurial, design thinking comme méthode d'innovation centrée utilisateur, validation d'idées avec MVP, customer development et lean startup, et financement + pitch pour scaler.",
   "routes.escola.curso.inovacao-empreendedorismo.lessons.4-financiamento-e-pitch.summary": "Sources de capital (bootstrapping, business angels, VC), pitch deck vs elevator pitch, métriques pour investisseurs (TAM/SAM/SOM, LTV/CAC, runway) et comment approcher les business angels.",
   "routes.escola.curso.inovacao-empreendedorismo.lessons.4-financiamento-e-pitch.title": "4. Financement et Pitch",
@@ -841,5 +841,8 @@
   "agente.chat.mic_denied": "Je n'ai pas pu accéder au microphone. Vérifie les permissions.",
   "agente.chat.clear_confirm": "Effacer tout l'historique du chat ?",
   "agente.chat.cleared": "Historique effacé. Demande-moi n'importe quoi sur ton app.",
-  "agente.chat.audio_label": "🎤 Audio enregistré"
+  "agente.chat.audio_label": "🎤 Audio enregistré",
+  "routes.escola.curso.analise-investimentos.title": "Analyse des Investissements",
+  "routes.escola.curso.analise-investimentos.description": "Évaluation économique des projets d'investissement : flux de trésorerie, VAN, TRI, payback, analyse du risque et de l'incertitude (sensibilité, Monte Carlo, options réelles), coût du capital WACC et structure optimale de financement.",
+  "routes.escola.curso.analise-investimentos.tagline": "Business Administration · Budget de capitaux, VAN/TRI, risque, coût du capital"
 }

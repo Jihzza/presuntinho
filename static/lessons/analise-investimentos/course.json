@@ -1,0 +1,8 @@
+{
+  "slug": "analise-investimentos",
+  "title": "Análise de Investimentos",
+  "icon": "💰",
+  "color": "#059669",
+  "description": "Avaliação económica de projectos de investimento: cash flows, VPL, TIR, payback, análise de risco e incerteza (sensibilidade, Monte Carlo, opções reais), custo de capital WACC e estrutura óptima de financiamento.",
+  "order": 36
+}

@@ -1,0 +1,183 @@
+{
+  "id": "03-analise-incerteza-risco",
+  "title": "3. Análise de Incerteza e Risco: Sensibilidade, Cenários, Monte Carlo, Árvores de Decisão e Opções Reais",
+  "courseSlug": "analise-investimentos",
+  "lessonNumber": 3,
+  "description": "Como lidar com a incerteza nas projecções de cash flow: análise de sensibilidade (variação de uma variável de cada vez, tornado diagrams), análise de cenários (base/best/worst), simulação de Monte Carlo (10k iterações com amostragem de distribuições), árvores de decisão com Expected Monetary Value (EMV), e o enquadramento de opções reais (Black-Scholes como intuição para opções de expandir, abandonar, diferir ou alternar).",
+  "audio": "Nesta terceira lição enfrentamos a realidade incómoda: os cash flows projectados são estimativas, não certezas. Vamos cobrir quatro ferramentas para lidar com esta incerteza. A análise de sensibilidade varia uma variável de cada vez e identifica o ponto de viragem (break-even) e os inputs mais críticos — visualizados em tornado diagrams. A análise de cenários constrói três ou mais futuros plausíveis (pessimista, base, optimista) e calcula o VPL em cada um. A simulação de Monte Carlo repete o cálculo do VPL milhares de vezes com amostragem aleatória das variáveis de entrada. As árvores de decisão mapeiam opções sequenciais e calculam o Expected Monetary Value. E fechamos com opções reais — o reconhecimento de que muitos investimentos incorporam opções de flexibilidade (expandir, abandonar, diferir) que a análise tradicional de VPL ignora, e como o modelo de Black-Scholes dá intuição útil para valorá-las.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Sensibilidade", "Monte Carlo", "Cenários", "Árvore de Decisão", "EMV", "Opções Reais", "Black-Scholes", "Tornado Diagram"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "A incerteza nos cash flows projectados"
+    },
+    {
+      "type": "p",
+      "text": "Toda a análise de investimento começa com projecções de cash flow que são, por natureza, estimativas. O volume de vendas previsto pode estar errado em 30%, o custo das matérias-primas pode subir 15% por choque geopolítico, o custo de capital pode subir 200 pontos base se os bancos centrais apertarem. Uma análise robusta deve testar quão sensível é o VPL a estas variações. Sem esta camada de análise de risco, o VPL é um ponto — com ela, torna-se uma distribuição. As ferramentas dominantes são: sensibilidade (uma variável), cenários (várias em conjunto), Monte Carlo (distribuições completas), árvores de decisão (opções sequenciais) e opções reais (flexibilidade estratégica)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "VPL pontual assume que todas as estimativas são certas — quase nunca é realista",
+        "Análise de sensibilidade: uma variável de cada vez, ver efeito no VPL",
+        "Análise de cenários: várias variáveis em conjunto (base/best/worst)",
+        "Monte Carlo: distribuições estatísticas completas, milhares de iterações",
+        "Árvores de decisão: opções sequenciais com probabilidades",
+        "Opções reais: flexibilidade estratégica (expandir, abandonar, diferir) valorada como opção financeira"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Análise de sensibilidade e tornado diagrams"
+    },
+    {
+      "type": "p",
+      "text": "A análise de sensibilidade varia uma variável de cada vez (OVAT — one-variable-at-a-time) e mede o impacto no VPL. Para cada input, calcula-se o VPL nos extremos plausíveis (e.g. volume de vendas ±20%) e identificam-se os pontos de viragem (break-even) — o valor do input que anula o VPL. A visualização canónica é o tornado diagram: barras horizontais ordenadas por magnitude de impacto, com o input mais sensível no topo. A vantagem é identificar quais inputs merecem investigação adicional e negociação (e.g. preço de venda) versus quais podem ser assumidos como razoavelmente certos. Limitação: ignora correlações entre variáveis — vendas e preço costumam estar correlacionados."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "OVAT: variar uma variável, manter restantes fixas — visualizar impacto no VPL",
+        "Pontos de viragem: valor do input que zera o VPL (break-even da variável)",
+        "Tornado diagram: barras horizontais por magnitude de impacto, do mais sensível para o menos",
+        "Identifica variáveis críticas para investigação adicional e gestão de risco",
+        "Limitação: ignora correlações — vendas baixas provavelmente correlacionam com preço baixo",
+        "Boa prática: combinar OVAT com cenários (variáveis correlacionadas em conjunto)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Construção prática de um tornado diagram"
+    },
+    {
+      "type": "p",
+      "text": "Para um projecto com 8 inputs (volume, preço, custo variável, custo fixo, CAPEX, vida útil, taxa de desconto, valor residual), constrói-se uma tabela: para cada input, calcular VPL quando o input está no extremo optimista e no extremo pessimista (mantendo restantes no caso base). A diferença absoluta entre os dois VPL dá o comprimento da barra do tornado. Ordenar por magnitude. O tornado revela imediatamente quais inputs merecem semanas de análise adicional e quais podem ser tratados com ordem de grandeza. É prática padrão em corporate finance e project finance (bancos de investimento, McKinsey, BCG usam-no extensivamente)."
+    },
+    {
+      "type": "h2",
+      "text": "Análise de cenários: base, melhor e pior caso"
+    },
+    {
+      "type": "p",
+      "text": "A análise de cenários vai além da sensibilidade OVAT ao combinar várias variáveis em conjunto. Típico: três cenários — pessimista (worst case), base (most likely case), optimista (best case). Cada cenário atribui valores plausíveis aos inputs chave de forma consistente: no pessimista, vendas baixas + preços comprimidos + custos altos; no optimista, o oposto. Calcula-se o VPL em cada um. A regra de decisão completa considera o VPL esperado (ponderado pelas probabilidades subjectivas) e a robustez (qual a probabilidade do VPL ser negativo?). Crítica: três cenários podem ser demasiado poucos se as variáveis tiverem caudas gordas (distribuições com valores extremos)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Três cenários canónicos: pessimista, base, optimista — definem-se com consistência interna",
+        "Cada cenário atribui valores aos inputs chave de forma correlacionada",
+        "VPL esperado = Σ (probabilidade × VPL cenário) — ponderação subjectiva",
+        "Probabilidade de VPL negativo = medida directa de risco de perda",
+        "Crítica: três cenários podem não capturar distribuições assimétricas ou caudas gordas",
+        "Boa prática: complementar com Monte Carlo quando o risco de caudas é relevante"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Simulação de Monte Carlo (10k iterações)"
+    },
+    {
+      "type": "p",
+      "text": "Monte Carlo é a generalização probabilística completa da análise de cenários. Em vez de três pontos, define-se a distribuição estatística de cada input (normal, lognormal, triangular, uniforme, beta, etc.) e amostram-se valores aleatórios milhares de vezes (tipicamente 10.000 iterações), calculando o VPL em cada iteração. O resultado é uma distribuição completa do VPL — média, mediana, desvio-padrão, percentis 5 e 95, probabilidade de VPL negativo. Correlação entre variáveis é tratável (copulas, matrizes de correlação). Requisitos técnicos: bom gerador de números aleatórios, modelo válido das distribuições, software (Crystal Ball, @Risk, R, Python). Cuidado: GIGO (Garbage In, Garbage Out) — más distribuições geram más conclusões."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Monte Carlo: amostra aleatória das distribuições dos inputs, calcula VPL, repete N vezes",
+        "10.000 iterações é o mínimo razoável para distribuições estáveis",
+        "Resultado: distribuição completa — média, mediana, σ, VaR, percentis",
+        "Inputs de distribuições: triangular (pessimista/mais provável/optimista), lognormal (volumes, preços), uniforme (intervalo conhecido)",
+        "Correlação: matriz de correlação entre inputs (e.g. vendas e preço costumam ser negativamente correlacionados em ciclo de procura)",
+        "Output útil: 'probabilidade de VPL > 0' (decisão), 'VPL esperado' (valor), 'VaR 5%' (risco)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Aplicações práticas e limitações"
+    },
+    {
+      "type": "p",
+      "text": "Aplicações: project finance (viabilidade de centrais eléctricas, pontes, parques eólicos — análise de debt service coverage ratio com cash flows simulados), oil & gas (preços do petróleo com modelos de reversão à média), pharmaceutical (probabilidade técnica de sucesso × market size × royalty rate), valuations de startups (probabilidade de cenários de sucesso). Limitações: (a) as distribuições assumidas são subjectivas; (b) correlações são instáveis em choques; (c) caudas gordas (eventos raros extremos) podem dominar o resultado e raramente são bem capturadas. Por isso, Monte Carlo complementa mas não substitui o julgamento humano sobre cenários extremos (tail risk)."
+    },
+    {
+      "type": "h2",
+      "text": "Árvores de decisão e Expected Monetary Value (EMV)"
+    },
+    {
+      "type": "p",
+      "text": "A árvore de decisão representa problemas de investimento com decisões sequenciais e eventos probabilísticos. Nós de decisão (quadrados) representam escolhas do gestor; nós de probabilidade (círculos) representam resultados incertos. Em cada ramo final, regista-se o outcome (VPL, payoff); em cada nó de probabilidade, calcula-se o Expected Monetary Value (EMV = Σ probabilidade × outcome). A decisão óptima em cada nó de decisão é o ramo com maior EMV. Aplicações clássicas: decisão de entrar num mercado agora ou esperar, decidir entre lançar produto A ou B, projectos de I&D com fases go/no-go. Vantagem: força a explicitação de probabilidades e opções. Limitação: subjectividade das probabilidades e simplificação da realidade."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Árvore: nós de decisão (quadrado) e nós de probabilidade (círculo); outcome em cada folha",
+        "EMV = Σ (probabilidade × outcome) — valor esperado em cada nó de probabilidade",
+        "Decisão óptima em cada quadrado: escolher o ramo com maior EMV",
+        "Aplicações: decisões sequenciais, opções reais, projectos faseados com go/no-go",
+        "Vantagem: força explicitação de probabilidades — alinhamento de expectativas entre decisores",
+        "Limitação: probabilidades subjectivas; outcomes simplificados; ignora opções abandonáveis no meio do caminho"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Cuidado com EMV e aversão ao risco: o EMV pondera linearmente os outcomes — um VPL de +1000 com probabilidade 50% e VPL de −500 com probabilidade 50% tem EMV = +250. Mas uma empresa em risco de falência pode não aceitar a aposta (aversão ao risco, valor de sobrevivência). Árvores com utilidade esperada (utility theory) e não com EMV resolvem este caso, mas são mais complexas e raramente usadas fora do sector financeiro."
+    },
+    {
+      "type": "h2",
+      "text": "Opções reais: expandir, abandonar, diferir, alternar"
+    },
+    {
+      "type": "p",
+      "text": "Opções reais é o reconhecimento de que muitos investimentos de capital incorporam flexibilidade estratégica futura — opções que o VPL tradicional ignora sistematicamente. Stewart Myers (1977) cunhou o termo 'real options' em analogia às opções financeiras de Black-Scholes (1973). Tipos canónicos: opção de expansão (se o mercado se revelar maior do que o esperado, aumentar capacidade); opção de abandono (se o mercado for pior do que esperado, vender o activo e recuperar valor residual); opção de diferimento (esperar mais informação antes de investir); opção de alternância (mudar inputs/outputs do processo em função de preços relativos — e.g. centrais eléctricas gás/óleo)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Opção de expansão: aumenta upside — VPL está a subestimar porque ignora o crescimento opcional",
+        "Opção de abandono: limita downside — valor residual do activo funciona como 'put option'",
+        "Opção de diferimento: esperar mais informação pode ter valor positivo (analogia com call option)",
+        "Opção de alternância (switch): flexibilidade operacional aumenta valor em ambientes voláteis",
+        "VPL tradicional subestima projectos com flexibilidade estratégica significativa",
+        "Sector high-tech, oil & gas, farmacêutico, imobiliário — todos com opções reais valiosas"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Black-Scholes como intuição para opções reais"
+    },
+    {
+      "type": "p",
+      "text": "O modelo de Black-Scholes-Merton (1973) valora uma call option europeia: C = S×N(d1) − K×e^(−rT)×N(d2), onde S é o preço actual do activo subjacente, K o strike, T o tempo até expiração, r a taxa sem risco, σ a volatilidade. A fórmula diz: o valor da opção cresce com S (subida do activo), cresce com σ (volatilidade — paradoxalmente, mais incerteza pode aumentar o valor da opção de expansão!), cresce com T (mais tempo = mais oportunidade) e decresce com K (preço de exercício). Por analogia: NPV_estático + valor_opção_real = VPL_expandido. Para opções simples (e.g. diferimento), usar fórmulas fechadas tipo Black-Scholes; para opções complexas, recorrer a árvores binomiais (Cox-Ross-Rubinstein) ou simulação de Monte Carlo sobre o processo do activo subjacente."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: a intuição de Black-Scholes é poderosa mas subutilizada. A chave é: opções valem mais em ambientes incertos (volatilidade alta) porque aumenta o upside assimétrico. Quando um investidor te diz 'este sector é demasiado incerto para investir', lembra-o de que a incerteza tem valor — desde que tenhas flexibilidade para reagir. A regra prática: VPL negativo + opções reais valiosas pode ainda justificar o investimento."
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: combinar as ferramentas"
+    },
+    {
+      "type": "p",
+      "text": "Análise de risco robusta combina todas as ferramentas. Numa análise típica: (1) VPL pontual como base; (2) sensibilidade OVAT e tornado para identificar inputs críticos; (3) cenários para combinar variáveis correlacionadas; (4) Monte Carlo para distribuição completa; (5) árvore de decisão se há opções sequenciais; (6) opções reais se há flexibilidade estratégica significativa. Cada camada adiciona robustez e informação — o VPL pontual sozinho é inadequado para decisões de grande capital. O custo computacional e de tempo é geralmente justificado pelo tamanho da decisão (CAPEX >10M€ quase sempre justifica Monte Carlo)."
+    }
+  ],
+  "keyPoints": [
+    "Análise de sensibilidade varia uma variável de cada vez (OVAT); tornado diagram ordena por magnitude",
+    "Pontos de viragem: valor do input que zera o VPL (break-even da variável)",
+    "Cenários combinam variáveis correlacionadas — base/best/worst com consistência interna",
+    "Monte Carlo: distribuições estatísticas + amostragem aleatória, 10k iterações mínimo",
+    "Outputs Monte Carlo: média, mediana, σ, percentis 5/95, probabilidade de VPL negativo",
+    "Correlação entre inputs via matriz de correlação ou copulas",
+    "Árvores de decisão mapeiam opções sequenciais; EMV = Σ (probabilidade × outcome)",
+    "Opções reais: flexibilidade estratégica (expandir, abandonar, diferir, alternar) que VPL estático ignora",
+    "Black-Scholes intuição: opções valem mais com maior volatilidade, mais tempo, menor strike",
+    "Combinação canónica: VPL + sensibilidade + cenários + Monte Carlo + árvore + opções reais"
+  ],
+  "quizSlug": "aiq",
+  "nextLesson": "04-custo-capital-estrutura",
+  "prevLesson": "02-payback-e-indicadores-complementares"
+}

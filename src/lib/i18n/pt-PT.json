@@ -840,5 +840,8 @@
   "agente.chat.mic_denied": "Não consegui aceder ao microfone. Verifica as permissões.",
   "agente.chat.clear_confirm": "Limpar todo o histórico do chat?",
   "agente.chat.cleared": "Histórico limpo. Pergunta-me qualquer coisa sobre o que tens na app.",
-  "agente.chat.audio_label": "🎤 Áudio gravado"
+  "agente.chat.audio_label": "🎤 Áudio gravado",
+  "routes.escola.curso.analise-investimentos.title": "Análise de Investimentos",
+  "routes.escola.curso.analise-investimentos.description": "Avaliação económica de projectos de investimento: cash flows, VPL, TIR, payback, análise de risco e incerteza (sensibilidade, Monte Carlo, opções reais), custo de capital WACC e estrutura óptima de financiamento.",
+  "routes.escola.curso.analise-investimentos.tagline": "Business Administration · Capital budgeting, VPL/TIR, risco, custo de capital"
 }

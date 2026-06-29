@@ -426,6 +426,18 @@
                                   lessonCount: 4,
                                   quizCount: 1,
                                   badge: 'Uni'
+                                },
+                                {
+                                  slug: 'analise-investimentos',
+                                  title: 'Análise de Investimentos',
+                                  tagline: 'Business Administration · Capital budgeting, VPL/TIR, risco, custo de capital',
+                                  description:
+                                    'Avaliação económica de projectos de investimento: cash flows, VPL, TIR, payback, análise de risco e incerteza (sensibilidade, Monte Carlo, opções reais), custo de capital WACC e estrutura óptima de financiamento.',
+                                  icon: '💰',
+                                  color: '#059669',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
                                 }
                               ];
 </script>

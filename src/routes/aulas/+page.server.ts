@@ -89,7 +89,8 @@ const COURSE_META: Record<string, CourseMeta> = {
     empreendedorismo: { slug: 'empreendedorismo', title: 'Empreendedorismo e Plano de Negócios', icon: '🚀', color: '#e11d48' },
     'gestao-qualidade': { slug: 'gestao-qualidade', title: 'Gestão da Qualidade Total', icon: '🎯', color: '#0ea5e9' },
     'lideranca-coaching': { slug: 'lideranca-coaching', title: 'Liderança e Coaching', icon: '🧭', color: '#1e3a8a' },
-    'gestao-operacoes': { slug: 'gestao-operacoes', title: 'Gestão de Operações', icon: '⚙️', color: '#0891b2' }
+    'gestao-operacoes': { slug: 'gestao-operacoes', title: 'Gestão de Operações', icon: '⚙️', color: '#0891b2' },
+    'analise-investimentos': { slug: 'analise-investimentos', title: 'Análise de Investimentos', icon: '💰', color: '#059669' }
   };
 
 /** Turn "blue-ocean-strategy" → "Blue Ocean Strategy". */

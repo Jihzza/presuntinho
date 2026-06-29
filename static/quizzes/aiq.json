@@ -1,0 +1,118 @@
+{
+  "id": "aiq",
+  "title": "Quiz: Análise de Investimentos",
+  "description": "Testa os teus conhecimentos sobre análise de investimentos: cash flows livres e VPL/TIR (regra de decisão, análise incremental, inflação nominal/real), indicadores complementares (Payback, Payback Descontado, PI, EAC, MIRR), análise de incerteza (sensibilidade, cenários, Monte Carlo, árvores de decisão com EMV, opções reais com intuição Black-Scholes), e custo de capital (CAPM, WACC, estrutura óptima — MM, trade-off, pecking order). 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "courseSlug": "analise-investimentos",
+  "questions": [
+    {
+      "q": "Qual é a regra de decisão do Valor Actual Líquido (VPL) para aceitar ou rejeitar um projecto?",
+      "opts": [
+        "Aceitar se VPL < 0 (cria valor acima do custo de capital)",
+        "Aceitar se VPL > 0 (cria valor acima do custo de capital)",
+        "Aceitar se TIR > 0, independentemente do custo de capital",
+        "Aceitar se Payback < 1 ano, independentemente do VPL"
+      ],
+      "correct": 1,
+      "explanation": "O VPL mede a criação de valor absoluto acima do custo de oportunidade do capital. VPL > 0 significa que os cash flows descontados excedem o investimento inicial — o projecto ganha mais do que o exigido pelos financiadores. VPL < 0 significa destruição de valor. VPL = 0 indica break-even — o projecto ganha exactamente o custo de capital. Esta é a regra canónica em finanças corporativas: aceitar todos os projectos independentes com VPL > 0."
+    },
+    {
+      "q": "Porque é que a TIR (Taxa Interna de Rendibilidade) pode dar sinal errado em projectos mutuamente exclusivos?",
+      "opts": [
+        "Porque a TIR é sempre menor do que o custo de capital",
+        "Porque a TIR é uma medida relativa (percentagem) e ignora a escala do projecto — análise incremental é necessária",
+        "Porque a TIR pressupõe reinvestimento ao custo de capital",
+        "Porque a TIR não considera o valor temporal do dinheiro"
+      ],
+      "correct": 1,
+      "explanation": "Em projectos mutuamente exclusivos, a TIR directa pode preferir um projecto pequeno com TIR alta mas VPL menor, sobre um projecto grande com TIR moderada mas VPL maior. A solução tecnicamente correcta é a análise incremental: calcular VPL/TIR dos cash flows incrementais (projecto maior − projecto menor). A TIR também assume reinvestimento à TIR (optimista), enquanto o VPL assume reinvestimento ao custo de capital (realista). Por isso VPL > TIR como critério, mesmo em exclusivos."
+    },
+    {
+      "q": "A fórmula do Payback Descontado é preferível à do Payback simples porque:",
+      "opts": [
+        "É mais rápida de calcular",
+        "Considera todos os cash flows do projecto, incluindo os após o payback",
+        "Incorpora o valor temporal do dinheiro descontando os cash flows ao custo de capital",
+        "Não requer o conhecimento do investimento inicial"
+      ],
+      "correct": 2,
+      "explanation": "O Payback simples soma cash flows nominais, ignorando que 1€ hoje vale mais do que 1€ amanhã. O Payback Descontado desconta cada cash flow ao custo de capital antes de os acumular, dando uma medida realista do tempo de recuperação. Ambos partilham a limitação crítica de ignorar cash flows após o payback — não são medidas de rentabilidade, apenas de risco de curto prazo. Por isso Payback Descontado é filtro complementar ao VPL, nunca substituto."
+    },
+    {
+      "q": "Qual é a fórmula do Profitability Index (Índice de Rendibilidade) e quando é especialmente útil?",
+      "opts": [
+        "PI = VPL / I0 — útil quando há capital ilimitado",
+        "PI = TIR / WACC — útil para comparar sectores",
+        "PI = VPL / I0 — útil em situações de racionamento de capital",
+        "PI = Payback / Vida útil — útil para projectos de longa duração"
+      ],
+      "correct": 2,
+      "explanation": "O PI mede VPL por unidade investida: PI = VPL / I0 (equivalente a 1 + VPL/I0 incluindo o investimento inicial no numerador). Em capital ilimitado, o PI é redundante — aceita-se tudo com VPL > 0. Em capital rationing (orçamento fixo), ordenar projectos por PI descendente e aceitar em sequência maximiza o VPL total. Limitações: o PI é rácio, não medida absoluta; projectos pequenos com PI alto podem gerar menos valor absoluto do que um projecto grande com PI médio."
+    },
+    {
+      "q": "Na análise de cenários de um projecto de investimento, qual é a prática mais robusta?",
+      "opts": [
+        "Definir três cenários (pessimista, base, optimista) com valores independentes em cada variável",
+        "Definir três cenários (pessimista, base, optimista) com valores consistentes e correlacionados entre variáveis",
+        "Usar apenas o cenário base, com o argumento de que os outros são especulativos",
+        "Definir 100 cenários aleatórios sem estrutura"
+      ],
+      "correct": 1,
+      "explanation": "Cenários bem construídos mantêm consistência interna entre variáveis — no cenário pessimista, vendas baixas + preços comprimidos + custos altos devem aparecer juntos, não de forma aleatória. Esta correlação reflecte como o mundo real funciona: em recessão, vendas caem E preços caem E custos sobem. Definir variáveis independentes em cenários é tecnicamente possível mas gera cenários implausíveis (e.g. vendas em queda com preços em alta). A prática profissional usa 3-5 cenários com narrativas coerentes."
+    },
+    {
+      "q": "Na simulação de Monte Carlo para análise de investimentos, qual é o output mais informativo?",
+      "opts": [
+        "Apenas o VPL médio",
+        "A distribuição completa do VPL — média, mediana, percentis e probabilidade de VPL negativo",
+        "O valor máximo do VPL observado nas 10.000 iterações",
+        "A taxa de desconto que maximiza o VPL"
+      ],
+      "correct": 1,
+      "explanation": "Monte Carlo gera uma distribuição completa do VPL (e não um valor pontual), com média, mediana, desvio-padrão, percentis 5/95 (VaR) e a probabilidade de VPL negativo. Esta última medida é especialmente útil: 'qual a probabilidade de perder dinheiro?' é tão informativo quanto o VPL esperado. O valor máximo isolado é trivial; o valor médio é importante mas incompleto. A distribuição permite calcular o VPL esperado, o risco de cauda e o perfil completo de incerteza para tomada de decisão robusta."
+    },
+    {
+      "q": "No modelo CAPM (Capital Asset Pricing Model), a fórmula do custo do capital próprio é:",
+      "opts": [
+        "Ke = Rf + β × MRP, onde Rf é taxa sem risco, β é o risco sistemático e MRP o prêmio de mercado",
+        "Ke = Kd × (1 − t), ajustando o custo da dívida por impostos",
+        "Ke = WACC × (V/E), revertendo o WACC para equity",
+        "Ke = TIR, igualando o custo de capital ao retorno do projecto"
+      ],
+      "correct": 0,
+      "explanation": "O CAPM (Sharpe 1964, Lintner 1965, Mossin 1966) decompõe o custo do capital próprio em taxa sem risco (Rf) + prêmio pelo risco sistemático (β × MRP). O beta mede a covariância do activo com o mercado — risco não diversificável, remunerado. O risco não-sistemático (empresa, indústria) é diversificável em carteiras e não é remunerado. Esta separação é o contributo central do CAPM: gestores de projectos só são remunerados pelo risco de mercado que carregam, não pelo risco específico."
+    },
+    {
+      "q": "Qual é o principal contributo da teoria de Modigliani-Miller (1958) sobre estrutura de capital?",
+      "opts": [
+        "Mostrou que a dívida é sempre preferível ao equity devido ao benefício fiscal",
+        "Provou que, em mercados perfeitos sem impostos nem custos de falência, o valor da empresa é independente da estrutura de capital",
+        "Demonstrou que a estrutura óptima tem sempre 50% dívida e 50% equity",
+        "Concluiu que empresas em crescimento devem financiar-se exclusivamente com equity"
+      ],
+      "correct": 1,
+      "explanation": "Modigliani-Miller (1958) provaram que, em mercados perfeitos sem impostos, custos de falência ou custos de transacção, o valor da empresa é independente da sua estrutura de capital — a 'irrelevância da estrutura'. Este teorema contraintuitivo é a base de toda a corporate finance moderna: mostra quais condições são necessárias para a estrutura de capital passar a importar. Quando se relaxa cada pressuposto (introduzindo impostos, custos de falência, assimetria de informação), a estrutura passa a ter valor — e as teorias trade-off e pecking order reconstroem a decisão."
+    },
+    {
+      "q": "A pecking order theory (Myers-Majluf, 1984) defende que as empresas devem financiar-se por esta ordem de preferência:",
+      "opts": [
+        "Equity → dívida → financiamento interno",
+        "Dívida → equity → financiamento interno",
+        "Financiamento interno → dívida → equity",
+        "Apenas com financiamento interno, recusando qualquer forma externa"
+      ],
+      "correct": 2,
+      "explanation": "Myers e Majluf (1984) propuseram que, devido a assimetria de informação entre gestores e investidores externos, as empresas têm uma ordem hierárquica de preferência: primeiro financiamento interno (lucros retidos, sem custos de informação), depois dívida (custo de informação menor), e por último equity (sinal mais negativo — gestores emitem quando a acção está sobrevalorizada). Esta teoria explica por que razão empresas lucrativas preferem não pagar dividendos (acumulam interno) e por que razão emissões de equity são tipicamente mal recebidas pelo mercado."
+    },
+    {
+      "q": "O que distingue uma opção real de 'expandir' de uma opção real de 'abandonar' num projecto de investimento?",
+      "opts": [
+        "A opção de expandir aumenta o upside (call) e a opção de abandonar limita o downside (put)",
+        "São exactamente iguais — ambas aumentam o VPL esperado",
+        "A opção de expandir é sempre mais valiosa do que a opção de abandonar",
+        "A opção de abandonar só existe em projectos públicos, não privados"
+      ],
+      "correct": 0,
+      "explanation": "Em analogia com opções financeiras, a opção de expandir funciona como uma call option — permite ao gestor aumentar a escala do investimento se as condições se revelarem favoráveis, capturando upside. A opção de abandonar funciona como uma put option — permite vender o activo e recuperar valor residual se as condições se revelarem desfavoráveis, limitando o downside. A intuição de Black-Scholes aplica-se: opções valem mais em ambientes de alta volatilidade (mais incerteza) porque aumentam o upside assimétrico. Projectos com flexibilidade estratégica significativa estão subvalorizados pelo VPL estático."
+    }
+  ]
+}

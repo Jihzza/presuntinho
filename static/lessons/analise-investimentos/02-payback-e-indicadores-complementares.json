@@ -1,0 +1,164 @@
+{
+  "id": "02-payback-e-indicadores-complementares",
+  "title": "2. Payback, Payback Descontado, Índice de Rendibilidade, EAC e MIRR",
+  "courseSlug": "analise-investimentos",
+  "lessonNumber": 2,
+  "description": "Critérios complementares ao VPL: Payback simples (tempo até recuperar investimento) e Payback Descontado (com custo de capital), Índice de Rendibilidade (Profitability Index, PI = VPL/investimento), Custo Anual Equivalente (Equivalent Annual Cost, EAC) para comparar projectos de duração diferente, e TIR Modificada (MIRR) que resolve o problema da TIR múltipla e a hipótese de reinvestimento.",
+  "audio": "Nesta segunda lição vamos cobrir os indicadores complementares ao VPL. O Payback é o mais intuitivo: quanto tempo até recuperar o investimento? Veremos a versão simples (sem desconto) e a descontada (com custo de capital), e por que a descontada é estritamente preferível. Vamos cobrir o Índice de Rendibilidade — Profitability Index — que mede VPL por unidade de capital investido, útil em racionamento de capital. Vamos cobrir o EAC — Equivalent Annual Cost — para comparar projectos de duração diferente (uma máquina que dura 5 anos versus outra que dura 8 anos). E vamos fechar com a MIRR — Modified Internal Rate of Return — que resolve os dois problemas clássicos da TIR: múltiplas soluções e hipótese irrealista de reinvestimento.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Payback", "Discounted Payback", "PI", "EAC", "MIRR", "Racionamento de Capital", "Custo Anual Equivalente"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Payback period — quanto tempo até recuperar o investimento"
+    },
+    {
+      "type": "p",
+      "text": "O Payback é o indicador mais antigo e mais intuitivo de análise de investimentos: conta quantos anos são necessários para que os cash flows operacionais acumulados igualem o investimento inicial. Critério de decisão: aceitar se o Payback ≤ número máximo aceitável (definido pela empresa). Exemplo: investimento 1000, cash flows de 300/ano. Payback = 3 anos + (1000−900)/300 = 3,33 anos. Vantagens: simplicidade extrema, foco em liquidez e risco de curto prazo, fácil comunicação a não-financeiros. Desvantagens: ignora cash flows após o payback, ignora valor temporal do dinheiro (na versão simples)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Payback = tempo até Σ FCFt ≥ I0 (cash flows acumulados igualarem investimento)",
+        "Payback simples: usa cash flows nominais, sem desconto",
+        "Payback descontado: usa cash flows descontados ao custo de capital k",
+        "Payback descontado é estritamente preferível — incorpora valor temporal do dinheiro",
+        "Critério: aceitar se Payback ≤ Payback máximo aceitável (ex: 3 anos para projectos de TI)",
+        "Limitação grave: ignora tudo o que acontece depois do payback — um projecto com payback 2 anos e cash flows zero depois pode parecer melhor do que um com payback 4 anos e cash flows infinitos"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Por que o Payback é tão usado apesar das críticas"
+    },
+    {
+      "type": "p",
+      "text": "Empresas usam o Payback por três razões práticas: (1) é o indicador mais compreensível para gestores não-financeiros — 'quanto tempo até recuperarmos o dinheiro'; (2) é um proxy razoável para risco — projectos com payback longo estão mais expostos a mudanças de mercado; (3) em ambientes com elevada incerteza, os cash flows distantes são essencialmente inúteis, e o Payback funciona como filtro de sobrevivência. Brigham & Ehrhardt notam: 'Payback is widely used, but it is not a sophisticated capital budgeting technique — it should be combined with VPL or TIR for major decisions'."
+    },
+    {
+      "type": "h2",
+      "text": "Discounted Payback (Payback Descontado)"
+    },
+    {
+      "type": "p",
+      "text": "O Payback Descontado corrige o problema do valor temporal do dinheiro: descontam-se os cash flows ao custo de capital antes de os acumular. O critério continua a ser 'aceitar se o Payback Descontado ≤ número máximo', mas agora a medida é mais realista. Exemplo: investimento 1000, cash flows 300/ano, k=10%. Payback simples = 3,33 anos; Payback Descontado: descontando a 10%, PV(FCF1) = 272,7; PV(FCF2) = 247,9; PV(FCF3) = 225,4; PV(FCF4) = 204,9. Σ acumulada atinge 1000 em t ≈ 4,17 anos. Mesmo neste exemplo simples, o Payback Descontado é cerca de 1 ano superior ao simples — em contextos de taxas elevadas a diferença pode ser dramática."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Payback Descontado = tempo até Σ FCFt/(1+k)^t ≥ I0",
+        "Incorpora valor temporal do dinheiro — mais conservador que Payback simples",
+        "Ainda ignora cash flows após o payback (não é medida de rentabilidade)",
+        "Útil como filtro: projectos que não recuperam em 4-5 anos (descontados) raramente sobrevivem",
+        "Combinar com VPL para decisões finais: Payback Descontado para risco, VPL para rentabilidade",
+        "Algumas empresas usam Payback Descontado como hurdle interno para aprovar projectos"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Índice de Rendibilidade (Profitability Index, PI)"
+    },
+    {
+      "type": "p",
+      "text": "O Índice de Rendibilidade (Profitability Index, PI) mede o VPL gerado por cada euro investido: PI = VPL / I0. Equivalente: PI = Σ FCFt/(1+k)^t / I0 (incluindo o FCF0 = −I0, logo PI = 1 + VPL/I0). Critério: aceitar se PI > 1 (cria valor por unidade de capital investido). O PI é particularmente útil em situações de racionamento de capital: a empresa não tem dinheiro para todos os projectos com VPL positivo e tem de escolher quais aceitar. Ordenar projectos por PI (do maior para o menor) e aceitar em sequência até esgotar o orçamento maximiza o VPL total sob racionamento."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "PI = VPL / I0 — VPL por unidade monetária investida",
+        "Aceitar se PI > 1 (cria valor por unidade investida)",
+        "Útil em racionamento de capital (capital rationing): orçamento fixo, múltiplos projectos concorrentes",
+        "Maximiza VPL total sob racionamento se PI for usado para ordenação",
+        "Empresas com capital ilimitado não precisam de PI — ordenam só por VPL",
+        "Limitações: não captura o efeito absoluto do projecto (um PI alto num projecto pequeno pode gerar menos valor do que um PI médio num projecto grande)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "VPL vs PI em racionamento de capital"
+    },
+    {
+      "type": "p",
+      "text": "Em capital ilimitado, a regra é aceitar todos os projectos com VPL > 0 e o PI é redundante. Mas em capital rationing (orçamento fixo por trimestre/ano), a escolha é entre projectos e a regra muda. Solução: ordenar projectos por PI (descendente) e aceitar em sequência até o orçamento esgotar. Cuidado: o PI pode falhar quando os projectos são divisíveis ou quando há múltiplos períodos de orçamento. Em tais casos, programação linear (LP) resolve o problema formalmente — variáveis de decisão binárias (aceitar/rejeitar) ou contínuas (fracção do projecto)."
+    },
+    {
+      "type": "h2",
+      "text": "Custo Anual Equivalente (Equivalent Annual Cost, EAC)"
+    },
+    {
+      "type": "p",
+      "text": "O Custo Anual Equivalente (Equivalent Annual Cost, EAC) converte o VPL de um projecto num custo (ou benefício) anual constante durante a sua vida útil. Fórmula: EAC = VPL × k / (1 − (1+k)^−n), onde k é o custo de capital e n é a vida útil. O EAC é indispensável quando se comparam projectos com vidas diferentes: por exemplo, máquina A custa 50000, dura 5 anos, gera VPL 10000; máquina B custa 40000, dura 3 anos, gera VPL 12000. Comparar VPL directamente é injusto (B dura menos). Calcular EAC dá a base anualizada e revela que A pode ser melhor apesar do menor VPL absoluto."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "EAC = VPL × k / (1 − (1+k)^−n) — converte VPL plurianual em custo anual constante",
+        "Equivalente: EAC = (VPL × k) / (1 − (1+k)^−n) = anuidade equivalente ao VPL",
+        "Indispensável para comparar alternativas com vidas úteis diferentes",
+        "Pressuposto: o projecto é replicável indefinidamente (para perpetuar a comparação)",
+        "Método alternativo: cadeia de substituição (replacement chain) — replica o projecto mais curto até igualar a vida do mais longo, depois compara VPL",
+        "Aplicação clássica: leasing vs comprar equipamento, marcas de máquinas, contratos de manutenção"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Erro frequente: comparar VPL directamente entre projectos com vidas úteis diferentes. Uma máquina que dura 10 anos tem mais períodos para gerar valor do que uma que dura 3 — VPL mais alto não significa melhor. Sempre calcular EAC (ou usar cadeia de substituição) antes de decidir. Brigham: 'EAC levels the playing field for unequal lives'."
+    },
+    {
+      "type": "h2",
+      "text": "TIR Modificada (Modified IRR, MIRR)"
+    },
+    {
+      "type": "p",
+      "text": "A TIR Modificada (Modified Internal Rate of Return, MIRR) resolve dois problemas clássicos da TIR: (1) múltiplas TIR quando há sign changes nos cash flows; (2) a hipótese irrealista de reinvestimento à TIR (a TIR clássica assume que os cash flows intermédios são reinvestidos à própria TIR, que pode ser muito superior ao custo de capital — a MIRR assume reinvestimento ao custo de capital, mais realista). Cálculo: (a) soma-se o valor terminal dos cash flows positivos reinvestidos ao custo de capital k até ao último período; (b) ignora-se o sinal do investimento inicial negativo; (c) a MIRR é a taxa que iguala o valor terminal descontado ao investimento inicial: MIRR = (Valor Terminal / |I0|)^(1/n) − 1."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "MIRR = taxa tal que o valor terminal dos cash flows reinvestidos a k iguala o investimento inicial",
+        "Resolve múltiplas TIR (sempre única solução)",
+        "Hipótese de reinvestimento realista (ao custo de capital, não à TIR)",
+        "Pode ser calculada em Excel: função MIRR() — argumentos: cash flows, taxa de financiamento, taxa de reinvestimento",
+        "Convenção de sinais: negativo inicial, positivos subsequentes; valores negativos intermédios tratados como reinvestimento",
+        "Pode ainda divergir do VPL em projectos mutuamente exclusivos com vidas diferentes — usar EAC nesses casos"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Limitações dos critérios complementares"
+    },
+    {
+      "type": "p",
+      "text": "Nenhum dos critérios complementares substitui o VPL. Payback ignora cash flows após a recuperação e o valor temporal (na versão simples). PI é rácio, não medida absoluta — projectos pequenos com PI alto podem gerar pouco valor total. EAC pressupõe replicabilidade infinita (irrealista). MIRR resolve algumas limitações da TIR, mas continua a ser taxa (relativa) e não valor absoluto. A regra canónica continua a ser: usar VPL como critério primário e os complementares como informação de suporte (risco via Payback Descontado, eficiência de capital via PI, comparabilidade de vidas via EAC, robustez via MIRR)."
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: qual indicador em que situação?"
+    },
+    {
+      "type": "p",
+      "text": "Em qualquer business case, o mínimo indispensável é VPL e TIR (ou MIRR). Adicionar Payback Descontado como filtro de risco. Em racionamento de capital, acrescentar PI. Em comparação de alternativas com vidas diferentes, acrescentar EAC. Em decisões com horizonte longo, considerar a árvore de decisão (lição 3) e opções reais. O VPL continua a ser o critério de referência, mas a decisão final integra múltiplas perspectivas — risco, liquidez, eficiência de capital, robustez a variações das hipóteses. A moderna prática de corporate finance recomenda a combinação VPL + Payback + sensibilidade a cenários (ver lição 3)."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: o VPL é o critério primário, mas nunca te fies só nele. Um projecto com VPL enorme mas Payback de 15 anos é arriscadíssimo — em 15 anos o mercado pode mudar completamente. Combina sempre VPL + Payback Descontado + análise de sensibilidade. Os critérios complementares não são substitutos, são filtros de risco e robustez."
+    }
+  ],
+  "keyPoints": [
+    "Payback simples: tempo até cash flows acumulados igualarem investimento (ignora valor temporal)",
+    "Payback Descontado: descontado ao custo de capital — incorpora valor temporal",
+    "Payback não é medida de rentabilidade — ignora cash flows após recuperação",
+    "PI = VPL / I0 — VPL por unidade investida; útil em racionamento de capital",
+    "Ordenar por PI (descendente) e aceitar em sequência maximiza VPL sob racionamento",
+    "EAC = VPL × k / (1 − (1+k)^−n) — converte VPL plurianual em custo anual constante",
+    "EAC indispensável para comparar alternativas com vidas úteis diferentes",
+    "MIRR resolve múltiplas TIR e hipótese de reinvestimento (assume reinvestimento a k, não a TIR)",
+    "MIRR pode divergir do VPL em exclusivos com vidas diferentes — usar EAC nesses casos",
+    "Combinação canónica de critérios: VPL + Payback Descontado + sensibilidade a cenários"
+  ],
+  "quizSlug": "aiq",
+  "nextLesson": "03-analise-incerteza-risco",
+  "prevLesson": "01-fluxos-caixa-e-vpl-tir"
+}

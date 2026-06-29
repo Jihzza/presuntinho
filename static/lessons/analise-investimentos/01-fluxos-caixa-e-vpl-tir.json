@@ -1,0 +1,174 @@
+{
+  "id": "01-fluxos-caixa-e-vpl-tir",
+  "title": "1. Fluxos de Caixa, Valor Actual Líquido (VPL) e Taxa Interna de Rendibilidade (TIR)",
+  "courseSlug": "analise-investimentos",
+  "lessonNumber": 1,
+  "description": "Como projectar cash flows de um projecto de investimento (CAPEX inicial, inflows operacionais, valor residual, working capital), calcular o Valor Actual Líquido (VPL/VPV) descontando ao custo de oportunidade do capital, a Taxa Interna de Rendibilidade (TIR/IRR) e o perfil de VPL, a regra de decisão (aceitar se VPL > 0) e a análise incremental para projectos mutuamente exclusivos, com inflação nominal vs real.",
+  "audio": "Nesta primeira lição entramos na disciplina central das Finanças Corporativas: a avaliação económica de projectos de investimento. Vamos aprender a projectar cash flows livres (free cash flows) separando CAPEX, NOPAT, depreciação e working capital. Vamos aplicar a fórmula do VPL — Valor Actual Líquido — descontando ao custo de oportunidade do capital (WACC ou hurdle rate) e interpretar a regra de decisão: aceitar se VPL > 0. Vamos cobrir a TIR (Taxa Interna de Rendibilidade) como a taxa que anula o VPL, o perfil de VPL que mostra como o valor muda com a taxa de desconto, e o caso especial dos projectos mutuamente exclusivos, onde a TIR pode enganar — usaremos análise incremental. No fim, distinguimos fluxos nominais (com inflação) de fluxos reais (ajustados), e a regra de Fischer para tarifas consistentes.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["VPL", "TIR", "NPV", "IRR", "CAPEX", "Free Cash Flow", "Capital Budgeting", "Análise Incremental"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é Análise de Investimentos e Capital Budgeting"
+    },
+    {
+      "type": "p",
+      "text": "Análise de Investimentos (capital budgeting) é o processo de planear, avaliar e controlar despesas de capital — investimentos em activos de longa duração cujo retorno se estende por múltiplos anos. Exemplos: comprar uma máquina, abrir uma fábrica, lançar um novo produto, adquirir uma empresa, construir um parque eólico. A característica definidora é que há um desembolso inicial significativo (CAPEX) seguido de uma série esperada de benefícios futuros (cash inflows). Como o dinheiro tem valor temporal — 1€ hoje vale mais do que 1€ amanhã — a comparação directa de somas em diferentes anos é enviesada. Precisamos de técnicas que tragam todos os valores para uma base temporal comum: o presente (VPL) ou um equivalente anual (EAC)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Capital budgeting: decisões de despesa de capital com impacto plurianual (3-30 anos)",
+        "Três perguntas canónicas: investir? quanto? que projectos escolher se forem alternativos?",
+        "Técnicas principais: VPL (Net Present Value), TIR (Internal Rate of Return), Payback, Profitability Index",
+        "Todas dependem de uma projecção de cash flows e de uma taxa de desconto (custo de oportunidade)",
+        "Incerteza: as cash flows futuras são estimativas — análise de risco/sensibilidade é parte integral (lição 3)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Projecção de cash flows livres (Free Cash Flow)"
+    },
+    {
+      "type": "p",
+      "text": "O primeiro passo — e o mais crítico — é projectar os cash flows do projecto. Não confundir com lucro contabilístico: trabalhamos com caixa, não com accruals. O Free Cash Flow to the Firm (FCFF) define-se como: FCFF = NOPAT + Depreciação & Amortização − CAPEX − Variação de Working Capital. O NOPAT (Net Operating Profit After Taxes) é o EBIT × (1−t). Somamos de volta a depreciação porque não é saída de caixa, e descontamos o CAPEX (compra de activos fixos) e o investimento em working capital (inventário, contas a receber, contas a pagar). Em projectos com vida finita, somamos também o valor residual (liquidação, valor de mercado, perpetuidade) ao último ano."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "FCFF = NOPAT + D&A − CAPEX − ΔWorking Capital",
+        "NOPAT = EBIT × (1 − taxa de imposto sobre o rendimento)",
+        "CAPEX: compra de activos fixos — prédios, máquinas, equipamento, veículos, software",
+        "ΔWorking Capital: aumento em inventário + A/R − A/P durante o período",
+        "Valor residual: valor de mercado do activo no fim do horizonte de análise (liquidação, venda, perpetuidade)",
+        "Cuidado: depreciação reduz imposto (tax shield), mas não é cash out — soma-se de volta"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Por que trabalhamos com cash flows e não com lucro contabilístico? Porque o lucro inclui accruals (estimativas, provisões, depreciação) que não correspondem a movimento de caixa, e é a caixa que paga dívidas, salários e dividendos. Brigham & Ehrhardt (Financial Management, 15ª ed.) reforçam: 'we discount cash flows, not accounting earnings — dividends, not earnings, are the ultimate goal of the firm'."
+    },
+    {
+      "type": "h2",
+      "text": "Valor Actual Líquido (VPL / NPV)"
+    },
+    {
+      "type": "p",
+      "text": "O Valor Actual Líquido (Net Present Value, NPV) é o somatório dos cash flows do projecto descontados ao custo de oportunidade do capital, subtraído do investimento inicial. Fórmula: VPL = Σ (FCFt / (1+k)^t) − I0, onde FCFt é o cash flow livre no ano t, k é a taxa de desconto (WACC ou hurdle rate), I0 é o investimento inicial no momento zero. A regra de decisão é simples: aceitar o projecto se VPL > 0 (porque cria valor acima do custo de oportunidade), rejeitar se VPL < 0, e ser indiferente se VPL = 0. O VPL é considerado o critério de excelência em finanças corporativas — é coerente com a maximização da riqueza dos accionistas."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "VPL = Σ_{t=0}^{n} FCFt / (1+k)^t — soma de todos os cash flows actualizados ao presente",
+        "Aceitar se VPL > 0 (cria valor acima do custo de oportunidade)",
+        "Rejeitar se VPL < 0 (destrói valor)",
+        "VPL = 0 → indiferente — o projecto ganha exactamente o custo de capital (break-even)",
+        "VPL é absoluto: soma em euros, aditivo entre projectos independentes",
+        "Dependência crítica: a estimativa da taxa k (custo de capital) — pequeno erro em k ⇒ grandes erros em VPL"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Exemplo canónico: projecto com investimento de 1000 e inflows de 400/ano durante 4 anos, k=10%"
+    },
+    {
+      "type": "p",
+      "text": "Investimento inicial I0 = 1000 (no ano 0). Cash inflows de 400 no fim de cada um dos 4 anos seguintes. Custo de capital k = 10%. VPL = −1000 + 400/1,1 + 400/1,1² + 400/1,1³ + 400/1,1⁴ = −1000 + 400 × 3,1699 = −1000 + 1267,95 = +267,95. VPL positivo ⇒ aceitar. Note-se como o factor de anuidade (1−(1+k)^−n)/k = (1−1,1^−4)/0,1 = 3,1699 simplifica enormemente o cálculo. Para projectos com cash flows irregulares, faz-se a soma caso a caso."
+    },
+    {
+      "type": "h2",
+      "text": "Taxa Interna de Rendibilidade (TIR / IRR)"
+    },
+    {
+      "type": "p",
+      "text": "A Taxa Interna de Rendibilidade (Internal Rate of Return, IRR) é a taxa de desconto que torna o VPL exactamente zero: Σ FCFt / (1+TIR)^t = 0. Em termos económicos, é a taxa de crescimento anual composta que o projecto gera sobre o capital investido (não recuperado). A regra de decisão: aceitar se TIR > k (custo de capital), rejeitar se TIR < k. Vantagem da TIR: comunica-se como uma percentagem, é intuitivamente comparável com a taxa que o banco oferece. Desvantagem crítica: pode haver múltiplas TIR (sign changes), pode não haver solução fechada, e — crucial — pode dar sinal errado em projectos mutuamente exclusivos (ver análise incremental)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "TIR = taxa k tal que VPL(k) = 0 — equação polinomial, geralmente resolvida numericamente (Newton-Raphson)",
+        "Aceitar se TIR > k (custo de capital); rejeitar se TIR < k",
+        "Múltiplas TIR: quantos sign changes nos cash flows, tantas TIR possíveis (regra de Descartes)",
+        "TIR modificada (MIRR) resolve múltiplas TIR — ver lição 2",
+        "TIR é relativa (percentagem), não aditiva — projectos independentes somam-se por VPL",
+        "Pode enganar quando se comparam projectos de escala diferente (small project high IRR, big project low IRR)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Perfil de VPL (NPV profile)"
+    },
+    {
+      "type": "p",
+      "text": "O perfil de VPL é um gráfico que mostra o VPL em função da taxa de desconto. Para um projecto convencional (1 sign change), o VPL é decrescente na taxa de desconto e intersecta o eixo horizontal na TIR. Para projectos não-convencionais (múltiplos sign changes), o perfil pode subir e descer várias vezes. O perfil de VPL permite comparar projectos visualmente e identificar pontos de Fisher (taxa à qual o VPL relativo de dois projectos se inverte — útil na análise incremental)."
+    },
+    {
+      "type": "h2",
+      "text": "Projectos mutuamente exclusivos e análise incremental"
+    },
+    {
+      "type": "p",
+      "text": "Quando os projectos são independentes (a aceitação de um não afecta a aceitação de outro), o critério VPL é directo — aceitar todos com VPL > 0. Mas quando são mutuamente exclusivos (só podemos escolher um), a comparação pela TIR pode dar o projecto errado. Solução: análise incremental (incremental analysis). Calcula-se o VPL ou TIR da diferença entre os cash flows dos dois projectos (projecto maior − projecto menor). Se o incremental tiver VPL > 0 ou TIR > k, o projecto maior é preferido; caso contrário, o menor. Esta é a única forma tecnicamente correcta de usar a TIR em mutually exclusive."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Projectos independentes: aceite todos com VPL > 0 (regra aditiva)",
+        "Projectos mutuamente exclusivos: escolha o de maior VPL absoluto",
+        "TIR pode enganar em exclusivos — comparar pela TIR directa é falacioso se escalas/lifetimes diferem",
+        "Análise incremental: projectar cash flows incrementais (maior − menor) e calcular VPL/TIR do incremento",
+        "Reinvestissement assumption: VPL assume reinvestimento ao custo de capital k (realista); TIR assume reinvestimento à TIR (optimista)",
+        "Por isso VPL > TIR como critério de decisão, mesmo quando TIR > k"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Inflação: fluxos nominais vs reais e a regra de Fischer"
+    },
+    {
+      "type": "p",
+      "text": "Os cash flows podem ser projectados de duas formas: em euros nominais (incluindo inflação esperada) ou em euros reais de hoje (poder de compra constante). A taxa de desconto deve ser consistente: se os cash flows são nominais, descontar à taxa nominal (k_nom); se reais, descontar à taxa real (k_real). A regra de Fischer (1930) liga as duas: (1 + k_nom) = (1 + k_real) × (1 + π), onde π é a inflação esperada. Aproximação: k_nom ≈ k_real + π. Erro comum: descontar cash flows nominais a uma taxa real (ou vice-versa) — gera VPL completamente enviesado."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Regra de Fischer: (1 + k_nom) = (1 + k_real) × (1 + π)",
+        "Cash flows nominais → taxa nominal (consistência obrigatória)",
+        "Cash flows reais → taxa real",
+        "Misturar (cash nominal + taxa real) é o erro mais comum em avaliações reais",
+        "Em países com inflação alta (>5% anual) a distinção é crítica; em países com inflação baixa (<2%) o erro é menor",
+        "Imposto sobre inflação: depreciação de activos é em euros nominais históricos — gera imposto sobre ganho inflacionário fictício"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: quando tiveres de fazer uma análise de investimento, começa sempre pelos cash flows, não pela taxa. Erros nas estimativas de cash flows são maiores do que erros na taxa de desconto. E nunca mistures fluxos nominais com taxa real — é o erro que mais se vê em planos de negócios e que torna os VPL completamente enganadores."
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: VPL vs TIR — qual usar?"
+    },
+    {
+      "type": "p",
+      "text": "A regra canónica em finanças corporativas (Brigham & Ehrhardt, Ross-Westerfield-Jaffe, Brealey-Myers) é: VPL é o critério primário, TIR é complementar. Vantagens do VPL: é aditivo entre projectos independentes, corresponde directamente à criação de valor para o accionista, e assume reinvestimento ao custo de capital (realista). Vantagens da TIR: comunica-se em percentagem, intuitivamente familiar, útil para benchmarking contra hurdle rates. Quando divergem (e divergem em projectos não-convencionais ou com escalas diferentes), o VPL ganha. Na prática, ambos são reportados em qualquer business case robusto."
+    }
+  ],
+  "keyPoints": [
+    "Capital budgeting: decisão de despesa de capital com impacto plurianual — exige descontar cash flows",
+    "FCFF = NOPAT + D&A − CAPEX − ΔWorking Capital — base da projecção de cash flows",
+    "VPL = Σ FCFt / (1+k)^t − I0 — aceitar se VPL > 0 (cria valor acima do custo de capital)",
+    "VPL é o critério de excelência — aditivo, coerente com maximização da riqueza",
+    "TIR = taxa k tal que VPL(k) = 0 — aceitar se TIR > k",
+    "Múltiplas TIR possíveis (sign changes); MIRR é alternativa robusta (ver lição 2)",
+    "Análise incremental resolve conflitos entre VPL e TIR em projectos mutuamente exclusivos",
+    "Regra de Fischer: (1 + k_nom) = (1 + k_real)(1 + π) — consistencia obrigatória",
+    "Erro clássico: descontar cash flows nominais com taxa real (ou vice-versa)",
+    "Projecção de cash flows é mais crítica do que escolha da taxa — comece sempre pelos FCF"
+  ],
+  "quizSlug": "aiq",
+  "nextLesson": "02-payback-e-indicadores-complementares",
+  "prevLesson": null
+}
