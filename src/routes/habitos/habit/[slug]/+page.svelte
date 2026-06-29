@@ -208,7 +208,7 @@
     </section>
 
     <section class="heatmap-section" aria-label="{$t('a11y.aria.mapa_de_calor', { default: 'Mapa de calor' })}">
-      <h2 class="section-title">Últimos 90 dias</h2>
+      <h2 class="section-title">{$t('habitos.habit.ultimos_90_dias', { default: 'Últimos 90 dias' })}</h2>
       <Heatmap data={heatmap} color={habit.color} />
     </section>
   {/if}

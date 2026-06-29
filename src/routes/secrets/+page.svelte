@@ -154,7 +154,7 @@
         {discoveredCount} / {secrets.length} discovered
       </span>
     </h1>
-    <p class="sub">As dicas estão sempre visíveis. As recompensas desbloqueiam à medida que descobres cada easter egg.</p>
+    <p class="sub">{$t('routes.secrets.subtitle', { default: 'As dicas estão sempre visíveis. As recompensas desbloqueiam à medida que descobres cada easter egg.' })}</p>
   </header>
 
   {#if loadError}

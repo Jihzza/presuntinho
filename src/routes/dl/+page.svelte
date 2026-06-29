@@ -94,7 +94,7 @@
       <span class="sep">›</span>
       <span>{$t('dl.breadcrumb.current', { default: 'Downloads' })}</span>
     </p>
-    <span class="tag">Módulo 6</span>
+    <span class="tag">{$t('routes.dl.modulo_tag', { default: 'Módulo 6' })}</span>
     <h1>📥 Download Center</h1>
     <p class="sub">{$t('dl.sub', { default: 'Ficheiros do assignment e materiais de estudo.' })}</p>
   </header>

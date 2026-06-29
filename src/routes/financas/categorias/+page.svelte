@@ -193,7 +193,7 @@
   {#if loading}
     <Skeleton lines={4} />
   {:else if error}
-    <EmptyState emoji="⚠️" title="Erro" description={error} />
+    <EmptyState emoji="⚠️" title={$t('routes.financas.categorias.erro_titulo', { default: 'Erro' })} description={error} />
   {:else}
     {#if editingId !== null || isNew}
       <form class="cat-form" onsubmit={handleSubmit}>

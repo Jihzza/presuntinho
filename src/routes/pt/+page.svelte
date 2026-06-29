@@ -201,7 +201,7 @@
     </p>
     <span class="tag">🇵🇹 Lições em Português</span>
     <h1>🇵🇹 Aulas de Marketing — em PT</h1>
-    <p class="sub">Para estudares na tua língua materna.</p>
+    <p class="sub">{$t('routes.pt.subtitle_para_estudares', { default: 'Para estudares na tua língua materna.' })}</p>
   </header>
 
   <!-- 4 Frameworks pt-PT -------------------------------------------------- -->
@@ -227,13 +227,13 @@
   <!-- Dica final --------------------------------------------------------- -->
   <article class="card highlight">
     <h2>💡 Dica final para escrever</h2>
-    <p>Quando reescreveres o assignment na tua voz, lembra-te:</p>
+    <p>{$t('routes.pt.dica_final.lembrar', { default: 'Quando reescreveres o assignment na tua voz, lembra-te:' })}</p>
     <ul>
-      <li>Usa contrações: não, é, estou, vamos</li>
-      <li>Opiniões pessoais: "eu recomendaria", "na minha leitura"</li>
-      <li>Hedging: "parece-me", "sugere que", "talvez"</li>
-      <li>Exemplos específicos do caso (não generalidades)</li>
-      <li>Varia o comprimento das frases</li>
+      <li>{$t('routes.pt.dica_final.contracoes', { default: 'Usa contrações: não, é, estou, vamos' })}</li>
+      <li>{$t('routes.pt.dica_final.opinioes', { default: 'Opiniões pessoais: "eu recomendaria", "na minha leitura"' })}</li>
+      <li>{$t('routes.pt.dica_final.hedging', { default: 'Hedging: "parece-me", "sugere que", "talvez"' })}</li>
+      <li>{$t('routes.pt.dica_final.exemplos', { default: 'Exemplos específicos do caso (não generalidades)' })}</li>
+      <li>{$t('routes.pt.dica_final.variar', { default: 'Varia o comprimento das frases' })}</li>
     </ul>
   </article>
 
@@ -253,9 +253,9 @@
     <table class="vogais">
       <thead>
         <tr>
-          <th>Vogal</th>
+          <th>{$t('routes.pt.th.vogal', { default: 'Vogal' })}</th>
           <th>Som (IPA)</th>
-          <th>Truque mnemónico</th>
+          <th>{$t('routes.pt.th.truque_mnemonico', { default: 'Truque mnemónico' })}</th>
         </tr>
       </thead>
       <tbody>
@@ -276,7 +276,7 @@
 
   <article class="card">
     <h2>📖 Primeiras 50 palavras — com tradução Tunisiana</h2>
-    <p class="mini-intro">Em 7 categorias:</p>
+    <p class="mini-intro">{$t('routes.pt.mini_intro.em_7_categorias', { default: 'Em 7 categorias:' })}</p>
     {#each Object.entries(WORDS) as [cat, list] (cat)}
       <details class="cat" open={cat === 'Cumprimentos'}>
         <summary>{cat}</summary>
@@ -321,7 +321,7 @@
     <table class="verbos">
       <thead>
         <tr>
-          <th>Verbo</th>
+          <th>{$t('routes.pt.th.verbo', { default: 'Verbo' })}</th>
           <th>eu</th>
           <th>tu</th>
           <th>ele/ela</th>
@@ -351,7 +351,7 @@
 
   <article class="card highlight">
     <h2>🎯 Quiz rápido — ganhas badge 🇵🇹!</h2>
-    <p>Testa o que aprendeste com o mini-curso.</p>
+    <p>{$t('routes.pt.quiz.subtitle', { default: 'Testa o que aprendeste com o mini-curso.' })}</p>
     <a class="quiz-btn" href="/escola/quiz/ptq/">Fazer o quiz 🇵🇹</a>
   </article>
 </div>

@@ -167,7 +167,7 @@
             </li>
           {/if}
           {#if !assignment.lessonSlug && !assignment.audioSlug}
-            <li class="muted">Sem recursos associados.</li>
+            <li class="muted">{$t('trabalhos.assignment.sem_recursos', { default: 'Sem recursos associados.' })}</li>
           {/if}
         </ul>
       </section>

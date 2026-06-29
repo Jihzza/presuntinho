@@ -65,7 +65,7 @@
       <span class="sep">›</span>
       <span>{$t('course.breadcrumb.current', { default: 'Course' })}</span>
     </p>
-    <span class="tag">Módulo 2</span>
+    <span class="tag">{$t('routes.course.modulo_tag', { default: 'Módulo 2' })}</span>
     <h1>🎓 Course Theory</h1>
     <p class="sub">SWOT, TOWS, SCQA, Buyer Persona — os quatro frameworks que precisas dominar.</p>
   </header>
@@ -82,7 +82,7 @@
           <h2>{fw.title}</h2>
           <p class="fw-tagline">{fw.tagline}</p>
           <p class="fw-desc">{fw.desc}</p>
-          <span class="fw-cta">Abrir lição →</span>
+          <span class="fw-cta">{$t('routes.course.abrir_licao', { default: 'Abrir lição →' })}</span>
         </div>
       </a>
     {/each}

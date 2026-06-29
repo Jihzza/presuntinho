@@ -139,7 +139,7 @@
 <div class="nova-page">
   <header class="hero">
     <h1>➕ Nova transação</h1>
-    <p class="sub">Adiciona uma receita ou despesa.</p>
+    <p class="sub">{$t('routes.financas.nova.subtitle', { default: 'Adiciona uma receita ou despesa.' })}</p>
   </header>
 
   <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">

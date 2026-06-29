@@ -113,7 +113,7 @@
 
   <form class="form" onsubmit={handleSubmit} novalidate>
     <div class="field">
-      <label for="habit-name">Nome <span aria-hidden="true">*</span></label>
+      <label for="habit-name">{$t('habitos.novo.label.nome', { default: 'Nome' })} <span aria-hidden="true">*</span></label>
       <input
         id="habit-name"
         type="text"

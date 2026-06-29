@@ -490,7 +490,7 @@
                                                     {/each}
                         </div>
               {#if section.data.examples}
-                <h3 class="examples-h">Exemplos</h3>
+                <h3 class="examples-h">{$t('escola.curso.pt.h3.examples', { default: 'Exemplos' })}</h3>
                 <ul class="examples">
                   {#each section.data.examples as ex (ex.pt)}
                     <li>
