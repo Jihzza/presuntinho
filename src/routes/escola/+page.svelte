@@ -130,13 +130,13 @@
     {
       slug: 'comportamento-organizacional',
       title: 'Comportamento Organizacional',
-      tagline: 'Business Administration · Liderança, equipas, comunicação e mudança',
+      tagline: 'Business Administration · Pessoas, equipas, cultura e liderança',
       description:
-        'Estuda o comportamento nas organizações: estilos de liderança, dinâmica de equipas (Tuckman), comunicação e negociação (BATNA), e gestão da mudança (Kotter).',
+        'Como as pessoas pensam, sentem e agem nas organizações: personalidade, motivação e percepção individual (Big Five, Maslow, Herzberg, McGregor, Self-Determination Theory), dinâmica de grupos e equipas (Tuckman, Belbin, groupthink, social loafing), estrutura, cultura e poder (Mintzberg, Schein, Hofstede, French-Raven), e liderança, empowerment e gestão de conflitos (Fiedler, Path-Goal, Bass, Thomas-Kilmann).',
       icon: '🧠',
-      color: '#0891b2',
-      lessonCount: 8,
-      quizCount: 2,
+      color: '#6d28d9',
+      lessonCount: 4,
+      quizCount: 1,
       badge: 'Uni'
       },
     {

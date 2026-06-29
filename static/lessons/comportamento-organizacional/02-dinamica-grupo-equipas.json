@@ -1,0 +1,173 @@
+{
+  "id": "02-dinamica-grupo-equipas",
+  "title": "2. Dinâmica de Grupo e Equipas: Formação, Papéis e Tomada de Decisão",
+  "courseSlug": "comportamento-organizacional",
+  "lessonNumber": 2,
+  "description": "Como os grupos e equipas se formam, funcionam e decidem: o modelo de cinco estágios de Tuckman (forming, storming, norming, performing, adjourning), os nove papéis de equipa de Belbin (planta, monitor, coordenador, implementador, etc.), os fenómenos de coesão, normas e social loafing, os vieses da tomada de decisão grupal (groupthink de Janis, polarização) e os modelos de decisão individual e organizacional (rational, bounded rationality de Simon), com atenção às equipas virtuais.",
+  "audio": "Nesta segunda lição subimos do indivíduo para o grupo. Começamos pelo modelo clássico de Tuckman (1965): forming — os membros apresentam-se e evitam conflito; storming — surgem conflitos, resistência, negociação de papéis; norming — normas e coesão consolidam-se; performing — a equipa atinge alto desempenho; adjourning — dissolução ou transição. Depois, os nove papéis de equipa de Belbin (1981): pensamento (planta, monitor, especialista); acção (implementador, finalizador, coordenador); pessoas (coesionador, dinamizador, investigador de recursos). Cobrimos coesão (a cola da equipa), normas (regras informais que regulam comportamento) e social loafing (perda de produtividade individual em grupos). Depois os vieses da decisão grupal: groupthink de Janis (1972) — pressão por consenso que gera decisões desastrosas como o fiasco da Baía dos Porcos — e polarização grupal (tendência das discussões a tornar posições extremas). Por fim, modelos de decisão: rational model de Herbert Simon (decisor perfeitamente informado) vs bounded rationality (satisfizing em vez de maximizing) e os desafios de equipas virtuais na era do trabalho remoto.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Tuckman", "Belbin", "Groupthink", "Polarização", "Social Loafing", "Bounded Rationality", "Equipas Virtuais", "Coesão", "Normas"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Grupos vs equipas: a diferença crítica"
+    },
+    {
+      "type": "p",
+      "text": "Um grupo é dois ou mais indivíduos que interagem para alcançar um objectivo. Uma equipa é um tipo especial de grupo com três características distintivas: (1) interdependência — os membros dependem uns dos outros para cumprir o objectivo; (2) accountability compartilhada — todos são responsáveis pelo resultado colectivo; (3) objectivo comum específico — frequentemente requer coordenação de competências diversas. Equipas eficazes são raras porque exigem confiança, clareza de papéis e gestão cuidadosa. O mito é que 'pessoas formam equipas naturalmente' — não formam, e equipas mal desenhadas desperdiçam talento."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Grupo: dois+ indivíduos interactivos com objectivo partilhado",
+        "Equipa: grupo com interdependência + accountability compartilhada + objectivo comum específico",
+        "Tipos: equipas funcionais, cross-funcionais, auto-geridas, virtuais, project-based",
+        "Métricas de eficácia: resultados (output), satisfação dos membros, viabilidade",
+        "Condições de eficácia (Hackman): objectivo claro, estrutura, suporte organizacional, coaching",
+        "Desafio moderno: equipas híbridas (parte presencial, parte remoto) — ver secção final"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Modelo de Tuckman: cinco estágios de desenvolvimento"
+    },
+    {
+      "type": "p",
+      "text": "Bruce Tuckman (1965) propôs que todas as equipas passam por cinco estágios sequenciais de desenvolvimento: (1) Forming — os membros apresentam-se, evitam conflito, dependem do líder, comportamento cortês; (2) Storming — surgem conflitos reais, resistência, frustração, competição por papéis e poder; (3) Norming — normas e coesão consolidam-se, confiança cresce, o grupo torna-se coeso; (4) Performing — a equipa funciona ao nível de pleno desempenho, auto-gestão e foco em resultados; (5) Adjourning — dissolução ou reestruturação, com emoções de perda (especialmente em equipas de projecto). Conhecer este modelo ajuda gestores a diagnosticar onde a equipa está e a intervir com paciência nos estágios iniciais."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Forming: cortesia, incerteza, dependência do líder — definir objectivos e papéis é crítico",
+        "Storming: conflito, resistência, negociação de papéis — não evitar, mas gerir construtivamente",
+        "Norming: coesão, normas compartilhadas, confiança — fase ideal para definir processos",
+        "Performing: alto desempenho, auto-gestão, foco em resultados — o líder vira facilitador",
+        "Adjourning: dissolução ou reorientação — reconhecer contribuições, rituais de fecho",
+        "Tuckman aplicável também a equipas ágeis (squads): retro alimentando cada storming"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Implicação prática: equipas novas precisam de passar por storming — não é sinal de equipa fracassada, é fase natural. Líderes que tentam evitar todo o conflito com cortesia artificial atrasam a chegada ao performing. Pelo contrário, facilitar conflitos sobre tarefas (não sobre pessoas) acelera a maturidade."
+    },
+    {
+      "type": "h2",
+      "text": "Papéis de equipa de Belbin: nove papéis complementares"
+    },
+    {
+      "type": "p",
+      "text": "Meredith Belbin (1981, Team Roles at Work) descobriu que o desempenho da equipa depende mais da combinação de papéis do que das competências individuais. Identificou nove papéis de equipa agrupados em três clusters: (1) Pensamento — Planta (criativo, gera ideias, não muito prático), Monitor/Evaluator (analítico, estratégico, avalia opções), Especialista (perito técnico profundo); (2) Acção — Implementador (disciplinado, fiável, executor), Finalizador/Completer (meticuloso, preocupado com detalhes), Coordenador/Chairman (líder natural, madura, delega); (3) Pessoas — Coesionador/Teamworker (cooperativo, diplomático, suaviza conflitos), Dinamizador/Shaper (extrovertido, enérgico, desafia o status quo), Investigador de Recursos/Resource Investigator (extrovertido, networker, explora oportunidades). Equipas eficazes têm representação equilibrada destes papéis — uma equipa de nove pessoas é o ideal."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Pensamento: Planta (criador), Monitor (analista), Especialista (perito técnico)",
+        "Acção: Implementador (executor), Finalizador (detalhista), Coordenador (líder natural)",
+        "Pessoas: Coesionador (diplomático), Dinamizador (energético), Investigador de Recursos (networker)",
+        "Equilíbrio ideal: 9 pessoas = 1 por papel",
+        "Auto-diagnóstico: responder ao Belbin Self-Perception Inventory (BSP) e ao Observer Assessment",
+        "Cuidado: papéis não são fixos — cada pessoa pode exercer vários papéis em diferentes momentos"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Coesão, normas e social loafing"
+    },
+    {
+      "type": "p",
+      "text": "Coesão é o grau de atracção dos membros pela equipa e a sua motivação para permanecer nela. Equipas coesas tendem a ter melhor desempenho (especialmente em tarefas com alta interdependência), maior satisfação dos membros e menor rotatividade. Mas coesão alta também pode ser perigosa: pode levar a groupthink (próxima secção). Normas são regras informais que os membros adoptam para regular o comportamento — desde produtividade esperada até dress code e linguagem aceitável. Social loafing (Latané, Williams e Harkins, 1979) é a tendência de indivíduos a esforçarem-se menos quando trabalham em grupo do que quando trabalham sozinhos, por diluição de responsabilidade e percepção de que o seu contributo individual é insubstituível. É mais provável em tarefas com output não-mensurável e em grupos grandes."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Coesão: grau de atracção pela equipa — predictor de desempenho, satisfação e retenção",
+        "Coesão alta: ↑ performance (com supervisão), ↑ satisfação, ↓ rotatividade, ↑ groupthink",
+        "Normas: regras informais — produtividade, vestuário, comunicação, hierarquia",
+        "Social loafing: ↓ esforço individual em grupo (diluição de responsabilidade)",
+        "Mitigação do social loafing: accountability individual, contribuição identificável, tamanho do grupo",
+        "Efeito oposto: social facilitation (desempenho ↑ em tarefas simples com outros presentes)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Tomada de decisão grupal: groupthink e polarização"
+    },
+    {
+      "type": "p",
+      "text": "Irving Janis (1972, 'Victims of Groupthink') cunhou o termo groupthink para descrever o fenómeno em que equipas altamente coesas, sob pressão, adoptam uma racionalização colectiva que suprime o pensamento crítico e leva a decisões desastrosas. Sintomas: ilusão de invulnerabilidade, racionalização colectiva, crença na moralidade inerente do grupo, estereotipar oponentes, auto-censura, ilusão de unanimidade, pressão sobre dissidentes. O caso clássico é o fiasco da Baía dos Porcos (1961): a equipa de Kennedy aprovou uma invasão com falhas evidentes porque ninguém quis desafiar o consenso. Polarização grupal (Stoner, 1961; Moscovici & Zavalloni) é a tendência de grupos de discussão a fazer escolhas mais extremas do que a média das posições individuais iniciais — grupos conservadores tornam-se mais conservadores, grupos arriscados tornam-se mais arriscados."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Groupthink (Janis, 1972): pressão por consenso suprime dissidência → decisões desastrosas",
+        "Caso clássico: Baía dos Porcos (1961) — invasão a Cuba aprovada sem questionar",
+        "Condições: coesão alta, isolamento, líder directivo, pressão temporal, ambiguidade moral",
+        "Sintomas: ilusão de invulnerabilidade, auto-censura, suposição de unanimidade",
+        "Prevenção: devil's advocate, líder imparcial, subgrupos independentes,决策channels separados",
+        "Polarização grupal: discussão move o grupo para posições mais extremas (não convergência)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Modelos de decisão: rational vs bounded rationality"
+    },
+    {
+      "type": "p",
+      "text": "O modelo racional clássico (assumido pela economia neoclássica) descreve o decisor como perfeitamente informado, com preferências estáveis, capaz de avaliar todas as alternativas e escolher a que maximiza a utilidade esperada. Herbert Simon (1947, 'Administrative Behavior') propôs a bounded rationality: na prática, os decisores têm informação limitada, capacidade cognitiva limitada e tempo limitado, pelo que não optimizam — satisfazem. Satisficing significa escolher a primeira alternativa aceitável que satisfaz um nível de aspiração predefinido, em vez de procurar a óptima. Mais tarde, Daniel Kahneman (2011, 'Thinking, Fast and Slow') sistematizou os dois sistemas: Sistema 1 (rápido, intuitivo, emocional) e Sistema 2 (lento, deliberativo, lógico). Decisões organizacionais são tipicamente System 1 sob pressão temporal, com todas as distorções daí decorrentes."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Rational model: informação completa, alternativas avaliadas, maximização de utilidade",
+        "Bounded rationality (Simon): informação limitada, capacidades limitadas → satisficing",
+        "Satisficing = escolher a 1ª alternativa aceitável acima do nível de aspiração",
+        "Kahneman Sistema 1: rápido, automático, emocional, intuitivo (heurísticas)",
+        "Kahneman Sistema 2: lento, deliberativo, lógico, esforçoso (analítico)",
+        "Implicação: decisões sob pressão usam Sistema 1 → erros sistemáticos (vieses)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Equipas virtuais: desafios e boas práticas"
+    },
+    {
+      "type": "p",
+      "text": "Equipas virtuais (distribuídas geograficamente, comunicando principalmente por tecnologia) são a norma no trabalho moderno. Desafios específicos: menor confiança inicial (sem contacto face-a-face), mais difícil estabelecer normas compartilhadas, comunicação mais ambígua (perde-se 80% do contexto não-verbal), coordenação mais cara (time zones, assincronia), isolamento social. Boas práticas documentadas pela pesquisa (Gratton & Erickson, 2007): (1) investir em 'kick-offs' presenciais ou virtuais síncronos com tempo social; (2) sobrepor horas de trabalho (overlap hours); (3) criar espaços informais (canais de chat não-trabalho); (4) usar vídeo em reuniões-chave para preservar contexto não-verbal; (5) documentar decisões em formato escrito; (6) gestão intencional da confiança — 'swift trust' (Meyerson) como ponto de partida."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Equipas virtuais: desafios = confiança, normas, ambiguidade, isolamento, coordenação",
+        "Kick-off presencial ou síncrono com tempo social → constrói base de confiança",
+        "Overlap hours: 2-3h de sobreposição de fusos para colaboração síncrona",
+        "Informal channels: chat não-trabalho, social calls, coffee roulette",
+        "Vídeo em reuniões-chave para preservar contexto não-verbal (~80% do significado)",
+        "Documentação escrita: decisões, action items, contexto — chave para async"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: o que torna uma equipa verdadeiramente eficaz"
+    },
+    {
+      "type": "p",
+      "text": "Equipas eficazes combinam: (1) composição certa — diversidade cognitiva + papéis Belbin equilibrados; (2) processo certo — passar por Tuckman sem medo do storming, gerir coesão e normas, evitar social loafing com accountability individual; (3) decisão certa — awareness do groupthink e da polarização, devil's advocate, separação de papéis (decisor vs executor), uso deliberado de bounded rationality; (4) contexto certo — apoio organizacional, recursos, e (se virtual) sobreposição horária e tempo social. Na prática, a maioria das equipas falha não por falta de talento mas por processo mal desenhado."
+    }
+  ],
+  "keyPoints": [
+    "Tuckman: forming → storming → norming → performing → adjourning (5 estágios)",
+    "Belbin: 9 papéis em 3 clusters (Pensamento, Acção, Pessoas) — equilíbrio = eficácia",
+    "Coesão alta melhora desempenho mas pode gerar groupthink",
+    "Social loafing: ↓ esforço individual em grupo — mitigar com accountability",
+    "Groupthink (Janis): pressão por consenso gera decisões desastrosas (caso Baía dos Porcos)",
+    "Polarização grupal: discussão move o grupo para posições mais extremas",
+    "Bounded rationality (Simon): decisores satisficem em vez de optimizar",
+    "Sistema 1 (rápido/intuitivo) vs Sistema 2 (lento/analítico) de Kahneman",
+    "Equipas virtuais: kick-offs presenciais, overlap hours, vídeo, documentação",
+    "Equipas eficazes: composição + processo + decisão + contexto — talento sem processo falha"
+  ],
+  "quizSlug": "coq",
+  "nextLesson": "03-estrutura-organizacional-cultura-poder",
+  "prevLesson": "01-comportamento-individual"
+}

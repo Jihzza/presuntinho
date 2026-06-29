@@ -1,7 +1,7 @@
 {
   "id": "coq",
   "title": "Quiz: Comportamento Organizacional",
-  "description": "Testa os conceitos de liderança, equipas e mudança organizacional.",
+  "description": "Testa os conceitos de personalidade, motivação, equipas, cultura, poder e liderança organizacional.",
   "questions": [
     {
       "q": "Equipa muito experiente precisa de:",
@@ -50,6 +50,56 @@
         "Interesses",
         "Preço",
         "Poder"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Herzberg distingue entre:",
+      "opts": [
+        "Fatores higiênicos e motivacionais",
+        "Apenas salário e bónus",
+        "Liderança e gestão",
+        "Curto e longo prazo"
+      ],
+      "a": 0
+    },
+    {
+      "q": "BATNA em inglês (Fisher-Ury):",
+      "opts": [
+        "Best Alternative To Negotiated Agreement",
+        "Basic Agreement To Negotiate Always",
+        "Bargaining And Trade Negotiation Act",
+        "Business Annual Target Note"
+      ],
+      "a": 0
+    },
+    {
+      "q": "Poder especialista (French-Raven) é:",
+      "opts": [
+        "Baseado no cargo (coerção)",
+        "Baseado no conhecimento e perícia",
+        "Baseado em medo (coercivo)",
+        "Baseado em carisma (referência)"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Conflito de tarefa (Deutsch) é:",
+      "opts": [
+        "Sempre tóxico para a equipa",
+        "Saudável quando bem gerido e focado em objetivos",
+        "Proibido em equipas de alto desempenho",
+        "Apenas entre chefias e liderança"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Burnout (Maslach) inclui três dimensões:",
+      "opts": [
+        "Apenas cansaço físico",
+        "Exaustão emocional, cinismo/despersonalização e queda de eficácia profissional",
+        "Só falta ao trabalho e absentismo",
+        "Apenas stress passageiro e irritabilidade"
       ],
       "a": 1
     }

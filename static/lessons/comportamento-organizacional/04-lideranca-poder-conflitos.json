@@ -1,0 +1,286 @@
+{
+  "id": "04-lideranca-poder-conflitos",
+  "title": "4. Liderança, Poder e Gestão de Conflitos",
+  "courseSlug": "comportamento-organizacional",
+  "lessonNumber": 4,
+  "description": "Como a liderança efectiva emerge nas organizações: fontes de poder de French-Raven (coercivo, recompensa, legítimo, perito, referência), estilos de liderança Path-Goal de House (directivo, apoiante, participativo, orientado para a realização), empowerment e engagement (modelo de Kahn, condições Spreitzer), gestão de conflitos Thomas-Kilmann (5 modos: competição, colaboração, compromisso, evitamento, acomodação) e negociação distributiva vs integrativa (BATNA, ZOPA, zona de acordo possível).",
+  "audio": "Nesta quarta lição voltamos ao nível individual-líder para cobrir liderança, poder e gestão de conflitos. Começamos pelas cinco bases de poder de French e Raven (1959): coercivo (capacidade de punir), de recompensa (dar algo positivo), legítimo (posição formal), de perito (conhecimento técnico) e de referência (identificação, admiração). Depois, a teoria Path-Goal de House (1971) e os quatro estilos de líder: directivo (instruções claras, útil em tarefas ambíguas), apoiante (cuidado com pessoas e bem-estar), participativo (consulta a equipa nas decisões) e orientado para a realização (desafios altos e confiança na excelência). Cobrimos empowerment e engagement: o modelo de Kahn (1990) que define engagement como o uso pleno do eu no trabalho — e as três condições psicológicas de Spreitzer (meaningfulness, self-efficacy, self-determination). Depois a gestão de conflitos Thomas-Kilmann (1974) com cinco modos: competição, colaboração, compromisso, evitamento e acomodação — cada um útil em contextos diferentes. Por fim, negociação distributiva vs integrativa: BATNA (Best Alternative to a Negotiated Agreement), ZOPA (Zone of Possible Agreement), e a diferença entre ganhar-perder e ganhar-ganhar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["French-Raven", "Path-Goal", "House", "Kahn", "Spreitzer", "Thomas-Kilmann", "BATNA", "ZOPA", "Empoderamento", "Negociação"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Liderança vs gestão: duas funções complementares"
+    },
+    {
+      "type": "p",
+      "text": "Liderança e gestão são frequentemente confundidos mas têm naturezas distintas. Gestão (Peter Drucker, Mary Parker Follett) é o processo de planear, organizar, dirigir e controlar recursos para atingir objectivos definidos — lida com complexidade, ordem e previsibilidade. Liderança (John Kotter, 1990, 'A Force for Change') é o processo de dar direcção, inspirar, alinhar e motivar pessoas para trabalhar com entusiasmo na prossecução de objectivos — lida com mudança, visão e influência. Um bom gestor sem visão torna-se burocrata; um visionário sem gestão gera caos. Os melhores líderes hoje são ambos — gestores disciplinados que também inspiram."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Gestão: planear, organizar, dirigir, controlar — lida com complexidade",
+        "Liderança: definir direcção, inspirar, alinhar, motivar — lida com mudança",
+        "Drucker: 'management is doing things right; leadership is doing the right things'",
+        "Kotter: liderança é a força que inicia e sustenta a mudança",
+        "Líderes eficazes: visão + execução + inspiração",
+        "Implicação BA: desenvolve ambas as competências, não só uma"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "As cinco bases de poder de French e Raven (1959)"
+    },
+    {
+      "type": "p",
+      "text": "John French e Bertram Raven (1959, 'The Bases of Social Power') identificaram cinco fontes de poder que uma pessoa pode usar para influenciar outras: (1) Coercivo — baseado na capacidade de punir ou negar recompensas negativas (ex: chefe que pode despedir ou rebaixar); (2) Recompensa — baseado na capacidade de dar recompensas positivas (bónus, promoções, reconhecimento); (3) Legítimo — baseado na posição formal e na autoridade percebida (CEO, presidente, supervisor); (4) Perito (expert) — baseado em conhecimento, competência técnica ou experiência reconhecida; (5) Referência (referent) — baseado em identificação, admiração ou desejo de se associar à pessoa. Raven acrescentou mais tarde o poder de informação (acesso a dados críticos). A distinção-chave: poder coercivo, de recompensa e legítimo dependem da posição formal — desaparecem quando a posição acaba. Poder de perito e de referência podem existir sem posição — são a base da influência sem autoridade."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Coercivo: capacidade de punir — gera obediência mas não comprometimento",
+        "Recompensa: capacidade de dar algo positivo — gera compliance",
+        "Legítimo: posição formal, autoridade percebida — gera obediência por contrato social",
+        "Perito (expert): conhecimento técnico — gera respeito e seguimento voluntário",
+        "Referência: identificação, admiração — gera lealdade e inspiração",
+        "Informação (acrescentado por Raven): acesso a dados críticos — influencia decisões",
+        "Bases de poder são complementares: líderes eficazes combinam várias"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Insight prático para a BA: constrói poder de perito (estuda, certifica-te, ganha profundidade técnica) e poder de referência (sê íntegro, inspira confiança) — são as duas fontes que sobrevivem à mudança de cargo e que funcionam sem posição hierárquica. Coaches e consultores poderosos são peritos com referência, não CEOs."
+    },
+    {
+      "type": "h2",
+      "text": "Teoria Path-Goal de House: o líder como facilitador de caminhos"
+    },
+    {
+      "type": "p",
+      "text": "Robert House (1971, reformulada em 1996) propôs a teoria Path-Goal, segundo a qual o trabalho do líder é ajudar os subordinados a alcançar os seus objectivos, fornecendo direcção, suporte e remoção de obstáculos ao longo do caminho (path) que leva às metas (goal). A teoria identifica quatro estilos de liderança que o líder deve adaptar à situação: (1) Directivo — dá instruções claras, estrutura tarefas, espera conformidade; útil quando as tarefas são ambíguas ou os subordinados são inexperientes; (2) Apoiante (supportive) — mostra cuidado com as pessoas e o seu bem-estar, é amigável e acessível; útil em tarefas stressantes ou frustrantes; (3) Participativo — consulta os subordinados antes de decidir, valoriza as suas ideias; útil em tarefas complexas onde o subordinado tem mais informação; (4) Orientado para a realização (achievement-oriented) — estabelece desafios altos, mostra confiança na excelência, procura melhoria contínua; útil em tarefas complexas com subordinados competentes."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Directivo: instruções claras, estrutura, conformidade — tarefas ambíguas ou inexperiência",
+        "Apoiante: cuidado com pessoas, acessibilidade — tarefas stressantes ou frustrantes",
+        "Participativo: consulta a equipa, partilha decisões — tarefas complexas, expertise distribuída",
+        "Orientado para a realização: desafios altos, confiança na excelência — tarefas complexas com expertise",
+        "Adaptação situacional: o líder escolhe o estilo conforme o contexto",
+        "Path-Goal integra traços, comportamentos e contingência — síntese moderna"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Empoderamento e engagement: o modelo de Kahn"
+    },
+    {
+      "type": "p",
+      "text": "William Kahn (1990, 'Psychological Conditions of Personal Engagement and Disengagement at Work') definiu engagement como 'o uso do eu preferencial das pessoas nos seus papéis de trabalho — empregar e expressar as suas qualidades pessoais (cognitivas, emocionais, físicas) enquanto executam tarefas que promovem conexões com o trabalho e com os outros'. Identificou três condições psicológicas que promovem engagement: (1) Meaningfulness (significado) — sentir que o trabalho vale a pena, que tem propósito e impacto; (2) Safety (segurança psicológica) — sentir-se seguro para ser autêntico, sem medo de retaliação; (3) Availability (disponibilidade) — ter os recursos físicos e emocionais para investir no trabalho. Quando estas condições estão presentes, há engagement; quando ausentes, há disengagement (burnout, cinismo, rotatividade)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Engagement = uso pleno do eu no trabalho (Kahn, 1990)",
+        "Três condições: significado, segurança psicológica, disponibilidade",
+        "Disengagement = burnout, cinismo, rotatividade — condições ausentes",
+        "Distinção crítica: engagement não é felicidade — é investimento pessoal autêntico",
+        "Líderes promovem engagement criando significado (propósito claro), segurança (confiança) e disponibilidade (recursos)",
+        "Pesquisa Gallup: equipas altamente engaged têm 21% mais produtividade e 41% menos rotatividade"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Empoderamento estrutural: as quatro condições de Spreitzer"
+    },
+    {
+      "type": "p",
+      "text": "Gretchen Spreitzer (1995, 'Psychological Empowerment in the Workplace') distinguiu empowerment psicológico (as crenças dos indivíduos sobre o seu papel) de empowerment estrutural (práticas organizacionais que dão poder). O empowerment psicológico tem quatro cognições: (1) Meaning (significado) — o trabalho tem propósito alinhado com os meus valores; (2) Competence (competência) — tenho a capacidade e confiança para fazer bem; (3) Self-determination (auto-determinação) — tenho autonomia e escolha sobre como faço o trabalho; (4) Impact (impacto) — o meu trabalho faz diferença nos resultados. As práticas organizacionais que alimentam estas cognições incluem: descentralização da decisão, acesso a informação, empowerment de recursos, responsabilidade por resultados e feedback contínuo. Spreitzer mostrou que empowerment psicológico medeia a relação entre empowerment estrutural e resultados (desempenho, satisfação, inovação)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Quatro cognições de empowerment psicológico: Meaning, Competence, Self-determination, Impact",
+        "Meaning: o trabalho alinha-se com os meus valores e propósito",
+        "Competence: tenho capacidade e confiança — mestria percebida",
+        "Self-determination: tenho escolha e autonomia sobre como trabalhar",
+        "Impact: o meu trabalho faz diferença nos resultados colectivos",
+        "Empoderamento estrutural: descentralização, informação, recursos, responsabilidade",
+        "Aplicação prática: dar autonomia real (não só retórica) + feedback de impacto"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: empowerment real não é dizer às pessoas que têm poder — é desenhar os sistemas para que o tenham. Decisões descentralizadas, acesso a informação orçamental e operacional, responsabilidade por resultados mensuráveis, e feedback explícito sobre o impacto do trabalho de cada um. Se os teus projectos de consultoria continuam a precisar de aprovação do CEO em cada decisão, não tens empowerment — tens bureaucracy."
+    },
+    {
+      "type": "h2",
+      "text": "Tipos de conflito e o que nos dizem"
+    },
+    {
+      "type": "p",
+      "text": "Conflito é a percepção de interesses incompatíveis entre pessoas ou grupos. Nem todo o conflito é mau — a literatura distingue três tipos: (1) Conflito de tarefa (task conflict) — desacordo sobre ideias, estratégias, conteúdo do trabalho; geralmente construtivo, leva a melhores decisões quando bem gerido; (2) Conflito de relação (relationship conflict) — incompatibilidades pessoais, emoções, desconfiança; quase sempre destrutivo, gera stress e reduz desempenho; (3) Conflito de processo (process conflict) — desacordo sobre como fazer o trabalho, quem faz o quê, logística; pode ser construtivo se resolvido cedo, destrutivo se crónico. O gestor eficaz distingue os três e gere cada um de forma diferente: promove conflito de tarefa (estimula debate construtivo), minimiza conflito de relação (intervém cedo, media), e clarifica processos para reduzir conflito processual."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Task conflict: desacordo sobre ideias/conteúdo — construtivo se bem gerido",
+        "Relationship conflict: incompatibilidades pessoais — quase sempre destrutivo",
+        "Process conflict: desacordo sobre como fazer — gerível se resolvido cedo",
+        "Conflito moderado de tarefa ↑ desempenho e inovação",
+        "Conflito de relação ↑ stress, ↓ desempenho, ↑ rotatividade",
+        "Papel do líder: promover debate de ideias, mediar tensões pessoais, clarificar processos"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Modelo Thomas-Kilmann: cinco modos de gerir conflitos"
+    },
+    {
+      "type": "p",
+      "text": "Kenneth Thomas e Ralph Kilmann (1974, 'Conflict Mode Instrument') propuseram um modelo que cruza duas dimensões — assertividade (grau em que tento satisfazer os meus interesses) e cooperação (grau em que tento satisfazer os interesses do outro) — para identificar cinco modos de lidar com conflito: (1) Competição (assertivo, não cooperante) — winner-takes-all, usa poder, busca vitória; útil em emergências ou contra acções anti-éticas; (2) Colaboração (assertivo, cooperante) — procura solução win-win que satisfaça ambos; ideal para conflitos complexos e importantes; (3) Compromisso (meio termo) — ambos cedem algo para chegar a acordo aceitável; útil quando objectivos são mutuamente exclusivos ou há pressão temporal; (4) Evitamento (não assertivo, não cooperante) — recusa envolver-se, adia ou retira-se; útil para questões triviais ou quando o custo de confronto excede o benefício; (5) Acomodação (não assertivo, cooperante) — cede aos interesses do outro; útil quando o assunto é mais importante para o outro ou para preservar a relação."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Competição (assertivo + não cooperante): winner-takes-all — emergências ou anti-ética",
+        "Colaboração (assertivo + cooperante): win-win — conflitos complexos e importantes",
+        "Compromisso (meio termo): ambos cedem — objectivos mutuamente exclusivos",
+        "Evitamento (não assertivo + não cooperante): recusa-se a envolver — questões triviais",
+        "Acomodação (não assertivo + cooperante): cede ao outro — preservar relação ou assunto é mais importante para o outro",
+        "Sem modo universalmente melhor — o modo certo depende do contexto",
+        "Inventário TKI: instrumento de auto-avaliação de 30 itens"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Aplicação prática: treinar equipas em TKI ajuda a perceber o estilo próprio e a diversificar o repertório. Um gestor que só compete gera medo; um que só evita acumula problemas. O líder eficaz identifica o modo certo para cada situação — competindo contra acções anti-éticas, colaborando em decisões estratégicas, comprometendo em pressões temporais, evitando trivialidades, acomodando quando a relação vale mais que a questão."
+    },
+    {
+      "type": "h2",
+      "text": "Negociação distributiva: repartir um bolo fixo"
+    },
+    {
+      "type": "p",
+      "text": "Negociação distributiva (também chamada win-lose ou posicional) acontece quando os recursos são fixos e a tarefa é repartir a 'torta' — o que um ganha, o outro perde. Caracteriza-se por: posições iniciais extremas, pouca informação partilhada, foco em limites (preço, salário, prazo), ameaças e concessão. As táticas incluem: ancoragem (fazer a primeira oferta extrema para puxar o ponto de referência), making concessions (ceder pequenas concessões em troca de outras), e bluffing (fingir força quando fraco). Os elementos-chave a dominar: BATNA (Best Alternative to a Negotiated Agreement) — a melhor alternativa se a negociação falhar; Reservation Point (RP) — o pior acordo que aceitas; e ZOPA (Zone of Possible Agreement) — a sobreposição entre os RPs das duas partes. Saber a tua BATNA é a fonte de poder mais importante: quanto melhor a alternativa, mais podes andar para trás sem medo."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Negociação distributiva: recursos fixos, win-lose, foco em posições",
+        "BATNA: melhor alternativa se a negociação falhar — fonte de poder #1",
+        "Reservation Point (RP): o pior acordo aceitável",
+        "ZOPA: zona de acordo possível — sobreposição entre RPs das duas partes",
+        "Se não há ZOPA (RPs não se sobrepõem) → não há acordo possível sem mudar a torta",
+        "Tácticas: ancoragem, concessões graduais, bluffing (ética variável)",
+        "Exemplo clássico: vendedor (RP €8.000) vs comprador (RP €10.000) → ZOPA entre €8K-€10K"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Negociação integrativa: expandir o bolo antes de repartir"
+    },
+    {
+      "type": "p",
+      "text": "Negociação integrativa (também chamada win-win ou de princípios) procura expandir a 'torta' antes de a repartir — criar valor antes de dividir. Inspirada por Roger Fisher e William Ury (1981, 'Getting to Yes') e pelo método HARVARD, baseia-se em quatro princípios: (1) Separar as pessoas do problema — não confundir relação com substância; (2) Focar nos interesses, não nas posições — posições são o que as pessoas dizem querer; interesses são o porquê; (3) Inventar opções de ganho mútuo — brainstorming antes de decidir; (4) Insistir em critérios objectivos — usar padrões externos (mercado, precedentes, leis) para decidir em vez de pressão. A negociação integrativa descobre trades-offs de valor diferente para cada parte (ex: vendedor valoriza mais dinheiro imediato, comprador valoriza mais prazo) e gera soluções criativas onde ambos ganham mais do que na alternativa distributiva."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Negociação integrativa: criar valor antes de repartir (win-win)",
+        "Método HARVARD (Fisher & Ury, 1981): quatro princípios",
+        "1. Separar pessoas do problema: relação ≠ substância",
+        "2. Focar em interesses, não posições: o porquê, não o quê",
+        "3. Inventar opções de ganho mútuo: brainstorming antes de decidir",
+        "4. Critérios objectivos: mercado, precedentes, padrões externos",
+        "Trades-offs de valor assimétrico: cada parte valoriza mais uma dimensão diferente",
+        "Exemplo: salário vs flexibilidade — trabalhador valoriza flexibilidade, empresa valoriza retenção"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "BATNA: o conceito mais poderoso da negociação"
+    },
+    {
+      "type": "p",
+      "text": "BATNA (Best Alternative to a Negotiated Agreement) foi cunhado por Roger Fisher e William Ury (1981) e é provavelmente o conceito mais importante de toda a negociação. A tua BATNA é a melhor coisa que podes fazer se a negociação actual falhar — é a tua alternativa real. Quanto melhor a tua BATNA, mais podes recusar uma oferta má e mais poder tens para negociar. Quanto pior a tua BATNA, mais vulnerável és a aceitar um mau acordo. Por isso, um passo crucial antes de qualquer negociação importante é desenvolver e fortalecer a tua BATNA: candidatares-te a outros empregos antes de pedir aumento, ter outros fornecedores antes de renegociar um contrato, ter outras parcerias antes de pedir equity a um investidor. Na prática, a BATNA determina o teu reservation point — o pior acordo que aceitas. E o teu BATNA é mais forte se for concreta (uma oferta real) do que hipotética ('posso candidatar-me')."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "BATNA = Best Alternative to a Negotiated Agreement",
+        "Quanto melhor a BATNA, mais poder de negociação",
+        "Quanto pior a BATNA, mais vulnerável a aceitar mau acordo",
+        "BATNA concreta (oferta real) > BATNA hipotética (vou procurar)",
+        "Antes de negociar: investir tempo a fortalecer BATNA",
+        "BATNA determina o teu reservation point (pior acordo aceitável)",
+        "Fisher & Ury: 'the most powerful tool you have is your BATNA'"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Exemplo real: estás a pedir um aumento. Se não tens outras ofertas, BATNA fraca → tens de aceitar o que derem. Se tens 3 ofertas de outras empresas, BATNA forte → podes ser honesto: 'tenho uma proposta de €X, adoraria ficar mas preciso que a empresa reconheça o meu valor'. A BATNA muda tudo."
+    },
+    {
+      "type": "h2",
+      "text": "Distributiva vs integrativa: quando usar cada uma"
+    },
+    {
+      "type": "p",
+      "text": "As duas abordagens não são opostas — são complementares e a maioria das negociações reais usa ambas em momentos diferentes. Na fase de criação de valor (antes de fechar o acordo), a abordagem integrativa prevalece: brainstorming, explorar interesses, inventar opções. Na fase de distribuição (quando se decide quem fica com quê), a abordagem distributiva entra: propostas, concessões, comparação com critérios. A negociação eficaz faz a transição de forma suave: primeiro cria valor, depois distribui. Os erros comuns: ficar preso em posições distributivas demasiado cedo (fecha opções criativas), ou tentar fazer integrativa quando o assunto é puramente distributivo (preço de um produto homogéneo). O domínio da negociação moderna exige saber ler a situação e alternar entre os dois modos."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Distribuitiva e integrativa são complementares, não opostas",
+        "Fase 1 — criação de valor: integrativa (brainstorming, interesses)",
+        "Fase 2 — distribuição: distributiva (propostas, concessões, critérios)",
+        "Erro 1: distributiva cedo demais — fecha opções criativas",
+        "Erro 2: integrativa quando é puramente distributivo (preço de commodity)",
+        "Domínio moderno: ler a situação e alternar entre modos",
+        "A maioria das negociações reais usa ambas em momentos diferentes"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: como ser um líder eficaz em BA"
+    },
+    {
+      "type": "p",
+      "text": "Os quatro takeaways principais desta lição para a prática da liderança na BA: (1) Constrói poder que sobrevive à mudança de cargo — investe em perito (estudo, certificações, profundidade técnica) e em referência (integridade, fiabilidade, inspiração); (2) Adapta o teu estilo de liderança ao contexto — directivo em tarefas ambíguas, apoiante em situações stressantes, participativo em decisões complexas, orientado para a realização quando a equipa tem mestria; (3) Cria engagement real dando significado, segurança psicológica e disponibilidade — empowerment de retórica não funciona, empowerment estrutural sim; (4) Domina negociação — identifica a tua BATNA antes de cada conversa importante, separa interesses de posições, procura trades-offs criativos, e usa critérios objectivos para fechar. Estas quatro competências juntas separam o líder burocrata do líder transformacional."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Constrói poder de perito e referência — sobrevivem à mudança de cargo",
+        "Adapta o estilo: directivo / apoiante / participativo / realização conforme o contexto",
+        "Cria engagement estrutural: significado + segurança psicológica + disponibilidade",
+        "Domina negociação: BATNA, interesses vs posições, trades-offs, critérios objectivos",
+        "Combina criação de valor (integrativa) e distribuição (distributiva)",
+        "Treina TKI para diversificar o repertório de gestão de conflitos",
+        "Líder eficaz: visão + execução + inspiração + adaptação contextual"
+      ]
+    }
+  ],
+  "keyPoints": [
+    "Liderança lida com mudança e visão; gestão lida com complexidade e ordem",
+    "French-Raven: 5 bases de poder (coercivo, recompensa, legítimo, perito, referência) + informação",
+    "Poder de perito e referência sobrevivem à mudança de posição — constrói-os",
+    "Path-Goal (House): 4 estilos — directivo, apoiante, participativo, orientado para a realização",
+    "Engagement (Kahn): uso pleno do eu — 3 condições (meaningfulness, safety, availability)",
+    "Empoderamento psicológico (Spreitzer): meaning, competence, self-determination, impact",
+    "3 tipos de conflito: tarefa (construtivo), relação (destrutivo), processo (gerível)",
+    "Thomas-Kilmann: 5 modos — competição, colaboração, compromisso, evitamento, acomodação",
+    "Negociação distributiva: BATNA, RP, ZOPA — repartir bolo fixo",
+    "Negociação integrativa: criar valor antes de repartir (interesses, opções, critérios objectivos)",
+    "BATNA é a fonte de poder #1: fortalecê-la antes de negociar é crítico",
+    "Síntese: constrói poder durável, adapta estilo, cria engagement, domina negociação"
+  ],
+  "quizSlug": "coq",
+  "nextLesson": null,
+  "prevLesson": "03-estrutura-organizacional-cultura-poder"
+}

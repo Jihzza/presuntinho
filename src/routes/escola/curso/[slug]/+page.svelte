@@ -143,23 +143,20 @@
       ]
     },
         'comportamento-organizacional': {
-      slug: 'comportamento-organizacional',
-      title: 'Comportamento Organizacional',
-      tagline: 'Business Administration · Comportamento nas organizações',
-      description: 'Liderança, dinâmica de equipas, comunicação e gestão da mudança.',
-      icon: '🧠',
-      color: '#0891b2',
-      lessons: [
-        { slug: 'lideranca', title: '1. Estilos de Liderança', summary: 'Autocrático, democrático, situacional, transformacional.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional — Base', estMinutes: 7 },
-        { slug: 'trabalho-equipa', title: '2. Dinâmica de Equipas', summary: 'Tuckman: Forming → Storming → Norming → Performing.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional — Base', estMinutes: 7 },
-        { slug: 'comunicacao', title: '3. Comunicação e Negociação', summary: 'Escuta ativa, win-win e BATNA.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional — Base', estMinutes: 7 },
-        { slug: 'gestao-mudanca', title: '4. Gestão da Mudança', summary: 'Modelo Kotter (8 passos) e curva da mudança.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional — Base', estMinutes: 7 },
-        { slug: 'motivacao-teorias', title: '5. Teorias da Motivação', summary: 'Maslow, Herzberg, McGregor e auto-determinação.', quizSlug: 'coq2', quizTitle: 'Quiz: Comportamento Organizacional — Avançado', estMinutes: 8 },
-        { slug: 'conflito-negociacao', title: '6. Conflito e Negociação', summary: 'Tipos de conflito, negociação integrativa e BATNA.', quizSlug: 'coq2', quizTitle: 'Quiz: Comportamento Organizacional — Avançado', estMinutes: 8 },
-        { slug: 'poder-politica', title: '7. Poder e Política nas Organizações', summary: 'Fontes de poder formais e informais.', quizSlug: 'coq2', quizTitle: 'Quiz: Comportamento Organizacional — Avançado', estMinutes: 8 },
-        { slug: 'bem-estar-organizacional', title: '8. Bem-Estar e Saúde Mental', summary: 'Sinais de burnout e ações concretas do líder.', quizSlug: 'coq2', quizTitle: 'Quiz: Comportamento Organizacional — Avançado', estMinutes: 9 }
-      ]
-    },
+              slug: 'comportamento-organizacional',
+              title: 'Comportamento Organizacional',
+              tagline: 'Business Administration · Pessoas, equipas, cultura e liderança',
+              description:
+                'Como as pessoas pensam, sentem e agem nas organizações: personalidade, motivação e percepção individual (Big Five, Maslow, Herzberg, McGregor, Self-Determination Theory), dinâmica de grupos e equipas (Tuckman, Belbin, groupthink, social loafing), estrutura, cultura e poder (Mintzberg, Schein, Hofstede, French-Raven), e liderança, empowerment e gestão de conflitos (Fiedler, Path-Goal, Bass, Thomas-Kilmann).',
+              icon: '🧠',
+              color: '#6d28d9',
+              lessons: [
+                { slug: 'comportamento-individual', title: '1. Comportamento Individual: Personalidade, Motivação e Percepção', summary: 'Big Five (OCEAN), Maslow, Herzberg, McGregor, SDT de Deci-Ryan, attribution biases.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional', estMinutes: 9 },
+                { slug: 'dinamica-grupo-equipas', title: '2. Dinâmica de Grupos e Equipas', summary: 'Tuckman (5 estágios), Belbin (9 papéis), groupthink, social loafing, tomada de decisão grupal.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional', estMinutes: 9 },
+                { slug: 'estrutura-organizacional-cultura-poder', title: '3. Estrutura Organizacional, Cultura e Poder', summary: 'Mintzberg (5 configurações), Schein (3 níveis), Hofstede (6 dimensões), French-Raven (5 bases).', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional', estMinutes: 10 },
+                { slug: 'lideranca-poder-conflitos', title: '4. Liderança, Poder e Gestão de Conflitos', summary: 'Path-Goal de House, empowerment de Kahn/Spreitzer, Thomas-Kilmann (5 modos), BATNA/ZOPA.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional', estMinutes: 10 }
+              ]
+            },
     equivalenza: {
       slug: 'equivalenza',
       title: 'Equivalenza — The Scent of a Second Chance',

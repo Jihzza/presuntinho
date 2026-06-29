@@ -1,0 +1,177 @@
+{
+  "id": "03-estrutura-organizacional-cultura-poder",
+  "courseSlug": "comportamento-organizacional",
+  "lessonNumber": 3,
+  "description": "A arquitectura das organizações: as cinco configurações estruturais de Mintzberg (entrepreneurial, machine, professional, divisional, adhocracy), os três níveis de cultura de Schein (artefactos, valores, pressupostos básicos), as seis dimensões culturais de Hofstede (PDI, IDV, MAS, UAI, LTO, IND), o Competing Values Framework de Cameron-Quinn (clan, adhocracy, market, hierarchy), as cinco bases de poder de French e Raven (coercivo, recompensa, legítimo, perito, referência), e os mecanismos de socialização organizacional.",
+  "audio": "Nesta terceira lição subimos ao nível organizacional. Começamos pela estrutura — Henry Mintzberg (1979, 'The Structuring of Organizations') identificou cinco configurações fundamentais: entrepreneurial (startups, decisão centralizada, pouca estrutura), machine bureaucracy (fábricas, procedimentos rígidos, decisão centralizada), professional bureaucracy (hospitais, universidades, profissionais com autonomia dentro de padrões), divisional (multi-empresa, cada divisão é uma quasi-empresa) e adhocracy (consultoras, I&D, equipas project-based flexíveis). Depois a cultura — Edgar Schein (1985) distingue três níveis: artefactos e comportamentos visíveis (escritório, dress code, rituais); valores (estratégia, princípios, missão); e pressupostos básicos (crenças invisíveis, tomadas como certas). Geert Hofstede (1980, 'Culture's Consequences') identificou originalmente quatro dimensões nacionais (PDI Power Distance Index, IDV Individualism, MAS Masculinity, UAI Uncertainty Avoidance Index) a que se juntaram LTO Long-Term Orientation e IND Indulgence. O Competing Values Framework de Cameron-Quinn cruza dois eixos (flexibilidade vs controlo, interno vs externo) e gera quatro quadrantes: clan, adhocracy, market, hierarchy. Cobrimos depois as cinco bases de poder de French e Raven (1959): coercivo, recompensa, legítimo, perito (expert) e referência (referent) — conceitos chave para entender política organizacional e influência sem autoridade. Por fim, socialização organizacional: como as empresas integram novos membros através de estágios (anticipatory socialization, encounter, change and acquisition, Van Maanen & Schein).",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Mintzberg", "Schein", "Hofstede", "Cameron-Quinn", "French-Raven", "Poder", "Cultura Organizacional", "Estrutura Organizacional", "Socialização"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Estrutura organizacional: as cinco configurações de Mintzberg"
+    },
+    {
+      "type": "p",
+      "text": "Henry Mintzberg (1979, 'The Structuring of Organizations') observou que as organizações tendem a gravitar para cinco configurações-tipo, cada uma com mecanismo coordenador principal, parte mais relevante da organização, tipo de descentralização e parâmetros de concepção específicos: (1) Simple Structure (entrepreneurial) — pequena, orgânica, decisão centralizada no CEO, ideal para startups e PMEs em fase inicial; (2) Machine Bureaucracy — tarefas operacionais padronizadas, decisões verticalizadas, procedimentos rígidos, ideal para produção em massa; (3) Professional Bureaucracy — procedimentos padronizados mas com profissionais (médicos, advogados, professores) com grande autonomia dentro das normas, ideal para hospitais e universidades; (4) Divisional Form — estrutura de holdings, cada divisão é uma quasi-empresa autónoma, ideal para conglomerados; (5) Adhocracy — equipas project-based flexíveis, alta inovação, ideal para consultoras e departamentos de I&D."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Entrepreneurial (Simple Structure): pequena, orgânica, decisão centralizada no CEO — startups",
+        "Machine Bureaucracy: tarefas padronizadas, autoridade vertical — produção em massa",
+        "Professional Bureaucracy: procedimentos + autonomia profissional — hospitais, universidades",
+        "Divisional: cada divisão autónoma, holding structure — conglomerados",
+        "Adhocracy: equipas project-based flexíveis — consultoras, I&D",
+        "Configurações são tipos ideais — organizações reais são misturas"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Cultura organizacional: os três níveis de Schein"
+    },
+    {
+      "type": "p",
+      "text": "Edgar Schein (1985, 'Organizational Culture and Leadership') definiu cultura organizacional como 'o padrão de pressupostos básicos que um grupo inventou, descobriu ou desenvolveu ao aprender a lidar com os seus problemas de adaptação externa e integração interna, e que funcionou suficientemente bem para ser considerado válido e ensinado a novos membros'. Schein distinguiu três níveis de profundidade: (1) Artefactos e comportamentos — o que se vê e ouve (escritório aberto vs fechado, dress code, linguagem, rituais, símbolos visíveis, layouts); (2) Valores — o que as pessoas dizem sobre o porquê fazem o que fazem (missão, valores proclamados, estratégia, princípios); (3) Pressupostos básicos — crenças invisíveis, tomadas como certas, raramente discutidas (aqui está a verdadeira cultura). O desafio: os dois primeiros níveis são facilmente imitados por concorrentes; o terceiro é o que torna a cultura distintiva e duradoura."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Nível 1 — Artefactos: dress code, escritórios, linguagem, rituais, símbolos visíveis",
+        "Nível 2 — Valores: missão, princípios proclamados, estratégia, filosofias declaradas",
+        "Nível 3 — Pressupostos básicos: crenças invisíveis, tidas como certas, raramente questionadas",
+        "Cultura forte vs fraca: intensidade e consenso nos pressupostos básicos",
+        "Funções da cultura: integração interna + adaptação externa",
+        "Cultura não se muda por decreto — exige alinhamento dos três níveis (schein)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Exemplo clássico: a Google tem escritórios abertos com cores berrantes (artefacto), proclama 'don't be evil' (valor proclamado), mas tem pressupostos básicos sobre meritocracia técnica e autonomia individual que são mais profundos e mais difíceis de copiar. Muitas empresas tentam copiar os artefactos da Google e falham em capturar a cultura subjacente."
+    },
+    {
+      "type": "h2",
+      "text": "Dimensões culturais de Hofstede: comparando culturas nacionais"
+    },
+    {
+      "type": "p",
+      "text": "Geert Hofstede (1980, 'Culture's Consequences') analisou 100.000 questionários de funcionários da IBM em 40 países e identificou dimensões sistemáticas pelas quais as culturas nacionais diferem. Originalmente quatro dimensões, depois expandidas para seis: (1) PDI — Power Distance Index (grau em que menos poderosos aceitam desigualdade); (2) IDV — Individualism (vs Collectivism) (grau em que as pessoas se vêem como indivíduos vs parte de grupo); (3) MAS — Masculinity (vs Femininity) (prevalência de valores assertivos e competitivos vs cuidado e qualidade de vida); (4) UAI — Uncertainty Avoidance Index (tolerância à ambiguidade e ao desconhecido); (5) LTO — Long-Term Orientation (foco no futuro e persistência vs tradição e curto prazo); (6) IND — Indulgence (vs Restraint) (grau em que se satisfazem desejos humanos e se goza a vida). Portugal tem PDI alto (~63), Collectivism moderado, Femininity, UAI alta, IND baixa."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "PDI — Power Distance: desigualdade aceite (Portugal ~63, Brasil ~69, Suécia ~31)",
+        "IDV — Individualism: 'eu' vs 'nós' (EUA ~91, China ~20)",
+        "MAS — Masculinity: assertividade e performance (Japão ~95, Suécia ~5)",
+        "UAI — Uncertainty Avoidance: tolerância à ambiguidade (Portugal alta, Singapura baixa)",
+        "LTO — Long-Term Orientation: pragmatismo futuro vs tradição (China ~87, EUA ~26)",
+        "IND — Indulgence: satisfação de desejos humanos (Brasil ~59, Egipto ~4)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Competing Values Framework de Cameron e Quinn"
+    },
+    {
+      "type": "p",
+      "text": "Kim Cameron e Robert Quinn (1999, 'Diagnosing and Changing Organizational Culture') desenvolveram o Competing Values Framework (CVF), que cruza dois eixos — flexibilidade vs controlo, e foco interno vs foco externo — para criar quatro quadrantes que descrevem tipos de cultura organizacional: (1) Clan (flexível, interno) — família, lealdade, tradição, mentorship, foco em pessoas, ambiente acolhedor (startups, empresas familiares); (2) Adhocracy (flexível, externo) — criatividade, risco, inovação, experimentação, foco no futuro (tech companies, I&D); (3) Market (controlada, externa) — resultados, concorrência, produtividade, foco no cliente, ambiente competitivo (empresas de vendas, multinacionais); (4) Hierarchy (controlada, interna) — procedimentos, estabilidade, ordem, foco em eficiência, ambiente formal (bancos, forças armadas, burocracias). Cada organização tem uma combinação dos quatro, com um dominante. A ferramenta de diagnóstico (OCAI) ajuda a identificar o perfil actual vs desejado."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Clan (flexível + interno): família, mentorship, lealdade, acolhimento",
+        "Adhocracy (flexível + externo): inovação, criatividade, experimentação, risco",
+        "Market (controlo + externo): resultados, concorrência, produtividade, foco no cliente",
+        "Hierarchy (controlo + interno): procedimentos, estabilidade, ordem, eficiência",
+        "Diagnóstico: OCAI (Organizational Culture Assessment Instrument) — perfil actual vs desejado",
+        "Cultura muda por: recrutamento selectivo, socialização, comportamentos do líder, sistemas"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "As cinco bases de poder de French e Raven"
+    },
+    {
+      "type": "p",
+      "text": "John French e Bertram Raven (1959) identificaram cinco bases de poder que uma pessoa pode usar para influenciar outras: (1) Poder coercivo — baseado na capacidade de punir ou negar recompensas (ex: chefe que pode despedir); (2) Poder de recompensa — baseado na capacidade de dar recompensas positivas (ex: chefe que pode promover ou atribuir bónus); (3) Poder legítimo — baseado na posição formal e na autoridade percebida (ex: título de CEO, contrato de trabalho que define deveres); (4) Poder de perito (expert) — baseado em conhecimento, competência técnica ou experiência reconhecida (ex: consultor que sabe mais que os clientes); (5) Poder de referência (referent) — baseado em identificação, admiração ou desejo de se associar (ex: líder inspirador, celebridade, marca admirada). Mais tarde, Raven acrescentou o poder de informação (acesso a dados críticos). O poder coercivo e de recompensa dependem da posição; o de perito e referência podem existir sem posição formal — são a base da influência sem autoridade."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Coercivo: capacidade de punir — gera obediência, não comprometimento",
+        "Recompensa: capacidade de dar algo positivo — gera compliance, não comprometimento",
+        "Legítimo: posição formal, autoridade — gera obediência por contrato social",
+        "Perito (expert): conhecimento técnico — gera respeito e seguimento voluntário",
+        "Referência: identificação, admiração — gera lealdade e inspiração",
+        "Informação (acrescentado): acesso a dados críticos — influencia quem decide"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Insight prático: líderes eficazes constroem poder de perito e de referência porque estes sobrevivem à mudança de posição. Um CEO que só tem poder coercivo e legítimo perde toda a influência quando deixa o cargo. Os coaches, mentores e consultores mais poderosos são peritos com referência — não precisam de título."
+    },
+    {
+      "type": "h2",
+      "text": "Socialização organizacional: integrar novos membros"
+    },
+    {
+      "type": "p",
+      "text": "Socialização organizacional é o processo pelo qual novos membros aprendem as normas, valores, comportamentos e conhecimentos necessários para participar efectivamente na organização. Van Maanen e Schein (1979) propuseram que a socialização tem três fases: (1) Anticipatory Socialization — antes de entrar (expectativas, recrutamento, realidade do trabalho pré-visualizada); (2) Encounter — primeiros encontros (confronto entre expectativas e realidade, ansiedade inicial); (3) Change and Acquisition — adopção de novos papéis, valores, comportamentos. Também identificaram dimensões de socialização: colectiva vs individual, formal vs informal, sequencial vs aleatória, fixa vs variável, em série vs em paralelo, com tutela vs sem tutela. Socialização mais estruturada leva a papéis mais conformes; menos estruturada permite inovação e diversidade de papéis."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Anticipatory: antes de entrar — recrutamento, real-job preview, expectativas realistas",
+        "Encounter: primeiros encontros — confronto com realidade, ansiedade, onboarding",
+        "Change and Acquisition: adopção de novos papéis, valores, comportamentos",
+        "6 dimensões Van Maanen-Schein: colectiva/individual, formal/informal, sequencial/aleatória, fixa/variável, série/paralelo, tutela/sem tutela",
+        "Socialização estruturada → conformidade; desestruturada → inovação",
+        "Realistic Job Preview (RJP) reduz rotatividade voluntária nos primeiros 18 meses"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Política organizacional: o lado inevitável do comportamento"
+    },
+    {
+      "type": "p",
+      "text": "Política organizacional é o uso intencional de poder e influência para atingir objectivos que podem ou não coincidir com os objectivos formais da organização. Robbins & Judge definem-na como 'comportamento que não é exigido formalmente mas que influencia a distribuição de vantagens na organização'. Exemplos: networking estratégico, construção de coalizões, controlo de informação, lobbying interno, formação de imagem. Política não é necessariamente negativa — pode ajudar a desbloquear decisões bloqueadas, a construir consenso, a navegar em ambientes ambíguos. Torna-se destrutiva quando se traduz em jogos de soma zero, favoritismo, sabotagem ou nepotismo. Gerir política requer literacy política (saber ler o terreno) e integridade (saber onde traçar a linha)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Política = uso de poder e influência para objectivos pessoais/de grupo",
+        "Ferramentas legítimas: networking, lobbying, coalizões, comunicação estratégica",
+        "Ferramentas ilegítimas: manipulação de informação, favoritismo, sabotagem, nepotismo",
+        "Political skill (Ferris et al.): aptitude social para entender e influenciar pessoas em contexto de trabalho",
+        "Literacy política: ler o terreno, identificar stakeholders, antecipar reacções",
+        "Política inevitável em organizações complexas — geri-la com integridade é competência-chave"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: como alinhar estrutura, cultura e poder"
+    },
+    {
+      "type": "p",
+      "text": "Três alavancas macro: (1) estrutura — escolher conscientemente a configuração Mintzberg que serve a estratégia (não herdar a do sector cegamente); (2) cultura — diagnosticar com ferramentas como OCAI e Hofstede, e trabalhar os pressupostos básicos através de socialização, comportamentos do líder e sistemas; (3) poder — desenvolver fontes de perito e referência, não só coercivo e legítimo. A tríade estrutura-cultura-poder determina se a organização executa a estratégia ou fica refém de inércia. Mudanças nos três níveis são demoradas (especialmente cultura) mas possíveis se forem alinhadas e persistentes."
+    }
+  ],
+  "keyPoints": [
+    "Mintzberg: 5 configurações — entrepreneurial, machine, professional, divisional, adhocracy",
+    "Schein: 3 níveis de cultura — artefactos, valores, pressupostos básicos",
+    "Hofstede: 6 dimensões cross-cultural — PDI, IDV, MAS, UAI, LTO, IND",
+    "Cameron-Quinn CVF: clan, adhocracy, market, hierarchy (2 eixos)",
+    "French-Raven: 5 bases de poder — coercivo, recompensa, legítimo, perito, referência",
+    "Poder de perito e referência sobrevivem à mudança de posição (vs coercivo e legítimo)",
+    "Socialização organizacional: 3 fases (anticipatory, encounter, change and acquisition)",
+    "6 dimensões Van Maanen-Schein de socialização (colectiva/individual, formal/informal...)",
+    "OCAI (Cameron-Quinn) diagnostica cultura actual vs desejada",
+    "Tríade estrutura-cultura-poder alinha-se para executar estratégia"
+  ],
+  "quizSlug": "coq",
+  "nextLesson": "04-lideranca-empowerment-conflitos",
+  "prevLesson": "02-dinamica-grupo-equipas"
+}

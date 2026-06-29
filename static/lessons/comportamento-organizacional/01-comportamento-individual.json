@@ -1,0 +1,215 @@
+{
+  "id": "01-comportamento-individual",
+  "title": "1. Comportamento Individual: Personalidade, Motivação e Percepção",
+  "courseSlug": "comportamento-organizacional",
+  "lessonNumber": 1,
+  "description": "Fundamentos do comportamento humano dentro das organizações: os traços Big Five (OCEAN) e a sua aplicação ao trabalho, as grandes teorias motivacionais (Maslow, Herzberg, McGregor, Self-Determination Theory), erros fundamentais de percepção e atribuição (correspondence bias, self-serving bias), e a relação entre atitudes, satisfação e engagement.",
+  "audio": "Nesta primeira lição entramos no nível mais granular do comportamento organizacional: o indivíduo. Vamos começar pela personalidade — o modelo dominante é o Big Five (OCEAN): Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism. Conscientiousness é o melhor preditor de desempenho em quase todas as funções. Depois entramos nas grandes teorias da motivação: Maslow e a hierarquia das necessidades (fisiológicas, segurança, sociais, estima, auto-realização); Herzberg e a distinção entre factores higiênicos e motivacionais; McGregor com a Teoria X (pessoas preguiçosas, precisam de controlo) vs Teoria Y (pessoas auto-motivadas, gostam de responsabilidade); e a Self-Determination Theory de Deci e Ryan que identifica três necessidades psicológicas inatas — autonomia, competência e relacionamento. Cobrimos depois os vieses de percepção e atribuição: o correspondence bias (atribuir o comportamento dos outros à sua disposição e não à situação) e o self-serving bias (atribuir os nossos sucessos a nós e os fracassos ao contexto). Por fim, atitudes, satisfação e engagement — a pesquisa do Gallup mostra que equipas altamente engagées têm 21% mais produtividade.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Big Five", "OCEAN", "Maslow", "Herzberg", "McGregor", "Self-Determination Theory", "Self-Serving Bias", "Correspondence Bias", "Attribution", "Engagement"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é o Comportamento Organizacional e os seus três níveis de análise"
+    },
+    {
+      "type": "p",
+      "text": "Comportamento Organizacional (CO / OB — Organizational Behavior) é o campo que estuda como as pessoas, os grupos e as estruturas afectam o comportamento dentro das organizações, com o objectivo de aplicar esse conhecimento para melhorar a eficácia organizacional (Robbins & Judge, Organizational Behavior, 18ª ed.). O CO organiza-se em três níveis de análise: (1) individual — personalidade, percepção, motivação, atitudes, satisfação; (2) grupal — dinâmica de equipa, papéis, normas, comunicação, liderança, conflito, tomada de decisão; (3) organizacional — estrutura, cultura, poder, política, mudança. As quatro lições deste curso percorrem exactamente estes três níveis, com a primeira dedicada ao indivíduo, a segunda ao grupo, a terceira à organização, e a quarta de volta ao indivíduo-líder com foco em liderança e conflito."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "CO estuda três níveis: indivíduo → grupo → organização (modelo de Robbins)",
+        "Objectivo prático: prever, explicar e influenciar o comportamento no trabalho",
+        "Aplicações: recrutamento, avaliação, motivação, design de equipas, cultura, liderança",
+        "Bases teóricas: psicologia, sociologia, antropologia, economia, ciência política",
+        "Esta L01 cobre o nível individual; L02 grupo; L03 organização; L04 liderança e conflito"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Personalidade e o modelo Big Five (OCEAN)"
+    },
+    {
+      "type": "p",
+      "text": "Personalidade é o conjunto de traços psicológicos que tornam o comportamento de uma pessoa consistente ao longo do tempo e das situações. O modelo dominante em psicologia organizacional é o Big Five (também chamado OCEAN), que identifica cinco dimensões fundamentais da personalidade, cada uma num contínuo: Openness (Abertura à Experiência), Conscientiousness (Conscienciosidade), Extraversion (Extroversão), Agreeableness (Amabilidade) e Neuroticism (Neuroticismo). Cada dimensão tem forte suporte empírico cross-cultural, é relativamente estável ao longo da vida adulta, e tem implicações directas para o desempenho no trabalho."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "O — Openness (Abertura): curiosidade, criatividade, abertura a novas ideias; alta em profissões criativas",
+        "C — Conscientiousness (Conscienciosidade): disciplina, organização, auto-controlo, fiabilidade — é o melhor preditor de desempenho em quase todas as funções",
+        "E — Extraversion (Extroversão): sociabilidade, assertividade, energia positiva — predictor de sucesso em vendas e liderança",
+        "A — Agreeableness (Amabilidade): cooperação, confiança, empatia — predictor de bom desempenho em funções de serviço e trabalho em equipa",
+        "N — Neuroticism (Neurotismo): instabilidade emocional, ansiedade, hostilidade — correlaciona negativamente com desempenho e satisfação",
+        "Outras tipologias: MBTI (popular mas pouco validade científica), DISC, Hexaco"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Implicação prática para gestão: Conscientiousness é o preditor #1 de desempenho em quase todas as funções — desde empregos de entrada até executivos. Em funções de alto risco (pilotos, cirurgiões, controladores de tráfego aéreo), combinar Conscientiousness alto com Neuroticism baixo é a fórmula para baixo erro humano. Por isso, muitas organizações usam o Big Five em recruitment assessment centers e em coaching executivo."
+    },
+    {
+      "type": "h2",
+      "text": "Teoria da hierarquia das necessidades de Maslow"
+    },
+    {
+      "type": "p",
+      "text": "Abraham Maslow (1943) propôs que as necessidades humanas estão organizadas numa hierarquia de cinco níveis: (1) necessidades fisiológicas (comida, água, sono, abrigo); (2) segurança (estabilidade, protecção, ordem); (3) sociais / pertença (amizade, amor, aceitação, afecto); (4) estima (reconhecimento, respeito, status); (5) auto-realização (potencial, crescimento, propósito). A ideia central: as necessidades de nível inferior devem ser razoavelmente satisfeitas antes de as de nível superior se tornarem motivadoras. Maslow é criticado pela falta de suporte empírico rigoroso (as pessoas motivam-se por múltiplas necessidades em paralelo, não em sequência estrita), mas continua a ser uma framework útil para diagnóstico e comunicação."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Hierarquia: fisiológicas → segurança → sociais → estima → auto-realização",
+        "Níveis inferiores: extrínsecos (sobrevivência e estabilidade)",
+        "Níveis superiores: intrínsecos (pertença, reconhecimento, propósito)",
+        "Implicação para薪酬: salário (fisiológicas + segurança) antes de bónus e reconhecimento",
+        "Implicação para engagement: pertença + estima + auto-realização explicam o 'porquê' do trabalho",
+        "Críticas: sequência rígida é falsa — pessoas motivam-se por múltiplos níveis em simultâneo"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Teoria dos dois factores de Herzberg"
+    },
+    {
+      "type": "p",
+      "text": "Frederick Herzberg (1959, 'One More Time: How Do You Motivate Employees?') distinguiu entre factores higiênicos (também chamados extrínsecos) — salário, condições de trabalho, políticas da empresa, supervisão, relações com colegas — e factores motivacionais (intrínsecos) — realização, reconhecimento, o próprio trabalho, responsabilidade, crescimento. A sua descoberta contraintuitiva: a ausência de factores higiênicos causa insatisfação, mas a sua presença não motiva — só evita a insatisfação. Pelo contrário, só os factores motivacionais é que geram satisfação duradoura e engagement. Implicação prática: pagar bem é necessário (higiene), mas não é suficiente para reter talento — é preciso enriquecer o trabalho (job enrichment vertical)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Factores higiênicos: salário, condições, políticas, supervisão, segurança, relações",
+        "Factores motivacionais: realização, reconhecimento, trabalho em si, responsabilidade, crescimento",
+        "Higiênicos ausentes → insatisfação; presentes → ausência de insatisfação (mas não motivam)",
+        "Motivacionais presentes → satisfação; ausentes → ausência de satisfação",
+        "Job enrichment (vertical): acrescentar responsabilidade, autonomia, feedback",
+        "Críticas: a metodologia (entrevistas críticas) é subjectiva e enviesada pela reconstrução narrativa"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Teoria X e Teoria Y de McGregor"
+    },
+    {
+      "type": "p",
+      "text": "Douglas McGregor (1960, 'The Human Side of Enterprise') propôs que as práticas de gestão reflectem sempre uma teoria implícita sobre a natureza humana. A Teoria X vê as pessoas como inerentemente preguiçosas, evitadoras de trabalho, sem ambição, resistentes à mudança — precisam de controlo, coerção e direcção. A Teoria Y vê as pessoas como naturalmente activas, responsáveis, criativas, procurando significado — podem auto-dirigir-se e participar. McGregor argumentava que a Teoria Y é mais realista e gera melhores resultados. Esta distinção é importante porque se reflecte em políticas concretas: controlo rígido (X) vs empowerment, participação e desenvolvimento (Y)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Teoria X: pessoas são preguiçosas, evitam responsabilidade, precisam de controlo",
+        "Teoria Y: pessoas são criativas, procuram responsabilidade, podem auto-dirigir-se",
+        "Estilos de gestão decorrentes: X → autoritário, microgestão; Y → participativo, coaching",
+        "McGregor não disse que X ou Y é sempre verdadeiro — disse que a escolha molda a prática",
+        "Implicação: gestores que vêem pessoas como Teoria Y criam ambientes onde estas se tornam Teoria Y (e vice-versa) — efeito de profecia auto-realizada",
+        "Críticas: simplificação binária; na prática, há tarefas e contextos onde X é apropriado"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Self-Determination Theory de Deci e Ryan"
+    },
+    {
+      "type": "p",
+      "text": "Edward Deci e Richard Ryan (2000) desenvolveram a Self-Determination Theory (SDT), que identifica três necessidades psicológicas inatas e universais cuja satisfação é essencial para a motivação intrínseca, o crescimento psicológico e o bem-estar: (1) Autonomia — sentir-se na origem das próprias acções, não controlado externamente; (2) Competência — sentir-se eficaz, dominar desafios, crescer; (3) Relacionamento (relatedness) — sentir-se ligado, pertencer, ser cuidado e cuidar. Quando estas três necessidades são satisfeitas, as pessoas são intrinsecamente motivadas, persistem mais e têm melhor desempenho. Quando são frustradas, surge alienação, burnout e rotatividade. A SDT é uma das teorias mais robustas e aplicadas actualmente."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Três necessidades inatas: Autonomia, Competência, Relacionamento (relatedness)",
+        "Motivação intrínseca: surge quando as três necessidades são satisfeitas",
+        "Motivação extrínseca: quatro graus de internalização (external, introjected, identified, integrated)",
+        "Aplicação prática: dar escolha (autonomia), feedback de mestria (competência), conectar a equipas (relacionamento)",
+        "Validada cross-cultural e em diferentes domínios (trabalho, educação, desporto, saúde)",
+        "Fundamenta práticas modernas: remote work com flexibilidade, OKRs, coaching, agile, holacracy"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: a SDT é provavelmente a teoria motivacional mais accionável que podes usar. Sempre que desenhas um programa de engagement ou coaching, pergunta: estou a aumentar a autonomia? estou a criar oportunidades de mestria? estou a fortalecer o sentimento de pertença? Se a resposta for sim aos três, vais ver impacto. Se for não a algum, tens um diagnóstico do que está a falhar."
+    },
+    {
+      "type": "h2",
+      "text": "Percepção e atribuição: como interpretamos o comportamento"
+    },
+    {
+      "type": "p",
+      "text": "Percepção é o processo pelo qual organizamos e interpretamos as impressões sensoriais para dar sentido ao ambiente. Como é um processo subjectivo, diferentes pessoas podem olhar para o mesmo comportamento e tirar conclusões opostas. A atribuição (Fritz Heider, 1958; Harold Kelley, 1967) é o processo de atribuir causas ao comportamento observado — 'por que é que o João entregou o relatório atrasado?'. As dimensões clássicas da atribuição são: interna vs externa (disposição vs situação), estável vs instável (permanente vs temporário) e controlável vs incontrolável."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Percepção = processo de organizar e interpretar informação sensorial",
+        "Factores que distorcem a percepção: atenção selectiva, estereótipos, efeito de halo, projecção",
+        "Atribuição interna (disposicional): 'o João é preguiçoso' — atribui à pessoa",
+        "Atribuição externa (situacional): 'o sistema estava em baixo' — atribui ao contexto",
+        "Covariação de Kelley: informação distinta, consistente ao longo do tempo e do contexto permite atribuição precisa",
+        "Erros sistemáticos: correspondence bias e self-serving bias (abaixo)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Vieses fundamentais de atribuição"
+    },
+    {
+      "type": "p",
+      "text": "Dois vieses são especialmente prevalentes e têm impacto na gestão de pessoas. O correspondence bias (também chamado fundamental attribution error) é a tendência a sobrestimar factores disposicionais (internos) e subestimar factores situacionais (externos) ao explicar o comportamento dos outros — 'o cliente gritou connosco porque é mal-educado' em vez de 'o cliente está sob stress porque o produto dele avariou'. O self-serving bias é a tendência a atribuir os nossos próprios sucessos a causas internas ('sou inteligente, trabalhei duro') e os nossos fracassos a causas externas ('a tarefa era impossível, o briefing era confuso'). Estes vieses distorcem avaliações de desempenho, decisões de promoção, análise de conflitos e diagnóstico organizacional."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Correspondence bias (fundamental attribution error): sobrestima disposições, subestima situações ao explicar os outros",
+        "Self-serving bias: atribui os meus sucessos a mim e os meus fracassos ao contexto",
+        "Impacto: avaliações de desempenho injustas, blame cultures, decisões de promoção enviesadas",
+        "Mitigação: empatia ('qual é a pressão que esta pessoa está a sentir?'), perspetiva-taking, dados objectivos",
+        "Outros vieses: actor-observer bias (vejo-me maissituacional, os outros mais disposicionais)",
+        "Implicação: gestores devem ser treinados em atribuição — ver a situação antes de julgar a pessoa"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Atitudes, satisfação e engagement"
+    },
+    {
+      "type": "p",
+      "text": "Atitudes são avaliações estáveis (favoráveis ou desfavoráveis) que as pessoas têm sobre objectos, pessoas, ideias ou situações. As três componentes clássicas (ABC model): afectiva (sentimentos), comportamental (intenções de acção) e cognitiva (crenças). A satisfação no trabalho é uma atitude específica — o sentimento positivo que resulta da avaliação do próprio trabalho. Os determinantes mais fortes:薪酬adequado, trabalho interessante, condições justas, colegas e supervisor com quem se dá bem, e perspectiva de crescimento. O engagement (comprometimento energético) vai além da satisfação: vigor, dedicação e absorção no trabalho. A pesquisa Gallup mostra que apenas ~21% dos colaboradores estão activamente engaged globalmente, e equipas no top quartile de engagement têm 21% mais produtividade e 41% menos rotatividade."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Atitudes = avaliações estáveis favoráveis/desfavoráveis (componentes ABC: afectiva, comportamental, cognitiva)",
+        "Satisfação no trabalho: sentimento positivo em relação ao próprio trabalho",
+        "Engagement: vigor + dedicação + absorção — vai além da satisfação",
+        "Determinantes:薪酬, conteúdo do trabalho, condições, relações, crescimento",
+        "Consequências da satisfação: desempenho, rotatividade, absentismo, cidadania organizacional (OCB)",
+        "Gallup Q12: 12 perguntas que medem engagement — usado em 90% das Fortune 500"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: como gerir pessoas a partir do indivíduo"
+    },
+    {
+      "type": "p",
+      "text": "Os três takeaways principais para a prática da gestão de pessoas: (1) Personality matters — usar o Big Five em recruitment e desenvolvimento; conscientiousness é o preditor #1 de desempenho; (2) Motivação é multifacetada — combinar薪酬adequado (Herzberg higiene + Maslow base) com enriquecimento do trabalho (job enrichment + SDT); (3) Cuidado com os vieses — treinar atribuição cuidadosa para evitar correspondence bias e self-serving bias, especialmente em avaliações de desempenho e resolução de conflitos. Estas são as ferramentas que se aplicam no dia-a-dia: reuniões 1:1, feedback, coaching, reconhecimento, design de funções."
+    }
+  ],
+  "keyPoints": [
+    "Comportamento Organizacional estuda 3 níveis: indivíduo, grupo, organização",
+    "Big Five (OCEAN): Conscientiousness é o melhor preditor de desempenho profissional",
+    "Maslow: hierarquia de necessidades (fisiológicas → segurança → sociais → estima → auto-realização)",
+    "Herzberg: factores higiênicos (extrínsecos) evitam insatisfação; motivacionais (intrínsecos) geram satisfação",
+    "McGregor: Teoria X (controlo) vs Teoria Y (empowerment) — molda práticas de gestão",
+    "Self-Determination Theory: autonomia, competência, relacionamento são necessidades inatas",
+    "Correspondence bias: sobrestima disposições, subestima situações dos outros",
+    "Self-serving bias: atribui os meus sucessos a mim e os meus fracassos ao contexto",
+    "Engagement vai além da satisfação: vigor + dedicação + absorção (Gallup Q12)",
+    "Implicações: usar Big Five em recruitment; SDT em design de funções; treinar atribuição cuidadosa"
+  ],
+  "quizSlug": "coq",
+  "nextLesson": "02-dinamica-grupo-equipas",
+  "prevLesson": null
+}

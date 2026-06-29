@@ -66,7 +66,7 @@ const COURSE_META: Record<string, CourseMeta> = {
   contabilidade: { slug: 'contabilidade', title: 'Contabilidade', icon: '📊', color: '#2563eb' },
   microeconomia: { slug: 'microeconomia', title: 'Microeconomia', icon: '📉', color: '#dc2626' },
   'recursos-humanos': { slug: 'recursos-humanos', title: 'Recursos Humanos', icon: '👥', color: '#7c3aed' },
-  'comportamento-organizacional': { slug: 'comportamento-organizacional', title: 'Comportamento Organizacional', icon: '🧠', color: '#0891b2' },
+  'comportamento-organizacional': { slug: 'comportamento-organizacional', title: 'Comportamento Organizacional', icon: '🧠', color: '#6d28d9' },
   macroeconomia: { slug: 'macroeconomia', title: 'Macroeconomia', icon: '🌍', color: '#0ea5e9' },
   'marketing-estrategico': { slug: 'marketing-estrategico', title: 'Marketing Estratégico', icon: '🎯', color: '#e11d48' },
     'etica-negocios': { slug: 'etica-negocios', title: 'Ética nos Negócios', icon: '⚖️', color: '#16a34a' },
