@@ -157,6 +157,21 @@
                 { slug: 'lideranca-poder-conflitos', title: '4. Liderança, Poder e Gestão de Conflitos', summary: 'Path-Goal de House, empowerment de Kahn/Spreitzer, Thomas-Kilmann (5 modos), BATNA/ZOPA.', quizSlug: 'coq', quizTitle: 'Quiz: Comportamento Organizacional', estMinutes: 10 }
               ]
             },
+        'gestao-inovacao': {
+              slug: 'gestao-inovacao',
+              title: 'Gestão da Inovação e Tecnologia',
+              tagline: 'Business Administration · Inovação, design thinking e ecossistemas',
+              description:
+                'Inovação não é só ideia: é sistema. Aprende gestão de inovação end-to-end — Drucker, Christensen, design thinking, lean startup, funil Stage-Gate, portfolio e ecossistemas.',
+              icon: '💡',
+              color: '#ca8a04',
+              lessons: [
+                { slug: '01-fundamentos-inovacao', title: '1. Fundamentos de Inovação: Drucker, Christensen, Foster, Chesbrough e Stage-Gate', summary: 'Fontes de inovação de Drucker, sustaining vs disruptive de Christensen, S-curve de Foster, open innovation de Chesbrough e funil Stage-Gate de Cooper.', quizSlug: 'giq', quizTitle: 'Quiz: Gestão da Inovação', estMinutes: 9 },
+                { slug: '02-design-thinking-e-criatividade', title: '2. Design Thinking, Criatividade e Lean Startup: Brown, Double Diamond, Ries e MVPs', summary: '5 fases de Brown (Empathize/Define/Ideate/Prototype/Test), Double Diamond do Design Council, prototipagem e Build-Measure-Learn de Ries com MVPs.', quizSlug: 'giq', quizTitle: 'Quiz: Gestão da Inovação', estMinutes: 9 },
+                { slug: '03-gestao-portfolio-inovacao', title: '3. Gestão de Portfolio de Inovação: Exploitation vs Exploration, Gating, Métricas e Real Options', summary: 'Exploitation vs exploration de March, critérios de seleção strategic fit, gating, métricas (R&D intensity, time-to-market, ROI), matriz BCG e real options.', quizSlug: 'giq', quizTitle: 'Quiz: Gestão da Inovação', estMinutes: 9 },
+                { slug: '04-ecossistemas-e-tecnologia', title: '4. Ecossistemas de Inovação, Plataformas e Transformação Digital: Parker, Rogers e Kane', summary: 'Platform thinking de Parker/Van Alstyne, ecossistemas (Silicon Valley, Israel, Shenzhen), IP strategy, digital transformation de Kane/Phillips e curva de adopção de Rogers.', quizSlug: 'giq', quizTitle: 'Quiz: Gestão da Inovação', estMinutes: 9 }
+              ]
+            },
     equivalenza: {
       slug: 'equivalenza',
       title: 'Equivalenza — The Scent of a Second Chance',

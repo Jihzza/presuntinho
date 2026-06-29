@@ -1,0 +1,241 @@
+{
+  "id": "01-fundamentos-inovacao",
+  "title": "1. Fundamentos de Inovação: Drucker, Christensen, Foster, Chesbrough e o Funil Stage-Gate de Cooper",
+  "courseSlug": "gestao-inovacao",
+  "lessonNumber": 1,
+  "description": "Os fundamentos da gestão da inovação: as 7 fontes de inovação de Peter Drucker (surpresas, incongruências, mudanças, obstáculos, demografia, percepção e conhecimento), sustaining vs disruptive de Clayton Christensen, a S-curve de Richard Foster, open innovation de Henry Chesbrough, e o funil Stage-Gate de Robert Cooper.",
+  "audio": "Nesta primeira lição vamos construir a base conceptual da gestão da inovação. Começamos com a definição operativa de inovação — não é só ideia: é implementação que cria valor. Vemos depois as 7 fontes de Drucker, que continuam a ser o melhor ponto de partida para diagnóstico: onde estão as oportunidades de inovação na minha organização? Passamos a Christensen e a distinção sustaining vs disruptive que mudou o pensamento estratégico nos anos 90 — porque razão empresas excelentes falham? A S-curve de Foster explica a dinâmica temporal: toda tecnologia atinge um limite, e quem não muda de S-curve morre. Chesbrough introduz a open innovation, que reconheceu que as melhores ideias já não estão todas dentro da empresa. E terminamos com o funil Stage-Gate de Cooper, o processo mais usado no mundo para gerir inovação. Vamos.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Inovação", "Drucker", "Christensen", "Foster", "Chesbrough", "Stage-Gate", "Cooper", "S-curve", "Disruptive"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é inovação (e o que não é)"
+    },
+    {
+      "type": "p",
+      "text": "Joseph Schumpeter (1942, Capitalism, Socialism and Democracy) cunhou a ideia de 'destruição criadora': a inovação não é incremental nem cosmética — é o processo pelo qual新产品 e métodos substituem os antigos, deslocando empresas, sectores e até países. Peter Drucker (1985, Innovation and Entrepreneurship) definiu inovação de forma operativa: 'a função específica do empreendedor é revolucionar o sistema económico, criando novos produtos, novos métodos de produção, novos mercados e novos arranjos organizacionais'. A definição moderna, do Manual de Oslo (OCDE, 2018): uma inovação é a implementação de um produto, processo, método de marketing ou método organizacional novo ou significativamente melhorado. Três critérios: novidade, implementação e criação de valor."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Inovação ≠ invenção: invenção é a ideia, inovação é a ideia implementada e adoptada que cria valor",
+        "Schumpeter: 'destruição criadora' — novos produtos/métodos substituem os antigos, deslocam empresas e indústrias",
+        "Drucker: 'empreendedor é quem revoluciona o sistema económico' — definição operativa, não psicológica",
+        "Manual de Oslo (OCDE): novidade + implementação + criação de valor = inovação",
+        "Quatro tipos: produto, processo, marketing, organizacional (Manual de Oslo)",
+        "Pode ser radical (disruptiva) ou incremental (sustaining) — veremos Christensen abaixo"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Schumpeter vs Drucker: Schumpeter via o empreendedor como agente quase-heróico do sistema capitalista; Drucker operacionalizou a ideia — qualquer organização, em qualquer sector, pode inovar sistematicamente. A pergunta certa não é 'temos innovators?' mas 'temos um sistema de inovação?'."
+    },
+    {
+      "type": "h2",
+      "text": "As 7 fontes de inovação de Peter Drucker"
+    },
+    {
+      "type": "p",
+      "text": "Peter Drucker (1985) identificou sete fontes de oportunidades de inovação que continuam a ser, 40 anos depois, o melhor framework de diagnóstico. Cinco fontes internas à empresa ou sector (surpresas, incongruências, necessidades de processo, mudanças na indústria/mercado, demografia) e duas externas (percepções, novo conhecimento). Drucker insistia: inovação é trabalho, não inspiração. 'Innovation is a discipline, not a personality trait'. O exercício prático: percorrer as sete fontes anualmente, em cada unidade de negócio, e identificar 2-3 oportunidades concretas por fonte."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "1) Surpresas: sucessos ou fracassos inesperados revelam oportunidades ocultas (IBM 1970s-80s perdeu o PC porque não soube ler a surpresa)",
+        "2) Incongruências: discrepâncias entre o que é e o que deveria ser (realidade vs expectativa, custo vs valor, etc.)",
+        "3) Necessidades de processo: gargalos, quebras, estrangulamentos que pedem reinvenção",
+        "4) Mudanças na indústria/mercado: reestruturações, fusões, novos entrantes que abrem espaço",
+        "5) Demografia: mudanças em idade, escolaridade, composição étnica, estrutura familiar criam novos mercados",
+        "6) Mudanças de percepção: quando o significado emocional de algo muda (café Starbucks, vinho, café como 'terceira vaga')",
+        "7) Novo conhecimento: a fonte mais sexy mas também a mais arriscada (alta incerteza, longos lead-times)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Exercício Drucker: reúna a equipa de liderança, distribua as 7 fontes pelos participantes, e peça 30 minutos para cada um identificar 3 oportunidades concretas no negócio. Depois apresentam à equipa. Em 4 horas, têm um pipeline de 20+ oportunidades. Repetir trimestralmente."
+    },
+    {
+      "type": "h2",
+      "text": "Sustaining vs Disruptive Innovation (Christensen)"
+    },
+    {
+      "type": "p",
+      "text": "Clayton Christensen (1997, The Innovator's Dilemma) identificou o paradoxo que definiu a era moderna da estratégia: empresas excelentes, com boa gestão, boas práticas, e foco no cliente, podem falhar sistematicamente. O motivo? A sustaining innovation (melhoria contínua de produtos para clientes existentes) é o que toda a boa empresa faz — e o que as torna vulneráveis à disruptive innovation. Disruptive é uma inovação que começa por servir um segmento de baixo valor ou novo, com produto inferior em performance, mas com características diferentes (mais simples, mais barato, mais conveniente) que, ao longo do tempo, satisfaz o mainstream e destrói o incumbente. Exemplos canónicos: disco rígido (3,5\"取代 5,25\"), steel minimills取代 integrated mills, Netflix取代 Blockbuster, streaming取代 cable, smartphones取代 câmaras point-and-shoot e GPS standalone."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Sustaining: melhor produto para cliente existente — rentável, solicitado, premiado pelo mercado",
+        "Disruptive: produto inicialmente inferior em features, mas com atributos novos (preço, simplicidade, conveniência)",
+        "Disruptive começa em segmento low-end ou new-market foothold",
+        "Incumbente ignora porque 'não é rentável' e 'não é o que o cliente quer'",
+        "Quando a tecnologia disruptive melhora até satisfazer o mainstream, o incumbente já não tem tempo de responder",
+        "A 'travessia do deserto' é o que permite a Christensen a explicar fracassos de empresas excelentes"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Christensen matizou em 2015 (Workshop at HBS): cerca de 30-40% das 'disruptions' são falsas — a teoria foi mal aplicada. O critério operacional é: (1) existe um segmento low-end mal servido? (2) a tecnologia disruptiva começa com performance inferior? (3) a melhoria ao longo do tempo é mais rápida que as necessidades do mainstream? Se sim, é disruptiva. Caso contrário, é só sustaining ou marketing."
+    },
+    {
+      "type": "h2",
+      "text": "A S-Curve de Richard Foster"
+    },
+    {
+      "type": "p",
+      "text": "Richard Foster (1986, Innovation: The Attacker's Advantage) propôs que toda tecnologia segue uma S-curve: fase inicial lenta (investimento em learning, sem retorno), fase de crescimento explosivo (a tecnologia amadurece, escala, domina), e fase de maturidade/saturação (os ganhos marginais caem, a tecnologia aproxima-se de limites físicos ou económicos). A implicação estratégica: em vez de apostar em defender a tecnologia actual quando ela entra na fase de maturidade, a empresa deve atacar a próxima S-curve — mesmo que isso signifique canibalizar o negócio actual. Empresas que não fazem isto morrem: Kodak (digital), Nokia (smartphone), Xerox (computing), Polaroid (digital photography), Blockbuster (streaming), Sears (e-commerce)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "S-curve: investimento → crescimento → maturidade → saturação",
+        "Performance é função do esforço cumulativo, não do esforço marginal",
+        "Na fase de maturidade, dobrar o R&D dobra pouco a performance — diminishing returns",
+        "Defender a S-curve actual com mais investimento é o caminho para a irrelevância",
+        "Atacar a próxima S-curve com S-curve nascente, mesmo que inicialmente menos rentável",
+        "A pergunta certa: 'qual é a próxima curva antes de esta amadurecer?'"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Limites físicos e as ondas de Kondratiev"
+    },
+    {
+      "type": "p",
+      "text": "A S-curve tem limites físicos. Um transistor não pode ser menor que um átomo. Uma bateria não pode ter mais densidade energética que a termodinâmica permite. Quando uma S-curve se aproxima do limite, a inovação fundamental acontece em outra curva — e quem está posicionado na curva errada perde tudo. Nicholas Kondratiev (1925) descreveu ciclos de ondas longas de 40-60 anos, cada uma dominada por uma tecnologia-infrastructure: vapor (1780s), ferrovia (1830s), electricidade (1870s), motor de combustão (1900s), semiconductor/IT (1970s), internet (1990s), AI/ML (2010s-2020s). Cada onda cria vencedores e destrói incumbentes."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Kondratiev: ondas de 40-60 anos dominadas por uma tecnologia-infrastructure",
+        "Onda 1 (1780s): vapor e têxtil — UK domina",
+        "Onda 2 (1830s): ferrovia e aço — UK, depois Alemanha/EUA",
+        "Onda 3 (1870s): electricidade e química — Alemanha e EUA",
+        "Onda 4 (1900s): motor de combustão, petróleo, automóvel — EUA domina",
+        "Onda 5 (1970s): semiconductor, computador, telecom — EUA, Japão, Coreia",
+        "Onda 6 (1990s): internet, software, biotech — EUA",
+        "Onda 7 (2010s+): AI, ML, dados, energia renovável, biotech avançada"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Tipos de inovação: incremental, adjacent, transformational, breakthrough"
+    },
+    {
+      "type": "p",
+      "text": "Vários frameworks classificam a inovação por grau de mudança. O framework mais útil para o gestor (Nagji & Tuff, 'Managing Your Innovation Portfolio', HBR 2012) tem 3 níveis: Core innovation (incremental, melhorar produtos existentes — 70% do esforço), Adjacent innovation (estender capacidades a novos mercados ou produtos — 20%), Transformational innovation (criar novos negócios — 10%). A regra 70-20-10 é famosa: é o mix óptimo para um portfolio saudável. Mas atenção: 'innovation breakthrough' é por vezes usado para descrever transformacional (Tushman & O'Reilly, 1997: 'ambidextrous organizations' precisam de explorar E explotar em paralelo)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Core (incremental): melhorar produto/serviço existente, servir cliente existente — sustenta o P&L",
+        "Adjacent: estender capacidade a novo mercado OU novo produto com capacidade existente",
+        "Transformational: novo negócio, novo modelo, capacidade nova, mercado novo",
+        "Regra 70-20-10 (Nagji-Tuff): 70% core, 20% adjacent, 10% transformational",
+        "Breakthrough = descoberta científica ou tecnológica radical (HBR 1997, Leifer et al.)",
+        "Cada tipo exige governance, métricas, ciclo de decisão, cultura diferentes"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Open Innovation de Henry Chesbough"
+    },
+    {
+      "type": "p",
+      "text": "Henry Chesbrough (2003, Open Innovation) propôs uma mudança de paradigma: na era industrial, a inovação era fechada — R&D interno, propriedade intelectual fechada, secretismo. Na era do conhecimento, com pessoas móveis, mercados globais, venture capital e internet, a inovação é distribuída. As melhores ideias estão fora da empresa, em universidades, startups, fornecedores, clientes, concorrentes. A empresa inteligente combina fluxos internos e externos de ideias — inside-out (vender/licenciar IP não usado) e outside-in (comprar, licenciar, absorver, integrar). Chesbrough distingue 'open innovation' de 'open source' — open innovation é estratégia comercial, open source é modelo de licenciamento de software. Exemplos: Procter & Gamble (Connect+Develop: 50% das ideias de fora), IBM (vendeu PC business, comprou conhecimento), Tesla (patentes abertas para acelerar mercado de EV), Quirky (co-criação com comunidade)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Paradigma: da 'innovation is closed' para 'innovation is open'",
+        "Inside-out: vender, licenciar, spin-off IP que a empresa não vai explorar",
+        "Outside-in: comprar, licenciar, absorver, integrar ideias e tecnologias externas",
+        "Coupled: coinventar com parceiros, joint ventures, alianças",
+        "P&G Connect+Develop: 50% das ideias vêm de fora — caso clássico",
+        "Tesla abriu patentes para acelerar adopção de EV (muscle over market)",
+        "Críticas: 'open' não é 'grátis' — integração custa, IP leakage é real"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Implicação prática: a empresa moderna não é um 'castelo fechado de innovators' mas um 'hub' que absorve, integra e devolve inovação. As perguntas de diagnóstico: que percentagem das nossas ideias vem de fora? Temos um processo de absorptive capacity (Cohen-Levinthal, 1990)? Como gerimos IP como activo estratégico?"
+    },
+    {
+      "type": "h2",
+      "text": "O Funil Stage-Gate de Robert Cooper"
+    },
+    {
+      "type": "p",
+      "text": "Robert Cooper (1986, Winning at New Products) criou o processo mais usado no mundo para gerir inovação: o Stage-Gate (estágio-portão). O modelo organiza a inovação como um funil com estágios (onde o trabalho acontece — discovery, scoping, business case, development, testing, launch) e portões (onde se decide go/kill — Go/No-Go decisions). Cada portão é uma decisão baseada em critérios (strategic fit, market attractiveness, technical feasibility, financial return, risk). A regra: cada portão mata 30-50% dos projectos que entram — só passam os com maior probabilidade de sucesso. O funil resolve dois problemas clássicos: (1) muito investimento em projectos que não vão ter mercado, (2) projectos bons mortos por decisão tardia. A segunda geração (Stage-Gate II, 2009) admite 'fuzzy gates' no início (ideação aberta) e gates mais formais no final."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Stage-Gate: 5 estágios (Discovery, Scoping, Business Case, Development, Launch) + 5 portões Go/No-Go",
+        "Cada portão tem critérios (strategic fit, market attractiveness, technical feasibility, financial return)",
+        "Regra: 30-50% de kill em cada portão — disciplina do funil",
+        "Resolve o problema de 'too much invested to kill' (sunk cost fallacy)",
+        "Stage-Gate II (2009): fuzzy gates no início (ideação aberta), gates formais no final",
+        "Usado por 75%+ das empresas Fortune 500 em novos produtos (Cooper, 2017)"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Fases do Stage-Gate clássico"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Stage 0 (Discovery): ideação, identificação de oportunidades — fuzzy front-end, baixo custo",
+        "Gate 1 (Idea Screen): decisão de avançar para Scoping — critérios de strategic fit",
+        "Stage 1 (Scoping): análise preliminar, definição de produto, mercado, timing",
+        "Gate 2 (Second Screen): decisão de avançar para Business Case — viabilidade técnica e de mercado",
+        "Stage 2 (Business Case): business case detalhado, projeções financeiras, plano de lançamento",
+        "Gate 3 (Go to Development): decisão de investir — critérios financeiros e estratégicos",
+        "Stage 3 (Development): desenvolvimento do produto, testes internos",
+        "Gate 4 (Go to Testing): decisão de avançar para test de mercado — readiness check",
+        "Stage 4 (Testing): test-market, beta, trials com clientes reais",
+        "Gate 5 (Go to Launch): decisão de lançamento nacional/internacional",
+        "Stage 5 (Launch): commercialisation, scale-up, post-launch review"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: como ler o sistema de inovação"
+    },
+    {
+      "type": "p",
+      "text": "Os cinco frameworks que vimos (Drucker, Christensen, Foster, Chesbrough, Cooper) não competem entre si — complementam-se. Drucker diz onde procurar (7 fontes). Christensen diz o que temer (disruptive). Foster diz quando mudar (S-curve). Chesbrough diz como abrir (open). Cooper diz como decidir (Stage-Gate). Uma organização que domine os cinco tem um sistema de inovação — não apenas um departamento de I&D. A pergunta diagnóstica: 'qual é o nosso sistema de inovação? cobre as 7 fontes? está atento ao disruptivo? reconhece a S-curve? integra fluxos externos? tem gates disciplinados?'."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Drucker: 7 fontes de oportunidade — onde procurar",
+        "Christensen: sustaining vs disruptive — o que temer",
+        "Foster: S-curve — quando atacar a próxima curva",
+        "Chesbrough: open innovation — como integrar fluxos externos",
+        "Cooper: Stage-Gate — como decidir go/kill com disciplina",
+        "Juntos: sistema de inovação, não apenas departamento de R&D",
+        "Próxima lição: como gerar as ideias (design thinking) e testá-las (lean startup)"
+      ]
+    }
+  ],
+  "keyPoints": [
+    "Inovação é implementação que cria valor, não só invenção (Schumpeter, Drucker, Manual de Oslo)",
+    "Drucker identificou 7 fontes de oportunidade: surpresas, incongruências, processo, indústria, demografia, percepção, conhecimento",
+    "Christensen: sustaining innovation melhora produtos para clientes existentes; disruptive começa em segmento low-end e desloca incumbentes",
+    "Foster S-curve: toda tecnologia segue investimento → crescimento → maturidade; a inovação fundamental acontece na próxima curva",
+    "Tipos de inovação: core/adjacent/transformational (70-20-10 de Nagji-Tuff) ou sustaining/disruptive de Christensen",
+    "Chesbrough open innovation: combinar inside-out e outside-in; P&G Connect+Develop, Tesla patentes abertas",
+    "Stage-Gate de Cooper: 5 estágios + 5 portões Go/No-Go; 30-50% kill em cada portão",
+    "Os frameworks não competem: Drucker (onde), Christensen (o que), Foster (quando), Chesbrough (como abrir), Cooper (como decidir)"
+  ],
+  "quizSlug": "giq",
+  "nextLesson": "02-design-thinking-e-criatividade",
+  "prevLesson": null
+}

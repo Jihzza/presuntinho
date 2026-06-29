@@ -1,0 +1,280 @@
+{
+  "id": "02-design-thinking-e-criatividade",
+  "title": "2. Design Thinking, Criatividade e Lean Startup: Brown, Double Diamond, Ries e MVPs",
+  "courseSlug": "gestao-inovacao",
+  "lessonNumber": 2,
+  "description": "Como gerar e testar ideias de inovação de forma disciplinada: as 5 fases de design thinking de Tim Brown (Empathize/Define/Ideate/Prototype/Test), o Double Diamond do Design Council (divergir-convergir), prototipagem rápida, e o método lean startup de Eric Ries (Build-Measure-Learn com MVPs).",
+  "audio": "Na primeira lição vimos o que é inovação, como Drucker a procura, como Christensen explica o disruptivo, como Foster a vê nas S-curves, e como Cooper a gere com Stage-Gate. Agora vamos descer ao nível operacional: como geramos as ideias? Como testamos se valem alguma coisa? Como evitamos construir produtos que ninguém quer? Entramos no design thinking de Tim Brown (IDEO), no Double Diamond do Design Council britânico, e no lean startup de Eric Ries. A ideia central: inovação não é só ter boas ideias — é ter um processo disciplinado para testá-las barato e rápido, antes de investir muito. Vamos.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Design Thinking", "Brown", "IDEO", "Double Diamond", "Lean Startup", "Ries", "MVP", "Prototyping"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é Design Thinking"
+    },
+    {
+      "type": "p",
+      "text": "Tim Brown, CEO da IDEO e presidente da School of Design de Stanford, definiu design thinking (2008, HBR 'Design Thinking'; 2009, Change by Design) como 'a disciplina que usa a sensibilidade e o método do designer para resolver problemas e criar soluções que sirvam as pessoas'. Três pilares: empatia profunda com o utilizador, pensamento abdutivo (e não apenas dedutivo ou indutivo), e prototipagem iterativa. O design thinking não substitui o pensamento analítico nem o pensamento criativo — soma uma terceira via, centrada no ser humano e orientada para a acção. David Kelley (fundador da IDEO e da d.school de Stanford) insiste: 'design thinking is a confidence-building discipline' — a repetição dos ciclos dá às equipas a confiança para abordar problemas que parecem impossíveis."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Design thinking = sensibilidade + método do designer aplicados a problemas humanos",
+        "Três pilares: empatia, pensamento abdutivo, prototipagem iterativa",
+        "Tim Brown (IDEO, Stanford d.school) — pai do conceito moderno",
+        "David Kelley: 'é uma disciplina que constrói confiança'",
+        "Não substitui pensamento analítico/criativo — soma uma terceira via centrada no humano",
+        "Aplicações: produtos, serviços, processos, experiência do cliente, estratégia, modelo de negócio"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "As 5 fases de design thinking de Tim Brown"
+    },
+    {
+      "type": "p",
+      "text": "O processo clássico da d.school de Stanford (descrito por Brown em Change by Design, 2009) tem 5 fases não-lineares: Empathize (empatizar — observar, entrevistar, sentir o que o utilizador sente), Define (definir — sintetizar a aprendizagem num 'point of view' ou problema bem formulado), Ideate (idealizar — gerar muitas ideias sem julgamento), Prototype (prototipar — construir versões baratas e rápidas), Test (testar — recolher feedback, iterar). As fases não são lineares — frequentemente saltamos de Test para Define ou de Prototype para Empathize quando aprendemos algo novo. A chave é a iteração rápida e o bias para acção: 5 protótipos maus valem mais que 1 plano perfeito."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "1) Empathize: observar, entrevistar, experimentar, sentir — imergir no mundo do utilizador",
+        "2) Define: sintetizar observações em point-of-view (POV) — 'o utilizador precisa de ___ porque ___'",
+        "3) Ideate: brainstorming, brainwriting, SCAMPER, métodos de criatividade — quantidade antes de qualidade",
+        "4) Prototype: construir versões tangíveis, de baixa fidelidade, rapidamente (papel, Lego, role-play)",
+        "5) Test: testar com utilizadores reais, recolher feedback, iterar",
+        "Processo não-linear: frequente voltar a Empathize após Test para refinar o problema"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Ferramentas da fase Empathize"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Entrevistas em profundidade: 1-1, 60-90 min, ouvir mais do que falar, seguir o método socrático",
+        "Observação directa: shadowing, contextual inquiry — ver o utilizador no ambiente natural",
+        "Empathy map: o que diz/pensa/faz/sente — 4 quadrantes para sintetizar",
+        "Extreme users: estudar utilizadores extremos revela mais do que estudar o mainstream",
+        "Body storming / role-play: o designer experimenta o problema no próprio corpo",
+        "Diary studies: o utilizador documenta a sua experiência durante 1-2 semanas",
+        "Ferramentas: Ethnio, UserTesting, dscout, Lookback"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Ferramentas da fase Define"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Point of View (POV): '[Utilizador] precisa de [necessidade] porque [insight surpreendente]'",
+        "How-Might-We (HMW): reformular o POV como pergunta — 'Como podemos ___?'",
+        "Persona: arquétipo do utilizador-alvo com nome, foto, demografia, comportamentos, objectivos",
+        "Customer journey map: as etapas que o utilizador percorre, com pontos de dor e momentos de verdade",
+        "Affinity diagram: agrupar observações em clusters temáticos",
+        "5 Whys: perguntar 'porquê?' 5 vezes para chegar à causa-raiz",
+        "Problema bem definido = metade da solução (Heuristic: 'a well-defined problem is a half-solved problem')"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Dica operacional: invista 40% do tempo em Empathize, 20% em Define, 20% em Ideate, 20% em Prototype+Test. A tentação do gestor é saltar para Ideate sem Empathize — resultado: soluções tecnicamente brilhantes que ninguém quer."
+    },
+    {
+      "type": "h2",
+      "text": "O Double Diamond do Design Council"
+    },
+    {
+      "type": "p",
+      "text": "O Design Council britânico (2005, 'The Double Diamond') propôs um modelo mais macro de processo de design e inovação. Tem 4 fases em 2 diamantes: Discover (descobrir — divergir, gerar entendimento amplo), Define (definir — convergir, sintetizar o problema correcto), Develop (desenvolver — divergir, gerar soluções), Deliver (entregar — convergir, escolher e implementar). A contribuição conceptual: distinguir divergir de convergir, e reconhecer que há divergência tanto na fase de compreensão do problema como na fase de geração de soluções. O processo tem portanto dois momentos 'spread' (divergir) e dois momentos 'narrow' (convergir). É usado em todas as grandes consultorias de design e em governos (UK Policy Lab, Singapore Centre for Strategic Futures)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Diamond 1: Discover (divergir) → Define (convergir) — compreender o problema",
+        "Diamond 2: Develop (divergir) → Deliver (convergir) — resolver o problema",
+        "Fase 1 Discover: investigação, pesquisa, entrevistas, observação",
+        "Fase 2 Define: sintetizar, priorizar, formular o brief de design",
+        "Fase 3 Develop: ideação, prototipagem, iteração, testes com utilizadores",
+        "Fase 4 Deliver: finalização, implementação, medição de impacto",
+        "Inspirou frameworks como Service Safari, Design Sprint, e o Double Loop Learning de Argyris"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Pensamento divergente e convergente"
+    },
+    {
+      "type": "p",
+      "text": "A regra de ouro do design thinking é alternar divergir e convergir. Pensamento divergente (Guilford, 1967; de Bono, 1970): gerar muitas opções, sem julgamento, explorar territórios novos. Pensamento convergente: avaliar, priorizar, escolher. A tentação em organizações tradicionais é convergir demasiado cedo (avaliação mata exploração) ou divergir em demasia (paralisia de análise). O designer alterna deliberadamente: abre (gera 50 ideias), fecha (escolhe 3), abre (explora 5 protótipos), fecha (escolhe 1). Esta disciplina é tão importante quanto as técnicas — equipas sem treino saltam de brainstorming para execução, matando as melhores ideias no berço."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Divergir: gerar volume, aceitar o absurdo, sem julgamento, explorar long tail",
+        "Convergir: avaliar, priorizar, decidir com critérios explícitos",
+        "Erro comum: convergir cedo (killing ideas in crib) ou divergir sem foco (paralisia)",
+        "Disciplina: alternar deliberadamente, com time-boxes",
+        "Regras de brainstorming de Osborn: defer judgment, encourage wild ideas, build on others, stay on topic, quantity over quality",
+        "Métodos: SCAMPER, brainwriting 6-3-5, lotus blossom, random input, analogy from nature"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Prototipagem: pensar com as mãos"
+    },
+    {
+      "type": "p",
+      "text": "Prototipagem é o coração do design thinking. Protótipo é qualquer artefacto que torne uma ideia tangível para testá-la: sketch no papel, mockup em cartão, role-play, wireframe digital, vídeo conceptual, MVP (Minimum Viable Product). A regra é: tão rápido e barato quanto possível, tão detalhado quanto necessário para o teste. A prototipagem serve três fins: (1) comunica a ideia melhor que palavras, (2) força a tomar decisões (a vague idea stays vague, a prototype reveals hidden complexity), (3) cria objecto de discussão com utilizadores. IDEO e a d.school defendem 'fail often, fail cheap' — protótipos maus são investimentos baratos que poupam investimentos caros em produtos maus."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Protótipo = qualquer artefacto que torne a ideia tangível para testá-la",
+        "Fidelidade: baixa (sketch), média (wireframe), alta (HTML/funcional), variável por fase",
+        "3 fins: comunicação, forçar decisões, criar objecto de discussão",
+        "IDEO: 'fail often, fail cheap' — protótipos maus poupam investimentos maus",
+        "Tipos: paper prototype, role-play, video concept, clickable mockup, functional MVP",
+        "Costuma ser o que separa equipas de design thinking de equipas de brainstorm tradicional"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Lean Startup de Eric Ries"
+    },
+    {
+      "type": "p",
+      "text": "Eric Ries (2011, The Lean Startup) propôs um método para startups e inovação corporativa inspirado em lean manufacturing, customer development (Steve Blank) e design thinking. Três pilares: (1) Build-Measure-Learn loop, (2) MVP (Minimum Viable Product), (3) Validated Learning + Pivot/Persevere. O objectivo é encurtar o ciclo de aprendizagem — em vez de gastar 12-18 meses a construir um produto para descobrir que ninguém quer, gasta-se 2-4 semanas a construir o MVP mais barato possível, mede-se a resposta real, aprende-se, e itera-se. O método é hoje standard em inovação corporativa: GE FastWorks, Telefónica Alpha, LEGO, Volkswagen,多家 Fortune 500."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Build-Measure-Learn loop: ciclo de aprendizagem rápido e empírico",
+        "MVP (Minimum Viable Product): a versão mais barata que permite testar uma hipótese",
+        "Validated Learning: aprendizagem validada com dados reais, não opiniões",
+        "Pivot: mudança de estratégia baseada em learning (problema, solução, segmento, etc.)",
+        "Persevere: continuar quando a evidência valida a hipótese",
+        "Innovation accounting: métricas que medem progresso real, não vanity metrics"
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "O Build-Measure-Learn loop"
+    },
+    {
+      "type": "p",
+      "text": "O loop Build-Measure-Learn é o coração do lean startup. Build: construir o MVP mais simples que testa a hipótese de valor. Measure: medir o comportamento real dos utilizadores (não o que dizem, o que fazem). Learn: decidir se a hipótese está validada (persevere) ou invalidada (pivot). A velocidade do loop é o que importa — Ries insiste: 'the only way to win is to learn faster than the competition'. Em prática: cada sprint (1-4 semanas) testa uma hipótese; se a hipótese for validada, escala-se; se invalidada, pívota-se e testa-se outra hipótese. O risco é confundir vaidade com aprendizagem — métricas como 'utilizadores registados' ou 'páginas vistas' não dizem nada sobre valor real criado."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Build: MVP = versão mais simples que testa a hipótese central de valor",
+        "Measure: comportamento real, não opiniões (analytics, cohort analysis, A/B testing)",
+        "Learn: validar ou invalidar a hipótese, decidir pivot ou persevere",
+        "Velocidade do loop é a vantagem competitiva — 'learn faster than the competition'",
+        "Sprint 1-4 semanas por hipótese",
+        "Innovation accounting: actionable metrics vs vanity metrics",
+        "Cohort analysis, funnel analysis, retention curves são as ferramentas padrão"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "MVP — Minimum Viable Product"
+    },
+    {
+      "type": "p",
+      "text": "O MVP é a versão mais simples do produto que permite validar a hipótese central de valor. Não é um produto mínimo decente — é um produto desenhado para testar uma aprendizagem. Exemplos canónicos: Dropbox (vídeo conceptual antes de construir o software), Zappos (fotos de sapatos em lojas de terceiros antes de ter armazém), Airbnb (anúncios no próprio apartamento antes de plataforma), Buffer (landing page antes de produto). O espectro vai de smoke test (landing page + ads) a concierge (serviço manual, sem automação) a piecemeal (usar APIs de terceiros) a high-fidelity (protótipo funcional limitado). Frank Robinson (synthesised em Ries) definiu 8 tipos de MVP, do Concierge ao Wizard of Oz."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "MVP = versão mais simples que testa a hipótese central de valor",
+        "Dropbox: vídeo conceptual — 'este é o produto, alguém pagaria?' (resposta: sim, 70k sign-ups overnight)",
+        "Zappos: fotos de sapatos em loja de terceiros — testa 'as pessoas comprariam sapatos online?'",
+        "Airbnb: anúncios do próprio apartamento em plataforma genérica — testa 'pessoas alugam a estranhos?'",
+        "Buffer: landing page antes de produto — testa 'pessoas pagariam por um scheduler de Twitter?'",
+        "Tipos: smoke test, concierge, piecemeal, wizard of oz, single-feature, high-fidelity, etc.",
+        "MVP não é 'produto mínimo decente' — é 'teste de hipótese mínimo'"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Erro clássico: confundir MVP com 'produto mínimo aceitável'. MVP deve ter baixa qualidade por design — é um teste, não um produto acabado. Se o utilizador gostar do MVP, é sinal de que vale a pena investir. Se não gostar, aprende-se barato. Construir um MVP de alta qualidade é desperdiçar budget em hipótese não validada."
+    },
+    {
+      "type": "h2",
+      "text": "Customer Development de Steve Blank"
+    },
+    {
+      "type": "p",
+      "text": "Steve Blank (2005, Four Steps to the Epiphany; 2013, The Startup Owner's Manual) criou o método Customer Development que é a base do lean startup. A ideia: startups (e novos negócios em empresas) não são versões pequenas de grandes empresas — têm um problema diferente: procuram product-market fit. O método tem 4 fases paralelas ao Customer Discovery, Customer Validation, Customer Creation e Company Building. Em cada fase, a empresa está fora do prédio a falar com clientes. O paralelo com Stage-Gate: a fase 0 (Discovery) do Stage-Gate é exactamente o que Blank chama Customer Discovery. A diferença: Blank é mais prescritivo sobre COMO falar com clientes (entrevistas de problema, não pitch de solução)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "4 fases: Customer Discovery, Validation, Creation, Company Building",
+        "Customer Discovery: identificar e validar o problema, segmentar clientes, formar hipóteses",
+        "Customer Validation: testar se a solução resolve o problema — MVP + earlyvangelists",
+        "Customer Creation: construir a demanda, scaling sales and marketing",
+        "Company Building: transição de startup para empresa (departamentos, processos, métricas)",
+        "Paralelo com Stage-Gate: Discovery ↔ Customer Discovery, Scoping ↔ Validation",
+        "Diferença: foco em 'sair do prédio' (get out of the building) para validar com clientes reais"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Pivot e Persevere"
+    },
+    {
+      "type": "p",
+      "text": "Pivot é uma mudança estruturada de estratégia baseada em learning validado. Ries identificou 10 tipos: zoom-in pivot, zoom-out pivot, customer segment pivot, customer need pivot, platform pivot, business architecture pivot, value capture pivot, growth pivot, channel pivot, technology pivot. Persevere é a decisão de continuar quando a hipótese está validada. A regra de ouro: cada pivot deve ser feito com base em dados (não opinião), em iteração rápida (não esperar), e com alinhamento da equipa (todos sabem o que está a ser testado). A triste realidade: 70-80% das startups pivota ao menos uma vez. Em empresas established, pivots são frequentemente mais difíceis pela cultura e pelo poder das unidades de negócio actuais."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Pivot: mudança estruturada de estratégia baseada em learning validado",
+        "10 tipos: zoom-in, zoom-out, customer segment, customer need, platform, business architecture, value capture, growth, channel, technology",
+        "Persevere: continuar quando a hipótese está validada",
+        "Regra: cada pivot é baseado em dados, em iteração rápida, com alinhamento da equipa",
+        "70-80% das startups pivota ao menos uma vez",
+        "Em empresas, pivots são mais difíceis pela cultura e pelo poder dos negócios estabelecidos"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Síntese: o sistema integrado de descoberta de inovação"
+    },
+    {
+      "type": "p",
+      "text": "Design thinking, Double Diamond e Lean Startup não são competidores — são layers complementares. Design thinking fornece o toolkit de descoberta (Empathize/Define/Ideate/Prototype/Test). Double Diamond fornece a macro-arquitectura (divergir-convergir, duas vezes). Lean Startup fornece o método empírico de teste (Build-Measure-Learn com MVPs e pivots). O sistema integrado para inovação: (1) Empathize/Define com design thinking para encontrar o problema real; (2) Ideate para gerar soluções; (3) Prototype+Test com MVPs lean startup para validar hipóteses; (4) Cooper Stage-Gate para escalar as que passam os testes; (5) S-curve de Foster para saber quando pivotar a estratégia global. As melhores organizações de inovação integram tudo isto num pipeline disciplinado."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Design thinking: toolkit de descoberta (Empathize/Define/Ideate/Prototype/Test)",
+        "Double Diamond: macro-arquitectura (divergir-convergir duas vezes)",
+        "Lean Startup: método empírico de teste (Build-Measure-Learn, MVP, pivot)",
+        "Pipeline integrado: Discover (d.thinking) → Validate (lean) → Scale (Stage-Gate) → Renew (S-curve)",
+        "Próxima lição: gestão de portfolio de inovação — como decidir o que avançar, parar, matar, escalar"
+      ]
+    }
+  ],
+  "keyPoints": [
+    "Design thinking (Tim Brown, IDEO): empatia + abdutivo + prototipagem iterativa; 5 fases (Empathize/Define/Ideate/Prototype/Test)",
+    "Double Diamond (Design Council): Discover (divergir) → Define (convergir) → Develop (divergir) → Deliver (convergir)",
+    "Pensamento divergente gera volume sem julgamento; convergente avalia e prioriza; alternar é a disciplina",
+    "Prototipagem torna ideias tangíveis, força decisões, cria objecto de discussão; 'fail often, fail cheap'",
+    "Lean Startup (Ries): Build-Measure-Learn loop, MVP, Validated Learning, Pivot/Persevere, Innovation Accounting",
+    "MVP = versão mais simples que testa a hipótese central (Dropbox vídeo, Zappos fotos, Buffer landing page)",
+    "Customer Development (Blank): 4 fases paralelas (Discovery, Validation, Creation, Building) com 'get out of the building'",
+    "Pivot é mudança estruturada baseada em learning; 10 tipos; 70-80% das startups pivota ao menos uma vez",
+    "Integração: d.thinking (descoberta) + Double Diamond (macro) + Lean Startup (teste) + Stage-Gate (escala) = sistema completo"
+  ],
+  "quizSlug": "giq",
+  "nextLesson": "03-gestao-portfolio-inovacao",
+  "prevLesson": "01-fundamentos-inovacao"
+}

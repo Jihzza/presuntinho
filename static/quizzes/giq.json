@@ -1,0 +1,118 @@
+{
+  "id": "giq",
+  "title": "Quiz: Gestão da Inovação",
+  "description": "Testa os teus conhecimentos sobre gestão da inovação: Drucker (7 fontes), Christensen (sustaining vs disruptive), Foster (S-curve), Chesbrough (open innovation), Cooper (Stage-Gate), design thinking de Brown (5 fases), Double Diamond, lean startup de Ries (Build-Measure-Learn, MVP), gestão de portfolio (exploitation vs exploration de March, gating, BCG matrix, real options), plataformas de Parker/Van Alstyne (network effects), ecossistemas de inovação (SV, Israel, Shenzhen), IP strategy (patentes, trade secrets, open source), digital transformation de Kane, e curva de adopção de Rogers (innovators, early adopters, early majority, late majority, laggards). 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "courseSlug": "gestao-inovacao",
+  "questions": [
+    {
+      "q": "Qual das seguintes NÃO é uma das 7 fontes de inovação de Peter Drucker?",
+      "opts": [
+        "Surpresas e incongruências",
+        "Mudanças demográficas",
+        "Análise de margens e EBITDA",
+        "Novo conhecimento"
+      ],
+      "a": 2,
+      "explanation": "As 7 fontes de Drucker (Innovation and Entrepreneurship, 1985) são: 1) Surpresas, 2) Incongruências, 3) Necessidades de processo, 4) Mudanças na indústria/mercado, 5) Demografia, 6) Mudanças de percepção, 7) Novo conhecimento. Análise de margens e EBITDA é uma ferramenta financeira, não uma fonte de inovação. A distinção é importante: Drucker insistia que inovação é diagnóstico de oportunidades, não exercício de powerpoint."
+    },
+    {
+      "q": "Na distinção de Clayton Christensen entre sustaining e disruptive innovation:",
+      "opts": [
+        "Sustaining melhora produtos para clientes existentes; disruptive começa em segmento low-end ou new-market e desloca incumbentes",
+        "Sustaining é sempre pior que disruptive",
+        "Disruptive é sempre melhor que sustaining",
+        "Não há diferença real — é a mesma coisa"
+      ],
+      "a": 0,
+      "explanation": "Sustaining innovation (melhoria contínua para clientes existentes) é o que toda a boa empresa faz — e o que a torna vulnerável. Disruptive innovation começa em segmento de baixo valor ou new-market, com produto inferior em features mas com atributos novos (preço, simplicidade, conveniência). Ao longo do tempo, a tecnologia disruptiva melhora até satisfazer o mainstream e desloca o incumbente. Exemplos: disco rígido 3,5\"取代 5,25\", Netflix取代 Blockbuster, streaming取代 cable."
+    },
+    {
+      "q": "A S-curve de Richard Foster mostra que toda tecnologia passa por fases. Qual a implicação estratégica principal?",
+      "opts": [
+        "Defender a tecnologia actual com mais investimento é a melhor estratégia",
+        "Em vez de defender a curva actual na fase de maturidade, a empresa deve atacar a próxima S-curve, mesmo que isso signifique canibalizar o negócio",
+        "A S-curve não tem implicações — é um conceito puramente teórico",
+        "Só importa a primeira curva; as seguintes são irrelevantes"
+      ],
+      "a": 1,
+      "explanation": "A S-curve (Foster, 1986) tem 3 fases: investimento (lenta), crescimento (explosiva) e maturidade/saturação (diminishing returns). A implicação: em vez de apostar em defender a curva actual quando ela entra na maturidade, a empresa deve atacar a próxima S-curve, mesmo que isso signifique canibalizar o próprio negócio. Empresas que não fazem isto morrem: Kodak (digital), Nokia (smartphone), Blockbuster (streaming), Polaroid (digital). A pergunta certa é 'qual é a próxima curva antes desta amadurecer?'."
+    },
+    {
+      "q": "No funil Stage-Gate de Robert Cooper, qual é a regra típica de kill em cada portão?",
+      "opts": [
+        "Matar 0% — todos passam",
+        "Matar 30-50% dos projectos em cada portão, mantendo apenas os com maior probabilidade de sucesso",
+        "Matar 100% — só passa 1 por portão",
+        "Matar aleatoriamente 10% por portão"
+      ],
+      "a": 1,
+      "explanation": "A regra típica do Stage-Gate (Cooper, 1986) é matar 30-50% dos projectos em cada portão. Esta disciplina resolve dois problemas: (1) muito investimento em projectos que não vão ter mercado, (2) projectos bons mortos por decisão tardia (sunk cost fallacy). O funil tem 5 estágios (Discovery, Scoping, Business Case, Development, Testing, Launch) e 5 portões Go/No-Go com critérios (strategic fit, market attractiveness, technical feasibility, financial return). Stage-Gate é usado por 75%+ das Fortune 500 em novos produtos."
+    },
+    {
+      "q": "No design thinking de Tim Brown, qual a sequência das 5 fases clássicas?",
+      "opts": [
+        "Ideate → Test → Empathize → Define → Prototype",
+        "Empathize → Define → Ideate → Prototype → Test",
+        "Test → Prototype → Ideate → Define → Empathize",
+        "Define → Empathize → Test → Prototype → Ideate"
+      ],
+      "a": 1,
+      "explanation": "As 5 fases clássicas do design thinking (Brown, 2009, Change by Design; d.school Stanford) são: 1) Empathize (observar, entrevistar, sentir o utilizador), 2) Define (sintetizar observações num point-of-view), 3) Ideate (brainstorm, gerar muitas ideias), 4) Prototype (construir versões tangíveis de baixa fidelidade), 5) Test (recolher feedback, iterar). As fases não são lineares — frequentemente saltamos de Test para Empathize quando aprendemos algo novo. A chave é a iteração rápida e o bias para acção: 5 protótipos maus valem mais que 1 plano perfeito."
+    },
+    {
+      "q": "No lean startup de Eric Ries, o que é um MVP (Minimum Viable Product)?",
+      "opts": [
+        "O produto final completo e perfeito",
+        "A versão mais simples do produto que permite testar a hipótese central de valor, com o mínimo de esforço e custo",
+        "Um produto de alta qualidade para impressionar investidores",
+        "Um produto com todas as features planeadas"
+      ],
+      "a": 1,
+      "explanation": "MVP = Minimum Viable Product, definido por Frank Robinson e popularizado por Ries (2011, The Lean Startup). É a versão mais simples do produto que permite testar a hipótese central de valor. Não é 'produto mínimo decente' — é 'teste de hipótese mínimo'. Exemplos canónicos: Dropbox (vídeo conceptual antes de construir software), Zappos (fotos de sapatos em loja de terceiros), Airbnb (anúncios do próprio apartamento), Buffer (landing page antes de produto). O objectivo é encurtar o ciclo Build-Measure-Learn."
+    },
+    {
+      "q": "Segundo James March, qual a diferença entre exploitation e exploration, e porque é que importa?",
+      "opts": [
+        "São a mesma coisa",
+        "Exploitation refina o que já sabemos (eficiência, baixo risco); exploration procura o novo (flexibilidade, alto risco); ambos são necessários, mas as mesmas estruturas não servem os dois",
+        "Exploitation é melhor que exploration",
+        "Exploration é melhor que exploitation"
+      ],
+      "a": 1,
+      "explanation": "March (1991) distinguiu exploitation (refinar, melhorar, explotar o que sabemos) de exploration (experimentar, descobrir, procurar o novo). Ambos necessários: só exploitation → refém da tecnologia actual; só exploration → morre antes de monetizar. Mas o dilema: as mesmas estruturas, incentivos e processos não servem os dois. A exploitation quer eficiência, baixa variância, controlo; a exploration quer flexibilidade, alta variância, autonomia. O'Reilly & Tushman chamaram a isto 'organização ambidextra' — separar estruturas, alinhar estratégia. Exemplos: Amazon (retail + AWS), Microsoft (Windows + Azure), 3M (15% time)."
+    },
+    {
+      "q": "Na matriz BCG growth-share aplicada a portfolio de inovação, qual é a diferença entre 'Stars' e 'Question Marks'?",
+      "opts": [
+        "Stars são projectos de alto crescimento com baixa quota; Question Marks são de alto crescimento com alta quota",
+        "Stars são projectos de alto crescimento com alta quota (investir fortemente); Question Marks são de alto crescimento com baixa quota (decidir)",
+        "Stars são projectos maduros; Question Marks são moonshots",
+        "Não há diferença — são sinónimos"
+      ],
+      "a": 1,
+      "explanation": "Na matriz BCG (Henderson, 1970), Stars têm alta quota de mercado e alto crescimento — investir fortemente para manter a liderança. Question Marks têm baixa quota mas alto crescimento — decidir se vale a pena investir para subir a quota (tornar Star) ou desinvestir (virar Dog). Cash Cows têm alta quota e baixo crescimento — explotar para gerar caixa. Dogs têm baixa quota e baixo crescimento — desinvestir ou matar. No portfolio de inovação: Stars = adjacents, Cash Cows = core sustaining, Question Marks = transformational bets, Dogs = failing projects."
+    },
+    {
+      "q": "Na curva de adopção de Everett Rogers, qual é a sequência das 5 categorias de adoptantes?",
+      "opts": [
+        "Early adopters → Innovators → Early majority → Late majority → Laggards",
+        "Innovators → Early adopters → Early majority → Late majority → Laggards",
+        "Laggards → Late majority → Early majority → Early adopters → Innovators",
+        "Early majority → Innovators → Early adopters → Late majority → Laggards"
+      ],
+      "a": 1,
+      "explanation": "A curva de Rogers (Diffusion of Innovations, 1962) tem 5 categorias, nesta ordem: Innovators (2.5%, visionários, toleram risco), Early adopters (13.5%, opinion leaders), Early majority (34%, pragmáticos, querem evidência), Late majority (34%, céticos, adoptam quando mainstream), Laggards (16%, resistentes). O tipping point é entre early adopters e early majority — uma vez ultrapassado, a difusão torna-se auto-reforçada. Geoffrey Moore (1991, Crossing the Chasm) identificou o abismo entre os dois primeiros e a maioria — requer 'whole product', beachhead segment e referências."
+    },
+    {
+      "q": "O que é 'open innovation' segundo Henry Chesbrough?",
+      "opts": [
+        "Manter todas as ideias dentro da empresa, com secretismo total",
+        "Combinar fluxos internos e externos de ideias (inside-out, outside-in, coupled), reconhecendo que as melhores ideias estão distribuídas",
+        "Abrir todo o código-fonte de todos os produtos",
+        "Criar uma subsidiária aberta para inovação"
+      ],
+      "a": 1,
+      "explanation": "Henry Chesbrough (2003, Open Innovation) propôs que, na era do conhecimento, a inovação é distribuída — as melhores ideias estão fora da empresa, em universidades, startups, fornecedores, clientes. A empresa inteligente combina fluxos internos e externos: inside-out (vender/licenciar IP não usado), outside-in (comprar, licenciar, absorver), coupled (coinventar com parceiros). Caso clássico: P&G Connect+Develop, com 50% das ideias de fora. Tesla abriu patentes de EV em 2014 para acelerar o mercado — 'open IP' como escolha estratégica de market-making, não de générosité. Open innovation ≠ open source: open innovation é estratégia comercial, open source é modelo de licenciamento de software."
+    }
+  ]
+}
