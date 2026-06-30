@@ -256,6 +256,13 @@
           <span class="quick-sub">{$t('financas.shortcuts.categorias.sub', { default: 'Gerir taxonomia' })}</span>
         </span>
       </a>
+      <a class="quick" href="/financas/relatorios/">
+        <span class="quick-icon" aria-hidden="true">📊</span>
+        <span class="quick-text">
+          <span class="quick-title">Relatórios</span>
+          <span class="quick-sub">Pie · top 5 · comparativo · CSV</span>
+        </span>
+      </a>
     </section>
   {/if}
 

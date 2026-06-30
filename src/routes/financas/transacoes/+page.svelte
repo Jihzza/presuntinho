@@ -251,6 +251,10 @@
 
   <section class="actions" aria-label="{$t('a11y.aria.acoes', { default: 'Ações' })}">
     <a class="btn-primary" href="/financas/nova/">{$t('financas.transacoes.cta.new', { default: '+ Nova transação' })}</a>
+    <a class="btn-secondary" href="/financas/relatorios/">
+      <span aria-hidden="true">⬇</span>
+      <span>{$t('financas.relatorios.export.csv', { default: 'Exportar CSV' })}</span>
+    </a>
   </section>
 
   <section class="filters" aria-label="{$t('a11y.aria.filtros', { default: 'Filtros' })}">
@@ -431,6 +435,8 @@
     margin-bottom: 1rem;
     display: flex;
     justify-content: flex-end;
+    gap: 0.5rem;
+    flex-wrap: wrap;
   }
   .btn-primary {
     display: inline-block;
@@ -453,6 +459,30 @@
   }
   .btn-primary:focus-visible {
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.4);
+  }
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--txt, #fff);
+    text-decoration: none;
+    padding: 0.625rem 1.1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    border: 1px solid var(--border-strong, rgba(255, 255, 255, 0.2));
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: inherit;
+    font-size: 0.95rem;
+  }
+  .btn-secondary:hover,
+  .btn-secondary:focus-visible {
+    background: rgba(255, 255, 255, 0.12);
+    outline: none;
+  }
+  .btn-secondary:focus-visible {
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.4);
   }
   .filters {
     background: var(--card, rgba(255, 255, 255, 0.05));
