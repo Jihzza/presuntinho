@@ -1,0 +1,79 @@
+{
+  "id": "4-caso-de-estudo",
+  "courseSlug": "estrategia-internacional",
+  "title": "Caso de Estudo: Expansão Ibérica de uma PME de D2C",
+  "audio": "Lição sobre caso de estudo em estratégia internacional — uma marca portuguesa de cosmética natural entra em Espanha via marketplaces e depois abre filial em Madrid.<break/><break/>Vamos aplicar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "Contexto: Mar de Alfazema, Lda." },
+    { "type": "p", "text": "Mar de Alfazema é uma PME portuguesa fundada em 2018 em Évora, especializada em cosmética natural artesanal (sabonetes, óleos, velas) com marca portuguesa forte, posicionamento premium, e vendas 100% D2C online (loja própria Shopify + 40% via Worten Marketplace PT). Volume de negócios 2025: 1.4M€ com margem EBITDA de 22%. 8 colaboradores. Mercado doméstico está a crescer 8%/ano mas o fundador Diogo Pereira sente pressão:" },
+    { "type": "ul", "items": [
+      "PROCURA: cliente brasileiro pergunta com frequência por envios para o Brasil; brand tem afinidade cultural natural.",
+      "CONCORRENTES: Similar (espanhola) acabou de anunciar entrada no mercado português com campanha de marketing agressiva; marca italiana L'Erbolario está a entrar em Portugal via El Corte Inglés.",
+      "OFERTA: fábrica opera a 65% de capacidade instalada — há espaço físico e humano para produção adicional sem CapEx significativo."
+    ] },
+    { "type": "p", "text": "Diogo tem de decidir: para onde internacionalizar primeiro, em que modo de entrada, com que cadência. O caso desenvolve as quatro decisões estratégicas principais ao longo de 18 meses." },
+    { "type": "h3", "text": "Decisão 1: Geografia — Brasil, Espanha ou ambos?" },
+    { "type": "p", "text": "Diogo avalia três opções no quadro CAGE (lição 1):" },
+    { "type": "ul", "items": [
+      "BRASIL: C:1 (língua, afinidade cultural, valores religiosos próximos), A:2 (relação histórica, ALBI sem barreiras alfandegárias), G:3 (10.000 km, 2 dias transporte marítimo), E:3 (Brasil tem PIB per capita baixo para premium, mas classe média-alta em São Paulo/ Rio é mercado viável). Score = 9.",
+      "ESPANHA: C:2 (língua diferente mas mercado hispanófono compreensível), A:1 (UE, moeda comum — depois de 2002 —, regulação cosmética europeia), G:1 (300 km, 1 dia transporte), E:2 (Espanha tem PIB per capita 95% do português). Score = 6.",
+      "FRANÇA: C:3 (língua diferente, cultura de beleza e cosmética francesa é proteccionista), A:1 (UE), G:1, E:2 (PIB per capita elevado). Score = 7. Risco alto: mercado saturado de cosmética natural francesa (L'Occitane, Yves Rocher)."
+    ] },
+    { "type": "p", "text": "Recomendação: Espanha primeiro (menor score CAGE, mais baixo risco), Brasil segundo (após validação em mercado próximo). França fica em 'backlog' para 2027+." },
+    { "type": "callout", "variant": "example", "text": "Decisão fundamentada em CAGE, não em 'onde tenho vontade de ir'. A tentação de Diogo era Brasil — afinidade cultural e língua — mas distância geográfica + capacidade financeira limitada tornariam a primeira experiência arriscada demais. Espanha oferece curva de aprendizado mais suave." },
+    { "type": "h2", "text": "Decisão 2: Modo de entrada — marketplaces primeiro, filial depois" },
+    { "type": "p", "text": "Diogo desenha uma abordagem em duas fases com base nas lições de modos de entrada (lição 2):" },
+    { "type": "h3", "text": "Fase A (Meses 1-9): Validação via marketplaces" },
+    { "type": "ul", "items": [
+      "Listar produtos em Amazon.es, El Corte Inglés Marketplace, Miravia. CapEx: ~5k€ (fotografia de produto, tradução, registo de marca na OEPM).",
+      "Vender com envio a partir de Portugal (fulfilment from origin). Sem presença física em Espanha.",
+      "Medir três KPIs: taxa de conversão por canal, NPS pós-compra, taxa de recompra 90 dias. Se nenhum dos três for promissor em 6 meses, abortar antes de abrir filial."
+    ] },
+    { "type": "p", "text": "Esta fase é, em essência, exportação directa com baixa commitment — modo de entrada de menor risco. Permite validação sem exposição financeira significativa." },
+    { "type": "h3", "text": "Fase B (Meses 10-18): Filial comercial em Madrid" },
+    { "type": "ul", "items": [
+      "Se KPIs validação forem positivos: abrir sucursal comercial (não produção) em Madrid com 2 pessoas (country manager + customer service).",
+      "Sucursal comercial faz: marketing local, parcerias com influencers, gestão de retalho selectivo (farmácias premium, El Corte Inglés loja física, концепт-stores).",
+      "Produção continua em Évora — filial é sales & marketing, não manufacturing. Modelo 'transnational lite'."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Estratégia 'two-speed' — validar barato, escalar caro só depois de validação. Empresas que abrem filial no dia 1 sem testar pagam 18-24 meses de cash burn para descobrir que o produto não vende. Mar de Alfazema evita isso ao usar marketplaces como 'instrumento de pesquisa paga pelo cliente'." },
+    { "type": "h2", "text": "Decisão 3: Adaptação vs estandardização — arquétipo multi-doméstica" },
+    { "type": "p", "text": "Diogo decide multi-doméstica (lição 3): máxima resposta local. Razões:" },
+    { "type": "ul", "items": [
+      "PRODUTO: cosmética é categoria onde cheiro, textura e expectativa variam culturalmente. Sabonete português com alfazema pode precisar de aroma mais suave para gosto espanhol.",
+      "MARKETING: campanha 'Mediterrâneo autêntico' funciona em Portugal mas 'Naturaleza portuguesa' ressoa mais em Espanha (que tem orgulho próprio em natureza).",
+      "EMBALAGEM: regulação espanhola exige informação em castelhano + nome do distribuidor local na etiqueta. Adaptação obrigatória.",
+      "PREÇO: elasticidade-preço da cosmética premium é diferente. Portugal aceita preço X; Espanha precisa de ~15% abaixo para paridade percebida (incluindo portes)."
+    ] },
+    { "type": "p", "text": "Trade-off assumido: perda de economias de escala em marketing e produto. Ganho: adaptação maximiza aceitação local. Custo é aceitável porque volume esperado nos primeiros 18 meses não justifica investimento em plataforma de produto estandardizada." },
+    { "type": "h2", "text": "Decisão 4: Gestão de risco cambial e político" },
+    { "type": "p", "text": "Dois riscos típicos de operação em mercado externo que Diogo prepara:" },
+    { "type": "ul", "items": [
+      "RISCO CAMBIAL: Portugal-Espanha está em zona euro, exposição cambial é zero. Quando expandir para Brasil (futuro), exposição ao BRL passa a existir — empresa deve usar hedging (forward contracts 6-12 meses) para travar taxa de câmbio em vendas contratadas.",
+      "RISCO POLÍTICO/REGULATÓRIO: regulação cosmética europeia (CE 1223/2009) é exigente mas estável. Risco principal em Brasil é ICMS variável por estado + alterações em regras de importação que podem criar barreira não-tarifária."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "PME em primeira internacionalização tipicamente subestima risco operacional (clientes que não pagam, devoluções, gestão de stock entre países) e superestima risco cambial/político. Em zona euro o risco cambial é zero; risco político intra-UE é baixo; risco operacional é alto. Preparar o operacional antes de hedge cambial." },
+    { "type": "h3", "text": "Resultados esperados em 18 meses" },
+    { "type": "p", "text": "Projeção do plano de Diogo:" },
+    { "type": "ul", "items": [
+      "Mês 6: vendas marketplaces ~15k€/mês, NPS > 50, recompra > 8%. Validação OK.",
+      "Mês 12: filial Madrid operacional, vendas totais mercado espanhol 35-45k€/mês.",
+      "Mês 18: break-even operacional da filial, decisão sobre Brasil baseada em dados reais.",
+      "Se sucesso em Espanha + Brasil: ano 3 volume de exportação > 35% do volume total; arquétipo migra para transnacional (operação multi-país coordenada)."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "O caso mostra o ciclo completo: CAGE para escolher geografia, two-speed entry para escolher modo, multi-doméstica para escolher arquétipo, gestão de risco para preparar operação. As quatro decisões são interdependentes — escolher Brasil primeiro forçaria modo de entrada e arquétipo diferentes, com capital muito maior." }
+  ],
+  "keyPoints": [
+    "Geografia: usar CAGE para pontuar candidatos — Espanha (6) < Brasil (9) < França (7) como primeira expansão; Espanha oferece menor fricção.",
+    "Modo de entrada: abordagem two-speed — marketplaces (exportação directa, baixo risco) durante 6-9 meses para validar, depois sucursal comercial (mais compromisso) se KPIs positivos.",
+    "Arquétipo: multi-doméstica para cosmética — máxima adaptação local em produto, marketing, embalagem e preço; trade-off de escala aceite em troca de aceitação local.",
+    "Risco: risco operacional (clientes, devoluções, stock) é o principal para PME em primeira internacionalização, não cambial ou político intra-UE.",
+    "Decisões interdependentes: CAGE-geografia + modo + arquétipo + risco devem ser desenhados em conjunto, não sequencialmente."
+  ],
+  "suggestedReadings": [
+    "Ghemawat, P. (2007). 'Redefining Global Strategy', Harvard Business School Press — casos PME.",
+    "Lasserre, P. (2017). 'Global Strategic Management', 4th ed., Palgrave — capítulo sobre expansão ibérica e lusófona.",
+    "OCDE (2023). 'SME Internationalisation Strategies', OECD SME and Entrepreneurship Papers."
+  ]
+}

@@ -248,17 +248,29 @@
                   badge: 'Uni'
                 },
                 {
-                  slug: 'gestao-conflitos',
-                  title: 'Gestão de Conflitos',
-                  tagline: 'Business Administration · Fontes do conflito, estilos de resposta, negociação integrativa e mediação',
-                  description:
-                    'Gestão de conflitos aplicada à gestão: natureza e fontes do conflito organizacional (tarefas, relações, processos, valores), estilos de resposta (Thomas-Kilmann: competição, colaboração, compromisso, evitamento, acomodação), modelos de processo (posições vs interesses, BATNA/ZOPA), mediação e negociação integrativa, comunicação não-violenta, gestão de conflitos em equipas híbridas e multi-culturais, e o papel do líder como gestor construtivo de divergências.',
-                  icon: '🕊️',
-                  color: '#65a30d',
-                  lessonCount: 4,
-                  quizCount: 1,
-                  badge: 'Uni'
-                },
+                                  slug: 'gestao-conflitos',
+                                  title: 'Gestão de Conflitos',
+                                  tagline: 'Business Administration · Fontes do conflito, estilos de resposta, negociação integrativa e mediação',
+                                  description:
+                                    'Gestão de conflitos aplicada à gestão: natureza e fontes do conflito organizacional (tarefas, relações, processos, valores), estilos de resposta (Thomas-Kilmann: competição, colaboração, compromisso, evitamento, acomodação), modelos de processo (posições vs interesses, BATNA/ZOPA), mediação e negociação integrativa, comunicação não-violenta, gestão de conflitos em equipas híbridas e multi-culturais, e o papel do líder como gestor construtivo de divergências.',
+                                  icon: '🕊️',
+                                  color: '#65a30d',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
+                                },
+                                {
+                                  slug: 'estrategia-internacional',
+                                  title: 'Estratégia Internacional',
+                                  tagline: 'Business Administration · Drivers de internacionalização, modos de entrada, estratégias multi-doméstica/global/transnacional e gestão de risco internacional',
+                                  description:
+                                    'Estratégia internacional aplicada à gestão: porquê internacionalizar (drivers de procura, oferta, custos, governo e concorrentes), modos de entrada (exportação, licenciamento, franchising, joint ventures, subsidiária de capital próprio, aquisições), escolha entre globalização vs multi-doméstico vs transnacional vs internacional, localização e vantagens específicas, decisões de coordenação e configuração da cadeia de valor (Hofstede e distância cultural, Bartlett & Ghoshal), timing de entrada, gestão de risco cambial e político, e os trade-offs entre integração global e resposta local em empresas multinacionais.',
+                                  icon: '🌍',
+                                  color: '#0ea5e9',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
+                                },
         {
                   slug: 'analise-financeira',
                   title: 'Análise Financeira',

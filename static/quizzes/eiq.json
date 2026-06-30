@@ -1,0 +1,117 @@
+{
+  "id": "eiq",
+  "title": "Quiz: Estratégia Internacional",
+  "description": "Testa os teus conhecimentos em estratégia internacional: drivers de internacionalização (procura, oferta, custos, governo, concorrentes), framework CAGE de Ghemawat (cultural, administrative, geography, economic), modos de entrada (exportação indirecta/directa, licenciamento, franchising, joint venture, subsidiária greenfield, aquisição), arquétipos de Bartlett & Ghoshal (internacional, multi-doméstica, global, transnacional), drivers de integração global vs resposta local, joint ventures e gestão de risco internacional. 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "questions": [
+    {
+      "q": "No framework CAGE de Pankaj Ghemawat, qual das seguintes distâncias NÃO é uma das quatro dimensões originais?",
+      "opts": [
+        "Cultural (língua, religião, valores)",
+        "Administrativa (laços coloniais, acordos comerciais, moeda comum)",
+        "Demográfica (estrutura etária, taxa de natalidade)",
+        "Económica (PIB per capita, custo de mão-de-obra, custo de capital)"
+      ],
+      "a": 2,
+      "explanation": "CAGE tem quatro dimensões: Cultural, Administrative (institucional), Geographic, Economic. Demografia pode influenciar distância económica e cultural mas não é dimensão autónoma no framework original (Ghemawat, 2001). A tentação de expandir CAGE para CAGE-D é comum mas perde-se a elegância do modelo 2×2 que é a sua força didáctica."
+    },
+    {
+      "q": "Uma marca portuguesa de cosmética com 1M€ de volume quer entrar no mercado brasileiro. Qual dos seguintes NÃO é um driver válido de internacionalização para este caso?",
+      "opts": [
+        "Procura: clientes brasileiros perguntam com frequência por envios",
+        "Custos: acesso a mão-de-obra mais barata em São Paulo",
+        "Oferta: fábrica opera a 65% de capacidade com margem para mais produção",
+        "Concorrentes: marca espanhola Similar está a entrar agressivamente em Portugal"
+      ],
+      "a": 1,
+      "explanation": "Driver de custos mão-de-obra mais barata em São Paulo não aplica — o Brasil não é low-cost para manufactura de cosmética (é mais caro que Portugal em muitas categorias). Os outros três são drivers reais: clientes pedem (procura), capacidade ociosa (oferta), pressão competitiva (concorrentes). Confundir drivers leva a entrada em mercado errado ou com modo errado."
+    },
+    {
+      "q": "Porque é que o licenciamento é frequentemente desencorajado para PMEs que pretendem construir presença de marca de longo prazo?",
+      "opts": [
+        "Licenciamento é ilegal na maioria dos países para PMEs",
+        "Licenciamento elimina aprendizado organizacional sobre mercado e cria dependência de parceiro cujo incentivo é royalties, não construção de marca",
+        "Licenciamento exige investimento de capital inicial superior a subsidiária",
+        "Licenciamento é mais arriscado financeiramente que joint venture"
+      ],
+      "a": 1,
+      "explanation": "Licenciamento tem baixo risco financeiro e zero investimento em capital, mas terceiriza o aprendizado sobre mercado (clientes, regulação, cultura) e dá controlo a parceiro cujo incentivo é maximizar royalties de curto prazo, não construir a sua marca. Para PME com produto diferenciado e intenção de construir marca global, licenciamento é armadilha — funciona para produtos commoditizados (chips, ingredientes) onde marca não é fonte de valor."
+    },
+    {
+      "q": "No modelo de Bartlett & Ghoshal, o arquétipo 'transnacional' consegue combinar integração global e resposta local. Porque é que poucas empresas conseguem manter este arquétipo?",
+      "opts": [
+        "Porque o modelo foi desacreditado academicamente desde 1990",
+        "Porque o custo organizacional de coordenação (matriz complexa, knowledge-sharing, equipas multiculturais) é 30-50% superior a multi-doméstica ou global pura",
+        "Porque clientes globais não existem na prática",
+        "Porque a legislação antitrust europeia proíbe estruturas transnacionais"
+      ],
+      "a": 1,
+      "explanation": "Transnacional é o ideal teórico mas tem custo organizacional brutal — coordenação entre subsidiárias, knowledge-sharing entre geografias, gestão de equipas multiculturais. Bartlett & Ghoshal estimam overhead 30-50% superior a outras estruturas. Empresas como Unilever, Nestlé, Toyota conseguem por escala e maturidade organizacional — PME raramente. Não é regulação que impede; é custo e complexidade."
+    },
+    {
+      "q": "Uma joint venture entre empresa portuguesa (tecnologia) e parceiro brasileiro (acesso a mercado) está em risco de falhar ao fim de 3 anos por causa de:",
+      "opts": [
+        "Diferença horária Lisboa-São Paulo (4h) inviabiliza reuniões",
+        "Parceiro brasileiro usa JV como stepping-stone para aprender tecnologia, autonomizar-se e criar concorrente ao fim do contrato",
+        "Língua portuguesa é barreira intransponível",
+        "Regulação brasileira proíbe joint ventures com capital europeu"
+      ],
+      "a": 1,
+      "explanation": "Padrão clássico de falha de JV: parceiro usa a joint venture como mecanismo de aprendizado (transfere know-how através de operações conjuntas) e depois autonomiza-se criando competidor. Defesa contratual: cláusulas de não-competição pós-dissolução, royalties sobre uso de IP desenvolvido durante JV, e limites de rotação de pessoal-chave. Defesa operacional: reter IP crítico fora do perímetro da JV (ex: I&D continua na matriz)."
+    },
+    {
+      "q": "Qual dos seguintes é o principal risco para uma PME europeia em primeira internacionalização para outro país da UE?",
+      "opts": [
+        "Risco cambial elevado pela exposição à moeda local",
+        "Risco operacional: clientes que não pagam, devoluções, gestão de stock entre países, conformidade regulatória",
+        "Risco de nacionalização de activos por governo estrangeiro",
+        "Risco de guerra comercial entre blocos económicos"
+      ],
+      "a": 1,
+      "explanation": "Em zona euro o risco cambial é zero. Risco político intra-UE é baixo. Risco operacional (clientes que não pagam, devoluções cross-border, conformidade com regulação nacional específica, gestão de stock) é o principal e é tipicamente subestimado por PME. Subcontratar fulfilment (Amazon FBA, Miravia fulfilment) reduz este risco no início."
+    },
+    {
+      "q": "O modelo Uppsala de internacionalização (Johanson & Vahlne, 1977) é caracterizado por:",
+      "opts": [
+        "Entrada simultânea em 50 países nos primeiros 12 meses",
+        "Expansão incremental começando por mercados psicologicamente próximos e ganhando conhecimento antes de saltar para mercados mais distantes",
+        "Uso exclusivo de licenciamento como modo de entrada",
+        "Born global — escala global desde a fundação"
+      ],
+      "a": 1,
+      "explanation": "Uppsala model: incremental, mercados psicologicamente próximos primeiro, aprendizado progressivo, commitment gradual. Born Global (modelo oposto): empresas que internacionalizam desde dia 1 em nichos digitais/IP. PME de cosmética típica segue Uppsala (produto físico com cadeia logística pesada); PME de SaaS típica segue Born Global (produto digital sem fronteira). Escolha de modelo depende quase inteiramente do tipo de produto."
+    },
+    {
+      "q": "Qual das seguintes é uma razão válida para preferir aquisição sobre greenfield ao entrar num novo mercado?",
+      "opts": [
+        "Aquisição é sempre mais barata que greenfield em qualquer circunstância",
+        "Aquisição dá entrada rápida com clientes,equipa e market share já estabelecidos — útil quando velocidade é vantagem competitiva ou quando integração cultural é gerível",
+        "Aquisição elimina completamente risco de integração",
+        "Greenfield é ilegal em mercados emergentes"
+      ],
+      "a": 1,
+      "explanation": "Aquisição dá entrada rápida (vs 12-18 meses para greenfield operacional), com clientes e quota de mercado estabelecidos. Razões válidas: mercado atractivo está a ser ocupado por concorrente (precisa de velocidade), activos únicos (marca local, licença) só disponíveis via M&A. Risco: integração cultural, due diligence incompleta, overpayment. Não é 'sempre mais barato' nem 'elimina risco' — é trade-off diferente."
+    },
+    {
+      "q": "No contexto de drivers de integração global, qual das seguintes características de indústria PUXA a empresa para estratégia global?",
+      "opts": [
+        "Gosto local muito variável entre países",
+        "Regulação nacional distinta que exige adaptação local",
+        "Elevada intensidade de I&D e economias de escala em produção",
+        "Distribuição local com práticas e margens próprias"
+      ],
+      "a": 2,
+      "explanation": "Drivers de integração global incluem I&D intensivo (pesquisa concentrada gera eficiência), economias de escala (uma fábrica global é mais barata), clientes globais (multinacional quer fornecedor multinacional), rivalidade global (concorrente escala global força escala global), valor de marca global (luxo, tecnologia). Os outros três (gosto, regulação, distribuição) são drivers de resposta local que PUXAM para multi-doméstica."
+    },
+    {
+      "q": "Porque é que 'late customization' (produzir peça base em país low-cost e finalizar/embalar perto do consumidor) é comum em bens de consumo internacionais?",
+      "opts": [
+        "Porque reduz custo de adaptação de produto final a cada mercado sem perder economias de escala na produção da peça base",
+        "Porque é exigido por regulação aduaneira europeia",
+        "Porque elimina completamente o custo de transporte",
+        "Porque clientes exigem embalagem local para poder reclamar"
+      ],
+      "a": 0,
+      "explanation": "Late customization é o padrão clássico de empresas globais de bens de consumo (P&G, Unilever, L'Oréal): produzem concentrado/ingrediente activo em poucos hubs mundiais, e fazem only final assembly + embalagem + idioma perto do consumidor final. Vantagem: economias de escala na produção da peça cara (ingrediente activo), customização barata na peça final (embalagem, manual). Reduz custo total de adaptação a mercado local sem sacrificar eficiência global."
+    }
+  ]
+}

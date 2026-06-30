@@ -1,0 +1,17 @@
+{
+  "slug": "estrategia-internacional",
+  "title": "Estratégia Internacional",
+  "category": "BA",
+  "level": "advanced",
+  "estMinutes": 38,
+  "icon": "🌍",
+  "color": "#0ea5e9",
+  "description": "Estratégia internacional aplicada à gestão: porquê internacionalizar (drivers de procura, oferta, custos, governo e concorrentes), modos de entrada (exportação, licenciamento, franchising, joint ventures, subsidiária de capital próprio, aquisições), escolha entre globalização vs multi-doméstico vs transnacional vs internacional, localização e vantagens específicas (L优势), decisões de coordenação e configuração da cadeia de valor (Hofstede e distância cultural, Bartlett & Ghoshal), timing de entrada, gestão de risco cambial e político, e os trade-offs entre integração global e resposta local em empresas multinacionais.",
+  "tagline": "Business Administration · Drivers de internacionalização, modos de entrada, estratégias multi-doméstica/global/transnacional e gestão de risco internacional",
+  "lessons": [
+    { "slug": "1-drivers-da-internacionalizacao", "title": "1. Porquê Internacionalizar: Drivers e Pressões", "summary": "As quatro forças CAGE de Pankaj Ghemawat que tornam a distância entre mercados maleável: cultura, administração, geografia e economia — e como cada uma gera drivers de procura, oferta, custos, governo e concorrentes.", "quizSlug": "eiq", "estMinutes": 9 },
+    { "slug": "2-modos-de-entrada", "title": "2. Modos de Entrada e Compromisso de Recursos", "summary": "Espectro de entrada: exportação indirecta, licenciamento, franchising, contract manufacturing, joint venture, subsidiária greenfield, aquisição. Trade-offs controlo vs risco vs commitment vs velocidade.", "quizSlug": "eiq", "estMinutes": 10 },
+    { "slug": "3-estrategias-multi-vs-global", "title": "3. Estratégia Multi-doméstica, Global, Transnacional e Internacional", "summary": "Os quatro arquétipos de Bartlett & Ghoshal: integração global vs resposta local, e como a matriz 2×2 pressupõe trade-offs. Pressão por integração, pressões por resposta local, e o trade-off 'transnational dilemma'.", "quizSlug": "eiq", "estMinutes": 10 },
+    { "slug": "4-caso-de-estudo", "title": "4. Caso: Expansão Ibérica de uma PME de D2C", "summary": "Aplicação prática: uma marca portuguesa de cosméticos naturais entra em Espanha via marketplaces primeiro, depois abre filial em Madrid. Decisões de localização, modo de entrada, gestão cambial e adaptação cultural.", "quizSlug": "eiq", "estMinutes": 9 }
+  ]
+}

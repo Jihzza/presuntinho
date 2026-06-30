@@ -1,0 +1,62 @@
+{
+  "id": "2-modos-de-entrada",
+  "courseSlug": "estrategia-internacional",
+  "title": "Modos de Entrada e Compromisso de Recursos",
+  "audio": "Lição sobre modos de entrada em mercados internacionais: exportação, licenciamento, franchising, joint ventures e subsidiárias.<break/><break/>Vamos continuar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "Os modos de entrada são trade-offs — não há melhor absoluto" },
+    { "type": "p", "text": "Não existe 'melhor modo de entrada'. Cada um representa trade-off entre quatro dimensões: controlo sobre operações locais, risco financeiro e operacional, velocidade de entrada, e flexibilidade de saída. Uma PME com produto digital pode preferir licenciamento (baixo risco, baixo controlo, alta velocidade); uma empresa de manufactura a entrar num mercado cativo pode preferir subsidiária greenfield (alto risco, alto controlo, baixa velocidade). A escolha certa depende dos drivers da lição anterior, do tipo de produto, e da estratégia competitiva global." },
+    { "type": "h3", "text": "Os nove modos principais — do menos ao mais intenso em recursos" },
+    { "type": "p", "text": "Do menos ao mais comprometido com recursos e exposição ao risco:" },
+    { "type": "ul", "items": [
+      "EXPORTAÇÃO INDIRECTA: vende para intermediário doméstico que exporta (trading house, export management company). Baixo investimento, baixo risco, pouco controlo sobre marca e preço no destino. Boa forma de testar mercado.",
+      "EXPORTAÇÃO DIRECTA: vende directamente para cliente ou distribuidor no destino. Mais controlo, mais investimento em equipa comercial internacional, mais risco de crédito.",
+      "LICENCIAMENTO: cede tecnologia, marca ou processo produtivo a empresa local mediante royalties. Sem investimento, mas perde-se controlo sobre qualidade e estratégia.",
+      "FRANCHISING: modelo específico de licenciamento para serviços com sistema operacional replicável (restauração, retalho, hotelaria). Cedência de marca, sistema, formação, em troca de fee inicial + royalties.",
+      "CONTRACT MANUFACTURING: produção local contratada a terceiros. Mantém distribuição própria mas transfere produção. Comum em bens de consumo onde mão-de-obra barata compensa.",
+      "JOINT VENTURE: sociedade com parceiro local (50/50 ou outra proporção). Combina conhecimento do parceiro sobre mercado com tecnologia/IP da empresa. Exige alinhamento estratégico e governance cuidado.",
+      "ALIANÇA ESTRATÉGICA: contrato de longo prazo sem equity compartilhado (ex: distribuição exclusiva, co-development). Mais flexível que JV mas menos alinhamento de incentivos.",
+      "SUBSIDIÁRIA GREENFIELD: constrói operação do zero no destino. Máximo controlo, máximo investimento, máximo risco. Usado quando IP ou know-how é demasiado sensível para partilhar, ou quando mercado justifica escala local.",
+      "AQUISIÇÃO: compra de player local existente. Entrada rápida com activos, clientes eequipa já estabelecidos. Risco: integração cultural, overpayment, problemas ocultos."
+    ] },
+    { "type": "callout", "variant": "example", "text": "IKEA entra tipicamente via subsidiária greenfield para manter controlo absoluto sobre experiência de loja. McDonald's entra via franchising porque sistema operacional é replicável e franchisado local tem mais eficiência operacional. Microsoft entra em mercados novos via subsidiária directa para proteger IP. Zara entra via subsidiária mas com integração vertical extrema para controlar supply chain. Cada escolha é estratégica e derivada do tipo de produto e vantagem competitiva." },
+    { "type": "h2", "text": "Trade-off central: controlo vs flexibilidade vs commitment" },
+    { "type": "p", "text": "O erro clássico de PME é escolher modo de entrada pelo atractivo de 'baixo risco' (licenciamento, exportação) sem considerar o custo de longo prazo em controlo e capacidade de aprendizado. Três trade-offs a gerir:" },
+    { "type": "ul", "items": [
+      "Controlo vs risco: quanto mais controlo, mais risco financeiro e operacional. Subsidiária greenfield dá controlo total mas exposição total. Licenciamento dá zero controlo e zero risco financeiro.",
+      "Velocidade vs commitment: aquisição e JV dão entrada rápida mas comprometem capital e reputação com parceiro local. Greenfield é lento mas limpo.",
+      "Aprendizado vs exposição: subsidiária própria gera aprendizado profundo sobre mercado local (clientes, regulação, cultura) mas exige presença física e gestão expatriada. Licenciamento terceiriza esse aprendizado."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Escolha por default de licenciamento 'porque é mais barato' gera expansão que não ensina nada sobre o mercado e cria dependência de parceiro cujo incentivo é maximizar royalties, não construir a sua marca. O aprendizado organizacional sobre mercado local é frequentemente a vantagem competitiva sustentável mais valiosa da internacionalização — e licenciamento elimina-o." },
+    { "type": "h2", "text": "Joint Ventures: como evitar o divórcio a 3 anos" },
+    { "type": "p", "text": "Joint ventures falham mais por governance do que por estratégia. Padrões comuns:" },
+    { "type": "ul", "items": [
+      "Definir EXIT desde o dia 1: cláusulas de buy-sell, opções de compra/venda ao fim de N anos, gatilhos de dissolução. Sem isto, divórcio é litigation caro.",
+      "Alinhar EXPECTATIVAS DE RETORNO: parceiro local quer cash flow rápido, empresa quer reinvestimento para crescimento. Discrepância gera conflito na JV a partir do ano 2.",
+      "Separar GOVERNANCE de GESTÃO:董事会 para decisões estratégicas, gestão operacional para execução. Sem isto, micro-decisões diárias viram conflito estratégico.",
+      "Proteger IP com contrato detalhado: know-how transferível vs know-how retido, royalties sobre uso, auditoria, não-competição pós-dissolução."
+    ] },
+    { "type": "p", "text": "Joint venture funciona quando: 1) ambos os parceiros precisam um do outro (ex: empresa tem tecnologia, parceiro tem acesso a mercado e regulação), 2) o mercado é grande demais para um sozinho, 3) há alinhamento de horizonte temporal. Falha tipicamente quando: a) um parceiro usa JV como stepping-stone para aprender e depois autonomizar-se, b) diferenças culturais são subestimadas, c) governance é informal." },
+    { "type": "h3", "text": "Aquisição: a ilusão de entrada rápida" },
+    { "type": "p", "text": "Aquisição parece solução rápida: compras player local, ganhas clientes,equipa, e market share instantaneamente. Realidade tem três armadilhas:" },
+    { "type": "ul", "items": [
+      "DUE DILIGENCE INSUFICIENTE: passivos ocultos (fiscais, laborais, contratuais), clientes em risco de churn pós-aquisição, tecnologia legada incompatível. Comprar 'gato por lebre' é comum.",
+      "INTEGRAÇÃO CULTURAL: a equipa local tem identidade, hábitos, relações com clientes e fornecedores que não sobrevivem a fusão cultural mal gerida. Taxa de insucesso de integrações pós-M&A nos primeiros 24 meses é ~30-50%.",
+      "OVERPAYMENT: o preço de entrada em mercados atractivos está inflacionado pela concorrência entre compradores. Pagar 12× EBITDA em mercado emergente pode destruir valor logo no closing."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Regra prática para aquisição: nunca pagar mais do que 5× EBITDA para alvo em mercado emergente (devido ao risco), e exigir 6-12 meses de gestão conjunta antes de integração plena. Integração imediata é receita para desastre." }
+  ],
+  "keyPoints": [
+    "Nove modos de entrada do menos ao mais intenso: exportação indirecta → exportação directa → licenciamento → franchising → contract manufacturing → joint venture → aliança estratégica → subsidiária greenfield → aquisição.",
+    "Trade-off central: controlo vs risco vs velocidade vs commitment. Não há modo óptimo absoluto — escolha depende de tipo de produto, IP, e estratégia.",
+    "Licenciamento é tentador por baixo risco, mas elimina aprendizado organizacional sobre mercado — frequentemente a vantagem competitiva sustentável mais valiosa.",
+    "Joint venture: definir exit desde dia 1, alinhar expectativas de retorno, separar governance de gestão, proteger IP contratualmente.",
+    "Aquisição: due diligence rigorosa (passivos ocultos), integração cultural lenta (6-12 meses), preço realista (≤5× EBITDA em mercado emergente)."
+  ],
+  "suggestedReadings": [
+    "Hollensen, S. (2020). 'Global Marketing', 8th ed., Pearson — capítulo sobre modos de entrada.",
+    "Root, F. R. (1994). 'Entry Strategies for International Markets', Lexington Books.",
+    "Kogut, B. (1988). 'Joint Ventures: Theoretical and Empirical Perspectives', Strategic Management Journal."
+  ]
+}

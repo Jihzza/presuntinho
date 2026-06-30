@@ -1,0 +1,76 @@
+{
+  "id": "3-estrategias-multi-vs-global",
+  "courseSlug": "estrategia-internacional",
+  "title": "Estratégia Multi-doméstica, Global, Transnacional e Internacional",
+  "audio": "Lição sobre os quatro arquétipos de Bartlett & Ghoshal: multi-doméstica, global, transnacional e internacional — e como escolher.<break/><break/>Vamos continuar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "Os quatro arquétipos de Bartlett & Ghoshal" },
+    { "type": "p", "text": "Sumantra Ghoshal e Christopher Bartlett (1989, 'Managing Across Borders') propuseram uma matriz 2×2 com duas dimensões: integração global (grau em que a empresa trata o mundo como um único mercado e coordena operações entre países) vs resposta local (grau em que adapta oferta, marketing e operações a cada país). Isto dá quatro arquétipos estratégicos:" },
+    { "type": "ul", "items": [
+      "ESTRATÉGIA INTERNACIONAL: baixa integração global + baixa resposta local. Empresa explora oportunidades noutros países mas mantém operações locais essencialmente independentes. Risco: activos e competências não são partilhados entre geografias, sinergias limitadas. Típico de PMEs em fase inicial de internacionalização.",
+      "ESTRATÉGIA MULTI-DOMÉSTICA: baixa integração global + alta resposta local. Máxima adaptação a cada mercado. Típico de bens de consumo onde gosto local é determinante (cerveja, alimentos). Operações locais têm autonomia significativa, decisão de produto local.",
+      "ESTRATÉGIA GLOBAL: alta integração global + baixa resposta local. Produto único vendido em todos os mercados com mínima adaptação. Típico de semicondutores, aviação comercial, commodities industriais. Vantagens de escala máxima, mas perde responsiveness local.",
+      "ESTRATÉGIA TRANSNACIONAL: alta integração global + alta resposta local. Empresa consegue simultaneamente eficiência global e adaptação local. Pressupõe capacidade organizacional rara: matriz complexa, sistemas de knowledge-sharing entre subsidiárias,equipa multicultural. Risco: custo organizacional elevadíssimo, complexidade de gestão."
+    ] },
+    { "type": "callout", "variant": "example", "text": "Coca-Cola opera próximo de multi-doméstico: master brand global mas execução de marketing local, sabores regionais, campanhas adaptadas. Toyota opera próximo de transnacional: plataforma global de produção mas modelos desenhados regionalmente (Yaris para Europa, Corolla para EUA, Hilux para mercados emergentes). A Samsung transitou de multi-doméstica para transnacional nos anos 2000 com investimento massivo em I&D central + equipas regionais de design." },
+    { "type": "h2", "text": "Pressão por integração vs pressão por resposta local" },
+    { "type": "p", "text": "As duas dimensões da matriz são funções de pressões estruturais da indústria:" },
+    { "type": "h3", "text": "Drivers de INTEGRAÇÃO GLOBAL" },
+    { "type": "ul", "items": [
+      "Intensidade de I&D elevada —研发 spread por múltiplos mercados é ineficiente se o produto final é o mesmo.",
+      "Economias de escala em produção — uma fábrica servindo múltiplos países é mais barata do que uma fábrica por país.",
+      "Presença de clientes globais — cliente multinacional exige fornecedor com presença multinacional coordenada.",
+      "Pressão competitiva de rivais globais — concorrente que opera em escala global ganha margem que pode reinvestir em preço ou marketing.",
+      "Necessidade de marca global — categorias onde a marca ganha força com presença multinacional (luxo, tecnologia, aviação)."
+    ] },
+    { "type": "h3", "text": "Drivers de RESPOSTA LOCAL" },
+    { "type": "ul", "items": [
+      "Diferenças de gosto e cultura entre mercados — adaptação de produto é vantagem competitiva.",
+      "Pressão de distribuição local — retalho local tem práticas, margens e logística próprias.",
+      "Regulação nacional distinta — normas técnicas, fiscais, laborais variam.",
+      "Necessidade de adaptação de marketing — mensagem global não conecta se referências culturais são diferentes.",
+      "Hostilidade política/governamental a players 'estrangeiros' — adaptação é estratégia de legitimidade."
+    ] },
+    { "type": "p", "text": "Onde os dois conjuntos de pressões são fortes simultaneamente, surge o 'transnational dilemma' — pressão para globalizar E para localizar em paralelo. Poucas empresas conseguem resolver; a maioria escolhe comprometer uma dimensão." },
+    { "type": "callout", "variant": "warning", "text": "O 'transnational' parece o ideal teórico (eficiência + adaptação), mas tem custo organizacional brutal. Bartlett & Ghoshal estimam que estrutura transnacional exige 30-50% mais overhead de coordenação que multi-doméstica ou global pura. É um trade-off, não um upgrade automático." },
+    { "type": "h2", "text": "A escolha do arquétipo depende de sector e fase" },
+    { "type": "p", "text": "Não há 'melhor arquétipo' — escolha depende de:" },
+    { "type": "ul", "items": [
+      "Tipo de produto: bens físicos com cadeia logística pesada tendem a multi-doméstica (cerveja) ou transnacional (automóvel). Serviços digitais tendem a global (software) ou internacional (consultoria).",
+      "Maturidade da empresa em internacionalização: nos primeiros 3 anos, internacional ou multi-doméstica (subsidiária autónoma com pouca coordenação central). A partir de 5-10 anos em múltiplos mercados, pressões de escala puxam para global ou transnacional.",
+      "Diferenciação da indústria: commoditie pura (aço, granel) força integração global; diferenciação alta (luxo, moda) permite multi-doméstica ou transnacional.",
+      "Custo de coordenação: sectores com IT maduro e gestão deequipa remota eficiente conseguem transnacional; sectores com cadeia física complexa ficam em multi-doméstica."
+    ] },
+    { "type": "h3", "text": "Evolução típica de uma multinacional" },
+    { "type": "p", "text": "Empresas geralmente atravessam fases:" },
+    { "type": "ul", "items": [
+      "Fase 1 (INTERNACIONAL): exportação + subsidiária comercial. Presença limitada, aprendizado baixo.",
+      "Fase 2 (MULTI-DOMÉSTICA): subsidiária local com autonomia. Adaptação forte, sinergia fraca.",
+      "Fase 3 (GLOBAL): integração de produção, marketing, I&D. Eficiência alta, adaptação baixa.",
+      "Fase 4 (TRANSNACIONAL): tentativa de combinar ambas. Poucas empresas chegam aqui; as que chegam são tipicamente Unilever, Nestlé, Toyota, Cisco."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "PME em primeira internacionalização devem assumir Fase 1-2. A transição para Fase 3-4 é decisão de 10+ anos, com investimento massivo em sistemas e cultura organizacional. Tentar saltar directo para 'transnacional' na primeira expansão é receita para paralisia organizacional." },
+    { "type": "h2", "text": "Coordenação da cadeia de valor global" },
+    { "type": "p", "text": "Qualquer que seja o arquétipo escolhido, há decisões de configuração da cadeia de valor:" },
+    { "type": "ul", "items": [
+      "ONDE fazer I&D:集中 (matriz) gera eficiência e proteção de IP;分散 (múltiplas localizações) gera adaptabilidade a mercados locais e acesso a talento.",
+      "ONDE produzir: concentração em poucos locais aproveita escala mas aumenta risco cambial e logístico; dispersão geográfica reduz risco mas escala por local.",
+      "ONDE montar/embalar: 'late customization' — produzir peça base em país low-cost, finalizar (embalagem, manual,idioma) perto do consumidor final, reduz custo de adaptação.",
+      "ONDE fazer suporte/serviço: centralização (call center global) reduz custo mas pode falhar em idiomas e nuances; descentralização (suporte local) tem custo alto mas qualidade percebida maior.",
+      "ONDE comprar (sourcing): global procurement reduz custo mas cria dependência de fornecedores distantes e risco de disruption."
+    ] }
+  ],
+  "keyPoints": [
+    "Quatro arquétipos de Bartlett & Ghoshal: INTERNACIONAL (baixa integração + baixa resposta), MULTI-DOMÉSTICA (baixa + alta), GLOBAL (alta + baixa), TRANSNACIONAL (alta + alta).",
+    "Drivers de integração global: I&D intensivo, economias de escala, clientes globais, rivalidade global, valor de marca global.",
+    "Drivers de resposta local: diferenças de gosto, distribuição local, regulação nacional, marketing cultural, hostilidade a 'estrangeiros'.",
+    "Transnacional é o ideal teórico mas custa 30-50% mais em overhead organizacional — é trade-off, não upgrade automático.",
+    "Evolução típica PME: INTERNACIONAL → MULTI-DOMÉSTICA → GLOBAL → TRANSNACIONAL. Saltar fases é receita para paralisia."
+  ],
+  "suggestedReadings": [
+    "Bartlett, C. A. & Ghoshal, S. (1989). 'Managing Across Borders: The Transnational Solution', Harvard Business School Press.",
+    "Yip, G. S. (2003). 'Total Global Strategy II', Prentice Hall.",
+    "Prahalad, C. K. & Doz, Y. (1987). 'The Multinational Mission', Free Press."
+  ]
+}

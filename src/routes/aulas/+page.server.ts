@@ -96,8 +96,9 @@ const COURSE_META: Record<string, CourseMeta> = {
         'gestao-inovacao': { slug: 'gestao-inovacao', title: 'Gestão da Inovação e Tecnologia', icon: '💡', color: '#ca8a04' },
           'comercio-internacional': { slug: 'comercio-internacional', title: 'Comércio Internacional', icon: '🌐', color: '#0e7490' },
           'marketing-internacional': { slug: 'marketing-internacional', title: 'Marketing Internacional', icon: '🌍', color: '#0ea5e9' },
-          'gestao-conflitos': { slug: 'gestao-conflitos', title: 'Gestão de Conflitos', icon: '🕊️', color: '#65a30d' }
-            };
+          'gestao-conflitos': { slug: 'gestao-conflitos', title: 'Gestão de Conflitos', icon: '🕊️', color: '#65a30d' },
+                    'estrategia-internacional': { slug: 'estrategia-internacional', title: 'Estratégia Internacional', icon: '🌍', color: '#0ea5e9' }
+                      };
 
 /** Turn "blue-ocean-strategy" → "Blue Ocean Strategy". */
 function humanise(slug: string): string {

@@ -1,0 +1,67 @@
+{
+  "id": "1-drivers-da-internacionalizacao",
+  "courseSlug": "estrategia-internacional",
+  "title": "Porquê Internacionalizar: Drivers e Pressões",
+  "audio": "Lição sobre estratégia internacional, drivers de internacionalização e o modelo CAGE de Pankaj Ghemawat.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "Internacionalizar é resposta a drivers — não moda estratégica" },
+    { "type": "p", "text": "Internacionalização raramente é decisão 'pura' de crescimento — é resposta a um conjunto de pressões estruturais que tornam a expansão internacional economicamente racional (ou inevitável). Identificar qual driver empurra cada empresa é o primeiro passo para escolher modo de entrada, geografia e cadência. Confundir drivers leva a erros estratégicos caros: entrar num mercado porque 'todos entram' gera expansão sem vantagem; entrar por pressão competitiva real gera expansão com propósito." },
+    { "type": "h3", "text": "Os cinco grandes drivers de internacionalização" },
+    { "type": "p", "text": "A literatura (Dunning, Yip, Ghemawat) classifica os drivers em cinco categorias — procura, oferta, custos, governo e concorrentes:" },
+    { "type": "ul", "items": [
+      "Drivers de PROCURA: mercado doméstico saturado ou em declínio, cliente-chave que pede presença local, oportunidade em mercado emergente onde o segmento-alvo cresce 3-5× mais depressa do que no país de origem, ou procura global por uma categoria nova onde o país tem first-mover cultural.",
+      "Drivers de OFERTA: capacidade produtiva sub-utilizada no país de origem que pode ser rentabilizada servindo mercados externos, competências distintivas (tecnologia, marca, design) que são transferíveis para outros contextos sem perder valor, ou produtos em fim de ciclo de vida doméstico que podem ter segunda vida em mercados de menor exigência.",
+      "Drivers de CUSTOS: mão-de-obra mais barata em outras geografias para componentes não-críticos, acesso a matérias-primas ou energia mais baratas, economias de escala que só se atingem com volume combinado de múltiplos mercados, ou acesso a incentivos fiscais e subsídios à I&D em determinados países.",
+      "Drivers de GOVERNO: restrições ao mercado doméstico (quotas de importação em terceiros países que a empresa pode contornar produzindo lá), tratados comerciais que reduzem tarifas, regulação que favorece operadores locais (exigindo produção local), ou políticas públicas que subsidiem exportação.",
+      "Drivers de CONCORRENTES: pressão competitiva de rivais que já internacionalizaram e ganham escala, defensiva estratégica para bloquear entrada de terceiros em mercados-alvo, ou fusão/adquirir player local para ganhar posição antes de multinacional rival."
+    ] },
+    { "type": "callout", "variant": "example", "text": "Uma marca portuguesa de cosmética natural pode ter três drivers simultâneos: driver de PROCURA (Brasil tem afinidade cultural com produtos naturais mediterrânicos), driver de OFERTA (capacidade da fábrica em Vila Nova de Gaia com utilização a 60%), e driver de CONCORRENTES (a marca espanhola Similar já entrou no Brasil). Internacionalizar para responder só a um dos três, ignorando os outros dois, gera expansão subótima." },
+    { "type": "h2", "text": "O modelo CAGE: distância que ainda importa no mundo globalizado" },
+    { "type": "p", "text": "Pankaj Ghemawat (2001, 'Distance Still Matters') propôs o framework CAGE para desafiar a ideia de 'mundo plano'. A distância entre dois países não é apenas geográfica — é estrutural em quatro dimensões, cada uma criando fricção diferente para internacionalização:" },
+    { "type": "ul", "items": [
+      "C — CULTURAL: diferenças de língua, religião, valores, raça, etnia, normas sociais,饮食习惯. Maior distância cultural gera maior custo de adaptação de produto, comunicação de marketing e gestão deequipa local. Um país anglófono para outro país anglófono tem distância cultural baixa; um país muçulmano conservador para um país nórdico tem distância alta.",
+      "A — ADMINISTRATIVE (ou institucional): laços coloniais, acordos comerciais, moeda comum, ausência de barreiras não-tarifárias. A UE reduz distância administrativa intra-bloco a quase zero para mercadorias (mas não para serviços regulados). Laços coloniaisPortugal-Brasil criam distância administrativa baixa apesar de serem continentes diferentes.",
+      "G — GEOGRAPHIC: distância física, acesso a transporte (porto, aeroporto, ferrovia), terreno, tamanho do país, risco climático, risco de疫病. Custo de transporte e tempo de entrega são funções directas da distância geográfica — mas há economias de densidade que atenuam (hub logístico em Roterdão serve toda a Europa).",
+      "E — ECONOMIC: PIB per capita, distribuição de rendimento, custo de mão-de-obra, custo de capital, intensidade de I&D, infraestrutura digital. Mercados com PIB per capita muito diferente do país de origem exigem adaptação de preço e por vezes de modelo de negócio (produto 'good enough' para mercados de baixo rendimento)."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Use CAGE para pontuar candidatos a internacionalização: para cada país-alvo, atribua 1 (muito baixa) a 5 (muito alta) em cada dimensão. Some. Quanto menor o score, mais fácil a expansão. Portugal→Espanha tem tipicamente C:2, A:1, G:1, E:2 = 6. Portugal→China = C:5, A:4, G:4, E:3 = 16. Não é bloqueante — mas exige mais planeamento, mais capital e mais paciência." },
+    { "type": "h2", "text": "Quando NÃO internacionalizar — os sinais de alerta" },
+    { "type": "p", "text": "Internacionalizar cedo demais é uma das causas mais frequentes de morte de PME. Sinais de que NÃO é momento de internacionalizar:" },
+    { "type": "ul", "items": [
+      "Mercado doméstico ainda em crescimento e com margem saudável — saturar o próprio terreno antes de expandir é regra de gestão básica que o hype de 'scale-up global' ignora.",
+      "Produto/serviço ainda instável no mercado doméstico — internacionalizar um produto que ainda tem bugs de NPS é distribuir os bugs a maior escala.",
+      "Equipa sem capacidade de gestão remota — se a equipa directiva nunca geriu colaboradores a 3 fusos horários, abrir uma filial em Singapura vai falhar por reasons não-mercadológicas.",
+      "Sem diferencial competitivo claro no mercado doméstico — se em Portugal a empresa compete por preço, em mercados externos vai competir com players maiores e mais eficientes. Internacionalizar é amplificar o diferencial existente, não criá-lo.",
+      "Sem capacidade financeira para absorver 18-24 meses de operação deficitária no novo mercado — expansão internacional raramente dá lucro antes do segundo ano; cash-flow negativo durante o período de ramp-up é norma, não exceção."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Estudos de BCG sobre internacionalização de PMEs europeias mostram que ~40% das expansões internacionais nos primeiros 3 anos não recuperam investimento. O principal factor de falha não é escolha errada de mercado — é timing errado: empresa que ainda não consolidou o mercado doméstico e usa internacionalização como fuga para a frente." },
+    { "type": "h2", "text": "O Uppsala model vs born global — duas lógicas" },
+    { "type": "p", "text": "Há duas lógicas dominantes de internacionalização em PME:" },
+    { "type": "ul", "items": [
+      "Uppsala model (Johanson & Vahlne, 1977): internacionalização incremental, começando por mercados psicologicamente próximos (países nórdicos entram em países nórdicos), ganhando experiência e conhecimento, depois saltando para mercados progressivamente mais distantes. Ênfase em learning-by-doing e commitment gradual.",
+      "Born Global (McKinsey, Oviatt & McDougall, 1994): empresas que desde a fundação se concebem globais, explorando nichos onde a escala global é vantagem (software B2B, design, biotech). Saltam a fase incremental e internacionalizam nos primeiros 1-3 anos."
+    ] },
+    { "type": "p", "text": "A escolha entre Uppsala e Born Global depende quase inteiramente do tipo de produto. Produtos físicos com cadeia logística pesada (alimentos, mobiliário) seguem Uppsala. Produtos digitais ou com forte componente de IP (software, consultoria especializada, design) seguem Born Global. PME portuguesa de cosmética natural está no primeiro caso — Uppsala com mercado-âncora Brasil faz sentido; PME portuguesa de SaaS para contabilidade pode ser Born Global desde dia 1." },
+    { "type": "h3", "text": "Indicadores de prontidão para internacionalizar" },
+    { "type": "p", "text": "Antes de aprovar internacionalização, três perguntas devem ter resposta clara:" },
+    { "type": "ul", "items": [
+      "Qual é o LTV/CAC do mercado doméstico e qual será a trajectória esperada no novo mercado? Se LTV/CAC doméstico é 3 e a projecção para o novo mercado é 1.5, a expansão destruirá valor nos próximos 24 meses mesmo que 'funcione'.",
+      "Que processo interno é replicável e qual depende da pessoa-chave? Se o sucesso doméstico depende do fundador em cada decisão, internacionalizar multiplica o gargalo — não resolve.",
+      "Que recursos financeiros estão alocados para 24 meses de ramp-up SEM expectativa de retorno? Se a resposta for 'vamos buscar financiamento quando estivermos lá', é cedo demais."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "O teste prático: 'se esta expansão falhar completamente em 18 meses, o negócio doméstico sobrevive?' Se a resposta for não, é cedo demais. Internacionalização é upside opcional, não aposta existencial." }
+  ],
+  "keyPoints": [
+    "Drivers de internacionalização: PROCURA (mercado saturado, oportunidade em emergente), OFERTA (capacidade sub-utilizada, IP transferível), CUSTOS (mão-de-obra, escala, incentivos), GOVERNO (quotas, tratados, regulação), CONCORRENTES (pressão defensiva).",
+    "Modelo CAGE de Ghemawat: distância Cultural, Administrativa, Geográfica e Económica entre países determina fricção de internacionalização — quanto maior, mais capital e tempo necessário.",
+    "Sinais de que NÃO é momento: mercado doméstico em crescimento, produto instável, sem experiência de gestão remota, sem diferencial claro, sem runway financeiro para 18-24 meses deficitários.",
+    "Uppsala model: incremental, começar por mercados psicologicamente próximos. Born Global: nichos digitais/IP onde escala global é vantagem desde dia 1.",
+    "Indicadores de prontidão: LTV/CAC projectado, replicabilidade de processo, runway financeiro. Se expansão falhar põe em causa o doméstico, é cedo demais."
+  ],
+  "suggestedReadings": [
+    "Ghemawat, P. (2001). 'Distance Still Matters', Harvard Business Review.",
+    "Dunning, J. H. (1988). 'The Eclectic Paradigm of International Production', Journal of International Business Studies.",
+    "Johanson, J. & Vahlne, J.-E. (1977). 'The Internationalization Process of the Firm', Journal of International Business Studies."
+  ]
+}

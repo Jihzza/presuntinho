@@ -337,19 +337,33 @@
                               ]
                             },
                             'gestao-conflitos': {
-                              slug: 'gestao-conflitos',
-                              title: 'Gestão de Conflitos',
-                              tagline: 'Business Administration · Fontes do conflito, estilos de resposta, negociação integrativa e mediação',
-                              description: 'Gestão de conflitos aplicada à gestão: natureza e fontes do conflito organizacional (tarefas, relações, processos, valores), estilos de resposta (Thomas-Kilmann: competição, colaboração, compromisso, evitamento, acomodação), modelos de processo (posições vs interesses, BATNA/ZOPA), mediação e negociação integrativa, comunicação não-violenta, gestão de conflitos em equipas híbridas e multi-culturais, e o papel do líder como gestor construtivo de divergências.',
-                              icon: '🕊️',
-                              color: '#65a30d',
-                              lessons: [
-                                { slug: '1-natureza-e-fontes-do-conflito', title: '1. Natureza e Fontes do Conflito Organizacional', summary: 'Como o conflito surge em equipas: tarefas, relações, processos e valores, e quando é funcional ou disfuncional.', quizSlug: 'gcq', quizTitle: 'Quiz: Gestão de Conflitos', estMinutes: 9 },
-                                { slug: '2-estilos-e-processos', title: '2. Estilos de Resposta, Processo e Dinâmica', summary: 'Os cinco estilos de Thomas-Kilmann, posições vs interesses, BATNA/ZOPA e escalada vs des-escalada.', quizSlug: 'gcq', quizTitle: 'Quiz: Gestão de Conflitos', estMinutes: 9 },
-                                { slug: '3-negociacao-mediacao-comunicacao', title: '3. Negociação Integrativa, Mediação e Comunicação Não-Violenta', summary: 'Negociação baseada em interesses, escuta activa, CNV e o papel do gestor como mediador.', quizSlug: 'gcq', quizTitle: 'Quiz: Gestão de Conflitos', estMinutes: 9 },
-                                { slug: '4-caso-de-estudo', title: '4. Caso de Estudo: Conflito em Equipa Híbrida', summary: 'Aplicação prática: como uma equipa híbrida resolve uma disputa de prioridades entre produto e engineering.', quizSlug: 'gcq', quizTitle: 'Quiz: Gestão de Conflitos', estMinutes: 9 }
-                              ]
-                            },
+                                                          slug: 'gestao-conflitos',
+                                                          title: 'Gestão de Conflitos',
+                                                          tagline: 'Business Administration · Fontes do conflito, estilos de resposta, negociação integrativa e mediação',
+                                                          description: 'Gestão de conflitos aplicada à gestão: natureza e fontes do conflito organizacional (tarefas, relações, processos, valores), estilos de resposta (Thomas-Kilmann: competição, colaboração, compromisso, evitamento, acomodação), modelos de processo (posições vs interesses, BATNA/ZOPA), mediação e negociação integrativa, comunicação não-violenta, gestão de conflitos em equipas híbridas e multi-culturais, e o papel do líder como gestor construtivo de divergências.',
+                                                          icon: '🕊️',
+                                                          color: '#65a30d',
+                                                          lessons: [
+                                                            { slug: '1-natureza-e-fontes-do-conflito', title: '1. Natureza e Fontes do Conflito Organizacional', summary: 'Como o conflito surge em equipas: tarefas, relações, processos e valores, e quando é funcional ou disfuncional.', quizSlug: 'gcq', quizTitle: 'Quiz: Gestão de Conflitos', estMinutes: 9 },
+                                                            { slug: '2-estilos-e-processos', title: '2. Estilos de Resposta, Processo e Dinâmica', summary: 'Os cinco estilos de Thomas-Kilmann, posições vs interesses, BATNA/ZOPA e escalada vs des-escalada.', quizSlug: 'gcq', quizTitle: 'Quiz: Gestão de Conflitos', estMinutes: 9 },
+                                                            { slug: '3-negociacao-mediacao-comunicacao', title: '3. Negociação Integrativa, Mediação e Comunicação Não-Violenta', summary: 'Negociação baseada em interesses, escuta activa, CNV e o papel do gestor como mediador.', quizSlug: 'gcq', quizTitle: 'Quiz: Gestão de Conflitos', estMinutes: 9 },
+                                                            { slug: '4-caso-de-estudo', title: '4. Caso de Estudo: Conflito em Equipa Híbrida', summary: 'Aplicação prática: como uma equipa híbrida resolve uma disputa de prioridades entre produto e engineering.', quizSlug: 'gcq', quizTitle: 'Quiz: Gestão de Conflitos', estMinutes: 9 }
+                                                          ]
+                                                        },
+                                                        'estrategia-internacional': {
+                                                          slug: 'estrategia-internacional',
+                                                          title: 'Estratégia Internacional',
+                                                          tagline: 'Business Administration · Drivers de internacionalização, modos de entrada, estratégias multi-doméstica/global/transnacional e gestão de risco internacional',
+                                                          description: 'Estratégia internacional aplicada à gestão: porquê internacionalizar (drivers de procura, oferta, custos, governo e concorrentes), modos de entrada (exportação, licenciamento, franchising, joint ventures, subsidiária de capital próprio, aquisições), escolha entre globalização vs multi-doméstico vs transnacional vs internacional, localização e vantagens específicas, decisões de coordenação e configuração da cadeia de valor (Hofstede e distância cultural, Bartlett & Ghoshal), timing de entrada, gestão de risco cambial e político, e os trade-offs entre integração global e resposta local em empresas multinacionais.',
+                                                          icon: '🌍',
+                                                          color: '#0ea5e9',
+                                                          lessons: [
+                                                            { slug: '1-drivers-da-internacionalizacao', title: '1. Porquê Internacionalizar: Drivers e Pressões', summary: 'As quatro forças CAGE de Pankaj Ghemawat que tornam a distância entre mercados maleável: cultura, administração, geografia e economia — e como cada uma gera drivers de procura, oferta, custos, governo e concorrentes.', quizSlug: 'eiq', quizTitle: 'Quiz: Estratégia Internacional', estMinutes: 9 },
+                                                            { slug: '2-modos-de-entrada', title: '2. Modos de Entrada e Compromisso de Recursos', summary: 'Espectro de entrada: exportação indirecta, licenciamento, franchising, contract manufacturing, joint venture, subsidiária greenfield, aquisição. Trade-offs controlo vs risco vs commitment vs velocidade.', quizSlug: 'eiq', quizTitle: 'Quiz: Estratégia Internacional', estMinutes: 10 },
+                                                            { slug: '3-estrategias-multi-vs-global', title: '3. Estratégia Multi-doméstica, Global, Transnacional e Internacional', summary: 'Os quatro arquétipos de Bartlett & Ghoshal: integração global vs resposta local, e como a matriz 2×2 pressupõe trade-offs. Pressão por integração, pressões por resposta local, e o trade-off transnational dilemma.', quizSlug: 'eiq', quizTitle: 'Quiz: Estratégia Internacional', estMinutes: 10 },
+                                                            { slug: '4-caso-de-estudo', title: '4. Caso: Expansão Ibérica de uma PME de D2C', summary: 'Aplicação prática: uma marca portuguesa de cosméticos naturais entra em Espanha via marketplaces primeiro, depois abre filial em Madrid. Decisões de localização, modo de entrada, gestão cambial e adaptação cultural.', quizSlug: 'eiq', quizTitle: 'Quiz: Estratégia Internacional', estMinutes: 9 }
+                                                          ]
+                                                        },
                     'analise-investimentos': {
                       slug: 'analise-investimentos',
                       title: 'Análise de Investimentos',
