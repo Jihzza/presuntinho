@@ -262,7 +262,7 @@
   {#if financasApp}
     <footer class="page-footer" aria-hidden="true">
       <span style="--swatch: {financasApp.color}">{financasApp.icon}</span>
-      <span>{$t('financas.footer.subapp', { default: 'Sub-app #{n} no hub' }).replace('{n}', String(financasApp.order))}</span>
+      <span>{$t('financas.footer.position', { default: 'Hub · Finanças' })}</span>
     </footer>
   {/if}
 </div>

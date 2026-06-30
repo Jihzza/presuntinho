@@ -178,7 +178,7 @@
   {#if habitosApp}
     <footer class="page-footer" aria-hidden="true">
         <span style="--swatch: {habitosApp.color}">{habitosApp.icon}</span>
-        <span>{$t('habitos.footer.subapp', { default: 'Sub-app #{n} no hub' }).replace('{n}', String(habitosApp.order))}</span>
+        <span>{$t('habitos.footer.position', { default: 'Hub · Hábitos' })}</span>
       </footer>
   {/if}
 </div>
