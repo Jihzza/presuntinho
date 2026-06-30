@@ -277,14 +277,20 @@
 
 <style>
   .chat-root {
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 64px - 64px); /* header + bottom-nav */
-    max-width: 800px;
-    margin: 0 auto;
-    background: var(--bg, #1f2e4a);
-    color: var(--txt, #fff);
-  }
+      display: flex;
+      flex-direction: column;
+      /* Use 100dvh (dynamic viewport height) to account for mobile browser chrome.
+         The previous `calc(100vh - 64px - 64px)` was fragile: in PWA standalone
+         the bottom-nav is ~80px (not 64) due to env(safe-area-inset-bottom),
+         and 100vh on iOS standalone eats extra space at top. 100dvh reflects
+         the actually visible viewport after chrome, and we use flex so the
+         composer can grow inside rather than depend on absolute heights. */
+      min-height: calc(100dvh - 64px - 80px);
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--bg, #1f2e4a);
+      color: var(--txt, #fff);
+    }
   .chat-header {
     display: flex;
     align-items: center;
@@ -399,13 +405,17 @@
     opacity: 0.8;
   }
   .composer {
-    display: flex;
-    align-items: flex-end;
-    gap: 0.4rem;
-    padding: 0.6rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.2);
-  }
+      display: flex;
+      align-items: flex-end;
+      gap: 0.4rem;
+      padding: 0.6rem 0.6rem calc(0.6rem + env(safe-area-inset-bottom));
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.2);
+      /* Stay glued to the bottom even if .chat-root shrinks below its
+         min-height (e.g. when keyboard is open on mobile). */
+      position: sticky;
+      bottom: 0;
+    }
   .icon-btn {
     background: transparent;
     border: 0;
