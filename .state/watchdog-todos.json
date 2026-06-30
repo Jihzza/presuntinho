@@ -1,15 +1,6 @@
 {
-  "lastUpdated": "2026-06-30T05:30:00+02:00",
+  "lastUpdated": "2026-06-30T08:15:00+02:00",
   "openItems": [
-    {
-      "id": "gap-091",
-      "category": "i18n",
-      "description": "Auditoria sistemática de PT hardcoded em .svelte files. Skander 1 já produziu priorização em .state/i18n-audit-gap-091.md + 4 batches em .state/skander1-batches-gap-091.md. Batch-1+2 (escola + finanças) committed em 55e240e. Batch-3 (hábitos+trabalhos) e Batch-4 (agente+aulas+dl+biblioteca) em background (deleg_da34fa09).",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-29-20",
-      "created_at": "2026-06-29T21:05:00+02:00",
-      "updated_at": "2026-06-30T05:30:00+02:00"
-    },
     {
       "id": "gap-028",
       "category": "smoke-fail",
@@ -21,7 +12,7 @@
     {
       "id": "gap-034",
       "category": "feature-pedida-pelo-Daniel",
-      "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Já temos 44 cadeiras BA entregues. Continua como gap-107.",
+      "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Já temos 45 cadeiras BA entregues. Continua como gap-108.",
       "severity": "baixa",
       "source": "audio-Daniel-2026-06-27",
       "created_at": "2026-06-28T13:05:00+02:00"
@@ -51,47 +42,123 @@
       "created_at": "2026-06-28T23:25:00+02:00"
     },
     {
-      "id": "gap-104",
-      "category": "lição/curso",
-      "description": "Cadeira BA #45: brief Skander 1 (deleg_c2fbca33 do tick anterior). Próxima cadeira a despachar.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-30-04",
-      "created_at": "2026-06-30T04:55:00+02:00"
-    },
-    {
-      "id": "gap-105",
-      "category": "i18n",
-      "description": "gap-091 batch-3 — hábitos/novo (3 fixes: hero.title, criando, submit.criar) + trabalhos/assignment/[slug] (4 fixes: loading, file_path, back_to_list ×2) + 6 chaves × 5 locales (30 entries). Despachado para Skander 2 (deleg_da34fa09).",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-30-05",
-      "created_at": "2026-06-30T05:30:00+02:00",
-      "dispatched_to": "Skander 2 — deleg_da34fa09"
-    },
-    {
-      "id": "gap-106",
-      "category": "i18n",
-      "description": "gap-091 batch-4 — agente/+page.svelte (1 fix + 1 cleanup), aulas/+page.svelte (1 cleanup), dl/+page.svelte (1 cleanup), biblioteca/novo/+page.svelte (2 fixes + 1 cleanup) + 3 chaves × 5 locales (15 entries). Despachado para Skander 2 (deleg_da34fa09).",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-30-05",
-      "created_at": "2026-06-30T05:30:00+02:00",
-      "dispatched_to": "Skander 2 — deleg_da34fa09"
-    },
-    {
       "id": "gap-107",
       "category": "lição/curso",
-      "description": "Próxima cadeira BA a despachar (já temos 44). Candidatas: #45 Auditoria e Controladoria, #46 Direito Empresarial, #47 Ética nos Negócios, #48 Responsabilidade Social, #49 Empreendedorismo Social, #50 Economia Comportamental. Skander 1 a decidir em background (deleg_da34fa09).",
+      "description": "Próxima cadeira BA a despachar (já temos 45). Skander 1 a decidir em background.",
       "severity": "baixa",
       "source": "watchdog-tick-2026-06-30-05",
-      "created_at": "2026-06-30T05:30:00+02:00",
-      "dispatched_to": "Skander 1 — deleg_da34fa09"
+      "created_at": "2026-06-30T05:30:00+02:00"
+    },
+    {
+      "id": "gap-108",
+      "category": "lição/curso",
+      "description": "Cadeira BA #46. Após gap-107 (Skander 1 decide), despachar BA #46 com 4 lições + 10 quiz MCQ + i18n 5 locales + CATALOGUE wired.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-30-07",
+      "created_at": "2026-06-30T07:00:00+02:00"
+    },
+    {
+      "id": "gap-111",
+      "category": "UI/UX",
+      "description": "Hub: apagar copy 'Site V3 preservado' e 'V3 Content' que vaza developer-speak para user final. Auditado por Skander 1 em 2026-06-28.",
+      "severity": "média",
+      "source": "audit-UX-Skander1-2026-06-28",
+      "created_at": "2026-06-30T08:15:00+02:00",
+      "dispatched_to": "Skander 2 — deleg_63dfee9d"
+    },
+    {
+      "id": "gap-112",
+      "category": "empty-area",
+      "description": "/habitos/: mostrar streak '🔥 N dias' + status '✓ hoje' em cada row. Sem isto, lista parece vazia. Auditado por Skander 1 em 2026-06-28.",
+      "severity": "alta",
+      "source": "audit-UX-Skander1-2026-06-28",
+      "created_at": "2026-06-30T08:15:00+02:00",
+      "dispatched_to": "Skander 2 — deleg_63dfee9d"
+    },
+    {
+      "id": "gap-113",
+      "category": "UI/UX",
+      "description": "/financas/: gráfico Chart.js só mostra despesas. Adicionar receitas (dataset #2 verde) ou stacked bar.",
+      "severity": "média",
+      "source": "audit-UX-Skander1-2026-06-28",
+      "created_at": "2026-06-30T08:15:00+02:00",
+      "dispatched_to": "Skander 2 — deleg_63dfee9d"
+    },
+    {
+      "id": "gap-114",
+      "category": "bug",
+      "description": "Splash: placeholder='princesa' revela password do Daniel. Substituir por placeholder genérico.",
+      "severity": "alta",
+      "source": "audit-UX-Skander1-2026-06-28",
+      "created_at": "2026-06-30T08:15:00+02:00",
+      "dispatched_to": "Skander 2 — deleg_63dfee9d"
+    },
+    {
+      "id": "gap-115",
+      "category": "bug",
+      "description": "Definicoes: link 'https://github.com/' aponta para homepage genérico. 'Versão · {today}' mostra data, não versão. Corrigir ambos.",
+      "severity": "média",
+      "source": "audit-UX-Skander1-2026-06-28",
+      "created_at": "2026-06-30T08:15:00+02:00",
+      "dispatched_to": "Skander 2 — deleg_63dfee9d"
+    },
+    {
+      "id": "gap-116",
+      "category": "bug",
+      "description": "Definicoes: botão 'reset_password' mostra '⏳ soon' e não faz nada. Implementar fluxo real com PBKDF2.",
+      "severity": "alta",
+      "source": "audit-UX-Skander1-2026-06-28",
+      "created_at": "2026-06-30T08:15:00+02:00",
+      "dispatched_to": "Skander 2 — deleg_63dfee9d"
+    },
+    {
+      "id": "gap-117",
+      "category": "empty-area",
+      "description": "Seed finanças só para Fatma — Daniel vê dashboard em branco. Generalizar ensureSeedTransacoes para ambos profiles.",
+      "severity": "alta",
+      "source": "audit-UX-Skander1-2026-06-28",
+      "created_at": "2026-06-30T08:15:00+02:00",
+      "dispatched_to": "Skander 2 — deleg_63dfee9d"
+    },
+    {
+      "id": "gap-118",
+      "category": "UI/UX",
+      "description": "HeartButton sem tooltip '✨ Easter egg' — user pensa que é botão quebrado.",
+      "severity": "baixa",
+      "source": "audit-UX-Skander1-2026-06-28",
+      "created_at": "2026-06-30T08:15:00+02:00",
+      "dispatched_to": "Skander 2 — deleg_63dfee9d"
+    },
+    {
+      "id": "gap-119",
+      "category": "UI/UX",
+      "description": "Footer 'Sub-app #n no hub' em Finanças/Hábitos — metadata interna a sangrar para user.",
+      "severity": "baixa",
+      "source": "audit-UX-Skander1-2026-06-28",
+      "created_at": "2026-06-30T08:15:00+02:00",
+      "dispatched_to": "Skander 2 — deleg_63dfee9d"
+    },
+    {
+      "id": "gap-120",
+      "category": "empty-area",
+      "description": "Criar /financas/relatorios/ — pie categorias + top 5 despesas + comparativo mês-a-mês + export CSV.",
+      "severity": "média",
+      "source": "audit-UX-Skander1-2026-06-28",
+      "created_at": "2026-06-30T08:15:00+02:00",
+      "dispatched_to": "Skander 2 — deleg_63dfee9d"
     }
   ],
   "closedItems": [
+    {"id": "gap-091", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "c1d542b", "note": "i18n PT→$t() audit completo. 4 batches + 145 i18n entries."},
     {"id": "gap-098", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "5e749db"},
     {"id": "gap-099", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "c11e367"},
     {"id": "gap-100", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "dcdd99f"},
     {"id": "gap-101", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "2d09a97"},
     {"id": "gap-102", "closed_at": "2026-06-30T05:30:00+02:00", "sha": "55e240e"},
-    {"id": "gap-103", "closed_at": "2026-06-30T05:30:00+02:00", "sha": "55e240e"}
+    {"id": "gap-103", "closed_at": "2026-06-30T05:30:00+02:00", "sha": "55e240e"},
+    {"id": "gap-104", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "91e796b", "note": "BA #45 Economia Comportamental. 4 lições + beq quiz 10 + i18n 5 locales + CATALOGUE wired."},
+    {"id": "gap-105", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "c1d542b", "note": "batch-3: habitos/novo + trabalhos/assignment/[slug] + 6 chaves × 5 locales"},
+    {"id": "gap-106", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "c1d542b", "note": "batch-4: agente + aulas + dl + biblioteca/novo + 3 chaves × 5 locales"},
+    {"id": "gap-110", "closed_at": "2026-06-30T08:15:00+02:00", "sha": "942c1ba", "note": "fix(agente) chat-root 100dvh + safe-area-inset-bottom no composer. Áudio Daniel 2026-06-29 18:35 'página do agente não aparece nada'. npm run check verde, npm run build verde."}
   ]
 }
