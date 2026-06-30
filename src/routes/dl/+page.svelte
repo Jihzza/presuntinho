@@ -137,7 +137,7 @@
   <!-- Warning -->
   <article class="card warning">
     <h2>{$t('dl.warning.h2', { default: '⚠️ Lembrete importante' })}</h2>
-    <p>{$t('dl.warning.p', { default: 'Q3 (Marketing Problem), Q4 (TOWS) e Q5 (Recommendation) <strong>não podem usar IA diretamente</strong>. Estas secções têm de ser inteiramente tuas. Usa este material para perceberes a metodologia e depois escreve sozinho/a.' })}</p>
+    <p>{$t('dl.warning.p')}</p>
   </article>
 
   <p class="footer-note" aria-hidden="true">🐷 Presuntinho — Built with ❤️ for Fatma</p>

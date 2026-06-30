@@ -102,7 +102,7 @@
 
 <div class="novo">
   <header class="hero">
-    <h1>{$t('biblioteca.novo.hero.title', { default: '➕ Novo marcador' })}</h1>
+    <h1>{$t('biblioteca.novo.hero.title')}</h1>
     <p class="sub">{$t('biblioteca.novo.hero.sub', { default: 'Guarda um link com título, descrição e tags.' })}</p>
   </header>
 
@@ -178,7 +178,7 @@
     <div class="actions">
       <a class="btn-secondary" href="/biblioteca/">{$t('biblioteca.novo.action.cancel', { default: 'Cancelar' })}</a>
       <button type="submit" class="btn-primary" disabled={submitting}>
-        {submitting ? 'A criar…' : 'Criar marcador'}
+        {submitting ? $t('biblioteca.novo.criando', { default: 'A criar…' }) : $t('biblioteca.novo.submit.criar', { default: 'Criar marcador' })}
       </button>
     </div>
   </form>

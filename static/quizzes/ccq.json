@@ -1,107 +1,117 @@
 {
   "id": "ccq",
   "title": "Quiz: Comportamento do Consumidor",
-  "description": "Testa os teus conhecimentos sobre factores de influência, processo de decisão, segmentação e comportamento digital.",
+  "description": "Testa os teus conhecimentos em comportamento do consumidor: factores que influenciam a decisão de compra (culturais, sociais, pessoais e psicológicos), o processo de decisão de compra em cinco estágios de Kotler (reconhecimento, pesquisa, avaliação, decisão, pós-compra) com resolução limitada e extensiva de problemas, segmentação STP (demográfica, psicográfica, comportamental, geográfica, por benefícios) e construção de personas, e o comportamento digital omnichannel (jornada do cliente, mobile-first, social commerce, showrooming, webrooming, RFM e personalização sob RGPD). 10 perguntas, 4 opções cada, com explicação detalhada.",
   "questions": [
     {
-      "q": "No modelo de Kotler, qual destes blocos é considerado o que actua a um nível mais profundo e quase invisível?",
+      "q": "No modelo de Kotler, qual dos quatro blocos de factores que influenciam a decisão de compra actua num nível mais profundo e quase invisível, abaixo da consciência individual?",
       "opts": [
         "Factores pessoais",
         "Factores culturais",
         "Factores sociais",
         "Factores psicológicos"
       ],
-      "a": 1
+      "a": 1,
+      "explanation": "Os quatro blocos do modelo de Kotler ordenam-se do mais profundo/invisível ao mais visível: (1) FACTORES CULTURAIS — cultura, subcultura e classe social, são valores e comportamentos aprendidos desde a infância que operam abaixo da consciência; (2) factores sociais — grupos de referência, família e papéis/status; (3) factores pessoais — idade, ciclo de vida, ocupação, estilo de vida, personalidade e autoconceito; (4) FACTORES PSICOLÓGICOS — motivação (Maslow), percepção, aprendizagem e crenças/atitudes, são os mais imediatos e conscientes. Os culturais são os mais difíceis de identificar pelo próprio consumidor, mas são os mais estáveis no tempo e os que mais diferenciam uma pessoa de outra."
     },
     {
-      "q": "A teoria de Maslow explica a motivação como:",
+      "q": "Qual das seguintes opções descreve melhor a 'família de procriação' dentro dos factores sociais que influenciam a decisão de compra?",
       "opts": [
-        "Reforço positivo e negativo",
-        "Hierarquia de necessidades (fisiológicas, segurança, sociais, estima, auto-realização)",
-        "Motivações inconscientes e racionalização",
-        "Aprendizagem por tentativa e erro"
+        "A família de orientação — pais e irmãos que transmitem valores na infância",
+        "O agregado de pessoas com quem o consumidor partilha o agregado doméstico, como cônjuge e filhos, que influencia directamente as decisões do dia-a-dia",
+        "O grupo de amigos que serve como referência aspiracional",
+        "Os colegas de trabalho que exercem influência profissional"
       ],
-      "a": 1
+      "a": 1,
+      "explanation": "Kotler distingue dois tipos de família: (1) FAMÍLIA DE ORIENTAÇÃO — pais e irmãos, que transmitem valores e atitudes mesmo depois de o consumidor ser adulto, e cujos efeitos persistem ao longo da vida; (2) FAMÍLIA DE PROCRAÇÃO — cônjuge e filhos, que influencia directamente as decisões quotidianas e é especialmente importante em bens duradouros (carro, casa, electrodomésticos grandes) onde o cônjuge muitas vezes tem voto decisivo. Esta distinção é central em marketing familiar e em estratégias de segmentação."
     },
     {
-      "q": "No processo de decisão de cinco estágios, qual é o primeiro?",
+      "q": "No processo de decisão de compra de cinco estágios de Kotler, qual é a sequência CORRECTA?",
       "opts": [
-        "Pesquisa de informação",
-        "Reconhecimento da necessidade",
-        "Avaliação de alternativas",
-        "Decisão de compra"
+        "Pesquisa de informação → Reconhecimento da necessidade → Avaliação de alternativas → Decisão de compra → Comportamento pós-compra",
+        "Reconhecimento da necessidade → Pesquisa de informação → Avaliação de alternativas → Decisão de compra → Comportamento pós-compra",
+        "Reconhecimento da necessidade → Avaliação de alternativas → Pesquisa de informação → Decisão de compra → Comportamento pós-compra",
+        "Avaliação de alternativas → Reconhecimento da necessidade → Pesquisa de informação → Decisão de compra → Comportamento pós-compra"
       ],
-      "a": 1
+      "a": 1,
+      "explanation": "A sequência clássica do modelo de Kotler é: (1) RECONHECIMENTO DA NECESSIDADE — o consumidor percebe a diferença entre o estado actual e o desejado, despoletado por estímulo interno (fome, sede) ou externo (anúncio, vitrine); (2) PESQUISA DE INFORMAÇÃO — interna (memória) e externa (online, amigos, reviews); (3) AVALIAÇÃO DE ALTERNATIVAS — comparação entre marcas com critérios de ponderação variável; (4) DECISÃO DE COMPRA — intenção que pode ser alterada por atitude dos outros e factores situacionais; (5) COMPORTAMENTO PÓS-COMPRA — satisfação, dissonância cognitiva, recompra e word-of-mouth. Para compras habituais o consumidor salta etapas."
     },
     {
-      "q": "Qual a diferença entre dissonância cognitiva e satisfação pós-compra?",
+      "q": "Na avaliação de alternativas, o modelo em que o consumidor rejeita qualquer marca que falhe NUM ÚNICO critério-chave (independentemente de quão bem pontue nos restantes) chama-se:",
       "opts": [
-        "São a mesma coisa — ambas resultam de expectativas correspondidas",
-        "Dissonância é arrependimento/dúvida quando o produto falha expectativas; satisfação é reforço positivo quando excede",
-        "Dissonância ocorre antes da compra, satisfação depois",
-        "Satisfação é um conceito B2B; dissonância é B2C"
+        "Modelo de valor esperado (expect-value)",
+        "Modelo conjuntivo",
+        "Modelo disjuntivo",
+        "Modelo lexicográfico"
       ],
-      "a": 1
+      "a": 2,
+      "explanation": "São quatro modelos clássicos de avaliação: (1) EXPECT-VALUE — cada alternativa tem um valor esperado ponderado pela importância dos atributos; (2) CONJUNTIVO — a marca é aceite APENAS se passar um limiar mínimo em TODOS os critérios (ninguém compra um carro com 0 estrelas em segurança, mesmo sendo barato); (3) DISJUNTIVO — a marca é rejeitada se falhar num ÚNICO critério-chave, ainda que brilhe nos restantes (ex: rejeitar comida com alergénio, mesmo sendo gourmet); (4) LEXICOGRÁFICO — o critério mais importante decide e elimina marcas em rondas sucessivas. O disjuntivo é o mais útil para identificar hard constraints do consumidor."
     },
     {
-      "q": "Os quatro critérios clássicos de segmentação são:",
+      "q": "A 'resolução extensiva de problemas' (extended problem solving) aplica-se quando:",
       "opts": [
-        "Preço, qualidade, distribuição, promoção",
-        "Geográfica, demográfica, psicográfica, comportamental",
-        "Online, offline, mobile, social",
-        "Idade, género, rendimento, religião"
+        "O consumidor compra por hábito, com baixo envolvimento",
+        "O consumidor faz uma compra altamente envolvida, com avaliação demorada de alternativas e significativa dissonância pós-compra",
+        "O consumidor repete uma compra conhecida, alterando apenas a marca",
+        "O consumidor nunca compra o produto e procura substitutos"
       ],
-      "a": 1
+      "a": 1,
+      "explanation": "São três níveis de resolução de problemas: (1) RESOLUÇÃO EXTENSIVA (extended problem solving) — alta envolvência, avaliação demorada, múltiplas alternativas, alta dissonância pós-compra, típica de carros, casas, férias caras; (2) RESOLUÇÃO LIMITADA (limited problem solving) — envolvimento moderado, alguma pesquisa mas com critérios mais simples, típica de mudar de marca de sabonete ou comprar um electrodoméstico; (3) RESOLUÇÃO ROTINEIRA (routinised response) — compra por hábito, baixo envolvimento, baixo risco percebido (leite, café diário, sal). A escolha de marketing-mix varia radicalmente consoante o nível — extended justifica campanhas detalhadas e vendedores; rotineira exige presença na gôndola."
     },
     {
-      "q": "Uma persona é:",
+      "q": "Quais são os quatro critérios clássicos de segmentação de mercado segundo Kotler?",
       "opts": [
-        "Um cliente real que serve de referência",
-        "Um personagem semi-fictício que representa um segmento-alvo, baseado em dados",
-        "Um indicador de performance de vendas",
-        "O decisor final numa compra B2B"
+        "Preço, qualidade, distribuição e promoção",
+        "Geográfica, demográfica, psicográfica e comportamental",
+        "Online, offline, mobile e social",
+        "Idade, género, rendimento e religião"
       ],
-      "a": 1
+      "a": 1,
+      "explanation": "Os quatro critérios clássicos de segmentação são: (1) GEOGRÁFICA — região, clima, densidade, país, cultura; (2) DEMOGRÁFICA — idade, género, rendimento, educação, religião, etnia, dimensão da família; (3) PSICOGRÁFICA (ou sociográfica) — estilo de vida, valores, personalidade, classe social, AIO (activities, interests, opinions); (4) COMPORTAMENTAL — benefícios procurados, lealdade à marca, taxa de uso, ocasião de uso, estádio de readiness. Muitos autores consideram a segmentação por benefícios a mais poderosa porque correlaciona com as outras variáveis e identifica directamente motivações de compra."
     },
     {
-      "q": "STP significa:",
+      "q": "O modelo RFM (Recency, Frequency, Monetary) é uma ferramenta de segmentação usada principalmente para:",
       "opts": [
-        "Sistema, Tecnologia, Pessoas",
-        "Segmentação, Targeting, Posicionamento",
-        "Serviço, Transacção, Preço",
-        "Sampling, Testing, Publishing"
+        "Definir a política de preços em novos mercados",
+        "Pontuar e segmentar clientes existentes pelo comportamento de compra passado, alimentando campanhas de CRM e personalização",
+        "Escolher os canais de distribuição para um novo produto",
+        "Medir o brand awareness através de surveys de reconhecimento"
       ],
-      "a": 1
+      "a": 1,
+      "explanation": "RFM é um modelo de scoring para base de clientes existente: (1) RECENCY — há quanto tempo fez a última compra (quanto mais recente, mais valiosa); (2) FREQUENCY — quantas compras fez no período (frequência alta indica lealdade); (3) MONETARY — quanto gastou em valor acumulado (alto valor = alto LTV potencial). Cada cliente recebe uma pontuação nos três eixos (tipicamente 1–5), produzindo segmentos como 'champions' (R5/F5/M5), 'at risk' (R1/F3/M3), 'new customers' (R5/F1/M1) ou 'hibernating'. É a base do CRM moderno e alimenta campanhas de email, SMS e retargeting personalizadas."
     },
     {
-      "q": "Qual a diferença entre multichannel e omnichannel?",
+      "q": "No STP (Segmentation, Targeting, Positioning), a estratégia em que a empresa escolhe UM ÚNICO nicho de mercado e concentra todos os recursos para o servir excelentemente chama-se:",
       "opts": [
-        "São sinónimos",
-        "Multichannel é ter vários canais; omnichannel é integrá-los numa experiência coerente para o cliente",
-        "Multichannel é só digital; omnichannel é só físico",
-        "Omnichannel é mais barato mas menos eficiente"
+        "Marketing indiferenciado (de massas)",
+        "Marketing diferenciado (multissegmento)",
+        "Marketing concentrado (niche marketing)",
+        "Micromarketing (marketing individual)"
       ],
-      "a": 1
+      "a": 2,
+      "explanation": "São quatro estratégias de targeting em STP: (1) INDIFERENCIADO (mass marketing) — uma oferta única para todo o mercado, típica de produtos de base (sal, açúcar); (2) DIFERENCIADO — várias ofertas adaptadas a vários segmentos (a maioria das marcas grandes); (3) CONCENTRADO (niche) — toda a empresa focada num único segmento, procurando liderança nele (Bugatti, Rolls-Royce em hiperluxo; Dollar Shave Club em homens jovens); (4) MICROMARKETING — adaptação a segmentos muito pequenos ou mesmo individuais (segmentos locais, contas B2B chave, marketing one-to-one). Concentrado faz sentido quando a empresa tem recursos limitados ou quer dominar uma micro-niche com margens elevadas."
     },
     {
-      "q": "Showrooming é quando o cliente:",
+      "q": "Showrooming é o fenómeno em que o consumidor:",
       "opts": [
-        "Vai à loja ver e tocar no produto, depois compra online",
-        "Pesquisa online, depois vai à loja comprar",
-        "Compra online e levanta em loja",
+        "Vai à loja ver e tocar no produto, depois compra online (geralmente mais barato)",
+        "Pesquisa online, lê reviews, depois vai à loja física comprar",
+        "Compra online e levanta o produto numa loja (click & collect / BOPIS)",
         "Devolve o produto em loja depois de comprar online"
       ],
-      "a": 0
+      "a": 0,
+      "explanation": "Dois fenómenos ilustram a sobreposição digital/físico: (1) SHOWROOMING — o cliente visita a loja para ver, tocar e experimentar o produto (especialmente relevante em categorias como moda, electrónica, cosmética), depois compra online onde geralmente encontra melhor preço, mais opções ou conveniência; (2) WEBROOMING — inverso, o cliente pesquisa online, lê reviews e compara, depois vai à loja física comprar para ter experiência humana, levar imediatamente ou evitar custos de envio. Marcas verdadeiramente omnichannel ganham em ambos; quem só tem loja perde no showrooming, quem só tem e-commerce perde no contacto humano."
     },
     {
-      "q": "RGPD afecta o marketing digital ao obrigar a:",
+      "q": "Qual é a diferença fundamental entre 'multichannel' e 'omnichannel' no comportamento digital do consumidor?",
       "opts": [
-        "Eliminar todo o uso de dados pessoais",
-        "Consentimento explícito, transparência e direito ao esquecimento na recolha de dados",
-        "Pagar uma taxa anual por cada utilizador",
-        "Proibir personalização de conteúdos"
+        "São sinónimos — ambas referem presença em vários canais",
+        "Multichannel é ter vários canais independentes; omnichannel é integrá-los numa experiência coerente e sem fricção para o cliente",
+        "Multichannel é exclusivamente digital; omnichannel é exclusivamente físico",
+        "Multichannel é mais barato mas menos eficiente; omnichannel é caro mas melhor"
       ],
-      "a": 1
+      "a": 1,
+      "explanation": "A diferença é estrutural: (1) MULTICHANNEL — a marca está presente em vários canais (loja física, site, app, Instagram, marketplace) mas cada um opera como silo independente, com inventário, preços e dados de cliente separados — o cliente que muda de canal tem de recomeçar; (2) OMNICHANNEL — os canais estão INTEGRADOS numa experiência coerente, com inventário único, base de dados unificada do cliente e jornadas que cruzam canais sem fricção (compra no telemóvel, personaliza na app, levanta na loja, devolve por correio). Omnichannel exige back-office repensado, métricas centradas no cliente (não no canal) e investimento em integração."
     }
   ]
 }

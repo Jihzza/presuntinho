@@ -1,0 +1,652 @@
+{
+  "files_scanned": 59,
+  "total": 62,
+  "by_area": {
+    "components/EmptyState": [
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\EmptyState.svelte",
+        "line": 14,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": ") or a `label` + `onclick` (renders",
+        "tag": "hardcoded",
+        "default_t": false
+      }
+    ],
+    "components/LanguageSwitcher": [
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\LanguageSwitcher.svelte",
+        "line": 14,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "; the panel is a",
+        "tag": "hardcoded",
+        "default_t": false
+      }
+    ],
+    "/agente": [
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\agente\\+page.svelte",
+        "line": 195,
+        "kind": "expr-string",
+        "severity": "MÉDIA",
+        "snippet": "o que falta?",
+        "tag": "hardcoded",
+        "default_t": true
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\agente\\+page.svelte",
+        "line": 223,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "a pensar…",
+        "tag": "hardcoded",
+        "default_t": false
+      }
+    ],
+    "/aulas": [
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\aulas\\+page.svelte",
+        "line": 68,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "{lessons} lições em {courses} cursos — abre cada uma para ouvir o áudio e seguir a leitura.",
+        "tag": "hardcoded",
+        "default_t": false
+      }
+    ],
+    "/biblioteca": [
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\biblioteca\\novo\\+page.svelte",
+        "line": 105,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "➕ Novo marcador",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\biblioteca\\novo\\+page.svelte",
+        "line": 181,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "A criar…",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\biblioteca\\novo\\+page.svelte",
+        "line": 181,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "Criar marcador",
+        "tag": "hardcoded",
+        "default_t": false
+      }
+    ],
+    "/dl": [
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\dl\\+page.svelte",
+        "line": 140,
+        "kind": "text",
+        "severity": "MÉDIA",
+        "snippet": "não podem usar IA diretamente",
+        "tag": "hardcoded",
+        "default_t": true
+      }
+    ],
+    "/escola": [
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\curso\\[slug]\\+page.svelte",
+        "line": 623,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "← Voltar à Escola",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\curso\\[slug]\\+page.svelte",
+        "line": 626,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "A carregar curso…",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\curso\\portugues\\+page.svelte",
+        "line": 255,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "🇵🇹 Curso de Português",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\curso\\portugues\\+page.svelte",
+        "line": 267,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "🎯 Badge: 🇵🇹 Lusófono (b11)",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\curso\\portugues\\+page.svelte",
+        "line": 532,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "✓ Marcado como estudado.",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\curso\\portugues\\quiz\\+page.svelte",
+        "line": 73,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "🇵🇹 Quiz de Português",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\curso\\portugues\\quiz\\+page.svelte",
+        "line": 74,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "5 perguntas · Ganha a badge 🇵🇹 Lusófono (b11) com 5/5 certas.",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\curso\\portugues\\quiz\\+page.svelte",
+        "line": 96,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "← Voltar ao curso PT",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\quiz\\[quizSlug]\\+page.svelte",
+        "line": 43,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "← Voltar ao curso",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\walkthrough\\[lessonSlug]\\+page.svelte",
+        "line": 135,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "Audio walkthrough + transcrição + pontos-chave da lição {lessonSlug}.",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\walkthrough\\[lessonSlug]\\+page.svelte",
+        "line": 141,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "A carregar walkthrough…",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\walkthrough\\[lessonSlug]\\+page.svelte",
+        "line": 144,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "Lição não encontrada.",
+        "tag": "hardcoded",
+        "default_t": false
+      }
+    ],
+    "/financas": [
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\categorias\\+page.svelte",
+        "line": 236,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "despesa",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\categorias\\+page.svelte",
+        "line": 236,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "receita",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\nova\\+page.svelte",
+        "line": 141,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "➕ Nova transação",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\nova\\+page.svelte",
+        "line": 163,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "despesa",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\nova\\+page.svelte",
+        "line": 165,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "despesa",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\nova\\+page.svelte",
+        "line": 175,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "receita",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\nova\\+page.svelte",
+        "line": 177,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "receita",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\orcamento\\+page.svelte",
+        "line": 160,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "📊 Orçamento",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\orcamento\\+page.svelte",
+        "line": 250,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "sem limite",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\orcamento\\+page.svelte",
+        "line": 261,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "A gravar…",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\transacoes\\+page.svelte",
+        "line": 240,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "📋 Transações",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\transacoes\\+page.svelte",
+        "line": 253,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "+ Nova transação",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\transacoes\\+page.svelte",
+        "line": 357,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "receita",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\transacoes\\+page.svelte",
+        "line": 361,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "--cat-cor: #94a3b8",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\transacoes\\+page.svelte",
+        "line": 367,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "Sem descrição",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\transacoes\\[id]\\+page.svelte",
+        "line": 145,
+        "kind": "attr",
+        "severity": "MÉDIA",
+        "snippet": "{$t('a11y.aria.voltar_a_lista', { default: 'Voltar à lista' })}",
+        "tag": "hardcoded",
+        "default_t": true
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\transacoes\\[id]\\+page.svelte",
+        "line": 176,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "valor",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\transacoes\\[id]\\+page.svelte",
+        "line": 211,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "A guardar…",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\transacoes\\[id]\\+page.svelte",
+        "line": 216,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "/financas/transacoes",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\transacoes\\[id]\\+page.svelte",
+        "line": 228,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "Eliminar",
+        "tag": "hardcoded",
+        "default_t": false
+      }
+    ],
+    "/habitos": [
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\habitos\\novo\\+page.svelte",
+        "line": 102,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "➕ Novo hábito",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\habitos\\novo\\+page.svelte",
+        "line": 193,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "A criar…",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\habitos\\novo\\+page.svelte",
+        "line": 193,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "Criar hábito",
+        "tag": "hardcoded",
+        "default_t": false
+      }
+    ],
+    "/pt": [
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\pt\\+page.svelte",
+        "line": 202,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "🇵🇹 Lições em Português",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\pt\\+page.svelte",
+        "line": 229,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "💡 Dica final para escrever",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\pt\\+page.svelte",
+        "line": 242,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "🇵🇹 Mini-Curso de Português (side quest!)",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\pt\\+page.svelte",
+        "line": 252,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "O Português tem 5 vogais orais (mais nasais, mas vamos com o básico):",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\pt\\+page.svelte",
+        "line": 272,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "Para ti (Tunisian):",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\pt\\+page.svelte",
+        "line": 272,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "o Português é mais fonético que o Inglês. O",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\pt\\+page.svelte",
+        "line": 273,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "é como",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\pt\\+page.svelte",
+        "line": 273,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "; o",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\pt\\+page.svelte",
+        "line": 346,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "Eu sou a Fatma",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\pt\\+page.svelte",
+        "line": 346,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "Estou a estudar",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\pt\\+page.svelte",
+        "line": 348,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "Faço o trabalho amanhã",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\pt\\+page.svelte",
+        "line": 355,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "Fazer o quiz 🇵🇹",
+        "tag": "hardcoded",
+        "default_t": false
+      }
+    ],
+    "/trabalhos": [
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\trabalhos\\+page.svelte",
+        "line": 175,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "status status-{statuses[a.id] || 'open'}",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\trabalhos\\+page.svelte",
+        "line": 222,
+        "kind": "expr-string",
+        "severity": "ALTA",
+        "snippet": "status status-{a.status}",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\trabalhos\\assignment\\[slug]\\+page.svelte",
+        "line": 116,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "A carregar trabalho…",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\trabalhos\\assignment\\[slug]\\+page.svelte",
+        "line": 122,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "static/data/assignments/equivalenza.json",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\trabalhos\\assignment\\[slug]\\+page.svelte",
+        "line": 124,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "← Voltar à lista de trabalhos",
+        "tag": "hardcoded",
+        "default_t": false
+      },
+      {
+        "file": "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\trabalhos\\assignment\\[slug]\\+page.svelte",
+        "line": 176,
+        "kind": "text",
+        "severity": "ALTA",
+        "snippet": "← Voltar à lista de trabalhos",
+        "tag": "hardcoded",
+        "default_t": false
+      }
+    ]
+  },
+  "sev_counts": {
+    "ALTA": 59,
+    "MÉDIA": 3,
+    "BAIXA": 0
+  },
+  "files": [
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\BadgeCard.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\BadgeGrid.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\ColorPicker.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\Confetti.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\Countdown.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\EasterEggsCard.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\EmptyState.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\HeartButton.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\Heatmap.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\HubCard.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\InstallButton.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\LanguageSwitcher.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\LessonRunner.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\LoveLock.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\Mascot.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\OfflineIndicator.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\OnboardingModal.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\ProgressBar.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\QuizRunner.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\SecretModal.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\Skeleton.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\Toast.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\lib\\components\\XpPill.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\+error.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\+layout.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\agente\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\aulas\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\biblioteca\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\biblioteca\\item\\[id]\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\biblioteca\\novo\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\case\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\course\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\definicoes\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\dl\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\caderno\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\curso\\[slug]\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\curso\\portugues\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\curso\\portugues\\quiz\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\licao\\[courseSlug]\\[lessonSlug]\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\quiz\\[quizSlug]\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\escola\\walkthrough\\[lessonSlug]\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\categorias\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\nova\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\orcamento\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\transacoes\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\financas\\transacoes\\[id]\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\habitos\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\habitos\\habit\\[slug]\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\habitos\\novo\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\pt\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\secrets\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\splash\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\trabalhos\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\trabalhos\\assignment\\[slug]\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\walk\\+page.svelte",
+    "C:\\Users\\rafaa\\Documents\\GitHub\\presuntinho\\src\\routes\\write\\+page.svelte"
+  ]
+}

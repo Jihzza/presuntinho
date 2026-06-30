@@ -113,15 +113,15 @@
   </nav>
 
   {#if loading}
-    <p class="state">A carregar trabalho…</p>
+    <p class="state">{$t('trabalhos.assignment.loading', { default: 'A carregar trabalho…' })}</p>
   {:else if error || !assignment}
     <div class="state error" role="alert">
       <p>⚠️ {error ?? 'Trabalho desconhecido.'}</p>
       <p>
         Verifica que o slug <code>{page.params.slug}</code> existe no pack
-        <code>static/data/assignments/equivalenza.json</code>.
+        <code>{$t('trabalhos.assignment.file_path', { default: 'static/data/assignments/equivalenza.json' })}</code>.
       </p>
-      <a class="back-link" href="/trabalhos/">← Voltar à lista de trabalhos</a>
+      <a class="back-link" href="/trabalhos/">{$t('trabalhos.assignment.back_to_list', { default: '← Voltar à lista de trabalhos' })}</a>
     </div>
   {:else}
     <article class="assignment">
@@ -173,7 +173,7 @@
       </section>
 
       <footer class="footer-row">
-        <a class="back-link" href="/trabalhos/">← Voltar à lista de trabalhos</a>
+        <a class="back-link" href="/trabalhos/">{$t('trabalhos.assignment.back_to_list', { default: '← Voltar à lista de trabalhos' })}</a>
       </footer>
     </article>
   {/if}

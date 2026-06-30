@@ -99,7 +99,7 @@
 
 <div class="novo">
   <header class="hero">
-    <h1>➕ Novo hábito</h1>
+    <h1>{$t('habitos.novo.hero.title', { default: '➕ Novo hábito' })}</h1>
     <p class="sub">{$t('habitos.novo.sub', { default: 'Define um hábito diário para acompanhares com streaks.' })}</p>
   </header>
 
@@ -190,7 +190,7 @@
     <div class="actions">
       <a class="btn-secondary" href="/habitos/">{$t('habitos.novo.cancelar', { default: 'Cancelar' })}</a>
       <button type="submit" class="btn-primary" disabled={submitting}>
-        {submitting ? 'A criar…' : 'Criar hábito'}
+        {submitting ? $t('habitos.novo.criando', { default: 'A criar…' }) : $t('habitos.novo.submit.criar', { default: 'Criar hábito' })}
       </button>
     </div>
   </form>

@@ -64,11 +64,9 @@
     <span class="hero-tag">{$t('aulas.title', { default: '🎓 Aulas' })}</span>
     <h1>{$t('aulas.title', { default: 'Todas as aulas' })}</h1>
     <p class="sub">
-      {$t('aulas.subtitle', {
-        default: '{lessons} lições em {courses} cursos — abre cada uma para ouvir o áudio e seguir a leitura.'
-      })
-        .replace('{lessons}', String(totalLessons))
-        .replace('{courses}', String(totalCourses))}
+      {$t('aulas.subtitle')
+              .replace('{lessons}', String(totalLessons))
+              .replace('{courses}', String(totalCourses))}
     </p>
   </header>
 
