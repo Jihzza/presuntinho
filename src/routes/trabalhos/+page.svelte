@@ -246,7 +246,7 @@
   {#if trabalhosApp}
     <footer class="page-footer" aria-hidden="true">
       <span style="--swatch: {trabalhosApp.color}">{trabalhosApp.icon}</span>
-      <span>{$t('trabalhos.footer.subapp', { default: 'Sub-app #{n} no hub' }).replace('{n}', String(trabalhosApp.order))}</span>
+      <span>{$t('trabalhos.footer.position', { default: 'Hub · Trabalhos' })}</span>
     </footer>
   {/if}
 </div>

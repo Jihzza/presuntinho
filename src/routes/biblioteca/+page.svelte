@@ -265,7 +265,7 @@
   {#if bibliotecaApp}
     <footer class="page-footer" aria-hidden="true">
       <span style="--swatch: {bibliotecaApp.color}">{bibliotecaApp.icon}</span>
-      <span>{$t('biblioteca.footer.subapp', { default: 'Sub-app #{n} no hub' }).replace('{n}', String(bibliotecaApp.order))}</span>
+      <span>{$t('biblioteca.footer.position', { default: 'Hub · Biblioteca' })}</span>
     </footer>
   {/if}
 </div>
