@@ -990,5 +990,30 @@
   "write.breadcrumb.home": "← Hub",
   "write.head.title": "Ticra · Tiɣbula Anti-AI",
   "routes.escola.quiz.eiq.title": "Quiz: International Strategy",
-  "routes.escola.quiz.eiq.description": "Test your knowledge of international strategy: drivers of internationalization (demand, supply, costs, government, competitors), Ghemawat's CAGE framework (cultural, administrative, geographic, economic), entry modes (indirect/direct export, licensing, franchising, joint venture, greenfield subsidiary, acquisition), Bartlett & Ghoshal archetypes (international, multi-domestic, global, transnational), drivers of global integration vs local responsiveness, joint ventures and international risk management. 10 questions, 4 options each, with detailed explanation."
+  "routes.escola.quiz.eiq.description": "Test your knowledge of international strategy: drivers of internationalization (demand, supply, costs, government, competitors), Ghemawat's CAGE framework (cultural, administrative, geographic, economic), entry modes (indirect/direct export, licensing, franchising, joint venture, greenfield subsidiary, acquisition), Bartlett & Ghoshal archetypes (international, multi-domestic, global, transnational), drivers of global integration vs local responsiveness, joint ventures and international risk management. 10 questions, 4 options each, with detailed explanation.",
+  "routes": {
+    "aulas": {
+      "curso": {
+        "gestao-risco": {
+          "tagline": "ادارة اعمال - ISO 31000 و COSO ERM وبازل III و TCFD - تعرف المخاطر وحللها ورد عليها",
+          "title": "تسيير المخاطر"
+        }
+      }
+    },
+    "escola": {
+      "curso": {
+        "gestao-risco": {
+          "description": "تسيير المخاطر في ادارة الاعمال: الاساسيات (تعريف الخطر حسب نايت، الانواع استراتيجية/تشغيلية/مالية/امتثال، الشهية مقابل التحمل)، التعرف والتحليل (العصف الذهني ودلفي وSWOT وتحليل السيناريوهات ومصفوفات الاحتمالxالاثر)، الرد والتخفيف (استراتيجية 4T - تحمل، عالج، حول، انه - التأمين والتحوط والتنويع وخطط استمرارية الاعمال)، وابرز الاطار (ISO 31000 بعملية 5 مراحل، COSO ERM 2017 بـ5 مكونات و20 مبدا، بازل III لمخاطر الائتمان/السوق/التشغيل، وتقارير ESG/المناخ عبر TCFD وCSRD).",
+          "tagline": "ادارة اعمال - ISO 31000 و COSO ERM وبازل III و TCFD - تعرف المخاطر وحللها ورد عليها",
+          "title": "تسيير المخاطر"
+        }
+      },
+      "quiz": {
+        "grq": {
+          "title": "اختبار: تسيير المخاطر",
+          "description": "10 اسئلة لاختبار معرفتك بتسيير المخاطر: الخطر مقابل عدم اليقين حسب نايت، استراتيجية الرد 4T، ISO 31000، COSO ERM، بازل III وTCFD."
+        }
+      }
+    }
+  }
 }

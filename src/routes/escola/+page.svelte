@@ -512,6 +512,18 @@
                                   badge: 'Uni'
                                 },
                                 {
+                                  slug: 'gestao-risco',
+                                  title: 'Gestão de Risco',
+                                  tagline: 'Business Administration · ISO 31000, COSO ERM, Basileia III e TCFD — identificar, analisar e responder a riscos empresariais',
+                                  description:
+                                    'Gestão de risco aplicada à gestão empresarial: fundamentos (definição de risco segundo Knight, tipologia estratégica/operacional/financeira/compliance, apetite vs tolerância), identificação e análise (brainstorming, Delphi, SWOT, análise de cenários, matrizes probabilidade×impacto, heatmaps), resposta e mitigação (estratégia 4T — Tolerate, Treat, Transfer, Terminate — seguros, hedging, diversificação, BCP/DRP), e os principais frameworks e normas (ISO 31000 com processo em 5 etapas, COSO ERM 2017 com 5 componentes e 20 princípios, Basileia III para risco de crédito/mercado/operacional, e reporting ESG/clima via TCFD e CSRD).',
+                                  icon: '⚠️',
+                                  color: '#dc2626',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
+                                },
+                                {
                                   slug: 'analise-investimentos',
                                   title: 'Análise de Investimentos',
                                   tagline: 'Business Administration · Capital budgeting, VPL/TIR, risco, custo de capital',

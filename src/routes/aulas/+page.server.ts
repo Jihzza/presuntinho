@@ -97,7 +97,8 @@ const COURSE_META: Record<string, CourseMeta> = {
           'comercio-internacional': { slug: 'comercio-internacional', title: 'Comércio Internacional', icon: '🌐', color: '#0e7490' },
           'marketing-internacional': { slug: 'marketing-internacional', title: 'Marketing Internacional', icon: '🌍', color: '#0ea5e9' },
           'gestao-conflitos': { slug: 'gestao-conflitos', title: 'Gestão de Conflitos', icon: '🕊️', color: '#65a30d' },
-                    'estrategia-internacional': { slug: 'estrategia-internacional', title: 'Estratégia Internacional', icon: '🌍', color: '#0ea5e9' }
+                    'estrategia-internacional': { slug: 'estrategia-internacional', title: 'Estratégia Internacional', icon: '🌍', color: '#0ea5e9' },
+              'gestao-risco': { slug: 'gestao-risco', title: 'Gestão de Risco', icon: '⚠️', color: '#dc2626' }
                       };
 
 /** Turn "blue-ocean-strategy" → "Blue Ocean Strategy". */

@@ -1,0 +1,138 @@
+{
+  "id": "4-frameworks-e-normas",
+  "courseSlug": "gestao-risco",
+  "title": "Frameworks e Normas: ISO 31000, COSO ERM 2017, Basileia III e TCFD/CSRD",
+  "audio": "Lição sobre os principais frameworks e normas de gestão de risco: ISO 31000 com princípios e processo em 5 etapas, COSO ERM 2017 com 5 componentes e 20 princípios, Basileia III para bancos (risco de crédito, mercado e operacional), e reporting ESG/clima via TCFD e CSRD.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "Porque é que existem frameworks de gestão de risco" },
+    { "type": "p", "text": "Frameworks não são teoria académica — são práticas consolidadas que reguladores, auditores, investidores e analistas reconhecem e exigem. ISO 31000 (2018) é a norma internacional de referência, aplicável a qualquer organização. COSO ERM (2017) é o framework norte-americano dominante, particularmente em empresas cotadas. Basileia III é o quadro prudencial obrigatório para bancos. TCFD e CSRD são os standards emergentes para risco climático e ESG. Dominar cada um é compreender a linguagem comum que o mundo dos negócios usa para falar de risco." },
+    { "type": "p", "text": "Não confundir frameworks com métodos ou ferramentas. Frameworks são arquitecturas conceptuais que organizam o pensamento sobre risco e permitem comunicação consistente entre organizações, auditores, e reguladores. Métodos são técnicas específicas (brainstorming, Delphi, simulação Monte Carlo) que aplicam dentro dos frameworks. Ferramentas são sistemas e software que operacionalizam métodos. Uma empresa pode usar simulação Monte Carlo (método) dentro do seu processo ISO 31000 (framework) implementado em software Riskalyze ou @risk (ferramenta)." },
+    { "type": "h2", "text": "ISO 31000:2018 — a norma global" },
+    { "type": "p", "text": "A norma ISO 31000 foi publicada pela International Organization for Standardization em 2009, com revisão substancial em 2018 que reforçou integração com governance e tomada de decisão. Não é certificável (ISO não emite certificado para ISO 31000) mas é o standard de facto que auditors usam como referência, e foi adoptada como base em muitas normas sectoriais (ISO 9001, ISO 14001, ISO 27001 — todas referem gestão de risco)." },
+    { "type": "h3", "text": "Os 8 princípios da ISO 31000" },
+    { "type": "p", "text": "A norma define 8 princípios que devem guiar a gestão de risco em qualquer organização. São eles o 'espírito' da norma:" },
+    { "type": "ul", "items": [
+      "Integrada: gestão de risco faz parte de todas as actividades da organização, não é projecto paralelo.",
+      "Estruturada e abrangente: abordagem metódica para resultados consistentes e comparáveis.",
+      "Customizada: alinhada com contexto externo/interno e perfil de risco da organização.",
+      "Inclusiva: envolve partes interessadas apropriadas em todo o processo.",
+      "Dinâmica: acompanha mudanças de contexto e risco continuamente.",
+      "Baseada na melhor informação disponível: inputs históricos e actuais, combinados com experiência e previsão.",
+      "Factores humanos e culturais: reconhece capacidades, percepções e intenções de pessoas externas e internas.",
+      "Melhoria contínua: refinada através de experiência e aprendizagem organizacional."
+    ] },
+    { "type": "h2", "text": "O processo ISO 31000 em 5 etapas" },
+    { "type": "p", "text": "O coração normativo da ISO 31000 é o processo de gestão de risco em 5 etapas sequenciais e iterativas. O processo não é linear na prática — é iterativo, com revisões e realimentações constantes. Cada etapa tem deliverables claros e deve ser documentada." },
+    { "type": "ol", "items": [
+      "Estabelecer o contexto: definir parâmetros externos e internos, âmbito do processo, critérios de risco, e estrutura de governance. Inclui declaração de apetite ao risco e tolerância por unidade.",
+      "Identificação de riscos: descobrir, reconhecer e descrever riscos (incluindo os seus impactos, fontes, causas e consequências). Onde, quando, porquê e como podem ocorrer eventos. Técnicas: brainstorming, Delphi, SWOT, cenários, registo de histórico.",
+      "Análise de riscos: compreender natureza, fontes, causa, consequência, probabilidade e magnitude do risco. Qualitativa (escalas, descrições) ou quantitativa (modelos probabilísticos, simulação). Inputs para etapa 4.",
+      "Avaliação de riscos: comparar resultados da análise com critérios definidos para decidir se risco é aceitável ou exige tratamento. Considera benefício, custo e oportunidades.",
+      "Tratamento de riscos: seleccionar e implementar opções para modificar risco (estratégia 4T: Tolerate, Treat, Transfer, Terminate). Plano de tratamento, owner, prazo, KPI. Voltamos ao contexto com ciclo iterativo."
+    ] },
+    { "type": "callout", "variant": "example", "text": "Empresa de transportes ferroviários identifica risco de descarrilamento por falha de via. Contexto estabelecido: operar em rede ibérica, RTO de恢复 24h, apetite ao risco zero acidentes com fatalidade. Identificação: análise de 10 anos mostra 2 descarrilamentos por ano em média. Análise: 2/ano × 30M€ impacto médio = 60M€ exposição anual. Avaliação: acima do apetite (zero). Tratamento: programa de inspeção de via semanal + investimento 100M€ em refurbishment em 5 anos (mitigação primária), mais seguro de responsabilidade ilimitada (transfer). Plano de tratamento inclui KPI (km via inspeccionada/mês) e owner (Direcção de Engenharia)." },
+    { "type": "h3", "text": "Limitações honestas do ISO 31000" },
+    { "type": "p", "text": "ISO 31000 é framework genérico — não diz 'como implementar gestão de risco numa cadeia de fast-food' ou 'num banco'. Não é certificável. Não integra explicitamente risco financeiro e risco de mercado com a profundidade que COSO ERM tem. Auditoria externa raramente verifica conformidade com ISO 31000 isoladamente — usa-a como lente conceptual para avaliar outras práticas (incluindo frameworks internos). Para sectores regulados, frameworks específicos (Basileia, Solvência II, regulação seguradora) tomam precedência." },
+    { "type": "h2", "text": "COSO ERM 2017: o framework empresarial integrado" },
+    { "type": "p", "text": "O Committee of Sponsoring Organizations of the Treadway Commission publicou em 2004 o framework original 'Enterprise Risk Management — Integrated Framework', actualizado em 2017 para alinhamento com estratégia e performance. É hoje o framework de referência em empresas cotadas norte-americanas, em muito do mundo anglo-saxónico, e crescentemente em mercados europeus. Foi actualizado em 2017 exactamente porque a versão 2004 era vista como demasiado compliance-oriented e pouco integrada com estratégia e tomada de decisão." },
+    { "type": "h3", "text": "Os 5 componentes do COSO ERM 2017" },
+    { "type": "p", "text": "O framework de 2017 estrutura-se em 5 componentes interrelacionados que mostram como risco se integra nos processos de negócio." },
+    { "type": "ul", "items": [
+      "Governance e cultura: Conselho supervisiona estratégia e risk appetite; estrutura organizacional reporta riscos; cultura de risco (tone at the top) é compatível com apetite; integridade e valores sustentam a gestão de risco; pessoas são competentes; accountability é clara.",
+      "Estratégia e objectivo-setting: considera apetite ao risco no planeamento estratégico; avalia alternativas estratégicas face ao risco; formula estratégia alinhada com apetite; objectivos operacionais descendem da estratégia e apoiam-na; identifica e avalia riscos que ameaçam objectivos.",
+      "Performance: identifica e avalia riscos que afectam performance; prioriza riscos por magnitude; implementa respostas de risco seleccionado; desenvolve portfolio view de risco; monitoriza performance do tratamento de risco; identifica e comunica deficits que requerem remediação.",
+      "Revisão e correcção: avalia componentes e operação do ERM ao longo do tempo; mede progresso contra targets; identifica mudanças em risco que exijam revisão; comunica informação de risco; reporta à gestão e Conselho.",
+      "Informação, comunicação e reporting: gera e usa informação relevante e de qualidade para apoiar o ERM; comunica informação internamente e externamente em tempo útil; comunica actividades, resultados e planos de tratamento; fornece relatórios sobre risco, cultura e performance."
+    ] },
+    { "type": "h3", "text": "Os 20 princípios detalhados" },
+    { "type": "p", "text": "Cada um dos 5 componentes desdobra-se em princípios detalhados (4-5 por componente, totalizando 20 princípios) que operacionalizam o componente em comportamentos observáveis. Por exemplo, o componente 1 (Governance) inclui princípios como 'o Conselho exerce oversight do risco', 'estrutura organizacional suporta o ERM', 'cultura ERM é compatível com appetite', 'demonstra compromisso com competência profissional', e 'aplica accountability'. COSO publicou os princípios detalhados para dar critérios de auditoria observáveis." },
+    { "type": "ul", "items": [
+      "Princípios de governance (5): oversight do Conselho; estrutura organizacional; cultura compatível; competência profissional; accountability clara.",
+      "Princípios de estratégia (4): considera apetite; avalia alternativas; estratégia alinhada; objectivos operacionais.",
+      "Princípios de performance (5): identifica e prioriza; implementa respostas; portfolio view; monitoriza e comunica; remedia deficits.",
+      "Princípios de revisão (3): avalia componentes; mede progresso; identifica mudanças.",
+      "Princípios de informação e comunicação (3): gera informação relevante; comunica internamente; reporta formalmente."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "COSO ERM 2017 ganhou adopção precisamente por ser menos checklist e mais integração com estratégia. Para startups e PMEs, a maioria dos 20 princípios aplica-se, mas com menos formalismo. Empresas maiores precisam de demonstrar alinhamento com todos em auditoria externa anual." },
+    { "type": "h2", "text": "Basileia III: o pilar prudencial dos bancos" },
+    { "type": "p", "text": "O Comité de Supervisão Bancária de Basileia (Basel Committee on Banking Supervision) é o órgão do Bank for International Settlements que define standards prudenciais para bancos internacionalmente activos. Basileia I (1988) introduziu requisitos mínimos de capital. Basileia II (2004) refinou o cálculo por risco de crédito, mercado e operacional, e introduziu três pilares (requisitos mínimos, supervisão, disciplina de mercado). Basileia III (publicação 2010-2017, implementação faseada) reforçou níveis de capital, introduziu buffer de conservação e contra-cíclico, e melhorou cobertura de risco de mercado e contraparte. Crise de 2007-2009 motivou Basileia III — os padrões anteriores subestimaram risco de mercado e liquidez." },
+    { "type": "h3", "text": "Os três pilares de Basileia" },
+    { "type": "p", "text": "A arquitectura tripartida mantida desde Basileia II é útil para gestão de risco fora do contexto bancário também — pensar em três pilares é pensar em 'regra, supervisão, transparência'." },
+    { "type": "ul", "items": [
+      "Pilar 1 — Requisitos mínimos de capital: regras quantitativas para cálculo de capital mínimo por risco de crédito, mercado e operacional. Foram reforçadas em Basileia III com maior exigência de capital de melhor qualidade (Common Equity Tier 1, ou CET1), buffers anticíclicos, e cobertura de risco de contraparte.",
+      "Pilar 2 — Processo de supervisão: regulador (banco central ou supervisor prudencial) avalia adequação do capital e risco do banco individual, exige planos de capital, e pode impor requisitos adicionais. Conhecido como SREP (Supervisory Review and Evaluation Process) na UE.",
+      "Pilar 3 — Disciplina de mercado: requisitos de divulgação de risco, capital e exposição que permitem investidores e mercado avaliarem adequação do banco. Publicação trimestral/anual de rácios, exposições, e metodologias."
+    ] },
+    { "type": "h3", "text": "Risco de crédito, mercado e operacional em detalhe" },
+    { "type": "p", "text": "A alocação de capital em Pilar 1 distribui-se pelas três maiores classes de risco bancário, cada uma com método próprio de cálculo." },
+    { "type": "ul", "items": [
+      "Risco de crédito: perdas por incumprimento de contraparte. Métodos de cálculo: método standardizado (ponderações por categoria e rating externo), IRB — Internal Ratings Based (F-IRB ou A-IRB, com modelos internos do banco aprovados pelo supervisor). Cobertura: exposições em balanço e fora do balanço, risco de contraparte em derivados, risco de concentração.",
+      "Risco de mercado: perdas por movimentos adversos em preços de mercado (taxas de juro, câmbio, acções, commodities) em carteira de trading. Métodos: standardizado (ponderações por sensibilidade) ou interno (VaR, stressed VaR, IRC — Incremental Risk Charge). Cobertura: book de trading; exposição a risco cambial estrutural é tratada separadamente.",
+      "Risco operacional: perdas por falhas em processos, pessoas, sistemas ou eventos externos (incluindo fraude interna/externa, falhas de IT, desastres, compliance inadequado). Métodos: standard approach (TSA — receita bruta por linha de negócio como proxy) ou Advanced Measurement Approach (AMA — modelos internos baseados em dados históricos e cenários), actualmente Standardised Approach (revisto em Basileia III.5, substituindo AMA por SA)."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Basileia é complexo e em constante evolução. As regras finais (Basileia III.5 ou 'Basel IV' como chamado informalmente) foram concluídas em 2017 com implementação faseada até 2028, e mudaram significativamente o cálculo de risco de mercado e operacional. Bancos grandes investem dezenas de milhões em sistemas e consultoras para implementar. Para gestores não-bancários, o valor de conhecer Basileia é conceptual — compreensão dos pilares, da linguagem prudencial, e da expectativa regulatória que gradualmente se espalha a fintechs, fundos de pensão e seguradoras." },
+    { "type": "h2", "text": "Risco climático e ESG: TCFD, CSRD, e a nova regulação europeia" },
+    { "type": "p", "text": "A partir de 2015, com o Acordo de Paris, risco climático emergiu como categoria autónoma de risco financeiro. Em 2017, o Financial Stability Board criou o Task Force on Climate-related Financial Disclosures (TCFD), que definiu a estrutura hoje adoptada globalmente. Em paralelo, a União Europeia publicou o European Green Deal (2019), o Sustainable Finance Disclosure Regulation (SFDR, 2019) e a Corporate Sustainability Reporting Directive (CSRD, 2022), que tornam obrigatório reporting ESG detalhado." },
+    { "type": "h3", "text": "TCFD: estrutura de disclosure de risco climático" },
+    { "type": "p", "text": "TCFD estruturou a divulgação em torno de quatro pilares que cobrem o ciclo completo de governance de risco climático: Governance (como o Conselho e gestão supervisionam riscos climáticos), Strategy (impactos materiais no negócio, cenários climáticos considerados), Risk Management (como risco climático é identificado, avaliado e gerido), e Metrics & Targets (métricas utilizadas, incluindo Scope 1, 2 e 3 de emissões, e metas de redução). Adopção voluntária inicialmente, hoje exigida por reguladores em múltiplas jurisdições (UK, Canadá, Japão, UE)." },
+    { "type": "ul", "items": [
+      "Governance: descrição de oversight pela administração e papel da gestão na avaliação e gestão de riscos e oportunidades climáticas.",
+      "Strategy: descrição de impactos materiais de riscos e oportunidades climáticas no negócio, estratégia e planeamento financeiro. Inclui tipicamente análise de cenários (e.g., 1.5°C, 2°C, 3°C).",
+      "Risk Management: descrição de processos para identificar, avaliar e gerir riscos climáticos, e como estes estão integrados no ERM global.",
+      "Metrics & Targets: métricas utilizadas (emissões Scope 1/2/3, exposição a risco físico, exposição a risco de transição), e metas associadas a gestão desses riscos."
+    ] },
+    { "type": "h3", "text": "CSRD: o novo standard obrigatório europeu" },
+    { "type": "p", "text": "A Corporate Sustainability Reporting Directive (CSRD) entrou em vigor em 2023 e substitui a NFRD (Non-Financial Reporting Directive) com âmbito e rigor expandidos. Aplica-se a grandes empresas europeias em fases: 2024 para reporting de 2025 (empresas já sob NFRD), 2025 para reporting de 2026 (outras grandes), 2026 para PMEs cotadas. Reporting segue European Sustainability Reporting Standards (ESRS) com 12 standards, cobrindo ambiente (E1-E5), social (S1-S4), e governance (G1-G3). Auditoria externa é obrigatória e limitada ('assurance') em primeira fase, razoável em fase posterior." },
+    { "type": "ul", "items": [
+      "Double materiality (dupla materialidade): empresa reporta impactos negativos do negócio no ambiente/sociedade (impact materiality) e impactos financeiros de factores ESG na empresa (financial materiality). Para cada tema, identifica o que é material.",
+      "ESRS 2 general disclosures: características da empresa, estratégia, governance, política de due diligence, e stakeholders principais. Reporte transversal obrigatório.",
+      "ESRS E1 Climate change: mitigação (emissões Scope 1-3, plano de transição), adaptação (riscos físicos e de transição identificados), e descarbonização (Science-Based Targets alignment se aplicável).",
+      "ESRS S1 Own workforce: diversidade, condições de trabalho, formação, remuneração, liberdade de associação, e sistemas de queixas. Para empresas com >250 colaboradores.",
+      "Auditoria limitada: a partir de 2025 para ESRS reporting, evoluindo para razoável em 2028. Significa que auditor não só verifica processo mas avalia razoabilidade dos números reportados."
+    ] },
+    { "type": "callout", "variant": "example", "text": "Empresa de retalho com 500 colaboradores e 100M€ de receita aplica CSRD para reporting de 2026. Deve identificar impactos financeiros do clima (e.g., exposição a risco físico em lojas costeiras, exposição a carbono pricing em logística), impactos de práticas laborais (e.g., risco de rotatividade, formação), e impactos na comunidade (e.g., fornecedores em países com direitos humanos fracos). Reporting resulta em ~40-80 páginas de sustentabilidade auditada, com métricas GHG,pay gap, política de fornecedores. Clientes B2B pedem estes dados em procurement; investidores em due diligence." },
+    { "type": "h2", "text": "Comparação entre frameworks: como escolher" },
+    { "type": "p", "text": "Diferentes frameworks para diferentes contextos. Para gestão de risco geral, ISO 31000 é o ponto de partida mais versátil. Para empresas cotadas nos EUA ou com operações relevantes, COSO ERM 2017 é referência. Para bancos e seguradoras, Basileia III (banco) e Solvência II (seguro) são obrigatórios. Para disclosure ESG, TCFD é o padrão conceptual mais adopt e CSRD o mais exigente em termos de conteúdo obrigatório na UE. Em termos práticos, empresas multi-jurisdição adoptam múltiplos frameworks e mapeiam-nos entre si para evitar redundância." },
+    { "type": "ul", "items": [
+      "ISO 31000: vocabulário universal, aplicável a qualquer organização, não-certificável. Boa para estaleiro de pensamento e para verificar completeness do próprio programa.",
+      "COSO ERM 2017: integração com estratégia, 5 componentes e 20 princípios auditáveis, referencia para SofS (Statement on Standards for Attestation Engagements) auditoria nos EUA.",
+      "Basileia III/Solvência II: obrigatório para banca/seguros, requisitos quantitativos e qualitativos, foco em capital e solvência.",
+      "TCFD: disclosure-oriented, voluntário historicamente, hoje adoptado por reguladores em ≥10 jurisdições.",
+      "CSRD: obrigatório na UE, double materiality, ESRS detalhados, auditoria limitada/razoável."
+    ] },
+    { "type": "h2", "text": "Mapeamento entre frameworks: como evitar redundância" },
+    { "type": "p", "text": "Empresas com obrigação ou opção de seguir múltiplos frameworks fazem tipicamente 'mapa de calor' de requisitos: para cada requisito de cada framework, identificar (a) está satisfeito por alguma prática existente, (b) exige prática específica adicional, (c) é realmente novo e exige implementação. O mapa permite mostrar que 60-80% dos requisitos de COSO estão satisfeitos por práticas ISO 31000 já existentes — evitando duplicação de documentação. Cross-walks são publicados pelos próprios emissores dos frameworks: ISO publicou 'ISO 31000:2018 — Linking with other standards'." },
+    { "type": "callout", "variant": "tip", "text": "Adoptar todos os frameworks de uma vez é caminho para paralisia e custos massivos de consultoria. Aproximação pragmática: começar com ISO 31000 como framework integrador (universal, neutro); adicionar sector-specific quando obrigatório (Basileia, Solvência); adoptar COSO ERM 2017 quando empresa cresce e/ou prepara IPO/AIM em mercado com exigência; e abordar CSRD/TCFD com lead time de 18-24 meses antes da obrigação efectiva." },
+    { "type": "h2", "text": "Profissionalização da função de risco" },
+    { "type": "p", "text": "Frameworks e normas são apenas arquitectura. Sem pessoas qualificadas e com autoridade, ficam vazios. Função de Chief Risk Officer (CRO) ganhou peso em empresas médias e grandes, e organizações profissionais (FERMA — Federation of European Risk Management Associations; Institute of Risk Management; PRMIA — Professional Risk Managers' International Association) certificam profissionais de risco com programas estruturados." },
+    { "type": "ul", "items": [
+      "CRO: executivo C-level responsável pela função de risco. Reporta tipicamente ao CEO e tem acesso directo ao Conselho (idealmente via Comité de Risco). Independência do CFO é crítica para evitar conflito de interesse entre geração de receita financeira e controlo de risco.",
+      "Função de risco (Risk Function): equipa de segunda linha que apoia negócio na implementação de framework, monitoriza KRIs, e reporta perfil de risco. Dimensão típica: 1-3 pessoas em PME, 10-50 em grandes bancos.",
+      "Auditoria interna (terceira linha): assegura que primeira e segunda linhas operam conforme políticas e frameworks. Reporta ao Comité de Auditoria (não à gestão).",
+      "Comité de Risco do Conselho: subcomité do Conselho que supervisiona estratégia de risco, apetite, e recursos. Composição típica: 3-5 administradores com experiência relevante (financeira, sectorial, regulatória)."
+    ] },
+    { "type": "h2", "text": "Resumo da cadeira: gestão de risco como competência profissional" },
+    { "type": "p", "text": "Gestão de risco é hoje competência profissional reconhecida, não intuição pessoal. Os elementos essenciais que esta cadeira ajudou a desenvolver:" },
+    { "type": "ul", "items": [
+      "Vocabulário: distinguir risco (probabilidades estimáveis) de incerteza Knightiana, apetite de tolerância, perigo de exposição, downside-only risk de risco bidirecional.",
+      "Identificação: combinar métodos (brainstorming, Delphi, SWOT, cenários) para vencer viéses cognitivos; manter registo vivo com owner e KRIs.",
+      "Análise: qualitativa para triagem; quantitativa para risco material; matriz P×I como ferramenta central; heatmaps para comunicação.",
+      "Resposta: 4T (Tolerate, Treat, Transfer, Terminate) com critérios explícitos para cada escolha; plano de mitigação com prazo, custo, KPI, plano de contingência.",
+      "Frameworks: ISO 31000 como integrador universal; COSO ERM 2017 para empresas cotadas; Basileia/Solvência para reguladores financeiros; TCFD/CSRD para disclosure ESG/clima.",
+      "Continuidade: BCP/DRP testados regularmente, com plano de comunicação pré-aprovado e equipas com responsabilidade nomeada antes da crise."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Gestão de risco é como gestão da qualidade total nos anos 1990: começa como 'custo de conformidade' e evolui para 'vantagem competitiva'. Empresas que internalizaram ERM como prática contínua, e não como requisito de auditoria, capturam valor estratégico — desde capacidade de actuar em crises até estruturação de portfolio mais resiliente. A profissionalização da função de risco na próxima década vai separar vencedores de perdedores em sectores expostos a choques crescentes." }
+  ],
+  "keyPoints": [
+    "ISO 31000:2018 define 8 princípios (integrada, estruturada, customizada, inclusiva, dinâmica, baseada em informação, factores humanos, melhoria contínua) e 5 etapas (contexto, identificação, análise, avaliação, tratamento).",
+    "COSO ERM 2017 estrutura gestão em 5 componentes (governance, estratégia, performance, revisão, informação) com 20 princípios operacionais auditáveis.",
+    "Basileia III mantém 3 pilares (requisitos de capital, supervisão SREP, disciplina de mercado) e três classes de risco Pilar 1 (crédito, mercado, operacional) — aplicação faseada de Basileia III.5 até 2028.",
+    "TCFD estrutura disclosure climática em 4 pilares (governance, estratégia, risk management, métricas) — adoptado por ≥10 jurisdições a partir de 2017.",
+    "CSRD europeia exige double materiality (impacto e financeiro), 12 ESRS (E1-E5, S1-S4, G1-G3) e auditoria limitada/razoável — aplicável a grandes empresas em fases 2024-2028.",
+    "CRO e função de risco profissionalizam gestão; mapeamento entre frameworks evita duplicação (60-80% dos requisitos de COSO tipicamente cobertos por práticas ISO 31000)."
+  ],
+  "quizSlug": "grq",
+  "nextLesson": null,
+  "prevLesson": "3-resposta-e-mitigacao"
+}

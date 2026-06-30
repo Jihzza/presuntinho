@@ -679,6 +679,8 @@
   "routes.aulas.curso.gestao-conflitos.tagline": "Business Administration · Fontes do conflito, estilos de resposta, negociação integrativa e mediação",
   "routes.aulas.curso.gestao-conflitos.title": "Gestão de Conflitos",
   "routes.aulas.curso.gestao-qualidade": "Gestão da Qualidade Total",
+  "routes.aulas.curso.gestao-risco.tagline": "Business Administration · ISO 31000, COSO ERM, Basileia III e TCFD — identificar, analisar e responder a riscos empresariais",
+  "routes.aulas.curso.gestao-risco.title": "Gestão de Risco",
   "routes.aulas.curso.lideranca-coaching": "Liderança e Coaching",
   "routes.aulas.curso.marketing-internacional.tagline": "Business Administration · STP global, mix 4Ps internacional, modos de entrada, Hofstede e diplomacia corporativa",
   "routes.aulas.curso.marketing-internacional.title": "Marketing Internacional",
@@ -742,6 +744,9 @@
   "routes.escola.curso.gestao-qualidade.description": "Como construir uma cultura de qualidade que atravessa toda a organização: princípios de Deming, Juran, Ishikawa e Crosby, ferramentas (Pareto, fishbone, SPC, FMEA), sistemas de gestão ISO 9001/14001/45001 com PDCA e auditorias, e qualidade em serviços via ServQual, lean services, six sigma e modelo EFQM.",
   "routes.escola.curso.gestao-qualidade.tagline": "Business Administration · TQM, ferramentas, ISO 9001 e excelência em serviços",
   "routes.escola.curso.gestao-qualidade.title": "Gestão da Qualidade Total",
+  "routes.escola.curso.gestao-risco.description": "Gestão de risco aplicada à gestão empresarial: fundamentos (definição de risco segundo Knight, tipologia estratégica/operacional/financeira/compliance, apetite vs tolerância), identificação e análise (brainstorming, Delphi, SWOT, análise de cenários, matrizes probabilidade×impacto, heatmaps), resposta e mitigação (estratégia 4T — Tolerate, Treat, Transfer, Terminate — seguros, hedging, diversificação, BCP/DRP), e os principais frameworks e normas (ISO 31000 com processo em 5 etapas, COSO ERM 2017 com 5 componentes e 20 princípios, Basileia III para risco de crédito/mercado/operacional, e reporting ESG/clima via TCFD e CSRD).",
+  "routes.escola.curso.gestao-risco.tagline": "Business Administration · ISO 31000, COSO ERM, Basileia III e TCFD — identificar, analisar e responder a riscos empresariais",
+  "routes.escola.curso.gestao-risco.title": "Gestão de Risco",
   "routes.escola.curso.inovacao-empreendedorismo.description": "Mindset empreendedor, design thinking como método de inovação centrada no utilizador, validação de ideias com MVP, customer development e lean startup, e financiamento + pitch para escalar.",
   "routes.escola.curso.inovacao-empreendedorismo.lessons.4-financiamento-e-pitch.summary": "Fontes de capital (bootstrapping, business angels, VC), pitch deck vs elevator pitch, métricas para investidores (TAM/SAM/SOM, LTV/CAC, runway) e como abordar business angels.",
   "routes.escola.curso.inovacao-empreendedorismo.lessons.4-financiamento-e-pitch.title": "4. Financiamento e Pitch",
@@ -990,5 +995,15 @@
   "walkthrough.verify.exists": "existe.",
   "walkthrough.verify.text": "Verifica que",
   "write.breadcrumb.home": "← Hub",
-  "write.head.title": "Writing · Tips Anti-AI"
+  "write.head.title": "Writing · Tips Anti-AI",
+  "routes": {
+    "escola": {
+      "quiz": {
+        "grq": {
+          "title": "Quiz: Gestao de Risco",
+          "description": "10 perguntas para testar os teus conhecimentos de gestao de risco: risco vs incerteza segundo Knight, estrategia 4T de resposta, ISO 31000, COSO ERM, Basileia III e TCFD."
+        }
+      }
+    }
+  }
 }

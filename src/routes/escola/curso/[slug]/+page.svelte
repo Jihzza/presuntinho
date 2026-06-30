@@ -363,8 +363,22 @@
                                                             { slug: '3-estrategias-multi-vs-global', title: '3. Estratégia Multi-doméstica, Global, Transnacional e Internacional', summary: 'Os quatro arquétipos de Bartlett & Ghoshal: integração global vs resposta local, e como a matriz 2×2 pressupõe trade-offs. Pressão por integração, pressões por resposta local, e o trade-off transnational dilemma.', quizSlug: 'eiq', quizTitle: 'Quiz: Estratégia Internacional', estMinutes: 10 },
                                                             { slug: '4-caso-de-estudo', title: '4. Caso: Expansão Ibérica de uma PME de D2C', summary: 'Aplicação prática: uma marca portuguesa de cosméticos naturais entra em Espanha via marketplaces primeiro, depois abre filial em Madrid. Decisões de localização, modo de entrada, gestão cambial e adaptação cultural.', quizSlug: 'eiq', quizTitle: 'Quiz: Estratégia Internacional', estMinutes: 9 }
                                                           ]
-                                                        },
-                    'analise-investimentos': {
+                                                          },
+                                                          'gestao-risco': {
+                                                          slug: 'gestao-risco',
+                                                          title: 'Gestão de Risco',
+                                                          tagline: 'Business Administration · ISO 31000, COSO ERM, Basileia III e TCFD — identificar, analisar e responder a riscos empresariais',
+                                                          description: 'Gestão de risco aplicada à gestão empresarial: fundamentos (definição de risco segundo Knight, tipologia estratégica/operacional/financeira/compliance, apetite vs tolerância), identificação e análise (brainstorming, Delphi, SWOT, análise de cenários, matrizes probabilidade×impacto, heatmaps), resposta e mitigação (estratégia 4T — Tolerate, Treat, Transfer, Terminate — seguros, hedging, diversificação, BCP/DRP), e os principais frameworks e normas (ISO 31000 com processo em 5 etapas, COSO ERM 2017 com 5 componentes e 20 princípios, Basileia III para risco de crédito/mercado/operacional, e reporting ESG/clima via TCFD e CSRD).',
+                                                          icon: '⚠️',
+                                                          color: '#dc2626',
+                                                          lessons: [
+                                                          { slug: '1-fundamentos-risco', title: '1. Fundamentos de Risco: Definição, Tipos e Knight', summary: 'O que é risco em gestão, tipologia estratégica/operacional/financeira/compliance, distinção risco vs incerteza (Knight) e diferença entre apetite e tolerância ao risco.', quizSlug: 'grq', quizTitle: 'Quiz: Gestão de Risco', estMinutes: 9 },
+                                                          { slug: '2-identificacao-e-analise', title: '2. Identificação e Análise: Métodos, Qualitativa vs Quantitativa e Matriz Probabilidade × Impacto', summary: 'Métodos de identificação (brainstorming, Delphi, SWOT, análise de cenários, registo de riscos), análise qualitativa vs quantitativa, e priorização com matriz probabilidade × impacto e heatmaps.', quizSlug: 'grq', quizTitle: 'Quiz: Gestão de Risco', estMinutes: 9 },
+                                                          { slug: '3-resposta-e-mitigacao', title: '3. Resposta e Mitigação: Estratégia 4T, Seguros, Hedging, Diversificação e BCP/DRP', summary: 'As quatro estratégias de resposta (Tolerate, Treat, Transfer, Terminate), planos de mitigação, instrumentos de transferência (seguros, hedging, diversificação) e continuidade de negócio (BCP/DRP).', quizSlug: 'grq', quizTitle: 'Quiz: Gestão de Risco', estMinutes: 9 },
+                                                          { slug: '4-frameworks-e-normas', title: '4. Frameworks e Normas: ISO 31000, COSO ERM 2017, Basileia III e TCFD/CSRD', summary: 'Os frameworks profissionais: ISO 31000 com princípios e processo em 5 etapas, COSO ERM 2017 com 5 componentes e 20 princípios, Basileia III para risco de crédito/mercado/operacional, e TCFD/CSRD para ESG e risco climático.', quizSlug: 'grq', quizTitle: 'Quiz: Gestão de Risco', estMinutes: 9 }
+                                                          ]
+                                                          },
+                                                          'analise-investimentos': {
                       slug: 'analise-investimentos',
                       title: 'Análise de Investimentos',
                       tagline: 'Business Administration · Capital budgeting, VPL/TIR, risco, custo de capital',
