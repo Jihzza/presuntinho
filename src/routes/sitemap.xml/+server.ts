@@ -39,7 +39,9 @@ const PUBLIC_ROUTES: string[] = [
   '/financas/',
   '/habitos/',
   '/biblioteca/',
-  '/definicoes/'
+  '/definicoes/',
+  '/aulas/',
+  '/agente/'
 ];
 
 /** ISO date used for `<lastmod>` — set at build time. */

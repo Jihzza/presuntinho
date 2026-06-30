@@ -139,7 +139,15 @@ function loadCourse(courseDir: string, courseSlug: string): CourseBucket | null 
   } catch {
     return null;
   }
-  const jsonFiles = entries.filter((f) => f.endsWith('.json')).sort();
+  // Exclude `course.json` — those are *course metadata* (slug, icon,
+  // description, lesson index), not lessons. They live next to the
+  // lesson files so `/escola/curso/[slug]/` can fetch them via a single
+  // read, but they must NOT show up in /aulas as #N "<Course Name>".
+  // gap-128: 23 fake "#5 <CourseName>" entries were rendering as
+  // empty placeholder cards before this filter.
+  const jsonFiles = entries
+    .filter((f) => f.endsWith('.json') && f !== 'course.json')
+    .sort();
   if (jsonFiles.length === 0) return null;
 
   const lessons: LessonMeta[] = [];
