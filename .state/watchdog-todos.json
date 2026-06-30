@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-30T12:20:00+02:00",
+  "lastUpdated": "2026-06-30T12:25:00+02:00",
   "openItems": [
     {
       "id": "gap-028",
@@ -45,15 +45,6 @@
       "id": "gap-117",
       "category": "empty-area",
       "description": "Seed finanças em db.ts:614 corre quando transacoes.count()===0. Daniel vê dashboard em branco provavelmente porque seed foi seed-out antes de novo fix. Confirmar live smoke após deploy.",
-      "severity": "média",
-      "source": "audit-UX-Skander1-2026-06-28",
-      "created_at": "2026-06-30T08:15:00+02:00",
-      "dispatched_to": "Skander 2 — deleg_63dfee9d"
-    },
-    {
-      "id": "gap-120",
-      "category": "empty-area",
-      "description": "Criar /financas/relatorios/ — pie categorias + top 5 despesas + comparativo mês-a-mês + export CSV.",
       "severity": "média",
       "source": "audit-UX-Skander1-2026-06-28",
       "created_at": "2026-06-30T08:15:00+02:00",
@@ -114,6 +105,7 @@
     {"id": "gap-116", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "fix(ux) definicoes reset_password real PBKDF2 (não mais '⏳ soon')."},
     {"id": "gap-118", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "HeartButton title='Clica — easter egg' via $t() em 5 locales."},
     {"id": "gap-119", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "2607019", "note": "fix(ux) footer 'Sub-app #{n} no hub' → 'Hub · Finanças/Hábitos' em 5 locales."},
+    {"id": "gap-120", "closed_at": "2026-06-30T09:35:00+02:00", "sha": "d42e373", "note": "feat(financas) /financas/relatorios/ shipped em d42e373 — pie categorias + top 5 despesas + comparativo mês-a-mês + export CSV (5 locales i18n). 764 linhas, prod serve 200. Estado actualizado tarde."},
     {"id": "gap-121", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "streak+today já no 823edd2 — gap-121 era verificação, fechada como já feita."},
     {"id": "gap-122", "closed_at": "2026-06-30T12:20:00+02:00", "sha": "fbdc389", "note": "BA #46 Gestão de Conflitos: 4 lições + 10 MCQ + i18n 7 chaves × 5 locales + CATALOGUE wired. npm run check 0/0, build verde, prod serve 200."},
     {"id": "gap-125", "closed_at": "2026-06-30T10:05:00+02:00", "sha": "07fe69c", "note": "fix(ux) footer 'Hub · {Section}' para biblioteca + trabalhos (5 locales)."}
