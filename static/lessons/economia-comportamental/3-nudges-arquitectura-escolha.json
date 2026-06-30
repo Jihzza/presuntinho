@@ -1,0 +1,81 @@
+{
+  "id": "3-nudges-arquitectura-escolha",
+  "courseSlug": "economia-comportamental",
+  "title": "Nudges, Arquitectura da Escolha e Ética",
+  "audio": "Lição sobre nudges, arquitectura da escolha e os limites éticos entre ajudar, persuadir e manipular.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "O que é um nudge" },
+    { "type": "p", "text": "Richard Thaler e Cass Sunstein definiram, em Nudge (2008), nudge como 'qualquer aspecto da arquitectura de escolha que altera o comportamento das pessoas de forma previsível sem proibir qualquer opção nem alterar significativamente os seus incentivos económicos'. A definição tem três critérios: o nudge preserva liberdade; orienta comportamento de modo previsível; opera sobre o contexto, não sobre a proibição." },
+    { "type": "h3", "text": "Paternalismo liberal (libertarian paternalism)" },
+    { "type": "p", "text": "A posição filosófica de Sunstein e Thaler admite que influenciamos sempre as escolhas dos outros — ao desenhar formulários, menus, defaults e layouts, estamos a escolher por eles se não pensarmos nisso. O paternalismo liberal propõe fazer esse desenho de forma ética e transparente, ajudando as pessoas a tomarem melhores decisões sem lhes retirar a liberdade. O ponto de fricção com o libertarianismo puro está precisamente aí: não há neutrality na arquitectura de escolha." },
+    { "type": "h2", "text": "Arquitectura da escolha: princípios operacionais" },
+    { "type": "p", "text": "O ambiente onde a decisão é tomada pode ser tão determinante como os incentivos explícitos. Os elementos clássicos da arquitectura da escolha incluem:" },
+    { "type": "ul", "items": [
+      "Defaults (opções por defeito): o caminho do 'não-escolher' tem força desproporcionada. Funciona porque actua sobre inércia, custo cognitivo e percepção de endosso institucional.",
+      "Saliência: tornar consequências visíveis no momento certo (custo total, calorias, risco, progresso) aumenta qualidade da decisão.",
+      "Fricção: adicionar passos, campos obrigatórios ou confirmações pode reduzir comportamento impulsivo (compras, partilha de dados) ou indesejado (auto-exclusão de apps).",
+      "Feedback: mostrar resultado da acção em tempo real ('este mês já poupou €120') reforça comportamento positivo e evidencia desvios.",
+      "Simplificação: dividir decisões complexas em passos sequenciais, mostrando progresso e evitando sobrecarga.",
+      "Timing da mensagem: o melhor momento para sugerir uma acção é quando o utilizador já está predisposto (após uma conquista, no momento de planeamento)."
+    ] },
+    { "type": "h2", "text": "Defaults e opt-out" },
+    { "type": "p", "text": "Defaults são provavelmente a alavanca mais poderosa da arquitectura da escolha. Johnson e Goldstein mostraram que em países com opt-out (presumido consentimento para doação de órgãos) as taxas de doação efectiva são de 85-99%, versus 5-40% em países com opt-in. O mesmo efeito aparece em planos de pensões profissionais: a inscrição automática tem adesões 30-40 pontos percentuais acima da inscrição voluntária." },
+    { "type": "callout", "variant": "example", "text": "Uma empresa portuguesa de média dimensão automatizou a inscrição no plano de poupança empresarial: novos colaboradores entram por defeito no plano, com 3% de contribuição, podendo cancelar ou alterar a qualquer momento. Em 18 meses, a taxa de adesão subiu de 28% para 81%, sem reduzir a satisfação." },
+    { "type": "h2", "text": "Saliência e feedback" },
+    { "type": "p", "text": "A saliência resolve um problema central: muitas consequências da decisão estão distantes no tempo ou fora do campo de visão imediato. Exemplos efectivos:" },
+    { "type": "ul", "items": [
+      "Etiquetas de calorias em menus: não proíbem nada, mas tornam o custo nutricional visível no momento da escolha.",
+      "Estimativa de custo total de empréstimos: mostrar, no momento da assinatura, o total a pagar ao longo do contrato ajuda o consumidor a comparar ofertas.",
+      "Estimativas de carbono em comércio electrónico: tornar visível o impacto ambiental altera a percepção do produto — não exactamente o preço, mas a responsabilidade.",
+      "Feedback em apps de finanças: ver o gasto acumulado do mês (€340 de restaurants) muda o comportamento na próxima compra mais do que o orçamento anual abstracto."
+    ] },
+    { "type": "h2", "text": "Fricção estratégica" },
+    { "type": "p", "text": "Adicionar passos pode parecer contraproducente em experiência de utilizador, mas é legítimo quando protege o utilizador. Exemplos:" },
+    { "type": "ul", "items": [
+      "Confirmação dupla antes de apagar dados ou fechar contas: reduz arrependimento e erros.",
+      "Cooldown de 24h em apostas desportivas online antes do primeiro depósito: bem desenhado, protege utilizadores impulsivos.",
+      "Verificação obrigatória de idade em compras de álcool/tabaco online: fricção leve com benefício claro de saúde pública.",
+      "Pedir confirmação em envios de grandes quantias para pessoas desconhecidas: protege utilizadores de fraudes emocionais (estafa do 'nigeriano' moderno)."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Fricção comercial pode ser dark pattern: passwords canceladas no subsolo do perfil, 'saltar 7 telas' para cancelar, confirmar opt-in para não receber marketing — fricção aplicada contra o utilizador." },
+    { "type": "h2", "text": "Ética dos nudges: distinguir ajudar de manipular" },
+    { "type": "p", "text": "Nudges não são intrinsecamente bons ou maus. A ética depende da intenção e do desenho. Quatro critérios são úteis:" },
+    { "type": "ul", "items": [
+      "Bem-estar do utilizador: o nudge aumenta o bem-estar de quem decide, ou apenas o do desenhador?",
+      "Transparência: a arquitectura pode ser explicada em linguagem clara? Se não, há motivo para desconfiar.",
+      "Autonomia: o utilizador pode mudar de ideias com custo baixo? Ou está desenhado para prendê-lo?",
+      "Reversibilidade: o nudge é reversível? Nudges que prendem (subscrição de difícil cancelamento, contratos anuais com fee) são eticamente mais problemáticos do que nudges com saída fácil."
+    ] },
+    { "type": "h3", "text": "Dark patterns: o lado negro da arquitectura da escolha" },
+    { "type": "p", "text": "Dark patterns são designs que enganam ou manipulam utilizadores em benefício do designer. Identifique alguns dos mais comuns:" },
+    { "type": "ul", "items": [
+      "Confirmshaming: 'Não, obrigado, não quero poupar' em vez de 'Não, obrigado' — manipula culpa.",
+      "Bait and switch: botão 'X' que abre anúncio em vez de fechar; CTA que diz 'subscrever' mas adiciona extras.",
+      "Hidden costs: taxas que só aparecem no checkout (mas são legítimas, dependendo da transparência inicial).",
+      "Sneak into basket: extras adicionados sem consentimento explícito (seguro de viagem, garantia extra).",
+      "Urgency fabricated: 'só 1 em stock' que nunca se esgota realmente; 'preço acaba em' contagens que recomeçam.",
+      "Forced continuity: 免费试验 que renova automaticamente sem lembrete eficaz."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Teste interno em qualquer produto digital: pergunte à equipa de produto 'se publicássemos os nossos fluxos de opt-out e cancelamento no site, ficávamos tranquilos?'. Se a resposta é hesitação, há dark pattern escondido." },
+    { "type": "h2", "text": "Aplicações empresariais reais" },
+    { "type": "h3", "text": "Planos de pensões com inscrição automática" },
+    { "type": "p", "text": "O exemplo clássico de nudge legítimo. A inscrição automática com opt-out (e employer match parcial) preserva a liberdade, aumenta dramaticamente a poupança de longo-prazo, e tem demonstrado melhorar bem-estar financeiro na reforma. Foi política pública no Reino Unido, EUA e Singapura." },
+    { "type": "h3", "text": "Checkout de e-commerce" },
+    { "type": "p", "text": "Simplificar o checkout (3 passos em vez de 6, campos mínimos, autopreenchimento) reduz abandono de carrinho de forma comprovada. Mas esconder taxas ou seguros opcionais até ao fim do fluxo, ou exigir criação de conta para finalizar, é dark pattern com risco reputacional e regulatório (Decreto-Lei 57/2018 em Portugal, RGPD)." },
+    { "type": "h3", "text": "Cantinas e escolha alimentar" },
+    { "type": "p", "text": "Mover fruta e vegetais para o nível dos olhos e colocar sobremesas no fundo do balcão aumenta escolhas saudáveis em 15-25% sem proibir nada. É uma das intervenções mais estudadas em políticas públicas de saúde e funciona em escolas, hospitais e empresas." },
+    { "type": "h3", "text": "Alertas em homebanking" },
+    { "type": "p", "text": "Bancos europeus começam a mostrar 'este mês já gastou X em [categoria]' como nudge educativo. Bem desenhado (não ameaçador, sem 'reprovação implícita'), ajuda gestão financeira pessoal. Mal desenhado (linguagem culpabilizante, sem contexto), irrita e gera desconfiança." }
+  ],
+  "keyPoints": [
+    "Nudge: intervenção no ambiente de escolha que altera comportamento de forma previsível, sem proibir alternativas nem alterar incentivos económicos significativos.",
+    "Defaults, saliência, fricção, feedback e simplificação são os principais alavancas da arquitectura da escolha.",
+    "Defaults são extremamente poderosos — funcionam em pensões, doação de órgãos, privacidade e consentimento.",
+    "Saliência e feedback tornam consequências distantes visíveis no momento da decisão.",
+    "Ética dos nudges: bem-estar do utilizador, transparência, autonomia e reversibilidade distinguem um nudge legítimo de um dark pattern."
+  ],
+  "quizSlug": "beq",
+  "nextLesson": "4-aplicacoes-negocios",
+  "prevLesson": "2-prospect-theory-risco"
+}

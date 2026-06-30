@@ -1,0 +1,64 @@
+{
+  "id": "1-racionalidade-limitada-vieses",
+  "courseSlug": "economia-comportamental",
+  "title": "Racionalidade Limitada, Heurísticas e Vieses",
+  "audio": "Lição sobre economia comportamental, racionalidade limitada, heurísticas e vieses.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "A ruptura com o agente perfeitamente racional" },
+    { "type": "p", "text": "A economia clássica assume que pessoas e empresas tomam decisões optimizando utilidades ou lucros com informação completa e capacidade cognitiva ilimitada. A realidade é outra: gestores decidem sob pressão de tempo, informação incompleta, emoções, conflitos internos e limitações cognitivas genuínas. A economia comportamental não invalida a teoria económica — complementa-a descrevendo como pessoas reais se desviam sistematicamente da racionalidade ideal." },
+    { "type": "h3", "text": "Racionalidade limitada (bounded rationality)" },
+    { "type": "p", "text": "Herbert Simon mostrou, nos anos 1950, que decisores reais raramente maximizam — procuram soluções satisfatórias (satisficing) dentro de restrições cognitivas, de tempo e de informação. Em vez de avaliar todas as alternativas possíveis, fixam critérios de aceitabilidade e param assim que encontram uma opção que os cumpra. Para a gestão, isto significa que o problema raramente é 'falta de dados' — é 'qual é o critério de suficientemente bom'." },
+    { "type": "h3", "text": "Heurísticas: atalhos úteis que podem falhar" },
+    { "type": "p", "text": "Heurísticas são atalhos mentais que simplificam decisões complexas. São úteis quando o custo cognitivo de analisar racionalmente excede o benefício, mas produzem erros sistemáticos quando aplicadas fora de contexto. As três heurísticas clássicas do programa Kahneman-Tversky são:" },
+    { "type": "ul", "items": [
+      "Disponibilidade: estimar a probabilidade de um evento pela facilidade com que exemplos vêm à mente. Eventos mediáticos parecem mais prováveis do que a base-rate indica.",
+      "Representatividade: classificar algo pela semelhança com um estereótipo, ignorando frequências-base. É a base do 'hot hand fallacy' em desporto e em investimento.",
+      "Ancoragem: ajustar estimativas a partir de um número inicial, mesmo quando esse número é arbitrário. Preços de referência, salários 'esperados' e metas orçamentais funcionam como âncoras."
+    ] },
+    { "type": "h2", "text": "Vieses cognitivos que distorcem decisões empresariais" },
+    { "type": "p", "text": "Para além das três heurísticas, há dezenas de vieses documentados. Os mais impactantes para gestores:" },
+    { "type": "ul", "items": [
+      "Excesso de confiança (overconfidence): sobrestimar a precisão das nossas previsões e a qualidade das nossas decisões. Tende a diminuir com experiência e a aumentar com informação.",
+      "Viés de confirmação: procurar informação que confirme a nossa hipótese e desvalorizar a que a contradiz. Funciona como filtro invisível.",
+      "Hindsight bias ('eu sempre soube'): depois de saber o resultado, julgar que era óbvio. Corrói a capacidade de aprender com erros.",
+      "Framing effect: a mesma escolha apresentada com moldura diferente (ganhos vs perdas, percentagem vs valor absoluto) conduz a decisões diferentes.",
+      "Sunk cost fallacy: continuar a investir num projecto só porque já gastámos muito nele, ignorando perspectivas futuras.",
+      "Status quo bias: preferência por manter o estado actual mesmo quando uma alternativa é claramente melhor."
+    ] },
+    { "type": "h2", "text": "Sistema 1 e Sistema 2: dois modos de pensar" },
+    { "type": "p", "text": "Daniel Kahneman popularizou a distinção entre dois sistemas: o Sistema 1 (rápido, intuitivo, automático, emocional) e o Sistema 2 (lento, deliberado, analítico, esforçado). O Sistema 1 é dominante no dia-a-dia — é eficiente e funciona bem 80-90% do tempo, mas herda os vieses das heurísticas. O Sistema 2 entra em acção quando a tarefa é nova, complexa ou quando pomos o cérebro em 'modo alerta'. A gestão moderna exige saber quando cada sistema é adequado e não tentar forçar o Sistema 2 em tarefas que pedem velocidade." },
+    { "type": "callout", "variant": "example", "text": "Um investidor particular pode usar Sistema 1 para decidir que 'esta acção parece boa' em segundos (heurística de representatividade), mas deveria usar Sistema 2 para um portfolio pensionável — análise de fundamentals, diversificação e horizonte temporal. O mesmo cérebro, dois modos, resultados muito diferentes." },
+    { "type": "h2", "text": "Decision hygiene: como reduzir erros sistemáticos" },
+    { "type": "p", "text": "Não se 'desviesa' um cérebro com formação — mas pode-se desenhar o processo de decisão de modo a reduzir o impacto dos vieses. Algumas práticas de decision hygiene:" },
+    { "type": "ul", "items": [
+      "Pré-mortem: antes de aprovar um projecto, a equipa imagina que ele falhou e escreve porquê. Força a considerar riscos que todos evitam mencionar.",
+      "Red team: adversário de advocacia dedicado a atacar a proposta do autor. Funciona quando tem acesso real à decisão e é levado a sério.",
+      "Base rates como ponto de partida: começar estimativas com 'qual é a taxa-base deste tipo de evento na indústria?' antes de ajustar com informação específica.",
+      "Checklists explícitos para decisões repetidas: hiring, promoções, investimentos acima de certo valor, lançamentos de produto.",
+      "Separação entre quem propõe e quem aprova: quem recomenda o projecto não deve ser quem fecha o orçamento, para evitar conflito de interesses.",
+      "Tracking de previsões: registar cada previsão com probabilidade e data de revisão. Confronta o excesso de confiança com evidência."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Mais de 90% das decisões empresariais repetidas não têm processo documentado. Quando aparece um viés (sobre-confiança, ancoragem em números antigos, pressão social), não há defesa institucional." },
+    { "type": "h2", "text": "Aplicações empresariais reais" },
+    { "type": "h3", "text": "Startups e excesso de confiança" },
+    { "type": "p", "text": "Fundadores sobre-estimam TAM (Total Addressable Market), velocidade de adopção e capacidade de execução. Uma prática de pré-mortem antes de gastar capital significativo ajuda a identificar as hipóteses mais frágeis. 'Se daqui a 18 meses isto tivesse falhado, porquê?' é uma pergunta brutal mas útil." },
+    { "type": "h3", "text": "Recrutamento e viés de confirmação" },
+    { "type": "p", "text": "Entrevistadores formam uma impressão nos primeiros minutos e depois interpretam todas as respostas como confirmação dessa primeira impressão. Entrevistas estruturadas (mesmas perguntas, mesma grelha de avaliação, vários entrevistadores independentes) reduzem o efeito e melhoram a qualidade de hiring de forma mensurável." },
+    { "type": "h3", "text": "Previsão de vendas no retalho" },
+    { "type": "p", "text": "Equipas comerciais ancoram-se frequentemente no mês anterior, ignorando sazonalidade, concorrência, promoções activas ou mudança de preço. Usar base rates históricos por categoria e por canal (não 'o mês passado', mas 'mesmo mês em 2018/19/22') melhora a previsão." },
+    { "type": "h3", "text": "Inovação e aversão à perda" },
+    { "type": "p", "text": "Equipes sentem mais dor em perder um cliente do que prazer em ganhar dois. Isto reduz a predisposição para investir em novos produtos onde há risco de canibalizar o actual. Reconhecer o viés e orçamentar 'investimentos de canibalização' à parte ajuda a tomar decisões mais racionais." },
+    { "type": "callout", "variant": "tip", "text": "Antes de cada decisão importante, pergunta: 'que heurística ou viés está provavelmente a operar aqui?' Esta simples pergunta já reduz o impacto dos vieses, porque passa o assunto para o Sistema 2." }
+  ],
+  "keyPoints": [
+    "Racionalidade limitada (Simon): gestores decidem com informação incompleta, tempo limitado e capacidade cognitiva finita, procurando soluções satisfatórias em vez de óptimas.",
+    "Heurísticas de disponibilidade, representatividade e ancoragem simplificam decisões mas geram erros sistemáticos fora de contexto.",
+    "Vieses como excesso de confiança, confirmação e hindsight distorcem previsões, recrutamento e avaliação de projectos.",
+    "Sistema 1 (rápido, intuitivo) e Sistema 2 (lento, analítico) têm papéis diferentes; gerir bem é saber quando usar cada um.",
+    "Decision hygiene — pré-mortem, red team, base rates, checklists, separação entre proposta e aprovação — reduz o impacto dos vieses."
+  ],
+  "quizSlug": "beq",
+  "nextLesson": "2-prospect-theory-risco",
+  "prevLesson": null
+}

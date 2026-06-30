@@ -332,6 +332,18 @@
                                   badge: 'Uni'
                                 },
                                 {
+                                  slug: 'economia-comportamental',
+                                  title: 'Economia Comportamental',
+                                  tagline: 'Business Administration · Heurísticas, vieses, prospect theory, nudges e decisão empresarial',
+                                  description:
+                                    'Economia comportamental aplicada à gestão: racionalidade limitada, heurísticas, vieses cognitivos, prospect theory, aversão à perda, efeito dotação, mental accounting, nudges, arquitectura da escolha, ética e aplicações em marketing, finanças, pricing, UX e decisão empresarial.',
+                                  icon: '🧠',
+                                  color: '#7c3aed',
+                                  lessonCount: 4,
+                                  quizCount: 1,
+                                  badge: 'Uni'
+                                },
+                                {
                                   slug: 'sistemas-de-informacao',
                                   title: 'Sistemas de Informação',
                                   tagline: 'Universidade · Tipos de SI, ERP, CRM, BI e segurança da informação',

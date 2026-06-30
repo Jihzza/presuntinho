@@ -1,0 +1,117 @@
+{
+  "id": "beq",
+  "title": "Quiz: Economia Comportamental",
+  "description": "Testa os teus conhecimentos em economia comportamental: racionalidade limitada, heurísticas, vieses, prospect theory, aversão à perda, efeito dotação, mental accounting, nudges, arquitectura da escolha, ética e aplicações em marketing, finanças e gestão. 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "questions": [
+    {
+      "q": "O que significa 'racionalidade limitada' na decisão empresarial?",
+      "opts": [
+        "Gestores são sempre irracionais e não conseguem decidir",
+        "Gestores decidem com limites de informação, tempo e capacidade cognitiva",
+        "Empresas devem ignorar dados quantitativos",
+        "A melhor decisão é sempre a que maximiza lucro de curto prazo"
+      ],
+      "a": 1,
+      "explanation": "Racionalidade limitada (bounded rationality), conceito de Herbert Simon, descreve gestores que decidem sob informação incompleta, tempo limitado e capacidade cognitiva finita. Em vez de maximizar, procuram soluções satisfatórias (satisficing). Não significa irracionalidade — significa racionalidade com restrições reais, perfeitamente compatível com boas decisões empresariais."
+    },
+    {
+      "q": "Qual heurística ocorre quando uma pessoa estima a probabilidade de um evento com base em exemplos fáceis de lembrar?",
+      "opts": [
+        "Disponibilidade",
+        "Contabilidade mental",
+        "Aversão à perda",
+        "Efeito dotação"
+      ],
+      "a": 0,
+      "explanation": "Heurística de disponibilidade (Tversky-Kahneman): a probabilidade subjectiva é estimada pela facilidade com que exemplos vêm à mente. Eventos mediáticos (acidentes de avião, ataques terroristas) parecem mais prováveis do que estatísticas de base-rate indicam. Pode gerar decisões empresariais erradas se o gestor basear previsões em casos notórios em vez de frequência estatística."
+    },
+    {
+      "q": "Numa entrevista, o avaliador gosta do candidato nos primeiros minutos e depois interpreta todas as respostas como confirmação dessa primeira impressão. Isto é sobretudo:",
+      "opts": [
+        "Viés de confirmação",
+        "Mental accounting",
+        "Prospect theory",
+        "Herd behavior"
+      ],
+      "a": 0,
+      "explanation": "Viés de confirmação: tendência para procurar, interpretar e recordar informação que confirma a hipótese inicial, ignorando ou desvalorizando evidência contrária. Em recrutamento, entrevistas estruturadas com grelhas de avaliação e múltiplos entrevistadores independentes reduzem o efeito. É um dos vieses mais estudados em psicologia organizacional."
+    },
+    {
+      "q": "Segundo a Teoria da Perspectiva, as pessoas avaliam decisões principalmente em relação a:",
+      "opts": [
+        "Ganhos e perdas face a um ponto de referência",
+        "Riqueza final absoluta apenas",
+        "Lucro contabilístico da empresa",
+        "Preços médios do mercado accionista"
+      ],
+      "a": 0,
+      "explanation": "A Teoria da Perspectiva (Kahneman-Tversky, 1979) propõe que decisões sob risco dependem de ganhos e perdas percebidos relativamente a um ponto de referência, não da riqueza final absoluta. O ponto de referência pode ser preço anterior, salário esperado, orçamento inicial ou meta de vendas — e gerir referências é central em pricing, negociação e comunicação empresarial."
+    },
+    {
+      "q": "Aversão à perda significa que:",
+      "opts": [
+        "Pessoas nunca assumem riscos",
+        "Perdas tendem a pesar psicologicamente mais do que ganhos equivalentes",
+        "Todos os consumidores preferem produtos baratos",
+        "Empresas devem evitar qualquer investimento incerto"
+      ],
+      "a": 1,
+      "explanation": "Aversão à perda é o fenómeno central da Prospect Theory: perdas pesam cerca de 2,25× mais (Kahneman-Tversky) do que ganhos equivalentes no ponto de referência. Explica resistência a cortes necessários, medo de vender activos em perda e reacções emocionais a fees bancárias. Não significa que pessoas nunca assumam riscos — significa que o peso psicológico das perdas distorce a avaliação de opções equivalentes."
+    },
+    {
+      "q": "O efeito dotação (endowment effect) ajuda a explicar por que:",
+      "opts": [
+        "Pessoas valorizam mais algo depois de o possuírem",
+        "Pessoas esquecem preços antigos",
+        "Investidores compram sempre activos subvalorizados",
+        "Empresas preferem dívida a capital próprio"
+      ],
+      "a": 0,
+      "explanation": "Efeito dotação (Kahneman-Knetsch-Thaler): pessoas atribuem mais valor a um bem que já possuem do que estariam dispostas a pagar para o adquirir. Demonstrado em canecas, lotarias e试用期. Aplicações empresariais: trials que criam posse psicológica, devoluções generosas para reduzir custo percebido de ficar, opções vested para retenção de colaboradores. Funciona como alavanca de retenção quando aplicado legitimamente."
+    },
+    {
+      "q": "Um nudge é melhor definido como:",
+      "opts": [
+        "Uma lei que proíbe alternativas ruins",
+        "Um incentivo financeiro muito elevado",
+        "Uma alteração no ambiente de escolha que orienta comportamento sem retirar liberdade",
+        "Uma técnica para enganar consumidores"
+      ],
+      "a": 2,
+      "explanation": "Nudge (Thaler-Sunstein, 2008): 'qualquer aspecto da arquitectura de escolha que altera comportamento de forma previsível sem proibir qualquer opção nem alterar significativamente incentivos económicos'. Três critérios: preserva liberdade, é previsível, opera sobre contexto. Distingue-se de manipulação quando cumpre critérios éticos de bem-estar, transparência, autonomia e reversibilidade."
+    },
+    {
+      "q": "Qual exemplo ilustra um default/opt-out legítimo?",
+      "opts": [
+        "Esconder taxas obrigatórias até ao último passo do checkout",
+        "Inscrever automaticamente colaboradores num plano de poupança, permitindo saída fácil",
+        "Bloquear a opção de cancelar assinatura",
+        "Aumentar preços sem informar clientes"
+      ],
+      "a": 1,
+      "explanation": "Inscrição automática num plano de poupança com saída fácil é o exemplo clássico de nudge legítimo: preserva liberdade (cancelável), opera por default (sem proibir alternativas), melhora bem-estar financeiro (taxas de poupança 30-40pp superiores a inscrição voluntária) e é reversível (o colaborador sai quando quiser). É dark pattern quando o caminho de saída é deliberadamente friccionado ou escondido."
+    },
+    {
+      "q": "No behavioral pricing, uma opção 'isca' (decoy) serve para:",
+      "opts": [
+        "Tornar uma opção-alvo relativamente mais atractiva por comparação",
+        "Reduzir todos os preços da empresa",
+        "Eliminar a necessidade de segmentação",
+        "Garantir lucro sem custos"
+      ],
+      "a": 0,
+      "explanation": "Decoy effect (Ariely, Economist): adicionar uma terceira opção desenhada para tornar uma das outras relativamente mais atractiva por assimetria de atributos. Exemplo clássico da Economist: $59 web-only, $125 print-only (isca), $125 print+web — a maioria escolhe print+web porque print-only torna-se atraente apenas em comparação com isca. O isco é desenhado para ser pior que a opção-alvo em quase tudo, excepto preço."
+    },
+    {
+      "q": "Por que a experimentação A/B é importante em aplicações de economia comportamental?",
+      "opts": [
+        "Porque elimina todos os vieses humanos automaticamente",
+        "Porque transforma hipóteses sobre comportamento em evidência observável",
+        "Porque substitui estratégia empresarial",
+        "Porque só funciona em empresas tecnológicas"
+      ],
+      "a": 1,
+      "explanation": "Experimentação A/B transforma hipóteses comportamentais em evidência mensurável: direcção sem magnitude é incompleta, e efeitos contraintuitivos ('remover fricção pode aumentar cancelamento') só se revelam com teste. Não elimina vieses humanos — pelo contrário, exige interpretação cuidadosa dos resultados. Funciona em qualquer empresa com volume suficiente e instrumentação básica; não é exclusiva de tecnologia."
+    }
+  ]
+}

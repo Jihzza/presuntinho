@@ -79,6 +79,7 @@ const COURSE_META: Record<string, CourseMeta> = {
     'negociacao': { slug: 'negociacao', title: 'Técnicas de Negociação Empresarial', icon: '🤝', color: '#0369a1' },
     'introducao-ao-direito': { slug: 'introducao-ao-direito', title: 'Introdução ao Direito', icon: '⚖️', color: '#7c2d12' },
     'logistica': { slug: 'logistica', title: 'Logística', icon: '🚚', color: '#0f766e' },
+    'economia-comportamental': { slug: 'economia-comportamental', title: 'Economia Comportamental', icon: '🧠', color: '#7c3aed' },
     'sistemas-de-informacao': { slug: 'sistemas-de-informacao', title: 'Sistemas de Informação', icon: '💻', color: '#1e40af' },
     'inovacao-empreendedorismo': { slug: 'inovacao-empreendedorismo', title: 'Inovação e Empreendedorismo', icon: '💡', color: '#ca8a04' },
     'international-business': { slug: 'international-business', title: 'International Business', icon: '🌐', color: '#2563eb' },

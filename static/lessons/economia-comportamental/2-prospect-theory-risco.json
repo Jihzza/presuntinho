@@ -1,0 +1,70 @@
+{
+  "id": "2-prospect-theory-risco",
+  "courseSlug": "economia-comportamental",
+  "title": "Teoria da Perspectiva, Perdas e Risco",
+  "audio": "Lição sobre prospect theory, aversão à perda, efeito dotação e mental accounting.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "A Teoria da Perspectiva (Prospect Theory)" },
+    { "type": "p", "text": "Kahneman e Tversky publicaram em 1979 uma das teorias mais influentes da economia comportamental: a Prospect Theory. A ideia central: pessoas não avaliam resultados absolutos, mas sim ganhos e perdas relativamente a um ponto de referência. A 'utilidade' não é função de riqueza final — é função de desvios face ao estado actual ou esperado." },
+    { "type": "h3", "text": "Três pilares da Prospect Theory" },
+    { "type": "ul", "items": [
+      "Avaliação em ganhos e perdas face a um ponto de referência: o mesmo montante recebido como 'bónus' ou como 'devolução' tem valor psicológico diferente.",
+      "Sensibilidade decrescente: a diferença entre 100€ e 200€ pesa mais do que entre 1100€ e 1200€, em termos relativos.",
+      "Aversão à perda: perdas pesam cerca de 2× mais (Kahneman-Tversky estimaram o factor em ~2.25) do que ganhos equivalentes no ponto de referência."
+    ] },
+    { "type": "h2", "text": "Aversão à perda: porque custa tanto perder quanto custa" },
+    { "type": "p", "text": "Aversão à perda é talvez o viés mais robusto em economia comportamental. Pessoas rejeitam apostas 50/50 que podem ganhar 110€ ou perder 100€ — mesmo que o valor esperado seja positivo. Em contexto empresarial, explica resistência a cortes necessários, medo de vender activos em perda, e reacções muito emocionais a fees bancárias, multas e penalizações contratuais." },
+    { "type": "callout", "variant": "example", "text": "Uma empresa cliente recebe proposta de poupança de 20% na assinatura de cloud. Mesmo com custo de switching baixo, a equipa de IT frequentemente resiste: 'se correr mal, quem é que fica o fim-de-semana a recuperar?'. A perda potencial (tempo, stress) pesa mais que o ganho esperado (poupança anual)." },
+    { "type": "h2", "text": "Ponto de referência e a sua gestão" },
+    { "type": "p", "text": "O ponto de referência é pessoal e contextual. Exemplos:" },
+    { "type": "ul", "items": [
+      "Preço anterior de venda: 'estava 100€, agora 70€ — desconto!'. Mas se nunca foi vendido a 100€, não há desconto.",
+      "Salário esperado: pedir um aumento de 100€ face a expectativa de zero tem efeito psicológico maior do que pedir +200€ face a expectativa de +150€.",
+      "Orçamento inicial do projecto: gastos abaixo parecem 'poupanças', gastos acima parecem 'excessos' — independentemente do valor.",
+      "Metas de vendas: cobrar que 'falta €5000 para a meta' motiva mais do que 'atingiste 80%' — porque o ponto de referência é a meta."
+    ] },
+    { "type": "h3", "text": "Pricing com pontos de referência" },
+    { "type": "p", "text": "Em pricing, escolher o preço de referência certo é tão importante como o preço final. Mostrar o preço 'antes' e 'agora' activa o mecanismo; mostrar valores que o consumidor considera credíveis torna a promoção mais eficaz. Mas referências falsas (preços riscados que nunca foram praticados) destroem confiança e podem configurar publicidade enganosa." },
+    { "type": "h2", "text": "Efeito dotação (Endowment Effect)" },
+    { "type": "p", "text": "O efeito dotação descreve a tendência para atribuir mais valor aquilo que já possuímos do que aquilo que poderíamos comprar. Demonstrado classicamente por Kahneman-Knetsch-Thaler: donos de caneca pedem em média o dobro para vender do que potenciais compradores estão dispostos a pagar." },
+    { "type": "h3", "text": "Aplicações do efeito dotação em empresas" },
+    { "type": "ul", "items": [
+      "Trials e freemium: 30 dias gratuitos criam 'posse' psicológica. Cancelar torna-se uma perda sentida, não uma não-compra.",
+      "Devoluções: oferecer 'devolução gratuita nos primeiros 60 dias' reduz abandono porque o consumidor sente a oferta 'já sua'.",
+      "Stock options para colaboradores: opções vested criam endowment effect e aumentam retenção.",
+      "Pricing de upgrades: quem já paga plano Pro considera perda voltar ao plano Free, mesmo que nunca use metade das funcionalidades Pro."
+    ] },
+    { "type": "h2", "text": "Mental Accounting: dinheiro não é fungível na cabeça" },
+    { "type": "p", "text": "Thaler introduziu o conceito de mental accounting para descrever como consumidores e gestores tratam o dinheiro em 'contas mentais' separadas (orçamento de férias, marketing, fundo de emergência, bónus), mesmo quando racionalmente esses euros são perfeitamente fungíveis. Comportamentos típicos:" },
+    { "type": "ul", "items": [
+      "Bónus e 'dinheiro encontrado': pessoas tratam dinheiro de bónus ou restituição fiscal como mais 'dispendível' — taxa de poupança menor.",
+      "Coupon vs desconto em euros: economias equivalentes em coupon (€10 de desconto) e em dinheiro vivo (€10 que não gastaste) são sentidas de forma diferente.",
+      "Categorização de despesas: 'esta despesa vem do orçamento de marketing' vs 'tem que sair do orçamento pessoal' — mesmo euro, decisões diferentes.",
+      "Sunk costs: 'já gastei no curso, então tenho que acabar'. Mesmo raciocínio para projectos profissionais terminados em fase terminal sem viabilidade."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Gestores podem usar mental accounting a favor: criando 'sub-orçamentos' para investimentos em inovação, R&D ou experimentação que de outro modo seriam drenados por despesas correntes. Se o dinheiro está numa 'conta mental' dedicada, é mais difícil gastá-lo nas operações do dia-a-dia." },
+    { "type": "h2", "text": "Disposition Effect em investimentos" },
+    { "type": "p", "text": "Shefrin e Statman documentaram o 'disposition effect' em investidores particulares: vender activos que valorizaram cedo demais (para 'realizar ganho' e evitar arrependimento) e manter activos que desceram demasiado tempo (para evitar 'realizar perda'). Combina aversão à perda com contabilidade mental e excesso de confiança, e está documentado em mercados reais." },
+    { "type": "callout", "variant": "warning", "text": "Disposition effect em decisões corporativas: empresas mantêm produtos a perder dinheiro porque 'já investimos tanto', enquanto cortam produtos viáveis mas novos 'por conservadorismo'. É a versão organizacional do mesmo viés." },
+    { "type": "h2", "text": "Como tomar melhores decisões sob risco" },
+    { "type": "p", "text": "Algumas práticas para reduzir o impacto da aversão à perda em decisões empresariais:" },
+    { "type": "ul", "items": [
+      "Frame gains explicitly: descreva o resultado em termos de ganhos equivalentes ou em 'custo de inação' para neutralizar a perda-mental.",
+      "Use defaults pró-sociais: organizar as opções de modo a que o caminho 'não-decisão' leve ao melhor resultado agregado.",
+      "Separe o acto do resultado: premiar o processo e a qualidade da análise, não só o 'acertar ou errar'.",
+      "Teste com A/B: hipóteses sobre aversão à perda (free trial vs desconto, gift card vs cash) devem ser testadas em amostra, não assumidas.",
+      "Dê direito de saída fácil: oferecer cancelamento claro reverte o endowment effect adverso (clientes sentem-se menos presos) sem perder retenção saudável."
+    ] }
+  ],
+  "keyPoints": [
+    "Prospect Theory: decisões dependem de ganhos e perdas face a um ponto de referência, não da riqueza final absoluta.",
+    "Aversão à perda é robusta e pesa cerca de 2× mais do que ganhos equivalentes no ponto de referência.",
+    "O ponto de referência é construído socialmente (preços anteriores, expectativas, metas) e pode ser gerido em pricing e comunicação.",
+    "Efeito dotação: pessoas dão mais valor ao que já possuem — explica retenção em trials, devoluções e upgrades.",
+    "Mental accounting: o dinheiro é separado em 'contas mentais' independentes, mesmo sendo racionalmente fungível."
+  ],
+  "quizSlug": "beq",
+  "nextLesson": "3-nudges-arquitectura-escolha",
+  "prevLesson": "1-racionalidade-limitada-vieses"
+}

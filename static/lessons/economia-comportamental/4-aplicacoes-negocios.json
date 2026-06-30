@@ -1,0 +1,91 @@
+{
+  "id": "4-aplicacoes-negocios",
+  "courseSlug": "economia-comportamental",
+  "title": "Aplicações em Marketing, Finanças e Gestão",
+  "audio": "Lição sobre aplicações da economia comportamental em pricing, UX, behavioral finance, incentivos e experimentação.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "Behavioral Pricing" },
+    { "type": "p", "text": "Behavioral pricing usa vieses e heurísticas para influenciar a percepção de valor — não o preço-objectivo nem a estrutura de custos. Tácticas comuns (e os mecanismos por trás):" },
+    { "type": "ul", "items": [
+      "Preço-âncora: mostrar o preço mais alto primeiro torna os seguintes relativamente mais atractivos — funciona mesmo que o preço-âncora não seja 'real'.",
+      "Decoy effect (opção isca): adicionar uma terceira opção desenhada para tornar uma das outras duas relativamente mais atractiva. Documentado por Ariely no caso clássico da Economist.",
+      "Bundling vs unbundling: agrupar serviços (bundle) gera percepção de poupança quando o preço composto é inferior à soma das partes; unbundling pode ser usado para expor componentes indesejados (fee de serviço, 'ecotax').",
+      "Assinatura e gratuidade: €0/mês no tier free baixa a barreira de entrada e tira a fricção de decisão inicial, mesmo que o utilizador nunca converta.",
+      "Escassez e urgência: 'últimos 3 lugares' ou 'oferta até amanhã' activa perda de oportunidade e aumenta conversão quando é genuína; quando fabricada, é dark pattern."
+    ] },
+    { "type": "callout", "variant": "example", "text": "O caso clássico do The Economist: a assinatura web-only custava $59, a print-only $125, e a print+web $125 (mesmo preço que print-only). A adição do pacote print-only como isca fez a maioria das pessoas escolher print+web — porque $59 era a opção 'evidente', $125 print-only parecia má escolha (todos os atributos inferiores ao pacote conjunto), e $125 print+web tornava-se 'a mesma coisa, com mais'. O isco funciona quando cria assimetria de atracção." },
+    { "type": "h2", "text": "Behavioral Finance" },
+    { "type": "p", "text": "Behavioral finance aplica a mesma lente aos mercados financeiros. Os vieses mais estudados e o que produzem:" },
+    { "type": "ul", "items": [
+      "Overconfidence leva a volumes de transacção excessivos e subperformance (documentado em contas de corretagem).",
+      "Herd behavior cria bolhas e pânico, porque os investidores seguem o consenso social em vez de fundamentals.",
+      "Recency bias sobrevaloriza eventos recentes, levando a sobrar-reacção a notícias de curto-prazo.",
+      "Loss aversion + disposition effect: vender cedo os winners, segurar os losers.",
+      "Narrative bias: investimento em empresas com histórias bonitas (Tesla, crypto) e subvalorização de empresas 'aborrecidas' mas rentáveis."
+    ] },
+    { "type": "h3", "text": "Implicações para decisões de investimento empresarial" },
+    { "type": "p", "text": "Ao avaliar projectos de investimento, gestores de PME não estão imunes a overconfidence (projectos favoritos, lançamentos atrasados, persistência excessiva). Algumas práticas que reduzem o risco:" },
+    { "type": "ul", "items": [
+      "Cenários probabilísticos explícitos: para cada forecast, definir P10/P50/P90 e rever após o evento.",
+      "Tracking de previsões (Brier scores): comparar previsões passadas com resultados reais, confronta overconfidence com evidência.",
+      "Decisões de portfólio em comité: forçar revisão por pares dilui viés individual.",
+      "Estoppel explícito: assumir, em cada projecto, que 'se este cenário falhar, o management já viu' — responsabiliza pela qualidade da análise."
+    ] },
+    { "type": "h2", "text": "Gestão de pessoas, incentivos e métricas" },
+    { "type": "p", "text": "Incentivos e métricas são a forma mais visível de 'arquitectura de escolha' na gestão — não usam nudge, mexem no sistema de recompensas. Mas vieses interferem:" },
+    { "type": "ul", "items": [
+      "Goodhart's Law: 'quando uma métrica se torna objectivo, deixa de ser uma boa métrica'. Equipas optimizam a métrica em vez do objectivo subjacente.",
+      "Tunnel vision: incentivos focados numa métrica fazem equipas ignorarem efeitos colaterais (vendas agressivas, churn oculto, NPS baixo).",
+      "Ranking e pressão social: rankings públicos motivam top performers mas podem desencorajar medianos e criar ansiedade, gaming e comportamento anti-colaborativo.",
+      "Feedback tarde a mais: metas anuais com revisão ao fim de 12 meses perdem efeito comportamental — feedback em tempo real é muito mais eficaz."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Use 'objective and key results' (OKRs) com cautela: combine outcome metrics (satisfação, retenção) com output metrics (tarefas entregues) para evitar Goodhart. Recompense o progresso, não só o resultado — separa o acto do resultado e reduz aversão à perda em colaboradores." },
+    { "type": "h2", "text": "Experimentação A/B como método de decisão" },
+    { "type": "p", "text": "Porque é que a experimentação é central em economia comportamental aplicada?" },
+    { "type": "ul", "items": [
+      "Vieses são contextuais e mudam com a demografia, dispositivo, momento do dia e estado do utilizador. Intuição raramente os captura.",
+      "Efeitos são muitas vezes contraintuitivos: 'remover uma fricção' pode aumentar cancelamento (porque alguns utilizadores 'apreciam' a fricção).",
+      "Magnitude é incerta: o nudge funciona, mas quanto? 5% de uplift ou 50%? Decisões de produto precisam de magnitude, não direcção.",
+      "Heterogeneidade: o nudge pode funcionar para uns (novos utilizadores) e prejudicar outros (utilizadores avançados), e só experimentação estratificada revela isso."
+    ] },
+    { "type": "h3", "text": "Como correr A/B tests em escala empresarial" },
+    { "type": "p", "text": "Para equipas sem tooling estatístico avançado, alguns princípios mantêm-se:" },
+    { "type": "ul", "items": [
+      "Defina hipóteses antes do teste: 'mover o CTA de cor X para Y vai aumentar clicks porque [mecanismo]'.",
+      "Calculate sample size antes: vise poder estatístico de 80% com alpha de 5%. Não lance com 100 utilizadores.",
+      "Não pare o teste 'quando já se vê diferença': continue até ter tempo mínimo de ciclo ou paragem pré-definida.",
+      "Documente resultados negativos: 70% das hipóteses falham. O valor está no que se aprende, não em confirmar intuições.",
+      "Replique antes de escalar: 1 teste robusto > 10 testes anedóticos. Se o efeito é estável em cohorts diferentes, é real."
+    ] },
+    { "type": "h2", "text": "Aplicações empresariais reais" },
+    { "type": "h3", "text": "The Economist Decoy Pricing" },
+    { "type": "p", "text": "Já descrito em detalhe no início da lição. É a referência canónica em decoy effect e pricing comportamental. A lição: a estrutura do menu de opções muda a escolha tanto quanto o preço de qualquer opção individual." },
+    { "type": "h3", "text": "Amazon/Booking e escassez fabricada" },
+    { "type": "p", "text": "Mensagens como 'apenas 2 left!' ou 'X pessoas estão a ver este hotel' podem ajudar a decisão quando a informação é verdadeira (escassez real, popularidade real) e virar manipulação quando fabricada. As implicações incluem risco reputacional (reviews, associações de consumidores), regulatório (publicidade enganosa sob Decreto-Lei 57/2018), e erosão de confiança — utilizadores modernos estão cada vez mais atentos e podem tornar-se cínicos a longo prazo." },
+    { "type": "h3", "text": "Bancos e cartões de crédito" },
+    { "type": "p", "text": "Mostrar 'pagamento mínimo de €25' como destaque pode ancorar o consumidor nesse valor, prolongando a dívida e pagando juros durante anos. Disclosure claro (custo total se pagar apenas o mínimo, prazo de liquidação) ajuda escolha responsável. É nudge correto: alinhado com bem-estar do cliente, transparente, reversível (o cliente pode optar por pagar mais a qualquer momento)." },
+    { "type": "h3", "text": "SaaS e onboarding" },
+    { "type": "p", "text": "Empresas SaaS B2B testam variantes de onboarding (passos progressivos, checklists, mascotes, prompts contextuais). Variações de 5-15% em retenção a 30 dias são comuns, e multiplicadas por LTV têm impacto desproporcionado. Boa experimentação comportamental requer instrumentação (analytics), prática estatística e ciclo rápido de hipóteses." },
+    { "type": "callout", "variant": "warning", "text": "O lado negro da experimentação massiva: dark patterns optimizados via A/B. Se a equipa só mede 'conversão', vai dark-patterning até um nível que se torna evidente — momento em que reguladores, utilizadores e associações reagem. Inclua 'satisfação' e 'qualidade percebida' nos OKRs de produto." },
+    { "type": "h2", "text": "Cultura de decisão na organização" },
+    { "type": "p", "text": "A barreira mais alta à economia comportamental não é técnica — é cultural. Organizações que incorporam-na com sucesso têm:" },
+    { "type": "ul", "items": [
+      "Processo explícito para decisões importantes: critérios, dados, responsáveis, prazos.",
+      "Documentação de trade-offs: porquê escolhemos A em vez de B. Permite revisão futura.",
+      "Separação entre quem propõe e quem aprova: reduces conflict of interest.",
+      "Aprendizagem com erros sem caça às bruxas: erro com bom processo não deve penalizar.",
+      "Capacidade de parar projectos maus cedo: coragem institucional para cortar antes do sunk-cost se tornar insustentável."
+    ] }
+  ],
+  "keyPoints": [
+    "Behavioral pricing usa âncoras, decoys, bundles, assinaturas e escassez para influenciar percepção de valor sem mexer no preço-base.",
+    "Behavioral finance explica bolhas, pânico, recency bias e disposition effect em mercados financeiros.",
+    "Goodhart's Law: quando uma métrica vira alvo, deixa de ser boa métrica — combinar outcomes e outputs reduz gaming.",
+    "Experimentação A/B transforma hipóteses comportamentais em evidência observável — direcção sem magnitude é incompleta.",
+    "Cultura de decisão forte documenta trade-offs, separa proposta de aprovação e aprende com erros sem caça às bruxas."
+  ],
+  "quizSlug": "beq",
+  "nextLesson": null,
+  "prevLesson": "3-nudges-arquitectura-escolha"
+}

@@ -448,6 +448,20 @@
                             { slug: '4-logistica-internacional', title: '4. Logística Internacional', summary: 'Incoterms, alfândega, documentos e câmbios.', quizSlug: 'lgq', quizTitle: 'Quiz: Logística', estMinutes: 9 }
                           ]
                         },
+                        'economia-comportamental': {
+                          slug: 'economia-comportamental',
+                          title: 'Economia Comportamental',
+                          tagline: 'Business Administration · Heurísticas, vieses, prospect theory, nudges e decisão empresarial',
+                          description: 'Economia comportamental aplicada à gestão: racionalidade limitada, heurísticas, vieses cognitivos, prospect theory, aversão à perda, efeito dotação, mental accounting, nudges, arquitectura da escolha, ética e aplicações em marketing, finanças, pricing, UX e decisão empresarial.',
+                          icon: '🧠',
+                          color: '#7c3aed',
+                          lessons: [
+                            { slug: '1-racionalidade-limitada-vieses', title: '1. Racionalidade Limitada, Heurísticas e Vieses', summary: 'Como gestores decidem com informação incompleta, tempo limitado e atalhos cognitivos.', quizSlug: 'beq', quizTitle: 'Quiz: Economia Comportamental', estMinutes: 8 },
+                            { slug: '2-prospect-theory-risco', title: '2. Teoria da Perspectiva, Perdas e Risco', summary: 'Ganhos, perdas, pontos de referência, aversão à perda, efeito dotação e mental accounting.', quizSlug: 'beq', quizTitle: 'Quiz: Economia Comportamental', estMinutes: 9 },
+                            { slug: '3-nudges-arquitectura-escolha', title: '3. Nudges, Arquitectura da Escolha e Ética', summary: 'Defaults, saliência, fricção, feedback e limites éticos entre ajudar e manipular.', quizSlug: 'beq', quizTitle: 'Quiz: Economia Comportamental', estMinutes: 9 },
+                            { slug: '4-aplicacoes-negocios', title: '4. Aplicações em Marketing, Finanças e Gestão', summary: 'Pricing, UX, behavioral finance, incentivos, métricas e experimentação A/B.', quizSlug: 'beq', quizTitle: 'Quiz: Economia Comportamental', estMinutes: 8 }
+                          ]
+                        },
                         'sistemas-de-informacao': {
                           slug: 'sistemas-de-informacao',
                           title: 'Sistemas de Informação',
