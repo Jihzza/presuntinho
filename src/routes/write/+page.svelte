@@ -107,7 +107,7 @@
   </section>
 
   <div class="cta">
-    <a href="/pt/" class="btn primary">Seguinte: Lições em PT →</a>
+    <a href="/pt/" class="btn primary">{$t('write.cta.next', { default: 'Seguinte: Lições em PT →' })}</a>
   </div>
 </div>
 

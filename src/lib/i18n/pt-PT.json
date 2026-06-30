@@ -479,6 +479,8 @@
   "financas.relatorios.title": "Relatórios",
   "financas.relatorios.top.empty": "Sem despesas neste mês.",
   "financas.relatorios.top.title": "Top 5 despesas",
+  "financas.shortcuts.reports.sub": "Pie · top 5 · comparativo · CSV",
+  "financas.shortcuts.reports.title": "Relatórios",
   "financas.shortcuts.all.sub": "Histórico completo",
   "financas.shortcuts.all.title": "Ver todas",
   "financas.shortcuts.aria": "Atalhos",
@@ -651,6 +653,7 @@
     "limite_para": "Limite para {nome}"
   },
   "placeholder.ex_almoco_com_a_equipa": "Ex.: Almoço com a equipa",
+  "pt.breadcrumb.hub": "Hub",
   "ptcourse.dialogues": "Mini-diálogos",
   "ptcourse.example": "Exemplos",
   "ptcourse.quiz.cta": "Ganha a badge 🇵🇹 Lusófono!",
@@ -989,6 +992,7 @@
   "walkthrough.transcript": "Transcrição",
   "walkthrough.verify.exists": "existe.",
   "walkthrough.verify.text": "Verifica que",
+  "write.cta.next": "Seguinte: Lições em PT →",
   "write.breadcrumb.home": "← Hub",
   "write.head.title": "Writing · Tips Anti-AI"
 }

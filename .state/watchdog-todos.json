@@ -1,6 +1,14 @@
 {
-  "lastUpdated": "2026-06-30T12:25:00+02:00",
+  "lastUpdated": "2026-06-30T17:30:00+02:00",
   "openItems": [
+    {
+      "id": "gap-127",
+      "category": "i18n",
+      "description": "i18n lesson bodies — TODAS as 178 licoes (41 cadeiras BA) tem body PT-only (0/178 com chave i18n nas seccoes, 3483 seccoes totais todas PT-only). Verificado por node audit: nenhum ficheiro de licao tem sections[].i18n. Padrao actual: i18n metadata (titulo/description/tagline) + body PT-only nas seccoes. Daniel quer traduz tudo mas i18n completo de bodies = ~6100 entries x 5 locales = 30500 strings. 3 opcoes: (A) status quo + fechar gap, (B) piloto 1 cadeira, (C) total. Aguarda Skander 1 audit + decisao de produto.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-30-16",
+      "created_at": "2026-06-30T16:11:00+02:00"
+    },
     {
       "id": "gap-028",
       "category": "smoke-fail",
@@ -75,39 +83,183 @@
       "created_at": "2026-06-30T12:20:00+02:00"
     },
     {
-      "id": "gap-127",
+      "id": "gap-130",
       "category": "i18n",
-      "description": "i18n lesson bodies — todas as 46 cadeiras BA têm o body da lição só em PT-PT (título/description/tagline i18n, mas o conteúdo das secções/keyPoints está hardcoded PT). Audit estático: 45+1 cursos × ~30 secções = ~1400 strings PT hardcoded em /static/lessons/*.json. Confirmar se Daniel quer i18n completo das secções (cara) ou se o pattern actual (PT body + i18n metadata) é aceitável.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-30-12",
-      "created_at": "2026-06-30T12:20:00+02:00"
+      "description": "3 strings PT-hardcoded em producao sem $t() e sem default: (1) financas/+page.svelte:262-263 shortcut card Relatorios + Pie top 5 comparativo CSV (unica shortcut sem i18n — outras 4 ja estao traduzidas); (2) write/+page.svelte:110 CTA button Seguinte: Licoes em PT →; (3) pt/+page.svelte:198 breadcrumb Hub. Despachado para Skander 2 em feature/gap-130-pt-hardcoded — adiciona 4 chaves x 5 locales + 3 substituicoes.",
+      "severity": "media",
+      "source": "watchdog-tick-2026-06-30-17",
+      "created_at": "2026-06-30T17:30:00+02:00",
+      "dispatched_to": "Skander 2 — deleg_1d1f8bdd (feature/gap-130-pt-hardcoded)"
     }
   ],
   "closedItems": [
-    {"id": "gap-091", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "c1d542b", "note": "i18n PT→$t() audit completo. 4 batches + 145 i18n entries."},
-    {"id": "gap-098", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "5e749db"},
-    {"id": "gap-099", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "c11e367"},
-    {"id": "gap-100", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "dcdd99f"},
-    {"id": "gap-101", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "2d09a97"},
-    {"id": "gap-102", "closed_at": "2026-06-30T05:30:00+02:00", "sha": "55e240e"},
-    {"id": "gap-103", "closed_at": "2026-06-30T05:30:00+02:00", "sha": "55e240e"},
-    {"id": "gap-104", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "91e796b", "note": "BA #45 Economia Comportamental. 4 lições + beq quiz 10 + i18n 5 locales + CATALOGUE wired."},
-    {"id": "gap-105", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "c1d542b", "note": "batch-3: habitos/novo + trabalhos/assignment/[slug] + 6 chaves × 5 locales"},
-    {"id": "gap-106", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "c1d542b", "note": "batch-4: agente + aulas + dl + biblioteca/novo + 3 chaves × 5 locales"},
-    {"id": "gap-107", "closed_at": "2026-06-30T12:20:00+02:00", "sha": "fbdc389", "note": "BA #46 Gestão de Conflitos. Skander 1 escolheu Gestão de Conflitos."},
-    {"id": "gap-108", "closed_at": "2026-06-30T12:20:00+02:00", "sha": "fbdc389", "note": "BA #46 Gestão de Conflitos. 4 lições (21-34 secções cada) + gcq quiz 10 + i18n 5 locales × 7 chaves + CATALOGUE wired em 3 ficheiros. npm run check 0/0, build verde, prod serve 200."},
-    {"id": "gap-110", "closed_at": "2026-06-30T08:15:00+02:00", "sha": "942c1ba", "note": "fix(agente) chat-root 100dvh + safe-area-inset-bottom no composer. Áudio Daniel 2026-06-29 18:35 'página do agente não aparece nada'. npm run check verde, npm run build verde."},
-    {"id": "gap-111", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "53c0265", "note": "fix(hub+settings) collapse V3/legacy em 'Mais Presuntinho'."},
-    {"id": "gap-112", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "fix(ux) /habitos/ streak '🔥 N dias' + status '✓ hoje' por row."},
-    {"id": "gap-113", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "fix(ux) /financas/ Chart.js agora mostra receitas (dataset #2 verde)."},
-    {"id": "gap-114", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "53c0265", "note": "fix(ux) splash placeholder 'Palavra-passe' (5 locales) — era princesa que vazava password Daniel."},
-    {"id": "gap-115", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "53c0265", "note": "fix(ux) definicoes VERSION+REPO_URL single source from $lib/version."},
-    {"id": "gap-116", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "fix(ux) definicoes reset_password real PBKDF2 (não mais '⏳ soon')."},
-    {"id": "gap-118", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "HeartButton title='Clica — easter egg' via $t() em 5 locales."},
-    {"id": "gap-119", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "2607019", "note": "fix(ux) footer 'Sub-app #{n} no hub' → 'Hub · Finanças/Hábitos' em 5 locales."},
-    {"id": "gap-120", "closed_at": "2026-06-30T09:35:00+02:00", "sha": "d42e373", "note": "feat(financas) /financas/relatorios/ shipped em d42e373 — pie categorias + top 5 despesas + comparativo mês-a-mês + export CSV (5 locales i18n). 764 linhas, prod serve 200. Estado actualizado tarde."},
-    {"id": "gap-121", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "streak+today já no 823edd2 — gap-121 era verificação, fechada como já feita."},
-    {"id": "gap-122", "closed_at": "2026-06-30T12:20:00+02:00", "sha": "fbdc389", "note": "BA #46 Gestão de Conflitos: 4 lições + 10 MCQ + i18n 7 chaves × 5 locales + CATALOGUE wired. npm run check 0/0, build verde, prod serve 200."},
-    {"id": "gap-125", "closed_at": "2026-06-30T10:05:00+02:00", "sha": "07fe69c", "note": "fix(ux) footer 'Hub · {Section}' para biblioteca + trabalhos (5 locales)."}
+    {
+      "id": "gap-091",
+      "closed_at": "2026-06-30T07:00:00+02:00",
+      "sha": "c1d542b",
+      "note": "i18n PT→$t() audit completo. 4 batches + 145 i18n entries."
+    },
+    {
+      "id": "gap-098",
+      "closed_at": "2026-06-30T04:55:00+02:00",
+      "sha": "5e749db"
+    },
+    {
+      "id": "gap-099",
+      "closed_at": "2026-06-30T04:55:00+02:00",
+      "sha": "c11e367"
+    },
+    {
+      "id": "gap-100",
+      "closed_at": "2026-06-30T04:55:00+02:00",
+      "sha": "dcdd99f"
+    },
+    {
+      "id": "gap-101",
+      "closed_at": "2026-06-30T04:55:00+02:00",
+      "sha": "2d09a97"
+    },
+    {
+      "id": "gap-102",
+      "closed_at": "2026-06-30T05:30:00+02:00",
+      "sha": "55e240e"
+    },
+    {
+      "id": "gap-103",
+      "closed_at": "2026-06-30T05:30:00+02:00",
+      "sha": "55e240e"
+    },
+    {
+      "id": "gap-104",
+      "closed_at": "2026-06-30T07:00:00+02:00",
+      "sha": "91e796b",
+      "note": "BA #45 Economia Comportamental. 4 lições + beq quiz 10 + i18n 5 locales + CATALOGUE wired."
+    },
+    {
+      "id": "gap-105",
+      "closed_at": "2026-06-30T07:00:00+02:00",
+      "sha": "c1d542b",
+      "note": "batch-3: habitos/novo + trabalhos/assignment/[slug] + 6 chaves × 5 locales"
+    },
+    {
+      "id": "gap-106",
+      "closed_at": "2026-06-30T07:00:00+02:00",
+      "sha": "c1d542b",
+      "note": "batch-4: agente + aulas + dl + biblioteca/novo + 3 chaves × 5 locales"
+    },
+    {
+      "id": "gap-107",
+      "closed_at": "2026-06-30T12:20:00+02:00",
+      "sha": "fbdc389",
+      "note": "BA #46 Gestão de Conflitos. Skander 1 escolheu Gestão de Conflitos."
+    },
+    {
+      "id": "gap-108",
+      "closed_at": "2026-06-30T12:20:00+02:00",
+      "sha": "fbdc389",
+      "note": "BA #46 Gestão de Conflitos. 4 lições (21-34 secções cada) + gcq quiz 10 + i18n 5 locales × 7 chaves + CATALOGUE wired em 3 ficheiros. npm run check 0/0, build verde, prod serve 200."
+    },
+    {
+      "id": "gap-110",
+      "closed_at": "2026-06-30T08:15:00+02:00",
+      "sha": "942c1ba",
+      "note": "fix(agente) chat-root 100dvh + safe-area-inset-bottom no composer. Áudio Daniel 2026-06-29 18:35 'página do agente não aparece nada'. npm run check verde, npm run build verde."
+    },
+    {
+      "id": "gap-111",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "53c0265",
+      "note": "fix(hub+settings) collapse V3/legacy em 'Mais Presuntinho'."
+    },
+    {
+      "id": "gap-112",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "823edd2",
+      "note": "fix(ux) /habitos/ streak '🔥 N dias' + status '✓ hoje' por row."
+    },
+    {
+      "id": "gap-113",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "823edd2",
+      "note": "fix(ux) /financas/ Chart.js agora mostra receitas (dataset #2 verde)."
+    },
+    {
+      "id": "gap-114",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "53c0265",
+      "note": "fix(ux) splash placeholder 'Palavra-passe' (5 locales) — era princesa que vazava password Daniel."
+    },
+    {
+      "id": "gap-115",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "53c0265",
+      "note": "fix(ux) definicoes VERSION+REPO_URL single source from $lib/version."
+    },
+    {
+      "id": "gap-116",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "823edd2",
+      "note": "fix(ux) definicoes reset_password real PBKDF2 (não mais '⏳ soon')."
+    },
+    {
+      "id": "gap-118",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "823edd2",
+      "note": "HeartButton title='Clica — easter egg' via $t() em 5 locales."
+    },
+    {
+      "id": "gap-119",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "2607019",
+      "note": "fix(ux) footer 'Sub-app #{n} no hub' → 'Hub · Finanças/Hábitos' em 5 locales."
+    },
+    {
+      "id": "gap-120",
+      "closed_at": "2026-06-30T09:35:00+02:00",
+      "sha": "d42e373",
+      "note": "feat(financas) /financas/relatorios/ shipped em d42e373 — pie categorias + top 5 despesas + comparativo mês-a-mês + export CSV (5 locales i18n). 764 linhas, prod serve 200. Estado actualizado tarde."
+    },
+    {
+      "id": "gap-121",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "823edd2",
+      "note": "streak+today já no 823edd2 — gap-121 era verificação, fechada como já feita."
+    },
+    {
+      "id": "gap-122",
+      "closed_at": "2026-06-30T12:20:00+02:00",
+      "sha": "fbdc389",
+      "note": "BA #46 Gestão de Conflitos: 4 lições + 10 MCQ + i18n 7 chaves × 5 locales + CATALOGUE wired. npm run check 0/0, build verde, prod serve 200."
+    },
+    {
+      "id": "gap-125",
+      "closed_at": "2026-06-30T10:05:00+02:00",
+      "sha": "07fe69c",
+      "note": "fix(ux) footer 'Hub · {Section}' para biblioteca + trabalhos (5 locales)."
+    },
+    {
+      "id": "gap-126",
+      "closed_at": "2026-06-30T16:11:00+02:00",
+      "sha": "1f1ab3f",
+      "note": "BA #47 Estratégia Internacional: 4 lições + eiq quiz 10 + i18n 5 locales + CATALOGUE wired. d003829 fechou i18n sync final (980/980 em todos locales)."
+    },
+    {
+      "id": "gap-128",
+      "closed_at": "2026-06-30T16:11:00+02:00",
+      "sha": "pending-tick34",
+      "note": "chore(cleanup) orphan static/lessons/estrategia-corporativa-portfolio/ — 1 draft lesson (Chinese character leak), NOT in CATALOGUE, NOT referenced anywhere. Deleted."
+    },
+    {
+      "id": "gap-129",
+      "closed_at": "2026-06-30T16:11:00+02:00",
+      "sha": "pending-tick34",
+      "note": "audit fix: 18 lesson dirs missing course.json — verified these are old/legacy (equivalenza, branding, etc.) with no i18n metadata; CATALOGUE already wired in src/routes/escola/+page.svelte and src/routes/aulas/+page.server.ts. No action needed beyond audit; gaps-127 (lesson bodies PT-only) is the real residual i18n item."
+    },
+    {
+      "id": "gap-127-duplicate",
+      "closed_at": "2026-06-30T17:30:00+02:00",
+      "sha": "dedup-tick34",
+      "note": "Duplicate of gap-127 merged into single entry with refined description after node audit (0/178 i18n bodies, 3483 PT-only sections)."
+    }
   ]
 }

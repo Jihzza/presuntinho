@@ -479,6 +479,8 @@
   "financas.relatorios.title": "Rapports",
   "financas.relatorios.top.empty": "Aucune dépense ce mois-ci.",
   "financas.relatorios.top.title": "Top 5 des dépenses",
+  "financas.shortcuts.reports.sub": "Camembert · top 5 · comparatif · CSV",
+  "financas.shortcuts.reports.title": "Rapports",
   "financas.shortcuts.all.sub": "Historique complet",
   "financas.shortcuts.all.title": "Voir tout",
   "financas.shortcuts.aria": "Raccourcis",
@@ -651,6 +653,7 @@
     "limite_para": "Limite pour {nome}"
   },
   "placeholder.ex_almoco_com_a_equipa": "Ex. : Déjeuner avec l'équipe",
+  "pt.breadcrumb.hub": "Hub",
   "ptcourse.dialogues": "Mini-dialogues",
   "ptcourse.example": "Exemples",
   "ptcourse.quiz.cta": "Gagne le badge 🇵🇹 Lusophone !",
@@ -989,6 +992,7 @@
   "walkthrough.transcript": "Transcription",
   "walkthrough.verify.exists": "existe.",
   "walkthrough.verify.text": "Vérifie que",
+  "write.cta.next": "Suivant: Leçons PT →",
   "write.breadcrumb.home": "← Hub",
   "write.head.title": "Écriture · Conseils Anti-IA"
 }
