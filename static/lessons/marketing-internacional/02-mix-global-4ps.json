@@ -1,0 +1,178 @@
+{
+  "id": "02-mix-global-4ps",
+  "title": "2. Mix Marketing Global 4Ps: Produto, Preço, Praça e Promoção Internacional",
+  "courseSlug": "marketing-internacional",
+  "lessonNumber": 2,
+  "description": "Como adaptar o marketing-mix clássico a múltiplos países — produto (adaptação vs padronização, country-of-origin effects), preço (dumping, transfer pricing, currency hedging, PPP, ethnocentric vs polycentric vs geocentric pricing), praça (canais de distribuição internacionais: exportação indireta/direta, joint ventures, subsidiárias) e promoção (glocal messaging, internacional advertising, comunhão global com adaptação local).",
+  "audio": "Nesta segunda lição descemos do STP estratégico para o marketing-mix operacional internacional. O ponto de partida é a pergunta: devemos padronizar a oferta mundial ou adaptar a cada país? O debate clássico, popularizado por Theodore Levitt (1983, 'The Globalization of Markets'), argumentava que a tecnologia e a comunicação criariam um 'mercado global homogéneo' onde a padronização vence. A evidência empírica das décadas seguintes mostrou que a maioria dos sectores exige alguma adaptação — mas o grau varia. Para o PRODUTO, há cinco estratégias de adaptação (Rothlauf, 2015): (1) produto straight extension — vender exactamente o mesmo produto em todo o lado (ex: iPhone, com mínimas variações técnicas); (2) product adaptation — adaptar características visíveis (cor, sabor, embalagem) sem alterar o core (ex: McDonald's menu por país); (3) product invention — criar produtos novos para mercados específicos (ex: shampoo para cabelos étnicos, produtos de higiene para climas tropicais); (4) product re-engineering — reformular o produto de raiz para reduzir custo (ex: Nano da Tata Motors,印度的 a 2500 USD); (5) backward invention — recriar versões antigas para mercados emergentes que valorizam simplicidade (ex: Nokia 105 reeditado). O country-of-origin effect (COO) é a percepção que os consumidores têm do país de fabrico: 'Made in Germany' = qualidade, 'Made in Japan' = tecnologia, 'Made in Italy' = design, 'Made in China' = preço baixo. O COO pode ser explorado (posicionamento) ou mitigado (co-branding). Para o PREÇO, três estratégias de pricing internacional: (1) ethnocentric — preço uniforme mundial; (2) polycentric — preço definido país-a-país, baseado nas condições locais; (3) geocentric — preço baseado em custos globais com margens coordenadas. Variáveis adicionais: purchasing power parity (Big Mac Index do The Economist), dumping (preço abaixo do custo ou abaixo do mercado doméstico, ilegal pela OMC), transfer pricing (preços de transferência entre subsidiárias para efeitos fiscais), currency hedging (cobertura de risco cambial via forwards/futuros/opções). Para a PRAÇA (distribuição), os canais internacionais incluem exportação indirecta (via trading houses, export management companies), exportação directa (via agentes, distribuidores, subsidiária comercial), licensing/franchising (cedência de marca e know-how), joint ventures (com parceiro local), e subsidiária integral (greenfield ou acquisition). Para a PROMOÇÃO, há comunicação padronizada (mesma mensagem mundial), comunicação adaptada (mensagem local), e comunicação dual (campanha global com execução local — 'glocal'). Decisão chave: quanto adaptar a mensagem para reflectir diferenças culturais, económicas e linguísticas.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["4Ps", "Marketing-Mix", "Produto", "Preço", "Praça", "Promoção", "Glocal", "Country-of-Origin"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Padronização vs adaptação: o debate clássico do marketing internacional"
+    },
+    {
+      "type": "p",
+      "text": "O ponto de partida do marketing-mix internacional é a decisão fundamental: padronizar a oferta mundial ou adaptar a cada país? O debate foi popularizado por Theodore Levitt (1983, 'The Globalization of Markets', HBR) que argumentava que satélites, telecom e internet criariam um 'mercado global homogéneo' onde a padronização vence (economies of scale, menor custo de marketing, coerência de marca). A resposta veio de autores como Douglas & Wind (1987) e Bartlett & Ghoshal (1989) que mostraram empiricamente que a maioria dos sectores exige alguma adaptação — o grau de adaptação varia inversamente com a 'força da marca' e directamente com a 'heterogeneidade cultural e regulatória'. Hoje, a questão não é 'padronizar OU adaptar' mas 'quanto padronizar e quanto adaptar em cada elemento do mix'. O framework moderno (Hill, 2008, 'International Business') propõe uma abordagem modular: o core do produto é padronizado (ex: software base do iPhone) mas elementos modulares são adaptados (tomada, idioma, frequência de bandas, métodos de pagamento). O resultado é 'mass customization' — economies of scale combinadas com relevância local."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Levitt (1983): tecnologia cria mercado global homogéneo → padronização vence",
+        "Douglas & Wind (1987): maioria dos sectores exige alguma adaptação",
+        "Bartlett & Ghoshal (1989): trade-off global-local é central",
+        "Questão moderna: não é 'OU' mas 'quanto padronizar/adaptar em cada elemento'",
+        "Framework Hill (2008): core padronizado + elementos modulares adaptados = mass customization",
+        "Decisão depende de: força da marca, variabilidade cultural/regulatória, custos de adaptação",
+        "Exemplo iPhone: core único, módulo de pagamento adaptado, idioma adaptado"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Produto: country-of-origin effects e cinco estratégias de adaptação"
+    },
+    {
+      "type": "p",
+      "text": "No marketing-mix internacional, o PRODUTO enfrenta o country-of-origin effect (COO): a percepção que os consumidores têm do país de fabrico. 'Made in Germany' = qualidade engenharia; 'Made in Japan' = tecnologia; 'Made in Italy' = design; 'Made in France' = luxo; 'Made in USA' = inovação; 'Made in China' = preço baixo (percepção que está a mudar). O COO pode ser explorado (posicionamento de marca tira partido do esteriótipo positivo) ou mitigado (co-branding com marca local). Há cinco estratégias de adaptação do produto (Rothlauf, 2015): (1) Straight extension — vender exactamente o mesmo produto em todo o lado. Exemplo: iPhone (mínimas variações técnicas). Vantagem: economies of scale; risco: rejeição cultural. (2) Product adaptation — adaptar características visíveis (sabor, cor, embalagem) sem alterar o core. Exemplo: McDonald's menu varia por país mas mantém Big Mac. (3) Product invention — criar produtos novos para mercados específicos. Exemplo: shampoos para cabelos étnicos, produtos anti-humidade para climas tropicais. (4) Product re-engineering — reformular para reduzir custo. Exemplo: Tata Nano (~US$2.500 na Índia). (5) Backward invention — recriar versões antigas para mercados emergentes. Exemplo: Nokia reedita o Nokia 105 como feature phone. Trade-off: adaptação custa em economies of scale e brand consistency, mas ganha em market share local."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Country-of-origin effect: percepção do país de fabrico (Germany = qualidade, Italy = design)",
+        "COO pode ser explorado (posicionamento) ou mitigado (co-branding local)",
+        "5 estratégias: straight extension, product adaptation, product invention, re-engineering, backward invention",
+        "Straight extension: mesmo produto em todo o lado (iPhone, com variações técnicas mínimas)",
+        "Product adaptation: adapta características visíveis sem alterar core (McDonald's)",
+        "Product invention: criar novos produtos para mercados específicos",
+        "Product re-engineering: reformular para reduzir custo (Tata Nano)",
+        "Backward invention: recriar versões antigas para emergentes (Nokia 105 reeditado)",
+        "Trade-off: economies of scale (straight) vs market share local (adaptação)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Caso Coca-Cola: a Coca-Cola é o exemplo clássico de straight extension — mesma fórmula básica, mesmo posicionamento 'refreshment global'. Mas adapta três elementos: a DOÇURA varia (mais açúcar em mercados quentes, menos em mercados com preocupação crescente com saúde), a EMBALAGEM varia (latas, garrafas de vidro retornáveis em alguns países, PET em outros), e a COMUNICAÇÃO varia (Natal com Pai-Natal na Europa, com Zhang Sanfeng na China em algumas campanhas, com ícones locais no Ramadão no Médio Oriente). O core é global; a execução é local. É o modelo 'glocal' em acção."
+    },
+    {
+      "type": "h2",
+      "text": "Preço: PPP, dumping, transfer pricing e currency hedging"
+    },
+    {
+      "type": "p",
+      "text": "O PREÇO no marketing internacional é mais complexo do que no doméstico por três razões: (1) Câmbio — o preço em moeda local flutua diariamente se o país não tiver câmbio fixo; (2) Poder de compra — varia enormemente entre países; (3) Regulação fiscal — diferentes taxas de imposto, controlo de preços, leis anti-dumping. Três estratégias de pricing internacional (Perlmutter, 1969, 'The Tortuous Evolution of the Multinational Corporation'): (1) Ethnocentric pricing — preço uniforme mundial, calculado a partir do preço doméstico. Simples, mas ignora PPP. (2) Polycentric pricing — preço definido país-a-país, com base em custos locais e poder de compra. Maximiza market share local mas pode gerar arbitragem. (3) Geocentric pricing — preço coordenado globalmente com base em custos marginais e posicionamento competitivo. Variáveis adicionais: purchasing power parity (Big Mac Index do The Economist mostra quanto tempo se trabalha para comprar um Big Mac — PPP-adjusted), dumping (preço abaixo do custo ou abaixo do mercado doméstico — ilegal pela OMC e combatido com anti-dumping duties), transfer pricing (preços de transferência entre subsidiárias para optimizar carga fiscal global), currency hedging (cobertura de risco cambial via forwards, futuros ou opções — uma empresa europeia que vende nos EUA em USD pode cobrir-se com NDF ou forwards de 6-12 meses). Estratégia de pricing = posicionamento da marca + custos + câmbio + concorrência + regulação."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Razões da complexidade: câmbio flutuante, PPP variável, regulação fiscal diferente",
+        "Ethnocentric: preço uniforme mundial (simples mas ignora PPP)",
+        "Polycentric: preço por país (maximiza market share mas gera arbitragem)",
+        "Geocentric: coordenado globalmente (custos marginais + posicionamento)",
+        "Purchasing Power Parity (PPP): quanto tempo se trabalha para comprar o produto (Big Mac Index)",
+        "Dumping: preço abaixo do custo ou mercado doméstico — ilegal pela OMC",
+        "Transfer pricing: preços intra-grupo para optimizar fiscalidade global",
+        "Currency hedging: forwards, futuros, opções, NDFs — cobrir exposição cambial 6-12 meses",
+        "Pricing = posicionamento + custos + câmbios + concorrência + regulação fiscal"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Praça: canais de distribuição internacionais"
+    },
+    {
+      "type": "p",
+      "text": "A PRAÇA (distribuição) internacional é onde o marketing encontra a logística e o modo de entrada (que detalhamos na Lição 3). Os canais internacionais típicos são cinco, em ordem crescente de investimento e controlo: (1) Exportação indirecta — vender via intermediários domésticos (trading houses, export management companies, brokers). Vantagem: baixo risco; desvantagem: pouco controlo sobre marketing local e feedback do mercado. (2) Exportação directa — vender directamente a importadores/distribuidores no país-alvo (agentes, distribuidores exclusivos, filial comercial). Vantagem: mais controlo, melhor feedback; custo: equipa dedicada no país. (3) Licensing/Franchising — ceder marca, know-how e processo a um parceiro local mediante royalty. Vantagem: baixo investimento, rápida expansão; risco: criação de futuro concorrente. (4) Joint venture — empresa conjunta com parceiro local (50/50 ou maioria/minoria). Vantagem: conhecimento local, navegação regulatória; risco: conflito de gestão. (5) Subsidiária integral — empresa 100% própria no país (greenfield de raiz ou acquisition de empresa local). Vantagem: controlo total; custo: investimento elevado. A escolha depende do volume esperado, do risco político, da distância cultural e da estratégia competitiva. A McDonald's usa subsidiária integral nos mercados desenvolvidos e master franchising nos mercados emergentes."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Exportação indirecta: via intermediários (trading houses, brokers) — baixo risco, pouco controlo",
+        "Exportação directa: via agentes/distribuidores/filial comercial — mais controlo",
+        "Licensing/franchising: cedência de marca + know-how + processo por royalty",
+        "Joint venture: 50/50 ou maioria/minoria com parceiro local — conhecimento + navegação regulatória",
+        "Subsidiária integral: 100% próprio (greenfield ou acquisition) — controlo total",
+        "Critério de escolha: volume, risco político, distância cultural, estratégia competitiva",
+        "McDonald's: subsidiária em desenvolvidos, master franchising em emergentes",
+        "Detalhamento das implicações estratégicas: ver Lição 3 (modos de entrada)"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Promoção: glocal messaging e internacional advertising"
+    },
+    {
+      "type": "p",
+      "text": "A PROMOÇÃO internacional enfrenta a decisão: comunicar com mensagem mundial única ou adaptar mensagem por país? O modelo moderno é o 'glocal': campanha global com execução local. A campanha global garante coerência de marca e economies of scale em criação; a execução local adapta linguagem, símbolos, canais e nuances culturais. Três abordagens (Onkvisit & Shaw, 2004): (1) Comunicação padronizada — mesma mensagem mundial (ex: 'Just Do It' da Nike funciona em todo o lado porque é simples e emocional). Funciona quando o benefício é universal e aspiracional. (2) Comunicação adaptada — mensagem local (ex: KitKat Japão 'good luck' vs 'have a break' no Ocidente). Vantagem: relevância cultural máxima; custo: criação múltipla. (3) Comunicação dual — campanha global com execução local (modelo dominante hoje). Exemplo: Coca-Cola 'Share a Coke' foi global mas com nomes locais em cada país. Ferramentas: internacional advertising (televisão, print, digital), PR internacional, feiras internacionais (Hannover Messe, Mobile World Congress, Canton Fair), sponsorship (Olympic Games, FIFA World Cup — alcance global), social media localizado. A adaptação cultural requer conhecimento das dimensões de Hofstede (Lição 4): em culturas de alto UAI (uncertainty avoidance), a mensagem deve ser específica e reduzir risco; em culturas de alto IDV (individualism), a mensagem deve falar de realização pessoal; em culturas de baixo IDV (coletivistas), a mensagem deve falar de família/comunidade."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Glocal: campanha global com execução local — modelo dominante hoje",
+        "Comunicação padronizada: mesma mensagem mundial (Nike 'Just Do It')",
+        "Comunicação adaptada: mensagem local por país (KitKat Japão 'good luck')",
+        "Comunicação dual: campanha global + execução local (Coca-Cola 'Share a Coke')",
+        "Ferramentas: TV/print/digital, PR, feiras (Hannover Messe, MWC, Canton Fair)",
+        "Sponsorship global: Olympics, FIFA World Cup, Expo — alcance mundial",
+        "Adaptação cultural: Hofstede — alto UAI = mensagem específica, baixo risco",
+        "Próxima lição: como escolher entre exportação, licenciamento, franchising, JV, subsidiária"
+      ]
+    }
+  ],
+  "keyPoints": [
+    "Decisão central mix: padronizar OU adaptar (Levitt 1983 vs Douglas & Wind 1987)",
+    "Framework Hill (2008): core padronizado + elementos modulares adaptados = mass customization",
+    "Produto: 5 estratégias (straight, adaptation, invention, re-engineering, backward invention)",
+    "Country-of-origin effect: 'Made in Germany' = qualidade, 'Made in Italy' = design",
+    "Preço: ethnocentric (uniforme mundial), polycentric (país-a-país), geocentric (coordenado)",
+    "PPP (purchasing power parity): Big Mac Index do The Economist mede desvio de PPP",
+    "Dumping ilegal pela OMC, combatido com anti-dumping duties",
+    "Transfer pricing: preços intra-grupo para optimizar fiscalidade global",
+    "Currency hedging: forwards, futuros, opções, NDFs — cobertura 6-12 meses",
+    "Praça: 5 canais (exportação indirecta, directa, licensing/franchising, JV, subsidiária)",
+    "Promoção glocal: campanha global + execução local (modelo dominante)",
+    "Adaptação cultural da promoção requer conhecimento de Hofstede (Lição 4)"
+  ],
+  "exercises": [
+    {
+      "type": "mc",
+      "question": "Theodore Levitt (1983) no clássico 'The Globalization of Markets' argumentou que:",
+      "options": [
+        "Toda a empresa deve adaptar-se a cada país individualmente",
+        "A tecnologia e a comunicação criam um mercado global homogéneo onde a padronização vence",
+        "A estratégia multi-doméstica é sempre superior à global",
+        "O marketing internacional não é diferente do marketing doméstico"
+      ],
+      "answer": "B",
+      "explanation": "Levitt (1983) argumentou que satélites, telecom e Internet criariam um 'mercado global homogéneo' onde produtos padronizados vendidos com o mesmo marketing em todo o lado seriam mais eficientes. A tese foi parcialmente refutada pela evidência empírica de Douglas & Wind (1987) e Bartlett & Ghoshal (1989), mas continua a ser uma referência obrigatória."
+    },
+    {
+      "type": "mc",
+      "question": "Uma empresa europeia vende produtos nos EUA em USD e quer cobrir o risco cambial do dólar face ao euro nos próximos 12 meses. Qual é o instrumento financeiro mais típico?",
+      "options": [
+        "Acções de empresas norte-americanas",
+        "Forward cambial a 12 meses (FX forward)",
+        "Letras do tesouro dos EUA",
+        "Factoring"
+      ],
+      "answer": "B",
+      "explanation": "FX forward a 12 meses é o instrumento clássico de currency hedging — permite fixar hoje a taxa de câmbio a que a empresa trocará USD por EUR no futuro, eliminando o risco cambial. Alternativas: futuros cambiais (CME), opções (vanilla ou exóticas), NDFs (non-deliverable forwards, para mercados com restrições cambiais). A escolha depende do horizonte, custo e grau de hedge desejado."
+    },
+    {
+      "type": "mc",
+      "question": "A política de 'transfer pricing' numa multinacional refere-se a:",
+      "options": [
+        "Preços de venda ao consumidor final em diferentes países",
+        "Preços a que subsidiárias do mesmo grupo transaccionam entre si, para efeitos fiscais e de reporting",
+        "Custos de transferência de mercadorias entre portos",
+        "Taxas de câmbio interbancárias"
+      ],
+      "answer": "B",
+      "explanation": "Transfer pricing é o preço a que subsidiárias do mesmo grupo transaccionam entre si (matriz vende matéria-prima à subsidiária, etc.). É regulado pela OCDE (BEPS, Base Erosion and Profit Shifting) e pelas autoridades fiscais nacionais para evitar manipulação que desvie lucros para jurisdições de baixa tributação. O método padrão é o arm's length principle: preço como se fosse entre partes independentes."
+    }
+  ],
+  "quizSlug": "mkq",
+  "nextLesson": "03-estrategias-entrada-mercado",
+  "prevLesson": "01-segmentacao-stp-global"
+}

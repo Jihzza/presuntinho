@@ -200,9 +200,24 @@
                 { slug: '02-analise-interna-vrio-swot', title: '2. Análise Interna: VRIO, RBV, SWOT Estratégico e McKinsey 7S', summary: 'RBV de Barney, VRIO (Value/Rarity/Imitability/Organization), SWOT estratégico (SO/ST/WO/WT) e McKinsey 7S para diagnóstico organizacional.', quizSlug: 'ecq', quizTitle: 'Quiz: Estratégia Corporativa Avançada', estMinutes: 10 },
                 { slug: '03-estrategias-corporativas', title: '3. Estratégias Corporativas: Ansoff, BCG/GE-McKinsey, Integração e Diversificação', summary: 'Ansoff (4 direcções), BCG (Stars/CashCows/QuestionMarks/Dogs), GE-McKinsey, integração vertical/horizontal, diversificação relacionada vs não-relacionada.', quizSlug: 'ecq', quizTitle: 'Quiz: Estratégia Corporativa Avançada', estMinutes: 10 },
                 { slug: '04-implementacao-estrategica', title: '4. Implementação Estratégica: BSC, OKRs, McKinsey 7S e Change Management', summary: 'Balanced Scorecard de Kaplan & Norton (4 perspectivas), OKRs de Andy Grove/Doerr, McKinsey 7S aplicado e modelos Kotter/ADKAR de change management.', quizSlug: 'ecq', quizTitle: 'Quiz: Estratégia Corporativa Avançada', estMinutes: 10 }
-              ]
-            },
-    equivalenza: {
+                              ]
+                            },
+                        'marketing-internacional': {
+                              slug: 'marketing-internacional',
+                              title: 'Marketing Internacional',
+                              tagline: 'Business Administration · STP global, mix 4Ps internacional, modos de entrada, Hofstede e diplomacia corporativa',
+                              description:
+                                'A cadeira aplicada de marketing internacional: como segmentar mercados-país (country markets, intermarket vs intra-market), targeting (undifferentiated, concentrated, differentiated, micromarketing mix) e posicionamento global. Como adaptar o marketing-mix a múltiplos países — produto (adaptação vs padronização, country-of-origin effects), preço (dumping, transfer pricing, currency hedging, PPP), praça (exportação indirecta/direta, JV, subsidiárias) e promoção (glocal messaging). Como escolher modos de entrada (exportação, licensing, franchising, joint ventures, subsidiárias integrais, FDI greenfield vs acquisition, alliances, born globals), enquadrados pelos modelos Uppsala e transaction cost analysis. E como navegar diferenças culturais em negócios internacionais — Hofstede 6 dimensões (PDI, IDV, MAS, UAI, LTO, IND), CSAs (cultural sensitives), estratégias glocal, diplomacia corporativa e soft power.',
+                              icon: '🌍',
+                              color: '#0ea5e9',
+                              lessons: [
+                                { slug: '01-segmentacao-stp-global', title: '1. Segmentação STP Global: Country Markets, Inter/Intra-Market, Targeting e Posicionamento Global', summary: 'Country markets segmentation, inter-market vs intra-market, targeting (undifferentiated, concentrated, differentiated, micromarketing mix) e posicionamento global.', quizSlug: 'mkq', quizTitle: 'Quiz: Marketing Internacional', estMinutes: 10 },
+                                { slug: '02-mix-global-4ps', title: '2. Mix Marketing Global 4Ps: Produto, Preço, Praça e Promoção Internacional', summary: 'Produto (adaptação vs padronização, country-of-origin), preço (dumping, transfer pricing, hedging, PPP), praça (canais internacionais) e promoção glocal.', quizSlug: 'mkq', quizTitle: 'Quiz: Marketing Internacional', estMinutes: 10 },
+                                { slug: '03-estrategias-entrada-mercado', title: '3. Estratégias de Entrada em Mercados Externos: Exportação, JV, Subsidiárias, FDI e Born Globals', summary: 'Sete modos de entrada (Root 1994), Uppsala model, transaction cost analysis, Dunning OLI, FDI greenfield vs acquisition, born globals e alliances.', quizSlug: 'mkq', quizTitle: 'Quiz: Marketing Internacional', estMinutes: 10 },
+                                { slug: '04-cultura-diplomacia-corporativa', title: '4. Cultura e Diplomacia Corporativa: Hofstede 6 Dimensões, CSAs, Glocal e Soft Power', summary: 'Hofstede 6 dimensões (PDI, IDV, MAS, UAI, LTO, IND), CSAs, estratégia glocal, diplomacia corporativa e soft power empresarial.', quizSlug: 'mkq', quizTitle: 'Quiz: Marketing Internacional', estMinutes: 10 }
+                              ]
+                            },
+                    equivalenza: {
       slug: 'equivalenza',
       title: 'Equivalenza — The Scent of a Second Chance',
       tagline: 'BCOBM311 Mid-Term · Case study completo',

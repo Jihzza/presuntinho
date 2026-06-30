@@ -1,0 +1,117 @@
+{
+  "id": "mkq",
+  "title": "Quiz: Marketing Internacional",
+  "description": "Testa os teus conhecimentos em marketing internacional: segmentação STP global (country markets, inter/intra-market, targeting, posicionamento), marketing-mix global 4Ps (produto com country-of-origin, preço com dumping/transfer pricing/hedging, praça com canais de distribuição, promoção glocal), modos de entrada (exportação, licensing, franchising, JV, subsidiária, FDI, born globals, Uppsala e transaction cost), e Hofstede 6 dimensões culturais (PDI, IDV, MAS, UAI, LTO, IND) com CSAs, diplomacia corporativa e soft power. 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "questions": [
+    {
+      "q": "Qual das seguintes NÃO é uma das 6 dimensões do modelo de Hofstede para comparação de culturas nacionais?",
+      "opts": [
+        "Power Distance Index (PDI)",
+        "Individualism vs Collectivism (IDV)",
+        "Marketing-Mix Sophistication (MMS)",
+        "Uncertainty Avoidance Index (UAI)"
+      ],
+      "a": 2,
+      "explanation": "As 6 dimensões de Hofstede são: (1) PDI — Power Distance Index, (2) IDV — Individualism, (3) MAS — Masculinity, (4) UAI — Uncertainty Avoidance, (5) LTO — Long-Term Orientation (adicionada em 1988 com Bond), e (6) IND — Indulgence vs Restraint (adicionada em 2010). 'Marketing-Mix Sophistication (MMS)' não existe — é um distractor. As dimensões são todas relativas a valores culturais nacionais, não a práticas de marketing."
+    },
+    {
+      "q": "No marketing internacional, a estratégia de targeting em que a empresa ataca UM ÚNICO segmento em vários países (ex: Tesla nos primeiros anos focada no segmento premium) chama-se:",
+      "opts": [
+        "Undifferentiated global marketing",
+        "Concentrated marketing",
+        "Differentiated global marketing",
+        "Micromarketing mix"
+      ],
+      "a": 1,
+      "explanation": "Concentrated marketing foca num único segmento em vários países — vantagem: foco total num nicho de elevada rendibilidade; risco: dependência excessiva desse segmento (ex: Tesla começou no premium antes de descer para mass-market). Undifferentiated seria uma oferta mundial única; differentiated seriam múltiplas ofertas adaptadas; micromarketing seria customização para nichos muito específicos."
+    },
+    {
+      "q": "O 'Big Mac Index' publicado anualmente pelo The Economist é usado para medir:",
+      "opts": [
+        "Inflação global",
+        "Purchasing Power Parity (PPP) — desvio entre câmbios e poder de compra real",
+        "Crescimento do PIB mundial",
+        "Taxas de juro dos bancos centrais"
+      ],
+      "a": 1,
+      "explanation": "O Big Mac Index (criado em 1986) compara o preço do Big Mac em diferentes países convertido para uma moeda comum, contra o preço nos EUA. Quando o Big Mac é mais caro em moeda local do que a PPP sugere, a moeda local está sobrevalorizada; quando é mais barato, está subvalorizada. É um indicador informal de PPP — útil mas limitado porque ignora custos locais (mão-de-obra, imobiliário, regulação)."
+    },
+    {
+      "q": "O 'country-of-origin effect' (COO) em marketing internacional refere-se a:",
+      "opts": [
+        "País onde a empresa-mãe está sediada",
+        "Percepção que os consumidores têm do país de fabrico do produto (ex: 'Made in Germany' = qualidade)",
+        "País de origem do consumidor final",
+        "País onde o produto foi inventado"
+      ],
+      "a": 1,
+      "explanation": "Country-of-origin effect é a percepção que os consumidores têm do país onde o produto foi fabricado. 'Made in Germany' = qualidade de engenharia; 'Made in Japan' = tecnologia; 'Made in Italy' = design; 'Made in France' = luxo; 'Made in USA' = inovação; 'Made in China' = preço baixo (embora esta percepção esteja a mudar). O COO pode ser explorado (posicionamento) ou mitigado (co-branding local)."
+    },
+    {
+      "q": "Pelo Uppsala model (Johanson & Vahlne 1977), uma empresa deve escolher mercados de entrada com base em:",
+      "opts": [
+        "Maior PIB absoluto",
+        "Menor distância cultural e institucional (psychic distance)",
+        "Menor risco político isolado, ignorando a cultura",
+        "Maior taxa de crescimento do PIB, qualquer que seja a cultura"
+      ],
+      "a": 1,
+      "explanation": "O Uppsala model propõe entrada incremental começando por mercados com menor psychic distance — países similares em língua, instituições, práticas de negócio e cultura. A empresa aprende e acumula experiência antes de saltar para mercados culturalmente distantes. A psychic distance não é distância geográfica mas percebida (língua, sistema legal, práticas comerciais). Portugal → Brasil tem baixa psychic distance; Portugal → Japão tem alta."
+    },
+    {
+      "q": "A política de 'dumping' em comércio internacional, combatida com direitos anti-dumping pela OMC, ocorre quando:",
+      "opts": [
+        "Uma empresa vende abaixo do custo de produção ou abaixo do preço no mercado doméstico, prejudicando concorrência local",
+        "Uma empresa vende produtos usados em países emergentes",
+        "Uma empresa vende sem marca em mercados externos",
+        "Uma empresa vende por grosso em vez de a retalho"
+      ],
+      "a": 0,
+      "explanation": "Dumping é a prática de vender um produto no mercado externo por preço inferior ao custo de produção ou inferior ao preço praticado no mercado doméstico, prejudicando produtores locais. É ilegal sob as regras da OMC (Artigo VI do GATT 1994) e os países podem impor anti-dumping duties (direitos compensatórios). É distinto de 'price discrimination' legal (que cobra preços diferentes em mercados diferentes) — o dumping é quando o preço é inferior ao custo ou ao doméstico."
+    },
+    {
+      "q": "No franchising internacional, a empresa franchisadora cede ao parceiro local:",
+      "opts": [
+        "Apenas a marca e o logo",
+        "Marca + know-how operacional + sistema completo + training + suporte + padrões (em troca de fees iniciais e royalties)",
+        "Apenas o produto para revenda",
+        "Apenas o direito de fabrico local"
+      ],
+      "a": 1,
+      "explanation": "Franchising é mais do que licensing: inclui marca + know-how + sistema operacional completo + training + suporte contínuo + padrões de qualidade + manuais operacionais. O franchisado paga fees iniciais (entry fee) e royalties recorrentes (% do revenue). Exemplos: McDonald's, Subway, Hilton, 7-Eleven. Vantagem: rápida expansão com capital do franchisado; risco: inconsistência entre unidades se a fiscalização falhar."
+    },
+    {
+      "q": "Duas dimensões de Hofstede particularmente relevantes para o estilo de venda e apresentação a clientes são:",
+      "opts": [
+        "LTO e IND",
+        "PDI e UAI — alto PDI exige decisor C-level presente; alto UAI exige planos detalhados com cenários",
+        "MAS e IND",
+        "IDV e MAS"
+      ],
+      "a": 1,
+      "explanation": "PDI e UAI são as duas dimensões mais directamente relevantes para apresentações de venda: PDI alto (Malásia 100, Filipinas 94, México 81) significa hierarquia forte — o vendedor precisa do decisor C-level presente, não basta persuadir o especialista técnico. UAI alto (Grécia 100, Portugal 99, Japão 92) significa aversão a incerteza — o vendedor precisa de planos detalhados, cenários, garantias explícitas. LTO e IND são mais relevantes para parcerias de longo prazo e estilo de marketing."
+    },
+    {
+      "q": "Born Globals (Oviatt & McDougall 1994) são empresas que:",
+      "opts": [
+        "Começam pequenas e só internacionalizam após 20 anos de mercado doméstico",
+        "Desde a fundação ou poucos anos após, competem em múltiplos países (ex: Logitech, Spotify, Klarna)",
+        "Operam apenas em mercados emergentes",
+        "Vendem exclusivamente por canais digitais"
+      ],
+      "a": 1,
+      "explanation": "Born Globals são empresas que, desde a fundação ou poucos anos após, competem em múltiplos países — desafiando o modelo Uppsala de internacionalização incremental. Exemplos: Logitech (1981), Skype (2003), Spotify (2008), Klarna (2005). São típicas em sectores de alta tecnologia, plataformas digitais, design/moda e SaaS onde activos intangíveis viajam facilmente. Características: founders com experiência internacional, redes globais desde o dia 1, mentalidade global."
+    },
+    {
+      "q": "A 'estratégia glocal' (Robertson 1995) em marketing internacional combina:",
+      "opts": [
+        "Preço baixo global com marca premium",
+        "Coerência global da marca com adaptação local profunda do produto, embalagem, distribuição e mensagem",
+        "Apenas tradução literal das campanhas",
+        "Operações 100% locais sem coordenação global"
+      ],
+      "a": 1,
+      "explanation": "Glocal (de 'glocalization', Robertson 1995) é o modelo dominante no século XXI: combinar coerência global da marca com adaptação local profunda — não apenas adaptar mensagem publicitária, mas adaptar produto, embalagem, distribuição, preço e mesmo modelo de negócio. McDonald's: marca global, menus completamente adaptados por país. Unilever: marcas locais (Cif, Omo, Skip, Surf) sob coordenação global. Nestlé: KitKat com 300+ sabores locais."
+    }
+  ]
+}

@@ -1,0 +1,197 @@
+{
+  "id": "01-segmentacao-stp-global",
+  "title": "1. Segmentação STP Global: Country Markets, Inter/Intra-Market, Targeting e Posicionamento Global",
+  "courseSlug": "marketing-internacional",
+  "lessonNumber": 1,
+  "description": "Como aplicar o STP (Segmentação, Targeting, Positioning) quando o mercado não é um único país mas um mosaico de países, culturas e níveis de desenvolvimento: country markets segmentation (variáveis macro: экономико-демографические, infra-estrutura, risco político), inter-market vs intra-market segmentation (agrupar países com perfis similares vs segmentar dentro de um país), targeting strategies (undifferentiated, concentrated, differentiated, micromarketing mix) e posicionamento global (frameworks como posicionamentos adaptados por país vs posicionamento mundial único).",
+  "audio": "Nesta primeira lição entramos no STP aplicado ao marketing internacional. O ponto de partida é que, quando uma empresa decide vender além-fronteiras, o 'mercado' deixa de ser uma população homogénea e passa a ser um mosaico de países com instituições, culturas, níveis de rendimento e comportamentos de compra muito diferentes. A primeira decisão de segmentação é macro: agrupar países. As variáveis mais usadas são macro-económicas (PIB per capita, taxa de crescimento, estabilidade cambial), demográficas (urbanização, escolaridade, estrutura etária), infra-estruturais (logística, digital, retalho moderno), institucionais (risco político, corrupção, sistema legal) e culturais (Hofstede — veremos na Lição 4). Com base nessa triagem, agrupamos países em clusters: o framework clássico de Cavusgil (1980) e o World Bank Group classificam economias em high-income, upper-middle, lower-middle, low-income — e cada cluster tem padrões de consumo distintos. Depois, distinguimos duas abordagens: inter-market segmentation, onde agrupamos países com perfis similares e tratamos cada cluster como um 'super-segmento' (tratar a Europa Ocidental como um todo, por exemplo); e intra-market segmentation, onde olhamos para dentro de um país e identificamos segmentos de consumidores (urban high-income, rural low-income, etc.) que podem existir em múltiplos países. Uma vez segmentado, o targeting internacional oferece quatro estratégias: (1) undifferentiated global marketing — uma única oferta mundial (ex: Coca-Cola original, alguns电子产品 de consumo); (2) concentrated marketing — focar num único segmento em vários países (ex: Tesla a começar pelo segmento premium); (3) differentiated global marketing — múltiplas ofertas adaptadas por segmento (ex: Unilever com centenas de marcas locais); (4) micromarketing mix —定制 para nichos muito específicos. A escolha depende do equilíbrio entre economies of scale (favorece undifferentiated) e local responsiveness (favorece concentrated/micromarketing). Por fim, o posicionamento global: posicionar de forma idêntica em todos os países (ex: Volvo = segurança em todo o mundo) ou adaptar a mensagem ao contexto cultural local. Ferramentas úteis: o positioning pyramid (atributo funcional, benefício emocional, reason-to-believe), e a decisão entre global brand positioning e local adaptation.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["STP", "Segmentação", "Targeting", "Posicionamento", "Country Markets", "Inter-Market", "Intra-Market", "Micromarketing"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Porque o STP muda quando o mercado são países"
+    },
+    {
+      "type": "p",
+      "text": "No marketing doméstico, o STP é aplicado a consumidores dentro de uma fronteira política e cultural comum — o 'mercado' é razoavelmente homogéneo em instituições, língua e poder de compra. No marketing internacional, o mercado é um mosaico de países com diferenças profundas: uns têm PIB per capita 50 vezes superior a outros, uns são democracias estáveis, outros têm risco político elevado, uns são high-context e outros low-context. Esta heterogeneidade muda a forma de segmentar: o nível macro (país) passa a ser a primeira segmentação, antes do nível micro (consumidor dentro do país). O modelo STP de Kotler (1980), aplicado ao internacional, desdobra-se em: (1) country segmentation (agrupar países com perfis similares), (2) market segmentation dentro de cada país, (3) targeting (escolher segmentos país×consumidor onde competir), (4) positioning global (como a marca quer ser percebida em cada mercado). Uma decisão de STP mal tomada no internacional custa muito mais do que no doméstico: um mercado-país exige investimento fixo em distribuição, regulação e adaptação de produto — reverter uma má entrada é caro."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "No doméstico o STP é micro (consumidor); no internacional o STP começa no macro (país)",
+        "Country segmentation: agrupar países com perfis similares em clusters",
+        "Inter-market vs intra-market: agrupar países vs segmentar dentro de cada país",
+        "Targeting: undifferentiated, concentrated, differentiated, micromarketing mix",
+        "Posicionamento: global idêntico vs adaptado por país (glocal)",
+        "Decisões STP mal tomadas custam muito mais no internacional (investimento fixo alto)",
+        "Coordenação: STP internacional exige coerência entre HQ e subsidiárias locais"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Country markets segmentation: variáveis macro para agrupar países"
+    },
+    {
+      "type": "p",
+      "text": "A primeira segmentação no marketing internacional é macro: agrupar países em clusters com perfis similares. As variáveis mais usadas são cinco famílias: (1) Económicas — PIB per capita, taxa de crescimento, distribuição de rendimento, taxa de câmbio real, endividamento externo; (2) Demográficas — dimensão da população, estrutura etária, urbanização, escolaridade, taxa de fertilidade; (3) Infra-estruturais — qualidade logística (LPI do World Bank), penetração digital, retalho moderno, rede rodoviária/portuária; (4) Institucionais — risco político (ICRG, Economist Intelligence Unit), índice de corrupção (Transparency International), sistema legal (common law vs civil law), estabilidade regulatória; (5) Culturais — língua, religião, dimensões Hofstede (que detalhamos na Lição 4). A combinação destas variáveis produz tipologias como a do World Bank (high-income / upper-middle / lower-middle / low-income) ou a do CIA World Factbook (developed / developing / least developed), mas as empresas constroem tipologias ad-hoc quando precisam de maior granularidade. A framework clássica de Cavusgil (1980, 'On the Internationalization Process of Firms') propunha agrupar países em 'export markets' com base em similaridade de procura e capacidade de compra. Hoje, a abordagem combina dados macro (World Bank, IMF, OECD) com dados micro (Google Trends, Statista, Euromonitor) para identificar clusters mais precisos."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Variáveis económicas: PIB per capita, crescimento, distribuição de rendimento, câmbio",
+        "Variáveis demográficas: população, estrutura etária, urbanização, escolaridade",
+        "Variáveis infra-estruturais: logística (LPI World Bank), digital, retalho moderno",
+        "Variáveis institucionais: risco político (ICRG), corrupção (Transparency), sistema legal",
+        "Variáveis culturais: língua, religião, dimensões Hofstede",
+        "Tipologias prontas: World Bank (4 níveis), CIA Factbook, OECD, IMF",
+        "Frameworks clássicos: Cavusgil (1980) — agrupar por similaridade de procura e capacidade de compra",
+        "Hoje: combinar dados macro (World Bank/IMF) com dados micro (Statista/Euromonitor)"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Exemplo aplicado: a Unilever opera em mais de 190 países mas não faz 190 estratégias diferentes. Agrupa países em clusters como 'rural emerging markets' (Índia rural, Indonésia rural, partes de África) com estratégias de sachets e micro-distribuição, e 'premium urban developed' (Europa Ocidental, Japão,大都市 asiáticos) com estratégias de super-premium e sustentabilidade. A empresa percebe que os desafios em Mumbai slum e Nairobi rural são muito similares entre si — justificando o tratamento como um único cluster."
+    },
+    {
+      "type": "h2",
+      "text": "Inter-market vs intra-market: dois eixos de segmentação"
+    },
+    {
+      "type": "p",
+      "text": "Uma vez decidida a tipologia macro, há dois eixos de segmentação que coexistem: inter-market e intra-market. Inter-market segmentation significa agrupar países com perfis similares e tratá-los como um 'super-segmento' — a Europa Ocidental pode ser vista como um único mercado para muitos bens de consumo (do ponto de vista da oferta, da regulação UE e do comportamento). Vantagem: economies of scale em produção e marketing. Intra-market segmentation significa segmentar consumidores DENTRO de um país — por exemplo, no Brasil há classes A/B high-income urban, classe C emerging, classes D/E low-income, cada uma com comportamentos de compra distintos. A Nestlé usa intensamente intra-market segmentation: vende Nespresso no segmento premium, Ninho na classe média, e Molico na classe popular — três marcas, três posicionamentos, um país. Na prática, as duas abordagens são combinadas: a empresa pode ter segmentos inter-mercado (urban high-income em大都市 globais) e segmentos intra-mercado (consumidores verdes na Alemanha). A matriz país × segmento-consumidor é a grelha operacional que alimenta as decisões de targeting e budgeting."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Inter-market: agrupar países com perfis similares num super-segmento",
+        "Intra-market: segmentar consumidores dentro de cada país",
+        "Inter-market = economies of scale (vantagem custo); Intra-market = local responsiveness",
+        "Exemplo inter: Europa Ocidental como mercado único (UE, regulação)",
+        "Exemplo intra: classes A/B, C, D/E no Brasil — Nestlé com Nespresso/Ninho/Molico",
+        "Combinação típica: grelha país × segmento-consumidor (matriz 2D)",
+        "A escolha depende do produto (commodity global vs customizado) e da regulação local"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Targeting strategies: undifferentiated, concentrated, differentiated, micromarketing mix"
+    },
+    {
+      "type": "p",
+      "text": "Depois de segmentar, a empresa escolhe targeting — quais segmentos vai atacar. No marketing internacional há quatro estratégias canónicas (adaptadas de Kotler para o contexto global): (1) Undifferentiated global marketing — uma única oferta mundial, sem adaptações. Exemplo clássico: Coca-Cola no século XX, Apple iPhone (com variantes técnicas localizadas mas conceito único), algumas marcas de luxo (Rolex, Louis Vuitton). Lógica: a procura mundial é suficientemente homogénea para justificar uma oferta única que maximiza economies of scale. Funciona quando a marca é forte e o produto é aspiracional/funcional. (2) Concentrated marketing — foco num único segmento em vários países. Exemplo: Tesla começou focada no segmento premium high-income antes de descer para mass-market. Vantagem: foco total num nicho de elevada rendibilidade. Risco: dependência excessiva de um segmento. (3) Differentiated global marketing — múltiplas ofertas adaptadas por segmento/país. Exemplo: Procter & Gamble tem Tide, Ariel, Bonux, Ace — múltiplas marcas de detergente adaptadas a segmentos de preço e preferências locais. Vantagem: cobertura máxima e adaptação local. Custo: menor eficiência produtiva e de marketing. (4) Micromarketing mix (ou 'mass customization') — oferta customizada para nichos muito específicos, frequentemente por país ou mesmo por região. Exemplo: alguns bens de consumo onde a regulação local obriga a adaptações (McDonald's menu varia por país). Trade-off fundamental: economies of scale (favorece undifferentiated) vs local responsiveness (favorece differentiated/micro). A framework de Bartlett & Ghoshal (1989, 'Managing Across Borders') descreve este trade-off como o dilema central da estratégia global."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Undifferentiated: uma oferta mundial, sem adaptações (Coca-Cola, iPhone)",
+        "Concentrated: foco num único segmento em vários países (Tesla premium)",
+        "Differentiated: múltiplas ofertas adaptadas por segmento/país (P&G multi-marca)",
+        "Micromarketing mix: customização para nichos muito específicos",
+        "Trade-off central: economies of scale (undifferentiated) vs local responsiveness (differentiated)",
+        "Framework Bartlett-Ghoshal (1989): o dilema global-local é o coração da estratégia multinacional",
+        "Critério de escolha: força da marca (favorece undiff), variabilidade cultural (favorece diff), estrutura de custos",
+        "Risco do concentrated: dependência excessiva de um segmento"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Caso McDonald's: é o exemplo mais extremo de micromarketing mix dentro de uma cadeia global. Menu nos EUA (Big Mac, Quarter Pounder), menu em Itália (pasta, McItaly burger, mozzarella sticks), menu no Japão (Teriyaki Burger, Ebi Filet-O), menu na Índia (McAloo Tikki — sem carne de vaca por razões religiosas). Mesma marca mundial, mas a oferta é desenhada país-a-país. A eficiência operacional e de marca são globais; a oferta é local. É o modelo 'glocal' em acção."
+    },
+    {
+      "type": "h2",
+      "text": "Posicionamento global: idêntico em todo o lado vs adaptado por país"
+    },
+    {
+      "type": "p",
+      "text": "A última etapa do STP internacional é o posicionamento: como a marca quer ser percebida na mente do consumidor em cada mercado. Há duas abordagens: (1) Global brand positioning — uma promessa de marca idêntica em todos os países, garantindo coerência. Exemplos: Volvo = segurança; BMW = 'ultimate driving machine' (freude am fahren); Rolex = prestígio intemporal; Nike = superação atlética. Vantagens: coerência, brand equity cumulativo, custo de comunicação menor. Funciona quando o benefício é universal e aspiracional. (2) Local adapted positioning — a promessa é adaptada ao contexto cultural e social de cada país. Exemplo: Unilever adapta Dove (cuidado, beleza real) mas com nuances diferentes em cada mercado; KitKat no Japão posiciona-se como 'good luck charm' (kitto katsu = 'vais conseguir') em vez do 'have a break' ocidental. Trade-off: coerência global vs relevância local. Ferramentas úteis: positioning pyramid (atributo → benefício funcional → benefício emocional → reason-to-believe), positioning statement (target, frame of reference, point of difference, reason-to-believe) e brand mantra (3-5 palavras que resumem a essência da marca). A decisão depende do tipo de produto (commodity universal vs culturalmente embedded), da força da marca (marcas fortes podem ser globais; marcas fracas beneficiam de adaptação) e da estratégia competitiva (em mercados muito competitivos, a adaptação pode ser necessária para diferenciar)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Posicionamento global idêntico: coerência, brand equity cumulativo, menor custo",
+        "Posicionamento adaptado por país: relevância local, diferenciação em mercados competitivos",
+        "Exemplos globais: Volvo (segurança), BMW (freude am fahren), Rolex (prestígio)",
+        "Exemplos adaptados: KitKat Japão (good luck), McDonald's por país",
+        "Ferramentas: positioning pyramid (atributo → funcional → emocional → RTB)",
+        "Positioning statement: target + frame of reference + point of difference + reason-to-believe",
+        "Brand mantra: 3-5 palavras essência (Nike = 'authentic athletic performance')",
+        "Critério: produto universal vs cultural, força da marca, intensidade competitiva"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Do STP global ao plano de marketing-mix por país"
+    },
+    {
+      "type": "p",
+      "text": "O output do STP global é uma lista priorizada de segmentos país × consumidor onde competir e um posicionamento desejado para cada um. Esses outputs alimentam directamente as decisões de marketing-mix que detalharemos na Lição 2: o produto é o mesmo ou adaptado (country-of-origin, adaptações técnicas), o preço é PPP-adjusted ou premium-priced, a praça é exportação ou subsidiária local, a promoção é glocal messaging. A coerência entre STP e mix é o que separa marketing internacional estratégico de expansão por impulso. O STP também informa o modo de entrada (Lição 3): países de alto risco político e baixo volume podem justificar apenas exportação indirecta; países de alto volume e baixa distância cultural podem justificar subsidiária integral. E o STP é também culturalmente informado: as dimensões de Hofstede (PDI, IDV, MAS, UAI, LTO, IND, que detalhamos na Lição 4) afectam a forma como segmentos dentro de um país respondem a apelos de marketing e que posicionamento é eficaz. Em resumo: STP global é o framework de alto nível; mix, modo de entrada e adaptação cultural são os planos operacionais que dele derivam."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Output STP: lista priorizada de segmentos país × consumidor + posicionamento",
+        "Alimentação directa: decisões de mix (Lição 2) e de modo de entrada (Lição 3)",
+        "Coerência STP-mix separa marketing internacional estratégico de expansão por impulso",
+        "Modo de entrada: alto risco/baixo volume → exportação indirecta; baixo risco/alto volume → subsidiária",
+        "STP é culturalmente informado: Hofstede afecta apelos de marketing eficazes",
+        "Próxima lição: marketing-mix internacional — adaptar produto, preço, praça e promoção por país"
+      ]
+    }
+  ],
+  "keyPoints": [
+    "STP internacional começa no macro (país) antes do micro (consumidor)",
+    "Country markets segmentation: variáveis económicas, demográficas, infra-estruturais, institucionais, culturais",
+    "Inter-market: agrupar países similares num super-segmento (economies of scale)",
+    "Intra-market: segmentar consumidores dentro de cada país (Nestlé 3 marcas Brasil)",
+    "Targeting undifferentiated (Coca-Cola), concentrated (Tesla), differentiated (P&G), micromarketing (McDonald's)",
+    "Trade-off central Bartlett-Ghoshal (1989): economies of scale vs local responsiveness",
+    "Posicionamento global idêntico (Volvo, BMW) vs adaptado por país (KitKat Japão, McDonald's)",
+    "Ferramentas: positioning pyramid, positioning statement, brand mantra",
+    "Critério de escolha: universalidade do produto, força da marca, intensidade competitiva",
+    "Coerência STP → mix → modo de entrada → adaptação cultural é a marca de marketing internacional estratégico"
+  ],
+  "exercises": [
+    {
+      "type": "mc",
+      "question": "No marketing internacional, qual é o primeiro nível de segmentação que se aplica, antes da segmentação dentro de cada país?",
+      "options": [
+        "Segmentação por género",
+        "Country markets segmentation (agrupar países por perfis similares)",
+        "Segmentação por canal de distribuição",
+        "Segmentação por faixa etária"
+      ],
+      "answer": "B",
+      "explanation": "No marketing internacional, o primeiro nível é sempre macro: country markets segmentation, que agrupa países com perfis similares em clusters (usando variáveis económicas, demográficas, infra-estruturais, institucionais e culturais). Só depois se aplica a segmentação intra-mercado (dentro de cada país). Esta ordem reflecte que, no internacional, o país é a maior barreira à homogeneidade do mercado."
+    },
+    {
+      "type": "mc",
+      "question": "A estratégia de targeting em que a empresa escolhe um ÚNICO segmento para atacar em vários países (ex: Tesla premium nos primeiros anos) chama-se:",
+      "options": [
+        "Undifferentiated global marketing",
+        "Concentrated marketing",
+        "Differentiated global marketing",
+        "Micromarketing mix"
+      ],
+      "answer": "B",
+      "explanation": "Concentrated marketing (Kotler) foca a empresa num único segmento em vários países — vantagem: foco total num nicho de elevada rendibilidade; risco: dependência excessiva desse segmento. Undifferentiated seria uma oferta mundial única sem segmentação; differentiated seriam múltiplas ofertas adaptadas; micromarketing seria customização para nichos muito específicos."
+    },
+    {
+      "type": "mc",
+      "question": "O trade-off central descrito por Bartlett & Ghoshal (1989) em 'Managing Across Borders' é:",
+      "options": [
+        "Curto prazo vs longo prazo",
+        "Economies of scale vs local responsiveness",
+        "Custo fixo vs custo variável",
+        "Inovação vs tradição"
+      ],
+      "answer": "B",
+      "explanation": "Bartlett & Ghoshal (1989) identificaram o dilema global-local como o coração da estratégia multinacional: economies of scale e coerência global (favorece estratégias undifferentiated) vs local responsiveness e adaptação cultural (favorece estratégias differentiated/micromarketing). A solução não é escolher um extremo, mas gerir o trade-off via coordination, matrix structure e integration mechanisms."
+    }
+  ],
+  "quizSlug": "mkq",
+  "nextLesson": "02-mix-global-4ps",
+  "prevLesson": null
+}

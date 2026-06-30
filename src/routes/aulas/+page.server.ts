@@ -93,8 +93,9 @@ const COURSE_META: Record<string, CourseMeta> = {
     'gestao-operacoes': { slug: 'gestao-operacoes', title: 'Gestão de Operações', icon: '⚙️', color: '#0891b2' },
     'analise-investimentos': { slug: 'analise-investimentos', title: 'Análise de Investimentos', icon: '💰', color: '#059669' },
     'gestao-inovacao': { slug: 'gestao-inovacao', title: 'Gestão da Inovação e Tecnologia', icon: '💡', color: '#ca8a04' },
-    'comercio-internacional': { slug: 'comercio-internacional', title: 'Comércio Internacional', icon: '🌐', color: '#0e7490' }
-    };
+      'comercio-internacional': { slug: 'comercio-internacional', title: 'Comércio Internacional', icon: '🌐', color: '#0e7490' },
+      'marketing-internacional': { slug: 'marketing-internacional', title: 'Marketing Internacional', icon: '🌍', color: '#0ea5e9' }
+        };
 
 /** Turn "blue-ocean-strategy" → "Blue Ocean Strategy". */
 function humanise(slug: string): string {

@@ -1,0 +1,181 @@
+{
+  "id": "03-estrategias-entrada-mercado",
+  "title": "3. Estratégias de Entrada em Mercados Externos: Exportação, JV, Subsidiárias, FDI e Born Globals",
+  "courseSlug": "marketing-internacional",
+  "lessonNumber": 3,
+  "description": "Como escolher o modo de entrada em mercados externos: exportação indirecta e directa, licensing, franchising, joint ventures, subsidiárias integrais (greenfield vs acquisition), FDI (Foreign Direct Investment), alliance estratégica e born globals. Frameworks teóricos: Uppsala model (incremental commitment), transaction cost analysis (make-or-buy), Dunning OLI paradigm e eclectic paradigm.",
+  "audio": "Nesta terceira lição cobrimos os modos de entrada em mercados externos — a decisão estratégica que liga o STP global e o marketing-mix internacional ao compromisso de recursos no país-alvo. Os modos clássicos (Root, 1994) são, por ordem crescente de investimento e risco: (1) Exportação indirecta — via intermediários domésticos (trading houses, brokers); (2) Exportação directa — via agentes ou distribuidores no país-alvo; (3) Licensing — ceder tecnologia ou marca mediante royalty; (4) Franchising — modelo de licença + sistema operacional para serviços (McDonald's, Subway); (5) Joint venture — empresa conjunta com parceiro local; (6) Subsidiária integral — empresa 100% própria (greenfield de raiz ou acquisition/M&A); (7) Aliança estratégica — cooperação sem equity (ex: Airbus, consórcios de I&D). Às vezes inclui-se também o FDI greenfield vs acquisition como uma sub-decisão dentro da subsidiária integral. Dois frameworks teóricos são canónicos. PRIMEIRO, o Uppsala model (Johanson & Vahlne, 1977, 'The Internationalization Process of the Firm'): as empresas entram em mercados estrangeiros de forma incremental — primeiro exportação indirecta para países psicologicamente próximos (em termos de distância cultural, linguística e institucional), depois exportação directa, depois subsidiária, à medida que aprendem e o commitment cresce. A 'psychic distance' é central — países com língua, cultura e instituições similares são entradas de menor risco. O modelo foi atualizado em 2009 para incorporar networks e born globals. SEGUNDO, transaction cost analysis (Williamson, 1985, aplicado ao internacional por Anderson & Coughlan, 1987): a escolha do modo de entrada depende de comparar o custo de internalizar a operação (subsidiária) com o custo de transaccionar via mercado (exportação/licença). Internalizar quando: activos específicos altos (tecnologia proprietária, marca forte), incerteza alta, frequência alta. Exportar/licenciar quando: activos genéricos, baixa especificidade, baixa frequência. Complementarmente, o Dunning OLI paradigm (1988, 'The Eclectic Paradigm of International Production') diz que o FDI/subsidiária integral só faz sentido quando a empresa tem Ownership advantage (tecnologia/marca proprietária), Location advantage (o país-alvo tem vantagens específicas — recursos, mercado, eficiência) e Internalization advantage (internalizar é mais eficiente que licenciar). Por fim, os BORN GLOBALS (Oviatt & McDougall, 1994, 'Toward a Theory of International New Ventures'): empresas que, desde a fundação ou poucos anos após, competem em múltiplos países — típicas em sectores de alta tecnologia, plataformas digitais e design (ex: Skype, Spotify, Logitech).",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "tags": ["Modos de Entrada", "Exportação", "Joint Venture", "Subsidiária", "FDI", "Uppsala", "Transaction Cost", "Born Global"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Os sete modos de entrada (Root 1994) — ordem crescente de commitment"
+    },
+    {
+      "type": "p",
+      "text": "A decisão de entrada em mercados externos tem sete modos canónicos (Root, 1994), em ordem crescente de investimento, risco e controlo: (1) Exportação indirecta — a empresa vende a intermediários domésticos que exportam (trading houses, export management companies, brokers). Vantagem: risco mínimo, sem investimento externo; desvantagem: zero controlo sobre marketing no destino, feedback limitado. (2) Exportação directa — a empresa vende directamente a importadores, distribuidores ou agentes no país-alvo, ou abre filial comercial própria. Vantagem: melhor controlo, feedback directo, capacidade de adaptação local; custo: equipa dedicada. (3) Licensing — a empresa cede tecnologia, marca ou processo a um parceiro local mediante royalty (% do revenue ou fixed fee). Vantagem: baixo investimento, royalty como income passivo; risco: criação de futuro concorrente, perda de controlo de qualidade. (4) Franchising — modelo de licensing + sistema operacional completo para serviços (McDonald's, Subway, Hilton). Inclui training, padrões operacionais, marca, suporte. Vantagem: rápida expansão, scale economies; risco: inconsistência entre franchisados. (5) Joint venture — empresa conjunta com parceiro local (50/50 ou maioria/minoria). Vantagem: conhecimento local do parceiro, navegação regulatória, redução de risco político; risco: conflito de gestão, partilha de lucros, alinhamento estratégico difícil. (6) Subsidiária integral — empresa 100% própria no país-alvo. Vantagem: controlo total sobre estratégia, marca e operações; custo: investimento elevado, exposição total ao risco do país. (7) Aliança estratégica — cooperação entre empresas sem equity (ex: acordos de I&D, code-sharing em aviação, redes de distribuição partilhadas). A escolha depende do volume esperado, do risco político, da distância cultural, da especificidade dos activos e da estratégia competitiva de longo prazo."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Exportação indirecta: intermediários domésticos — risco mínimo, sem investimento externo",
+        "Exportação directa: agentes/distribuidores/filial comercial — melhor controlo",
+        "Licensing: ceder tecnologia/marca por royalty — risco: cria futuro concorrente",
+        "Franchising: licensing + sistema operacional (McDonald's, Subway) — rápida expansão",
+        "Joint venture: 50/50 com local — vantagem: conhecimento + navegação regulatória",
+        "Subsidiária integral: 100% próprio (greenfield ou M&A) — controlo total, risco total",
+        "Aliança estratégica: cooperação sem equity (I&D, code-share, redes)",
+        "Critério: volume esperado, risco político, distância cultural, especificidade de activos"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Uppsala model: commitment incremental e psychic distance"
+    },
+    {
+      "type": "p",
+      "text": "O Uppsala model (Johanson & Vahlne, 1977, 'The Internationalization Process of the Firm', Uppsala University) é o framework teórico mais influente sobre a sequência de entrada em mercados externos. Propõe que as empresas entram em mercados estrangeiros de forma incremental: (1) começam por exportar indirectamente para países com 'psychic distance' baixa — países com língua, cultura, educação, linguagem de negócios e instituições similares; (2) à medida que adquirem experiência, expandem para países com maior psychic distance; (3) gradualmente aumentam o commitment de recursos — exportação indirecta → exportação directa → licenciamento → JV → subsidiária integral. A 'psychic distance' é o conceito central: não é distância geográfica mas distância percebida em termos de factores que dificultam o fluxo de informação entre mercado doméstico e externo (língua, educação, práticas de negócio, cultura, sistema legal). Exemplos: Portugal → Brasil tem psychic distance baixa (língua); Portugal → Angola tem distância média (língua comum mas instituições muito diferentes); Portugal → Japão tem distância alta (língua, instituições, cultura). O modelo foi refinado em 2009 (Johanson & Vahlne, 'The Uppsala model 2.0') para incorporar networks — empresas entram via relações de rede (clientes, fornecedores, parceiros) em vez de apenas por decisão top-down. Implicação prática: empresas com recursos limitados devem começar por mercados próximos culturalmente e só depois saltar para mercados distantes. Empresas digitais (Spotify, Skype) Born Global desafiam o modelo porque entram em múltiplos países desde o início — mas o modelo continua válido para empresas industriais e de bens de consumo físicos."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Uppsala model (Johanson & Vahlne 1977): entrada incremental em mercados externos",
+        "Sequência: exportação indirecta → directa → licensing → JV → subsidiária",
+        "Psychic distance: distância percebida (língua, instituições, práticas de negócio, cultura)",
+        "Psychic distance ≠ distância geográfica — Portugal-Brasil baixa, Portugal-Japão alta",
+        "Empresa entra primeiro em países próximos, depois salta para distantes",
+        "Uppsala 2.0 (2009): entrada via networks (clientes, fornecedores, parceiros)",
+        "Bons Globals (Spotify, Skype) desafiam o modelo — entrada multi-mercado desde o início",
+        "Implicação prática: recursos limitados → começar por mercados psicologicamente próximos"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Caso IKEA: a IKEA seguiu quase literalmente o modelo Uppsala. Entrou primeiro na Noruega (1963) e Dinamarca (1969) — países próximos culturalmente da Suécia. Depois expandiu para Suíça (1973), Alemanha (1974), Austrália (1975), Canadá (1976), EUA (1985), Japão (1974), Itália (1989), China (1998), Japão (2006 re-entrada), Índia (2018). A entrada em mercados culturalmente distantes (China, Índia) foi feita com joint venture ou adaptações profundas do modelo — porque o modelo de 'flat-pack + showroom' tinha de ser adaptado a hábitos locais (na China, por exemplo, a IKEA teve de oferecer serviço de entrega ao domicílio porque os chineses não transportavam eles mesmos os móveis)."
+    },
+    {
+      "type": "h2",
+      "text": "Transaction cost analysis: internalizar vs transaccionar"
+    },
+    {
+      "type": "p",
+      "text": "Transaction cost economics (Williamson, 1985; aplicado ao internacional por Anderson & Coughlan, 1987 e Hennart, 1982) analisa a escolha do modo de entrada como decisão make-or-buy. A pergunta central: vale a pena internalizar a operação no país-alvo (subsidiária integral) ou é mais eficiente transaccionar via mercado (exportação, licensing, franchising)? A resposta depende de três atributos da transacção: (1) Especificidade dos activos — quanto mais específicos (tecnologia proprietária, marca forte, processo único, capital humano especializado), maior a vantagem de internalizar para evitar expropriação pelo parceiro. Exemplo: a Coca-Cola internaliza (subsidiária integral) porque a fórmula é altamente específica. (2) Incerteza — quanto maior a incerteza (câmbio, política, procura), maior a vantagem de internalizar para evitar ser apanhado em posições contratuais desvantajosas. (3) Frequência — quanto maior a frequência das transacções, maior a vantagem de internalizar (custos fixos da subsidiária diluem-se). Regra prática: activos específicos + alta incerteza + alta frequência → internalizar (subsidiária). Activos genéricos + baixa incerteza + baixa frequência → transaccionar (exportar ou licenciar). O modelo explica porque empresas high-tech tendem a internalizar em mercados desenvolvidos (defesa da IP) mas licenciam em mercados com fraca proteção de IP (emergentes com pirataria)."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Pergunta: internalizar (subsidiária) ou transaccionar (exportar/licenciar)?",
+        "Atributo 1: especificidade dos activos — alta → internalizar",
+        "Atributo 2: incerteza (câmbio, política, procura) — alta → internalizar",
+        "Atributo 3: frequência — alta → internalizar (custos fixos diluem-se)",
+        "Activos específicos: tecnologia proprietária, marca forte, processo único, know-how",
+        "Exemplo: Coca-Cola internaliza porque fórmula é altamente específica",
+        "Exemplo high-tech: internaliza em desenvolvidos (defesa IP), licencia em emergentes (pirataria)",
+        "Regra: específicos + alta incerteza + alta frequência = subsidiária"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Dunning OLI paradigm e FDI greenfield vs acquisition"
+    },
+    {
+      "type": "p",
+      "text": "O Dunning OLI paradigm (Dunning, 1988, 'The Eclectic Paradigm of International Production') explica por que algumas empresas escolhem FDI (Foreign Direct Investment) — subsidiária integral — em vez de modos menos intensos. Três condições devem estar reunidas: (1) Ownership advantage — a empresa tem activos proprietários que dão vantagem (tecnologia, marca, processo, gestão). Sem isto, não vale a pena investir no exterior. (2) Location advantage — o país-alvo tem vantagens específicas (mercado grande, recursos naturais, mão-de-obra barata, custos de produção baixos, regime fiscal favorável) que justifiquem produzir lá. Sem isto, exportar ou licenciar seria suficiente. (3) Internalization advantage — internalizar a operação é mais eficiente do que vender/licenciar esses activos a terceiros. Razões: protecção de IP, controlo de qualidade,回避 de falhas de mercado (imperfect information, opportunism). Quando O+L+I estão presentes, FDI é a escolha óptima. FDI pode ser greenfield (construir de raiz — fábrica, escritório, retalho) ou acquisition (M&A — comprar empresa local existente). Greenfield: vantagem de construir exactamente o que se quer; desvantagem: mais lento (2-5 anos), maior risco, sem marca local ou rede de clientes pré-existente. Acquisition: vantagem de speed-to-market, marca local, rede de distribuição, conhecimento regulatório; desvantagem: integração cultural difícil, pagamento de goodwill/premium, herança de passivo (legacy liabilities). A escolha greenfield vs acquisition depende do tempo disponível, do valor da marca local, do custo de aquisição vs greenfield e da capacidade de integração cultural."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "OLI paradigm (Dunning 1988): Ownership + Location + Internalization advantages",
+        "O: ownership advantage — activos proprietários (tecnologia, marca, processo)",
+        "L: location advantage — país-alvo tem atractivos específicos (mercado, recursos, custos)",
+        "I: internalization advantage — internalizar é mais eficiente que licenciar",
+        "Quando O+L+I presentes → FDI (subsidiária integral)",
+        "FDI greenfield: construir de raiz — exactamente o que se quer, mas mais lento",
+        "FDI acquisition: M&A local — speed-to-market, marca local, conhecimento regulatório",
+        "Desvantagem acquisition: integração cultural, goodwill premium, legacy liabilities",
+        "Critério greenfield vs acquisition: tempo, valor da marca local, custo, capacidade de integração"
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Born globals e alliance estratégica: alternativas ao modelo Uppsala"
+    },
+    {
+      "type": "p",
+      "text": "Os Born Globals (Oviatt & McDougall, 1994, 'Toward a Theory of International New Ventures') são empresas que, desde a fundação ou poucos anos após, competem em múltiplos países — desafiando o modelo Uppsala de entrada incremental. Exemplos: Logitech (fundada 1981 na Suíça, vendas globais desde o início), Skype (2003, global desde o início), Spotify (2008, presente em 180+ países desde cedo), Klarna (2005, presente em múltiplos países europeus desde cedo). Os Born Globals são típicos em sectores de: (1) alta tecnologia (onde activos intangíveis viajam facilmente), (2) plataformas digitais (rede effects são globais por natureza), (3) design e moda (criatividade vende-se globalmente), (4) software/SaaS (deployment é trivial além-fronteiras). As características dos Born Globals incluem: founders com experiência internacional prévia, redes globais desde o dia 1, mentalidade global, uso intensivo de digital, time-to-internationalization muito curto. A aliança estratégica é outra alternativa ao modelo clássico: cooperação com outra empresa sem criar equity conjunto (ex: code-sharing em aviação, joint R&D em farmacêutica, redes de distribuição partilhadas em bens de consumo). Vantagens da aliança: baixo custo, flexibilidade, acesso a competências complementares. Desvantagens: free-rider risk, alinhamento difícil, partilha de informação sensível. Airbus é um exemplo extremo — aliança estratégica formalizada como consortium entre vários países europeus. O modelo Born Global e a aliança estratégica são os caminhos preferidos quando a empresa quer ou precisa de presença internacional rápida e não pode esperar pela sequência Uppsala."
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Born Globals (Oviatt & McDougall 1994): empresas globais desde a fundação ou cedo",
+        "Exemplos: Logitech, Skype, Spotify, Klarna",
+        "Sectores típicos: alta tecnologia, plataformas digitais, design/moda, SaaS",
+        "Características: founders com experiência internacional, redes globais, mentalidade global",
+        "Desafiam o modelo Uppsala — entrada multi-mercado desde o início",
+        "Alliance estratégica: cooperação sem equity (code-share, joint R&D, redes)",
+        "Airbus: aliança formal entre países europeus para desenvolver aviões",
+        "Vantagem aliança: baixo custo, flexibilidade, competências complementares",
+        "Risco aliança: free-rider, alinhamento difícil, partilha de info sensível",
+        "Próxima lição: como a cultura molda decisões em negócios internacionais (Hofstede)"
+      ]
+    }
+  ],
+  "keyPoints": [
+    "7 modos de entrada (Root 1994): exportação indirecta, directa, licensing, franchising, JV, subsidiária, aliança",
+    "Ordem crescente: investimento, risco e controlo",
+    "Uppsala model (Johanson-Vahlne 1977): entrada incremental via psychic distance",
+    "Psychic distance: língua, instituições, cultura, práticas de negócio",
+    "Uppsala 2.0 (2009): entrada via networks (clientes, fornecedores, parceiros)",
+    "Transaction cost analysis (Williamson 1985): make-or-buy — específicos+incerteza+frequência → internalizar",
+    "Dunning OLI paradigm (1988): Ownership + Location + Internalization = FDI",
+    "FDI greenfield: construir de raiz — exactamente o que se quer, lento",
+    "FDI acquisition: M&A local — speed-to-market, marca local, integração difícil",
+    "Born Globals (Oviatt-McDougall 1994): globais desde início (Logitech, Spotify, Klarna)",
+    "Sectores Born Global: alta tech, plataformas digitais, design, SaaS",
+    "Alliance estratégica: cooperação sem equity (Airbus, code-share, joint R&D)",
+    "Regra prática: recursos limitados → mercados psicologicamente próximos primeiro"
+  ],
+  "exercises": [
+    {
+      "type": "mc",
+      "question": "Pelo Uppsala model (Johanson & Vahlne 1977), uma empresa deve entrar primeiro em mercados com:",
+      "options": [
+        "Maior dimensão absoluta (PIB)",
+        "Maior distância cultural (para diversificar risco)",
+        "Menor psychic distance (língua, instituições e cultura similares)",
+        "Menor risco político absoluto, ignorando a distância cultural"
+      ],
+      "answer": "C",
+      "explanation": "O Uppsala model propõe entrada incremental começando por mercados com menor psychic distance — países similares em língua, instituições, práticas de negócio e cultura. A empresa aprende e acumula experiência antes de saltar para mercados culturalmente distantes. Países com PIB alto mas muito distantes (ex: Japão para empresa portuguesa) são tipicamente entradas de segunda ou terceira vaga."
+    },
+    {
+      "type": "mc",
+      "question": "Segundo a transaction cost analysis aplicada ao internacional (Williamson, Anderson & Coughlan), uma empresa com TECNOLOGIA PROPRIETÁRIA e MERCADO-ALVO COM ALTA INCERTEZA POLÍTICA tende a escolher:",
+      "options": [
+        "Exportação indirecta (menor compromisso de recursos)",
+        "Licenciamento (royalty passivo)",
+        "Subsidiária integral (internalizar para proteger IP e evitar risco contratual)",
+        "Aliança estratégica sem equity"
+      ],
+      "answer": "C",
+      "explanation": "Activos específicos (tecnologia proprietária) + alta incerteza (risco político) favorecem internalização (subsidiária integral) — porque (a) licenciar expõe a IP a expropriação e (b) a incerteza torna contratos incompletos. Coca-Cola, Procter & Gamble e empresas farmacêuticas seguem este padrão: alta tecnologia proprietária + múltiplos mercados com risco → subsidiária integral ou JV estruturada para proteger IP."
+    },
+    {
+      "type": "mc",
+      "question": "O Dunning OLI paradigm (1988) diz que o FDI (subsidiária integral) é óptimo quando a empresa tem:",
+      "options": [
+        "Apenas Ownership advantage (tecnologia própria)",
+        "Apenas Location advantage (país atractivo)",
+        "Apenas Internalization advantage (controlo é melhor)",
+        "As três: Ownership + Location + Internalization"
+      ],
+      "answer": "D",
+      "explanation": "Dunning (1988) argumenta que as três condições devem estar presentes: O (Ownership — activos proprietários como tecnologia/marca), L (Location — país atractivo por mercado/recursos/custos) e I (Internalization — internalizar é mais eficiente que licenciar). Se faltar uma, outro modo (exportação, licenciamento, JV) é preferível. É o 'eclectic paradigm' porque combina Ownership (teoria de Hymer/Kindleberger), Location (teoria do comércio internacional) e Internalization (teoria dos custos de transacção)."
+    }
+  ],
+  "quizSlug": "mkq",
+  "nextLesson": "04-cultura-diplomacia-corporativa",
+  "prevLesson": "02-mix-global-4ps"
+}

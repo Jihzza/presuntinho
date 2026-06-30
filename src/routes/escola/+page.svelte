@@ -80,17 +80,29 @@
       badge: 'Novo'
     },
     {
-      slug: 'estrategia-corporativa',
-      title: 'Estratégia Corporativa Avançada',
-      tagline: 'Business Administration Avançado · Análise externa (PESTEL, 5 Forces, value chain), análise interna (VRIO, McKinsey 7S), estratégias corporativas (Ansoff, BCG, integração) e implementação (BSC, OKRs)',
-      description:
-        'A cadeira avançada de estratégia para decisores C-level: análise externa profunda (PESTEL, Porter Five Forces, value chain, strategic groups), análise interna baseada em recursos (VRIO, RBV, SWOT estratégico, McKinsey 7S), estratégias corporativas (Ansoff, BCG e GE-McKinsey portfolio, integração vertical/horizontal, diversificação), e implementação (Balanced Scorecard, OKRs, McKinsey 7S, strategic control e change management).',
-      icon: '🧭',
-      color: '#f97316',
-      lessonCount: 4,
-      quizCount: 1,
-      badge: 'Advanced'
-    },
+          slug: 'estrategia-corporativa',
+          title: 'Estratégia Corporativa Avançada',
+          tagline: 'Business Administration Avançado · Análise externa (PESTEL, 5 Forces, value chain), análise interna (VRIO, McKinsey 7S), estratégias corporativas (Ansoff, BCG, integração) e implementação (BSC, OKRs)',
+          description:
+            'A cadeira avançada de estratégia para decisores C-level: análise externa profunda (PESTEL, Porter Five Forces, value chain, strategic groups), análise interna baseada em recursos (VRIO, RBV, SWOT estratégico, McKinsey 7S), estratégias corporativas (Ansoff, BCG e GE-McKinsey portfolio, integração vertical/horizontal, diversificação), e implementação (Balanced Scorecard, OKRs, McKinsey 7S, strategic control e change management).',
+          icon: '🧭',
+          color: '#f97316',
+          lessonCount: 4,
+          quizCount: 1,
+          badge: 'Advanced'
+        },
+        {
+          slug: 'marketing-internacional',
+          title: 'Marketing Internacional',
+          tagline: 'Business Administration · STP global, mix 4Ps internacional, modos de entrada, Hofstede e diplomacia corporativa',
+          description:
+            'A cadeira aplicada de marketing internacional: como segmentar mercados-país (country markets, intermarket vs intra-market), targeting (undifferentiated, concentrated, differentiated, micromarketing mix) e posicionamento global. Como adaptar o marketing-mix a múltiplos países — produto (adaptação vs padronização, country-of-origin effects), preço (dumping, transfer pricing, currency hedging, PPP), praça (exportação indirecta/direta, JV, subsidiárias) e promoção (glocal messaging). Como escolher modos de entrada (exportação, licensing, franchising, joint ventures, subsidiárias integrais, FDI greenfield vs acquisition, alliances, born globals), enquadrados pelos modelos Uppsala e transaction cost analysis. E como navegar diferenças culturais em negócios internacionais — Hofstede 6 dimensões (PDI, IDV, MAS, UAI, LTO, IND), CSAs (cultural sensitives), estratégias glocal, diplomacia corporativa e soft power.',
+          icon: '🌍',
+          color: '#0ea5e9',
+          lessonCount: 4,
+          quizCount: 1,
+          badge: 'Uni'
+        },
     {
       slug: 'gestao-financeira',
       title: 'Gestão Financeira',
