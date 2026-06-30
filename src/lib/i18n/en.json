@@ -1015,5 +1015,10 @@
         }
       }
     }
-  }
+  },
+  "routes.escola.curso.gestao-risco.description": "Enterprise risk management applied to business: foundations (Knight's definition of risk, strategic/operational/financial/compliance typology, appetite vs tolerance), identification and analysis (brainstorming, Delphi, SWOT, scenario analysis, probability×impact matrices, heatmaps), response and mitigation (4T strategy — Tolerate, Treat, Transfer, Terminate — insurance, hedging, diversification, BCP/DRP), and the main frameworks and standards (ISO 31000 with a 5-step process, COSO ERM 2017 with 5 components and 20 principles, Basel III for credit/market/operational risk, and ESG/climate reporting via TCFD and CSRD).",
+  "routes.escola.curso.gestao-risco.tagline": "Business Administration · ISO 31000, COSO ERM, Basel III and TCFD — identify, analyse and respond to enterprise risks",
+  "routes.escola.curso.gestao-risco.title": "Risk Management",
+  "routes.aulas.curso.gestao-risco.tagline": "Business Administration · ISO 31000, COSO ERM, Basel III and TCFD — identify, analyse and respond to enterprise risks",
+  "routes.aulas.curso.gestao-risco.title": "Risk Management"
 }

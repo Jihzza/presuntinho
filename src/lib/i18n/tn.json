@@ -1015,5 +1015,10 @@
         }
       }
     }
-  }
+  },
+  "routes.escola.curso.gestao-risco.description": "Tadhbir l-moukhatarat moutabbaq 3la l-idara: assasiyyat (ta3rif l-moukhatara 3la Knight, tansiq strategik/3amaliyat/mali/ilmoutabiq, l-chahwa vs tassahul), t-tachkhis w t-tahlil (brainstorming, Delphi, SWOT, tahlil l-sinariouhat, matarat l-ihtimal×l-athar, heatmaps), radd w tkhfif (istratijia 4T — Tolerate, Treat, Transfer, Terminate — ta3min, hedging, tanawou3, BCP/DRP), w l-frameworks w lwouaris l-ra2isiyya (ISO 31000 bi 5 marhalaat, COSO ERM 2017 bi 5 3ounasir w 20 mabda, Basileia III li moukhatirat l-i3timan/souq/3amaliyat, w ta9rir ESG/clima 3an tari9 TCFD w CSRD).",
+  "routes.escola.curso.gestao-risco.tagline": "Business Administration · ISO 31000, COSO ERM, Basileia III w TCFD — tachkhis, tahlil w radd lil-moukhatirat",
+  "routes.escola.curso.gestao-risco.title": "Tadhbir l-Moukhatarat",
+  "routes.aulas.curso.gestao-risco.tagline": "Business Administration · ISO 31000, COSO ERM, Basileia III w TCFD — tachkhis, tahlil w radd lil-moukhatirat",
+  "routes.aulas.curso.gestao-risco.title": "Tadhbir l-Moukhatarat"
 }

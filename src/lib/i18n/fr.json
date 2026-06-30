@@ -1015,5 +1015,10 @@
         }
       }
     }
-  }
+  },
+  "routes.escola.curso.gestao-risco.description": "Gestion des risques appliquée au management d'entreprise : fondamentaux (définition du risque selon Knight, typologie stratégique/opérationnel/financier/conformité, appétit vs tolérance), identification et analyse (brainstorming, Delphi, SWOT, analyse de scénarios, matrices probabilité×impact, heatmaps), réponse et atténuation (stratégie 4T — Tolerate, Treat, Transfer, Terminate — assurances, hedging, diversification, BCP/DRP), et les principaux cadres et normes (ISO 31000 avec processus en 5 étapes, COSO ERM 2017 avec 5 composants et 20 principes, Bâle III pour les risques de crédit/marché/opérationnels, et reporting ESG/climatique via TCFD et CSRD).",
+  "routes.escola.curso.gestao-risco.tagline": "Business Administration · ISO 31000, COSO ERM, Bâle III et TCFD — identifier, analyser et répondre aux risques d'entreprise",
+  "routes.escola.curso.gestao-risco.title": "Gestion des Risques",
+  "routes.aulas.curso.gestao-risco.tagline": "Business Administration · ISO 31000, COSO ERM, Bâle III et TCFD — identifier, analyser et répondre aux risques d'entreprise",
+  "routes.aulas.curso.gestao-risco.title": "Gestion des Risques"
 }
