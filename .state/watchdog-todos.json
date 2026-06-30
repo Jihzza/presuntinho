@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-30T22:30:00+02:00",
+  "lastUpdated": "2026-07-01T00:05:00+02:00",
   "openItems": [
     {
       "id": "gap-028",
@@ -73,9 +73,48 @@
       "severity": "baixa",
       "source": "skander1-gap-127-2026-06-30",
       "created_at": "2026-06-30T19:30:00+02:00"
+    },
+    {
+      "id": "gap-144",
+      "category": "smoke-fail",
+      "description": "Confirmar live smoke da i18n agente engine em produção após deploy 0bc1596: navegar /agente/, clicar 'o que falta?', 'resumo financeiro', 'hábitos', 'progresso' e confirmar zero string PT hardcoded leak quando idioma != pt-PT. Live-fire bloqueado por auth gate — curl só dá /agente/ page shell (engine messages render client-side after tool dispatch). Pular se Daniel não nos der password.",
+      "severity": "média",
+      "source": "watchdog-tick-2026-07-01",
+      "created_at": "2026-07-01T00:05:00+02:00"
+    },
+    {
+      "id": "gap-145",
+      "category": "feature-pedida-pelo-Daniel",
+      "description": "Daniel pediu 'cursos sobretudo' / 'aulas sobretudo' — ir além das 49 cadeiras BA. Sugestão Skander 1: continuar com cadeiras BA satélites (Sistemas de Informação de Gestão, Comportamento do Consumidor, Gestão da Mudança, Análise Financeira Empresarial já shipped) OU novas cadeiras PT universitárias (ex: Sociologia das Organizações, Antropologia Cultural para módulo Arabe). Trial: acrescentar 1 curso 'Sociologia das Organizações' para benchmarking — 4 lições + i18n + 1 quiz.",
+      "severity": "baixa",
+      "source": "audio-Daniel-2026-06-27",
+      "created_at": "2026-07-01T00:05:00+02:00",
+      "note": "Pending Skander 1 design choice. 47 BA entregues."
     }
   ],
   "closedItems": [
+    {
+      "id": "gap-141",
+      "category": "i18n",
+      "description": "Engine do agente em PT-hardcoded. Despachar i18n tools.ts + engine.ts para 5 locales.",
+      "severity": "média",
+      "source": "audit-i18n-tick-2026-06-30",
+      "created_at": "2026-06-30T22:35:00+02:00",
+      "closed_at": "2026-07-01T00:05:00+02:00",
+      "sha": "0bc1596",
+      "note": "feat(agente) gap-143 i18n agent engine — 47 keys × 5 locales = 235 entries. Paridade 1041 keys × 5 locales = 5205. tools.ts: pending/suggestions → Localised{key, params}. engine.ts: tt()/renderLoc()/render() helpers via get(t)() com PT inline fallback. Auditoria: .state/_gap143-verify-keys.py. npm run check 0/0, npm run build verde."
+    },
+    {
+      "id": "gap-143",
+      "category": "i18n",
+      "description": "Routes agente.engine.* keys parity 5 locales.",
+      "severity": "média",
+      "source": "i18n-audit-pre-tick-2026-07-01",
+      "created_at": "2026-06-30T23:55:00+02:00",
+      "closed_at": "2026-07-01T00:05:00+02:00",
+      "sha": "0bc1596",
+      "note": "feat(agente) i18n engine parity 1041/1041 — same commit as gap-141."
+    },
     {
       "id": "gap-142",
       "category": "i18n",
