@@ -1,0 +1,17 @@
+{
+  "slug": "gestao-projectos",
+  "title": "Gestão de Projectos",
+  "category": "BA",
+  "level": "intermediate",
+  "estMinutes": 36,
+  "icon": "📋",
+  "color": "#0d9488",
+  "description": "Gestão de projectos aplicada à gestão empresarial: fundamentos (definição de projecto, triângulo de ferro scope/time/cost/quality, stakeholders, ciclo de vida em 5 fases, charter), frameworks tradicionais (PMBOK do PMI em 5 grupos de processos × 10 áreas de conhecimento, WBS, Gantt, caminho crítico, EVM, compressão), metodologias ágeis (Manifesto Ágil, Scrum com 3 papéis e 5 eventos, Kanban com WIP limits, Extreme Programming, scaling com SAFe/LeSS/Nexus), e ferramentas práticas e gestão (MS Project, Primavera, Jira; risk management de projecto com estratégia 4T; stakeholder mapping; casos paradigmáticos como Apollo, iPhone, NHS NPfIT, Boeing 787; certificações PMP/PRINCE2/CSM).",
+  "tagline": "Business Administration · PMBOK, Scrum, Kanban, WBS, caminho crítico, EVM e certificações PMP/PRINCE2 — do planeamento à entrega",
+  "lessons": [
+    { "slug": "1-fundamentos-projecto-e-ciclo-vida", "title": "1. Fundamentos de Projecto e Ciclo de Vida", "summary": "O que é um projecto vs operação vs programa vs portfólio, atributos do triângulo de ferro, stakeholders e matriz de Mendelow, ciclo de vida em 5 fases, project charter e critérios de sucesso.", "quizSlug": "gpq", "estMinutes": 9 },
+    { "slug": "2-pmbok-e-processos-tradicionais", "title": "2. PMBOK, Processos Tradicionais e WBS", "summary": "PMBOK do PMI em 5 grupos de processos × 10 áreas de conhecimento, WBS como decomposição de entregáveis, Gantt, caminho crítico (CPM) e PERT, compressão por fast-tracking e crashing, e Earned Value Management.", "quizSlug": "gpq", "estMinutes": 9 },
+    { "slug": "3-metodologias-ageis-scrum", "title": "3. Metodologias Ágeis, Scrum, Kanban e o Manifesto Ágil", "summary": "Manifesto Ágil e os 12 princípios, Scrum com 3 papéis (PO, SM, Developers) e 5 eventos, Kanban com WIP limits e lead time, Extreme Programming (TDD, pair programming, continuous integration), e scaling ágil com SAFe/LeSS/Nexus.", "quizSlug": "gpq", "estMinutes": 9 },
+    { "slug": "4-ferramentas-praticas-e-casos", "title": "4. Ferramentas Práticas, Gestão de Risco e Casos Reais", "summary": "Ferramentas (MS Project, Primavera, Jira, Asana, OpenProject), risk management de projecto com estratégia 4T, stakeholder mapping, casos paradigmáticos (Apollo, iPhone, Canal da Mancha; NHS NPfIT, FBI VCF, Boeing 787), e certificações PMP/PRINCE2/CSM/SAFe.", "quizSlug": "gpq", "estMinutes": 9 }
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "id": "gpq",
+  "title": "Quiz: Gestão de Projectos",
+  "description": "Testa os teus conhecimentos em gestão de projectos: fundamentos (definição de projecto, triângulo scope/time/cost/quality, stakeholders e matriz de Mendelow, ciclo de vida em 5 fases), PMBOK e processos tradicionais (5 grupos de processos × 10 áreas de conhecimento, WBS, Gantt, caminho crítico, EVM, fast-tracking vs crashing), metodologias ágeis (Manifesto Ágil, Scrum com 3 papéis e 5 eventos, Kanban com WIP limits, XP, scaling com SAFe), ferramentas (MS Project, Jira, Asana), gestão de risco em projectos (estratégia 4T), e certificações (PMP, PRINCE2, CSM). 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "questions": [
+    {
+      "q": "Qual das seguintes é a melhor definição de 'projecto' em gestão empresarial?",
+      "opts": [
+        "Qualquer trabalho realizado por uma empresa, independentemente de ter fim definido",
+        "Esforço temporário empreendido para criar um produto, serviço ou resultado único",
+        "Conjunto de actividades operacionais que se repetem diariamente numa organização",
+        "Programa de longo prazo sem horizonte de conclusão definido"
+      ],
+      "a": 1,
+      "explanation": "PMBOK (PMI) define projecto como 'esforço temporário empreendido para criar um produto, serviço ou resultado único'. Temporário significa início e fim definidos; único significa que o resultado é distinto de qualquer outro anterior. Isto distingue projecto de operação (contínua e repetitiva) e de programa (conjunto de projectos coordenados). Confundir projecto com 'qualquer trabalho' é erro comum de quem nunca estudou a disciplina formalmente — operacionalizar a distinção é a base conceptual de toda a gestão de projectos."
+    },
+    {
+      "q": "No 'triângulo de ferro' (iron triangle) da gestão de projectos, qual é o trade-off fundamental?",
+      "opts": [
+        "Lucro vs volume de vendas — não há relação com atributos do projecto",
+        "Scope, time e cost — qualquer compressão de um atributo exige expansão de outro ou redução de qualidade",
+        "Stakeholders internos vs externos — equilíbrio de interesses contraditórios",
+        "Recursos humanos vs materiais — alocação entre pessoas e equipamentos"
+      ],
+      "a": 1,
+      "explanation": "O triângulo de ferro articula o trade-off entre Scope (âmbito), Time (prazo) e Cost (custo). Comprimir o prazo (reduzir tempo) exige tipicamente mais pessoas (aumentar custo) ou menos funcionalidade (reduzir scope). A qualidade é influenciada pelos três e é sacrificada quando os três são comprimidos simultaneamente. Esta articulação é operacionalizada em 'fast-tracking' (executar actividades em paralelo) e 'crashing' (adicionar recursos). Memorizar o trade-off é básico em qualquer framework — pergunta testa vocabulário fundamental."
+    },
+    {
+      "q": "Na matriz de análise de stakeholders de Mendelow (poder × interesse), stakeholders com alto poder mas baixo interesse devem ser tratados como:",
+      "opts": [
+        "Monitorizar — gastar pouco esforço, estão descontentes",
+        "Manter satisfeitos — informá-los regularmente, mas não os consultar",
+        "Manter informados — comunicação frequente mas não personalizada",
+        "Gerir de perto — engagement activo e contínuo"
+      ],
+      "a": 1,
+      "explanation": "A matriz de Mendelow classifica stakeholders em 4 quadrantes: baixo poder + baixo interesse = monitorizar (esforço mínimo); alto poder + baixo interesse = manter satisfeitos (informação regular); baixo poder + alto interesse = manter informados (comunicação frequente); alto poder + alto interesse = gerir de perto (engagement activo contínuo). A lógica: alto poder significa que podem bloquear o projecto mesmo sem estar muito interessados; baixo interesse significa que gastar tempo em engagement profundo é ineficiente. Manter satisfeitos é a estratégia óptima — não os ignorar (podem bloquear), nem os consultar obsessivamente (custo sem retorno)."
+    },
+    {
+      "q": "No PMBOK 6ª edição (ainda muito usado em certificação PMP), quantos grupos de processos e áreas de conhecimento existem, e qual o número total de processos?",
+      "opts": [
+        "3 grupos × 8 áreas = 24 processos",
+        "5 grupos × 10 áreas = 49 processos",
+        "7 grupos × 12 áreas = 84 processos",
+        "8 domínios × 12 princípios = 96 processos"
+      ],
+      "a": 1,
+      "explanation": "PMBOK 6ª edição (2017) estrutura os processos em 5 grupos (Initiating, Planning, Executing, Monitoring/Controlling, Closing) × 10 áreas de conhecimento (Integração, Âmbito, Cronograma, Custos, Qualidade, Recursos, Comunicações, Risco, Procurement, Stakeholders) = 49 processos. A 7ª edição (2021) abandonou esta estrutura e adoptou 8 domínios de desempenho + 12 princípios (sem contagem fixa de processos). Confundir as duas edições é armadilha frequente em exames — a pergunta testa especificamente o conhecimento da versão ainda dominante em formação académica."
+    },
+    {
+      "q": "Na Work Breakdown Structure (WBS), qual é a decomposição correcta?",
+      "opts": [
+        "Decomposição por ACTIVIDADES — listar cada tarefa a executar (ex: betonar, pintar, instalar)",
+        "Decomposição por ENTREGÁVEIS — listar cada produto ou resultado (ex: estrutura, fachada, instalações)",
+        "Decomposição por RESPONSABILIDADES — listar cada departamento ou pessoa envolvida",
+        "Decomposição por FASES TEMPORAIS — listar cada mês ou semana do projecto"
+      ],
+      "a": 1,
+      "explanation": "A WBS decompõe ENTREGÁVEIS, não actividades. 'Construir edifício' decompõe-se em estrutura, fachada, instalações, acabamentos — não em escavar, betonar, levantar parede. Cada work package da WBS é depois decomposto em actividades no cronograma. Confundir WBS com lista de tarefas é o erro mais frequente em certificação PMP — a regra 8/80 (8-80 horas por work package) ajuda a calibrar o nível de detalhe. A WBS é input para o cronograma; cada pacote da WBS decompõe-se em actividades sequenciadas e duradas."
+    },
+    {
+      "q": "Qual é a diferença entre fast-tracking e crashing como técnicas de compressão de cronograma?",
+      "opts": [
+        "Fast-tracking adiciona recursos humanos; crashing executa actividades em paralelo",
+        "Fast-tracking executa actividades em paralelo (aumenta risco); crashing adiciona recursos (aumenta custo)",
+        "Fast-tracking reduz âmbito; crashing reduz qualidade",
+        "São sinónimos — ambas comprimem cronograma da mesma forma"
+      ],
+      "a": 1,
+      "explanation": "Fast-tracking comprime cronograma executando actividades em paralelo que originalmente seriam sequenciais (ex: iniciar acabamentos antes de estrutura completa). Aumenta risco de retrabalho e coordenação mas não custa tanto. Crashing comprime cronograma adicionando recursos a actividades do caminho crítico (ex: turno duplo, subcontratação). Aumenta custo mas mantém sequência lógica. A escolha depende do trade-off específico: fast-tracking é preferido quando há margem de retrabalho e pressão de prazo baixa; crashing é preferido quando há pressão financeira e qualidade não pode ser sacrificada. Confundir as duas técnicas é erro básico em gestão de projectos."
+    },
+    {
+      "q": "Na métrica Earned Value Management (EVM), um CPI (Cost Performance Index) de 0.85 num projecto que está a meio significa:",
+      "opts": [
+        "O projecto está 15% acima do orçamento e vai provavelmente terminar 18% acima (EAC ≈ orçamento/CPI)",
+        "O projecto está 15% abaixo do orçamento e vai provavelmente terminar 15% abaixo",
+        "O projecto está 85% completo em termos de cronograma",
+        "CPI < 1 significa que o projecto está adiantado em termos de prazo"
+      ],
+      "a": 0,
+      "explanation": "CPI = EV (Earned Value) / AC (Actual Cost). CPI = 0.85 significa que para cada €1 gasto, só €0.85 de trabalho foi concluído (ineficiência de 15%). Assumindo que esta tendência persiste, EAC (Estimate at Completion) ≈ orçamento total / CPI = orçamento / 0.85 ≈ orçamento × 1.18 (18% acima). Esta previsão permite ao gestor reagir antes do orçamento esgotar — renegociar âmbito, adicionar recursos a actividades ineficientes, ou escalar a sponsor. EVM é a única framework que integra custo, prazo e âmbito em métricas objectivas; sem ela, a derrapagem só é visível quando o dinheiro acaba."
+    },
+    {
+      "q": "No Scrum, qual é a responsabilidade central do Product Owner (PO)?",
+      "opts": [
+        "Gerir a equipa de desenvolvimento e atribuir tarefas diárias",
+        "Remover impedimentos e facilitar cerimónias Scrum",
+        "Maximizar o valor do produto resultante do trabalho da equipa, gerindo o Product Backlog",
+        "Implementar as práticas técnicas de Extreme Programming (TDD, pair programming)"
+      ],
+      "a": 2,
+      "explanation": "O Product Owner (PO) é responsável por maximizar o valor do produto resultante do trabalho da equipa Scrum. Mantém o Product Backlog priorizado, aceita ou rejeita trabalho, e representa a voz do cliente e do negócio. É uma pessoa (não comité) com autoridade para decidir o que entra ou sai do backlog. Confundir PO com Scrum Master é frequente: SM é servant-leader que remove impedimentos e facilita cerimónias (não atribui tarefas). Confundir PO com chefe de equipa também é erro comum — o PO não gere developers, prioriza o que a equipa entrega. Esta distinção é central na certificação Professional Scrum Master."
+    },
+    {
+      "q": "Qual das seguintes NÃO é uma estratégia clássica de resposta a riscos em projectos (estratégia 4T)?",
+      "opts": [
+        "Tolerar (aceitar activamente o risco com monitorização)",
+        "Tratar (implementar controlos para reduzir probabilidade ou impacto)",
+        "Transferir (seguro, hedging, subcontratação para terceiros)",
+        "Testar (submeter o risco a testes empíricos antes de qualquer resposta)"
+      ],
+      "a": 3,
+      "explanation": "As 4T para responder a AMEAÇAS são: Tolerar, Tratar, Transferir, Terminar. 'Testar' não é uma das 4T — testes podem ser parte da monitorização (revisão periódica do plano) mas não constituem uma estratégia autónoma de resposta. Para OPORTUNIDADES, a estratégia equivalente é 4E: Exploit (garantir que acontece), Enhance (aumentar probabilidade/impacto), Share (partilhar com parceiro), Accept (aceitar passivamente). Esta simetria (4T para ameaças, 4E para oportunidades) é frequentemente testada em certificação PMP — confundir Testar com 4T é a pegadinha clássica."
+    },
+    {
+      "q": "Qual destas certificações profissionais de gestão de projectos é dominada por contractos públicos europeus (especialmente UK, Alemanha, Países Baixos)?",
+      "opts": [
+        "PMP (Project Management Professional, PMI) — global, ~1M de certificados",
+        "PRINCE2 (Projects IN Controlled Environments, PeopleCert) — originário do governo britânico",
+        "CSM (Certified ScrumMaster, Scrum Alliance) — específico de Scrum",
+        "CAPM (Certified Associate in Project Management, PMI) — entry-level"
+      ],
+      "a": 1,
+      "explanation": "PRINCE2 (Projects IN Controlled Environments) foi desenvolvido pelo governo britânico nos anos 1980-90 e tornou-se standard de facto em contractos públicos europeus, especialmente UK, Alemanha e Países Baixos. Tem 7 princípios, 7 temas e 7 processos, com forte ênfase em governance e business case. PMP (PMI) é globalmente dominante e preferido em empresas privadas e consultoria. CSM/PSM (Scrum Alliance/Scrum.org) é específico de Scrum e valorizado em produto digital. CAPM é entry-level do PMI. Para um BA português a trabalhar com Administração Pública europeia, PRINCE2 é o complemento natural ao PMP."
+    }
+  ]
+}

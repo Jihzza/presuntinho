@@ -524,18 +524,30 @@
                                   badge: 'Uni'
                                 },
                                 {
-                                  slug: 'analise-investimentos',
-                                  title: 'Análise de Investimentos',
-                                  tagline: 'Business Administration · Capital budgeting, VPL/TIR, risco, custo de capital',
-                                  description:
-                                    'Avaliação económica de projectos de investimento: cash flows, VPL, TIR, payback, análise de risco e incerteza (sensibilidade, Monte Carlo, opções reais), custo de capital WACC e estrutura óptima de financiamento.',
-                                  icon: '💰',
-                                  color: '#059669',
-                                  lessonCount: 4,
-                                  quizCount: 1,
-                                  badge: 'Uni'
-                                }
-                              ];
+                                      slug: 'analise-investimentos',
+                                      title: 'Análise de Investimentos',
+                                      tagline: 'Business Administration · Capital budgeting, VPL/TIR, risco, custo de capital',
+                                      description:
+                                        'Avaliação económica de projectos de investimento: cash flows, VPL, TIR, payback, análise de risco e incerteza (sensibilidade, Monte Carlo, opções reais), custo de capital WACC e estrutura óptima de financiamento.',
+                                      icon: '💰',
+                                      color: '#059669',
+                                      lessonCount: 4,
+                                      quizCount: 1,
+                                      badge: 'Uni'
+                                    },
+                                    {
+                                      slug: 'gestao-projectos',
+                                      title: 'Gestão de Projectos',
+                                      tagline: 'Business Administration · PMBOK, Scrum, Kanban, WBS, caminho crítico, EVM e certificações PMP/PRINCE2 — do planeamento à entrega',
+                                      description:
+                                        'Gestão de projectos aplicada à gestão empresarial: fundamentos (definição de projecto, triângulo de ferro scope/time/cost/quality, stakeholders, ciclo de vida em 5 fases, charter), frameworks tradicionais (PMBOK do PMI em 5 grupos de processos × 10 áreas de conhecimento, WBS, Gantt, caminho crítico, EVM, compressão), metodologias ágeis (Manifesto Ágil, Scrum com 3 papéis e 5 eventos, Kanban com WIP limits, Extreme Programming, scaling com SAFe/LeSS/Nexus), e ferramentas práticas e gestão (MS Project, Primavera, Jira; risk management de projecto com estratégia 4T; stakeholder mapping; casos paradigmáticos como Apollo, iPhone, NHS NPfIT, Boeing 787; certificações PMP/PRINCE2/CSM).',
+                                      icon: '📋',
+                                      color: '#0d9488',
+                                      lessonCount: 4,
+                                      quizCount: 1,
+                                      badge: 'Uni'
+                                    }
+                                  ];
 </script>
 
 <svelte:head>

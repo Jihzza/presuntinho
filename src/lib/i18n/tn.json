@@ -1020,5 +1020,12 @@
   "routes.escola.curso.gestao-risco.tagline": "Business Administration · ISO 31000, COSO ERM, Basileia III w TCFD — tachkhis, tahlil w radd lil-moukhatirat",
   "routes.escola.curso.gestao-risco.title": "Tadhbir l-Moukhatarat",
   "routes.aulas.curso.gestao-risco.tagline": "Business Administration · ISO 31000, COSO ERM, Basileia III w TCFD — tachkhis, tahlil w radd lil-moukhatirat",
-  "routes.aulas.curso.gestao-risco.title": "Tadhbir l-Moukhatarat"
+  "routes.aulas.curso.gestao-risco.title": "Tadhbir l-Moukhatarat",
+  "routes.aulas.curso.gestao-projectos.title": "إدارة المشاريع",
+  "routes.aulas.curso.gestao-projectos.tagline": "إدارة الأعمال · PMBOK، Scrum، Kanban، WBS، المسار الحرج، EVM وشهادات PMP/PRINCE2 — من التخطيط إلى التسليم",
+  "routes.escola.curso.gestao-projectos.title": "إدارة المشاريع",
+  "routes.escola.curso.gestao-projectos.tagline": "إدارة الأعمال · PMBOK، Scrum، Kanban، WBS، المسار الحرج، EVM وشهادات PMP/PRINCE2 — من التخطيط إلى التسليم",
+  "routes.escola.curso.gestao-projectos.description": "إدارة المشاريع المطبقة على إدارة الأعمال: الأسس (تعريف المشروع، مثلث الحديد scope/time/cost/quality، أصحاب المصلحة، دورة الحياة في 5 مراحل، الميثاق)، الأطر التقليدية (PMBOK من PMI في 5 مجموعات عمليات × 10 مجالات معرفة، WBS، Gantt، المسار الحرج، EVM، الضغط)، المنهجيات الرشيقة (Manifesto Agile، Scrum بـ 3 أدوار و5 أحداث، Kanban بحدود WIP، Extreme Programming، التحجيم بـ SAFe/LeSS/Nexus)، والأدوات العملية والإدارة (MS Project، Primavera، Jira؛ إدارة مخاطر المشروع باستراتيجية 4T؛ رسم خرائط أصحاب المصلحة؛ حالات نموذجية مثل Apollo، iPhone، NHS NPfIT، Boeing 787؛ شهادات PMP/PRINCE2/CSM).",
+  "routes.escola.quiz.gpq.title": "اختبار: إدارة المشاريع",
+  "routes.escola.quiz.gpq.description": "اختبر معرفتك بإدارة المشاريع: الأسس (تعريف المشروع، مثلث scope/time/cost/quality، أصحاب المصلحة ومصفوفة Mendelow، دورة الحياة في 5 مراحل)، PMBOK والعمليات التقليدية (5 مجموعات عمليات × 10 مجالات معرفة، WBS، Gantt، المسار الحرج، EVM، fast-tracking vs crashing)، المنهجيات الرشيقة (Manifesto Agile، Scrum بـ 3 أدوار و5 أحداث، Kanban بحدود WIP، XP، التحجيم بـ SAFe)، الأدوات (MS Project، Jira، Asana)، إدارة مخاطر المشروع (استراتيجية 4T)، والشهادات (PMP، PRINCE2، CSM). 10 أسئلة، 4 خيارات لكل سؤال، مع شرح مفصل."
 }

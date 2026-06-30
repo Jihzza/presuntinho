@@ -1020,5 +1020,12 @@
   "routes.escola.curso.gestao-risco.tagline": "Business Administration · ISO 31000, COSO ERM, Basel III and TCFD — identify, analyse and respond to enterprise risks",
   "routes.escola.curso.gestao-risco.title": "Risk Management",
   "routes.aulas.curso.gestao-risco.tagline": "Business Administration · ISO 31000, COSO ERM, Basel III and TCFD — identify, analyse and respond to enterprise risks",
-  "routes.aulas.curso.gestao-risco.title": "Risk Management"
+  "routes.aulas.curso.gestao-risco.title": "Risk Management",
+  "routes.aulas.curso.gestao-projectos.title": "Project Management",
+  "routes.aulas.curso.gestao-projectos.tagline": "Business Administration · PMBOK, Scrum, Kanban, WBS, critical path, EVM and PMP/PRINCE2 certifications — from planning to delivery",
+  "routes.escola.curso.gestao-projectos.title": "Project Management",
+  "routes.escola.curso.gestao-projectos.tagline": "Business Administration · PMBOK, Scrum, Kanban, WBS, critical path, EVM and PMP/PRINCE2 certifications — from planning to delivery",
+  "routes.escola.curso.gestao-projectos.description": "Project management applied to business administration: foundations (definition of project, iron triangle scope/time/cost/quality, stakeholders, 5-phase life cycle, charter), traditional frameworks (PMBOK from PMI with 5 process groups × 10 knowledge areas, WBS, Gantt, critical path, EVM, compression), agile methodologies (Agile Manifesto, Scrum with 3 roles and 5 events, Kanban with WIP limits, Extreme Programming, scaling with SAFe/LeSS/Nexus), and practical tools and management (MS Project, Primavera, Jira; project risk management with 4T strategy; stakeholder mapping; paradigmatic cases like Apollo, iPhone, NHS NPfIT, Boeing 787; PMP/PRINCE2/CSM certifications).",
+  "routes.escola.quiz.gpq.title": "Quiz: Project Management",
+  "routes.escola.quiz.gpq.description": "Test your project management knowledge: foundations (project definition, scope/time/cost/quality triangle, stakeholders and Mendelow matrix, 5-phase life cycle), PMBOK and traditional processes (5 process groups × 10 knowledge areas, WBS, Gantt, critical path, EVM, fast-tracking vs crashing), agile methodologies (Agile Manifesto, Scrum with 3 roles and 5 events, Kanban with WIP limits, XP, scaling with SAFe), tools (MS Project, Jira, Asana), project risk management (4T strategy), and certifications (PMP, PRINCE2, CSM). 10 questions, 4 options each, with detailed explanations."
 }

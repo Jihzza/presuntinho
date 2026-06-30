@@ -1020,5 +1020,12 @@
   "routes.escola.curso.gestao-risco.tagline": "Business Administration · ISO 31000, COSO ERM, Bâle III et TCFD — identifier, analyser et répondre aux risques d'entreprise",
   "routes.escola.curso.gestao-risco.title": "Gestion des Risques",
   "routes.aulas.curso.gestao-risco.tagline": "Business Administration · ISO 31000, COSO ERM, Bâle III et TCFD — identifier, analyser et répondre aux risques d'entreprise",
-  "routes.aulas.curso.gestao-risco.title": "Gestion des Risques"
+  "routes.aulas.curso.gestao-risco.title": "Gestion des Risques",
+  "routes.aulas.curso.gestao-projectos.title": "Gestion de Projet",
+  "routes.aulas.curso.gestao-projectos.tagline": "Business Administration · PMBOK, Scrum, Kanban, WBS, chemin critique, EVM et certifications PMP/PRINCE2 — de la planification à la livraison",
+  "routes.escola.curso.gestao-projectos.title": "Gestion de Projet",
+  "routes.escola.curso.gestao-projectos.tagline": "Business Administration · PMBOK, Scrum, Kanban, WBS, chemin critique, EVM et certifications PMP/PRINCE2 — de la planification à la livraison",
+  "routes.escola.curso.gestao-projectos.description": "Gestion de projet appliquée au management d'entreprise : fondamentaux (définition de projet, triangle de fer scope/time/cost/quality, parties prenantes, cycle de vie en 5 phases, charte), cadres traditionnels (PMBOK du PMI avec 5 groupes de processus × 10 domaines de connaissance, WBS, Gantt, chemin critique, EVM, compression), méthodologies agiles (Manifeste Agile, Scrum avec 3 rôles et 5 événements, Kanban avec limites WIP, Extreme Programming, mise à l'échelle avec SAFe/LeSS/Nexus), et outils pratiques et gestion (MS Project, Primavera, Jira ; gestion des risques projet avec stratégie 4T ; cartographie des parties prenantes ; cas paradigmatiques comme Apollo, iPhone, NHS NPfIT, Boeing 787 ; certifications PMP/PRINCE2/CSM).",
+  "routes.escola.quiz.gpq.title": "Quiz : Gestion de Projet",
+  "routes.escola.quiz.gpq.description": "Testez vos connaissances en gestion de projet : fondamentaux (définition de projet, triangle scope/time/cost/quality, parties prenantes et matrice de Mendelow, cycle de vie en 5 phases), PMBOK et processus traditionnels (5 groupes de processus × 10 domaines de connaissance, WBS, Gantt, chemin critique, EVM, fast-tracking vs crashing), méthodologies agiles (Manifeste Agile, Scrum avec 3 rôles et 5 événements, Kanban avec limites WIP, XP, mise à l'échelle avec SAFe), outils (MS Project, Jira, Asana), gestion des risques projet (stratégie 4T), et certifications (PMP, PRINCE2, CSM). 10 questions, 4 options chacune, avec explications détaillées."
 }
