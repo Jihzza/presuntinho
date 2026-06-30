@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-30T18:00:00+02:00",
+  "lastUpdated": "2026-06-30T19:30:00+02:00",
   "openItems": [
     {
       "id": "gap-028",
@@ -75,14 +75,6 @@
       "created_at": "2026-06-30T12:20:00+02:00"
     },
     {
-      "id": "gap-127",
-      "category": "i18n",
-      "description": "i18n lesson bodies — todas as 46 cadeiras BA têm o body da lição só em PT-PT (título/description/tagline i18n, mas o conteúdo das secções/keyPoints está hardcoded PT). Audit estático: 45+1 cursos × ~30 secções = ~1400 strings PT hardcoded em /static/lessons/*.json. Confirmar se Daniel quer i18n completo das secções (cara) ou se o pattern actual (PT body + i18n metadata) é aceitável.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-30-12",
-      "created_at": "2026-06-30T12:20:00+02:00"
-    },
-    {
       "id": "gap-131",
       "category": "lição/curso",
       "description": "Cadeira BA #48. Próxima após Estratégia Internacional. Tema: Gestão de Risco (slug gestao-risco, quiz grq). 4 lições (fundamentos; identificação e análise; resposta e mitigação; frameworks e normas — ISO 31000, COSO ERM, Basel III, TCFD) + 10 quiz MCQ + i18n 7 chaves × 5 locales + CATALOGUE wired. Despachado para Skander 2 (deleg_58fc6f2e) em feature/gap-131-ba48-gestao-risco.",
@@ -90,6 +82,14 @@
       "source": "watchdog-tick-2026-06-30-18",
       "created_at": "2026-06-30T18:00:00+02:00",
       "dispatched_to": "Skander 2 — deleg_58fc6f2e (feature/gap-131-ba48-gestao-risco)"
+    },
+    {
+      "id": "gap-127-pilot",
+      "category": "i18n",
+      "description": "PILOT option (b) keyed $t() lookups, scope 1 lição × 1 locale, ~30 min mechanical. Sketched in .state/gap-127-decision.md §Pilot scope. Only executes if Skander 1 / Daniel overrides the DEFER recommendation in gap-127. Effort: ~16 strings × 1 locale = 30 min. DoD: check 0 + build verde + https://presuntinho.netlify.app/escola/licao/equivalenza/swot/ renders EN when fat-pref-lang=en, PT otherwise.",
+      "severity": "baixa",
+      "source": "skander1-gap-127-2026-06-30",
+      "created_at": "2026-06-30T19:30:00+02:00"
     }
   ],
   "closedItems": [
@@ -209,8 +209,8 @@
     },
     {
       "id": "gap-119",
-      "closed_at": "2026-06-30T09:50:00+02:00",
-      "sha": "2607019",
+      "closed_at": "2026-06-30T09:35:00+02:00",
+      "sha": "d42e373",
       "note": "fix(ux) footer 'Sub-app #{n} no hub' → 'Hub · Finanças/Hábitos' em 5 locales."
     },
     {
@@ -236,6 +236,13 @@
       "closed_at": "2026-06-30T10:05:00+02:00",
       "sha": "07fe69c",
       "note": "fix(ux) footer 'Hub · {Section}' para biblioteca + trabalhos (5 locales)."
+    },
+    {
+      "id": "gap-127",
+      "closed_at": "2026-06-30T19:30:00+02:00",
+      "sha": "watchdog-todos.json update",
+      "decision_doc": ".state/gap-127-decision.md",
+      "note": "DECISION: DEFER. Lesson bodies PT-only são intencionais: Fatma é aluna numa universidade portuguesa, os lições são conteúdo académico PT (Equivalenza SWOT, ISCTE BA, etc.) que ela consome em português para a coursework dela. Daniel's 'traduz tudo' audios foram sobre UI chrome (já fechado, 986/986 em 5 locales), nunca sobre corpos de lição. Cost to translate = ~18 000 strings × 4 locales = ~320-480 h tradutor ($5-8k USD) + 30MB static JSON ou 3MB i18n JSON no boot. ROI: baixa. PILOT disponível (gap-127-pilot): 1 lição (equivalenza/swot) × 1 locale (en), option (b) keyed $t(), ~30 min. Skander 1 / Daniel pode overridar → ship pilot → se verde, expandir."
     }
   ]
 }
