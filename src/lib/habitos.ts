@@ -185,6 +185,21 @@ export async function unlogHabit(habitId: number, date: string = localDateKey(ne
     .delete();
 }
 
+/**
+ * Return true if `habitId` has at least one log for today (user's local
+ * timezone).  Used by the habits list row so each card can render a
+ * '✓ hoje' / '— pendente' badge — without this the list looks empty
+ * (gap-112).  Hits the compound [habitId+date] index so it's O(1).
+ */
+export async function isLoggedToday(habitId: number): Promise<boolean> {
+  const todayKey = localDateKey(new Date());
+  const row = await db().habit_logs
+    .where('[habitId+date]')
+    .equals([habitId, todayKey])
+    .first();
+  return Boolean(row);
+}
+
 // ---------------------------------------------------------------------------
 // Streak & heatmap
 // ---------------------------------------------------------------------------

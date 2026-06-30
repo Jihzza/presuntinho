@@ -45,6 +45,14 @@
   import Heart from 'lucide-svelte/icons/heart';
   import Github from 'lucide-svelte/icons/github';
   import ExternalLink from 'lucide-svelte/icons/external-link';
+  // gap-116: real PBKDF2 reset-password flow imports.
+  import { getSession } from '$lib/auth/session';
+  import {
+      verifyAgainstEffectiveHashes,
+      setPassword,
+      type ProfileId
+  } from '$lib/auth/hash';
+  import { showToast } from '$lib/components/events';
 
   // ----- i18n -----
   // svelte-i18n 4 ships `$t` as the message-formatter store.  In a
@@ -154,11 +162,112 @@
     return unsub;
   });
 
-  // ----- Reset password (MVP stub) -----
-  let resetSoon = $state(false);
-  function resetPassword(): void {
-    resetSoon = true;
-    setTimeout(() => (resetSoon = false), 4000);
+  // ----- Reset password (gap-116: real PBKDF2 flow) -----
+  //
+  // The Settings page used to render a button that flipped a `resetSoon`
+  // flag and showed a "⏳ soon" hint.  Now it opens a modal with three
+  // fields, verifies the current password against the /auth/hashes.json
+  // PBKDF2 hashes (plus any localStorage override from a prior change),
+  // and persists a freshly-derived PBKDF2 hash via `setPassword` from
+  // `$lib/auth/hash`.
+  //
+  // Persistence note: the static hashes.json is deployed via Netlify
+  // and can't be mutated from the browser, so the new hash lands in
+  // `presuntinho-hashes-override` (see `loadEffectiveHashes` /
+  // `verifyAgainstEffectiveHashes` in `src/lib/auth/hash.ts`).
+  let resetOpen = $state(false);
+  let currentPw = $state('');
+  let newPw = $state('');
+  let confirmPw = $state('');
+  let resetBusy = $state(false);
+  let lastFocusedBeforeReset: HTMLElement | null = null;
+
+  // Active profile for the password change.  `getSession()` is
+  // authoritative for "who is logged in right now"; we re-read on open
+  // so the modal picks up a fresh login (e.g. switch from fatma →
+  // daniel in another tab).
+  let activeProfileId = $state<ProfileId | null>(null);
+
+  function openResetModal(): void {
+    if (resetOpen) return;
+    const session = getSession();
+    activeProfileId = session?.profile ?? null;
+    if (!activeProfileId) {
+      // No active session — tell the user to log in first instead of
+      // silently succeeding against an unknown profile.
+      showToast($t('settings.reset_password.error.wrong_current'));
+      return;
+    }
+    lastFocusedBeforeReset = (document.activeElement as HTMLElement | null) ?? null;
+    resetOpen = true;
+    currentPw = '';
+    newPw = '';
+    confirmPw = '';
+    resetBusy = false;
+  }
+
+  function closeResetModal(): void {
+    if (resetBusy) return;
+    resetOpen = false;
+    currentPw = '';
+    newPw = '';
+    confirmPw = '';
+    // Restore focus to the element that opened the modal — best
+    // practice for keyboard / screen-reader users.
+    if (lastFocusedBeforeReset && typeof lastFocusedBeforeReset.focus === 'function') {
+      try {
+        lastFocusedBeforeReset.focus();
+      } catch {
+        // element may have been removed
+      }
+    }
+  }
+
+  async function submitReset(): Promise<void> {
+    if (resetBusy) return;
+    const profile = activeProfileId ?? getSession()?.profile ?? null;
+    if (!profile) {
+      showToast($t('settings.reset_password.error.wrong_current'));
+      return;
+    }
+    const cur = currentPw.trim();
+    const nxt = newPw; // do NOT trim the new password; whitespace might be intentional
+    const cf = confirmPw;
+    if (!cur) {
+      showToast($t('settings.reset_password.error.wrong_current'));
+      return;
+    }
+    if (nxt.length === 0) {
+      // Treat empty new password as a mismatch so the user gets a
+      // meaningful toast instead of a silent no-op.
+      showToast($t('settings.reset_password.error.mismatch'));
+      return;
+    }
+    if (nxt !== cf) {
+      showToast($t('settings.reset_password.error.mismatch'));
+      return;
+    }
+    resetBusy = true;
+    try {
+      const verified = await verifyAgainstEffectiveHashes(cur);
+      if (!verified || verified.profile !== profile) {
+        showToast($t('settings.reset_password.error.wrong_current'));
+        resetBusy = false;
+        return;
+      }
+      await setPassword(profile, nxt);
+      showToast($t('settings.reset_password.success'));
+      // Close modal + clear inputs on success.
+      resetOpen = false;
+      currentPw = '';
+      newPw = '';
+      confirmPw = '';
+    } catch (e) {
+      console.error('[definicoes] reset password failed', e);
+      showToast($t('settings.reset_password.error.wrong_current'));
+    } finally {
+      resetBusy = false;
+    }
   }
 
   // ----- Clear local data -----
@@ -399,16 +508,16 @@
       <span class="icon-wrap"><Key size={18} /></span>
       <h2 id="acct-h">{$t('settings.reset_password')}</h2>
     </div>
-    <p class="muted">
-      {$t('settings.reset_password.soon')}
-    </p>
-    <button type="button" class="btn" onclick={resetPassword} disabled={resetSoon}>
+    <button
+      type="button"
+      class="btn"
+      onclick={openResetModal}
+      aria-haspopup="dialog"
+      aria-controls="reset-pw-modal"
+    >
       <Key size={16} aria-hidden="true" />
-      {$t('settings.reset_password')}
+      {$t('settings.reset_password.button')}
     </button>
-    {#if resetSoon}
-      <p class="hint">⏳ {$t('settings.reset_password.soon')}</p>
-    {/if}
   </section>
 
   <!-- ============ Data ============ -->
@@ -547,6 +656,101 @@
     </div>
   </div>
 {/if}
+
+<!-- ============ Reset password modal (gap-116) ============ -->
+{#if resetOpen}
+  <div
+    id="reset-pw-modal"
+    class="modal-backdrop"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="reset-pw-h"
+    tabindex="-1"
+  >
+    <button
+      type="button"
+      class="modal-backdrop-btn"
+      aria-label="{$t('a11y.aria.fechar', { default: 'Fechar' })}"
+      onclick={closeResetModal}
+      disabled={resetBusy}
+    ></button>
+    <div
+      class="modal modal-reset"
+      role="document"
+        >
+      <button
+        type="button"
+        class="modal-close"
+        aria-label="{$t('a11y.aria.fechar', { default: 'Fechar' })}"
+        onclick={closeResetModal}
+        disabled={resetBusy}
+      >×</button>
+
+      <h2 id="reset-pw-h">{$t('settings.reset_password.button')}</h2>
+
+      <form
+        class="reset-form"
+        onsubmit={(e) => { e.preventDefault(); void submitReset(); }}
+      >
+        <label class="field">
+          <span class="field-label">{$t('settings.reset_password.current')}</span>
+          <input
+            type="password"
+            autocomplete="current-password"
+            bind:value={currentPw}
+            disabled={resetBusy}
+            required
+          />
+        </label>
+        <label class="field">
+          <span class="field-label">{$t('settings.reset_password.new')}</span>
+          <input
+            type="password"
+            autocomplete="new-password"
+            bind:value={newPw}
+            disabled={resetBusy}
+            required
+            minlength="1"
+          />
+        </label>
+        <label class="field">
+          <span class="field-label">{$t('settings.reset_password.confirm')}</span>
+          <input
+            type="password"
+            autocomplete="new-password"
+            bind:value={confirmPw}
+            disabled={resetBusy}
+            required
+            minlength="1"
+          />
+        </label>
+
+        <div class="modal-actions">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            onclick={closeResetModal}
+            disabled={resetBusy}
+          >{$t('settings.reset_password.cancel')}</button>
+          <button
+            type="submit"
+            class="btn"
+            disabled={resetBusy}
+          >{resetBusy ? '…' : $t('settings.reset_password.submit')}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{/if}
+
+<svelte:window
+  onkeydown={(e) => {
+    if (resetOpen && e.key === 'Escape') {
+      e.preventDefault();
+      closeResetModal();
+    }
+  }}
+/>
 
 <style>
   .definicoes {
@@ -753,6 +957,103 @@
     gap: 0.5rem;
     justify-content: flex-end;
     margin-top: 1rem;
+  }
+
+  /* Transparent button that sits over the entire backdrop so users can
+     click anywhere outside the dialog to close it.  We keep it
+     accessible by giving it an aria-label (rendered via the existing
+     a11y.aria.fechar key) and visually hiding it. */
+  .modal-backdrop-btn {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    z-index: 0;
+  }
+  .modal-backdrop > .modal {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Position the close (X) button in the top-right of the dialog.
+     Used by the reset-password modal so users have a visible close
+     affordance beyond Escape / click-outside. */
+  .modal-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    background: transparent;
+    border: 0;
+    color: #cbd5e1;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0.4rem 0.65rem;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 0.375rem;
+  }
+  .modal-close:hover:not(:disabled),
+  .modal-close:focus-visible {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+    outline: none;
+  }
+  .modal-close:focus-visible {
+    box-shadow: 0 0 0 2px #ec4899;
+  }
+  .modal-close:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Reset-password modal: stacked password fields above the
+     action row.  Matches the dark glass theme used elsewhere. */
+  .modal-reset {
+    max-width: 460px;
+  }
+  .reset-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .field-label {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  .field input {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #fff;
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.75rem;
+    font-size: 1rem;
+    min-height: 44px;
+    width: 100%;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .field input:focus-visible {
+    outline: none;
+    border-color: #ec4899;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.35);
+  }
+  .field input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .reset-form .modal-actions {
+    margin-top: 0.25rem;
   }
   @media (min-width: 640px) {
     .definicoes {

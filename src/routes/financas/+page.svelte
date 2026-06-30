@@ -79,32 +79,41 @@
       chartInstance = null;
     }
     chartInstance = new Chart(canvas, {
-      type: 'bar',
-      data: {
-        labels: pontos.map((p) => formatMesCurto(p.mes)),
-        datasets: [
-          {
-            label: $t('financas.chart.datasetLabel', { default: 'Despesas' }),
-            data: pontos.map((p) => p.despesas),
-            backgroundColor: 'rgba(239, 68, 68, 0.7)',
-            borderColor: 'rgba(239, 68, 68, 1)',
-            borderWidth: 1,
-            borderRadius: 6,
-            maxBarThickness: 48
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: (ctx) => ` ${formatValor(ctx.parsed.y ?? 0)}`
-            }
-          }
-        },
+          type: 'bar',
+          data: {
+            labels: pontos.map((p) => formatMesCurto(p.mes)),
+            datasets: [
+              {
+                label: $t('financas.chart.datasetLabel.receitas', { default: 'Receitas' }),
+                data: pontos.map((p) => p.receitas),
+                backgroundColor: 'rgba(34, 197, 94, 0.7)',
+                borderColor: 'rgba(34, 197, 94, 1)',
+                borderWidth: 1,
+                borderRadius: 6,
+                maxBarThickness: 48
+              },
+              {
+                label: $t('financas.chart.datasetLabel', { default: 'Despesas' }),
+                data: pontos.map((p) => p.despesas),
+                backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                borderColor: 'rgba(239, 68, 68, 1)',
+                borderWidth: 1,
+                borderRadius: 6,
+                maxBarThickness: 48
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: true, position: 'top', labels: { color: '#cbd5e1' } },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => ` ${formatValor(ctx.parsed.y ?? 0)}`
+                }
+              }
+            },
         scales: {
           x: {
             ticks: { color: '#cbd5e1' },

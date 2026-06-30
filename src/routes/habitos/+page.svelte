@@ -17,6 +17,8 @@
   import {
     listHabitos,
     deleteHabito,
+    getStreak,
+    isLoggedToday,
     type Habit
   } from '$lib/habitos';
   import { subApps } from '$lib/registry';
@@ -29,6 +31,11 @@
   let loading = $state(true);
   let error = $state<string | null>(null);
   let confirmingDelete = $state<number | null>(null);
+  // gap-112: per-row streak + today-logged lookups so each card
+  // shows "🔥 N dias" and "✓ hoje" / "— pendente" instead of looking
+  // empty.
+  let streaks = $state<Map<number, number>>(new Map());
+  let logged = $state<Map<number, boolean>>(new Map());
 
   const habitosApp = subApps.find((a) => a.id === 'habitos');
 
@@ -36,7 +43,20 @@
     loading = true;
     error = null;
     try {
-      habits = await listHabitos();
+      const fresh = await listHabitos();
+      habits = fresh;
+      // Resolve streak + today status in parallel; one round-trip per habit.
+      const rows = await Promise.all(
+        fresh.map((h) => Promise.all([getStreak(h.id), isLoggedToday(h.id)]))
+      );
+      const nextStreaks = new Map<number, number>();
+      const nextLogged = new Map<number, boolean>();
+      fresh.forEach((h, i) => {
+        nextStreaks.set(h.id, rows[i][0]);
+        nextLogged.set(h.id, rows[i][1]);
+      });
+      streaks = nextStreaks;
+      logged = nextLogged;
     } catch (e) {
       console.error('[habitos] listHabitos failed', e);
       error = e instanceof Error ? e.message : 'Erro a carregar hábitos';
@@ -126,10 +146,18 @@
               <span class="icon" aria-hidden="true">{h.icon}</span>
               <span class="content">
                 <span class="name">{h.name}</span>
-                <span class="meta">
-                  {$t('habitos.created', { default: 'Criado a' })} {formatCreatedAt(h.createdAt)} · {h.cadence === 'daily' ? $t('habitos.cadence.daily', { default: 'diário' }) : h.cadence}
-                </span>
-              </span>
+                            <span class="meta">
+                              {$t('habitos.created', { default: 'Criado a' })} {formatCreatedAt(h.createdAt)} · {h.cadence === 'daily' ? $t('habitos.cadence.daily', { default: 'diário' }) : h.cadence}
+                            </span>
+                            <span class="status" aria-label={logged.get(h.id) ? $t('habitos.list.today_done', { default: '✓ hoje' }) : $t('habitos.list.today_pending', { default: '— pendente' })}>
+                              <span class="streak">{$t('habitos.list.streak', { default: '🔥 {n} dias', values: { n: streaks.get(h.id) ?? 0 } })}</span>
+                              <span class="today" data-done={logged.get(h.id) ? 'true' : 'false'}>
+                                {logged.get(h.id)
+                                  ? $t('habitos.list.today_done', { default: '✓ hoje' })
+                                  : $t('habitos.list.today_pending', { default: '— pendente' })}
+                              </span>
+                            </span>
+                          </span>
               <span class="arrow" aria-hidden="true">→</span>
             </a>
             <button

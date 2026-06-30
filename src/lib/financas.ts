@@ -53,10 +53,17 @@ export interface TotaisMes {
 /** Map<categoriaId, totalDespesa> — usado para gráficos / orçamentos. */
 export type TotaisPorCategoria = Record<string, number>;
 
-/** Um ponto (mês, total de despesas) para o gráfico de 6 meses. */
+/**
+ * Um ponto (mês, totais de receitas e despesas) para o gráfico de 6 meses.
+ *
+ * gap-113: agora devolvemos receitas E despesas para que o dashboard
+ * possa renderizar um grouped bar chart em vez de mostrar só a metade
+ * negativa da vida financeira do utilizador.
+ */
 export interface PontoMensal {
   mes: string;        // 'YYYY-MM'
   despesas: number;
+  receitas: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -338,8 +345,11 @@ export async function totaisPorCategoria(mes: string): Promise<TotaisPorCategori
 
 /**
  * Return the last 6 calendar months (oldest → newest) with their total
- * despesas.  Used by the dashboard bar chart.  The current month is
- * the last entry in the returned array.
+ * despesas AND receitas.  Used by the dashboard bar chart.  The current
+ * month is the last entry in the returned array.
+ *
+ * gap-113: `receitas` was added so the chart can render both bars
+ * side-by-side (grouped) instead of expenses-only.
  */
 export async function totaisPorMesUltimos6(): Promise<PontoMensal[]> {
   const result: PontoMensal[] = [];
@@ -348,7 +358,7 @@ export async function totaisPorMesUltimos6(): Promise<PontoMensal[]> {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const mes = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
     const total = await totalMes(mes);
-    result.push({ mes, despesas: total.despesas });
+    result.push({ mes, despesas: total.despesas, receitas: total.receitas });
   }
   return result;
 }
