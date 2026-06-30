@@ -635,10 +635,10 @@
 {#if loadError}
   <div class="course">
     <p class="error">{loadError}</p>
-    <p><a href="/escola/">← Voltar à Escola</a></p>
+    <p><a href="/escola/">{$t('escola.curso.back_to_school', { default: '← Voltar à Escola' })}</a></p>
   </div>
 {:else if !course}
-  <p class="loading">A carregar curso…</p>
+  <p class="loading">{$t('escola.curso.loading', { default: 'A carregar curso…' })}</p>
 {:else}
   <div class="course" style="--course-color: {course.color};">
     <header class="course-head">

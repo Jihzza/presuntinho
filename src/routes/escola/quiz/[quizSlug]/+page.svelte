@@ -40,7 +40,7 @@
   {/key}
 
   <p class="back-link">
-    <a href="/escola/curso/equivalenza/">← Voltar ao curso</a>
+    <a href="/escola/curso/equivalenza/">{$t('escola.quiz.back_to_course', { default: '← Voltar ao curso' })}</a>
   </p>
 </div>
 

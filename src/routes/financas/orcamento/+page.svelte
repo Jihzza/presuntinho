@@ -157,7 +157,7 @@
 
 <div class="orcamento-page">
   <header class="hero">
-    <h1>📊 Orçamento</h1>
+    <h1>{$t('financas.orcamento.hero.title', { default: '📊 Orçamento' })}</h1>
     <p class="sub">{$t('financas.orcamento.sub', { default: 'Limites por categoria — {mes}' }).replace('{mes}', formatMes(mesFiltro))}</p>
   </header>
 
@@ -247,7 +247,7 @@
                 {Math.round((gasto / limite) * 100)}%
               </span>
             {:else if gasto > 0}
-              <span class="percent-label muted">sem limite</span>
+              <span class="percent-label muted">{$t('financas.orcamento.sem_limite', { default: 'sem limite' })}</span>
             {/if}
           </div>
 
@@ -258,7 +258,7 @@
           {/if}
 
           {#if saving === c.id}
-            <span class="saving" aria-live="polite">A gravar…</span>
+            <span class="saving" aria-live="polite">{$t('financas.orcamento.gravando', { default: 'A gravar…' })}</span>
           {/if}
         </article>
       {/each}

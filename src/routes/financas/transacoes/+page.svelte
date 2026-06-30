@@ -237,7 +237,7 @@
 
 <div class="transacoes-page">
   <header class="hero">
-    <h1>📋 Transações</h1>
+    <h1>{$t('financas.transacoes.hero.title', { default: '📋 Transações' })}</h1>
     <p class="sub">{$t('transacoes.sub', { default: 'Histórico de receitas e despesas.' })}</p>
   </header>
 
@@ -250,7 +250,7 @@
   </nav>
 
   <section class="actions" aria-label="{$t('a11y.aria.acoes', { default: 'Ações' })}">
-    <a class="btn-primary" href="/financas/nova/">+ Nova transação</a>
+    <a class="btn-primary" href="/financas/nova/">{$t('financas.transacoes.cta.new', { default: '+ Nova transação' })}</a>
   </section>
 
   <section class="filters" aria-label="{$t('a11y.aria.filtros', { default: 'Filtros' })}">
@@ -364,7 +364,7 @@
                   {c?.icone ?? '📦'}
                 </span>
                 <span class="row-main">
-                  <span class="row-desc">{tx.descricao || (c?.nome ?? 'Sem descrição')}</span>
+                  <span class="row-desc">{tx.descricao || (c?.nome ?? $t('financas.transacoes.sem_descricao', { default: 'Sem descrição' }))}</span>
                   <span class="row-meta">
                     {c?.nome ?? tx.categoria} · {isReceita ? ARIA_RECEITA : ARIA_DESPESA}
                   </span>

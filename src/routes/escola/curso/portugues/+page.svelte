@@ -252,7 +252,7 @@
     {#if loading}
       <h1>{$t('escola.curso.pt.loading', { default: '🇵🇹 A carregar curso…' })}</h1>
     {:else if loadError}
-      <h1>{$t('escola.curso.pt.fallbackTitle', { default: '🇵🇹 Curso de Português' })}</h1>
+      <h1>{$t('escola.curso.pt.fallbackTitle')}</h1>
       <p class="sub">{$t('escola.curso.pt.temporarilyUnavailable', { default: 'Conteúdo temporariamente indisponível.' })}</p>
     {:else if course}
       <span class="tag">🇵🇹 Curso</span>
@@ -264,7 +264,7 @@
       <p class="meta">
         <span>⏱ ~{course.estimatedMinutes} min</span>
         <span>📚 {course.sections.length} secções</span>
-        <span>🎯 Badge: 🇵🇹 Lusófono (b11)</span>
+        <span>{$t('escola.curso.pt.badge_inline', { default: '🎯 Badge: 🇵🇹 Lusófono (b11)' })}</span>
       </p>
     {/if}
   </header>
@@ -529,7 +529,7 @@
                 ✓ Marcar como estudado
               </button>
             {:else}
-              <span class="studied-text">✓ Marcado como estudado.</span>
+              <span class="studied-text">{$t('escola.curso.pt.marked_studied', { default: '✓ Marcado como estudado.' })}</span>
             {/if}
           </footer>
         </section>

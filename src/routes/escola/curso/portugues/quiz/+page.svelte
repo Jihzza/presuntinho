@@ -70,8 +70,8 @@
       <span class="sep">›</span>
       <span>{$t('escola.quiz.breadcrumb.current', { default: 'Quiz' })}</span>
     </p>
-    <h1>🇵🇹 Quiz de Português</h1>
-    <p class="sub">5 perguntas · Ganha a badge 🇵🇹 Lusófono (b11) com 5/5 certas.</p>
+    <h1>{$t('escola.curso.pt.quiz.title', { default: '🇵🇹 Quiz de Português' })}</h1>
+    <p class="sub">{$t('escola.curso.pt.quiz.subtitle', { default: '5 perguntas · Ganha a badge 🇵🇹 Lusófono (b11) com 5/5 certas.' })}</p>
     {#if previousScore !== null}
       <p class="prev" aria-live="polite">
         Melhor resultado anterior: <strong>{previousScore}%</strong>
@@ -93,7 +93,7 @@
          inside QuizRunner's own logic via the score fallback in $effect.) -->
 
       <p class="back-link">
-        <a href="/escola/curso/portugues/">← Voltar ao curso PT</a>
+        <a href="/escola/curso/portugues/">{$t('escola.curso.pt.quiz.back', { default: '← Voltar ao curso PT' })}</a>
       </p>
     </div>
 

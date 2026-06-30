@@ -138,7 +138,7 @@
 
 <div class="nova-page">
   <header class="hero">
-    <h1>➕ Nova transação</h1>
+    <h1>{$t('financas.nova.hero.title', { default: '➕ Nova transação' })}</h1>
     <p class="sub">{$t('routes.financas.nova.subtitle', { default: 'Adiciona uma receita ou despesa.' })}</p>
   </header>
 

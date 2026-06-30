@@ -132,16 +132,18 @@
   <title>{pageTitle} · Presuntinho</title>
   <meta
     name="description"
-    content="Audio walkthrough + transcrição + pontos-chave da lição {lessonSlug}."
+    content={$t('escola.walkthrough.meta_description', {
+      default: 'Audio walkthrough + transcrição + pontos-chave da lição {lessonSlug}.'
+    }).replace('{lessonSlug}', lessonSlug)}
   />
 </svelte:head>
 
 <div class="walkthrough">
   {#if loading}
-    <p class="state">A carregar walkthrough…</p>
+    <p class="state">{$t('escola.walkthrough.loading', { default: 'A carregar walkthrough…' })}</p>
   {:else if loadError || !lesson}
     <div class="state error" role="alert">
-      <p>⚠️ {loadError ?? 'Lição não encontrada.'}</p>
+      <p>⚠️ {loadError ?? $t('escola.walkthrough.not_found', { default: 'Lição não encontrada.' })}</p>
       <p>{$t('walkthrough.verify.text', { default: 'Verifica que' })} <code>/lessons/equivalenza/{lessonSlug}.json</code> {$t('walkthrough.verify.exists', { default: 'existe.' })}</p>
       <p><a href="/escola/">{$t('walkthrough.backToEscola', { default: '← Voltar à Escola' })}</a></p>
     </div>
