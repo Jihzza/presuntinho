@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-30T09:50:00+02:00",
+  "lastUpdated": "2026-06-30T12:20:00+02:00",
   "openItems": [
     {
       "id": "gap-028",
@@ -12,7 +12,7 @@
     {
       "id": "gap-034",
       "category": "feature-pedida-pelo-Daniel",
-      "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Já temos 45 cadeiras BA entregues. Continua como gap-108.",
+      "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Já temos 46 cadeiras BA entregues (45 anteriores + Gestão de Conflitos hoje). Continua a ser desejável para ir além de BA.",
       "severity": "baixa",
       "source": "audio-Daniel-2026-06-27",
       "created_at": "2026-06-28T13:05:00+02:00"
@@ -36,26 +36,10 @@
     {
       "id": "gap-053",
       "category": "smoke-fail",
-      "description": "Smoke i18n real nas 5 línguas em produção após deploy 92ba6eb — confirmar que $t() resolve 753+ chaves sem mostrar fallbacks PT no DOM. Bloqueado por auth gate.",
+      "description": "Smoke i18n real nas 5 línguas em produção após deploy 92ba6eb — confirmar que $t() resolve 982 chaves sem mostrar fallbacks PT no DOM. Bloqueado por auth gate.",
       "severity": "média",
       "source": "watchdog-tick-2026-06-28-23",
       "created_at": "2026-06-28T23:25:00+02:00"
-    },
-    {
-      "id": "gap-107",
-      "category": "lição/curso",
-      "description": "Próxima cadeira BA a despachar (já temos 45). Skander 1 a decidir em background.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-30-05",
-      "created_at": "2026-06-30T05:30:00+02:00"
-    },
-    {
-      "id": "gap-108",
-      "category": "lição/curso",
-      "description": "Cadeira BA #46. Após gap-107 (Skander 1 decide), despachar BA #46 com 4 lições + 10 quiz MCQ + i18n 5 locales + CATALOGUE wired.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-30-07",
-      "created_at": "2026-06-30T07:00:00+02:00"
     },
     {
       "id": "gap-117",
@@ -76,25 +60,9 @@
       "dispatched_to": "Skander 2 — deleg_63dfee9d"
     },
     {
-      "id": "gap-121",
-      "category": "UI/UX",
-      "description": "Habitos dashboard: adicionar visualização de streak 7d e completions/dia. Reusar padrão gap-112 (streak+today) já aplicado. Verificar se já está feito no 823edd2.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-30-09",
-      "created_at": "2026-06-30T09:50:00+02:00"
-    },
-    {
-      "id": "gap-122",
-      "category": "lição/curso",
-      "description": "BA #46. Despachar 4 lições + 10 MCQ + i18n 5 locales + CATALOGUE wired. Skander 1 escolhe tema da lista (ex: Gestão de Conflitos, Negociação, Liderança, etc.).",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-30-09",
-      "created_at": "2026-06-30T09:50:00+02:00"
-    },
-    {
       "id": "gap-123",
       "category": "smoke-fail",
-      "description": "Smoke live-fire pós-fix audit UX: navegar /escola/ /financas/ /habitos/ /biblioteca/ /trabalhos/ /definicoes/ /agente/ e confirmar zero console errors + zero placeholders PT hardcoded visíveis. Após deploy gap-119.",
+      "description": "Smoke live-fire pós-fix audit UX: navegar /escola/ /financas/ /habitos/ /biblioteca/ /trabalhos/ /definicoes/ /agente/ e confirmar zero console errors + zero placeholders PT hardcoded visíveis. Bloqueado por auth gate — só podemos verificar /lessons/ e /quizzes/ via curl.",
       "severity": "média",
       "source": "watchdog-tick-2026-06-30-09",
       "created_at": "2026-06-30T09:50:00+02:00"
@@ -106,6 +74,22 @@
       "severity": "baixa",
       "source": "audio-Daniel-2026-06-29",
       "created_at": "2026-06-30T09:50:00+02:00"
+    },
+    {
+      "id": "gap-126",
+      "category": "lição/curso",
+      "description": "Cadeira BA #47. Próxima após Gestão de Conflitos. Tema possível: Gestão de Stakeholders, Comunicação Executiva, Estratégia de Pricing, ESG, Gestão de Risco, Fusões & Aquisições. 4 lições + 10 quiz MCQ + i18n 5 locales + CATALOGUE wired.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-30-12",
+      "created_at": "2026-06-30T12:20:00+02:00"
+    },
+    {
+      "id": "gap-127",
+      "category": "i18n",
+      "description": "i18n lesson bodies — todas as 46 cadeiras BA têm o body da lição só em PT-PT (título/description/tagline i18n, mas o conteúdo das secções/keyPoints está hardcoded PT). Audit estático: 45+1 cursos × ~30 secções = ~1400 strings PT hardcoded em /static/lessons/*.json. Confirmar se Daniel quer i18n completo das secções (cara) ou se o pattern actual (PT body + i18n metadata) é aceitável.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-30-12",
+      "created_at": "2026-06-30T12:20:00+02:00"
     }
   ],
   "closedItems": [
@@ -119,6 +103,8 @@
     {"id": "gap-104", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "91e796b", "note": "BA #45 Economia Comportamental. 4 lições + beq quiz 10 + i18n 5 locales + CATALOGUE wired."},
     {"id": "gap-105", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "c1d542b", "note": "batch-3: habitos/novo + trabalhos/assignment/[slug] + 6 chaves × 5 locales"},
     {"id": "gap-106", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "c1d542b", "note": "batch-4: agente + aulas + dl + biblioteca/novo + 3 chaves × 5 locales"},
+    {"id": "gap-107", "closed_at": "2026-06-30T12:20:00+02:00", "sha": "fbdc389", "note": "BA #46 Gestão de Conflitos. Skander 1 escolheu Gestão de Conflitos."},
+    {"id": "gap-108", "closed_at": "2026-06-30T12:20:00+02:00", "sha": "fbdc389", "note": "BA #46 Gestão de Conflitos. 4 lições (21-34 secções cada) + gcq quiz 10 + i18n 5 locales × 7 chaves + CATALOGUE wired em 3 ficheiros. npm run check 0/0, build verde, prod serve 200."},
     {"id": "gap-110", "closed_at": "2026-06-30T08:15:00+02:00", "sha": "942c1ba", "note": "fix(agente) chat-root 100dvh + safe-area-inset-bottom no composer. Áudio Daniel 2026-06-29 18:35 'página do agente não aparece nada'. npm run check verde, npm run build verde."},
     {"id": "gap-111", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "53c0265", "note": "fix(hub+settings) collapse V3/legacy em 'Mais Presuntinho'."},
     {"id": "gap-112", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "fix(ux) /habitos/ streak '🔥 N dias' + status '✓ hoje' por row."},
@@ -127,6 +113,9 @@
     {"id": "gap-115", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "53c0265", "note": "fix(ux) definicoes VERSION+REPO_URL single source from $lib/version."},
     {"id": "gap-116", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "fix(ux) definicoes reset_password real PBKDF2 (não mais '⏳ soon')."},
     {"id": "gap-118", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "HeartButton title='Clica — easter egg' via $t() em 5 locales."},
-    {"id": "gap-119", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "2607019", "note": "fix(ux) footer 'Sub-app #{n} no hub' → 'Hub · Finanças/Hábitos' em 5 locales."}
+    {"id": "gap-119", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "2607019", "note": "fix(ux) footer 'Sub-app #{n} no hub' → 'Hub · Finanças/Hábitos' em 5 locales."},
+    {"id": "gap-121", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "streak+today já no 823edd2 — gap-121 era verificação, fechada como já feita."},
+    {"id": "gap-122", "closed_at": "2026-06-30T12:20:00+02:00", "sha": "fbdc389", "note": "BA #46 Gestão de Conflitos: 4 lições + 10 MCQ + i18n 7 chaves × 5 locales + CATALOGUE wired. npm run check 0/0, build verde, prod serve 200."},
+    {"id": "gap-125", "closed_at": "2026-06-30T10:05:00+02:00", "sha": "07fe69c", "note": "fix(ux) footer 'Hub · {Section}' para biblioteca + trabalhos (5 locales)."}
   ]
 }
