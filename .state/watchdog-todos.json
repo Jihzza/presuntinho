@@ -1,25 +1,48 @@
 {
-  "lastUpdated": "2026-06-30T02:10:45.078459+02:00",
-  "openItems": [
-    {
-      "id": "gap-096",
-      "category": "lição/curso",
-      "description": "Próxima cadeira BA: dispachable para Skander 2. Continua a entrega do 'faz cursos sobretudo / aulas sobretudo' do Daniel. Próximas cadeiras candidatas por relevância: BA #41 Estratégia de Marketing Internacional (já temos Comércio Internacional BA #39, próxima camada é Estratégia de Marketing Internacional); BA #42 Marketing Digital / E-Commerce; BA #43 Comportamento do Consumidor. Despachar gap-097 com conteúdo denso (4 lições + quiz 10 perguntas + i18n 5 locales + CATALOGUE wired) e smoke 9/9 URLs HTTP 200.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-30-00",
-      "created_at": "2026-06-30T00:30:36.698748+02:00"
-    },
-    {
-      "id": "gap-091",
-      "category": "i18n",
-      "description": "Auditoria sistemática de PT hardcoded em .svelte files — agora gap-093 (deleg_bc4ed9b3 Skander 1). Vai produzir .state/i18n-audit-gap-093.md com priorização (alta/média/baixa) + chaves i18n sugeridas. Depois de receber o relatório, despachar fixes gap-094a/b/c por prioridade. [tick-24: pt-PT fix de 2 aulas.curso keys + BadgeGrid i18n keys delivered em gap-095; gap-091 Skander 1 audit pendente de análise do i18n-audit-raw.json]",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-29-20",
-      "created_at": "2026-06-29T21:05:00+02:00",
-      "updated_at": "2026-06-30T00:30:36.698748+02:00"
-    },
-    {
-      "id": "gap-028",
+  "lastUpdated": "2026-06-30T04:20:00.000000+02:00",
+      "lastUpdated": "2026-06-30T04:55:00+02:00",
+            "openItems": [
+              {
+                "id": "gap-101",
+                "category": "licao/curso",
+                "description": "Cadeira BA #44: Sistemas de Informação Gerencial (slug sistemas-de-informacao). Despachada para Skander 2 (deleg_05501a3e). 4 lições JÁ EXISTEM (1-tipos-de-si, 2-erp-crm, 3-business-intelligence, 4-seguranca-da-informacao) + siq.json JÁ EXISTE (verificado). Falta: course.json NOVO + i18n 5 locales (routes.escola.curso.sistemas-de-informacao.{title,description,tagline} + routes.aulas.curso.sistemas-de-informacao.{title,tagline} + routes.escola.quiz.siq.{title,description}) + CATALOGUE wired em 3 routes.",
+                "severity": "baixa",
+                "source": "watchdog-tick-2026-06-30-03",
+                "created_at": "2026-06-30T04:20:00+02:00",
+                "done": true,
+                "sha": "2d09a97",
+                "closed_at": "2026-06-30T04:55:00+02:00",
+                "evidence": "Production smoke 2026-06-30 04:55: /escola/curso/sistemas-de-informacao/=200; /escola/quiz/siq=200; 4 lessons (1-tipos-de-si, 2-erp-crm, 3-business-intelligence, 4-seguranca-da-informacao) + course.json + siq.json + 5 i18n locales (title/description/tagline × routes.escola.curso.sistemas-de-informacao + routes.aulas.curso.sistemas-de-informacao). Deploy 6a432c42 state=ready (commit 2d09a97)."
+              },
+              {
+                "id": "gap-102",
+                "category": "i18n",
+                "description": "gap-091 batch-1 — escola/* (13 findings, 5 ficheiros). Brief completo em .state/skander1-batches-gap-091.md (linhas 1-200). Adicionar 11 chaves novas × 5 locales (55 entries) + 2 cleanups redundantes. Ficheiros: src/routes/escola/curso/[slug]/+page.svelte, src/routes/escola/curso/portugues/+page.svelte, src/routes/escola/curso/portugues/quiz/+page.svelte, src/routes/escola/quiz/[quizSlug]/+page.svelte, src/routes/escola/walkthrough/[lessonSlug]/+page.svelte. Validar: npm run check 0/0 + npm run build verde + smoke dev /escola/curso/equivalenza/ /escola/curso/portugues/ /escola/curso/portugues/quiz/ /escola/quiz/equivalenza/.",
+                "severity": "média",
+                "source": "watchdog-tick-2026-06-30-04",
+                "created_at": "2026-06-30T04:55:00+02:00",
+                "dispatched_to": "Skander 2 — deleg_gap091b1 a abrir"
+              },
+              {
+                "id": "gap-103",
+                "category": "i18n",
+                "description": "gap-091 batch-2 — finanças/* (10 findings, 4 ficheiros). Brief completo em .state/skander1-batches-gap-091.md (secção batch-2). Adicionar 9 chaves novas × 5 locales (45 entries) + cleanups triviais. Ficheiros em src/routes/financas/. Validar: npm run check 0/0 + npm run build verde + smoke dev /financas.",
+                "severity": "média",
+                "source": "watchdog-tick-2026-06-30-04",
+                "created_at": "2026-06-30T04:55:00+02:00",
+                "dispatched_to": "Skander 2 — deleg_gap091b2 a abrir"
+              },
+        {
+          "id": "gap-091",
+          "category": "i18n",
+          "description": "Auditoria sistemática de PT hardcoded em .svelte files. Skander 1 despachado (deleg_390154d7) para analisar .state/i18n-audit-raw.json (62 findings em 59 ficheiros) e produzir .state/i18n-audit-gap-091.md com priorização ALTA/MÉDIA/BAIXA + chaves i18n sugeridas + batches dispatchable. Depois dos batches prontos, despachar Skander 2 para executar cada batch.",
+          "severity": "média",
+          "source": "watchdog-tick-2026-06-29-20",
+          "created_at": "2026-06-29T21:05:00+02:00",
+          "updated_at": "2026-06-30T04:20:00+02:00"
+                  },
+                  {
+                        "id": "gap-028",
       "category": "smoke-fail",
       "description": "Verificar fluxo de auth via browser: splash → escolha profile → password → onboarding modal — confirmar que funciona end-to-end sem console errors. Auth verificado por código (splash renders 2 buttons + ARIA radiogroup + form) mas live-fire bloqueado por password gating.",
       "severity": "média",
