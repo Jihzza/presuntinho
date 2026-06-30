@@ -1,0 +1,17 @@
+{
+  "slug": "sistemas-de-informacao",
+  "title": "Sistemas de Informação Gerencial",
+  "category": "BA",
+  "level": "intermediate",
+  "estMinutes": 36,
+  "icon": "💻",
+  "color": "#0ea5e9",
+  "description": "Sistemas de informação nas organizações: tipos (TPS, MIS, DSS, ESS), infra-estrutura (hardware, software, dados, pessoas, processos e rede), ERP vs CRM vs SCM vs BI, integração e fluxo de dados, business intelligence (data warehouse, OLAP, dashboards, data mining), segurança da informação (confidencialidade, integridade, disponibilidade, RGPD, autenticação, autorização, criptografia), cloud computing (SaaS, PaaS, IaaS, híbrida) e transformação digital com SI como vantagem competitiva.",
+  "tagline": "Business Administration · Tipos de SI, ERP/CRM, BI, segurança da informação e cloud",
+  "lessons": [
+    { "slug": "1-tipos-de-si", "title": "1. Tipos de Sistemas de Informação", "summary": "TPS, MIS, DSS, ESS — quem usa cada um e para quê.", "quizSlug": "siq", "estMinutes": 8 },
+    { "slug": "2-erp-crm", "title": "2. ERP e CRM", "summary": "Plataformas de integração: processos, dados, pessoas.", "quizSlug": "siq", "estMinutes": 8 },
+    { "slug": "3-business-intelligence", "title": "3. Business Intelligence", "summary": "Data warehouse, ETL, dashboards e decisão data-driven.", "quizSlug": "siq", "estMinutes": 9 },
+    { "slug": "4-seguranca-da-informacao", "title": "4. Segurança da Informação", "summary": "CIA triad, RGPD, criptografia e gestão de risco.", "quizSlug": "siq", "estMinutes": 9 }
+  ]
+}
