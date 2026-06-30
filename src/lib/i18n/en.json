@@ -990,5 +990,30 @@
   "walkthrough.verify.exists": "exists.",
   "walkthrough.verify.text": "Check that",
   "write.breadcrumb.home": "← Hub",
-  "write.head.title": "Writing · Anti-AI Tips"
+  "write.head.title": "Writing · Anti-AI Tips",
+  "routes": {
+    "aulas": {
+      "curso": {
+        "gestao-risco": {
+          "tagline": "Business Administration · ISO 31000, COSO ERM, Basel III and TCFD — identify, analyse and respond to business risks",
+          "title": "Risk Management"
+        }
+      }
+    },
+    "escola": {
+      "curso": {
+        "gestao-risco": {
+          "description": "Risk management applied to business management: fundamentals (Knight's definition of risk, strategic/operational/financial/compliance typology, appetite vs tolerance), identification and analysis (brainstorming, Delphi, SWOT, scenario analysis, probability x impact matrices, heatmaps), response and mitigation (4T strategy - Tolerate, Treat, Transfer, Terminate - insurance, hedging, diversification, BCP/DRP), and the main frameworks and standards (ISO 31000 with 5-step process, COSO ERM 2017 with 5 components and 20 principles, Basel III for credit/market/operational risk, and ESG/climate reporting via TCFD and CSRD).",
+          "tagline": "Business Administration · ISO 31000, COSO ERM, Basel III and TCFD - identify, analyse and respond to business risks",
+          "title": "Risk Management"
+        }
+      },
+      "quiz": {
+        "grq": {
+          "title": "Quiz: Risk Management",
+          "description": "10 questions to test your knowledge of risk management: Knight's risk vs uncertainty, 4T response strategy, ISO 31000, COSO ERM, Basel III and TCFD."
+        }
+      }
+    }
+  }
 }

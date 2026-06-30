@@ -1,0 +1,117 @@
+{
+  "id": "grq",
+  "title": "Quiz: Gestão de Risco",
+  "description": "Testa os teus conhecimentos em gestão de risco: definições e tipologia de risco (estratégico, operacional, financeiro, conformidade), distinção de Knight entre risco e incerteza, apetite vs tolerância ao risco, métodos de identificação (brainstorming, Delphi, SWOT, cenários, registo), análise qualitativa vs quantitativa, matriz probabilidade × impacto e heatmaps, estratégia 4T (Tolerate, Treat, Transfer, Terminate), seguros e hedging, diversificação, BCP/DRP, frameworks profissionais (ISO 31000 com processo em 5 etapas, COSO ERM 2017 com 5 componentes e 20 princípios, Basileia III para risco de crédito/mercado/operacional) e disclosure ESG/clima (TCFD/CSRD). 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "questions": [
+    {
+      "q": "Qual das seguintes NÃO é uma das quatro categorias clássicas de risco empresarial?",
+      "opts": [
+        "Risco operacional (falhas em processos, pessoas, sistemas ou eventos externos)",
+        "Risco estratégico (mudanças no ambiente competitivo, tecnológico ou regulatório)",
+        "Risco financeiro (variação cambial, crédito, liquidez e taxas de juro)",
+        "Marketing-mix (a combinação de produto, preço, praça e promoção numa estratégia coerente)"
+      ],
+      "a": 3,
+      "explanation": "As quatro categorias clássicas de risco empresarial são: estratégico, operacional, financeiro e de conformidade (compliance). Marketing-mix é conceito das 4Ps do marketing (McCarthy, 1960) que descreve variáveis controláveis da estratégia comercial, não uma categoria de risco. Confundir categoria de marketing com categoria de risco é erro comum de quem estuda pela primeira vez — sugere que a pergunta testa atenção ao vocabulário mais do que memorização."
+    },
+    {
+      "q": "Segundo Frank Knight (1921), qual a diferença fundamental entre risco e incerteza?",
+      "opts": [
+        "Risco e incerteza são sinónimos — o que muda é apenas a magnitude financeira do evento",
+        "Risco envolve probabilidades mensuráveis (estimáveis a partir de dados ou modelos); incerteza envolve probabilidades que não podem ser estimadas com confiança razoável",
+        "Risco envolve sempre perdas financeiras; incerteza envolve apenas ganhos ou perdas marginais",
+        "Incerteza é um fenómeno puramente psicológico sem correspondência no mundo real"
+      ],
+      "a": 1,
+      "explanation": "Knight distinguiu risco (probabilidades podem ser atribuídas com base em dados históricos, distribuições estatísticas, ou modelos como frequência de incêndios em habitações) de incerteza Knightiana (probabilidades não podem ser estimadas — caso único, dados inexistentes, distribuição desconhecida). A distinção é operacional: sob risco podemos calcular VaR e CET1, sob incerteza usamos cenários e planeamento adaptativo. Confundir os dois leva a modelos falsos ou paralisia decisória."
+    },
+    {
+      "q": "Na matriz probabilidade × impacto, um risco classificado na zona 'alta exposição' (probabilidade alta e impacto alto) deve geralmente ser tratado via:",
+      "opts": [
+        "Aceitação passiva e monitorização contínua sem acção",
+        "Tratamento activo (controlos, processos) ou transferência imediata (seguro, hedging, terceirização)",
+        "Ignorar quando impacto financeiro estimado for inferior a 50.000€",
+        "Transferência exclusiva apenas se impacto estimado for superior a 1 milhão de euros"
+      ],
+      "a": 1,
+      "explanation": "Riscos de alta exposição (probabilidade alta + impacto alto) exigem geralmente tratamento activo via controlos (Treat) ou transferência (Transfer) — esperar passivamente expõe empresa a perda material. Aceitar é próprio de riscos baixa exposição. Critérios financeiros rígidos (€50k, €1M) são heurísticas úteis em algumas empresas mas não há regra universal — a decisão depende do apetite ao risco da organização e do custo do tratamento versus benefício esperado. Profissionais treinam-se a ler a matriz como ferramenta de triagem, não como algoritmo."
+    },
+    {
+      "q": "Na estratégia 4T de resposta a risco, qual das seguintes NÃO é uma das quatro estratégias clássicas?",
+      "opts": [
+        "Tolerate (aceitar activamente e monitorizar)",
+        "Treat (implementar controlos internos para reduzir exposição)",
+        "Terminate (desactivar a fonte do risco: vender, sair, abandonar)",
+        "Test (submeter o risco a testes empíricos antes de qualquer tratamento)"
+      ],
+      "a": 3,
+      "explanation": "As 4T são Tolerate, Treat, Transfer, Terminate. 'Test' é confundir com prática de BCP/DRP onde testes regulares são parte da manutenção do plano, mas não é estratégia de resposta ao risco em si. Memorizar o 4T é básico em qualquer framework de gestão de risco (ISO 31000, COSO ERM, IRM). Note-se que 'Test' pode parecer plausível (gestores confundem 'testar antes de decidir' com categoria autónoma de resposta) mas não é — teste é actividade complementar dentro das quatro estratégias, não uma quinta."
+    },
+    {
+      "q": "Uma empresa portuguesa exportadora usa um contrato forward com banco para vender USD a 1,08 contra EUR a 12 meses, fixando taxa de câmbio futura. Como se classifica isto na estratégia 4T?",
+      "opts": [
+        "Transferência completa de risco (a contraparte banco assume todo o risco cambial)",
+        "Tratamento de risco (redução de exposição via instrumento financeiro que converte variabilidade em custo fixo)",
+        "Tolerar (a empresa assume a variação sabendo-se exposta)",
+        "Terminar (a empresa decidiu parar de exportar para a geografia em causa)"
+      ],
+      "a": 1,
+      "explanation": "Hedging via forward (ou futuro) é classicamente considerado Treat (redução de risco) e não Transfer completa, porque não entrega risco a terceiros que o assume — apenas converte variabilidade cambial em obrigação fixa, mantendo a empresa exposta à contraparte do forward e ao risco de base. Seguro, em contraste, é Transfer clássica. A distinção é subtil mas importante: se empresa tivesse comprado opção cambial pura (sem obrigação de exercício), aproximar-se-ia mais de Transfer porque paga prémio fixo por protecção que mantém upside. Para a exportadora, o trade-off clássico do forward é: elimina downside USD mas também elimina upside."
+    },
+    {
+      "q": "O processo de gestão de risco definido pela norma ISO 31000:2018 tem quantas etapas principais?",
+      "opts": [
+        "3 etapas — identificar, analisar, tratar",
+        "4 etapas — avaliar, responder, monitorizar, comunicar",
+        "5 etapas — estabelecer contexto, identificar, analisar, avaliar, tratar (formando ciclo iterativo)",
+        "7 etapas — incluindo exclusivamente etapas de auditoria e reporte externo"
+      ],
+      "a": 2,
+      "explanation": "ISO 31000:2018 define processo em 5 etapas sequenciais e iterativas: estabelecer contexto, identificar riscos, analisar riscos, avaliar riscos, tratar riscos. O processo não é puramente linear — é iterativo, com realimentações entre etapas e revisões periódicas. A pergunta testa conhecimento específico do standard ISO — confundi-lo com frameworks de outra metodologia (PRM, PMI Risk) é comum. Saber o número correcto de etapas é o mínimo para profissionais que falam com auditores."
+    },
+    {
+      "q": "O framework COSO ERM 2017 integra a gestão de risco com quais dimensões da empresa?",
+      "opts": [
+        "Apenas reporting financeiro — fornece garantias sobre fiabilidade das demonstrações financeiras",
+        "Estratégia e performance — apoia apenas decisões de médio prazo",
+        "Estratégia, performance e tomada de decisão em toda a empresa (não apenas reporting financeiro ou operações)",
+        "Apenas operações — gestão de risco vista como função exclusivamente operacional"
+      ],
+      "a": 2,
+      "explanation": "COSO ERM 2017 marcou uma ruptura com o original de 2004 precisamente por integrar risco com estratégia, performance, e tomada de decisão em toda a empresa — não apenas reporting financeiro (versão antiga) nem apenas operações. Os 5 componentes (Governance & Culture, Strategy & Objective-setting, Performance, Review & Correction, Information/Communication/Reporting) cobrem todo o ciclo estratégico e operacional. Esta integração é a razão pela qual COSO ERM 2017 é hoje referência em empresas cotadas, e não apenas em auditoria."
+    },
+    {
+      "q": "Sob Basileia III (e a versão refinada III.5 / 'Basileia IV' em implementação faseada), o capital para risco operacional pode ser calculado via:",
+      "opts": [
+        "Standardised Approach (TSA / SA) usando receita bruta por linha de negócio como proxy de exposição, ou Advanced Measurement Approach (AMA) baseado em modelos internos",
+        "Apenas Value-at-Risk (VaR) calculado sobre book de trading",
+        "Exclusivamente stress testing regulatório periódico sem fórmula de capital mínimo",
+        "Ponderações fixas idênticas às usadas para risco de mercado"
+      ],
+      "a": 0,
+      "explanation": "Risco operacional em Basileia tem dois métodos principais: Standardised Approach (TSA — Traditional Standardised Approach, baseado em receita bruta por linha de negócio multiplicada por factor β regulatório) ou Advanced Measurement Approach (AMA — modelos internos com dados históricos e cenários, sujeito a aprovação supervisor). Basileia III.5 (concluída em 2017, implementação até 2028) substituiu AMA por Standardised Approach refinado (SA) para alinhamento entre bancos. Confunde-se facilmente com risco de mercado (VaR, stressed VaR) ou com risco de crédito (IRB) — cada classe usa metodologias diferentes."
+    },
+    {
+      "q": "O principal objectivo de um Plano de Continuidade de Negócio (BCP) é:",
+      "opts": [
+        "Maximizar lucro no trimestre corrente",
+        "Garantir que as operações críticas continuam durante e após disrupção, assegurando a entrega de produtos e serviços essenciais à missão",
+        "Reduzir a carga fiscal da empresa em períodos de queda de receita",
+        "Substituir permanentemente operações regulares por operações manuais de menor custo"
+      ],
+      "a": 1,
+      "explanation": "BCP (Business Continuity Plan) tem como objectivo central garantir que a organização pode continuar a entregar produtos e serviços críticos durante e após incidentes disruptivos (incêndio em data center, ciberataque, pandemia, desastre natural). Envolve BIA (Business Impact Analysis), definição de RTO/RPO, sites alternativos, equipas nomeadas, plano de comunicação pré-aprovado. Sem teste regular (anual), o plano é teoria — pandemia 2020 revelou quantos BCPs de gaveta falharam porque assumiam escritórios funcionais. Não substitui nem elimina operações regulares; é plano de contingência activado só em disrupção."
+    },
+    {
+      "q": "O framework TCFD (Task Force on Climate-related Financial Disclosures) estrutura a divulgação de risco climático em quatro pilares. Quais são?",
+      "opts": [
+        "Apenas risco financeiro — disclosure de exposições financeiras directas a empresas de carbono",
+        "Riscos e oportunidades climáticas em geral, sem estrutura específica",
+        "Governance, estratégia, risk management, e metrics & targets — quatro pilares que cobrem o ciclo completo de gestão de risco climático",
+        "Apenas governance — definição de quem no Conselho supervisiona o tema"
+      ],
+      "a": 2,
+      "explanation": "TCFD (criado pelo Financial Stability Board em 2017) estrutura disclosure de risco climático em 4 pilares: Governance (oversight pela administração e gestão), Strategy (impactos materiais no negócio, cenários climáticos), Risk Management (identificação, avaliação e integração no ERM), e Metrics & Targets (métricas como Scope 1/2/3, exposição a risco físico e de transição, metas de redução). Adoptado por ≥10 jurisdições incluindo UE (via CSRD), UK, Canadá, Japão. Confunde-se com disclosure ESG amplo (GRI, SASB) mas TCFD tem foco específico em risco financeiro-relacionado com clima, conectando clima com planeamento estratégico e financeiro."
+    }
+  ]
+}

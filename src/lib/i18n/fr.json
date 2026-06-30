@@ -990,5 +990,30 @@
   "walkthrough.verify.exists": "existe.",
   "walkthrough.verify.text": "Vérifie que",
   "write.breadcrumb.home": "← Hub",
-  "write.head.title": "Écriture · Conseils Anti-IA"
+  "write.head.title": "Écriture · Conseils Anti-IA",
+  "routes": {
+    "aulas": {
+      "curso": {
+        "gestao-risco": {
+          "tagline": "Business Administration - ISO 31000, COSO ERM, Bale III et TCFD - identifier, analyser et repondre aux risques d'entreprise",
+          "title": "Gestion des Risques"
+        }
+      }
+    },
+    "escola": {
+      "curso": {
+        "gestao-risco": {
+          "description": "Gestion des risques appliquee a la gestion d'entreprise: fondamentaux (definition du risque selon Knight, typologie strategique/operationnel/financier/conformite, appetit vs tolerance), identification et analyse (brainstorming, Delphi, SWOT, analyse de scenarios, matrices probabilite x impact, heatmaps), reponse et attenuation (strategie 4T - Tolerer, Traiter, Transferer, Terminer - assurances, couverture, diversification, PCA/PRA), et les principaux cadres et normes (ISO 31000 avec processus en 5 etapes, COSO ERM 2017 avec 5 composants et 20 principes, Bale III pour le risque de credit/marche/operationnel, et reporting ESG/climat via TCFD et CSRD).",
+          "tagline": "Business Administration - ISO 31000, COSO ERM, Bale III et TCFD - identifier, analyser et repondre aux risques d'entreprise",
+          "title": "Gestion des Risques"
+        }
+      },
+      "quiz": {
+        "grq": {
+          "title": "Quiz : Gestion des Risques",
+          "description": "10 questions pour tester vos connaissances en gestion des risques : risque vs incertitude selon Knight, strategie 4T de reponse, ISO 31000, COSO ERM, Bale III et TCFD."
+        }
+      }
+    }
+  }
 }

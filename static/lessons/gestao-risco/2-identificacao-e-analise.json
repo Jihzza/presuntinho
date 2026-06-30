@@ -1,0 +1,106 @@
+{
+  "id": "2-identificacao-e-analise",
+  "courseSlug": "gestao-risco",
+  "title": "Identificação e Análise: Métodos, Qualitativa vs Quantitativa e Matriz Probabilidade × Impacto",
+  "audio": "Lição sobre identificação e análise de risco: métodos de identificação (brainstorming, Delphi, SWOT, análise de cenários, registo de riscos), análise qualitativa vs quantitativa, matriz probabilidade vezes impacto, e heatmaps.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "Porque é que a identificação é a fase mais crítica" },
+    { "type": "p", "text": "Identificação de risco é a fase que mais vezes falha em processos de gestão de risco. Não por falta de talento ou ferramentas, mas por dois vieses humanos sistemáticos: o viés de normalidade ('nunca aconteceu, não acontece'), que faz subestimar eventos raros mas possíveis; e o viés de disponibilidade ('lembro-me disto, logo é provável'), que faz sobrevalorizar eventos recentes ou salientes mas raros. Riscos catastróficos são tipicamente os mais sub-identificados precisamente porque a sua baixa frequência histórica os torna 'invisíveis' aos métodos que dependem de histórico." },
+    { "type": "p", "text": "Estudos de perdas catastróficas em seguros (1995 a 2015) mostram que 70% das maiores perdas empresariais do período não constavam dos registos de risco das empresas afectadas antes de ocorrerem. Furacões no Caribe, ataques de 11 de Setembro, falhas de sistema por ano 2000, crises sanitárias globais — todos caíram fora dos cenários dos gestores mesmo quando havia literatura académica a avisar. A lição: combinar métodos de identificação (cada um com viéses diferentes) é a única defesa razoável contra a sub-identificação." },
+    { "type": "h2", "text": "Brainstorming estruturado" },
+    { "type": "p", "text": "A técnica mais básica mas frequentemente mal aplicada. Para funcionar, o brainstorming de risco precisa de quatro condições: facilitador neutro (não o CEO ou o chefe da área em risco), regras explícitas (sem julgamento de ideias na fase de geração), estímulo com taxonomia (cada categoria do 4-tipos estratégicos como prompt), e tempo suficiente (45-90 minutos por sessão, com pausas). Resultados típicos de 30-50 riscos brutos numa sessão de 8-12 pessoas bem preparadas." },
+    { "type": "ul", "items": [
+      "Composição ideal: 1 facilitador, 1-2 representantes de cada área relevante (operações, finanças, vendas, IT, compliance), 0-2 especialistas externos (auditor, consultor de risco). CEO é melhor não estar — a sua presença inibe a geração honesta de riscos estratégicos.",
+      "Categorias de estímulo: por tipo de risco (estratégico, operacional, financeiro, conformidade), por horizonte temporal (curto prazo 0-12M, médio 1-3A, longo 3A+), por área funcional, ou por objectivo afectado.",
+      "Tempo: 60-90 minutos por sessão são suficientes. Mais que isso cai a produtividade por fadiga decisória.",
+      "Output: lista de 30-80 riscos brutos, sem juízo de importância, agrupados por categoria. Risco de duplicação é aceite nesta fase."
+    ] },
+    { "type": "callout", "variant": "example", "text": "Uma PME de logística em Portugal faz brainstorming trimestral com 8 pessoas (CEO, COO, CFO, head of IT, head of operations, compliance officer, 2 chefes de equipa). Numa sessão, o head of IT identifica 'risco de ataque ransomware com pedido de pagamento em cripto-activos'. É votado como tendo 'baixa probabilidade' e incluído no registo. Oito meses depois, ataque real. A preparação (e não a probabilidade estimada) é o que reduz custo do evento — sistema de backup testado e testado permite recuperação em 48h, em vez dos 30 dias habituais em PMEs." },
+    { "type": "h2", "text": "Método Delphi: expertise anónima convergente" },
+    { "type": "p", "text": "O método Delphi, criado nos anos 1950 pela RAND Corporation para previsão militar, adapta-se bem a identificação de risco raro ou técnico que beneficia de expertise externa. Funciona assim: identifica-se um painel de 8-15 especialistas reconhecidos no tema (academia, consultores, reguladores, veteranos do sector); aplica-se questionário individual (cada especialista responde sozinho); partilha-se resposta agregada anonimizada; especialistas revisam a sua estimativa à luz do grupo; itera-se 2-4 rondas até convergência. Risco típico de Delphi é o condicionamento — especialistas anónimos mas no mesmo campo têm acesso a informação semelhante, e o processo pode convergir em torno de consenso errado." },
+    { "type": "ul", "items": [
+      "Quando usar: temas técnicos raros (emergência climática, disrupção tecnológica de 5-15 anos, falhas de cadeia em sectores específicos). Não vale a pena para riscos comuns que qualquer equipa identifica.",
+      "Como escolher painel: combinar peritos com visões diferentes (heterogeneidade é mais importante que unanimidade). 8-15 pessoas é suficiente — acima disso coordenação torna-se pesada.",
+      "Rondas: 2-4 rondas, cada uma com questionário curto (≤30 min para responder). Resposta média do grupo enviada a todos, em cada ronda.",
+      "Critério de paragem: estabilidade das estimativas entre rondas (variação <10%) OU convergência para subgrupos identificáveis (sinal de que há consensos distintos que precisam ser analisados)."
+    ] },
+    { "type": "h3", "text": "Limitação crítica do Delphi" },
+    { "type": "p", "text": "Delphi é melhor para estimar parâmetros em cenários conhecidos do que para identificar riscos verdadeiramente novos. Especialistas são influenciados pela sua experiência e raramente identificam riscos que contradigam modelos mentais estabelecidos. Por isso, complementar Delphi com análise de 'sinais fracos' (trendspotting em literatura não-académica, redes sociais, registos de incidentes em sectores adjacentes) e com cenários contra-factuais é necessário para riscos verdadeiramente novos. Alguns autores propõem 'Delphi inverso' — pedir aos peritos para identificar riscos que EXCLUIRIAM da sua análise e trabalhar essas exclusões." },
+    { "type": "h2", "text": "SWOT como identificação de risco" },
+    { "type": "p", "text": "A análise SWOT (Strengths, Weaknesses, Opportunities, Threats) é omnipresente no planeamento estratégico, mas raramente é explorada para o que realmente vale: Threats (riscos externos sobre os quais a organização tem pouco controlo) e Weaknesses (vulnerabilidades internas que amplificam risco). Os pares SO, ST, WO, WT são a matriz TOWS (Weihrich, 1982) que operacionaliza a combinação: S+O para estratégias ofensivas, W+O para melhorias, S+T para diversificação, W+T para gestão defensiva de risco." },
+    { "type": "ul", "items": [
+      "Threats (T): riscos exógenos — entrada de novo concorrente com modelo disruptivo, alteração regulatória, choque de procura, evento geopolítico. A empresa pode preparar-se mas não controlar.",
+      "Weaknesses (W): vulnerabilidades internas — dependência de fornecedor único, dependência de pessoa-chave, base de clientes concentrada, balanços apertados, tecnologia obsoleta. Estes amplificam o impacto de riscos externos.",
+      "Cruzamentos úteis: W+T (combinação de vulnerabilidade interna e ameaça externa) gera os piores cenários. S+T (força + ameaça) identifica onde a resiliência da empresa pode ser preservada mesmo sob choque. W+O identifica onde aproveitar oportunidade exige reforço estrutural."
+    ] },
+    { "type": "callout", "variant": "example", "text": "Loja retalhista com forte marca (S), rede nacional de 200 lojas (S), mas dependência de um único distribuidor de mercadoria (W). Cruzamento W+T (dependência + choque político sobre esse distribuidor) gera o cenário de ruptura de stock — risco crítico que SWOT destaca melhor que outras técnicas." },
+    { "type": "h2", "text": "Análise de cenários: pensar o futuro alternativo" },
+    { "type": "p", "text": "Diferente de previsão, análise de cenários (Peter Schwartz, 'The Art of the Long View', 1991) constrói 3-5 narrativas alternativas do futuro, cada uma consistente internamente, e identifica que estratégias funcionam em várias. Foco não é 'qual futuro vai acontecer' mas 'estou preparado para vários futuros'. Para gestão de risco, é particularmente útil para riscos com elevada incerteza Knightiana onde a distribuição não é estimável — não se pode dizer que a probabilidade do cenário X é 30%, mas pode-se dizer que ele é plausível e a empresa deve estar pronta." },
+    { "type": "ul", "items": [
+      "Seleção de eixos críticos: 2-3 forças motrizes (tendências demográficas, tecnológicas, regulatórias, geopolíticas) que podem mover-se em direcções opostas. Ex: bloco político pode caminhar para maior integração ou fragmentação.",
+      "Construção de 4-9 cenários: cruzar 2-3 eixos binários (ou com mais níveis) gera uma matriz 2×2, 2×2×2, 3×3. Cada quadrante é uma narrativa vívida e internamente consistente, não 'melhor caso' e 'pior caso'.",
+      "Stress-testing estratégico: para cada cenário, identificar que exposição a risco a empresa tem (qual a perda estimada se acontece?). Onde exposição é grande e probabilidade não-nula: preparar contingência (hedge, planos de contingência, redundância).",
+      "Uso executivo: apresentar cenários ao Conselho com narratives curtas e visualizações, identificar indicadores precoces de cada cenário, definir gatilhos de acção quando indicadores disparam."
+    ] },
+    { "type": "h3", "text": "Wind tunnelling e war gaming" },
+    { "type": "p", "text": "Técnicas complementares de cenários: wind tunnelling submete planos e estratégias a cenários adversos específicos (war game militar é o exemplo clássico; PE e bancos fazem-no com portfolios inteiros). Empresa dePrivate equity submete cada empresa em carteira a 5 cenários adversos; equipa de gestão responde com plano de mitigação para cada. War gaming implica simular adversário activo (concorrente, regulador, atacante) para identificar vulnerabilidades que análise estática não revela. Útil em sectores com elevada rivalidade ou ameaça regulatória rápida." },
+    { "type": "h2", "text": "Registo de riscos: o documento vivo" },
+    { "type": "p", "text": "O risk register (registo de riscos) é o documento central de qualquer processo de gestão de risco. Não é uma planilha burocrática — é um instrumento vivo de comunicação entre direcções. Estrutura típica por linha de risco:" },
+    { "type": "ul", "items": [
+      "Identificação: número/ID, descrição, categoria (estratégico/operacional/financeiro/compliance), sub-categoria.",
+      "Avaliação inerente: probabilidade (escala 1-5 ou baixa/média/alta), impacto (idem), exposição inerente (PxI).",
+      "Controlos existentes: descrição do que já mitiga (segregação de funções, aprovação dupla, seguros, limites).",
+      "Avaliação residual: probabilidade/impacto após controlos — o que sobra depois do que já se faz.",
+      "Plano de tratamento: acções a implementar, dono, prazo, custo estimado, impacto esperado na exposição.",
+      "Indicadores: KRI (Key Risk Indicators) ou KPIs — métricas que sinalizam mudança no perfil de risco.",
+      "Owner: responsável pela gestão do risco (não necessariamente quem o identificou)."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "O erro mais comum em registos de risco é tratá-los como ferramenta de auditoria anual em vez de instrumento de gestão contínua. Registos que são actualizados trimestralmente em vez de continuamente tornam-se irrelevantes em 6 meses — controlos mudam, exposições mudam, novos riscos aparecem sem ser capturados. Owner é figura crítica: sem owner claro, ninguém monitoriza KRI nem actualiza o registo." },
+    { "type": "h2", "text": "Análise qualitativa vs quantitativa" },
+    { "type": "p", "text": "Duas filosofias complementares, cada uma com forças e fraquezas. Análise qualitativa usa julgamento de especialistas para classificar risco em escalas discretas (baixo/médio/alto, 1-5). É rápida, barata e funciona com informação limitada. Análise quantitativa usa modelos estatísticos e simulação para produzir distribuições de probabilidade de perda (Value-at-Risk, Expected Shortfall, simulações Monte Carlo com 10.000 iterações). É mais exigente em dados e capacidade técnica, mas produz estimativas que suportam decisões de capital e pricing." },
+    { "type": "h3", "text": "Quando usar cada uma" },
+    { "type": "p", "text": "Análise qualitativa é adequada para: início de processo (ainda não há dados), riscos raros sem histórico (avaliação por analogia), triagem inicial de portfolios de risco (separar material de não-material), comunicação a stakeholders não técnicos. Análise quantitativa é necessária para: cálculo de capital económico e regulatório (banca, seguros), pricing de produtos de risco (seguros, derivados), risco de mercado e crédito em instituições financeiras, projectos de grande investimento com modelo DCF/Monte Carlo. Na prática, a maioria das empresas usa um híbrido: qualitativa para a maioria dos riscos, quantitativa para os riscos materiais." },
+    { "type": "callout", "variant": "tip", "text": "Não caia na armadilha da análise quantitativa prematuramente. Modelos estadísticos elegantes sobre dados fracos produzem precisão falsa. A frase célebre do estatístico George Box aplica-se: 'todos os modelos estão errados, alguns são úteis'. Modelos quantitativos em risco são úteis se a empresa tem dados para os alimentar — caso contrário, continuam 'errados' sem acrescentarem informação. Comece sempre com qualitativa e só promova a quantitativa quando o material e os dados justificam." },
+    { "type": "h2", "text": "Matriz probabilidade × impacto" },
+    { "type": "p", "text": "A ferramenta central de priorização qualitativa de risco é a matriz probabilidade × impacto (P×I). Cada risco recebe uma classificação em duas dimensões: probabilidade (1-5 ou baixa/média/alta/extrema) e impacto (idem, geralmente em termos financeiros). A exposição é o produto, e a posição na matriz determina prioridade de tratamento." },
+    { "type": "ul", "items": [
+      "Construção da escala de impacto: precisa ser calibrada em valor absoluto (€) para a empresa. Uma perda de €100k pode ser 'baixa' para uma multinacional, 'catastrófica' para uma PME de 10 pessoas. Sem escala calibrada, priorização é arbitrária.",
+      "Construção da escala de probabilidade: semelhante — precisa de definição operacional. 'Alta probabilidade' pode significar '>50% em 12 meses' ou 'esperamos pelo menos uma vez por ano'. Sem definição concreta, classificações divergem entre avaliadores.",
+      "Zonas da matriz: 5×5 tipicamente gera 3-5 zonas de tratamento. Comum: zona verde (baixa exposição, monitorizar), zona amarela (exposição média, plano de mitigação a definir), zona laranja (exposição alta, mitigação prioritária), zona vermelha (exposição crítica, atenção imediata do top management).",
+      "Frequência de revisão: matriz deve ser revista conforme contexto muda. Risco baixou porque se implementou controlo (movimenta-se da zona vermelha para amarela); risco subiu porque novo evento externo (movimenta-se de amarelo para vermelho)."
+    ] },
+    { "type": "h3", "text": "Variações da matriz clássica" },
+    { "type": "p", "text": "Várias extensões são úteis para contextos específicos. Matriz com cinco impactos diferentes (financeiro, operacional, reputação, regulatório, humano) em vez de um agregado — útil quando uma empresa tem exposições heterogéneas. Matriz com dimensão temporal (curto/médio/longo prazo) em vez de uma só — separa crises operacionais (curtas) de ameaças estratégicas (longas). Matriz 'before/after' para mostrar efeito da estratégia de mitigação — qual a posição do risco antes e depois do tratamento planeado. Cada variação serve um propósito analítico diferente; escolha conforme a audiência e decisão." },
+    { "type": "h2", "text": "Heatmaps e comunicação visual" },
+    { "type": "p", "text": "Heatmap é a representação visual da matriz P×I em cores, normalmente com bolhas dimensionadas por exposição ou impacto financeiro. É a ferramenta mais eficaz de comunicação a Conselho de Administração e Top Management: transforma tabela de números em imagem imediatamente legível. Restrição importante: heatmaps agregam risco (cada bolha é um agregado) e podem esconder correlações que tornam o portfolio mais arriscado do que a soma das partes." },
+    { "type": "ul", "items": [
+      "Uso executivo: incluir heatmap no reporting trimestral ao Conselho, com evolução face ao trimestre anterior (setas ou marcadores de tendência).",
+      "Granularidade: heatmap de top-20 riscos para Conselho (não 80+), heatmap detalhado para gestão de risco.",
+      "Correlação entre riscos: anotar movimentos conjuntos (risco A e B tendem a subir juntos porque partilham causa subjacente) — informação crítica para gestão de portfolio de risco que heatmaps simples podem esconder.",
+      "Mapa de calor 3D: extensão com terceira dimensão (velocidade de materialização) usada em seguros e gestão de crise — risco alto, alta velocidade exige planeamento de continuidade dedicado."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Heatmaps são óptimas para comunicar mas péssimas para decidir sozinhas. A pergunta certa não é 'este risco está na zona vermelha?' mas 'qual a melhor estratégia de resposta?'. Heatmap mostra gravidade percebida; resposta vem de análise cuidada que combina risco com apetite, alternativas disponíveis, custo de mitigação e trade-offs estratégicos. Use heatmaps como início de conversa, não como fim de decisão." },
+    { "type": "h2", "text": "Cruzamento de risco: o portfolio importa" },
+    { "type": "p", "text": "O último nível de análise que distingue ERM maduro de gestão em silo: cruzamento entre riscos. Dois riscos isolados podem ser 'aceitáveis' mas quando correlacionados (um dispara o outro) tornam-se críticos. Exemplos clássicos: crise bancária + perda de confiança dos depositantes (correlação total); pandemia + quebra de cadeia global (forte correlação); subida de juros + devolução de crédito em mercado imobiliário." },
+    { "type": "p", "text": "Métodos: matriz de correlação (qualitativo, N×N), simulação de cenários correlacionados (quantitativo, Monte Carlo com cópulas), análise de stress multi-factor (ex: qual a perda se choques de juros, FX, e crescimento económico acontecem simultaneamente). Cada um destes exames identifica riscos onde o aparentemente 'muito improvável' se torna 'plausível após correlação', e ajusta a posição em portfolio. Empresas maduras em ERM dedicam 20-30% do tempo de análise a correlações, não a riscos isolados." },
+    { "type": "h2", "text": "Da análise à decisão: critérios de materialidade" },
+    { "type": "p", "text": "Nem todo risco identificado merece plano de mitigação detalhado. Gestão de risco profissional triagem risco por materialidade — combinação de exposição residual, alinhamento com apetite e capacidade de tratamento. Critérios típicos:" },
+    { "type": "ul", "items": [
+      "Materialidade financeira: impacto esperado > limite definido (tipicamente 1-5% do EBITDA anual).",
+      "Tolerância ao risco: risco com exposição acima da tolerância declarada da unidade exige plano.",
+      "Frequência esperada: riscos com probabilidade superior a X% ao ano entram em plano formal; abaixo disso, monitorizar passivamente.",
+      "Capacidade de absorção: empresas com elevado cash flow e capital podem absorver maiores riscos em POC (point of view) de planeamento de contingência; empresas com balanços apertados precisam de tratamento preventivo."
+    ] }
+  ],
+  "keyPoints": [
+    "Identificação é a fase mais fraca da gestão de risco — vieses de normalidade e disponibilidade fazem sub-valorizar riscos raros mas materiais.",
+    "Métodos complementares: brainstorming (geração rápida), Delphi (consenso de especialistas anónimos), SWOT (ameaças e fraquezas), análise de cenários (múltiplos futuros plausíveis), e registo de riscos (instrumento central vivo).",
+    "Qualitativa (escalas, julgamento) é para triagem; quantitativa (VaR, Monte Carlo) é para material e pricing. Hybridar é a norma profissional.",
+    "Matriz probabilidade × impacto (típica 5×5) com escala calibrada em € é a ferramenta central de priorização; heatmap é a versão visual para comunicação.",
+    "Cruzamento e correlação entre riscos transforma risco individual em risco de portfolio — o que distingue ERM maduro de gestão em silo."
+  ],
+  "quizSlug": "grq",
+  "nextLesson": "3-resposta-e-mitigacao",
+  "prevLesson": "1-fundamentos-risco"
+}
