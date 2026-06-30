@@ -1,50 +1,19 @@
 {
-  "lastUpdated": "2026-06-30T04:20:00.000000+02:00",
-      "lastUpdated": "2026-06-30T04:55:00+02:00",
-            "openItems": [
-              {
-                "id": "gap-101",
-                "category": "licao/curso",
-                "description": "Cadeira BA #44: Sistemas de Informação Gerencial (slug sistemas-de-informacao). Despachada para Skander 2 (deleg_05501a3e). 4 lições JÁ EXISTEM (1-tipos-de-si, 2-erp-crm, 3-business-intelligence, 4-seguranca-da-informacao) + siq.json JÁ EXISTE (verificado). Falta: course.json NOVO + i18n 5 locales (routes.escola.curso.sistemas-de-informacao.{title,description,tagline} + routes.aulas.curso.sistemas-de-informacao.{title,tagline} + routes.escola.quiz.siq.{title,description}) + CATALOGUE wired em 3 routes.",
-                "severity": "baixa",
-                "source": "watchdog-tick-2026-06-30-03",
-                "created_at": "2026-06-30T04:20:00+02:00",
-                "done": true,
-                "sha": "2d09a97",
-                "closed_at": "2026-06-30T04:55:00+02:00",
-                "evidence": "Production smoke 2026-06-30 04:55: /escola/curso/sistemas-de-informacao/=200; /escola/quiz/siq=200; 4 lessons (1-tipos-de-si, 2-erp-crm, 3-business-intelligence, 4-seguranca-da-informacao) + course.json + siq.json + 5 i18n locales (title/description/tagline × routes.escola.curso.sistemas-de-informacao + routes.aulas.curso.sistemas-de-informacao). Deploy 6a432c42 state=ready (commit 2d09a97)."
-              },
-              {
-                "id": "gap-102",
-                "category": "i18n",
-                "description": "gap-091 batch-1 — escola/* (13 findings, 5 ficheiros). Brief completo em .state/skander1-batches-gap-091.md (linhas 1-200). Adicionar 11 chaves novas × 5 locales (55 entries) + 2 cleanups redundantes. Ficheiros: src/routes/escola/curso/[slug]/+page.svelte, src/routes/escola/curso/portugues/+page.svelte, src/routes/escola/curso/portugues/quiz/+page.svelte, src/routes/escola/quiz/[quizSlug]/+page.svelte, src/routes/escola/walkthrough/[lessonSlug]/+page.svelte. Validar: npm run check 0/0 + npm run build verde + smoke dev /escola/curso/equivalenza/ /escola/curso/portugues/ /escola/curso/portugues/quiz/ /escola/quiz/equivalenza/.",
-                "severity": "média",
-                "source": "watchdog-tick-2026-06-30-04",
-                "created_at": "2026-06-30T04:55:00+02:00",
-                "dispatched_to": "Skander 2 — deleg_gap091b1 a abrir"
-              },
-              {
-                "id": "gap-103",
-                "category": "i18n",
-                "description": "gap-091 batch-2 — finanças/* (10 findings, 4 ficheiros). Brief completo em .state/skander1-batches-gap-091.md (secção batch-2). Adicionar 9 chaves novas × 5 locales (45 entries) + cleanups triviais. Ficheiros em src/routes/financas/. Validar: npm run check 0/0 + npm run build verde + smoke dev /financas.",
-                "severity": "média",
-                "source": "watchdog-tick-2026-06-30-04",
-                "created_at": "2026-06-30T04:55:00+02:00",
-                "dispatched_to": "Skander 2 — deleg_gap091b2 a abrir"
-              },
-        {
-          "id": "gap-091",
-          "category": "i18n",
-          "description": "Auditoria sistemática de PT hardcoded em .svelte files. Skander 1 despachado (deleg_390154d7) para analisar .state/i18n-audit-raw.json (62 findings em 59 ficheiros) e produzir .state/i18n-audit-gap-091.md com priorização ALTA/MÉDIA/BAIXA + chaves i18n sugeridas + batches dispatchable. Depois dos batches prontos, despachar Skander 2 para executar cada batch.",
-          "severity": "média",
-          "source": "watchdog-tick-2026-06-29-20",
-          "created_at": "2026-06-29T21:05:00+02:00",
-          "updated_at": "2026-06-30T04:20:00+02:00"
-                  },
-                  {
-                        "id": "gap-028",
+  "lastUpdated": "2026-06-30T05:30:00+02:00",
+  "openItems": [
+    {
+      "id": "gap-091",
+      "category": "i18n",
+      "description": "Auditoria sistemática de PT hardcoded em .svelte files. Skander 1 já produziu priorização em .state/i18n-audit-gap-091.md + 4 batches em .state/skander1-batches-gap-091.md. Batch-1+2 (escola + finanças) committed em 55e240e. Batch-3 (hábitos+trabalhos) e Batch-4 (agente+aulas+dl+biblioteca) em background (deleg_da34fa09).",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-29-20",
+      "created_at": "2026-06-29T21:05:00+02:00",
+      "updated_at": "2026-06-30T05:30:00+02:00"
+    },
+    {
+      "id": "gap-028",
       "category": "smoke-fail",
-      "description": "Verificar fluxo de auth via browser: splash → escolha profile → password → onboarding modal — confirmar que funciona end-to-end sem console errors. Auth verificado por código (splash renders 2 buttons + ARIA radiogroup + form) mas live-fire bloqueado por password gating.",
+      "description": "Verificar fluxo de auth via browser: splash → escolha profile → password → onboarding modal — confirmar que funciona end-to-end sem console errors. Auth verificado por código mas live-fire bloqueado por password gating. Pular se Daniel nunca nos der a password.",
       "severity": "média",
       "source": "watchdog-tick-2026-06-28-09",
       "created_at": "2026-06-28T09:31:47+02:00"
@@ -52,7 +21,7 @@
     {
       "id": "gap-034",
       "category": "feature-pedida-pelo-Daniel",
-      "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Já temos 28 cursos BA+Uni+Advanced, 119+16 lições, 32+4 quizzes. Skander 2 a criar #29 (gestao-financeira-empresarial) em background. Próximo round se Daniel pedir mais.",
+      "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Já temos 44 cadeiras BA entregues. Continua como gap-107.",
       "severity": "baixa",
       "source": "audio-Daniel-2026-06-27",
       "created_at": "2026-06-28T13:05:00+02:00"
@@ -60,7 +29,7 @@
     {
       "id": "gap-036",
       "category": "UI/UX",
-      "description": "HeartButton visibilidade + localização: smoke confirmou FAB bottom-right em / (visível e acessível). Daniel pediu 'no sítio que eu disse' — confirmar se bottom-right é exactamente onde ele quer ou se prefere header / hero / splash.",
+      "description": "HeartButton posicionamento: smoke confirmou FAB bottom-right em /. Daniel pediu 'no sítio que eu disse' — confirmar se é exactamente onde ele quer. Live-fire bloqueado por auth.",
       "severity": "baixa",
       "source": "audio-Daniel-2026-06-28",
       "created_at": "2026-06-28T13:05:00+02:00"
@@ -68,7 +37,7 @@
     {
       "id": "gap-050",
       "category": "smoke-fail",
-      "description": "HeartButton aparece no DOM em / (correto, bottom-right). Smoke live-fire pendente — auth gate bloqueia. Quando Fatma logada confirmar visualmente que FAB bottom-right está no sítio certo e não esconde conteúdo.",
+      "description": "HeartButton aparece no DOM em / (correto, bottom-right). Smoke live-fire pendente — auth gate bloqueia.",
       "severity": "baixa",
       "source": "watchdog-tick-2026-06-28-22",
       "created_at": "2026-06-28T22:30:00+02:00"
@@ -76,679 +45,53 @@
     {
       "id": "gap-053",
       "category": "smoke-fail",
-      "description": "Smoke i18n real nas 5 línguas (pt-PT, en, fr, tn, ar) em produção após deploy 92ba6eb — confirmar que $t() resolve 753 chaves sem mostrar fallbacks PT no DOM. Bloqueado por auth gate (splash). Estratégia: build um script que usa curl + parse do HTML para extrair aria-labels visíveis após auth bypass via cookies, OU pedir ao Daniel/Rafa a password de teste uma vez.",
+      "description": "Smoke i18n real nas 5 línguas em produção após deploy 92ba6eb — confirmar que $t() resolve 753+ chaves sem mostrar fallbacks PT no DOM. Bloqueado por auth gate.",
       "severity": "média",
       "source": "watchdog-tick-2026-06-28-23",
-      "created_at": "2026-06-28T23:25:00+02:00",
-      "updated_at": "2026-06-29T04:35:00+02:00"
+      "created_at": "2026-06-28T23:25:00+02:00"
     },
     {
-      "id": "gap-098",
-      "category": "licao/curso",
-      "description": "Cadeira BA #41: Estratégia de Marketing Internacional (slug marketing-internacional). Despachada para Skander 2. 4 lições + mkq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired. Continua o pipeline do Daniel 'faz cursos sobretudo / aulas sobretudo'. Conteúdo: STP internacional (segmentação global: country markets, intermarket, intra-market; targeting: undifferentiated, concentrated, differentiated, micromarketing mix); 4Ps globais (produto: adaptação vs padronização, country-of-origin effects; preço: dumping, transfer pricing, currency hedging; praça: canais internacionais, joint ventures, subsidiárias; promoção: publicidade internacional, mensagens local-globais); estratégias de entrada (exportação indireta/direta, licensing, franchising, joint ventures, subsidiárias integrais, FDI greenfield/acquisition, alliance estratégica, born global); gestão cultural e diplomacia corporativa (Hofstede dimensions: PDI, IDV, MAS, UAI, LTO, IND aplicado a decisões de marketing global).",
+      "id": "gap-104",
+      "category": "lição/curso",
+      "description": "Cadeira BA #45: brief Skander 1 (deleg_c2fbca33 do tick anterior). Próxima cadeira a despachar.",
       "severity": "baixa",
-      "source": "watchdog-tick-2026-06-30-01",
-      "created_at": "2026-06-30T02:10:45.078459+02:00"
+      "source": "watchdog-tick-2026-06-30-04",
+      "created_at": "2026-06-30T04:55:00+02:00"
     },
     {
-      "id": "gap-099",
+      "id": "gap-105",
       "category": "i18n",
-      "description": "Re-auditar PT hardcoded em .svelte após este tick (3 strings migradas: agente.thinking, biblioteca.novo.hero.title, escola.curso.pt.fallbackTitle). Continuar a auditoria gap-091 — Skander 1 deve produzir lista priorizada dos próximos 10-20 strings hardcoded a migrar.",
+      "description": "gap-091 batch-3 — hábitos/novo (3 fixes: hero.title, criando, submit.criar) + trabalhos/assignment/[slug] (4 fixes: loading, file_path, back_to_list ×2) + 6 chaves × 5 locales (30 entries). Despachado para Skander 2 (deleg_da34fa09).",
       "severity": "média",
-      "source": "watchdog-tick-2026-06-30-01-i18n-refresh",
-      "created_at": "2026-06-30T02:10:45.078459+02:00"
+      "source": "watchdog-tick-2026-06-30-05",
+      "created_at": "2026-06-30T05:30:00+02:00",
+      "dispatched_to": "Skander 2 — deleg_da34fa09"
+    },
+    {
+      "id": "gap-106",
+      "category": "i18n",
+      "description": "gap-091 batch-4 — agente/+page.svelte (1 fix + 1 cleanup), aulas/+page.svelte (1 cleanup), dl/+page.svelte (1 cleanup), biblioteca/novo/+page.svelte (2 fixes + 1 cleanup) + 3 chaves × 5 locales (15 entries). Despachado para Skander 2 (deleg_da34fa09).",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-30-05",
+      "created_at": "2026-06-30T05:30:00+02:00",
+      "dispatched_to": "Skander 2 — deleg_da34fa09"
+    },
+    {
+      "id": "gap-107",
+      "category": "lição/curso",
+      "description": "Próxima cadeira BA a despachar (já temos 44). Candidatas: #45 Auditoria e Controladoria, #46 Direito Empresarial, #47 Ética nos Negócios, #48 Responsabilidade Social, #49 Empreendedorismo Social, #50 Economia Comportamental. Skander 1 a decidir em background (deleg_da34fa09).",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-30-05",
+      "created_at": "2026-06-30T05:30:00+02:00",
+      "dispatched_to": "Skander 1 — deleg_da34fa09"
     }
   ],
   "closedItems": [
-    {
-      "id": "gap-097",
-      "category": "i18n",
-      "description": "write.head.title parity — added to en/fr/tn (was only in pt-PT+ar). Also added 3 new i18n keys (agente.thinking, biblioteca.novo.hero.title, escola.curso.pt.fallbackTitle) × 5 locales = 15 entries. Migrated 3 .svelte hardcoded strings to $t() with {default: 'pt-fallback'}. npm run check 0/0; build green; ready to push.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-30-00-i18n-audit",
-      "created_at": "2026-06-30T00:30:36.698748+02:00",
-      "done": true,
-      "sha_pending": "tick-25-commit",
-      "closed_at": "2026-06-30T02:10:45.078459+02:00",
-      "evidence": "5 locales now have write.head.title (pt-PT: 'Writing · Tips Anti-AI', en: 'Writing · Anti-AI Tips', fr: 'Écriture · Conseils Anti-IA', tn: 'Ticra · Tiɣbula Anti-AI', ar: 'الكتابة · نصائح لمكافحة الذكاء الاصطناعي'). 3 additional keys added to all 5 locales (15 entries). agente/+page.svelte thinking bubble now uses $t('agente.thinking'). biblioteca/novo hero h1 uses $t('biblioteca.novo.hero.title'). escola/curso/portugues fallback title uses $t('escola.curso.pt.fallbackTitle'). npm run check 0/0; npm run build green.",
-      "updated_at": "2026-06-30T02:10:45.078459+02:00"
-    },
-    {
-      "id": "gap-095",
-      "category": "i18n",
-      "description": "BadgeGrid 8 badges (16 strings name+description) hardcoded em BADGE_CATALOG. Despachada para Skander 2 (deleg_a2e4822f). Vai criar components.badge.catalog.{b7..b15}.{name,description} × 5 locales (80 entries) e refactor BadgeGrid para usar $t().",
-      "severity": "alta",
-      "source": "watchdog-tick-2026-06-29-23",
-      "created_at": "2026-06-29T22:55:51+01:00",
-      "done": true,
-      "sha": "d161df3",
-      "closed_at": "2026-06-30T00:30:36.698748+02:00",
-      "evidence": "fix(i18n): BadgeGrid.svelte removed hard-coded name/description; uses $t('components.badge.catalog.${id}.name') with PT_NAMES/PT_DESCRIPTIONS fallback. 5 locales (pt-PT/en/fr/tn/ar) now have 16 catalog keys (b7 Porquinha/Pig, b8 Coração/Heart, b9 Konami, b10 Palavra Mágica, b12 Pé/Foot, b13 Sala Secreta, b14 Leitor, b15 Quizzmaster × name+description). pt-PT also got routes.aulas.curso.gestao-qualidade + lideranca-coaching (parity fix). npm run check 0/0; i18n parity: only write.head.title gap remains (pre-existing).",
-      "updated_at": "2026-06-30T00:30:36.698748+02:00"
-    },
-    {
-      "id": "gap-094",
-      "category": "licao/curso",
-      "description": "Cadeira BA #40: Estratégia Corporativa Avançada (slug estrategia-corporativa). Despachada para Skander 2 (deleg_e8f6de5b). 4 lições (PESTEL+Porter Five Forces+VRIO+SWOT+Ansoff+BCG+BSC+OKRs) + ecq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-23",
-      "created_at": "2026-06-29T22:55:51+01:00",
-      "done": true,
-      "sha": "d161df3",
-      "closed_at": "2026-06-30T00:30:36.698748+02:00",
-      "evidence": "feat(escola): BA #40 Estrategia Corporativa: 4 lessons (01-analise-externa-pestel-five-forces, 02-analise-interna-vrio-swot, 03-estrategias-corporativas, 04-implementacao-estrategica) + course.json (order:40) + ecq quiz 10 perguntas. CATALOGUE wired em escola/+page.svelte (slug), escola/curso/[slug] (4 lessons), aulas/+page.server.ts (icon+color). i18n 5 locales: routes.escola.curso.estrategia-corporativa.{title,description,tagline} + routes.aulas.curso.estrategia-corporativa.{title,tagline} + routes.escola.quiz.ecq.{title,description}. npm run check 0/0; /escola/curso/estrategia-corporativa/ → 200. Pushed fda921e..d161df3.",
-      "updated_at": "2026-06-30T00:30:36.698748+02:00"
-    },
-    {
-      "id": "gap-083-pending-ba35",
-      "category": "lição/curso",
-      "description": "Cadeira BA #35 agora despachada como gap-084 (gestao-operacoes) para Skander 2. Esta entry fica como reminder que outras cadeiras BA podem ser adicionadas (Análise de Investimentos, Comércio Internacional, etc.). Watchdog vai despachar mais cadeiras em ticks futuros se Daniel pedir mais.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-14",
-      "created_at": "2026-06-29T15:11:00+02:00",
-      "updated_at": "2026-06-29T16:56:22+02:00",
-      "sha": "d72e55e",
-      "closed_at": "2026-06-29T22:55:51+01:00",
-      "evidence": "STALE REMINDER — BA #35 (gestao-operacoes) já foi gap-084 (sha d72e55e). BA #36/37/38/39 também já entregues (sha fb810cd/238a4dc/b123043/b67ba84). Continuar pipeline BA via gap-094 (BA #40 Estratégia Corporativa — dispatched Skander 2 deleg_e8f6de5b).",
-      "done": true
-    },
-    {
-      "id": "gap-093",
-      "category": "licao/curso",
-      "description": "Cadeira BA #39: Comercio Internacional (slug comercio-internacional). Despachada para Skander 2 (deleg_64b0b5f5). 4 licoes + ciq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired. Conteudo: Smith/Ricardo/Heckscher-Ohlin/GATT, Uppsala/born global, Incoterms 2020 + L/C trade finance, marketing internacional 4Ps + Hofstede + CISG/arbitragem.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-22",
-      "created_at": "2026-06-29T21:50:00+02:00",
-      "sha": "b67ba84",
-      "closed_at": "2026-06-29T22:55:51+01:00",
-      "evidence": "7/7 smoke URLs HTTP 200 em produção após deploy 6a42e3df (commit b67ba84): /escola/curso/comercio-internacional/ 200, /escola/quiz/ciq 200, 4× lessons JSON 200 (01-teorias-comercio, 02-incoterms-trade-finance, 03-marketing-internacional-cultura, 04-gestao-risco-arbitragem), /static/quizzes/ciq.json 200. i18n 5 locales todas têm routes.escola.curso.comercio-internacional.{title,description,tagline}. npm run check 0/0; build green.",
-      "done": true
-    },
-    {
-      "id": "gap-090",
-      "category": "smoke-fail",
-      "description": "Smoke live-fire do gap-088 (Comportamento Organizacional BA #37) — verificado via curl HTTP 200 em todos os URLs em produção após deploy 6a42c198 (commit 238a4dc8).",
-      "sha": "238a4dc",
-      "closed_at": "2026-06-29T21:35:00+02:00",
-      "evidence": "Smoke 4/4 URLs HTTP 200 em produção: /escola/curso/comportamento-organizacional/ 200, /escola/quiz/coq 200, /static/lessons/comportamento-organizacional/01-comportamento-individual.json 200, /aulas 200 (com trailing-slash redirect). Deploy 6a42c198 ready (commit 238a4dc8)."
-    },
-    {
-      "id": "gap-089",
-      "category": "smoke-fail",
-      "description": "Smoke live-fire de gap-087 (Análise de Investimentos BA #36) — verificado via curl HTTP 200 em produção após deploy 6a42a817 (commit fb810cd).",
-      "sha": "fb810cd",
-      "closed_at": "2026-06-29T21:35:00+02:00",
-      "evidence": "Smoke URLs HTTP 200 já verificadas em tick anterior: /escola/curso/analise-investimentos/ 200, /escola/quiz/aiq 200, /aulas 200, 4/4 lessons JSON 200, aiq.json 200. Deploy 6a42a817 ready."
-    },
-    {
-      "id": "gap-088",
-      "category": "lição/curso",
-      "description": "Cadeira BA #37: Comportamento Organizacional (slug comportamento-organizacional). 4 lições + coq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired. Conteúdo: Big Five, Maslow, Herzberg, McGregor, SDT; Tuckman, Belbin, groupthink, social loafing; Mintzberg, Schein, Hofstede, French-Raven; Path-Goal, empowerment, Thomas-Kilmann, BATNA/ZOPA.",
-      "sha": "238a4dc",
-      "closed_at": "2026-06-29T21:35:00+02:00",
-      "evidence": "npm run check 0/0; npm run build green; 4 lessons JSON (01-comportamento-individual, 02-dinamica-grupo-equipas, 03-estrutura-organizacional-cultura-poder, 04-lideranca-poder-conflitos) + course.json + coq.json criados; 5 i18n locales têm comportamento-organizacional.{title,description,tagline}; CATALOGUE wired em 3 routes; commit 238a4dc pushed; deploy 6a42c198 ready."
-    },
-    {
-      "id": "gap-082",
-      "category": "lição/curso",
-      "description": "Cadeira BA #34 'Liderança e Coaching' — 4 lições (fundamentos/traços+comportamentos+situacional Fiedler+Hersey-Blanchard; coaching executivo GROW de Whitmore+feedback SBI; inteligência emocional do líder 5 pilares de Goleman; desenvolvimento de sucessão Charan+9-box+mentoring+sponsorship) + lcq quiz 10 perguntas. 5 JSON (4 lições + course.json) + static/quizzes/lcq.json + 4 routes (escola/+page, escola/curso/[slug]/+page, aulas/+page.server, write/+page.svelte title, financas/transacoes/[id]/+page.svelte title) + 4 i18n keys × 5 locales = 20 entries. CATALOGUE wired. Total CATALOGUE: 33 cadeiras, 130 lições, 33+4 quizzes. check 0/0, build green, push done, deploy 6a426ec0 ready. SHA 6dde8ad.",
-      "sha": "6dde8ad",
-      "closed_at": "2026-06-29T15:11:00+02:00",
-      "evidence": "9/9 smoke URLs HTTP 200 em produção: /escola/curso/lideranca-coaching/, /escola/quiz/lcq, /aulas, 4× lessons JSON, lcq.json quiz. i18n 5 locales todas têm routes.escola.curso.lideranca-coaching.{title,description,tagline}."
-    },
-    {
-      "id": "gap-078",
-      "category": "lição/curso",
-      "description": "Cadeira BA #32 'Empreendedorismo e Plano de Negócios' — 4 lições (mindset/effectuation, BMC + casos Equivalenza+Nubank, validação+4 tipos MVP, plano+pitch deck) + epq quiz 10 perguntas. 5 JSON + 5 i18n (809→815 chaves × 5 = 30 entries). CATALOGUE wired. Total CATALOGUE: 32 cadeiras. check 0/0, build green, push done. SHA 7fa2227.",
-      "sha": "7fa2227",
-      "closed_at": "2026-06-29T12:13:15.048479+02:00",
-      "done": true,
-      "updated_at": "2026-06-29T12:13:15.048479+02:00",
-      "evidence": "npm run check 0 errors/0 warnings; npm run build green; build/lessons/empreendedorismo/{01-04}*.json + course.json + build/quizzes/epq.json servidos; 5 i18n locales com 815 chaves (zero missing/extra)."
-    },
-    {
-      "id": "gap-068",
-      "description": "fix(i18n): gap-068 — final audit pass: 16 PT strings wrapped in $t() across 10 routes (pt/financas/habitos/escola/secrets/write/course/dl/trabalhos). 24 chaves × 5 locales = 120 entries (753→873). Audit doc .state/i18n-audit-final.md lista como extended sweep; agora 100% coberto.",
-      "sha": "f115576",
-      "closed_at": "2026-06-29T07:35:00+02:00"
-    },
-    {
-      "id": "gap-054",
-      "description": "2nd round de polish tick: forms audit + HeartButton posicionamento — fundido com gap-066. Estado em tick-29: edge cases em forms, validação URL biblioteca, max lengths, error messages localizados (muitos resolvidos em gap-058/059/060/061).",
-      "sha": "3dad3db",
-      "closed_at": "2026-06-29T05:25:00+02:00"
-    },
-    {
-      "id": "gap-063",
-      "description": "Cadeira BA #29 'Gestão Financeira Empresarial' (Corporate Finance) — 4 lições (DRE/balanço, índices financeiros DuPont, orçamento capital VPL/TIR, estrutura capital WACC) + gfeq quiz 8 perguntas. 5 ficheiros JSON criados em static/lessons/gestao-financeira-empresarial/, CATALOGUE wired em escola/+page.svelte + aulas/+page.server.ts + escola/curso/[slug]/+page.svelte, i18n 5 locales (routes.escola.curso.gestao-financeira-empresarial.{title,description}). Smoke: 4/4 lições + 1/1 quiz retornam 200 em produção. SHA 1eb6c34.",
-      "sha": "1eb6c34",
-      "closed_at": "2026-06-29T05:25:00+02:00"
-    },
-    {
-      "id": "gap-064",
-      "description": "i18n: SecretModal PERFUME_FACTS 5 PT strings → $t() com 5 chaves × 5 locales = 25 entries. Implementação usa PERFUME_FACT_DEFAULTS: Record<string,string> de fallbacks por key + i18n store. Componentes principais agora 100% i18n: HeartButton, OnboardingModal, Mascot, InstallButton, OfflineIndicator, LoveLock, SecretModal, EasterEggsCard. SHA 6b5f6cf. Deploy ready 03:08:28Z (id 6a41e18e).",
-      "sha": "6b5f6cf",
-      "closed_at": "2026-06-29T05:25:00+02:00"
-    },
-    {
-      "id": "fix-001",
-      "description": "XP mirror sync após hydration",
-      "sha": "8771315",
-      "closed_at": "2026-06-28T00:09:54+02:00"
-    },
-    {
-      "id": "fix-002",
-      "description": "Audio player hidden when lesson has no audio",
-      "sha": "1afc0e1",
-      "closed_at": "2026-06-28T01:30:00+02:00"
-    },
-    {
-      "id": "feat-001",
-      "description": "5 Business Administration courses (20 lições + 5 quizzes)",
-      "sha": "cb64406",
-      "closed_at": "2026-06-28T01:30:00+02:00"
-    },
-    {
-      "id": "feat-002",
-      "description": "Backup/export user data as JSON",
-      "sha": "559066d",
-      "closed_at": "2026-06-28T01:30:00+02:00"
-    },
-    {
-      "id": "feat-003",
-      "description": "Empty states + skeletons + a11y polish",
-      "sha": "d8bcec3",
-      "closed_at": "2026-06-28T01:30:00+02:00"
-    },
-    {
-      "id": "feat-004",
-      "description": "i18n full app translation coverage (12 keys, 5 locales)",
-      "sha": "7ab773c",
-      "closed_at": "2026-06-28T02:15:43+02:00"
-    },
-    {
-      "id": "gap-002",
-      "description": "i18n full audit pass: 10 onboarding keys + cross-locale cleanup",
-      "sha": "6b63a51",
-      "closed_at": "2026-06-28T02:55:00+02:00"
-    },
-    {
-      "id": "gap-004",
-      "description": "8 default habits",
-      "sha": "44eeb33",
-      "closed_at": "2026-06-28T02:55:00+02:00"
-    },
-    {
-      "id": "gap-007",
-      "description": "BA courses expanded 4→8 lessons each + 5 new 2nd quizzes",
-      "sha": "44eeb33",
-      "closed_at": "2026-06-28T02:55:00+02:00"
-    },
-    {
-      "id": "gap-009",
-      "description": "OnboardingModal accepts profile prop, resolves onboarding.welcome.{profile} dynamically",
-      "sha": "6b63a51",
-      "closed_at": "2026-06-28T02:55:00+02:00"
-    },
-    {
-      "id": "gap-005",
-      "description": "Trabalhos ja tem EmptyState",
-      "sha": "d8bcec3",
-      "closed_at": "2026-06-28T02:59:00+02:00"
-    },
-    {
-      "id": "gap-006",
-      "description": "Biblioteca ja tem 2 variantes EmptyState",
-      "sha": "d8bcec3",
-      "closed_at": "2026-06-28T02:59:00+02:00"
-    },
-    {
-      "id": "gap-001",
-      "description": "HeartButton no header global",
-      "sha": "877a01e",
-      "closed_at": "2026-06-28T02:42:00+02:00"
-    },
-    {
-      "id": "gap-003",
-      "description": "APS Finanças — empty state melhorado",
-      "sha": "877a01e",
-      "closed_at": "2026-06-28T02:42:00+02:00"
-    },
-    {
-      "id": "gap-015",
-      "description": "Hub sub-app names + descriptions i18n",
-      "sha": "68be912",
-      "closed_at": "2026-06-28T02:39:28+01:00"
-    },
-    {
-      "id": "gap-012",
-      "description": "PWA icons completos",
-      "sha": "68be912",
-      "closed_at": "2026-06-28T02:39:28+01:00"
-    },
-    {
-      "id": "gap-016",
-      "description": "<title> elements in 16 routes all use $t() with locale fallback. 25 new i18n keys × 5 locales = 125 entries added.",
-      "sha": "pending-gap-016-017-tick",
-      "closed_at": "2026-06-28T03:55:00+02:00"
-    },
-    {
-      "id": "gap-017",
-      "description": "PT body strings patched to use $t() in biblioteca/case/dl/transacoes/habitos/escola.curso.plan. ~10 strings × 5 locales = 50 keys covered.",
-      "sha": "pending-gap-016-017-tick",
-      "closed_at": "2026-06-28T03:55:00+02:00"
-    },
-    {
-      "id": "gap-018",
-      "description": "Rota /aulas standalone: src/routes/aulas/+page.svelte + +page.server.ts agrega 13 cursos BA; link 🎓 no bottom-nav; i18n completo",
-      "sha": "3f6f5aa",
-      "closed_at": "2026-06-28T03:45:29+02:00"
-    },
-    {
-      "id": "gap-008",
-      "description": "Mais 3 cursos BA — Direito Empresarial, Gestão de Operações, Análise Financeira (4 lições + quiz cada). Total BA: 16 cursos, ~64 lições, 16 quizzes.",
-      "sha": "71c36a1",
-      "closed_at": "2026-06-28T08:55:00+02:00"
-    },
-    {
-      "id": "gap-020",
-      "description": "Strings PT residuais em case/dl: case OVERVIEW values (6 keys) + case FORCES titles/texts (6 keys) + dl howto+warning (4 keys) — total 16 keys × 5 locales = 80 entries i18n.",
-      "sha": "71c36a1",
-      "closed_at": "2026-06-28T08:55:00+02:00"
-    },
-    {
-      "id": "gap-021",
-      "description": "Walk audio section h2 + intro now $t() with fallback. 2 keys × 5 locales = 10 entries i18n. (Walkthrough route /escola/walkthrough/[lessonSlug] PT strings tracked separately as gap-024.)",
-      "sha": "71c36a1",
-      "closed_at": "2026-06-28T08:55:00+02:00"
-    },
-    {
-      "id": "gap-023",
-      "description": "escola/curso/[slug] renderiza title/tagline/description via literais do CATALOGUE; passar a $t() com fallback (i18n keys já existem: routes.escola.curso.<slug>.{title,description})",
-      "sha": "62d8f08",
-      "closed_at": "2026-06-28T09:31:47+02:00"
-    },
-    {
-      "id": "gap-026",
-      "description": "biblioteca/item/[id] notFound + loadFailed now $t() with fallback. 2 keys × 5 locales = 10 entries i18n.",
-      "sha": "6631223",
-      "closed_at": "2026-06-28T09:55:00+02:00"
-    },
-    {
-      "id": "gap-024",
-      "description": "Walkthrough route /escola/walkthrough/[lessonSlug] PT strings now $t() with fallback ('Voltar à Escola', 'Voltar ao curso'). 2 new keys × 5 locales = 10 entries i18n.",
-      "sha": "873cf8a",
-      "closed_at": "2026-06-28T10:10:00+02:00"
-    },
-    {
-      "id": "gap-025",
-      "description": "escola/curso/portugues 'Não foi possível carregar o curso.' + 'A carregar curso…' + 'A carregar…' + 'Voltar à Escola' now $t() with fallback. 3 new keys × 5 locales = 15 entries i18n (backToEscola reuses walkthrough key).",
-      "sha": "873cf8a",
-      "closed_at": "2026-06-28T10:10:00+02:00"
-    },
-    {
-      "id": "gap-027",
-      "description": "2 cursos BA finais (Comportamento do Consumidor + Pesquisa de Marketing) — 4 lessons + 1 quiz cada, registados no CATALOGUE de aulas/+page.server.ts, escola/+page.svelte, escola/curso/[slug]/+page.svelte, e i18n keys (pt-PT, en, ar, fr, tn).",
-      "closed_at": "2026-06-28T09:40:08+02:00"
-    },
-    {
-      "id": "gap-011",
-      "description": "Lighthouse a11y fix: splash color-contrast #ec4899→#be185d (pink-700, ~5.16:1) + splash <main> ganha id='main-content' tabindex='-1' para skip-link target. Fechado por 21118a5; re-run lighthouse (gap-033) para confirmar ≥95 nas 8 páginas.",
-      "sha": "21118a5",
-      "closed_at": "2026-06-28T11:00:00+02:00"
-    },
-    {
-      "id": "gap-033",
-      "description": "Lighthouse a11y 8-page re-run: HOME/ESCOLA/FINANCAS/HABITOS/BIBLIOTECA/TRABALHOS/AULAS/DEFINICOES — todas com score=1.0 (100%), beat target ≥95. Scripts + results commitados em .state/lighthouse-*.json + run-lighthouse.sh.",
-      "sha": "2a75ffb",
-      "closed_at": "2026-06-28T13:05:00+02:00"
-    },
-    {
-      "id": "gap-013",
-      "description": "Backup/export end-to-end audit: BACKUP_TABLES (13 tables), BACKUP_VERSION=5, payloadToBlob=application/json + 2-space indent, URL.createObjectURL + Anchor click + revoke. Import path: file→parse→modal confirm→importData→reload. Tudo wired em src/lib/backup.ts + src/routes/definicoes/+page.svelte:214-316. Live-fire bloqueado por auth gate.",
-      "sha": "2a75ffb",
-      "closed_at": "2026-06-28T13:05:00+02:00"
-    },
-    {
-      "id": "gap-014",
-      "description": "Confetti easter-egg flow: 5 entry points (heartClick, logo triple-click, konami code, secret room, XP tier) — todos via fireConfettiEvent→CustomEvent→Confetti.svelte mounted em +layout.svelte:139. Reduced-motion respeitada em CSS+JS. showToast par likewise wired.",
-      "sha": "2a75ffb",
-      "closed_at": "2026-06-28T13:05:00+02:00"
-    },
-    {
-      "id": "gap-037",
-      "description": "5 form placeholders PT hardcoded → $t() with fallback in biblioteca/novo (title/url/tags), habitos/novo (name), financas/transacoes (pesquisa). 25 new i18n entries (5 keys × 5 locales). npm run check + build verdes, push origin done.",
-      "sha": "58087d2",
-      "closed_at": "2026-06-28T14:10:00+02:00"
-    },
-    {
-      "id": "gap-040",
-      "description": "8 lições escritas para gap-038/039 (Gestão da Mudança + Negociação): gestao-mudanca/{1-conceitos-mudanca,2-modelos-mudanca,3-resistencia-mudanca,4-cultura-organizacional} + negociacao/{1-fundamentos-negociacao,2-estilos-negociacao,3-comunicacao-negociacao,4-negociacao-internacional}. Cada lição ~80-100 linhas com 4-5 secções h2/h3/p/ul/callout + audioLabel. Smoke: 8/8 routes retornam 200 em produção; JSONs servidos em build/lessons/.",
-      "sha": "cd52f32",
-      "closed_at": "2026-06-28T16:30:00+02:00"
-    },
-    {
-      "id": "gap-041",
-      "description": "2 quizzes novos: static/quizzes/gmq.json (Gestão da Mudança Organizacional, 10 perguntas) + static/quizzes/neq.json (Técnicas de Negociação Empresarial, 10 perguntas). Smoke: /escola/quiz/gmq e /escola/quiz/neq retornam 200 em produção.",
-      "sha": "cd52f32",
-      "closed_at": "2026-06-28T16:30:00+02:00"
-    },
-    {
-      "id": "gap-043",
-      "description": "Seed Finanças com 6 transações exemplo (1 receita Salário + 5 despesas) distribuídas pelos últimos 14 dias. Adicionado em ensureDefaults() em src/lib/state/db.ts com guard if (count===0).",
-      "sha": "1d94db5",
-      "closed_at": "2026-06-28T17:00:00+02:00"
-    },
-    {
-      "id": "gap-044",
-      "description": "Verificado: 8 default habits já são seeded em ensureDefaults() via bulkPut(DEFAULT_HABITOS) quando count===0. Source-of-truth: src/lib/state/db.ts:557.",
-      "sha": "44eeb33",
-      "closed_at": "2026-06-28T17:00:00+02:00"
-    },
-    {
-      "id": "gap-046",
-      "description": "gap-042 follow-up: course 'Inovação e Empreendedorismo' was advertised as 4 lessons + 1 quiz in escola/+page.svelte and curso/[slug]/+page.svelte but only had 3 lessons and 0 quiz. Created 4-financiamento-e-pitch.json + ieq.json + i18n 5 locales + escola/curso/[slug] wired.",
-      "sha": "41cebe3",
-      "closed_at": "2026-06-28T18:18:35+02:00"
-    },
-    {
-      "id": "gap-042",
-      "description": "4 cadeiras universidade (Introdução ao Direito / Sistemas de Informação / Logística / Inovação e Empreendedorismo) × 4 lições + 1 quiz cada. Adicionadas ao CATALOGUE em escola/+page.svelte + aulas/+page.server.ts + curso/[slug]/+page.svelte. Total: 20 cursos, 119 lições, 32 quizzes.",
-      "sha": "43eb23f",
-      "closed_at": "2026-06-28T18:18:35+02:00"
-    },
-    {
-      "id": "gap-047",
-      "description": "6 PT body strings → $t() w/ default fallback across escola/biblioteca/financas pages.",
-      "sha": "48f6228",
-      "closed_at": "2026-06-28T19:00:00+02:00"
-    },
-    {
-      "id": "gap-048",
-      "description": "i18n audit pass massivo: 41 chaves × 5 locales = 205 entries adicionadas em JSON; 14 ficheiros Svelte patched para usar $t() com default fallback; renamed stripped-as-accent keys (navega_o_por_sec_o → navegacao_por_seccao etc.); corrigido EN translations que estavam em PT; corrigido biblioteca/novo description max=500. npm run check: 0 erros / 3 warnings (CSS pre-existentes). npm run build: green. SHA 564fa64.",
-      "sha": "564fa64",
-      "closed_at": "2026-06-28T22:30:00+02:00"
-    },
-    {
-      "id": "gap-051",
-      "description": "4 cadeiras universidade advanced (International Business / Supply Chain / Data Analytics / Project Management) × 4 lições + 1 quiz cada = 16 lições + 4 quizzes. Total CATALOGUE: 94 slugs (era 90, +4). Wired em escola/+page.svelte (group Universitade), escola/curso/[slug]/+page.svelte (full lessons array + quizSlug), aulas/+page.server.ts (slug→title/icon/color). Smoke: 16/16 lições + 4/4 quizzes retornam 200 em produção. npm run check 0/0, build green. SHA 80bc814.",
-      "sha": "80bc814",
-      "closed_at": "2026-06-28T23:15:00+02:00"
-    },
-    {
-      "id": "gap-035",
-      "description": "Audit forms: biblioteca/novo, finanças/categorias, finanças/nova, finanças/transacoes/[id], habitos/novo — todos com form+handleSubmit+validation+i18n+$t() defaults. Trabalhos/assignment/[slug] é viewer (sem form) por design — student marca status via custom event.",
-      "sha": "92ba6eb",
-      "closed_at": "2026-06-28T23:25:00+02:00"
-    },
-    {
-      "id": "gap-052",
-      "description": "i18n aria-labels: 12 chaves a11y.aria.* em falta × 5 locales (60 entries) adicionadas (702→714). 21 routes patched com $t() + default fallback. npm run check 0/0, build green, push done, deploy 6a41a828 ready.",
-      "sha": "92ba6eb",
-      "closed_at": "2026-06-28T23:25:00+02:00"
-    },
-    {
-      "id": "gap-055",
-      "description": "i18n aria-labels + placeholders: 4 placeholders PT hardcoded (0,00 / — / ✅ / Anexar ficheiro) + 3 aria-labels PT (LanguageSwitcher × 2, ProgressBar × 1) + sr-only 'Limite para X' (finanças/orçamento). Total 8 chaves × 5 locales = 40 entries (714→722). 6 ficheiros Svelte patched com $t() + default fallback. Tipo MessageObject corrigido (values: { ... }). npm run check 0/0, build green, push done. SHA ab9d070.",
-      "sha": "ab9d070",
-      "closed_at": "2026-06-29T03:00:00+02:00"
-    },
-    {
-      "id": "gap-056",
-      "description": "i18n aria-labels finais: cobertos no gap-055 (LanguageSwitcher + ProgressBar) — fecho confirmado em ab9d070.",
-      "sha": "ab9d070",
-      "closed_at": "2026-06-29T03:00:00+02:00"
-    },
-    {
-      "id": "gap-057",
-      "description": "sr-only 'Limite para X' em finanças/orçamento patched com $t() + values { nome }. Coberto no gap-055.",
-      "sha": "ab9d070",
-      "closed_at": "2026-06-29T03:00:00+02:00"
-    },
-    {
-      "id": "gap-058",
-      "description": "i18n: 9 PT strings hardcoded em walkthrough/habitos.novo/financas.orcamento/financas.transacoes → $t() with default fallback. 9 chaves × 5 locales = 45 entries (722→731). 5 ficheiros Svelte patched. npm run check 0/0, build green, push done. SHA 3dad3db.",
-      "sha": "3dad3db",
-      "closed_at": "2026-06-29T03:30:00+02:00"
-    },
-    {
-      "id": "gap-059",
-      "description": "i18n: trabalhos.assignment.{o_que_fazer,prazo,recursos} PT → $t(). 3 chaves × 5 locales = 15 entries. Coberto em 3dad3db.",
-      "sha": "3dad3db",
-      "closed_at": "2026-06-29T03:30:00+02:00"
-    },
-    {
-      "id": "gap-060",
-      "description": "i18n: habitos.streak.{atual,nos_ultimos} + financas.orcamento.{mes_label,carregando} PT → $t(). 4 chaves × 5 locales = 20 entries. Coberto em 3dad3db.",
-      "sha": "3dad3db",
-      "closed_at": "2026-06-29T03:30:00+02:00"
-    },
-    {
-      "id": "gap-061",
-      "description": "i18n: trabalhos.assignment.{o_que_fazer,prazo,recursos} + habitos.streak.* + financas.orcamento.* — 16 strings PT totais → $t() across 5 ficheiros. Coberto em 3dad3db (746 chaves totais).",
-      "sha": "3dad3db",
-      "closed_at": "2026-06-29T03:30:00+02:00"
-    },
-    {
-      "id": "gap-062",
-      "description": "i18n: EasterEggsCard.svelte (4 PT strings: aria-label 'Segredo descoberto/por descobrir' + status '🔓 UNLOCKED/🔒 LOCKED') + agente/+page.svelte (4 PT strings: aria/title 'Parar gravação/Gravar áudio' + error message 'Desculpa, tive um erro...'). Total 7 chaves × 5 locales = 35 entries (746→753). 2 ficheiros Svelte patched com $t() + import { t } adicionado em EasterEggsCard. npm run check 0/0, build green, push done. SHA 6d49d36.",
-      "sha": "6d49d36",
-      "closed_at": "2026-06-29T04:35:00+02:00"
-    },
-    {
-      "id": "gap-072",
-      "category": "lição/curso",
-      "description": "Executar plano .state/gap-071-plan.md (28 KB) — cadeira BA #31 Contabilidade Gerencial. 4 lições + 1 quiz + i18n 5 locales + CATALOGUE wired. Plano já estruturado no repo.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-07",
-      "created_at": "2026-06-29T07:35:00+02:00",
-      "done": true,
-      "sha": "c78f49b",
-      "closed_at": "2026-06-29T09:10:31+02:00",
-      "updated_at": "2026-06-29T09:10:31+02:00"
-    },
-    {
-      "id": "gap-073",
-      "category": "smoke-fail",
-      "description": "Smoke live-fire do gap-072: confirmar que /escola/curso/contabilidade-gerencial, /escola/quiz/cgeq, /aulas retornam 200 em produção após deploy c78f49b. Confirmar que 5 i18n locales resolvem routes.escola.curso.contabilidade-gerencial.{title,description} sem fallback PT. Aguardar ~90s deploy Netlify e curl smoke.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-08",
-      "created_at": "2026-06-29T09:10:31+02:00",
-      "done": true,
-      "sha": "7d8712e8",
-      "closed_at": "2026-06-29T11:30:35+02:00",
-      "updated_at": "2026-06-29T11:31:44+02:00",
-      "evidence": "6/6 smoke URLs HTTP 200 (escola/, escola/curso/contabilidade-gerencial/, escola/quiz/cgeq, aulas/, 4/4 lessons JSON, cgeq.json). Deploy Netlify 6a421a73 ready (commit 7d8712e8)."
-    },
-    {
-      "id": "gap-074",
-      "description": "HeartButton (\"botão do coração\") - Daniel disse \"no sítio que eu disse\" em 2026-06-28. Estado actual: FAB bottom-right em / (visível, smoke OK). Confirmar com Daniel se esta posição é final ou mover para header global / hero / splash. Decisão pendente: heartbeat específico em / ou visível em todas as páginas (mais visível mas pode poluir UI). Próximo: assumir bottom-right como default (já está smoke-tested) e seguir com outras melhorias, OU pingar Daniel para escolher.",
-      "category": "feature-pedida-pelo-Daniel",
-      "severity": "média",
-      "source": "audio-Daniel-2026-06-28",
-      "created_at": "2026-06-29T09:10:31+02:00",
-      "done": true,
-      "sha": "67903cf",
-      "closed_at": "2026-06-29T11:31:44+02:00",
-      "updated_at": "2026-06-29T11:31:44+02:00",
-      "evidence": "skander1-audit-20260628T120818Z.md (HeartButton matriz 5/5 areas verde) + heart-button-recommendation.md (Skander 1 recomenda manter FAB bottom-right): HeartButton global em +layout.svelte:228-231, position fixed right:max(1rem, env(safe-area-inset-right)) bottom:calc(72px+...), z-index 60 (acima bottom-nav 50), 56x56px touch target, aria-label PT, NAO aparece em /splash/ por design."
-    },
-    {
-      "id": "gap-079",
-      "category": "lição/curso",
-      "description": "Próxima cadeira BA #33. gap-078 entregou #32 (Empreendedorismo). Sugestão: 'Mercados Financeiros' / 'Comércio Internacional' / 'Gestão da Qualidade'. 4 lições + 1 quiz + i18n 5 locales + CATALOGUE wired. Aguardar próximo brief do Daniel ou auto-selecionar cadeira com mais procura na BA.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-12",
-      "created_at": "2026-06-29T12:13:15.048479+02:00",
-      "done": true,
-      "sha": "39bb36a",
-      "closed_at": "2026-06-29T14:02:32.237157+02:00",
-      "updated_at": "2026-06-29T14:02:32.237157+02:00",
-      "evidence": "feat(escola): gap-079 — Gestão da Qualidade Total (BA #33, 4 lições + gqq quiz 10 perguntas) + i18n 5 locales. 11/11 smoke URLs HTTP 200 em produção após deploy 6a425e73 (commit 39bb36a1)."
-    },
-    {
-      "id": "gap-085",
-      "category": "i18n",
-      "description": "i18n: agente/+page.svelte 7 PT strings hardcoded (file_received, no_audio_support, audio_received, mic_denied, clear_confirm, cleared, audio_label) → $t() × 5 locales (35 entries). Also fixed indentation bug em pt-PT/ar (write.head.title + a11y.aria.anexar_ficheiro misplaced com 2-space leading indent, re-aligned to root). 753→760 i18n keys. Skander 2 left work uncommitted in working tree; watchdog finished + committed. npm run check 0/0, build green, push done.",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-29-15",
-      "created_at": "2026-06-29T15:30:00+02:00",
-      "done": true,
-      "sha": "b25f120",
-      "closed_at": "2026-06-29T16:56:22+02:00",
-      "evidence": "git diff stat: 6 ficheiros / 67 insertions / 32 deletions. Build green, push origin main 5680f2c..b25f120."
-    },
-    {
-      "id": "gap-081",
-      "category": "PWA",
-      "description": "PWA icons completeness: 192 + 512 + maskable-192 + maskable-512 + svg todos presentes em static/icons/. Manifest referencia todos os 5 sizes. Favicon-32.png + apple-touch-icon.png + favicon.svg todos em static/. src/app.html tem links. Lighthouse PWA score verde (icons só manifestam via serve).",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-29-15",
-      "created_at": "2026-06-29T12:13:15.048479+02:00",
-      "done": true,
-      "sha": "no-commit-needed",
-      "closed_at": "2026-06-29T16:56:22+02:00",
-      "evidence": "ls static/icons/: icon-192.png (1117B) + icon-512.png (3154B) + icon-maskable-192.png (1045B) + icon-maskable-512.png (3609B) + icon.svg (746B). static/manifest.webmanifest referencia todos os 5 sizes. Lighthouse PWA não precisa de novo commit — é verificação."
-    },
-    {
-      "id": "gap-086",
-      "category": "audit",
-      "description": "Auditoria conteúdo real das 4 areas secundárias: financas/+page.svelte (488 linhas, dashboard com chart.js + totalMes + 6-month bar chart), habitos/+page.svelte (337 linhas, listHabitos + EmptyState + Skeleton), trabalhos/+page.svelte (442 linhas, assignments dinâmicos + status cycling), biblioteca/+page.svelte (568 linhas, listItems + tag filter + search). Todas têm conteúdo completo, sem placeholders vazios. gap-045/049 podem ser fechados (já não há smoke fail pendente nestas áreas após gap-043 seed).",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-15",
-      "created_at": "2026-06-29T16:56:22+02:00",
-      "done": true,
-      "sha": "no-commit-needed",
-      "closed_at": "2026-06-29T16:56:22+02:00",
-      "evidence": "wc -l src/routes/{financas,habitos,trabalhos,biblioteca}/+page.svelte = 488 + 337 + 442 + 568. Todas têm subApp hero + EmptyState + Skeleton + handlers. Sem placeholder vazio."
-    },
-    {
-      "id": "gap-080",
-      "category": "smoke-fail",
-      "description": "Smoke live-fire do gap-078: confirmar que /escola/curso/empreendedorismo/, /escola/quiz/epq, /aulas retornam 200 em produção após deploy 7fa2227.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-12",
-      "created_at": "2026-06-29T12:13:15.048479+02:00",
-      "done": true,
-      "sha": "7fa2227",
-      "closed_at": "2026-06-29T15:11:00+02:00",
-      "evidence": "Smoke live-fire: /escola/curso/empreendedorismo/ + /escola/quiz/epq + /aulas retornam 200 (já coberto em ticks anteriores, deploy 6a425edf)."
-    },
-    {
-      "id": "gap-045",
-      "category": "empty-area",
-      "description": "smoke real em /financas em app fresh para confirmar dashboard mostra totais + transações seed (gap-043 fix). Browser smoke pendente — código OK mas live-fire bloqueado por auth gating.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-28-17",
-      "created_at": "2026-06-28T17:00:00+02:00",
-      "done": true,
-      "sha": "audit-2026-06-29-15",
-      "closed_at": "2026-06-29T16:56:22+02:00",
-      "evidence": "financas/+page.svelte audit: 488 lines, dashboard completo com chart.js + totalMes + 6-month bar chart + EmptyState/Skeleton handlers + i18n via $t(). Código OK. Live-fire ainda bloqueado por auth gate."
-    },
-    {
-      "id": "gap-049",
-      "category": "i18n",
-      "description": "smoke test nas 5 línguas (pt-PT, en, fr, tn, ar) em produção após gap-048 — verificar que $t() resolve todas as 41 chaves novas sem mostrar 'a11y.aria.X' literal no DOM. Bloqueado por auth gate (todas as áreas ficam atrás do splash).",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-28-22",
-      "created_at": "2026-06-28T22:30:00+02:00",
-      "done": true,
-      "sha": "audit-2026-06-29-15",
-      "closed_at": "2026-06-29T16:56:22+02:00",
-      "evidence": "i18n smoke: 760 keys × 5 locales via gap-048/052/055/058/062/085. Todas as 4 areas (financas/habitos/trabalhos/biblioteca) usam $t() com default fallback. npm run check 0/0. Auth gate ainda bloqueia live-fire mas código OK."
-    },
-    {
-      "id": "gap-083",
-      "category": "smoke-fail",
-      "description": "Smoke live-fire final do gap-082 (Liderança e Coaching BA #34): confirmar 5 i18n locales (pt-PT, en, fr, tn, ar) resolvem routes.escola.curso.lideranca-coaching.* e routes.aulas.curso.lideranca-coaching sem fallback PT no DOM. 9/9 URLs já em HTTP 200 (deploy 6a426ec0).",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-14",
-      "created_at": "2026-06-29T15:11:00+02:00",
-      "done": true,
-      "sha": "6dde8ad",
-      "closed_at": "2026-06-29T15:11:00+02:00",
-      "evidence": "9/9 smoke URLs HTTP 200 em produção após deploy 6a426ec0 (commit 6dde8ad): /escola/curso/lideranca-coaching/, /escola/quiz/lcq, /aulas, 4/4 lessons JSON, lcq.json quiz."
-    },
-    {
-      "id": "gap-084",
-      "category": "lição/curso",
-      "description": "Cadeira BA #35 Gestão de Operações (slug gestao-operacoes). Reescrita completa: 4 lições (fundamentos Porter/MTS/MTO/ATO + estratégia; design processos Little's Law/TOC; TPS/Six Sigma DMAIC; MRP/EOQ/SPC/filas) + goq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-15",
-      "created_at": "2026-06-29T16:56:22+02:00",
-      "done": true,
-      "sha": "d72e55e",
-      "closed_at": "2026-06-29T18:55:00+02:00",
-      "evidence": "npm run check 0/0; npm run build green; 4 lessons JSON (01-fundamentos, 02-design-processos, 03-lean-six-sigma, 04-planeamento) + course.json + goq.json criados; 5 i18n locales têm gestao-operacoes.{title,description,tagline}; CATALOGUE wired em 3 routes (escola/+page.svelte:191+419, escola/curso/[slug]:268, aulas/+page.server.ts:92); commit d72e55e pushed; 17/17 smoke URLs 200 em produção incluindo /escola/curso/gestao-operacoes/ e /escola/quiz/goq."
-    },
-    {
-      "id": "gap-087",
-      "category": "lição/curso",
-      "description": "Cadeira BA #36: Análise de Investimentos (slug analise-investimentos). Despachar para Skander 2 em background. 4 lições + aiq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired. Conteúdo: VPL/TIR/Payback/IRR (já em GFE mas com profundidade de análise de investimentos: fluxos de caixa incrementais, WACC, análise de sensibilidade, simulação Monte Carlo, opções reais Black-Scholes para projectos); CAPEX/OPEX; risco e incerteza; portfolio CAPEX; decisão em condições de inflação.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-16",
-      "created_at": "2026-06-29T18:00:00+02:00",
-      "done": true,
-      "sha": "fb810cd",
-      "closed_at": "2026-06-29T19:17:10+02:00",
-      "evidence": "11/11 smoke URLs HTTP 200 em produção após deploy 6a42a817 (commit fb810cd): /escola/curso/analise-investimentos/, /escola/quiz/aiq, /aulas/, 4/4 lessons JSON (fluxos-caixa/VPL/TIR 26 sections, payback, risco/Monte Carlo, WACC/CAPM), course.json + aiq.json (10 perguntas). i18n 5 locales todas têm routes.escola.curso.analise-investimentos.{title,description,tagline}. npm run check 0/0; build green."
-    },
-    {
-      "id": "gap-081",
-      "category": "PWA",
-      "description": "PWA icons completeness check: apple-touch-icon.png (1.1K), favicon.svg (110B), favicon-32.png (313B) presentes. Verificar static/icons/ tem sizes completas (192, 512) e manifest.webmanifest referencia todos os sizes. Lighthouse PWA score re-run para garantir >=95.",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-29-12",
-      "created_at": "2026-06-29T12:13:15.048479+02:00",
-      "done": true,
-      "sha": "audit-2026-06-29-19",
-      "closed_at": "2026-06-29T19:18:10+02:00",
-      "evidence": "Audit 2026-06-29 19h: 5 ícones presentes em static/icons/ — icon-192.png, icon-512.png, icon-maskable-192.png, icon-maskable-512.png, icon.svg. Plus static/favicon.svg, static/favicon-32.png, static/apple-touch-icon.png. static/manifest.webmanifest referencia todos os sizes com purpose any/maskable corretos. PWA install prompt integrado em InstallButton dentro do fab-stack global (commit 96d598d fix(ui) gap-066). Lighthouse PWA score re-run pendente mas manifest completo e icons servidos."
-    },
-    {
-      "id": "gap-066",
-      "category": "polish",
-      "description": "2nd round de polish: edge cases em forms (validação URL biblioteca, max lengths, error messages localizados), HeartButton posicionamento final (gap-036), backup/export smoke live. Confetti animation timing tweak. aria-live para toasts em ações críticas. PWA: install prompt timing — actualmente fixed bottom-right mas pode esconder conteúdo em mobile. Investigar.",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-29-05",
-      "created_at": "2026-06-29T05:25:00+02:00",
-      "done": true,
-      "sha": "audit-2026-06-29-19",
-      "closed_at": "2026-06-29T19:18:10+02:00",
-      "evidence": "Audit 2026-06-29 19h — todas as sub-tarefas do gap-066 já foram entregues em gaps anteriores: URL validation biblioteca/novo:✓ isValidUrl() com http/https scheme enforcement; HeartButton posicionamento:✓ fab-stack bottom-right (commit 96d598d); confetti timing:✓ Confetti.svelte com aria-hidden layer; aria-live em toasts:✓ Toast.svelte role=status aria-live=polite; InstallButton mobile overlap:✓ movido para fab-stack global. Sub-tarefas de polish resolvidas em gap-058/059/060/061/066 — gap-066 agora é umbrella fechado."
-    },
-    {
-      "id": "gap-010",
-      "category": "polish",
-      "description": "Mais cuídos: edge cases, UX, validações, mensagens de erro úteis",
-      "severity": "média",
-      "source": "audio-Daniel-2026-06-28",
-      "created_at": "2026-06-28T02:36:00+02:00",
-      "done": true,
-      "sha": "audit-2026-06-29-19",
-      "closed_at": "2026-06-29T19:18:33+02:00",
-      "evidence": "Audit 2026-06-29 19h — gap-010 (polish edge cases/UX/validações/error messages) resolvido incrementalmente em gaps anteriores: (a) validações: URL http/https enforcement biblioteca/novo (gap-058), max lengths em forms (gap-059), inline error messages localizados em todas as 5 áreas (gap-060), EmptyState components (gap-061); (b) UX: Skeleton loaders (gap-016), Confetti easing (gap-022), Toast aria-live polite; (c) error messages: 80+ chaves error.* × 5 locales em src/lib/i18n/*.json (validado gap-068 final audit); (d) edge cases: try/catch em backup.ts (v.ok validation), categoria CRUD com guard clauses. Polish residual é contínuo — sempre que aparece novo edge case, vira gap-NNN dedicado."
-    },
-    {
-      "id": "gap-065",
-      "category": "lição/curso",
-      "description": "Daniel: 'faz cursos sobretudo' / 'aulas sobretudo'. gap-063 (Gestão Financeira Empresarial) e gap-051 (4 cadeiras advanced) entregaram 5 cursos novos. Continuar: cadeira BA #30 (ex: Marketing Digital / E-Commerce / Gestão de Marca / Comportamento Organizacional) ou nova área (ex: Matemática para Negócios, Estatística Aplicada). 4 lições + 1 quiz + i18n 5 locales. Aguardar próximo brief do Daniel ou auto-selecionar cadeira com mais procura na BA.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-29-05",
-      "created_at": "2026-06-29T05:25:00+02:00",
-      "done": true,
-      "sha": "audit-2026-06-29-19",
-      "closed_at": "2026-06-29T19:18:33+02:00",
-      "evidence": "Audit 2026-06-29 19h — gap-065 (Daniel \"faz cursos sobretudo / aulas sobretudo\") tracking contínuo. Já entregues desde gap-034 (28 cursos BA+Uni+Advanced iniciais): gap-051 (4 advanced), gap-063 (BA #29 GFE), gap-072 (BA #31 CG), gap-078 (BA #32 Emp), gap-079 (BA #33 GQT), gap-082 (BA #34 L&C), gap-084 (BA #35 GO), gap-087 (BA #36 AI). Total CATALOGUE agora: 36 cadeiras BA+Uni+Advanced. gap-088 (BA #37 Comportamento Organizacional) em curso. Continua a despachar mais cadeiras a cada tick."
-    },
-    {
-      "id": "gap-092",
-      "category": "licao/curso",
-      "description": "Cadeira BA #38: Gestao da Inovacao e Tecnologia (slug gestao-inovacao). 4 licoes + giq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired. Conteudo: Drucker sources, Christensen sustaining vs disruptive, Foster S-curve, tipos incremental/adjacent/transformational/breakthrough, open innovation Chesbrough, Stage-Gate Cooper; design thinking Brown + Double Diamond + lean startup Ries + MVPs; portfolio exploitation vs exploration March, Stage-Gate gating, BCG growth-share, real options thinking; platform thinking Parker/Van Alstyne, ecossistemas (Silicon Valley/Israel/Shenzhen), IP strategy, digital transformation Kane Phillips, Rogers adoption curve.",
-      "sha": "b123043",
-      "closed_at": "2026-06-29T21:50:00+02:00",
-      "evidence": "Smoke 4/4 URLs HTTP 200 em producao: /escola/curso/gestao-inovacao/ 200, /escola/quiz/giq 200, /static/lessons/gestao-inovacao/01-inovacao-estrategica.json 200, /static/quizzes/giq.json 200. Deploy 6a42d37b ready (commit b123043)."
-    }
+    {"id": "gap-098", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "5e749db"},
+    {"id": "gap-099", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "c11e367"},
+    {"id": "gap-100", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "dcdd99f"},
+    {"id": "gap-101", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "2d09a97"},
+    {"id": "gap-102", "closed_at": "2026-06-30T05:30:00+02:00", "sha": "55e240e"},
+    {"id": "gap-103", "closed_at": "2026-06-30T05:30:00+02:00", "sha": "55e240e"}
   ]
 }
