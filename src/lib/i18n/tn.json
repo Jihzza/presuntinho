@@ -988,5 +988,7 @@
   "walkthrough.verify.exists": "existe.",
   "walkthrough.verify.text": "Vérifie que",
   "write.breadcrumb.home": "← Hub",
-  "write.head.title": "Ticra · Tiɣbula Anti-AI"
+  "write.head.title": "Ticra · Tiɣbula Anti-AI",
+  "routes.escola.quiz.eiq.title": "Quiz: International Strategy",
+  "routes.escola.quiz.eiq.description": "Test your knowledge of international strategy: drivers of internationalization (demand, supply, costs, government, competitors), Ghemawat's CAGE framework (cultural, administrative, geographic, economic), entry modes (indirect/direct export, licensing, franchising, joint venture, greenfield subsidiary, acquisition), Bartlett & Ghoshal archetypes (international, multi-domestic, global, transnational), drivers of global integration vs local responsiveness, joint ventures and international risk management. 10 questions, 4 options each, with detailed explanation."
 }
