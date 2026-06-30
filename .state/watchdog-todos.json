@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-30T12:25:00+02:00",
+  "lastUpdated": "2026-06-30T18:00:00+02:00",
   "openItems": [
     {
       "id": "gap-028",
@@ -81,33 +81,161 @@
       "severity": "baixa",
       "source": "watchdog-tick-2026-06-30-12",
       "created_at": "2026-06-30T12:20:00+02:00"
+    },
+    {
+      "id": "gap-131",
+      "category": "lição/curso",
+      "description": "Cadeira BA #48. Próxima após Estratégia Internacional. Tema: Gestão de Risco (slug gestao-risco, quiz grq). 4 lições (fundamentos; identificação e análise; resposta e mitigação; frameworks e normas — ISO 31000, COSO ERM, Basel III, TCFD) + 10 quiz MCQ + i18n 7 chaves × 5 locales + CATALOGUE wired. Despachado para Skander 2 (deleg_58fc6f2e) em feature/gap-131-ba48-gestao-risco.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-30-18",
+      "created_at": "2026-06-30T18:00:00+02:00",
+      "dispatched_to": "Skander 2 — deleg_58fc6f2e (feature/gap-131-ba48-gestao-risco)"
     }
   ],
   "closedItems": [
-    {"id": "gap-091", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "c1d542b", "note": "i18n PT→$t() audit completo. 4 batches + 145 i18n entries."},
-    {"id": "gap-098", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "5e749db"},
-    {"id": "gap-099", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "c11e367"},
-    {"id": "gap-100", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "dcdd99f"},
-    {"id": "gap-101", "closed_at": "2026-06-30T04:55:00+02:00", "sha": "2d09a97"},
-    {"id": "gap-102", "closed_at": "2026-06-30T05:30:00+02:00", "sha": "55e240e"},
-    {"id": "gap-103", "closed_at": "2026-06-30T05:30:00+02:00", "sha": "55e240e"},
-    {"id": "gap-104", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "91e796b", "note": "BA #45 Economia Comportamental. 4 lições + beq quiz 10 + i18n 5 locales + CATALOGUE wired."},
-    {"id": "gap-105", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "c1d542b", "note": "batch-3: habitos/novo + trabalhos/assignment/[slug] + 6 chaves × 5 locales"},
-    {"id": "gap-106", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "c1d542b", "note": "batch-4: agente + aulas + dl + biblioteca/novo + 3 chaves × 5 locales"},
-    {"id": "gap-107", "closed_at": "2026-06-30T12:20:00+02:00", "sha": "fbdc389", "note": "BA #46 Gestão de Conflitos. Skander 1 escolheu Gestão de Conflitos."},
-    {"id": "gap-108", "closed_at": "2026-06-30T12:20:00+02:00", "sha": "fbdc389", "note": "BA #46 Gestão de Conflitos. 4 lições (21-34 secções cada) + gcq quiz 10 + i18n 5 locales × 7 chaves + CATALOGUE wired em 3 ficheiros. npm run check 0/0, build verde, prod serve 200."},
-    {"id": "gap-110", "closed_at": "2026-06-30T08:15:00+02:00", "sha": "942c1ba", "note": "fix(agente) chat-root 100dvh + safe-area-inset-bottom no composer. Áudio Daniel 2026-06-29 18:35 'página do agente não aparece nada'. npm run check verde, npm run build verde."},
-    {"id": "gap-111", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "53c0265", "note": "fix(hub+settings) collapse V3/legacy em 'Mais Presuntinho'."},
-    {"id": "gap-112", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "fix(ux) /habitos/ streak '🔥 N dias' + status '✓ hoje' por row."},
-    {"id": "gap-113", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "fix(ux) /financas/ Chart.js agora mostra receitas (dataset #2 verde)."},
-    {"id": "gap-114", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "53c0265", "note": "fix(ux) splash placeholder 'Palavra-passe' (5 locales) — era princesa que vazava password Daniel."},
-    {"id": "gap-115", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "53c0265", "note": "fix(ux) definicoes VERSION+REPO_URL single source from $lib/version."},
-    {"id": "gap-116", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "fix(ux) definicoes reset_password real PBKDF2 (não mais '⏳ soon')."},
-    {"id": "gap-118", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "HeartButton title='Clica — easter egg' via $t() em 5 locales."},
-    {"id": "gap-119", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "2607019", "note": "fix(ux) footer 'Sub-app #{n} no hub' → 'Hub · Finanças/Hábitos' em 5 locales."},
-    {"id": "gap-120", "closed_at": "2026-06-30T09:35:00+02:00", "sha": "d42e373", "note": "feat(financas) /financas/relatorios/ shipped em d42e373 — pie categorias + top 5 despesas + comparativo mês-a-mês + export CSV (5 locales i18n). 764 linhas, prod serve 200. Estado actualizado tarde."},
-    {"id": "gap-121", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "streak+today já no 823edd2 — gap-121 era verificação, fechada como já feita."},
-    {"id": "gap-122", "closed_at": "2026-06-30T12:20:00+02:00", "sha": "fbdc389", "note": "BA #46 Gestão de Conflitos: 4 lições + 10 MCQ + i18n 7 chaves × 5 locales + CATALOGUE wired. npm run check 0/0, build verde, prod serve 200."},
-    {"id": "gap-125", "closed_at": "2026-06-30T10:05:00+02:00", "sha": "07fe69c", "note": "fix(ux) footer 'Hub · {Section}' para biblioteca + trabalhos (5 locales)."}
+    {
+      "id": "gap-091",
+      "closed_at": "2026-06-30T07:00:00+02:00",
+      "sha": "c1d542b",
+      "note": "i18n PT→$t() audit completo. 4 batches + 145 i18n entries."
+    },
+    {
+      "id": "gap-098",
+      "closed_at": "2026-06-30T04:55:00+02:00",
+      "sha": "5e749db"
+    },
+    {
+      "id": "gap-099",
+      "closed_at": "2026-06-30T04:55:00+02:00",
+      "sha": "c11e367"
+    },
+    {
+      "id": "gap-100",
+      "closed_at": "2026-06-30T04:55:00+02:00",
+      "sha": "dcdd99f"
+    },
+    {
+      "id": "gap-101",
+      "closed_at": "2026-06-30T04:55:00+02:00",
+      "sha": "2d09a97"
+    },
+    {
+      "id": "gap-102",
+      "closed_at": "2026-06-30T05:30:00+02:00",
+      "sha": "55e240e"
+    },
+    {
+      "id": "gap-103",
+      "closed_at": "2026-06-30T05:30:00+02:00",
+      "sha": "55e240e"
+    },
+    {
+      "id": "gap-104",
+      "closed_at": "2026-06-30T07:00:00+02:00",
+      "sha": "91e796b",
+      "note": "BA #45 Economia Comportamental. 4 lições + beq quiz 10 + i18n 5 locales + CATALOGUE wired."
+    },
+    {
+      "id": "gap-105",
+      "closed_at": "2026-06-30T07:00:00+02:00",
+      "sha": "c1d542b",
+      "note": "batch-3: habitos/novo + trabalhos/assignment/[slug] + 6 chaves × 5 locales"
+    },
+    {
+      "id": "gap-106",
+      "closed_at": "2026-06-30T07:00:00+02:00",
+      "sha": "c1d542b",
+      "note": "batch-4: agente + aulas + dl + biblioteca/novo + 3 chaves × 5 locales"
+    },
+    {
+      "id": "gap-107",
+      "closed_at": "2026-06-30T12:20:00+02:00",
+      "sha": "fbdc389",
+      "note": "BA #46 Gestão de Conflitos. Skander 1 escolheu Gestão de Conflitos."
+    },
+    {
+      "id": "gap-108",
+      "closed_at": "2026-06-30T12:20:00+02:00",
+      "sha": "fbdc389",
+      "note": "BA #46 Gestão de Conflitos. 4 lições (21-34 secções cada) + gcq quiz 10 + i18n 5 locales × 7 chaves + CATALOGUE wired em 3 ficheiros. npm run check 0/0, build verde, prod serve 200."
+    },
+    {
+      "id": "gap-110",
+      "closed_at": "2026-06-30T08:15:00+02:00",
+      "sha": "942c1ba",
+      "note": "fix(agente) chat-root 100dvh + safe-area-inset-bottom no composer. Áudio Daniel 2026-06-29 18:35 'página do agente não aparece nada'. npm run check verde, npm run build verde."
+    },
+    {
+      "id": "gap-111",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "53c0265",
+      "note": "fix(hub+settings) collapse V3/legacy em 'Mais Presuntinho'."
+    },
+    {
+      "id": "gap-112",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "823edd2",
+      "note": "fix(ux) /habitos/ streak '🔥 N dias' + status '✓ hoje' por row."
+    },
+    {
+      "id": "gap-113",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "823edd2",
+      "note": "fix(ux) /financas/ Chart.js agora mostra receitas (dataset #2 verde)."
+    },
+    {
+      "id": "gap-114",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "53c0265",
+      "note": "fix(ux) splash placeholder 'Palavra-passe' (5 locales) — era princesa que vazava password Daniel."
+    },
+    {
+      "id": "gap-115",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "53c0265",
+      "note": "fix(ux) definicoes VERSION+REPO_URL single source from $lib/version."
+    },
+    {
+      "id": "gap-116",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "823edd2",
+      "note": "fix(ux) definicoes reset_password real PBKDF2 (não mais '⏳ soon')."
+    },
+    {
+      "id": "gap-118",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "823edd2",
+      "note": "HeartButton title='Clica — easter egg' via $t() em 5 locales."
+    },
+    {
+      "id": "gap-119",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "2607019",
+      "note": "fix(ux) footer 'Sub-app #{n} no hub' → 'Hub · Finanças/Hábitos' em 5 locales."
+    },
+    {
+      "id": "gap-120",
+      "closed_at": "2026-06-30T09:35:00+02:00",
+      "sha": "d42e373",
+      "note": "feat(financas) /financas/relatorios/ shipped em d42e373 — pie categorias + top 5 despesas + comparativo mês-a-mês + export CSV (5 locales i18n). 764 linhas, prod serve 200. Estado actualizado tarde."
+    },
+    {
+      "id": "gap-121",
+      "closed_at": "2026-06-30T09:50:00+02:00",
+      "sha": "823edd2",
+      "note": "streak+today já no 823edd2 — gap-121 era verificação, fechada como já feita."
+    },
+    {
+      "id": "gap-122",
+      "closed_at": "2026-06-30T12:20:00+02:00",
+      "sha": "fbdc389",
+      "note": "BA #46 Gestão de Conflitos: 4 lições + 10 MCQ + i18n 7 chaves × 5 locales + CATALOGUE wired. npm run check 0/0, build verde, prod serve 200."
+    },
+    {
+      "id": "gap-125",
+      "closed_at": "2026-06-30T10:05:00+02:00",
+      "sha": "07fe69c",
+      "note": "fix(ux) footer 'Hub · {Section}' para biblioteca + trabalhos (5 locales)."
+    }
   ]
 }
