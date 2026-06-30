@@ -34,6 +34,7 @@
   "actions.cta.showAll": "Afficher tout",
   "agente.empty": "S'alli 3lech t7eb ta3ref 3al app.",
   "agente.placeholder": "So'al 3lech t7eb…",
+  "agente.thinking": "ur yerra…",
   "agente.title": "L'agent",
   "app.name": "Presuntinho",
   "app.tagline": "Equivalenza Study Hub",
@@ -74,6 +75,7 @@
   "biblioteca.novo.breadcrumb.current": "Nouveau",
   "biblioteca.novo.breadcrumb.home": "← La bibliotheque",
   "biblioteca.novo.hero.sub": "حفظ رابط بعنوان ووصف و tags.",
+  "biblioteca.novo.hero.title": "➕ Ammar nucen",
   "biblioteca.novo.label.description": "الوصف",
   "biblioteca.novo.label.tags": "Tags",
   "biblioteca.novo.notes.placeholder": "Notes personnelles, pour quoi t'as gardé, chapitres à lire…",
@@ -246,6 +248,7 @@
   "escola.curso.pt.breadcrumb.current": "Cours PT",
   "escola.curso.pt.breadcrumb.home": "← L'ecole",
   "escola.curso.pt.completedAt": "✅ الكورس تكمل في {date}.",
+  "escola.curso.pt.fallbackTitle": "🇵🇹 Tagrada n Tutnuc",
   "escola.curso.pt.h3.examples": "Exemples",
   "escola.curso.pt.loadFailed": "ما قدرتش تحمّل الكورس.",
   "escola.curso.pt.loading": "🇵🇹 يحمل الكورس…",
@@ -701,6 +704,7 @@
   "walkthrough.verify.exists": "existe.",
   "walkthrough.verify.text": "Vérifie que",
   "write.breadcrumb.home": "← Hub",
+  "write.head.title": "Ticra · Tiɣbula Anti-AI",
   "a11y.aria.anexar_ficheiro": "Joindre fichier",
   "a11y.aria.data_final": "Date de fin",
   "a11y.aria.data_inicial": "Date de debut",
@@ -733,18 +737,18 @@
   "a11y.aria.tags": "Tags",
   "a11y.aria.url": "URL",
   "a11y": {
-    "aria": {
-      "change_language": "Badel lougha — actuali: {native}",
-      "choose_language": "Ikhtar lougha",
-      "progresso_de": "Taqaddom {label}: {percent}%",
-      "disponivel_em_breve": "Ghi jay"
+  "aria": {
+  "change_language": "Badel lougha — actuali: {native}",
+  "choose_language": "Ikhtar lougha",
+  "progresso_de": "Taqaddom {label}: {percent}%",
+  "disponivel_em_breve": "Ghi jay"
     }
   },
   "placeholder": {
-    "zero_zero": "0.00",
-    "em_dash": "—",
-    "emoji_check": "✅",
-    "limite_para": "Hadd l-{nome}"
+  "zero_zero": "0.00",
+  "em_dash": "—",
+  "emoji_check": "✅",
+  "limite_para": "Hadd l-{nome}"
   },
   "walkthrough.audio.title": "Audio walkthrough",
   "walkthrough.audio.missing": "Makan fichier audio l hadhi l-derja.",

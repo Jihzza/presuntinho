@@ -34,6 +34,7 @@
   "actions.cta.showAll": "Tout afficher",
   "agente.empty": "Demande-moi tout ce que tu veux savoir sur l'app.",
   "agente.placeholder": "Demande n'importe quoi…",
+  "agente.thinking": "réflexion…",
   "agente.title": "Agent",
   "app.name": "Presuntinho",
   "app.tagline": "Equivalenza Study Hub",
@@ -74,6 +75,7 @@
   "biblioteca.novo.breadcrumb.current": "Nouveau",
   "biblioteca.novo.breadcrumb.home": "← Bibliothèque",
   "biblioteca.novo.hero.sub": "Enregistre un lien avec titre, description et étiquettes.",
+  "biblioteca.novo.hero.title": "➕ Nouveau marque-page",
   "biblioteca.novo.label.description": "Description",
   "biblioteca.novo.label.tags": "Tags",
   "biblioteca.novo.notes.placeholder": "Notes personnelles, pourquoi tu l'as gardé, chapitres à lire…",
@@ -246,6 +248,7 @@
   "escola.curso.pt.breadcrumb.current": "Cours PT",
   "escola.curso.pt.breadcrumb.home": "← École",
   "escola.curso.pt.completedAt": "✅ Cours terminé le {date}.",
+  "escola.curso.pt.fallbackTitle": "🇵🇹 Cours de Portugais",
   "escola.curso.pt.h3.examples": "Exemples",
   "escola.curso.pt.loadFailed": "Impossible de charger le cours.",
   "escola.curso.pt.loading": "🇵🇹 Chargement du cours…",
@@ -701,6 +704,7 @@
   "walkthrough.verify.exists": "existe.",
   "walkthrough.verify.text": "Vérifie que",
   "write.breadcrumb.home": "← Hub",
+  "write.head.title": "Écriture · Conseils Anti-IA",
   "a11y.aria.anexar_ficheiro": "Joindre un fichier",
   "a11y.aria.data_final": "Date de fin",
   "a11y.aria.data_inicial": "Date de début",
@@ -733,18 +737,18 @@
   "a11y.aria.tags": "Tags",
   "a11y.aria.url": "URL",
   "a11y": {
-    "aria": {
-      "change_language": "Changer de langue — actuelle : {native}",
-      "choose_language": "Choisir la langue",
-      "progresso_de": "Progression de {label} : {percent}%",
-      "disponivel_em_breve": "Bientôt disponible"
+  "aria": {
+  "change_language": "Changer de langue — actuelle : {native}",
+  "choose_language": "Choisir la langue",
+  "progresso_de": "Progression de {label} : {percent}%",
+  "disponivel_em_breve": "Bientôt disponible"
     }
   },
   "placeholder": {
-    "zero_zero": "0,00",
-    "em_dash": "—",
-    "emoji_check": "✅",
-    "limite_para": "Limite pour {nome}"
+  "zero_zero": "0,00",
+  "em_dash": "—",
+  "emoji_check": "✅",
+  "limite_para": "Limite pour {nome}"
   },
   "walkthrough.audio.title": "Walkthrough audio",
   "walkthrough.audio.missing": "Pas de fichier audio pour cette leçon.",

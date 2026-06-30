@@ -34,6 +34,7 @@
   "actions.cta.showAll": "Show all",
   "agente.empty": "Ask me anything about the app.",
   "agente.placeholder": "Ask anything…",
+  "agente.thinking": "thinking…",
   "agente.title": "Agent",
   "app.name": "Presuntinho",
   "app.tagline": "Equivalenza Study Hub",
@@ -74,6 +75,7 @@
   "biblioteca.novo.breadcrumb.current": "New",
   "biblioteca.novo.breadcrumb.home": "← Library",
   "biblioteca.novo.hero.sub": "Save a link with title, description and tags.",
+  "biblioteca.novo.hero.title": "➕ New bookmark",
   "biblioteca.novo.label.description": "Description",
   "biblioteca.novo.label.tags": "Tags",
   "biblioteca.novo.notes.placeholder": "Personal notes, why you saved it, chapters to read…",
@@ -246,6 +248,7 @@
   "escola.curso.pt.breadcrumb.current": "PT Course",
   "escola.curso.pt.breadcrumb.home": "← School",
   "escola.curso.pt.completedAt": "✅ Course completed on {date}.",
+  "escola.curso.pt.fallbackTitle": "🇵🇹 Portuguese Course",
   "escola.curso.pt.h3.examples": "Examples",
   "escola.curso.pt.loadFailed": "Could not load the course.",
   "escola.curso.pt.loading": "🇵🇹 Loading course…",
@@ -701,6 +704,7 @@
   "walkthrough.verify.exists": "exists.",
   "walkthrough.verify.text": "Check that",
   "write.breadcrumb.home": "← Hub",
+  "write.head.title": "Writing · Anti-AI Tips",
   "a11y.aria.anexar_ficheiro": "Attach file",
   "a11y.aria.data_final": "End date",
   "a11y.aria.data_inicial": "Start date",
@@ -733,18 +737,18 @@
   "a11y.aria.tags": "Tags",
   "a11y.aria.url": "URL",
   "a11y": {
-    "aria": {
-      "change_language": "Change language — current: {native}",
-      "choose_language": "Choose language",
-      "progresso_de": "Progress of {label}: {percent}%",
-      "disponivel_em_breve": "Coming soon"
+  "aria": {
+  "change_language": "Change language — current: {native}",
+  "choose_language": "Choose language",
+  "progresso_de": "Progress of {label}: {percent}%",
+  "disponivel_em_breve": "Coming soon"
     }
   },
   "placeholder": {
-    "zero_zero": "0.00",
-    "em_dash": "—",
-    "emoji_check": "✅",
-    "limite_para": "Limit for {nome}"
+  "zero_zero": "0.00",
+  "em_dash": "—",
+  "emoji_check": "✅",
+  "limite_para": "Limit for {nome}"
   },
   "walkthrough.audio.title": "Audio walkthrough",
   "walkthrough.audio.missing": "No audio file for this lesson.",

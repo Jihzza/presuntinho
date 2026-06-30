@@ -34,6 +34,7 @@
   "actions.cta.showAll": "Mostrar tudo",
   "agente.empty": "Pergunta-me o que quiseres saber sobre a app.",
   "agente.placeholder": "Pergunta qualquer coisa…",
+  "agente.thinking": "a pensar…",
   "agente.title": "Agente",
   "app.name": "Presuntinho",
   "app.tagline": "Equivalenza Study Hub",
@@ -74,6 +75,7 @@
   "biblioteca.novo.breadcrumb.current": "Novo",
   "biblioteca.novo.breadcrumb.home": "← Biblioteca",
   "biblioteca.novo.hero.sub": "Guarda um link com título, descrição e tags.",
+  "biblioteca.novo.hero.title": "➕ Novo marcador",
   "biblioteca.novo.label.description": "Descrição",
   "biblioteca.novo.label.tags": "Tags",
   "biblioteca.novo.notes.placeholder": "Notas pessoais, porquê que guardaste, capítulos a ler…",
@@ -246,6 +248,7 @@
   "escola.curso.pt.breadcrumb.current": "Curso PT",
   "escola.curso.pt.breadcrumb.home": "← Escola",
   "escola.curso.pt.completedAt": "✅ Curso concluído a {date}.",
+  "escola.curso.pt.fallbackTitle": "🇵🇹 Curso de Português",
   "escola.curso.pt.h3.examples": "Exemplos",
   "escola.curso.pt.loadFailed": "Não foi possível carregar o curso.",
   "escola.curso.pt.loading": "🇵🇹 A carregar curso…",
@@ -734,18 +737,18 @@
   "a11y.aria.tags": "Tags",
   "a11y.aria.url": "URL",
   "a11y": {
-    "aria": {
-      "change_language": "Mudar idioma — actual: {native}",
-      "choose_language": "Escolher idioma",
-      "progresso_de": "Progresso de {label}: {percent}%",
-      "disponivel_em_breve": "Disponível em breve"
+  "aria": {
+  "change_language": "Mudar idioma — actual: {native}",
+  "choose_language": "Escolher idioma",
+  "progresso_de": "Progresso de {label}: {percent}%",
+  "disponivel_em_breve": "Disponível em breve"
     }
   },
   "placeholder": {
-    "zero_zero": "0,00",
-    "em_dash": "—",
-    "emoji_check": "✅",
-    "limite_para": "Limite para {nome}"
+  "zero_zero": "0,00",
+  "em_dash": "—",
+  "emoji_check": "✅",
+  "limite_para": "Limite para {nome}"
   },
   "walkthrough.audio.title": "Audio walkthrough",
   "walkthrough.audio.missing": "Sem ficheiro de áudio para esta lição.",

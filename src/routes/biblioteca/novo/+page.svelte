@@ -102,7 +102,7 @@
 
 <div class="novo">
   <header class="hero">
-    <h1>➕ Novo marcador</h1>
+    <h1>{$t('biblioteca.novo.hero.title', { default: '➕ Novo marcador' })}</h1>
     <p class="sub">{$t('biblioteca.novo.hero.sub', { default: 'Guarda um link com título, descrição e tags.' })}</p>
   </header>
 

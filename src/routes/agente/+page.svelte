@@ -219,10 +219,10 @@
       </div>
     {/each}
     {#if busy}
-      <div class="msg msg-assistant">
-        <div class="bubble thinking">a pensar…</div>
-      </div>
-    {/if}
+          <div class="msg msg-assistant">
+            <div class="bubble thinking">{$t('agente.thinking', { default: 'a pensar…' })}</div>
+          </div>
+        {/if}
   </div>
 
   <div class="composer">

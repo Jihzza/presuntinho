@@ -252,7 +252,7 @@
     {#if loading}
       <h1>{$t('escola.curso.pt.loading', { default: '🇵🇹 A carregar curso…' })}</h1>
     {:else if loadError}
-      <h1>🇵🇹 Curso de Português</h1>
+      <h1>{$t('escola.curso.pt.fallbackTitle', { default: '🇵🇹 Curso de Português' })}</h1>
       <p class="sub">{$t('escola.curso.pt.temporarilyUnavailable', { default: 'Conteúdo temporariamente indisponível.' })}</p>
     {:else if course}
       <span class="tag">🇵🇹 Curso</span>

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-30T00:30:36.698748+02:00",
+  "lastUpdated": "2026-06-30T02:10:45.078459+02:00",
   "openItems": [
     {
       "id": "gap-096",
@@ -7,14 +7,6 @@
       "description": "Próxima cadeira BA: dispachable para Skander 2. Continua a entrega do 'faz cursos sobretudo / aulas sobretudo' do Daniel. Próximas cadeiras candidatas por relevância: BA #41 Estratégia de Marketing Internacional (já temos Comércio Internacional BA #39, próxima camada é Estratégia de Marketing Internacional); BA #42 Marketing Digital / E-Commerce; BA #43 Comportamento do Consumidor. Despachar gap-097 com conteúdo denso (4 lições + quiz 10 perguntas + i18n 5 locales + CATALOGUE wired) e smoke 9/9 URLs HTTP 200.",
       "severity": "baixa",
       "source": "watchdog-tick-2026-06-30-00",
-      "created_at": "2026-06-30T00:30:36.698748+02:00"
-    },
-    {
-      "id": "gap-097",
-      "category": "i18n",
-      "description": "Pre-existing parity gap: write.head.title present only in pt-PT and ar. Missing in en/fr/tn. Provavelmente de uma feature antiga (write app) que foi traduzida em pt-PT/ar mas não propagada. Quick fix: dispatch para Skander 2 mechanical para adicionar em en/fr/tn (1 key × 3 locales = 3 entries).",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-30-00-i18n-audit",
       "created_at": "2026-06-30T00:30:36.698748+02:00"
     },
     {
@@ -66,9 +58,38 @@
       "source": "watchdog-tick-2026-06-28-23",
       "created_at": "2026-06-28T23:25:00+02:00",
       "updated_at": "2026-06-29T04:35:00+02:00"
+    },
+    {
+      "id": "gap-098",
+      "category": "licao/curso",
+      "description": "Cadeira BA #41: Estratégia de Marketing Internacional (slug marketing-internacional). Despachada para Skander 2. 4 lições + mkq quiz 10 perguntas + i18n 5 locales + CATALOGUE wired. Continua o pipeline do Daniel 'faz cursos sobretudo / aulas sobretudo'. Conteúdo: STP internacional (segmentação global: country markets, intermarket, intra-market; targeting: undifferentiated, concentrated, differentiated, micromarketing mix); 4Ps globais (produto: adaptação vs padronização, country-of-origin effects; preço: dumping, transfer pricing, currency hedging; praça: canais internacionais, joint ventures, subsidiárias; promoção: publicidade internacional, mensagens local-globais); estratégias de entrada (exportação indireta/direta, licensing, franchising, joint ventures, subsidiárias integrais, FDI greenfield/acquisition, alliance estratégica, born global); gestão cultural e diplomacia corporativa (Hofstede dimensions: PDI, IDV, MAS, UAI, LTO, IND aplicado a decisões de marketing global).",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-30-01",
+      "created_at": "2026-06-30T02:10:45.078459+02:00"
+    },
+    {
+      "id": "gap-099",
+      "category": "i18n",
+      "description": "Re-auditar PT hardcoded em .svelte após este tick (3 strings migradas: agente.thinking, biblioteca.novo.hero.title, escola.curso.pt.fallbackTitle). Continuar a auditoria gap-091 — Skander 1 deve produzir lista priorizada dos próximos 10-20 strings hardcoded a migrar.",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-30-01-i18n-refresh",
+      "created_at": "2026-06-30T02:10:45.078459+02:00"
     }
   ],
   "closedItems": [
+    {
+      "id": "gap-097",
+      "category": "i18n",
+      "description": "write.head.title parity — added to en/fr/tn (was only in pt-PT+ar). Also added 3 new i18n keys (agente.thinking, biblioteca.novo.hero.title, escola.curso.pt.fallbackTitle) × 5 locales = 15 entries. Migrated 3 .svelte hardcoded strings to $t() with {default: 'pt-fallback'}. npm run check 0/0; build green; ready to push.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-30-00-i18n-audit",
+      "created_at": "2026-06-30T00:30:36.698748+02:00",
+      "done": true,
+      "sha_pending": "tick-25-commit",
+      "closed_at": "2026-06-30T02:10:45.078459+02:00",
+      "evidence": "5 locales now have write.head.title (pt-PT: 'Writing · Tips Anti-AI', en: 'Writing · Anti-AI Tips', fr: 'Écriture · Conseils Anti-IA', tn: 'Ticra · Tiɣbula Anti-AI', ar: 'الكتابة · نصائح لمكافحة الذكاء الاصطناعي'). 3 additional keys added to all 5 locales (15 entries). agente/+page.svelte thinking bubble now uses $t('agente.thinking'). biblioteca/novo hero h1 uses $t('biblioteca.novo.hero.title'). escola/curso/portugues fallback title uses $t('escola.curso.pt.fallbackTitle'). npm run check 0/0; npm run build green.",
+      "updated_at": "2026-06-30T02:10:45.078459+02:00"
+    },
     {
       "id": "gap-095",
       "category": "i18n",

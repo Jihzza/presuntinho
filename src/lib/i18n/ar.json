@@ -34,6 +34,7 @@
   "actions.cta.showAll": "عرض الكل",
   "agente.empty": "اسألني أي شيء عن التطبيق.",
   "agente.placeholder": "اسأل أي شيء…",
+  "agente.thinking": "يفكر…",
   "agente.title": "الوكيل",
   "app.name": "بريزونتينيو",
   "app.tagline": "مركز دراسة إيكيفالينزا",
@@ -74,6 +75,7 @@
   "biblioteca.novo.breadcrumb.current": "جديد",
   "biblioteca.novo.breadcrumb.home": "← المكتبة",
   "biblioteca.novo.hero.sub": "احفظ رابطًا بعنوان ووصف ووسوم.",
+  "biblioteca.novo.hero.title": "➕ إشارة جديدة",
   "biblioteca.novo.label.description": "الوصف",
   "biblioteca.novo.label.tags": "وسوم",
   "biblioteca.novo.notes.placeholder": "ملاحظات شخصية، لماذا حفظته، فصول للقراءة…",
@@ -246,6 +248,7 @@
   "escola.curso.pt.breadcrumb.current": "دورة PT",
   "escola.curso.pt.breadcrumb.home": "← المدرسة",
   "escola.curso.pt.completedAt": "✅ تم إكمال الدورة في {date}.",
+  "escola.curso.pt.fallbackTitle": "🇵🇹 دورة البرتغالية",
   "escola.curso.pt.h3.examples": "أمثلة",
   "escola.curso.pt.loadFailed": "تعذّر تحميل الدورة.",
   "escola.curso.pt.loading": "🇵🇹 جارٍ تحميل الدورة…",
@@ -734,18 +737,18 @@
   "a11y.aria.tags": "الوسوم",
   "a11y.aria.url": "الرابط",
   "a11y": {
-    "aria": {
-      "change_language": "تغيير اللغة — الحالية: {native}",
-      "choose_language": "اختر اللغة",
-      "progresso_de": "تقدّم {label}: {percent}٪",
-      "disponivel_em_breve": "قريباً"
+  "aria": {
+  "change_language": "تغيير اللغة — الحالية: {native}",
+  "choose_language": "اختر اللغة",
+  "progresso_de": "تقدّم {label}: {percent}٪",
+  "disponivel_em_breve": "قريباً"
     }
   },
   "placeholder": {
-    "zero_zero": "0.00",
-    "em_dash": "—",
-    "emoji_check": "✅",
-    "limite_para": "حدّ لـ {nome}"
+  "zero_zero": "0.00",
+  "em_dash": "—",
+  "emoji_check": "✅",
+  "limite_para": "حدّ لـ {nome}"
   },
   "walkthrough.audio.title": "شرح صوتي",
   "walkthrough.audio.missing": "لا يوجد ملف صوتي لهذا الدرس.",
