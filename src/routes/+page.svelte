@@ -10,7 +10,11 @@
    *      - Quizzes   : count of quizzes with at least one answered question
    *      - Escrita   : count of assignments with status !== 'open'
    *   4. Badge grid — 8 BadgeCards (PRESERVATION.md #11)
-   *   5. Legacy V3 section
+   *   5. "Mais Presuntinho" — 8 HubCards covering the Agent + V3 content
+   *      siblings of the main 5.  Gap-111 dropped the "Site V3 preservado"
+   *      and "V3 Content" sections that leaked dev-speak ("A migração para
+   *      rotas SvelteKit está concluída") to the user and replaced them with
+   *      a single user-friendly strip using the same HubCard component.
    *
    * State sources:
    *   - `xp` from `$lib/state/stores` (writable, auto-persisted)
@@ -31,7 +35,7 @@
   void InstallButton;
   import OnboardingModal from '$lib/components/OnboardingModal.svelte';
 
-  import { subApps, legacySubApp, v3Content, agentEntry } from '$lib/registry';
+  import { subApps, agentEntry, legacySubApp, v3Content } from '$lib/registry';
   import { db } from '$lib/state/db';
   import { xp, initStores } from '$lib/state/stores';
   import { getSession } from '$lib/auth/session';
@@ -258,24 +262,21 @@
     <BadgeGrid badges={badgesMap} />
   </section>
 
-  <section class="legacy-section" aria-label={$t('hub.section.legacy.aria', { default: 'Site V3 preservado' })}>
-    <h2 class="section-title">{$t('hub.section.legacy', { default: 'Site V3 preservado' })}</h2>
-    <p class="legacy-desc">{$t('hub.legacy.desc', { default: 'O site V3 original mantém-se reachable como arquivo. A migração para rotas SvelteKit está concluída para os 7 módulos abaixo.' })}</p>
-    <div class="legacy-grid">
-      <HubCard app={legacySubApp} />
-    </div>
-  </section>
-
-  <section class="v3-section" aria-label={$t('hub.section.v3.aria', { default: 'Conteúdo V3 migrado' })}>
-      <h2 class="section-title">{$t('hub.section.v3', { default: 'V3 Content' })}</h2>
-      <p class="v3-desc">{$t('hub.v3.desc', { default: 'As 7 páginas do V3 agora são rotas SvelteKit nativas — sem iframe, navegação rápida, prontas para SEO e PWA.' })}</p>
-      <div class="v3-grid">
-        <HubCard app={agentEntry as any} />
-        {#each v3Content as entry (entry.id)}
-          <HubCard app={legacySubApp} v3={entry} />
-        {/each}
-      </div>
-    </section>
+  <!--
+    gap-111: collapsed the legacy "Site V3 preservado" + "V3 Content" pair into a
+    single user-facing strip so internal migration copy never reaches the user.
+    Renders the agent card first, followed by the 7 V3 content entries.
+    Bumps the previous count from 5+1+1+7=14 cards down to 5+8=13 in one grid.
+  -->
+  <section class="more-section" aria-label={$t('hub.section.more.aria', { default: 'Mais Presuntinho' })}>
+    <h2 class="section-title">{$t('hub.section.more', { default: 'Mais Presuntinho' })}</h2>
+    <div class="more-grid">
+          <HubCard app={agentEntry as any} />
+          {#each v3Content as entry (entry.id)}
+            <HubCard app={legacySubApp} v3={entry} />
+          {/each}
+        </div>
+      </section>
 </div>
 
 <style>
@@ -362,8 +363,7 @@
   .apps,
   .progress-section,
   .badges-section,
-  .legacy-section,
-  .v3-section {
+  .more-section {
     margin-bottom: 2rem;
   }
   .section-title {
@@ -384,21 +384,10 @@
     grid-template-columns: 1fr;
     gap: 0.75rem;
   }
-  .legacy-desc {
-    font-size: 0.875rem;
-    color: #94a3b8;
-    margin: 0 0 0.75rem 0.25rem;
-  }
-  .legacy-grid,
-  .v3-grid {
+  .more-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.75rem;
-  }
-  .v3-desc {
-    font-size: 0.875rem;
-    color: #94a3b8;
-    margin: 0 0 0.75rem 0.25rem;
   }
   @media (min-width: 640px) {
     .grid {
@@ -407,8 +396,7 @@
     .progress-grid {
       grid-template-columns: repeat(3, 1fr);
     }
-    .legacy-grid,
-    .v3-grid {
+    .more-grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
@@ -428,8 +416,7 @@
     .progress-grid {
       grid-template-columns: repeat(3, 1fr);
     }
-    .legacy-grid,
-    .v3-grid {
+    .more-grid {
       grid-template-columns: repeat(3, 1fr);
     }
   }

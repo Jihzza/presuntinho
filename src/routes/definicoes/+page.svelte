@@ -38,6 +38,7 @@
   import Download from 'lucide-svelte/icons/download';
   import Upload from 'lucide-svelte/icons/upload';
   import Info from 'lucide-svelte/icons/info';
+  import { VERSION, REPO_URL } from '$lib/version';
   import Palette from 'lucide-svelte/icons/palette';
   import Globe from 'lucide-svelte/icons/globe';
   import Database from 'lucide-svelte/icons/database';
@@ -315,13 +316,14 @@
     }
   }
 
-  // Misc
-  const today = new Date().toISOString().slice(0, 10);
+  // Misc — gap-115: read version from a single source of truth
+  // (src/lib/version.ts) so the About card never shows a misleading date.
+  void REPO_URL;
 </script>
 
-<svelte:head>
-  <title>{$t('settings.title')} · Presuntinho</title>
-</svelte:head>
+  <svelte:head>
+    <title>{$t('settings.title')} · Presuntinho</title>
+  </svelte:head>
 
 <div class="definicoes">
   <header class="header">
@@ -460,7 +462,7 @@
     <ul class="about-list">
       <li>
         <Globe size={14} aria-hidden="true" />
-        {$t('settings.version')} · {today}
+        {$t('settings.version')} · {VERSION}
       </li>
       <li>
         <a href="/legacy/" target="_blank" rel="noopener noreferrer">
@@ -469,7 +471,7 @@
         </a>
       </li>
       <li>
-        <a href="https://github.com/" target="_blank" rel="noopener noreferrer">
+        <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
           <Github size={14} aria-hidden="true" />
           {$t('settings.about.repo')}
         </a>
