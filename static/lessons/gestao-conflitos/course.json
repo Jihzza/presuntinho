@@ -1,0 +1,17 @@
+{
+  "slug": "gestao-conflitos",
+  "title": "Gestão de Conflitos",
+  "category": "BA",
+  "level": "intermediate",
+  "estMinutes": 36,
+  "icon": "🕊️",
+  "color": "#65a30d",
+  "description": "Gestão de conflitos aplicada à gestão: natureza e fontes do conflito organizacional (tarefas, relações, processos, valores), estilos de resposta (Thomas-Kilmann: competição, colaboração, compromisso, evitamento, acomodação), modelos de processo (ponto de vista, posições vs interesses, BATNA/ZOPA), mediação e negociação integrativa, comunicação não-violenta, gestão de conflitos em equipas híbridas e multi-culturais, e o papel do líder como gestor construtivo de divergências.",
+  "tagline": "Business Administration · Fontes do conflito, estilos de resposta, negociação integrativa e mediação",
+  "lessons": [
+    { "slug": "1-natureza-e-fontes-do-conflito", "title": "1. Natureza e Fontes do Conflito Organizacional", "summary": "Como o conflito surge em equipas: tarefas, relações, processos e valores, e quando é funcional ou disfuncional.", "quizSlug": "gcq", "estMinutes": 9 },
+    { "slug": "2-estilos-e-processos", "title": "2. Estilos de Resposta, Processo e Dinâmica", "summary": "Os cinco estilos de Thomas-Kilmann, posições vs interesses, BATNA/ZOPA e escalada vs des-escalada.", "quizSlug": "gcq", "estMinutes": 9 },
+    { "slug": "3-negociacao-mediacao-comunicacao", "title": "3. Negociação Integrativa, Mediação e Comunicação Não-Violenta", "summary": "Negociação baseada em interesses, escuta activa, CNV e o papel do gestor como mediador.", "quizSlug": "gcq", "estMinutes": 9 },
+    { "slug": "4-caso-de-estudo", "title": "4. Caso de Estudo: Conflito em Equipa Híbrida", "summary": "Aplicação prática: como uma equipa híbrida re resolve uma disputa prioridades entre produto e engineering.", "quizSlug": "gcq", "estMinutes": 9 }
+  ]
+}

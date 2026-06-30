@@ -236,17 +236,29 @@
           badge: 'Uni'
         },
         {
-          slug: 'gestao-operacoes',
-          title: 'Gestão de Operações',
-          tagline: 'Business Administration · Processos, qualidade, capacidade e supply chain',
-          description:
-            'Como desenhar, operar e melhorar processos que transformam inputs em outputs: estratégia operacional, qualidade e Six Sigma, capacidade e layout, supply chain e Lean.',
-          icon: '🏭',
-          color: '#ea580c',
-          lessonCount: 4,
-          quizCount: 1,
-          badge: 'Uni'
-        },
+                  slug: 'gestao-operacoes',
+                  title: 'Gestão de Operações',
+                  tagline: 'Business Administration · Processos, qualidade, capacidade e supply chain',
+                  description:
+                    'Como desenhar, operar e melhorar processos que transformam inputs em outputs: estratégia operacional, qualidade e Six Sigma, capacidade e layout, supply chain e Lean.',
+                  icon: '🏭',
+                  color: '#ea580c',
+                  lessonCount: 4,
+                  quizCount: 1,
+                  badge: 'Uni'
+                },
+                {
+                  slug: 'gestao-conflitos',
+                  title: 'Gestão de Conflitos',
+                  tagline: 'Business Administration · Fontes do conflito, estilos de resposta, negociação integrativa e mediação',
+                  description:
+                    'Gestão de conflitos aplicada à gestão: natureza e fontes do conflito organizacional (tarefas, relações, processos, valores), estilos de resposta (Thomas-Kilmann: competição, colaboração, compromisso, evitamento, acomodação), modelos de processo (posições vs interesses, BATNA/ZOPA), mediação e negociação integrativa, comunicação não-violenta, gestão de conflitos em equipas híbridas e multi-culturais, e o papel do líder como gestor construtivo de divergências.',
+                  icon: '🕊️',
+                  color: '#65a30d',
+                  lessonCount: 4,
+                  quizCount: 1,
+                  badge: 'Uni'
+                },
         {
                   slug: 'analise-financeira',
                   title: 'Análise Financeira',

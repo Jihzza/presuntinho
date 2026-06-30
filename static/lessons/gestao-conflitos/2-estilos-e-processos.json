@@ -1,0 +1,79 @@
+{
+  "id": "2-estilos-e-processos",
+  "courseSlug": "gestao-conflitos",
+  "title": "Estilos de Resposta, Processo e Dinâmica",
+  "audio": "Lição sobre estilos de gestão de conflitos (Thomas-Kilmann), posições versus interesses, BATNA, ZOPA e escalada.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "O modelo Thomas-Kilmann: cinco estilos" },
+    { "type": "p", "text": "Kenneth Thomas e Ralph Kilmann publicaram em 1974 o modelo TKI (Thomas-Kilmann Conflict Mode Instrument), que se tornou a ferramenta mais usada em gestão de conflitos. Cruza duas dimensões: assertividade (grau em que a pessoa procura satisfazer os seus próprios interesses) e cooperatividade (grau em que tenta satisfazer os interesses do outro). Cinco estilos emergem:" },
+    { "type": "ul", "items": [
+      "Competição (alta assertividade, baixa cooperação): impor a própria posição. Útil ememergências e quando se defende um princípio não-negociável, mas destrutivo em conflitos quotidianos.",
+      "Colaboração (alta assertividade, alta cooperação): procurar solução que satisfaça ambas as partes — ganha-ganha. Demorada e exige confiança; ideal para conflitos estratégicos e relações de longo prazo.",
+      "Compromisso (assertividade média, cooperação média): cada parte cedealgo para chegar a acordo aceitável. Útil quando tempo é limitado ou as partes têm poder similar.",
+      "Evitamento (baixa assertividade, baixa cooperação): não enfrentaroconflito. Pode ser adequado quando o assunto é trivial ou a hora é errada; disfuncional quando substitui gestão.",
+      "Acomodação (baixa assertividade, alta cooperação): ceder para preservar a relação. Adequado quando o assunto importa mais ao outro, ou quando preservar a ligação é mais estratégico que 'ganhar'."
+    ] },
+    { "type": "h3", "text": "Que estilo usar quando?" },
+    { "type": "p", "text": "Não há estilo 'melhor' universal — há estilos adequados a contextos. Algumas heurísticas práticas:" },
+    { "type": "ul", "items": [
+      "Competição: protege integridade do produto em recall de segurança, decisõesunder pressão extrema, ou violações de compliance. Fora desses casos, erode confiança.",
+      "Colaboração: relações de longo prazo, problemas complexos, quando ambas as partes precisam de compromiso. Investimento alto mas retorno alto.",
+      "Compromisso: deadlines apertados, partes com poder similar,objectivos modestos em jogo.",
+      "Evitamento: assuntos triviais, conflitos comorigem emfadiga temporária, ou quando qualquer intervenção pioraria as coisas no curto prazo.",
+      "Acomodação: preservar relação mais importante do que resultado imediato, ou quando está claramente errado."
+    ] },
+    { "type": "callout", "variant": "example", "text": "Dois engenheiros disputam qual framework usar num novo microsserviço. Líder de equipa percebe que (a) discussão tem implicações arquitecturais profundas, (b) têm meses de trabalho em conjunto pela frente, (c) há espaço real para inventar uma terceira abordagem. Escolhe colaboração: investe 4 horas em sessão conjunta com dados de performance, casos de uso e restrições, sai com decisão híbrida que nenhum dos dois tinha imaginado e relação fortalecida." },
+    { "type": "h2", "text": "Posições versus interesses: a chave de Harvard" },
+    { "type": "p", "text": "Roger Fisher, William Ury e Bruce Patton formalizaram no livro 'Getting to Yes' (1981, Harvard Negotiation Project) a distinção fundamental entre posições e interesses. Posição é o que cada lado diz que quer; interesse é o porquê. Dois lados com posições opostas têm frequentemente interesses compatíveis — e é aí que mora a solução criativa." },
+    { "type": "ul", "items": [
+      "Posição A: 'o prazo de entrega não pode passar do dia 30.' Posição B: 'preciso de mais tempo ou a qualidade cai.'",
+      "Interesse de A: lançar antes do trimestre fiscal fechar, manter promessa a cliente estratégico, preservar reputação de pontualidade.",
+      "Interesse de B: evitar retrabalho custoso, manter bem-estar da equipa, garantir qualidade para evitar churn.",
+      "Solução criativa: entrega faseada (mínimo viável no dia 30, refinamento na semana 4) preserva ambos os interesses sem cedência de princípio."
+    ] },
+    { "type": "h3", "text": "Como identificar interesses profundos" },
+    { "type": "p", "text": "A técnica das '5 porquês' adaptada a conflitos ajuda a expor o interesse por trás da posição. Quando alguém afirma 'quero X', pergunte 'porquê?' repetidamente até chegar a uma necessidade humana básica (segurança, reconhecimento, autonomia, pertença, justiça, eficiência). Muitas vezes a reclamação 'a Sofia não colabora' (posição) descobre-se como 'preciso de reconhecimento pelo trabalho de planeamento' (interesse) ou 'preciso de previsibilidade para gerir a minha carga' (interesse)." },
+    { "type": "h2", "text": "BATNA e ZOPA: os limites objectivos" },
+    { "type": "p", "text": "Dois conceitos do método Harvard que transformam negociação de 'arte' em 'processo com critérios':" },
+    { "type": "ul", "items": [
+      "BATNA (Best Alternative To a Negotiated Agreement): a melhor alternativa caso não haja acordo. Definir BATNA com clareza é o passo mais importante antes de negociar. Se a sua BATNA é forte, tem poder de saída. Se for fraca, precisa de criá-la antes de negociar.",
+      "ZOPA (Zone Of Possible Agreement): a zona onde um acordo é logicamente possível para ambas as partes. Se as posições se sobrepõem, há ZOPA; se não se sobrepõem, negociar não produzirá acordo — melhor caminho é BATNA ou mediação criativa."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Negociação sem BATNA clara é negociação às cegas. Profissionais que conhecem bem a sua BATNA entram em sala com confiança calibrada; quem não a conhece ou bluffa ou cede excessivamente. Antes de qualquer negociação importante, escreva: 'se não chegar a acordo, o que faço?'" },
+    { "type": "h2", "text": "Dinâmica de escalada e des-escalada" },
+    { "type": "p", "text": "Conflitos interpessoais raramente permanecem estáticos — escalam ou des-escalam. Glasl identificou nove níveis de escalada em conflitos laborais (modelo de Glasl, usado em mediação epeacekeeping):" },
+    { "type": "ul", "items": [
+      "Níveis 1-3 (debate): endurecimento de posições, debate,indakan verbal mas sem ataque pessoal. Intervenção do gestor é suficiente.",
+      "Níveis 4-6 (perda de confiança): coalizões formadas, perda de face, ameaças e ultimatuns. Mediação profissional já é útil.",
+      "Níveis 7-9 (destruição mútua): intenção deliberada de magoar, destruição de reputação, hostilidade total. Apenas mediação muito estruturada, arbitragem ou saída de uma das partes."
+    ] },
+    { "type": "h3", "text": "Técnicas de des-escalada" },
+    { "type": "p", "text": "Quando se quer baixar a temperatura de um conflito interpessoal, há movimentos linguísticos e processuais que funcionam consistentemente:" },
+    { "type": "ul", "items": [
+      "Validar primeiro: 'eu percebo que esta situação te incomoda' antes de discordar. Não é concordar — é reconhecer a emoção como real.",
+      "Fazer perguntas abertas: 'o que tornaria isto aceitável para ti?' em vez de 'tens que aceitar'. Muda o jogo de posições para interesses.",
+      "Isolar o problema das pessoas: 'o problema aqui é X, não tu nem eu'. Linguagem de 'nós contra o problema' em vez de 'eu contra ti'.",
+      "Fazer pausa explícita: 'preciso de tempo para pensar nisto, posso responder amanhã?' Compra tempo para Sistema 2 e evita arrependimento.",
+      "Separar canais: conflitos altos preferem canais escritos, conflito médios preferem vídeo, conflitos baixos funcionam em texto. Errar ao subir canal em vez de descer é regra geral."
+    ] },
+    { "type": "h2", "text": "Processos formais de resolução" },
+    { "type": "p", "text": "Quando o conflito ultrapassa capacidade de gestão directa, há três processos formais com custos e benefícios distintos:" },
+    { "type": "ul", "items": [
+      "Mediação: terceiro neutro facilita comunicação e proposta de solução, mas não impõe decisão. Voluntária, confidencial, ~40% de taxa de acordo em laborais. Indicada para relações a preservar.",
+      "Arbitragem: terceiro neutro ouve ambos os lados e emite decisão vinculativa. Mais rápida que tribunal, mas relação pode ficar afectada. Útil quando precisa de fim claro.",
+      "Conciliação: variante de mediação com comité que investiga factos e propõe acordo não-vinculativo. Útil em conflitos colectivos."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Antes de subir para mediação formal, tente a 'mediação preventiva': peça a alguém neutro e respeitado por ambas as partes (não o chefe) para conversar informalmente com cada lado separadamente. Muitas vezes a designação informal resolve em dias, enquanto mediação formal leva semanas." }
+  ],
+  "keyPoints": [
+    "Thomas-Kilmann: cinco estilos (competição, colaboração, compromisso, evitamento, acomodação) cruzam assertividade e cooperatividade; cada um tem contexto adequado.",
+    "Distinção posições vs interesses (Fisher-Ury-Patton): a reclamação é a posição, o porquê é o interesse; interesses compatíveis abrem soluções criativas.",
+    "BATNA é a melhor alternativa sem acordo; ZOPA é a zona de acordo possível — negocie com ambas em mente para calibrar poder e expectativas.",
+    "Escalada de Glasl: 9 níveis de debate a destruição mútua; quanto mais alto o nível, mais formal a intervenção necessária.",
+    "Técnicas de des-escalada: validar antes de discordar, perguntas abertas, separar problema de pessoas, fazer pausas, ajustar canal de comunicação."
+  ],
+  "quizSlug": "gcq",
+  "nextLesson": "3-negociacao-mediacao-comunicacao",
+  "prevLesson": "1-natureza-e-fontes-do-conflito"
+}

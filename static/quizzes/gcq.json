@@ -1,0 +1,117 @@
+{
+  "id": "gcq",
+  "title": "Quiz: Gestão de Conflitos",
+  "description": "Testa os teus conhecimentos em gestão de conflitos organizacionais: natureza e fontes do conflito (tarefa vs relação), estilos de Thomas-Kilmann, posições versus interesses (Harvard), BATNA e ZOPA, escalada de Glasl, negociação integrativa, mediação, Comunicação Não-Violenta (CNV) e gestão de conflitos em equipas híbridas. 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "questions": [
+    {
+      "q": "Segundo Karen Jehn, qual a diferença fundamental entre conflito de tarefa e conflito de relação?",
+      "opts": [
+        "Conflito de tarefa acontece entre equipas remotas; conflito de relação em presencial",
+        "Conflito de tarefa é sobreobjectivos e métodos (centrado no trabalho); conflito de relação é sobre hostilidade interpessoal",
+        "Conflito de tarefa é sempre positivo; conflito de relação é sempre negativo",
+        "Conflito de tarefa aparece emreuniões; conflito de relação aparece em Slack"
+      ],
+      "a": 1,
+      "explanation": "Karen Jehn (1995) separou conflito de tarefa — disagreement sobreobjectivos, métodos e decisões, centrado no trabalho — de conflito de relação, que envolve tensão interpessoal, hostilidade e desconfiança. Estudos mostram que conflito de tarefa moderado melhora qualidade de decisão, enquanto conflito de relação corrói confiança e desempenho mesmo quando a discussão é 'ganha'. A implicação prática: o gestor deve proteger o primeiro e extinguir o segundo."
+    },
+    {
+      "q": "Qual destas é fonte estrutural (não sintoma) de conflito organizacional?",
+      "opts": [
+        "Tom de email mais seco entre dois colegas",
+        "Reuniões que 'não fecham' há semanas",
+        "Incentivos desalinhados entre departamentos comobjectivos legítimos diferentes",
+        "Piadas em retrospectiva sobre uma pessoa"
+      ],
+      "a": 2,
+      "explanation": "Fontes estruturais incluem recursos escassos,objectivos comincentivos desalinhados, dependências interdepartamentais sem SLA claro,ambigüidade de papéis e diferenças de valores. Os outros três (tom, reuniões, piadas) são sinais precoces ou sintomas, não fontes. Agir sobre sintomas sem identificar a fonte estrutural é mediar para voltar a ter o mesmo conflito em ciclo seguinte."
+    },
+    {
+      "q": "No modelo Thomas-Kilmann, o estilo 'colaboração' cruza que combinação de dimensões?",
+      "opts": [
+        "Baixa assertividade e baixa cooperação",
+        "Alta assertividade e baixa cooperação",
+        "Alta assertividade e alta cooperação",
+        "Assertividade média e cooperação média"
+      ],
+      "a": 2,
+      "explanation": "Thomas-Kilmann (1974) define cinco estilos cruzando assertividade (grau em que se procura satisfazer os próprios interesses) com cooperatividade (grau em que se procura satisfazer os do outro). Colaboração = alta assertividade + alta cooperação (procura ganha-ganha). Competição = alta + baixa. Acomodação = baixa + alta. Evitamento = baixa + baixa. Compromisso = média + média. Cada um tem contexto adequado."
+    },
+    {
+      "q": "Num conflito entre Vendas (bónus por receita) e Sucesso do Cliente (bónus por retenção), o gestor deveria começar por:",
+      "opts": [
+        "Decidir unilateralmente quem tem razão e impor a decisão",
+        "Diagnosticar a fonte estrutural (incentivos desalinhados) antes de mediar",
+        "Acomodar as duas equipas sem questionar o conflito",
+        "Remover o bónus de uma das equipas para acabar com o conflito"
+      ],
+      "a": 1,
+      "explanation": "Conflitos com fontes estruturais (incentivos desalinhados) não se resolvem medindo argumentos de cada lado — resolvem-se redesenhando o sistema. Antes de propor solução, o gestor deve identificar a fonte (aqui: incentivos conflituantes), expor os interesses legítimos por trás (Vendas precisa de receita, Sucesso precisa de retenção saudável), e alinhar incentivos (bónus colectivo amarrado a ambos, por exemplo). Decidir unilateralmente cria perdedor; acomodar adia; remover bónus gera novo conflito."
+    },
+    {
+      "q": "No método Harvard de negociação, qual a distinção central entre 'posição' e 'interesse'?",
+      "opts": [
+        "Posição é o que se quer; interesse é o porquê",
+        "Posição é emocional; interesse é racional",
+        "Posição é declarada em reunião; interesse em Slack",
+        "Posição é a oferta final; interesse é a BATNA"
+      ],
+      "a": 0,
+      "explanation": "Fisher, Ury e Patton ('Getting to Yes', 1981) definem posição como a proposta concreta ('quero aumento de €2.000') e interesse como a necessidade humana ouorganizacional por trás ('preciso sentir que o meu trabalho é reconhecido porque o salário actual está abaixo do mercado para a função'). Dois lados com posições opostas têm frequentemente interesses compatíveis, o que abre soluções criativas que satisfazem ambos em vez de um vencedor."
+    },
+    {
+      "q": "BATNA significa:",
+      "opts": [
+        "Best Alternative To a Negotiated Agreement",
+        "Basic Agreement Through Negotiation Analysis",
+        "Biggest Threat Against a New Argument",
+        "Balanced Approach To Narrow Aims"
+      ],
+      "a": 0,
+      "explanation": "BATNA (Best Alternative To a Negotiated Agreement) é o conceito criado por Fisher-Ury para designar a melhor alternativa caso a negociação falhe. Definir a BATNA com clareza é o passo mais importante antes de qualquer negociação importante — determina o limite mínimo aceitável e o poder real de cada lado. ZOPA (Zone Of Possible Agreement) é diferente: é a zona onde acordo é logicamente possível para ambos."
+    },
+    {
+      "q": "Na escalada de Glasl (modelo de 9 níveis), quando a intervenção do próprio gestor deixa de ser suficiente e se recomenda mediação profissional?",
+      "opts": [
+        "A partir do nível 1 (sempre)",
+        "Apenas no nível 9 (destruição mútua)",
+        "A partir dos níveis 4-6, quando há formação de coligações, perda de face e ameaça com ultimatos",
+        "Nunca, o gestor deve resolver tudo internamente"
+      ],
+      "a": 2,
+      "explanation": "Glasl descreve 9 níveis: 1-3 são debate (intervenção do gestor basta), 4-6 envolvem coalizões, perda de face, ameaçase ultimatuns — aqui mediação profissional já é útil, 7-9 são destruição mútua com intenção deliberada de magoar — aqui apenas mediação muito estruturada, arbitragem ou saída de uma das partes resolve. A escala mostra que esperar custa caro: cada nível exige intervenção mais formal e custosa."
+    },
+    {
+      "q": "A Comunicação Não-Violenta (CNV) de Marshall Rosenberg tem como componentes:",
+      "opts": [
+        "Argumento, contra-argumento, síntese, decisão",
+        "Observação, sentimento, necessidade, pedido",
+        "Identificação, comparação, classificação, conclusão",
+        "Queixa, acusação, defesa, justificação"
+      ],
+      "a": 1,
+      "explanation": "CNV estrutura-se em quatro passos: Observação (factos sem julgamento), Sentimento (emoção que o facto provoca em mim), Necessidade (o que está por baixo do sentimento), Pedido (acção concreta que peço ao outro). A lógica é separar emoção de pedido e desativar atribuições de culpa que inflam conflitos. Não é técnica de persuasão — é estrutura para expressão autêntica sem agressividade e escuta empática sem submissão."
+    },
+    {
+      "q": "Para Otto Scharmer (Teoria U), qual o nível de escuta mais útil em gestão de conflitos?",
+      "opts": [
+        "Escuta 1 — Downloading (confirmo o que já penso)",
+        "Escuta 2 — Factual (clarifico factos)",
+        "Escuta 3 — Empática (presença total, perspectivado outro)",
+        "Escuta 4 — Avaliativa (julgo imediatamente)"
+      ],
+      "a": 2,
+      "explanation": "Scharmer distingue: Escuta 1 — Downloading (80% das conversas, ouço confirmando o que já penso); Escuta 2 — Factual (atenção profissional, perguntas para clarificar); Escuta 3 — Empática (presença total, acompanho o outro do ponto de vista dele). Em mediação de conflitos, a solução aparece quando o mediador passa 80% do tempo em Escuta 3 — é o que distingue medição eficaz de medíocre."
+    },
+    {
+      "q": "Num caso de conflito entre Producto, Engenharia e Sucesso do Cliente, qual acordo combina melhor elementos para sustentabilidade?",
+      "opts": [
+        "Decisão CEO unilateral sem discussão",
+        "Entrega faseada MVP + refactoring + comité quinzenal com critérios objectivos + bónus colectivo porobjetivos partilhados",
+        "Compromisso do tipo 'me dão 2 semanas extras, aceito metade das features'",
+        "Punição da equipa que 'não colaborou'"
+      ],
+      "a": 1,
+      "explanation": "Acordos sustentáveis combinam quatro elementos: entregas concretas (MVP + refactoring), critérios objectivos (SLA, métricas, milestones), processos futuros (comité de roadmap, formato de RFC) e compromissos relacionais (bónus colectivo, comunicação escrita obrigatória). O acordo só com entregas é frágil; só com processo é teórico; só com bónus não alinha execução. Combinar os quatro cobreobjectivo imediato + problema estrutural + motivação + prevenção de reincidência."
+    }
+  ]
+}

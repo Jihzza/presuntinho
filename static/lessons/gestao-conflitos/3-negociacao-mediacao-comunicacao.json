@@ -1,0 +1,72 @@
+{
+  "id": "3-negociacao-mediacao-comunicacao",
+  "courseSlug": "gestao-conflitos",
+  "title": "Negociação Integrativa, Mediação e Comunicação Não-Violenta",
+  "audio": "Lição sobre negociação integrativa, técnicas de mediação, escuta activa e Comunicação Não-Violenta (CNV).<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "Negociação integrativa: o ganha-ganha sustentável" },
+    { "type": "p", "text": "Negociação distributiva ('ganha quem leva mais') funciona quando se divide um recurso fixo. Negociação integrativa ('ganha-ganha') funciona quando há recursos, valores ouobjectivos diferenciais entre as partes — o que cada um valoriza mais está disponível em maior quantidade para satisfazer o outro. Formalizada por Walton e McKersie (1965), a negociação integrativa é tecnicamente exigente mas produz acordos mais duradouros e relações mais fortes." },
+    { "type": "h3", "text": "Logrolling (ceder no que te importa pouco, ganhar no que te importa muito)" },
+    { "type": "p", "text": "A técnica clássica de negociação integrativa começa por descobrir preferências assimétricas: cada parte valoriza coisas diferentes com intensidades diferentes. Os itens de baixa prioridade para mim podem ser alta prioridade para ti, e vice-versa. Numa negociação salarial, empresa pode ceder em horário flexível (que lhe custa pouco) e o colaborador pode ceder em dias de férias (que lhe custa menos que horário). Ambos ficam melhor que no acordo puramente distributivo." },
+    { "type": "h3", "text": "Expansão do bolo antes de dividir" },
+    { "type": "p", "text": "Lax e Sebenius formalizaram o princípio 3D (Design, Deal, Dance — Desenhar, Acordar, Dançar): antes de negociar o acordo, redesenhe o espaço de solução. Criar valor antes de o dividir quase sempre aumenta o resultado total. Exemplos: oferecer formação em vez de aumento, alterar calendário de entrega em vez de preço, incluir cláusula de revisão futura em vez de comprometer tudo no presente." },
+    { "type": "h2", "text": "Mediação: o papel do terceiro neutro" },
+    { "type": "p", "text": "Em mediação, três tipos de papel coexistem: o mediador facilitativo (ajuda partes a comunicar, sem propor soluções), o mediador avaliativo (opina sobre mérito), o mediatoro transformativo (trabalha a relação além do conflito). O mediador profissional moderno oscila entre facilitativo e transformativo conforme o caso, evitando avaliativo por razões étnicas e práticas. A mediação eficaz combina escuta profunda, perguntas que reframe, e validação emocional sem cedência a manipulação." },
+    { "type": "ul", "items": [
+      "Fase 1 — abertura: apresentar processo, regras (confidencialidade, sem interrupções, respeito),objectivos. Estabelecer terreno seguro.",
+      "Fase 2 — histórias: cada parte conta a sua versão sem interrupção. Mediador parafraseia para mostrar compreensão mútua.",
+      "Fase 3 — interesses: identificar por trás das posições. Perguntar 'o que é que te importa disto?' até expor necessidade básica.",
+      "Fase 4 — opções: brainstorming conjunto de soluções sem avaliar. Quantidade antes de qualidade.",
+      "Fase 5 — acordo: consolidar em texto concreto, com critérios objectivos, prazos e mecanismo de revisão."
+    ] },
+    { "type": "callout", "variant": "example", "text": "Conflito entre fundadores sobre destino de uma participação societária: mediador começa por ouvir cada um separadamente, descobre que ambos querem evitar diluição mas por razões diferentes (um por controlo operacional, outro por valuation esperado). Solução integrada é participações diferenciadas com direitos diferentes — preserva ambos os interesses sem vencedor nem vencido. Acordo mais sólido que qualquer contrato anterior." },
+    { "type": "h2", "text": "Comunicação Não-Violenta (CNV): quatro passos" },
+    { "type": "p", "text": "Marshall Rosenberg, psicólogo americano, desenvolveu o modelo CNV (Comunicação Não-Violenta) com base em trabalho de Carl Rogers e Gandhi. Não é técnica de persuasão — é estrutura para expressão autêntica sem agressividade e escuta empática sem submissão. Quatro componentes:" },
+    { "type": "ul", "items": [
+      "Observação: factos sem julgamento. 'Chegaste 25 minutos atrasado à reunião' (facto); 'és irresponsável' (julgamento — a evitar).",
+      "Sentimento: emoção que o facto provoca em mim. 'Senti-me ansioso porque o cliente estava à espera', em vez de 'fiquei furioso contigo'.",
+      "Necessidade: o que está por baixo do sentimento. 'Preciso de previsibilidade para coordenar a equipa', em vez de atribuir culpa.",
+      "Pedido: acção concreta que pede ao outro (não exigência). 'Podes avisar-me por mensagem se fores atrasar mais de 10 minutos?', não 'tens que mudar.'"
+    ] },
+    { "type": "h3", "text": "Aplicação prática em contexto empresarial" },
+    { "type": "p", "text": "Quando confrontado com crítica ou conflito, a reacção típica é defensiva ('não foi culpa minha'). CNV propõe antes auto-empatia ('o que sinto? o que preciso?') seguida de empatia para o outro ('o que é que ele sente? o que é que ele precisa?') antes de expressão autêntica. Em equipas isto reduz drasticamente hostilidade porque separa emoção de pedido e desactiva atribuições de culpa. Em particular, distinguir sentimento ('estou preocupado') de avaliação ('tu fizeste mal') é o trabalho-chave." },
+    { "type": "callout", "variant": "warning", "text": "CNV não é técnica para 'ganhar' conflitos com embalagem simpática. Se a CNV é usada como manipulção para obter o que se quer com aparência de empatia, é detectada em segundos e aumenta a desconfiança. É um exercício de auto-clarificação primeiro, expressão autêntica segundo." },
+    { "type": "h2", "text": "Escuta activa: a ferramenta subestimada" },
+    { "type": "p", "text": "A maioria dos conflitos interpessoais tem mais ruído na comunicação do que desacordo substantivo. Escuta activa (Carl Rogers, Thomas Gordon) é o conjunto de comportamentos que demonstram atenção ao outro e clarificam a sua mensagem: parafrasear o que disse ('o que te oiço dizer é X, é isso?'),reflectir o sentimento ('pareces frustrado com esta situação'), resumirperiodicamente ('deixa-me ver se entendi tudo') e fazer perguntas abertas ('o que mais?' em vez de 'sim ou não?')." },
+    { "type": "h3", "text": "Os três níveis de escuta (Otto Scharmer, Teoria U)" },
+    { "type": "p", "text": "Otto Scharmer, do MIT, distingue três níveis de escuta frequentemente presentes em managers e coaches:" },
+    { "type": "ul", "items": [
+      "Escuta 1 — Downloading: ouço o outro confirmando o que já penso. Reacção típica: 'sim, sim, eu sei'. É o que fazemos com 80% das conversas quotidianas.",
+      "Escuta 2 — Factual: ouço com atenção, faço perguntas para clarificar, retivo factos. É escuta profissional competente, útil em diagnóstico.",
+      "Escuta 3 — Empática: ouço com presença total, acompanho o outro do ponto de vista dele, reconheço a sua perspectiva como válida mesmo que diferente. É escuta rara — exige parar o nosso diálogo interno."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Reunião de gestão de conflito falha quase sempre porque o mediador não sai da escuta 1. As partes percebem-se, desistem, escalam. Antes de propor solução, gaste 80% do tempo em escuta 3 (empática) com cada lado. A solução aparece naturalmente — ou chega-se à conclusão de que não há solução sem mudança estrutural." },
+    { "type": "h2", "text": "Conflitos em equipas híbridas e multi-culturais" },
+    { "type": "p", "text": "Trabalho híbrido e multicultural multiplica fontes de conflito: diferenças defuso horário, idioma, normas de comunicação (directa vs indirecta), expectativa de disponibilidade (resposta em 30 minutos vs resposta em 24 horas), feriado nacional,celebração religiosa. Estas diferenças raramente são o verdadeiro conflito — são gatilhos para tensões estruturais (invisibilidade, promoção, reconhecimento). A gestão eficaz começa por reconhecer o que é 'choque cultural' e o que é 'desigualdade sistémica'." },
+    { "type": "ul", "items": [
+      "Documentar e nomear regrasinformais: 'na nossa equipa, responder no mesmo dia útil' — explícito é melhor que implícito.",
+      "Tolerância zero para micro-agressões: piadas sobre sotaque, comentários sobre horários, perguntas invasivas sobre vida pessoal. Chamarlhes a atençãoem momento, sem humilhação pública, é pre-requisito de segurança psicológica.",
+      "Design inclusivo de reuniões: hora rotativa para acomodar fusos, atas escritas claras, decisões tomadas em formato síncrono E assíncrono para quem não pode estar presente.",
+      "Capacitação cultural: formação sobre vieses inconscientes, comunicação intercultural, normas variáveis. Não é 'outra coisa' — é parte da gestão de conflitos."
+    ] },
+    { "type": "h2", "text": "Construir uma cultura de resolução construtiva" },
+    { "type": "p", "text": "O objectivo último não é eliminar conflitos — é construir uma cultura organizacional onde conflitos são tratados como informação e oportunidade, não ameaça. Quatro pilares:" },
+    { "type": "ul", "items": [
+      "Segurança psicológica (Edmondson): membros da equipa sentem-se seguros para tomar riscos interpessoais, admitirignorância, sinalizar problemas, discordar do chefe.",
+      "Rituais estruturados: retrospectivas comsecção explícita de conflitos, RFC e processos de decisão transparente, office hours abertas para discussãodifícil.",
+      "Liderança exemplificadora: chefes que admitem quando erraram, pedem desculpa genuinamente e mostramaprendizagem com conflito próprio.",
+      "Métricas de saúde relacional: para além de NPS e KPIs técnicos, medir nível de conflito percepcionado, satisfação com gestão, rotatividade por equipa."
+    ] }
+  ],
+  "keyPoints": [
+    "Negociação integrativa (Walton-McKersie, Lax-Sebenius) procura criar valor via logrolling, expansão do bolo e descoberta de preferências assimétricas — produz acordos mais duradouros.",
+    "Mediação eficaz segue fases:abertura, histórias, interesses, opções, acordo; o mediador oscila entre facilitativo e transformativo sem ser avaliativo.",
+    "CNV (Rosenberg): quatro passos (observação, sentimento, necessidade, pedido) separam emoção de pedido, reduzindo hostilidade e atribuílção de culpa.",
+    "Escuta activa em três níveis (Scharmer): Downloading, Factual, Empática — conflitos eficazes exigem 80% do tempo em escuta empática antes de propor soluções.",
+    "Equipas híbridas e multiculturais exigem regras explícitas, tolerância zero para micro-agressões, design inclusivo e capacitação cultural."
+  ],
+  "quizSlug": "gcq",
+  "nextLesson": "4-caso-de-estudo",
+  "prevLesson": "2-estilos-e-processos"
+}

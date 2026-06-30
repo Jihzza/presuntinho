@@ -323,19 +323,33 @@
           ]
         },
         'gestao-operacoes': {
-          slug: 'gestao-operacoes',
-          title: 'Gestão de Operações',
-          tagline: 'Business Administration · Processos, lean, six sigma, planeamento e controlo',
-          description: 'Como desenhar, operar e melhorar os processos que transformam inputs em outputs: cadeia de valor de Porter e estratégia de operações (trade-offs custo/qualidade/velocidade/flexibilidade), design de processos e análise de fluxo (bottleneck, Little\'s Law, layouts), Toyota Production System e Six Sigma (DMAIC) para excelência operacional, e planeamento e controlo (MRP, EOQ, ABC, SPC, teoria das filas).',
-          icon: '⚙️',
-          color: '#0891b2',
-          lessons: [
-            { slug: '01-fundamentos-gestao-operacoes', title: '1. Fundamentos de Gestão de Operações: Processos, Cadeia de Valor de Porter e Estratégia Operacional', summary: 'Cadeia de valor de Porter, classificação de processos (MTS/MTO/ATO), prioridades competitivas e trade-offs custo/qualidade/velocidade/flexibilidade.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 },
-            { slug: '02-design-processos-layout-flow', title: '2. Design de Processos, Análise de Fluxo e Layout: Bottleneck, Throughput e Gestão de Capacidade', summary: 'SIPOC, BPMN, Little\'s Law, TOC de Goldratt, layouts (producto, processo, fixo, celular), takt time e gestão de capacidade.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 },
-            { slug: '03-lean-toyota-six-sigma', title: '3. Lean Production, Toyota Production System e Six Sigma (DMAIC): Eliminação Sistemática de Desperdício', summary: 'TPS (JIT + Jidoka), 7 wastes TIMWOOD, 5S, kanban, andon, kaizen, Six Sigma DMAIC e integração Lean Six Sigma.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 },
-            { slug: '04-planeamento-controlo-operacoes', title: '4. Planeamento e Controlo de Operações: MRP, EOQ, SPC e Teoria das Filas', summary: 'MPS, MRP, EOQ, safety stock, ABC, cartas Shewhart, Cp/Cpk, Taguchi loss function e teoria das filas M/M/1.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 }
-                      ]
-                    },
+                  slug: 'gestao-operacoes',
+                  title: 'Gestão de Operações',
+                  tagline: 'Business Administration · Processos, lean, six sigma, planeamento e controlo',
+                  description: 'Como desenhar, operar e melhorar os processos que transformam inputs em outputs: cadeia de valor de Porter e estratégia de operações (trade-offs custo/qualidade/velocidade/flexibilidade), design de processos e análise de fluxo (bottleneck, Little\'s Law, layouts), Toyota Production System e Six Sigma (DMAIC) para excelência operacional, e planeamento e controlo (MRP, EOQ, ABC, SPC, teoria das filas).',
+                  icon: '⚙️',
+                  color: '#0891b2',
+                  lessons: [
+                    { slug: '01-fundamentos-gestao-operacoes', title: '1. Fundamentos de Gestão de Operações: Processos, Cadeia de Valor de Porter e Estratégia Operacional', summary: 'Cadeia de valor de Porter, classificação de processos (MTS/MTO/ATO), prioridades competitivas e trade-offs custo/qualidade/velocidade/flexibilidade.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 },
+                    { slug: '02-design-processos-layout-flow', title: '2. Design de Processos, Análise de Fluxo e Layout: Bottleneck, Throughput e Gestão de Capacidade', summary: 'SIPOC, BPMN, Little\'s Law, TOC de Goldratt, layouts (producto, processo, fixo, celular), takt time e gestão de capacidade.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 },
+                    { slug: '03-lean-toyota-six-sigma', title: '3. Lean Production, Toyota Production System e Six Sigma (DMAIC): Eliminação Sistemática de Desperdício', summary: 'TPS (JIT + Jidoka), 7 wastes TIMWOOD, 5S, kanban, andon, kaizen, Six Sigma DMAIC e integração Lean Six Sigma.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 },
+                    { slug: '04-planeamento-controlo-operacoes', title: '4. Planeamento e Controlo de Operações: MRP, EOQ, SPC e Teoria das Filas', summary: 'MPS, MRP, EOQ, safety stock, ABC, cartas Shewhart, Cp/Cpk, Taguchi loss function e teoria das filas M/M/1.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 9 }
+                              ]
+                            },
+                            'gestao-conflitos': {
+                              slug: 'gestao-conflitos',
+                              title: 'Gestão de Conflitos',
+                              tagline: 'Business Administration · Fontes do conflito, estilos de resposta, negociação integrativa e mediação',
+                              description: 'Gestão de conflitos aplicada à gestão: natureza e fontes do conflito organizacional (tarefas, relações, processos, valores), estilos de resposta (Thomas-Kilmann: competição, colaboração, compromisso, evitamento, acomodação), modelos de processo (posições vs interesses, BATNA/ZOPA), mediação e negociação integrativa, comunicação não-violenta, gestão de conflitos em equipas híbridas e multi-culturais, e o papel do líder como gestor construtivo de divergências.',
+                              icon: '🕊️',
+                              color: '#65a30d',
+                              lessons: [
+                                { slug: '1-natureza-e-fontes-do-conflito', title: '1. Natureza e Fontes do Conflito Organizacional', summary: 'Como o conflito surge em equipas: tarefas, relações, processos e valores, e quando é funcional ou disfuncional.', quizSlug: 'gcq', quizTitle: 'Quiz: Gestão de Conflitos', estMinutes: 9 },
+                                { slug: '2-estilos-e-processos', title: '2. Estilos de Resposta, Processo e Dinâmica', summary: 'Os cinco estilos de Thomas-Kilmann, posições vs interesses, BATNA/ZOPA e escalada vs des-escalada.', quizSlug: 'gcq', quizTitle: 'Quiz: Gestão de Conflitos', estMinutes: 9 },
+                                { slug: '3-negociacao-mediacao-comunicacao', title: '3. Negociação Integrativa, Mediação e Comunicação Não-Violenta', summary: 'Negociação baseada em interesses, escuta activa, CNV e o papel do gestor como mediador.', quizSlug: 'gcq', quizTitle: 'Quiz: Gestão de Conflitos', estMinutes: 9 },
+                                { slug: '4-caso-de-estudo', title: '4. Caso de Estudo: Conflito em Equipa Híbrida', summary: 'Aplicação prática: como uma equipa híbrida resolve uma disputa de prioridades entre produto e engineering.', quizSlug: 'gcq', quizTitle: 'Quiz: Gestão de Conflitos', estMinutes: 9 }
+                              ]
+                            },
                     'analise-investimentos': {
                       slug: 'analise-investimentos',
                       title: 'Análise de Investimentos',

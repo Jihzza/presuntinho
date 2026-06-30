@@ -1,0 +1,64 @@
+{
+  "id": "1-natureza-e-fontes-do-conflito",
+  "courseSlug": "gestao-conflitos",
+  "title": "Natureza e Fontes do Conflito Organizacional",
+  "audio": "Lição sobre gestão de conflitos, natureza do conflito organizacional e suas fontes.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "O conflito é inevitável — e por vezes produtivo" },
+    { "type": "p", "text": "Nas organizações, conflito não é falha de comunicação nem sintoma de má liderança — é condição natural de pessoas comobjectivos, perspetivas e recursos diferentes a trabalhar juntas durante tempo prolongado. A visão clássica da primeira metade do século XX tratava o conflito como disfunção a eliminar (escola tradicional). A partir dos anos 70 e 80, a escola interaccionista passou a reconhecer que algum conflito é funcional: força debate, previne groupthink, expõe pontos fracos e alimenta inovação. A gestão moderna distingue entre conflito disfuncional (pessoal, persistente, parasitic) e conflito de tarefas (centrado em ideias, métodos,objectivos), e procura manter o segundo dentro de uma faixa saudável (Jehn, 1995)." },
+    { "type": "h3", "text": "Conflito de tarefa vs conflito de relação" },
+    { "type": "p", "text": "Karen Jehn, em estudos seminais sobre equipas de trabalho, separou conflito de tarefa (disagreement sobreobjectivos, métodos, decisões — centrado no trabalho) de conflito de relação (tensões pessoais, hostilidade interpessoal, desconfiança — centrado nas pessoas). Investigação mostra que conflito de tarefa moderado melhora qualidade de decisão e criatividade; conflito de relação corrói confiança e desempenho mesmo quando a equipa 'ganha' a discussão. O gestor deve, portanto, proteger o conflito de tarefas e extinguir (ou transformar) o conflito de relação." },
+    { "type": "h2", "text": "Fontes estruturais do conflito nas organizações" },
+    { "type": "p", "text": "Conflictos não surgem do nada — emergem de condições estruturais reconhecíveis. Identificar a fonte é o primeiro passo para gerir o conflito com precisão:" },
+    { "type": "ul", "items": [
+      "Recursos escassos: quando orçamento, atenção de liderança, tempo deequipa ou talento são limitados, disputa distributiva ('quem fica com o quê') é inevitável. Reuniões de planeamento frequentemente adiam decisões difíceis de alocação, e os conflitos regressam com juros mais tarde.",
+      "Diferentes objetivos e incentivos: Vendas recebe bónus por receita, Sucesso do Cliente recebe bónus por retenção, Engineering recebe bónus por fiabilidade — e cada um puxa o produto para o seu lado. Estruturas de incentivos desalinhadas são fontes clássicas de conflito interdepartamental.",
+      "Dependências interdepartamentais: equipas comalta interdependência (fornecedor-cliente interno) sofrem mais conflito do que equipas autónomas. Mas a interdependência é frequentemente necessária — o conflito é sintoma de má clarificação de papéis e SLAs, não da interdependência em si.",
+      "Ambiguidade de papéis e responsabilidades: quando duas áreas pensam ser 'donas' do mesmo entregável (ex: definição de roadmap pertence a Produto ou Engenharia? documentação a Marketing ou Sucesso do Cliente?), o conflito é estrutural e renasce em cada ciclo.",
+      "Diferenças de valores e identidade: equipas com culturas profissionais diferentes (financeiros vs criativos, vendas vs compliance, fundadores vs quadros contratados) trazem valores distintos sobre como decidir, comunicar e avaliar risco. Quando os valores entram em rota de colisão,os argumentos racionais raramente resolvem — o conflito é identitário.",
+      "Diferenças de informação e perspetiva: cada área vê dados diferentes e constrói modelos mentais distintos. O que Marketing lê como 'produto obsoleto', Product Manager lê como 'potencial não explorado'. Conflito de perspetiva é frequentemente o tipo mais produtivo se for gerido por partilha de dados."
+    ] },
+    { "type": "callout", "variant": "example", "text": "Uma PME de SaaS debate trimestralmente entre roadmap de Producto (novas features pedidas por enterprise) e estabilização técnica pedida pela equipa de Engenharia. As duas áreas têm objetivos legítimos e métricas diferentes (receita vs fiabilidade), dependência mútua (Engineering constrói o que Product prioriza) e perspetivas diferentes (Product vê mercado, Engineering vê débitos técnicos). Não é 'falta de alinhamento' — é fonte estrutural de conflito que precisa de processo explícito (QBR, RFC, critérios de trade-off) para ser gerida em vez de suprimida." },
+    { "type": "h2", "text": "Sinais precoces de conflito disfuncional" },
+    { "type": "p", "text": "Gestores experientes aprendem a ler sinais precoces antes de o conflito escalar para litígio ou saída de pessoas. Os primeiros sinais quase nunca são gritos ou confrontos abertos — são subtis:" },
+    { "type": "ul", "items": [
+      "Mudança no tom: respostas por email mais curtas, linguagem mais formal onde antes havia coloquial, sarcasmo leve.",
+      "Evasão de canais directos: emails copiam mais pessoas do que o necessário, decisões são adiadas para 'reunião seguinte', conversas cruciais migram para Slack em vez de対面.",
+      "Formação de coligações informais: 'nós' vs 'eles' aparece em conversas, comentários de corredor sobre uma pessoa ou área específica.",
+      "Queda de produtividade invisível: entregáveis que atrasam sem justificação clara, qualidade que desce em áreas específicas, reuniões que 'não fecham'.",
+      "Recuo à letra: pedidos escritos formais onde antes bastava uma conversa. Documentação excessiva é frequentemente sinal de confiança a deteriorar-se."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Esquecer um sinal precoce não é neutro — é letargia dispendiosa. Cada semana que um conflito disfuncional permanece sem gestão, cresce cerca de 5-10% em custo de resolução, segundo estudos de mediação organizacional. A inércia é a opção mais cara, não a mais segura." },
+    { "type": "h2", "text": "Diagnóstico antes da acção: o modelo dos quatro eixos" },
+    { "type": "p", "text": "Antes de intervir, o gestor precisa de diagnosticar. Uma ferramenta útil é cruzar dois eixos: o tipo de conflito (tarefa vs relação) com o nível de visibilidade (público vs privado). Isto dá quatro combinações, cada uma com resposta diferente:" },
+    { "type": "ul", "items": [
+      "Tarefa privado: dois colegas discutem metodologia em privado. Intervenção mínima — deixe fluir, peça resultados.",
+      "Tarefa público: debate aberto de equipa sobreobjectivo, estratégia ou processo. Encoraje — é o tipo mais saudável, promova com moderação estrutural.",
+      "Relação privado: tensão entre duas pessoas que ainda não contaminou a equipa. Confronto directo 1:1 ou mediação informal — espere que escalem.",
+      "Relação público: tensão visível para toda a equipa. Intervenção activa e estruturada, com mediação formal se necessário — risco de group-poisoning éalto."
+    ] },
+    { "type": "h3", "text": "Funções do conflito nas equipas de alto desempenho" },
+    { "type": "p", "text": "Investigação de equipas de alto desempenho em IDEO, Pixar, equipas militares de elite mostra que membros destas equipas não têm menos conflito — têm conflito mais frequente, mais directo e mais focado emobjectivos. O conflito discricionariamente proibido (reuniões onde todos concordam, decisões por consenso aparente) é o oposto de equipa de alto desempenho: é groupthink. Charlie Munger:'I've never heard an intelligent person say they wanted to work with smart people who always agreed with them.' O gestor que põe fim a todo o debate está a matar a equipa, mesmo que a curto prazo pareça mais harmonioso." },
+    { "type": "h2", "text": "Quando o conflito é sintoma de problema mais profundo" },
+    { "type": "p", "text": "Por vezes o conflito visível é sintoma de causa oculta. Exemplos comuns em PMEs e equipas em crescimento:" },
+    { "type": "ul", "items": [
+      "Founder's dilemma: fundadores com visões incompatíveis (crescimento agressivo vs sustentável) cuja disputa se manifesta como conflito em decisõesoperacionais.",
+      "Gestão de transições: empresa que era startup e passa a scale-up sente conflito entre quem quer manterinformalidade original e quem quer processos — o conflito é geracional e estrutural.",
+      "Sucessão e carreira: conflitos sobre promoções, reconhecimento e visibilidade que parecem pessoais são frequentemente sobre distribuição de poder.",
+      "Mudança de modelo de negócio: pivot ou mudança de cliente-alvo gera conflito entre membros que 'querem o produto antigo' e os que abraçam o novo.",
+      "Fadiga organizacional: equipas em burnout apresentam mais conflitos interpessoais. O sintoma relacional aponta para tratamento do sistema (carga, ritmo, prioridades) antes de qualquer mediação."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Antes de mediar um conflito entre dois colaboradores, faça três perguntas: 1) que informação cada lado tem que o outro não tem? 2) que incentivos estruturais estão a puxar cada lado para posições opostas? 3) que restrições externas (tempo, orçamento, recrutamento) limitam a solução? Muitas vezes, o que parece conflito de personalidade é conflito de sistema — e o remédio é mudar o sistema." }
+  ],
+  "keyPoints": [
+    "Conflito de tarefa (sobreobjectivos e métodos) moderado é funcional e melhora qualidade de decisão; conflito de relação corrói confiança e desempenho.",
+    "Fontes estruturais comuns: recursos escassos, incentivos desalinhados, dependências mal definidas, ambiguidade de papéis e diferenças de valores.",
+    "Sinais precoces são subtis: tom, canais, coligações, produtividade invisível, formalismo — apanhar cedo reduz custo 5-10× por semana.",
+    "Modelo de diagnóstico: combinar tipo de conflito (tarefa/relação) com visibilidade (público/privado) determina o tipo de intervenção.",
+    "Equipas de alto desempenho têm conflito frequente, directo e focado emobjectivos — grupo de consenso aparente é groupthink."
+  ],
+  "quizSlug": "gcq",
+  "nextLesson": "2-estilos-e-processos",
+  "prevLesson": null
+}

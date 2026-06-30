@@ -1,0 +1,99 @@
+{
+  "id": "4-caso-de-estudo",
+  "courseSlug": "gestao-conflitos",
+  "title": "Caso de Estudo: Conflito em Equipa Híbrida",
+  "audio": "Lição sobre um caso de estudo de gestão de conflitos numa equipa de produto híbrida, com prática de mediação.<break/><break/>Vamos começar.",
+  "audioLabel": "🎧 Lição em áudio (TTS)",
+  "sections": [
+    { "type": "h2", "text": "O caso: TechCorp, 60 colaboradores, produto SaaS B2B" },
+    { "type": "p", "text": "A TechCorp é uma PME SaaS com 60 colaboradores distribuídos por Lisboa, Porto e São Paulo. Três áreas — Produto (8 pessoas), Engenharia (20 pessoas) e Sucesso do Cliente (12 pessoas) — partilhamresponsabilidade pelo roadmap, satisfação de clientes enterprise e uptime do produto. Pedro é Head of Product há dois anos; Marta é Head of Engineering há seis meses (chegou de uma startup concorrente); Luísa é Head of Customer Success há três anos, com forte relação com os principais clientes." },
+    { "type": "h3", "text": "O conflito surge" },
+    { "type": "p", "text": "Em Março, três clientes enterprise (Sonae, CTT, Itaú) pedem uma nova funcionalidade de dashboards customizáveis. Pedro prioriza (compromisso Q2, demo em Junho). Marta argumenta que infra-estrutura actual não suporta a escala pedida e que construir em cima trará débitos técnicos graves; propõe adiar para Q4 com mais planeamento. Luísa vê churn eminente nos três clientes — meta de retenção do trimestre em risco — e pressiona por entrega faseada já em Maio." },
+    { "type": "p", "text": "A primeira reunião entre os três termina em impasse tenso. Pedro diz que 'a Marta não compreende pressão comercial'. Marta responde em email que 'sem dados de performance, não se pode assumir risco'. Luísa escreve em Slack que 'se perdemos estes clientes, a culpa é da Engenharia'. Uma semana depois, a equipa nota tensão em retrospectiva, três pessoas-chave pedem para sair, e o CEO marca reunião extraordinária." },
+    { "type": "h2", "text": "Diagnóstico do conflito" },
+    { "type": "p", "text": "Aplicando o modelo das quatro eixos da Lição 1, mapeamos o que se passou:" },
+    { "type": "ul", "items": [
+      "Tipo principal: mistura de conflito de tarefas e de relação — debate sobre roadmap é tarefa; comentários em Slack alusivos a 'culpa' são relação.",
+      "Visibilidade: tornou-se rapidamente público (retrospectiva, slack-canais partilhados, saída iminente de pessoas-chave).",
+      "Fonte estrutural:objectivos com métricas diferentes (Pedro por receita, Marta por fiabilidade, Luísa por retenção);ambigüidade de papéis (quem decide trade-off entre débitos e prazo?) dependência cruzada sem SLA interno claro.",
+      "Dinâmica:escalou de debate para confronto em uma semana — está em nível 3-4 de Glasl, mas a pedir para passar a 5-6.",
+      "Sinais precoces que foramignorados: 'Marta não compreende pressão comercial' era posicionamento pessoal, não ataque — mas não foi trabalhado a tempo."
+    ] },
+    { "type": "h2", "text": "Intervenção: CEO age como mediador" },
+    { "type": "p", "text": "O CEO da TechCorp, em vez de decidir unilateralmente, chamou as três partes para uma sessão de dois dias com mediação profissional externa. Estrutura seguida:" },
+    { "type": "ul", "items": [
+      "Sessão individual prévia: mediador ouviu cada parte 45 minutos separadamente, em privado. Mapas individuais de posições, interesses, preocupações e BATNA de cada um.",
+      "Identificação de interesses comuns: os três querem manter TechCorp competitiva e clientes satisfeitos. Divergem em método e sequência, não emobjectivo final.",
+      "Reframing: 'Marta não está a bloquear Pedro — está a alertar para risco de fiabilidade que pode custar mais que o atraso'. 'Luísa não está a pressionar sem dados — está a ver churn eminente nos seus dados de utilização'.",
+      "Brainstorming conjunto de opções: cada parte apresenta 3 ideias sem avaliar; lista cresce para 12 opções antes de qualquer filtro."
+    ] },
+    { "type": "h3", "text": "Acordo final integrado" },
+    { "type": "p", "text": "Após sessão completa, o acordo escrito inclui:" },
+    { "type": "ul", "items": [
+      "Entrega faseada Q2-MVP com feature flag para 3 clientes enterprise seleccionados (satisfaz Luísa,controlo de risco para Marta,data clara para Pedro).",
+      "Reforço técnico de 6 semanas em paralelo (infra-estrutura de dashboards), com milestone explícito em mid-Q2 que, se não atingido, pausa MVP.",
+      "Comité de roadmap com os três + CEO quinzenalmente, com critérios objectivos (RPS, NPS, SEV1 incidents, débitos técnicos),",
+      "SLA interno entre Producto-Engenharia-Sucesso: prazo de 5 dias úteis para feedback formal em RFCs, formato padrão, accountable party.",
+      "Recompensa colectiva porobjectivos comuns: 15% do bónus Q2 amarrado a ambos — entregas Q2 E uptime > 99.95%.",
+      "Compromisso de comunicação: decisões tomadas emreunião formal são escritas em ata e partilhadas no mesmo dia, sem Slack informal paralelo para assuntos críticos."
+    ] },
+    { "type": "h2", "text": "Análise da resolução: o que funcionou" },
+    { "type": "h3", "text": "Estrutura do processo" },
+    { "type": "p", "text": "Três factores processuais foram determinantes para evitar a escalada. Primeiro, o CEO reconheceu que o problema era estrutural e não pessoal — aguentou a pressão de 'resolver rápido' e investiu em mediação formal. Segundo, ouviu-se cada parte em privado antes de juntar — criou espaço para vulnerabilidade sem risco de ataque público. Terceiro, fez-se brainstorming conjunto antes de avaliar — mais de 12 opções geradas permitiram seleccionar a melhor em vez de segunda ou terceira." },
+    { "type": "h3", "text": "Substância do acordo" },
+    { "type": "p", "text": "Quatro elementos distinguem este acordo de uma solução de compromisso clássico. Inclui entregáveis explícitos (MVP + refactoring), critérios objectivos (SLA, milestones, bónus amarrado a métricas), processos futuros (comité, formato de RFC), e compromissos relacionais (comunicação escrita). Estes quatro elementos cobrem simultaneamente oobjectivo imediato (3 clientes satisfeitos Q2), o problema estrutural (ambigüidade de papéis), a motivaçãoego (incentivos alinhados) e o risco de reincidência (processo institucional)." },
+    { "type": "callout", "variant": "example", "text": "Seis meses depois, dois dos três clientes upgrade para plano enterprise, NPS das contas afectadas sobe 18 pontos, débitos técnicos reduzem-se 30% no componente dashboards, e nenhuma saída de pessoas-chave. O conflito foi tratado como oportunidade — estruturou três áreas que estavam em ambiguidade latente." },
+    { "type": "h2", "text": "Lições transferíveis para outros contextos" },
+    { "type": "p", "text": "Embora o caso TechCorp seja específico, há lições que se aplicam a disputas interpessoais, conflitos entre equipas e tensões com clientes:" },
+    { "type": "ul", "items": [
+      "Conflito é sintoma, não causa: ambigüidade de papéis,incentivos desalinhados, dependências mal definidas são as causas. Mediar sem remover causa é mediar para voltar a ter conflito.",
+      "Estrutura supera retórica: processos claros (comité, RFC, SLAs) reduzemárea para ressentimento. Acordos institucionais duram mais que acordos pessoais.",
+      "Métricas partilhadas mudam jogo: alinharrcompensas aobjectivos comuns transforma competição interna em cooperação.",
+      "Comunicação escrita como higiene: ata no mesmo dia elimina 'eu disse/foste tu' e cria registo para aprendizagem."
+    ] },
+    { "type": "h2", "text": "Checklist do mediador gestor" },
+    { "type": "p", "text": "Quando se deparar com conflito interpessoal ou interdepartamental em momento de gestão, siga esta lista na ordem:" },
+    { "type": "ol", "items": [
+      "Diagnosticar tipo e visibilidade (tarefa/relação × público/privado).",
+      "Identificar fontes estruturais (incentivos,ambigüidade, dependências, valores).",
+      "Ouvir cada lado em privado, separadamente (escuta empática, não propor soluções).",
+      "Mapear posições → interesses → BATNA de cada parte.",
+      "Juntar partes comobjectivos comuns destacados primeiro.",
+      "Brainstorming conjunto sem avaliar, ≥10 opções.",
+      "Filtrar por critérios objectivos (custo, risco, prazo, alinhamento estratégico).",
+      "Acordo escrito com entregas, métricas, processos, datas.",
+      "Mecanismo de revisão 30/60/90 dias para ajustar o que não funcionar."
+    ] },
+    { "type": "h2", "text": "Quando escalar para mediação profissional" },
+    { "type": "p", "text": "Nem todo o conflito interpessoal deve ser mediado pelo próprio gestor. Escale para mediação profissional externa quando:" },
+    { "type": "ul", "items": [
+      "Há risco legal ou de compliance (assédio, discriminação, violação de código).",
+      "A relação perdeu confiança básica e qualquer tentativa do chefe é vista como parcial.",
+      "Há diferença de poder significativa e risco de retaliação.",
+      "As partes têm múltiplas tentativas falhadas de resolução e estão em fase de desistência.",
+      "A empresa não tem competência interna e ninguém é visto como neutro por todas as partes."
+    ] },
+    { "type": "callout", "variant": "tip", "text": "Mediação profissional externa tem custo (€2-5k por caso em Portugal) mas retorno elevado. Para relações de longo prazo (parceiros, fornecedores chave, equipas coesas), o investimento recupera-se em meses através de retenção e produtividade. Para relações transacionais, compromisso ou decisão direcpta do CEO pode bastar." },
+    { "type": "h2", "text": "Resumo da cadeira: gestão de conflitos como competência" },
+    { "type": "p", "text": "Gestão de conflitos não é dom inato — é competência que se pratica. Os elementos essenciais que esta cadeira busca desenvolve:" },
+    { "type": "ul", "items": [
+      "Diagnóstico: distinguir tarefa/relação, público/privado, fonte estrutural/sintoma relacional.",
+      "Estilos: escolher conscientemente entre competição, colaboração, compromisso, evitamento, acomodação conforme contexto.",
+      "Processos: dominar posições vs interesses, BATNA, ZOPA, escalada de Glasl.",
+      "Comunicação: aplicar CNV, escuta activa 3-níveis, validar antes de discordar.",
+      "Mediação: estruturar sessões individuais e conjuntas, brainstormings, acordos escritos.",
+      "Cultura: construir segurança psicológica, rituais estruturados, liderança exemplificadora."
+    ] },
+    { "type": "callout", "variant": "warning", "text": "Conflito evitado não é conflito resolvido — é bomba-relógio organizacional. A disciplina de enfrentar e estruturar conflitos é uma das mais valiosas que um gestor pode trazer para qualquer empresa, em qualquer fase, em qualquer dimensão. Pratique semanalmente — começando por pequenos conflitos interpessoais que normalmente se ignorariam." }
+  ],
+  "keyPoints": [
+    "Caso TechCorp: conflito entre Producto, Engenharia e Sucesso é tipoconflito de tarefas + relação por incentivos desalinhados eambigüidade de papéis — diagnóstico correcto mudou intervenção.",
+    "Mediação CEO + externo: ouvir cada parte em privado, mapear interesses, brainstorming ≥10 opções, acordo escrito com entregas, métricas e processos.",
+    "Acordo eficaz combina entregas (MVP + refactoring), critérios objectivos (SLA, bónus amarrado a métricas), processos futuros (comité) e compromissos relacionais (comunicação).",
+    "Checklist do mediador: diagnosticar, identificar fontes, ouvir em privado, mapear interesses, juntar, brainstormar, filtrar, escrever, rever 30/60/90.",
+    "Escalar para mediação profissional externa quando há risco legal, perda de confiança básica, diferença de poder ou múltiplas tentativas falhadas."
+  ],
+  "quizSlug": "gcq",
+  "nextLesson": null,
+  "prevLesson": "3-negociacao-mediacao-comunicacao"
+}
