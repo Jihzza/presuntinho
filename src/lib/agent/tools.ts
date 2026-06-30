@@ -1,11 +1,12 @@
 // Agent tools — read-only queries against Dexie that the in-app agent can call.
 //
 // Every tool returns a JSON-serialisable object the engine turns into a
-// pt-PT reply. Tools never mutate state; they only read.
+// localised reply. Tools never mutate state; they only read.
 //
-// Pattern:
-//   const t = tools.summary();
-//   if (t.ok) console.log(t.text);  // always safe, no throws
+// i18n: structured "pending" / "suggestion" payloads carry a `key` + raw
+// data; the engine layer (`engine.ts`) wraps them via `get(t)()` from
+// svelte-i18n before they reach the user. This keeps tools.ts dependency
+// light (no svelte-i18n import) and trivially unit-testable.
 
 import { db } from '../state/db';
 import { getMesAtual, totalMes, listOrcamentos, listTransacoesMes } from '../financas';
@@ -14,6 +15,14 @@ import { listHabitos } from '../habitos';
 export type ToolResult<T> =
   | { ok: true; data: T }
   | { ok: false; error: string };
+
+/** A pending item / suggestion that the engine formats via i18n. */
+export interface Localised {
+  /** routes.agente.tools.* key used by engine.ts to look up the message. */
+  key: string;
+  /** Parameters for the {placeholders} in the translation template. */
+  params: Record<string, string | number>;
+}
 
 function todayISO(): string {
   const d = new Date();
@@ -182,27 +191,39 @@ export async function toolProfileSummary(): Promise<ToolResult<{
 }
 
 // ---------- Smart "what's missing" aggregator ----------
+//
+// pending[] and suggestions[] carry i18n keys + params. The engine layer
+// (engine.ts) calls get(t)() on each to produce the final user-facing
+// string. Keeping the formatting in tools.ts away from svelte-i18n makes
+// this module a pure data layer that's trivial to unit-test.
 
 export async function toolWhatsMissing(): Promise<ToolResult<{
-  pending: string[];
-  suggestions: string[];
+  pending: Localised[];
+  suggestions: Localised[];
 }>> {
   try {
-    const pending: string[] = [];
-    const suggestions: string[] = [];
+    const pending: Localised[] = [];
+    const suggestions: Localised[] = [];
 
     // Escola: páginas não visitadas
     const v = await toolVisitedPages();
     if (v.ok && v.data.notVisited.length > 0) {
-      pending.push(`${v.data.notVisited.length} páginas da Escola por explorar (${v.data.notVisited.join(', ')})`);
+      pending.push({
+        key: 'routes.agente.tools.pending_pages_escola',
+        params: { n: v.data.notVisited.length, lista: v.data.notVisited.join(', ') }
+      });
     }
 
     // Escola: quizzes não feitos
     const s = await toolSchoolProgress();
     if (s.ok && s.data.quizzesFeitos < s.data.quizzesTotal) {
       const falta = s.data.quizzesTotal - s.data.quizzesFeitos;
-      pending.push(`${falta} quiz${falta > 1 ? 'zes' : ''} por fazer`);
-      suggestions.push('Abrir /escola e tentar os quizzes em falta');
+      const pluralKey = falta === 1 ? 'routes.agente.tools.pending_quizzes_one' : 'routes.agente.tools.pending_quizzes_other';
+      pending.push({ key: pluralKey, params: { n: falta } });
+      suggestions.push({
+        key: 'routes.agente.tools.suggestion_open_escola',
+        params: {}
+      });
     }
 
     // Hábitos: o que não foi marcado hoje
@@ -210,15 +231,28 @@ export async function toolWhatsMissing(): Promise<ToolResult<{
     if (h.ok && h.data.totalHabitos > 0 && h.data.ativosHoje < h.data.totalHabitos) {
       const falta = h.data.totalHabitos - h.data.ativosHoje;
       const nomes = h.data.lista.filter((x) => !x.loggedToday).map((x) => x.name).slice(0, 3);
-      pending.push(`${falta} hábito${falta > 1 ? 's' : ''} por marcar hoje (${nomes.join(', ')}${falta > 3 ? '…' : ''})`);
-      suggestions.push('Abrir /habitos e marcar os do dia');
+      const pluralKey = falta === 1 ? 'routes.agente.tools.pending_habits_one' : 'routes.agente.tools.pending_habits_other';
+      pending.push({
+        key: pluralKey,
+        params: { n: falta, lista: nomes.join(', '), suffix: falta > 3 ? '…' : '' }
+      });
+      suggestions.push({
+        key: 'routes.agente.tools.suggestion_open_habitos',
+        params: {}
+      });
     }
 
     // Finanças: orçamento do mês corrente
     const f = await toolFinanceSummary();
     if (f.ok && f.data.orcamentosAtivos === 0 && (f.data.receitas > 0 || f.data.despesas > 0)) {
-      pending.push('Ainda não definiste orçamento para este mês');
-      suggestions.push('Abrir /financas/orcamento para definir limites por categoria');
+      pending.push({
+        key: 'routes.agente.tools.pending_no_budget',
+        params: {}
+      });
+      suggestions.push({
+        key: 'routes.agente.tools.suggestion_open_orcamento',
+        params: {}
+      });
     }
 
     return { ok: true, data: { pending, suggestions } };
