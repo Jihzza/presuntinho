@@ -379,19 +379,19 @@
                   ]
                 },
                 'pesquisa-de-marketing': {
-                          slug: 'pesquisa-de-marketing',
-                          title: 'Pesquisa de Marketing',
-                          tagline: 'Business Administration · Tipos de pesquisa, métodos qualitativos e quantitativos, amostragem e relatórios',
-                          description: 'Como planear, conduzir e interpretar pesquisa de mercado: exploratória vs descritiva vs causal, qualitativa vs quantitativa, amostragem e desenho de questionário, análise de dados e relatório executivo.',
-                          icon: '🔬',
-                          color: '#7c3aed',
-                          lessons: [
-                            { slug: '01-tipos-pesquisa', title: '1. Tipos de Pesquisa (Exploratória, Descritiva, Causal)', summary: 'Quando usar cada tipo e como se encadeiam.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 8 },
-                            { slug: '02-metodos-qualitativos-quantitativos', title: '2. Métodos Qualitativos vs Quantitativos', summary: 'Focus groups, entrevistas, surveys e métodos mistos.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 8 },
-                            { slug: '03-amostragem-questionario', title: '3. Amostragem e Desenho de Questionário', summary: 'Probabilística vs não-probabilística, margem de erro e boas práticas.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 8 },
-                            { slug: '04-analise-relatorio', title: '4. Análise de Dados e Relatório', summary: 'Da limpeza dos dados às recomendações accionáveis.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 9 }
-                          ]
-                        },
+                  slug: 'pesquisa-de-marketing',
+                  title: 'Pesquisa de Marketing',
+                  tagline: 'Business Administration · Processo de pesquisa, qualitativa vs quantitativa, amostragem, métodos de recolha e análise de dados',
+                  description: 'Como planear, conduzir e interpretar pesquisa de marketing: processo de pesquisa em 6 passos, dados primários vs secundários, qualitativa vs quantitativa, métodos quantitativos (surveys, Likert, amostragem, margem de erro), métodos qualitativos (focus groups, entrevistas, etnografia, netnografia, laddering, ZMET), análise de dados (SPSS, R, Python, regressão, clusters, conjoint) e relatório final.',
+                  icon: '📊',
+                  color: '#7c3aed',
+                  lessons: [
+                    { slug: '01-fundamentos-pesquisa-marketing', title: '1. Fundamentos da Pesquisa de Marketing', summary: 'Processo em 6 passos, dados primários vs secundários, qualitativa vs quantitativa, 3 tipos de pesquisa.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 9 },
+                    { slug: '02-metodos-coleta-dados-quantitativos', title: '2. Métodos de Recolha de Dados Quantitativos', summary: 'Surveys (CAWI, CATI, CAPI), Likert, amostragem probabilística vs não-probabilística, margem de erro, IC.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 10 },
+                    { slug: '03-metodos-coleta-dados-qualitativos', title: '3. Métodos de Recolha de Dados Qualitativos', summary: 'Focus groups, entrevistas em profundidade, etnografia, netnografia, projectivas, laddering, ZMET.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 9 },
+                    { slug: '04-analise-dados-relatorio', title: '4. Análise de Dados e Relatório', summary: 'Coding, SPSS/R/Python, crosstabs, regressão, fatorial, clusters, conjoint e relatório final.', quizSlug: 'pmq', quizTitle: 'Quiz: Pesquisa de Marketing', estMinutes: 10 }
+                  ]
+                },
                         'gestao-mudanca': {
                           slug: 'gestao-mudanca',
                           title: 'Gestão da Mudança Organizacional',

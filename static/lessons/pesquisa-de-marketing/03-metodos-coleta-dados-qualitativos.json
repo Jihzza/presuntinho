@@ -1,0 +1,173 @@
+{
+  "id": "03-metodos-coleta-dados-qualitativos",
+  "title": "Métodos de Recolha de Dados Qualitativos",
+  "courseSlug": "pesquisa-de-marketing",
+  "lessonNumber": 3,
+  "description": "Os métodos qualitativos usados em pesquisa de marketing: focus groups, entrevistas em profundidade, etnografia e netnografia, técnicas projectivas, laddering e ZMET. Como e quando usar cada um para descobrir motivações, percepções e linguagem dos consumidores que os surveys não conseguem captar.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["qualitativa", "focus group", "entrevista", "etnografia", "netnografia", "laddering", "ZMET"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Porquê pesquisa qualitativa"
+    },
+    {
+      "type": "p",
+      "text": "Surveys medem 'quanto' e 'quantos', mas raramente captam o 'porquê'. Porquê os consumidores escolhem uma marca e não outra? Porquê desistem no checkout? Porquê preferem embalar pequeno ao grande? Porquê algumas embalagens parecem premium e outras parecem baratas? Estas perguntas exigem profundidade — ouvir a linguagem dos consumidores, observar comportamentos em contexto, descodificar significados. A pesquisa qualitativa faz exactamente isso: amostra pequena, instrumentos abertos, análise interpretativa. É a fase de descoberta de qualquer projecto de pesquisa robusto."
+    },
+    {
+      "type": "h3",
+      "text": "Características da pesquisa qualitativa"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Amostras pequenas (10-50 pessoas), escolhidas por critério (não aleatórias).",
+        "Instrumentos semi-estruturados ou abertos — guião flexível, não questionário rígido.",
+        "Análise interpretativa — identificam-se temas, não se calculam médias.",
+        "Generalização por transferibilidade (não representatividade estatística).",
+        "Investigador é o instrumento — formação, treino e sensibilidade fazem a diferença.",
+        "Dados são texto, áudio, vídeo, imagem — não apenas números."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Focus groups — o clássico qualitativo"
+    },
+    {
+      "type": "p",
+      "text": "Grupo de 6 a 10 pessoas com perfil homogéneo (consumidores do segmento-alvo, decisores B2B, mães com filhos pequenos) reunidos durante 1 a 2 horas para discutir um tema sob a orientação de um moderador treinado. O moderador não dá opinião — facilita, faz perguntas abertas, observa dinâmicas de grupo, gere participantes dominantes. A discussão em grupo gera insights que não surgiriam em entrevista individual: uma pessoa lembra-se de algo que outra acrescenta, o grupo provoca reacções que revelam attitudes latentes."
+    },
+    {
+      "type": "h3",
+      "text": "Quando usar focus groups"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Explorar um tema novo antes de construir um questionário (gerar linguagem, identificar variáveis).",
+        "Testar conceitos de produto, campanhas, embalagens antes de investir em produção.",
+        "Entender attitudes sensíveis (saúde, sexualidade, dinheiro) em ambiente protegido.",
+        "Gerar ideias para inovação — o grupo constrói umas sobre as outras.",
+        "Não usar para: medir (não é quantitativo), tomar decisões sem follow-up quantitativo, projectos com pouco tempo (logística de recrutamento)."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Limitações dos focus groups"
+    },
+    {
+      "type": "p",
+      "text": "Dominância de participantes mais extrovertidos que sufocam vozes mais tímidas. Conformidade ao grupo — pessoas tendem a concordar com a opinião maioritária (especialmente em temas sensíveis). Artificialidade do setting — o consumidor não está no seu contexto natural. Subjectividade do moderador — análise pode enviesar-se pelas suas expectativas. Por isso se recomenda focus groups para gerar hipóteses, sempre seguidos de pesquisa quantitativa para confirmar."
+    },
+    {
+      "type": "h2",
+      "text": "Entrevistas em profundidade"
+    },
+    {
+      "type": "p",
+      "text": "Conversa individual semi-estruturada (30 a 90 minutos) com um entrevistado por sessão. Usa-se um guião flexível com tópicos a cobrir, não perguntas fixas. O entrevistador adapta a conversa ao respondente — aprofunda o que é interessante, transita entre temas consoante a fluidez. É ideal para: decisores B2B (difíceis de reunir em grupo), temas sensíveis (o entrevistado fala mais à vontade sozinho), estudo de casos críticos, entrevistas com especialistas. Pode ser presencial, por telefone ou por vídeo."
+    },
+    {
+      "type": "h3",
+      "text": "Técnica da escuta activa"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Perguntas abertas: 'Como foi a sua experiência...?' em vez de 'Foi boa, sim ou não?'.",
+        "Silêncio estratégico: deixar pausas para o respondente pensar e elaborar.",
+        "Espelho: repetir a última frase dita pelo respondente para encorajar continuação.",
+        "Clarificação: 'Pode explicar melhor o que quis dizer com...?' para evitar ambiguidades.",
+        "Sondagem: 'O que sentiu quando...?' quando a resposta é demasiado vaga."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Etnografia e netnografia"
+    },
+    {
+      "type": "p",
+      "text": "Etnografia é observação participante ou não-participante em contexto natural — observar consumidores em casa, na loja, no trabalho durante horas ou dias. Revela comportamentos que nem o próprio entrevistado verbaliza (rotinas, atalhos, adaptações, momentos de frustração). Em marketing, etnografia digital adaptada chama-se netnografia (Kozinets, 2002): observar conversas em fóruns, subreddits, grupos de Facebook, reviews de produtos, threads do Twitter. É especialmente útil para categorias onde os consumidores partilham experiências online (viagens, cosmética, gaming, parentalidade)."
+    },
+    {
+      "type": "h3",
+      "text": "Netnografia na prática"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Identificar comunidades online relevantes (fóruns, subreddits, hashtags, grupos).",
+        "Observar durante semanas sem intervir — captar linguagem natural, conflitos, consensos.",
+        "Comparar discurso público (reviews) com discurso privado (conversas em grupos fechados).",
+        "Triangular com entrevistas para validar interpretações.",
+        "Atenção à ética: dados são públicos mas exigem anonimização cuidadosa e, idealmente, consentimento."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Técnicas projectivas — ir além do discurso consciente"
+    },
+    {
+      "type": "p",
+      "text": "Técnicas projectivas partem do princípio que, quando confrontados com estímulos ambíguos, os respondentes projectam as suas attitudes e motivações profundas. São especialmente úteis quando os respondentes não conseguem ou não querem articular sentimentos (tabus, áreas emocionais, decisões de identidade). As técnicas mais usadas: associação de palavras (responder à palavra 'banco' com a primeira palavra que vier à mente), completar frases ('Quando entro numa loja cara, eu...'), teste do boneco (desenhar ou escolher bonecos que representem uma marca), escolha de imagens (sortear imagens e pedir para seleccionar as que mais se identificam com a categoria)."
+    },
+    {
+      "type": "h3",
+      "text": "Teste de apercepção temática (TAT) e cenários"
+    },
+    {
+      "type": "p",
+      "text": "O entrevistado vê uma imagem ambígua (uma pessoa a olhar pela janela, uma sala vazia) e conta uma história sobre o que se passa. As projecções revelam attitudes que discurso directo não alcança. Em marketing, é usado como 'cenários de marca': 'Imagine que está numa loja e encontra esta embalagem sem marca. Conta-me o que pensa, sente e decide.' Útil para categorias com forte carga simbólica (luxo, perfumes, alimentação infantil)."
+    },
+    {
+      "type": "h2",
+      "text": "Laddering — subir na cadeia de significados"
+    },
+    {
+      "type": "p",
+      "text": "Técnica de entrevista que procura chegar aos valores últimos do consumidor a partir dos atributos do produto. Parte de uma pergunta concreta ('Porque prefere este sumo?') e sobe progressivamente: 'Porque é que isso é importante?', 'E porquê?' — até chegar a valores pessoais ('Porque a saúde da minha família é a coisa mais importante'). O resultado é uma Hierarchical Value Map (HVM) que liga atributos (natural, sem corantes) → consequências funcionais (mais saudável) → consequências psicossociais (sou um bom pai) → valores (segurança, responsabilidade). É muito usado em branding e desenvolvimento de novos produtos."
+    },
+    {
+      "type": "h2",
+      "text": "ZMET — Zaltman Metaphor Elicitation Technique"
+    },
+    {
+      "type": "p",
+      "text": "Técnica desenvolvida por Gerald Zaltman (Harvard) baseada em metáforas visuais. O respondente é convidado a trazer 8-10 imagens (de revistas, Google, fotos pessoais) que representem os seus sentimentos sobre a marca ou categoria. O entrevistador conduz uma conversa guiada sobre cada imagem, procurando os temas subjacentes, oposições e ligações. Resultado: mapa mental visual dos significados profundos que o consumidor associa à marca. É uma técnica poderosa mas cara (1 entrevista por respondente, exige entrevistadores treinados e software de agregação). Muito usada em rebranding e inovação de categorias."
+    },
+    {
+      "type": "h3",
+      "text": "Análise qualitativa — da transcrição aos temas"
+    },
+    {
+      "type": "p",
+      "text": "A análise qualitativa não é estatística — é interpretativa. Método clássico: análise temática. Ler repetidamente as transcrições, identificar unidades de significado, agrupar em temas, refinar categorias, contar frequência de cada tema (semanticamente) ou procurar diversidade (latente). Softwares como NVivo, Atlas.ti ou mesmo Excel ajudam a organizar. O cuidado principal: não impor categorias a priori sem deixar espaço para temas emergentes. Dois investigadores a analisar o mesmo material devem chegar a conclusões semelhantes (inter-rater reliability) para garantir rigor."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: lembra-te que qualitativa não é 'sub-pesquisa' ou 'pesquisa de quem não pode pagar surveys'. É pesquisa com perguntas diferentes — funciona mal quando pede para medir, funciona óptimo quando precisa de entender. Usar como etapa exploratória antes da quantitativa é prática padrão em qualquer agência séria."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma startup quer lançar um novo produto de skincare. Quer perceber que motivações estão por trás da escolha de produtos pelas consumidoras. Que métodos qualitativos usar e porquê?",
+      "answer": "Combinação recomendada: (1) focus groups com consumidoras-alvo (4-5 grupos de 8 pessoas, segmentados por idade/estilo) para gerar a paisagem de motivações e linguagem; (2) entrevistas em profundidade com early adopters e influencers para explorar motivações profundas; (3) netnografia em fóruns de skincare (r/SkincareAddiction, blogs) para observar conversas naturais; (4) laddering com 10-15 respondentes para chegar aos valores últimos que sustentam as escolhas. Com base nos insights, desenha-se depois o survey quantitativo para medir dimensões e segmentar."
+    }
+  ],
+  "keyPoints": [
+    "Qualitativa busca profundidade, não medição — complemento (não substituto) da quantitativa.",
+    "Focus groups (6-10 pessoas, 1-2h): gerar hipóteses, explorar temas, testar conceitos.",
+    "Entrevistas em profundidade (1-1, 30-90min): decisores, temas sensíveis, casos críticos.",
+    "Etnografia: observar em contexto natural, revela comportamentos não-verbalizados.",
+    "Netnografia: etnografia em comunidades online — fóruns, subreddits, reviews.",
+    "Técnicas projectivas (associação, completar frases, TAT) ultrapassam discurso consciente.",
+    "Laddering: subir de atributos a valores pessoais via 'porquê' repetido.",
+    "ZMET: elicitação por metáforas visuais com mapas mentais de marca.",
+    "Análise qualitativa é temática (não estatística) — NVivo, Atlas.ti, Excel."
+  ],
+  "quizSlug": "pmq",
+  "nextLesson": "04-analise-dados-relatorio",
+  "prevLesson": "02-metodos-coleta-dados-quantitativos"
+}

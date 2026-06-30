@@ -1,8 +1,8 @@
 {
   "slug": "pesquisa-de-marketing",
   "title": "Pesquisa de Marketing",
-  "icon": "🔬",
+  "icon": "📊",
   "color": "#7c3aed",
-  "description": "Como planear, conduzir e interpretar pesquisa de mercado: exploratória vs descritiva vs causal, qualitativa e quantitativa, amostragem e relatórios.",
-  "order": 18
+  "description": "Como planear, conduzir e interpretar pesquisa de marketing: o processo de pesquisa em 6 passos, primária vs secundária, qualitativa vs quantitativa, amostragem, métodos de recolha e análise de dados para fundamentar decisões de marketing.",
+  "order": 43
 }

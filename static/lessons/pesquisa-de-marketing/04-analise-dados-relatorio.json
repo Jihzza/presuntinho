@@ -1,0 +1,165 @@
+{
+  "id": "04-analise-dados-relatorio",
+  "title": "Análise de Dados e Relatório de Pesquisa",
+  "courseSlug": "pesquisa-de-marketing",
+  "lessonNumber": 4,
+  "description": "Do dado ao insight: codificação e limpeza de dados, ferramentas (SPSS, R, Python, NVivo), estatística descritiva e inferencial, tabelas cruzadas, regressão, análise fatorial, análise de clusters e conjoint analysis. Como estruturar e apresentar o relatório final com conclusões e recomendações accionáveis.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["análise", "SPSS", "Python", "R", "regressão", "análise fatorial", "clusters", "conjoint", "relatório"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "Da recolha ao insight"
+    },
+    {
+      "type": "p",
+      "text": "Recolher dados é só o começo. Sem análise cuidadosa, dados brutos não dizem nada — são números sem história. O processo analítico tem cinco fases: preparação dos dados (limpeza, codificação, tratamento de não-respostas), análise exploratória (frequências, médias, cruzamentos), análise confirmatória (testes de hipóteses, modelos), interpretação (o que significam estes números para o negócio?) e comunicação (relatório, apresentação, dashboards). Uma análise bem feita transforma dados em decisões; uma mal feita desperdiça todo o investimento da recolha. É onde se prova (ou desmente) a intuição inicial."
+    },
+    {
+      "type": "h2",
+      "text": "Preparação dos dados — a fase subestimada"
+    },
+    {
+      "type": "p",
+      "text": "Etapa crítica e frequentemente subestimada: verificações iniciais consomem 60-80% do tempo de um analista de pesquisa. Inclui: verificação de integridade (respostas incompletas, padrões estranhos como 'sempre 3' ou 'tudo 7'), codificação de respostas abertas (transformar texto em categorias — moroso mas essencial para análise quantitativa), tratamento de outliers (decidir se valores extremos são erro de input ou verdade), tratamento de não-respostas (excluir, imputar média, criar categoria 'não sabe'). Em pesquisa qualitativa, preparação inclui transcrição de gravações, organização por temas e anonimização. Bases de dados mal preparadas geram conclusões erradas — é a lei do garbage in, garbage out."
+    },
+    {
+      "type": "h3",
+      "text": "Coding — transformar texto em números"
+    },
+    {
+      "type": "p",
+      "text": "Codificação é a tradução das respostas abertas em categorias analisáveis. Por exemplo, a resposta 'Adoro porque a minha pele fica macia e cheira bem' pode ser codificada como 'textura' (=1), 'cheiro' (=1) e 'resultado_visivel' (=1). Processo: (1) ler uma amostra para gerar categorias iniciais; (2) definir um livro de códigos com regras claras para cada categoria; (3) treinar dois codificadores numa sub-amostra e medir concordância (Cohen's kappa ≥ 0,7 é aceitável); (4) aplicar o livro à amostra total, esclarecendo dúvidas em equipa. Pode demorar um dia inteiro por survey longo com muitas abertas."
+    },
+    {
+      "type": "h2",
+      "text": "Ferramentas de análise — SPSS, R, Python e NVivo"
+    },
+    {
+      "type": "p",
+      "text": "A escolha da ferramenta depende do volume, complexidade estatística, orçamento e cultura da equipa. SPSS (IBM) é o clássico das ciências sociais e do marketing — interface gráfica, poderosas rotinas para testes standard, óptimo para quem não programa. R é a referência para estatística avançada — open-source, enorme ecossistema de pacotes (tidyverse, ggplot2, survey, lavaan para equações estruturais), curva de aprendizagem íngreme mas flexibilidade total. Python (pandas, numpy, scipy, scikit-learn, statsmodels) é igualmente poderoso, com integração nativa com machine learning e produção de dashboards. NVivo e Atlas.ti são as ferramentas líderes para análise qualitativa (codificação assistida, queries, network diagrams)."
+    },
+    {
+      "type": "h3",
+      "text": "Quando usar cada ferramenta"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "SPSS: equipas que não programam, análises standard (regressões, testes, clusters), orçamentos com capacidade para licença.",
+        "R: análises avançadas (modelos mistos, equações estruturais, análise fatorial confirmatória), equipas estatísticas.",
+        "Python: pipelines de análise reproduzíveis, integração com ML, deploy para produção, equipas tech-savvy.",
+        "Excel: análises rápidas, conjuntos de dados pequenos (<1000 casos), exploração visual inicial.",
+        "NVivo/Atlas.ti: análise qualitativa com codificação assistida, equipas que fazem muita pesquisa qualitativa."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Estatística descritiva — primeiros olhares"
+    },
+    {
+      "type": "p",
+      "text": "Tabelas de frequência (quantos deram cada resposta), medidas de tendência central (média, mediana, moda), medidas de dispersão (desvio-padrão, amplitude, variância), distribuições (histogramas para ver forma e detectar assimetrias ou outliers). Sempre que se reporta uma média, reportar também o desvio-padrão e o número de casos — caso contrário perde-se informação essencial. A mediana é preferível à média quando há outliers ou distribuições enviesadas. Para variáveis categóricas, reportar contagens e percentagens — nunca apenas percentagens."
+    },
+    {
+      "type": "h3",
+      "text": "Tabelas cruzadas (crosstabs)"
+    },
+    {
+      "type": "p",
+      "text": "Crosstabs cruzam duas (ou mais) variáveis categóricas e mostram a distribuição conjunta. Exemplo: 'consumidores do segmento 25-34 anos têm maior propensão a comprar online que consumidores 50+?'. Mostram contagens, percentagens por linha (para comparar dentro de cada categoria) e qui-quadrado para testar independência. São a ferramenta mais usada em pesquisa de marketing porque respondem directamente às perguntas de segmentação. Cuidados: subgrupos pequenos podem dar percentagens enganadoras; testes estatísticos ajudam a separar padrão real de acaso."
+    },
+    {
+      "type": "h2",
+      "text": "Análise inferencial — confirmar ou rejeitar padrões"
+    },
+    {
+      "type": "p",
+      "text": "Estatística inferencial avalia se padrões observados são reais ou poderiam ter surgido por acaso numa amostra daquela dimensão. Cinco testes clássicos: (1) teste t — comparar médias entre dois grupos (ex: satisfação entre homens e mulheres); (2) ANOVA — comparar médias entre 3+ grupos; (3) qui-quadrado — associar duas variáveis categóricas; (4) correlação de Pearson — relação linear entre duas variáveis contínuas (-1 a +1); (5) regressão — prever uma variável dependente a partir de uma ou mais independentes. Cada teste tem pressupostos (normalidade, independência, homogeneidade de variâncias, tamanho de amostra) que devem ser verificados antes de aplicar. O valor-p indica a probabilidade de o padrão ser acaso; convenção: valor-p < 0,05 sugere padrão estatisticamente significativo."
+    },
+    {
+      "type": "h2",
+      "text": "Regressão — a ferramenta mais poderosa"
+    },
+    {
+      "type": "p",
+      "text": "Regressão linear (OLS) modela a relação entre uma variável dependente contínua (satisfação, vendas, NPS) e uma ou mais variáveis independentes (idade, preço, frequência de uso). Produz coeficientes que indicam a magnitude e direcção do efeito — controlando pelas outras variáveis. R² mede a proporção de variância explicada. Regressão logística faz o mesmo para variável dependente binária (compra/não compra, churn/não churn) com coeficientes interpretáveis como odds ratios. Usos em marketing: prever vendas em função de investimento em mídia, identificar drivers de satisfação, modelar propensão de compra, quantificar elasticidade ao preço."
+    },
+    {
+      "type": "h2",
+      "text": "Análise fatorial e de clusters — segmentação"
+    },
+    {
+      "type": "p",
+      "text": "Análise fatorial (exploratória) identifica um número menor de 'factores' que explicam correlações entre muitas variáveis — útil quando se quer reduzir 30 atributos de marca para 5-6 dimensões. Requer verificar KMO (≥ 0,6) e Bartlett (significativo). Análise de clusters (k-means, hierárquica) agrupa respondentes em segmentos homogéneos com base em múltiplas variáveis. É a base estatística do STP — escolher k segmentos e atribuir cada respondente ao cluster mais próximo. Validação: estabilidade da solução com subamostras, interpretabilidade prática dos clusters (devem corresponder a personas identificáveis)."
+    },
+    {
+      "type": "h3",
+      "text": "Conjoint analysis — medir trade-offs"
+    },
+    {
+      "type": "p",
+      "text": "Conjoint analysis é uma técnica de análise que mede a importância relativa que os consumidores dão a diferentes atributos de um produto (preço, funcionalidades, marca, design). Apresenta conjuntos (conjoint) de combinações de atributos e pede ao respondente para escolher ou classificar. O modelo estatístico decompõe as escolhas em 'utilidades parciais' para cada nível de atributo — permitindo simular a quota de qualquer combinação de produto. É particularmente útil em desenvolvimento de novos produtos, pricing e decisões de configuração. Modelos mais avançados incluem HB (Hierarchical Bayes) para estimar preferências individuais."
+    },
+    {
+      "type": "h2",
+      "text": "Do insight à recomendação"
+    },
+    {
+      "type": "p",
+      "text": "Insight ≠ dado. Um dado é '40% dos clientes estão insatisfeitos'. Um insight é 'a insatisfação concentra-se no segmento 25-34 anos, urbano, que usa a app mais de 3x por semana e reclama especificamente do tempo de resposta no chat de suporte'. Um insight explica o porquê e aponta acção. A boa análise termina sempre em recomendações accionáveis: o que a empresa deve fazer com base no que se aprendeu? Sem recomendações, o relatório é apenas descrição — útil academicamente mas não para o negócio."
+    },
+    {
+      "type": "h2",
+      "text": "Estrutura do relatório de pesquisa"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Sumário executivo: 1-2 páginas com conclusões principais e recomendações. Para decisores ocupados — é frequentemente a única parte que vão ler.",
+        "Contexto e objectivos: por que se fez a pesquisa, que perguntas se queria responder.",
+        "Metodologia: tipo de pesquisa, amostra (tamanho, técnica), método de recolha, datas, limitações.",
+        "Resultados principais: tabelas, gráficos, citações (em qualitativa). Organizar por pergunta de pesquisa, não por questão do questionário.",
+        "Discussão e insights: o que os resultados significam, à luz do contexto e da literatura.",
+        "Recomendações: o que fazer com base nos achados. Concretas, priorizadas, com próximo passo sugerido.",
+        "Anexos: questionário completo, tabulações detalhadas, glossário, código de análise."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Comunicação para diferentes audiências"
+    },
+    {
+      "type": "p",
+      "text": "O mesmo estudo pode ter relatórios diferentes para audiências diferentes. Para a administração: 2-3 páginas, foco em insights e recomendações, zero jargão estatístico. Para marketing: relatório intermédio com segmentações e perfis. Para produto: detalhes sobre funcionalidades mencionadas, padrões de uso. Para a equipa técnica: metodologia completa, amostras, limitações. Apresentação oral (10-15 min) com 5-7 slides chave, cada um com uma mensagem clara — não é o relatório em formato slide, é uma versão condensada e narrativa do mesmo. Storytelling com dados: começar pelo achado mais surpreendente, contextualizar, mostrar evidência, fechar com acção."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: lembra-te que o valor da pesquisa está nas decisões que gera. Um relatório perfeito que ninguém lê é dinheiro queimado. Um relatório simples que leva a uma boa decisão vale dez vezes mais. A análise é meio, não fim — o fim é a acção."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma pesquisa sobre satisfação do cliente mostra que a nota média é 7,2/10. Que análises adicionais farias para transformar este dado em insight útil?",
+      "answer": "(1) Decompor por segmento — a média esconde variação entre grupos (idade, região, perfil de uso); (2) Decompor por dimensão do serviço — qual aspecto específico está a puxar a nota para baixo (atendimento, preço, produto)?; (3) Comparar com histórico — está a melhorar ou a piorar vs semestre anterior?; (4) Correlacionar com comportamento — clientes insatisfeitos churnam mais? Qual é a relação entre NPS e retenção?; (5) Analisar NPS por canal (app, loja, web) e por momento de contacto; (6) Analisar respostas qualitativas dos que deram nota ≤6 — o que dizem nos comentários abertos?; (7) Fazer regressão para identificar drivers únicos de satisfação, controlando por variáveis de confundimento. Insight útil final: 'a nota média de 7,2 esconde que 30% dos clientes do segmento X dão notas ≤5 por causa do tempo de espera no telefone, causando 15% de churn anual — reduzir espera de 8 min para 3 min recupera 8% dos churners.'"
+    }
+  ],
+  "keyPoints": [
+    "Pipeline analítico: preparação → exploratória → confirmatória → interpretação → comunicação.",
+    "Limpeza e codificação de dados consomem 60-80% do tempo (garbage in, garbage out).",
+    "Coding: livro de códigos, dois codificadores, Cohen's kappa ≥ 0,7 para fiabilidade.",
+    "SPSS para equipas não técnicas; R para estatística avançada; Python para pipelines e ML; NVivo para qualitativa.",
+    "Análise exploratória: frequências, medidas de tendência central e dispersão, histogramas.",
+    "Crosstabs são a ferramenta mais usada em marketing — respondem às perguntas de segmentação.",
+    "Inferência: teste t, ANOVA, qui-quadrado, correlação, regressão. Valor-p < 0,05 = significativo.",
+    "Regressão: modelar impacto de variáveis, prever outcomes, quantificar drivers.",
+    "Análise fatorial reduz muitas variáveis em poucos factores; clusters segmentam respondentes.",
+    "Conjoint mede trade-offs entre atributos e é base para pricing e design de produto.",
+    "Relatório executivo: sumário → objectivos → metodologia → resultados → insights → recomendações.",
+    "Adaptar a comunicação à audiência — administração quer decisões, técnica quer detalhes."
+  ],
+  "quizSlug": "pmq",
+  "nextLesson": null,
+  "prevLesson": "03-metodos-coleta-dados-qualitativos"
+}

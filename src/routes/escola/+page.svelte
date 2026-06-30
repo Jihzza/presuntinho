@@ -272,17 +272,17 @@
                   badge: 'Uni'
                 },
                 {
-                                  slug: 'pesquisa-de-marketing',
-                                  title: 'Pesquisa de Marketing',
-                                  tagline: 'Business Administration · Tipos de pesquisa, métodos qualitativos e quantitativos, amostragem e relatórios',
-                                  description:
-                                    'Como planear, conduzir e interpretar pesquisa de mercado: exploratória vs descritiva vs causal, qualitativa vs quantitativa, amostragem e desenho de questionário, análise de dados e relatório executivo.',
-                                  icon: '🔬',
-                                  color: '#7c3aed',
-                                  lessonCount: 4,
-                                  quizCount: 1,
-                                  badge: 'Uni'
-                                },
+                  slug: 'pesquisa-de-marketing',
+                  title: 'Pesquisa de Marketing',
+                  tagline: 'Business Administration · Processo de pesquisa, qualitativa vs quantitativa, amostragem, métodos de recolha e análise de dados',
+                  description:
+                    'Como planear, conduzir e interpretar pesquisa de marketing: processo de pesquisa em 6 passos, dados primários vs secundários, qualitativa vs quantitativa, métodos de recolha quantitativos (surveys, Likert, amostragem, margem de erro), métodos qualitativos (focus groups, entrevistas, etnografia, netnografia, laddering, ZMET), análise de dados (SPSS, R, Python, regressão, clusters, conjoint) e relatório final.',
+                  icon: '📊',
+                  color: '#7c3aed',
+                  lessonCount: 4,
+                  quizCount: 1,
+                  badge: 'Uni'
+                },
                                 {
                                   slug: 'gestao-mudanca',
                                   title: 'Gestão da Mudança Organizacional',

@@ -1,0 +1,170 @@
+{
+  "id": "02-metodos-coleta-dados-quantitativos",
+  "title": "Métodos de Recolha de Dados Quantitativos",
+  "courseSlug": "pesquisa-de-marketing",
+  "lessonNumber": 2,
+  "description": "O coração da pesquisa quantitativa em marketing: surveys online, presenciais e por telefone, escalas (Likert, semântica diferencial), amostragem probabilística vs não-probabilística, cálculo de tamanho de amostra, margem de erro e intervalos de confiança — como obter dados válidos e representativos.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["survey", "questionário", "likert", "amostragem", "margem de erro", "intervalo de confiança", "quantitativa"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "A pesquisa quantitativa em resumo"
+    },
+    {
+      "type": "p",
+      "text": "A pesquisa quantitativa mede — transforma percepções, comportamentos e opiniões em números que podem ser analisados estatisticamente e generalizados a uma população maior. É a abordagem dominante em marketing porque permite calcular quotas de mercado, validar hipóteses, segmentar populações, prever vendas e testar campanhas. O método mais usado é o survey (inquérito por questionário), seguido pela análise de dados de painel e transacionais. A qualidade dos resultados depende inteiramente da qualidade da recolha — amostra enviesada, questionário mal desenhado ou tamanho insuficiente tornam a análise sofisticada irrelevante."
+    },
+    {
+      "type": "h3",
+      "text": "Três pilares da quantitativa"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Método de recolha: survey, dados de painel (Nielsen), dados transacionais (vendas, web analytics), observação estruturada (counters, eye-tracking).",
+        "Desenho da amostra: probabilística vs não-probabilística, com técnicas específicas para cada caso.",
+        "Instrumento: questionário estruturado com perguntas fechadas, escalas validadas, testes de lógica para garantir qualidade."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Surveys — o método quantitativo dominante"
+    },
+    {
+      "type": "p",
+      "text": "Survey é um questionário estruturado aplicado a uma amostra de uma população. Pode ser online (o mais comum), por telefone, presencial (entrevistas face-a-face em locais de elevada circulação), ou misto. A escolha do modo afecta custos, taxas de resposta, qualidade dos dados e cobertura: online é barato mas exclui pessoas com pouca literacia digital; telefone alcança quem não está online mas tem custos crescentes; presencial tem maior controlo mas é caro e sujeito a viés do entrevistador."
+    },
+    {
+      "type": "h3",
+      "text": "Modos de aplicar um survey"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Online (CAWI — Computer-Assisted Web Interviewing): enviado por email, em apps, em painéis. Barato, rápido, alcance global. Viés: exclui offline e os que não respondem emails.",
+        "Telefone (CATI — Computer-Assisted Telephone Interviewing): operador liga para números aleatórios. Taxa de resposta mais alta mas custos crescentes e recusa crescente.",
+        "Presencial (CAPI — Computer-Assisted Personal Interviewing): entrevistador aplica questionário em tablet. Melhor para perguntas complexas mas é caro.",
+        "Auto-preenchido em papel: útil em conferências, eventos, retail. Menos controlo de qualidade mas funciona em contextos específicos.",
+        "Painel: amostra fixa de consumidores que responde periodicamente (painel de consumidores Nielsen, Kantar). Permite estudos longitudinais."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Escalas de medição — Likert, semântica diferencial, ordinal"
+    },
+    {
+      "type": "p",
+      "text": "A escala de Likert é a mais usada em surveys de marketing. Pede ao respondente para indicar o seu grau de concordância com uma afirmação, tipicamente em 5 ou 7 pontos: 1 = discordo totalmente, 5 = concordo totalmente (escala par com ponto neutro permite fuga de respondentes sem opinião). Permite cálculos de média e testes estatísticos. A escala semântica diferencial opõe dois adjectivos (bom/mau, forte/fraco) nos extremos de uma escala de 7 pontos, útil para medir percepções e imagens de marca. Escalas ordinais simples (1 a 10 para recomendar) são úteis para NPS e satisfação mas perdem poder discriminante nas extremidades."
+    },
+    {
+      "type": "h3",
+      "text": "Boas práticas em escalas"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Usar a mesma escala ao longo do questionário para reduzir fadiga cognitiva.",
+        "Escala ímpar (5 ou 7 pontos) com ponto médio permite 'não concordo nem discordo'.",
+        "Escala par (4 ou 6 pontos) força decisão; útil quando se quer evitar respostas neutras.",
+        "Evitar escalas com mais de 9 pontos — tornam-se cognitivamente pesadas.",
+        "Incluir opção 'não sei / não se aplica' só quando conceptualmente faz sentido (não incluir quando força o respondente a pensar).",
+        "Verificar fiabilidade das escalas multi-item com alpha de Cronbach (≥0,70 é aceitável)."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Amostragem — o coração da validade"
+    },
+    {
+      "type": "p",
+      "text": "Em quase nenhuma pesquisa é viável entrevistar toda a população-alvo. Medir satisfação dos 11 milhões de portugueses seria absurdo. A solução é estudar uma amostra — um subconjunto representativo — e inferir resultados para a população. Se a amostra for bem escolhida, os resultados reflectem, com margem de erro conhecida, o que se passa na população. Se for mal escolhida, os resultados são enviesados mesmo com milhares de respostas."
+    },
+    {
+      "type": "h3",
+      "text": "Amostragem probabilística"
+    },
+    {
+      "type": "p",
+      "text": "Cada elemento da população tem probabilidade conhecida (e geralmente igual) de ser seleccionado. Permite generalização estatística com cálculo de margem de erro. Quatro técnicas principais: (1) aleatória simples — cada elemento tem igual probabilidade (sorteio, gerador de números aleatórios); (2) sistemática — ponto de partida aleatório depois cada n-ésimo elemento da lista; (3) estratificada — divide a população em estratos homogéneos (idade, região, género) e tira-se amostra aleatória dentro de cada um — garante representatividade mesmo com amostras pequenas; (4) por clusters — divide em grupos geográficos ou naturais, seleccionam-se clusters aleatoriamente e estudam-se todos os elementos dentro — útil quando há dispersão geográfica."
+    },
+    {
+      "type": "h3",
+      "text": "Amostragem não-probabilística"
+    },
+    {
+      "type": "p",
+      "text": "A selecção não é aleatória — depende de critério, conveniência ou auto-selecção. Não permite cálculo rigoroso de margem de erro mas é mais barata e rápida. Técnicas: (1) conveniência — entrevistar quem está disponível (clientes na loja, colegas); (2) bola de neve — pedir a um entrevistado para indicar o próximo (útil para populações difíceis de encontrar); (3) quotas — definir quotas por perfil (50% mulheres, 50% homens) e preencher por critério do entrevistador; (4) julgamento — investigador escolhe elementos por critério ('expert sampling'). Não probabilística é útil para exploratória e testes-piloto, mas exige cautela em claims generalistas."
+    },
+    {
+      "type": "h2",
+      "text": "Tamanho da amostra e margem de erro"
+    },
+    {
+      "type": "p",
+      "text": "O tamanho da amostra determina a margem de erro — quanto menor a amostra, maior a margem. Para uma survey nacional em Portugal com 1000 entrevistas, a margem de erro ronda os ±3% com 95% de confiança. Aumentar para 2000 reduz para ±2%, mas o ganho marginal decresce rapidamente (a margem cai pela raiz quadrada do tamanho). A regra prática: para surveys de opinião pública, 1000-1500 entrevistas é suficiente; para segmentações finas ou subgrupos, precisam-se amostras maiores."
+    },
+    {
+      "type": "h3",
+      "text": "Fórmula simplificada para tamanho de amostra"
+    },
+    {
+      "type": "p",
+      "text": "Para estimar uma proporção (percentagem): n = (Z² × p × (1-p)) / e², onde Z é o valor da distribuição normal para o nível de confiança (1,96 para 95%), p é a proporção estimada (0,5 quando desconhecida — pior caso, dá a maior amostra necessária), e é a margem de erro desejada (0,03 para ±3%). Para Portugal com p=0,5 e margem de 3%, n = (1,96² × 0,25) / 0,03² ≈ 1067 entrevistas. É por isso que quase todos os surveys nacionais usam n entre 1000 e 1100. Para estimar uma média contínua, a fórmula muda ligeiramente mas a intuição é a mesma: n depende da variabilidade da variável, do Z e do erro admissível."
+    },
+    {
+      "type": "h3",
+      "text": "Cuidados com subgrupos"
+    },
+    {
+      "type": "p",
+      "text": "Uma amostra de 1000 produz margem de ±3% no agregado, mas em subgrupos como 'mulheres de 25-34 anos em Lisboa' pode haver apenas 50 respondentes — margem de ±14%. Concluir tendências nesse subgrupo com 50 respostas é arriscado. Regra: subgrupos com menos de 30-50 casos devem ser tratados com cautela ou explicitados como exploratórios. Soluções: oversampling (aumentar proporcionalmente a representação do subgrupo) ou amostra total maior."
+    },
+    {
+      "type": "h2",
+      "text": "Intervalos de confiança"
+    },
+    {
+      "type": "p",
+      "text": "Intervalo de confiança é a forma rigorosa de apresentar resultados amostrais: 'a satisfação dos clientes é 72%, com intervalo de confiança a 95% de [69%, 75%]'. Significa que se repetíssemos o estudo 100 vezes com amostras diferentes, em 95 dos casos o verdadeiro valor da população estaria nesse intervalo. Níveis comuns: 90% (mais permissivo), 95% (padrão), 99% (mais conservador). Apresentar intervalos de confiança em vez de apenas percentagens é mais honesto e é prática recomendada em qualquer relatório de pesquisa."
+    },
+    {
+      "type": "h2",
+      "text": "Vieses quantitativos comuns"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Viés de selecção: amostra não representa a população (só responda quem quer) — combatido com aleatoriedade e incentivos equilibrados.",
+        "Viés de resposta: entrevistado dá resposta socialmente aceitável (desejabilidade social) — combatido com anonimato garantido e perguntas indiretas.",
+        "Viés de não-resposta: certos grupos não respondem (homens 18-30, pessoas muito ocupadas) — combatido com follow-ups e incentivos.",
+        "Viés de questionário: perguntas indutoras, ordem enviesada, escalas assimétricas — combatido com pré-testes e revisão independente.",
+        "Viés de memória: respondente não se lembra do comportamento passado com precisão — combatido com perguntas sobre hábitos actuais em vez de recordação longínqua."
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: lembra-te que survey grande não é sinônimo de survey bom. 500 respostas de uma amostra enviesada valem menos que 100 respostas de uma amostra representativa com desenho cuidado. A qualidade está no desenho, não no tamanho."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma marca de cosmética quer saber que percentagem de mulheres em Lisboa usa protetor solar diariamente. Que técnica de amostragem usar e qual o tamanho aproximado de amostra?",
+      "answer": "Amostragem estratificada por idade (e talvez bairro) para garantir representatividade — Lisboa tem heterogeneidade etária e geográfica marcada. Tamanho: 400-600 entrevistas para margem de ±4-5%. Alternativa mais barata: amostragem por quotas em locais de elevada circulação (shoppings, farmácias), mas perde generalização estatística. Importante: garantir aleatoriedade dentro de cada estrato (ex: sorteio de mulheres em cada faixa etária)."
+    }
+  ],
+  "keyPoints": [
+    "Survey online é o modo dominante (CAWI), mas telefone (CATI) e presencial (CAPI) têm papéis específicos.",
+    "Escala de Likert (5 ou 7 pontos) é a mais usada para medir atitudes e opiniões.",
+    "Amostragem probabilística permite generalização; não-probabilística é mais barata mas enviesada.",
+    "Estratificada garante representatividade em amostras pequenas; clusters para dispersão geográfica.",
+    "Margem de erro: 1000 entrevistas dão ±3% no agregado com 95% de confiança.",
+    "Subgrupos com <30 respondentes devem ser tratados como exploratórios.",
+    "Intervalo de confiança é a forma honesta de apresentar resultados amostrais.",
+    "Vieses principais: selecção, resposta, não-resposta, questionário, memória."
+  ],
+  "quizSlug": "pmq",
+  "nextLesson": "03-metodos-coleta-dados-qualitativos",
+  "prevLesson": "01-fundamentos-pesquisa-marketing"
+}

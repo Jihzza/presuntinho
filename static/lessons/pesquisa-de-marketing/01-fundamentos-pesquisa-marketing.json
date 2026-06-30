@@ -1,0 +1,167 @@
+{
+  "id": "01-fundamentos-pesquisa-marketing",
+  "title": "Fundamentos da Pesquisa de Marketing",
+  "courseSlug": "pesquisa-de-marketing",
+  "lessonNumber": 1,
+  "description": "O que é pesquisa de marketing, o processo de pesquisa em 6 passos, dados primários vs secundários, investigação qualitativa vs quantitativa, e os três tipos de pesquisa (exploratória, descritiva e causal). A base conceptual que sustenta qualquer projecto de pesquisa.",
+  "audio": "",
+  "audioLabel": "",
+  "tags": ["pesquisa", "processo", "primária", "secundária", "qualitativa", "quantitativa", "exploratória", "descritiva", "causal"],
+  "sections": [
+    {
+      "type": "h2",
+      "text": "O que é pesquisa de marketing"
+    },
+    {
+      "type": "p",
+      "text": "Pesquisa de marketing é o processo sistemático de planear, recolher, analisar e reportar informação relevante para a tomada de decisão de marketing. É a ponte entre a intuição e a evidência: transforma dados brutos em insights accionáveis. Sem pesquisa, o marketer decide com base em palpites e experiência passada — o que pode funcionar mas arrisca erros caros. Uma boa pesquisa reduz incerteza, valida hipóteses e descobre oportunidades que estavam invisíveis a olho nu. A pesquisa pode ser interna (dados de vendas, CRM) ou externa (consumidores, mercado, concorrentes) e tem como objectivo último reduzir o risco das decisões estratégicas e tácticas."
+    },
+    {
+      "type": "h3",
+      "text": "Porque a pesquisa importa"
+    },
+    {
+      "type": "p",
+      "text": "Três razões principais. Primeiro, reduz a incerteza — substituir 'acho que os clientes querem X' por '72% dos clientes inquiridos afirmaram preferir X'. Segundo, valida intuições — por vezes o que parece óbvio internamente revela-se falso quando testado com clientes reais. Terceiro, descobre oportunidades — falhas no atendimento, segmentos mal servidos, funcionalidades pedidas vezes sem conta que nunca ninguém formalizou. Empresas orientadas por dados crescem mais rápido e retêm melhor os clientes do que empresas orientadas apenas por opinião."
+    },
+    {
+      "type": "h2",
+      "text": "O processo de pesquisa em 6 passos"
+    },
+    {
+      "type": "p",
+      "text": "Uma pesquisa de marketing segue normalmente seis passos sequenciais, embora na prática sejam iterativos (volta-se atrás quando um passo revela problemas no anterior). Os seis passos: (1) definição do problema e objectivos de pesquisa; (2) desenvolvimento do plano/desenho de pesquisa; (3) recolha de dados; (4) análise dos dados; (5) apresentação dos achados; (6) tomada de decisão e implementação. Saltar passos — sobretudo o primeiro — é a forma mais rápida de desperdiçar dinheiro numa pesquisa."
+    },
+    {
+      "type": "h3",
+      "text": "Passo 1 — Definir o problema e objectivos"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Conversar com decisores para entender que decisão querem tomar (não 'o que querem saber', mas 'o que vão decidir').",
+        "Reformular o problema numa pergunta de pesquisa clara e testável. Em vez de 'os clientes estão satisfeitos?', perguntar 'qual a percentagem de clientes que recomendaria a marca a um amigo e quais são os principais factores de insatisfação?'.",
+        "Identificar informação secundária já disponível. Muitas vezes a resposta está em dados internos.",
+        "Definir objectivos: exploratória (entender), descritiva (medir) ou causal (testar causa-efeito)."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Passo 2 — Desenhar o plano de pesquisa"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Escolher o tipo de pesquisa (exploratória, descritiva, causal) e abordagem (qualitativa, quantitativa ou mista).",
+        "Definir a população-alvo e o tamanho da amostra necessário.",
+        "Escolher o método de recolha (survey, entrevistas, focus groups, observação, dados secundários).",
+        "Estimar custo, prazo e recursos. Pesquisas caras em mercados pequenos raramente se justificam.",
+        "Redigir o protocolo de pesquisa: quem faz o quê, quando, com que perguntas, com que procedimento de amostragem."
+      ]
+    },
+    {
+      "type": "h3",
+      "text": "Passos 3 a 6 — Recolha, análise, achados e decisão"
+    },
+    {
+      "type": "p",
+      "text": "Recolha de dados: executar o plano, respeitando o protocolo. Análise: limpar dados, aplicar técnicas estatísticas (descritiva e inferencial) ou interpretativas (temática). Achados: traduzir resultados em insights — 'o que isto significa para o negócio'. Decisão: apresentar resultados aos decisores e implementar as acções. A pesquisa termina quando gera uma acção concreta, não quando termina o relatório."
+    },
+    {
+      "type": "h2",
+      "text": "Dados primários vs secundários"
+    },
+    {
+      "type": "p",
+      "text": "Distinção fundamental. Dados primários são recolhidos especificamente para a pesquisa em causa (survey feita agora, entrevistas conduzidas pela equipa, experimento desenhado para o efeito). Dados secundários já existem e foram recolhidos para outros fins (censos do INE, relatórios sectoriais, dados de vendas internas, estudos académicos, dados de redes sociais). Regra de ouro: começar sempre pelos dados secundários — são mais baratos, mais rápidos e dão contexto. Só se justifica recolher dados primários quando os secundários não respondem à pergunta de pesquisa."
+    },
+    {
+      "type": "h3",
+      "text": "Fontes de dados secundários"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Internos: dados de vendas (POS, e-commerce), CRM, web analytics, redes sociais, NPS, reclamações, call center.",
+        "Externos públicos: INE, Eurostat, Banco de Portugal, ACPM, AICEP, relatórios governamentais.",
+        "Externos pagos: Nielsen, Kantar, Euromonitor, Statista, Mordor Intelligence, Mintel — relatórios sectoriais e estudos de mercado.",
+        "Académicos: Google Scholar, ResearchGate, repositórios universitários, papers peer-reviewed."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Investigação qualitativa vs quantitativa"
+    },
+    {
+      "type": "p",
+      "text": "Duas grandes famílias que respondem a perguntas diferentes. Qualitativa busca profundidade — entender o 'porquê' e o 'como', explorar motivações, emoções e contextos. Usa amostras pequenas (10-50 pessoas), perguntas abertas, análise interpretativa. Quantitativa busca amplitude — medir 'quanto' e 'quantos', validar padrões em populações maiores. Usa amostras grandes (centenas a milhares), perguntas fechadas, análise estatística. Não são rivais: complementam-se. O caminho clássico começa com qualitativa (explorar, gerar hipóteses) e segue com quantitativa (medir, confirmar)."
+    },
+    {
+      "type": "h3",
+      "text": "Quando usar cada abordagem"
+    },
+    {
+      "type": "ul",
+      "items": [
+        "Qualitativa: problemas mal definidos, temas novos, exploração de motivações profundas, testes de conceitos, descoberta de linguagem do consumidor.",
+        "Quantitativa: medir dimensões de mercado, validar hipóteses, segmentar populações grandes, prever comportamentos, comparar grupos.",
+        "Mista (sequencial): qualitativa primeiro para gerar o questionário, quantitativa para medir em larga escala. É a abordagem mais robusta na prática."
+      ]
+    },
+    {
+      "type": "h2",
+      "text": "Os três tipos de pesquisa"
+    },
+    {
+      "type": "p",
+      "text": "Consoante o objectivo, a pesquisa divide-se em três tipos. Exploratória: entender um problema mal definido ou um fenómeno novo — descobre questões, gera hipóteses, identifica variáveis. Descritiva: medir e caracterizar um mercado, comportamento ou perfil — responde a 'quem, o quê, quando, onde, como' mas não 'porquê'. Causal: testar relações de causa-efeito — exige experimentos controlados para inferir causalidade (e não apenas correlação). Cada tipo usa métodos diferentes e responde a perguntas diferentes — escolher o tipo errado é desperdiçar recursos."
+    },
+    {
+      "type": "h3",
+      "text": "Pesquisa exploratória"
+    },
+    {
+      "type": "p",
+      "text": "Usada quando o problema está mal definido ou o tema é novo. Objectivo: descobrir, não medir. Métodos típicos: revisão de literatura, focus groups, entrevistas em profundidade, observação, estudos de caso. Amostras pequenas (10-30 pessoas), não probabilísticas, escolhidas por conveniência ou critério. Resultados qualitativos — ideias e hipóteses, não conclusões estatísticas. É a fase de descoberta e precede sempre uma pesquisa descritiva ou causal."
+    },
+    {
+      "type": "h3",
+      "text": "Pesquisa descritiva"
+    },
+    {
+      "type": "p",
+      "text": "Usada quando se quer descrever um mercado, perfil de consumidores ou comportamento. Pergunta-se 'quem, o quê, quando, onde, como'. Exemplos: quota de mercado, perfil demográfico de clientes, frequência de compra, awareness de marca. Métodos: surveys (online, telefone, presencial), observação estruturada, dados de painel (Nielsen, Kantar). Requer amostras maiores e, idealmente, probabilísticas. Resultados quantitativos — frequências, médias, percentagens. Descreve o mercado mas não estabelece causalidade."
+    },
+    {
+      "type": "h3",
+      "text": "Pesquisa causal"
+    },
+    {
+      "type": "p",
+      "text": "Usada quando se quer testar relações de causa-efeito: 'se mudarmos o preço, as vendas aumentam ou diminuem?'. É o único tipo que permite inferir causalidade. Método de ouro: experimento controlado (A/B test) — variar a variável independente (preço, mensagem, layout) e medir o efeito na dependente (vendas, conversão), controlando variáveis externas. Quando o experimento não é possível, recorre-se a quasi-experimentos ou modelos de regressão com variáveis instrumentais. É a pesquisa mais cara mas a que responde às perguntas mais decisivas para o negócio."
+    },
+    {
+      "type": "callout",
+      "variant": "success",
+      "text": "Para a Fatma: lembra-te que os três tipos se encadeiam. Começar com um survey grande sem trabalho exploratório prévio é como construir um questionário sem saber o que perguntar — perguntas irrelevantes, respostas inúteis. Pesquisa começa com perguntas, não com amostras grandes."
+    },
+    {
+      "type": "exercise",
+      "question": "Uma marca de iogurtes quer perceber se reduzir o açúcar em 20% afecta as vendas. Que tipo de pesquisa usar? E se quiser entender porque é que algumas pessoas compram iogurte e outras não?",
+      "answer": "Para o efeito do açúcar nas vendas: pesquisa causal — A/B test ou experimento controlado. Para entender porque algumas pessoas compram e outras não: pesquisa exploratória — focus groups e entrevistas em profundidade para descobrir motivações. Sequência completa seria: exploratória (motivações) → descritiva (mercado e consumo) → causal (testar a redução de açúcar)."
+    }
+  ],
+  "keyPoints": [
+    "Pesquisa de marketing é o processo sistemático de planear, recolher, analisar e reportar informação para decisões de marketing.",
+    "Processo em 6 passos: problema → plano → recolha → análise → achados → decisão.",
+    "Dados primários são recolhidos para a pesquisa; secundários já existem e são mais baratos.",
+    "Qualitativa busca profundidade; quantitativa busca amplitude. Caminho clássico: quali → quanti.",
+    "Exploratória: descobrir problemas mal definidos; amostras pequenas e não-probabilísticas.",
+    "Descritiva: medir mercados e perfis; amostras maiores, geralmente probabilísticas.",
+    "Causal: testar causa-efeito via experimentos ou A/B tests; única forma de inferir causalidade.",
+    "Saltar o passo 1 (definir o problema) é a forma mais rápida de desperdiçar dinheiro."
+  ],
+  "quizSlug": "pmq",
+  "nextLesson": "02-metodos-coleta-dados-quantitativos",
+  "prevLesson": null
+}

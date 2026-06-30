@@ -74,7 +74,7 @@ const COURSE_META: Record<string, CourseMeta> = {
     'direito-empresarial': { slug: 'direito-empresarial', title: 'Direito Empresarial', icon: '⚖️', color: '#7e22ce' },
     'analise-financeira': { slug: 'analise-financeira', title: 'Análise Financeira', icon: '📈', color: '#0d9488' },
     'comportamento-do-consumidor': { slug: 'comportamento-do-consumidor', title: 'Comportamento do Consumidor', icon: '🛍️', color: '#db2777' },
-    'pesquisa-de-marketing': { slug: 'pesquisa-de-marketing', title: 'Pesquisa de Marketing', icon: '🔬', color: '#7c3aed' },
+    'pesquisa-de-marketing': { slug: 'pesquisa-de-marketing', title: 'Pesquisa de Marketing', icon: '📊', color: '#7c3aed' },
     'gestao-mudanca': { slug: 'gestao-mudanca', title: 'Gestão da Mudança Organizacional', icon: '🔄', color: '#14b8a6' },
     'negociacao': { slug: 'negociacao', title: 'Técnicas de Negociação Empresarial', icon: '🤝', color: '#0369a1' },
     'introducao-ao-direito': { slug: 'introducao-ao-direito', title: 'Introdução ao Direito', icon: '⚖️', color: '#7c2d12' },

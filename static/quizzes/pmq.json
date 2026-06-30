@@ -1,107 +1,117 @@
 {
   "id": "pmq",
-  "title": "Quiz: Project Management",
-  "description": "Testa os teus conhecimentos sobre triple constraint, ciclo de vida do projecto, PMBOK, Agile e gestão de risco/stakeholders.",
+  "title": "Quiz: Pesquisa de Marketing",
+  "description": "Testa os teus conhecimentos sobre pesquisa de marketing: o processo em 6 passos, dados primários vs secundários, qualitativa vs quantitativa, os três tipos de pesquisa (exploratória, descritiva, causal), amostragem (probabilística e não-probabilística), margem de erro e intervalo de confiança, focus groups e entrevistas em profundidade, etnografia e técnicas projectivas, regressão, análise fatorial e clusters, e estrutura do relatório final com achados e recomendações. 10 perguntas, 4 opções cada.",
   "questions": [
     {
-      "q": "A triple constraint de um projecto é:",
+      "q": "O processo de pesquisa de marketing em 6 passos começa por:",
       "opts": [
-        "Qualidade, custo, risco",
-        "Scope, time, cost (escopo, prazo, orçamento)",
-        "Pessoas, processo, produto",
-        "Sponsor, PM, cliente"
+        "Recolher os dados primários",
+        "Definir o problema e os objectivos de pesquisa",
+        "Construir o questionário",
+        "Calcular o tamanho da amostra"
       ],
-      "a": 1
+      "a": 1,
+      "lesson": "01-fundamentos-pesquisa-marketing"
     },
     {
-      "q": "O ciclo de vida tradicional de um projecto tem:",
+      "q": "Uma marca quer entender porque é que os seus clientes trocam de fornecedor. Que tipo de pesquisa é mais adequado como primeiro passo?",
       "opts": [
-        "2 fases",
-        "5 phase groups: initiation, planning, execution, monitoring & controlling, closure",
-        "10 fases",
-        "Apenas execução e encerramento"
+        "Pesquisa causal — para testar todas as causas simultaneamente",
+        "Pesquisa descritiva — para medir a taxa de churn",
+        "Pesquisa exploratória — para descobrir motivações e variáveis relevantes",
+        "Pesquisa quantitativa com regressão logística — para prever churn"
       ],
-      "a": 1
+      "a": 2,
+      "lesson": "01-fundamentos-pesquisa-marketing"
     },
     {
-      "q": "WBS (Work Breakdown Structure) é:",
+      "q": "Uma survey nacional em Portugal com 1000 entrevistas aleatórias dá, no agregado, uma margem de erro de aproximadamente:",
       "opts": [
-        "Lista de stakeholders",
-        "Decomposição hierárquica do trabalho em pacotes geríveis",
-        "Diagrama de Gantt",
-        "Matriz de risco"
+        "± 1% a 95% de confiança",
+        "± 3% a 95% de confiança",
+        "± 5% a 99% de confiança",
+        "± 10% a 90% de confiança"
       ],
-      "a": 1
+      "a": 1,
+      "lesson": "02-metodos-coleta-dados-quantitativos"
     },
     {
-      "q": "Gantt chart mostra:",
+      "q": "A amostragem estratificada é especialmente útil quando:",
       "opts": [
-        "Custos detalhados",
-        "Tarefas em barras ao longo do tempo, mostrando duração e sequência",
-        "Stakeholders",
-        "Riscos"
+        "A população é homogénea e há tempo limitado",
+        "Se quer entrevistar respondentes acessíveis numa loja",
+        "A população tem subgrupos importantes e se quer garantir representatividade em amostras pequenas",
+        "Não se tem acesso à lista completa da população"
       ],
-      "a": 1
+      "a": 2,
+      "lesson": "02-metodos-coleta-dados-quantitativos"
     },
     {
-      "q": "Caminho crítico (critical path) é:",
+      "q": "Num focus group, o moderador deve:",
       "opts": [
-        "Caminho mais curto do projecto",
-        "Sequência de tarefas mais longa — determina a duração mínima do projecto",
-        "Lista de tarefas de baixo risco",
-        "Apenas tarefas com budget alto"
+        "Dar a sua opinião sobre os produtos discutidos para guiar o grupo",
+        "Facilitar a discussão, fazer perguntas abertas e gerir dinâmicas de grupo sem dar opinião",
+        "Concentrar-se apenas nos participantes mais extrovertidos",
+        "Aplicar um questionário estruturado a cada participante individualmente"
       ],
-      "a": 1
+      "a": 1,
+      "lesson": "03-metodos-coleta-dados-qualitativos"
     },
     {
-      "q": "Scrum é um framework:",
+      "q": "A técnica de laddering em pesquisa qualitativa procura:",
       "opts": [
-        "Waterfall",
-        "Ágil, com sprints, daily stand-ups, retrospectives e product backlog",
-        "Sequencial e linear",
-        "Apenas para software"
+        "Medir atitudes através de escalas de Likert",
+        "Subir progressivamente do atributo do produto até aos valores últimos do consumidor via 'porquê' repetido",
+        "Projectar attitudes inconscientes usando estímulos ambíguos",
+        "Comparar clusters de consumidores em variáveis demográficas"
       ],
-      "a": 1
+      "a": 1,
+      "lesson": "03-metodos-coleta-dados-qualitativos"
     },
     {
-      "q": "Kanban usa:",
+      "q": "Netnografia é:",
       "opts": [
-        "Sprints fixos",
-        "Quadro visual com colunas (to do, doing, done) e WIP limits",
-        "Apenas documentação",
-        "Hierarquia funcional"
+        "Um método quantitativo de análise de redes sociais",
+        "Etnografia adaptada a comunidades online — observar conversas em fóruns, subreddits, reviews",
+        "Análise estatística de net promoter score",
+        "Teste de aceitação de uma nova landing page"
       ],
-      "a": 1
+      "a": 1,
+      "lesson": "03-metodos-coleta-dados-qualitativos"
     },
     {
-      "q": "Earned Value Management (EVM) mede:",
+      "q": "A regressão logística é usada quando:",
       "opts": [
-        "Satisfação do cliente",
-        "Desempenho do projecto integrando scope, schedule e cost (PV, EV, AC)",
-        "Apenas custos reais",
-        "Apenas prazos"
+        "A variável dependente é contínua (ex: vendas em euros)",
+        "Se querem comparar médias entre 3 ou mais grupos",
+        "A variável dependente é binária (ex: compra / não compra; churn / não churn)",
+        "Se querem reduzir muitas variáveis a poucos factores"
       ],
-      "a": 1
+      "a": 2,
+      "lesson": "04-analise-dados-relatorio"
     },
     {
-      "q": "Risk register contém:",
+      "q": "A análise de clusters (k-means) em pesquisa de marketing serve principalmente para:",
       "opts": [
-        "Lista de stakeholders",
-        "Identificação, probabilidade, impacto e resposta a riscos",
-        "Apenas orçamento",
-        "Apenas marcos do projecto"
+        "Limpar dados com outliers",
+        "Testar causa-efeito entre variáveis",
+        "Segmentar respondentes em grupos homogéneos — base estatística do STP",
+        "Construir um intervalo de confiança a 95%"
       ],
-      "a": 1
+      "a": 2,
+      "lesson": "04-analise-dados-relatorio"
     },
     {
-      "q": "Matriz Poder × Interesse classifica stakeholders em:",
+      "q": "No relatório final de pesquisa, a secção mais lida por decisores ocupados é tipicamente:",
       "opts": [
-        "4 quadrantes: manage closely, keep satisfied, keep informed, monitor",
-        "2 grupos",
-        "6 categorias",
-        "Apenas sponsor e cliente"
+        "Os anexos com tabulações detalhadas",
+        "O capítulo de metodologia para validar o rigor",
+        "O sumário executivo com conclusões e recomendações",
+        "A análise exploratória completa com histogramas"
       ],
-      "a": 0
+      "a": 2,
+      "lesson": "04-analise-dados-relatorio"
     }
   ]
 }
