@@ -14,6 +14,7 @@ import type { RequestHandler } from './$types';
  *   - /habitos/habit/[slug]    per-user
  *   - /financas/nova/ /financas/orcamento/ /financas/transacoes/
  *   - /biblioteca/novo/ /habitos/novo/  forms, not indexable
+ *   - /financas/relatorios/             per-user data (gap-120)
  *
  * The SvelteKit plus-server.ts endpoint is prerendered at build time via the
  * `export const prerender = true` below. This works even though the rest of

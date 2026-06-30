@@ -997,6 +997,10 @@
         "gestao-risco": {
           "tagline": "Business Administration - ISO 31000, COSO ERM, Bale III et TCFD - identifier, analyser et repondre aux risques d'entreprise",
           "title": "Gestion des Risques"
+        },
+        "gestao-projectos": {
+          "title": "Gestion de Projet",
+          "tagline": "Business Administration · PMBOK, Scrum, Kanban, WBS, chemin critique, EVM et certifications PMP/PRINCE2 — de la planification à la livraison"
         }
       }
     },
@@ -1006,12 +1010,21 @@
           "description": "Gestion des risques appliquee a la gestion d'entreprise: fondamentaux (definition du risque selon Knight, typologie strategique/operationnel/financier/conformite, appetit vs tolerance), identification et analyse (brainstorming, Delphi, SWOT, analyse de scenarios, matrices probabilite x impact, heatmaps), reponse et attenuation (strategie 4T - Tolerer, Traiter, Transferer, Terminer - assurances, couverture, diversification, PCA/PRA), et les principaux cadres et normes (ISO 31000 avec processus en 5 etapes, COSO ERM 2017 avec 5 composants et 20 principes, Bale III pour le risque de credit/marche/operationnel, et reporting ESG/climat via TCFD et CSRD).",
           "tagline": "Business Administration - ISO 31000, COSO ERM, Bale III et TCFD - identifier, analyser et repondre aux risques d'entreprise",
           "title": "Gestion des Risques"
+        },
+        "gestao-projectos": {
+          "title": "Gestion de Projet",
+          "tagline": "Business Administration · PMBOK, Scrum, Kanban, WBS, chemin critique, EVM et certifications PMP/PRINCE2 — de la planification à la livraison",
+          "description": "Gestion de projet appliquée à la gestion d'entreprise: fondamentaux (définition de projet, triangle de fer scope/time/cost/quality, parties prenantes, cycle de vie en 5 phases, charte), frameworks traditionnels (PMBOK du PMI en 5 groupes de processus × 10 domaines de connaissance, WBS, Gantt, chemin critique, EVM, compression), méthodologies agiles (Manifeste Agile, Scrum avec 3 rôles et 5 événements, Kanban avec WIP limits, Extreme Programming, scaling avec SAFe/LeSS/Nexus), et outils pratiques (MS Project, Primavera, Jira; gestion de risque de projet avec stratégie 4T; cartographie des parties prenantes; cas paradigmatiques comme Apollo, iPhone, NHS NPfIT, Boeing 787; certifications PMP/PRINCE2/CSM)."
         }
       },
       "quiz": {
         "grq": {
           "title": "Quiz : Gestion des Risques",
           "description": "10 questions pour tester vos connaissances en gestion des risques : risque vs incertitude selon Knight, strategie 4T de reponse, ISO 31000, COSO ERM, Bale III et TCFD."
+        },
+        "gpq": {
+          "title": "Quiz : Gestion de Projet",
+          "description": "Testez vos connaissances en gestion de projet: fondamentaux (définition de projet, triangle scope/time/cost/quality, parties prenantes et matrice de Mendelow, cycle de vie en 5 phases), PMBOK et processus traditionnels (5 groupes de processus × 10 domaines de connaissance, WBS, Gantt, chemin critique, EVM, fast-tracking vs crashing), méthodologies agiles (Manifeste Agile, Scrum avec 3 rôles et 5 événements, Kanban avec WIP limits, XP, scaling avec SAFe), outils (MS Project, Jira, Asana), gestion de risque de projet (stratégie 4T), et certifications (PMP, PRINCE2, CSM). 10 questions, 4 options chacune, avec explications détaillées."
         }
       }
     }

@@ -997,6 +997,10 @@
         "gestao-risco": {
           "tagline": "ادارة اعمال - ISO 31000 و COSO ERM وبازل III و TCFD - تعرف المخاطر وحللها ورد عليها",
           "title": "تسيير المخاطر"
+        },
+        "gestao-projectos": {
+          "title": "Gestion de Projets",
+          "tagline": "Business Administration · PMBOK, Scrum, Kanban, WBS, chemin critique, EVM w certifications PMP/PRINCE2 — min planification lel livraison"
         }
       }
     },
@@ -1006,12 +1010,21 @@
           "description": "تسيير المخاطر في ادارة الاعمال: الاساسيات (تعريف الخطر حسب نايت، الانواع استراتيجية/تشغيلية/مالية/امتثال، الشهية مقابل التحمل)، التعرف والتحليل (العصف الذهني ودلفي وSWOT وتحليل السيناريوهات ومصفوفات الاحتمالxالاثر)، الرد والتخفيف (استراتيجية 4T - تحمل، عالج، حول، انه - التأمين والتحوط والتنويع وخطط استمرارية الاعمال)، وابرز الاطار (ISO 31000 بعملية 5 مراحل، COSO ERM 2017 بـ5 مكونات و20 مبدا، بازل III لمخاطر الائتمان/السوق/التشغيل، وتقارير ESG/المناخ عبر TCFD وCSRD).",
           "tagline": "ادارة اعمال - ISO 31000 و COSO ERM وبازل III و TCFD - تعرف المخاطر وحللها ورد عليها",
           "title": "تسيير المخاطر"
+        },
+        "gestao-projectos": {
+          "title": "Gestion de Projets",
+          "tagline": "Business Administration · PMBOK, Scrum, Kanban, WBS, chemin critique, EVM w certifications PMP/PRINCE2 — min planification lel livraison",
+          "description": "Gestion de projets appliquée lel gestion d'entreprise: fondements (définition de projet, triangle de fer scope/time/cost/quality, stakeholders, cycle de vie 5 phases, charter), frameworks traditionnels (PMBOK men PMI b 5 groupes de processus × 10 domaines de connaissance, WBS, Gantt, chemin critique, EVM, compression), méthodologies agiles (Manifeste Agile, Scrum b 3 rôles w 5 événements, Kanban b WIP limits, XP, scaling b SAFe/LeSS/Nexus), w outils pratiques (MS Project, Primavera, Jira; gestion de risque de projet b stratégie 4T; stakeholder mapping; cas paradigmatiques kima Apollo, iPhone, NHS NPfIT, Boeing 787; certifications PMP/PRINCE2/CSM)."
         }
       },
       "quiz": {
         "grq": {
           "title": "اختبار: تسيير المخاطر",
           "description": "10 اسئلة لاختبار معرفتك بتسيير المخاطر: الخطر مقابل عدم اليقين حسب نايت، استراتيجية الرد 4T، ISO 31000، COSO ERM، بازل III وTCFD."
+        },
+        "gpq": {
+          "title": "Quiz: Gestion de Projets",
+          "description": "Testa les connaissances mte3ek f gestion de projets: fondements (définition de projet, triangle scope/time/cost/quality, stakeholders w matrice de Mendelow, cycle de vie 5 phases), PMBOK w processus traditionnels (5 groupes de processus × 10 domaines de connaissance, WBS, Gantt, chemin critique, EVM, fast-tracking vs crashing), méthodologies agiles (Manifeste Agile, Scrum b 3 rôles w 5 événements, Kanban b WIP limits, XP, scaling b SAFe), outils (MS Project, Jira, Asana), gestion de risque de projet (stratégie 4T), w certifications (PMP, PRINCE2, CSM). 10 questions, 4 options kol wa7da, b explications détaillées."
         }
       }
     }

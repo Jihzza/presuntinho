@@ -1002,6 +1002,34 @@
         "grq": {
           "title": "Quiz: Gestao de Risco",
           "description": "10 perguntas para testar os teus conhecimentos de gestao de risco: risco vs incerteza segundo Knight, estrategia 4T de resposta, ISO 31000, COSO ERM, Basileia III e TCFD."
+        },
+        "gpq": {
+          "title": "Quiz: Gestão de Projectos",
+          "description": "Testa os teus conhecimentos de gestão de projectos: fundamentos (definição de projecto, triângulo scope/time/cost/quality, stakeholders e matriz de Mendelow, ciclo de vida em 5 fases), PMBOK e processos tradicionais (5 grupos de processos × 10 áreas de conhecimento, WBS, Gantt, caminho crítico, EVM, fast-tracking vs crashing), metodologias ágeis (Manifesto Ágil, Scrum com 3 papéis e 5 eventos, Kanban com WIP limits, XP, scaling com SAFe), ferramentas (MS Project, Jira, Asana), gestão de risco de projecto (estratégia 4T), e certificações (PMP, PRINCE2, CSM). 10 perguntas, 4 opções cada, com explicações detalhadas."
+        }
+      },
+      "curso": {
+        "gestao-risco": {
+          "title": "Gestão de Risco",
+          "tagline": "Business Administration · ISO 31000, COSO ERM, Basileia III e TCFD — identificar, analisar e responder a riscos empresariais",
+          "description": "Gestão de risco aplicada à gestão empresarial: fundamentos (definição de risco segundo Knight, tipologia estratégica/operacional/financeira/compliance, apetite vs tolerância), identificação e análise (brainstorming, Delphi, SWOT, análise de cenários, matrizes probabilidade×impacto, heatmaps), resposta e mitigação (estratégia 4T — Tolerate, Treat, Transfer, Terminate — seguros, hedging, diversificação, BCP/DRP), e os principais frameworks e normas (ISO 31000 com processo em 5 etapas, COSO ERM 2017 com 5 componentes e 20 princípios, Basileia III para risco de crédito/mercado/operacional, e reporting ESG/clima via TCFD e CSRD)."
+        },
+        "gestao-projectos": {
+          "title": "Gestão de Projectos",
+          "tagline": "Business Administration · PMBOK, Scrum, Kanban, WBS, caminho crítico, EVM e certificações PMP/PRINCE2 — do planeamento à entrega",
+          "description": "Gestão de projectos aplicada à gestão empresarial: fundamentos (definição de projecto, triângulo de ferro scope/time/cost/quality, stakeholders, ciclo de vida em 5 fases, charter), frameworks tradicionais (PMBOK do PMI em 5 grupos de processos × 10 áreas de conhecimento, WBS, Gantt, caminho crítico, EVM, compressão), metodologias ágeis (Manifesto Ágil, Scrum com 3 papéis e 5 eventos, Kanban com WIP limits, Extreme Programming, scaling com SAFe/LeSS/Nexus), e ferramentas práticas e gestão (MS Project, Primavera, Jira; risk management de projecto com estratégia 4T; stakeholder mapping; casos paradigmáticos como Apollo, iPhone, NHS NPfIT, Boeing 787; certificações PMP/PRINCE2/CSM)."
+        }
+      }
+    },
+    "aulas": {
+      "curso": {
+        "gestao-risco": {
+          "title": "Gestão de Risco",
+          "tagline": "Business Administration · ISO 31000, COSO ERM, Basileia III e TCFD — identificar, analisar e responder a riscos empresariais"
+        },
+        "gestao-projectos": {
+          "title": "Gestão de Projectos",
+          "tagline": "Business Administration · PMBOK, Scrum, Kanban, WBS, caminho crítico, EVM e certificações PMP/PRINCE2 — do planeamento à entrega"
         }
       }
     }
@@ -1010,5 +1038,7 @@
   "routes.aulas.curso.gestao-projectos.title": "Gestão de Projectos",
   "routes.escola.curso.gestao-projectos.description": "Gestão de projectos aplicada à gestão empresarial: fundamentos (definição de projecto, triângulo de ferro scope/time/cost/quality, stakeholders, ciclo de vida em 5 fases, charter), frameworks tradicionais (PMBOK do PMI em 5 grupos de processos × 10 áreas de conhecimento, WBS, Gantt, caminho crítico, EVM, compressão), metodologias ágeis (Manifesto Ágil, Scrum com 3 papéis e 5 eventos, Kanban com WIP limits, Extreme Programming, scaling com SAFe/LeSS/Nexus), e ferramentas práticas e gestão (MS Project, Primavera, Jira; risk management de projecto com estratégia 4T; stakeholder mapping; casos paradigmáticos como Apollo, iPhone, NHS NPfIT, Boeing 787; certificações PMP/PRINCE2/CSM).",
   "routes.escola.curso.gestao-projectos.tagline": "Business Administration · PMBOK, Scrum, Kanban, WBS, caminho crítico, EVM e certificações PMP/PRINCE2 — do planeamento à entrega",
-  "routes.escola.curso.gestao-projectos.title": "Gestão de Projectos"
+  "routes.escola.curso.gestao-projectos.title": "Gestão de Projectos",
+  "routes.escola.quiz.gpq.title": "Quiz: Gestão de Projectos",
+  "routes.escola.quiz.gpq.description": "Testa os teus conhecimentos de gestão de projectos: fundamentos (definição de projecto, triângulo scope/time/cost/quality, stakeholders e matriz de Mendelow, ciclo de vida em 5 fases), PMBOK e processos tradicionais (5 grupos de processos × 10 áreas de conhecimento, WBS, Gantt, caminho crítico, EVM, fast-tracking vs crashing), metodologias ágeis (Manifesto Ágil, Scrum com 3 papéis e 5 eventos, Kanban com WIP limits, XP, scaling com SAFe), ferramentas (MS Project, Jira, Asana), gestão de risco de projecto (estratégia 4T), e certificações (PMP, PRINCE2, CSM). 10 perguntas, 4 opções cada, com explicações detalhadas."
 }

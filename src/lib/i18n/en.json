@@ -997,6 +997,10 @@
         "gestao-risco": {
           "tagline": "Business Administration · ISO 31000, COSO ERM, Basel III and TCFD — identify, analyse and respond to business risks",
           "title": "Risk Management"
+        },
+        "gestao-projectos": {
+          "title": "Project Management",
+          "tagline": "Business Administration · PMBOK, Scrum, Kanban, WBS, critical path, EVM and PMP/PRINCE2 certifications — from planning to delivery"
         }
       }
     },
@@ -1006,12 +1010,21 @@
           "description": "Risk management applied to business management: fundamentals (Knight's definition of risk, strategic/operational/financial/compliance typology, appetite vs tolerance), identification and analysis (brainstorming, Delphi, SWOT, scenario analysis, probability x impact matrices, heatmaps), response and mitigation (4T strategy - Tolerate, Treat, Transfer, Terminate - insurance, hedging, diversification, BCP/DRP), and the main frameworks and standards (ISO 31000 with 5-step process, COSO ERM 2017 with 5 components and 20 principles, Basel III for credit/market/operational risk, and ESG/climate reporting via TCFD and CSRD).",
           "tagline": "Business Administration · ISO 31000, COSO ERM, Basel III and TCFD - identify, analyse and respond to business risks",
           "title": "Risk Management"
+        },
+        "gestao-projectos": {
+          "title": "Project Management",
+          "tagline": "Business Administration · PMBOK, Scrum, Kanban, WBS, critical path, EVM and PMP/PRINCE2 certifications — from planning to delivery",
+          "description": "Project management applied to business administration: foundations (definition of project, iron triangle scope/time/cost/quality, stakeholders, 5-phase life cycle, charter), traditional frameworks (PMBOK from PMI with 5 process groups × 10 knowledge areas, WBS, Gantt, critical path, EVM, compression), agile methodologies (Agile Manifesto, Scrum with 3 roles and 5 events, Kanban with WIP limits, Extreme Programming, scaling with SAFe/LeSS/Nexus), and practical tools and management (MS Project, Primavera, Jira; project risk management with 4T strategy; stakeholder mapping; paradigmatic cases like Apollo, iPhone, NHS NPfIT, Boeing 787; PMP/PRINCE2/CSM certifications)."
         }
       },
       "quiz": {
         "grq": {
           "title": "Quiz: Risk Management",
           "description": "10 questions to test your knowledge of risk management: Knight's risk vs uncertainty, 4T response strategy, ISO 31000, COSO ERM, Basel III and TCFD."
+        },
+        "gpq": {
+          "title": "Quiz: Project Management",
+          "description": "Test your project management knowledge: foundations (project definition, scope/time/cost/quality triangle, stakeholders and Mendelow matrix, 5-phase life cycle), PMBOK and traditional processes (5 process groups × 10 knowledge areas, WBS, Gantt, critical path, EVM, fast-tracking vs crashing), agile methodologies (Agile Manifesto, Scrum with 3 roles and 5 events, Kanban with WIP limits, XP, scaling with SAFe), tools (MS Project, Jira, Asana), project risk management (4T strategy), and certifications (PMP, PRINCE2, CSM). 10 questions, 4 options each, with detailed explanations."
         }
       }
     }
