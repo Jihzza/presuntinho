@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-30T08:15:00+02:00",
+  "lastUpdated": "2026-06-30T09:50:00+02:00",
   "openItems": [
     {
       "id": "gap-028",
@@ -58,82 +58,10 @@
       "created_at": "2026-06-30T07:00:00+02:00"
     },
     {
-      "id": "gap-111",
-      "category": "UI/UX",
-      "description": "Hub: apagar copy 'Site V3 preservado' e 'V3 Content' que vaza developer-speak para user final. Auditado por Skander 1 em 2026-06-28.",
-      "severity": "média",
-      "source": "audit-UX-Skander1-2026-06-28",
-      "created_at": "2026-06-30T08:15:00+02:00",
-      "dispatched_to": "Skander 2 — deleg_63dfee9d"
-    },
-    {
-      "id": "gap-112",
-      "category": "empty-area",
-      "description": "/habitos/: mostrar streak '🔥 N dias' + status '✓ hoje' em cada row. Sem isto, lista parece vazia. Auditado por Skander 1 em 2026-06-28.",
-      "severity": "alta",
-      "source": "audit-UX-Skander1-2026-06-28",
-      "created_at": "2026-06-30T08:15:00+02:00",
-      "dispatched_to": "Skander 2 — deleg_63dfee9d"
-    },
-    {
-      "id": "gap-113",
-      "category": "UI/UX",
-      "description": "/financas/: gráfico Chart.js só mostra despesas. Adicionar receitas (dataset #2 verde) ou stacked bar.",
-      "severity": "média",
-      "source": "audit-UX-Skander1-2026-06-28",
-      "created_at": "2026-06-30T08:15:00+02:00",
-      "dispatched_to": "Skander 2 — deleg_63dfee9d"
-    },
-    {
-      "id": "gap-114",
-      "category": "bug",
-      "description": "Splash: placeholder='princesa' revela password do Daniel. Substituir por placeholder genérico.",
-      "severity": "alta",
-      "source": "audit-UX-Skander1-2026-06-28",
-      "created_at": "2026-06-30T08:15:00+02:00",
-      "dispatched_to": "Skander 2 — deleg_63dfee9d"
-    },
-    {
-      "id": "gap-115",
-      "category": "bug",
-      "description": "Definicoes: link 'https://github.com/' aponta para homepage genérico. 'Versão · {today}' mostra data, não versão. Corrigir ambos.",
-      "severity": "média",
-      "source": "audit-UX-Skander1-2026-06-28",
-      "created_at": "2026-06-30T08:15:00+02:00",
-      "dispatched_to": "Skander 2 — deleg_63dfee9d"
-    },
-    {
-      "id": "gap-116",
-      "category": "bug",
-      "description": "Definicoes: botão 'reset_password' mostra '⏳ soon' e não faz nada. Implementar fluxo real com PBKDF2.",
-      "severity": "alta",
-      "source": "audit-UX-Skander1-2026-06-28",
-      "created_at": "2026-06-30T08:15:00+02:00",
-      "dispatched_to": "Skander 2 — deleg_63dfee9d"
-    },
-    {
       "id": "gap-117",
       "category": "empty-area",
-      "description": "Seed finanças só para Fatma — Daniel vê dashboard em branco. Generalizar ensureSeedTransacoes para ambos profiles.",
-      "severity": "alta",
-      "source": "audit-UX-Skander1-2026-06-28",
-      "created_at": "2026-06-30T08:15:00+02:00",
-      "dispatched_to": "Skander 2 — deleg_63dfee9d"
-    },
-    {
-      "id": "gap-118",
-      "category": "UI/UX",
-      "description": "HeartButton sem tooltip '✨ Easter egg' — user pensa que é botão quebrado.",
-      "severity": "baixa",
-      "source": "audit-UX-Skander1-2026-06-28",
-      "created_at": "2026-06-30T08:15:00+02:00",
-      "dispatched_to": "Skander 2 — deleg_63dfee9d"
-    },
-    {
-      "id": "gap-119",
-      "category": "UI/UX",
-      "description": "Footer 'Sub-app #n no hub' em Finanças/Hábitos — metadata interna a sangrar para user.",
-      "severity": "baixa",
+      "description": "Seed finanças em db.ts:614 corre quando transacoes.count()===0. Daniel vê dashboard em branco provavelmente porque seed foi seed-out antes de novo fix. Confirmar live smoke após deploy.",
+      "severity": "média",
       "source": "audit-UX-Skander1-2026-06-28",
       "created_at": "2026-06-30T08:15:00+02:00",
       "dispatched_to": "Skander 2 — deleg_63dfee9d"
@@ -146,6 +74,38 @@
       "source": "audit-UX-Skander1-2026-06-28",
       "created_at": "2026-06-30T08:15:00+02:00",
       "dispatched_to": "Skander 2 — deleg_63dfee9d"
+    },
+    {
+      "id": "gap-121",
+      "category": "UI/UX",
+      "description": "Habitos dashboard: adicionar visualização de streak 7d e completions/dia. Reusar padrão gap-112 (streak+today) já aplicado. Verificar se já está feito no 823edd2.",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-30-09",
+      "created_at": "2026-06-30T09:50:00+02:00"
+    },
+    {
+      "id": "gap-122",
+      "category": "lição/curso",
+      "description": "BA #46. Despachar 4 lições + 10 MCQ + i18n 5 locales + CATALOGUE wired. Skander 1 escolhe tema da lista (ex: Gestão de Conflitos, Negociação, Liderança, etc.).",
+      "severity": "baixa",
+      "source": "watchdog-tick-2026-06-30-09",
+      "created_at": "2026-06-30T09:50:00+02:00"
+    },
+    {
+      "id": "gap-123",
+      "category": "smoke-fail",
+      "description": "Smoke live-fire pós-fix audit UX: navegar /escola/ /financas/ /habitos/ /biblioteca/ /trabalhos/ /definicoes/ /agente/ e confirmar zero console errors + zero placeholders PT hardcoded visíveis. Após deploy gap-119.",
+      "severity": "média",
+      "source": "watchdog-tick-2026-06-30-09",
+      "created_at": "2026-06-30T09:50:00+02:00"
+    },
+    {
+      "id": "gap-124",
+      "category": "feature-pedida-pelo-Daniel",
+      "description": "Daniel: 'página do agente não aparece nada' (áudio 2026-06-29 18:35). gap-110 fixou chat-root 100dvh. Confirmar live smoke após deploy.",
+      "severity": "baixa",
+      "source": "audio-Daniel-2026-06-29",
+      "created_at": "2026-06-30T09:50:00+02:00"
     }
   ],
   "closedItems": [
@@ -159,6 +119,14 @@
     {"id": "gap-104", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "91e796b", "note": "BA #45 Economia Comportamental. 4 lições + beq quiz 10 + i18n 5 locales + CATALOGUE wired."},
     {"id": "gap-105", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "c1d542b", "note": "batch-3: habitos/novo + trabalhos/assignment/[slug] + 6 chaves × 5 locales"},
     {"id": "gap-106", "closed_at": "2026-06-30T07:00:00+02:00", "sha": "c1d542b", "note": "batch-4: agente + aulas + dl + biblioteca/novo + 3 chaves × 5 locales"},
-    {"id": "gap-110", "closed_at": "2026-06-30T08:15:00+02:00", "sha": "942c1ba", "note": "fix(agente) chat-root 100dvh + safe-area-inset-bottom no composer. Áudio Daniel 2026-06-29 18:35 'página do agente não aparece nada'. npm run check verde, npm run build verde."}
+    {"id": "gap-110", "closed_at": "2026-06-30T08:15:00+02:00", "sha": "942c1ba", "note": "fix(agente) chat-root 100dvh + safe-area-inset-bottom no composer. Áudio Daniel 2026-06-29 18:35 'página do agente não aparece nada'. npm run check verde, npm run build verde."},
+    {"id": "gap-111", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "53c0265", "note": "fix(hub+settings) collapse V3/legacy em 'Mais Presuntinho'."},
+    {"id": "gap-112", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "fix(ux) /habitos/ streak '🔥 N dias' + status '✓ hoje' por row."},
+    {"id": "gap-113", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "fix(ux) /financas/ Chart.js agora mostra receitas (dataset #2 verde)."},
+    {"id": "gap-114", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "53c0265", "note": "fix(ux) splash placeholder 'Palavra-passe' (5 locales) — era princesa que vazava password Daniel."},
+    {"id": "gap-115", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "53c0265", "note": "fix(ux) definicoes VERSION+REPO_URL single source from $lib/version."},
+    {"id": "gap-116", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "fix(ux) definicoes reset_password real PBKDF2 (não mais '⏳ soon')."},
+    {"id": "gap-118", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "823edd2", "note": "HeartButton title='Clica — easter egg' via $t() em 5 locales."},
+    {"id": "gap-119", "closed_at": "2026-06-30T09:50:00+02:00", "sha": "2607019", "note": "fix(ux) footer 'Sub-app #{n} no hub' → 'Hub · Finanças/Hábitos' em 5 locales."}
   ]
 }
