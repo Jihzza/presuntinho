@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-30T19:30:00+02:00",
+  "lastUpdated": "2026-06-30T22:00:00+02:00",
   "openItems": [
     {
       "id": "gap-028",
@@ -12,7 +12,7 @@
     {
       "id": "gap-034",
       "category": "feature-pedida-pelo-Daniel",
-      "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Já temos 46 cadeiras BA entregues (45 anteriores + Gestão de Conflitos hoje). Continua a ser desejável para ir além de BA.",
+      "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Agora 47 cadeiras BA (BA #49 Gestão de Projectos acabou de fechar gap-140). Continua desejável para ir além de BA.",
       "severity": "baixa",
       "source": "audio-Daniel-2026-06-27",
       "created_at": "2026-06-28T13:05:00+02:00"
@@ -65,23 +65,6 @@
       "severity": "baixa",
       "source": "audio-Daniel-2026-06-29",
       "created_at": "2026-06-30T09:50:00+02:00"
-    },
-    {
-      "id": "gap-126",
-      "category": "lição/curso",
-      "description": "Cadeira BA #47. Próxima após Gestão de Conflitos. Tema possível: Gestão de Stakeholders, Comunicação Executiva, Estratégia de Pricing, ESG, Gestão de Risco, Fusões & Aquisições. 4 lições + 10 quiz MCQ + i18n 5 locales + CATALOGUE wired.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-30-12",
-      "created_at": "2026-06-30T12:20:00+02:00"
-    },
-    {
-      "id": "gap-131",
-      "category": "lição/curso",
-      "description": "Cadeira BA #48. Próxima após Estratégia Internacional. Tema: Gestão de Risco (slug gestao-risco, quiz grq). 4 lições (fundamentos; identificação e análise; resposta e mitigação; frameworks e normas — ISO 31000, COSO ERM, Basel III, TCFD) + 10 quiz MCQ + i18n 7 chaves × 5 locales + CATALOGUE wired. Despachado para Skander 2 (deleg_58fc6f2e) em feature/gap-131-ba48-gestao-risco.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-30-18",
-      "created_at": "2026-06-30T18:00:00+02:00",
-      "dispatched_to": "Skander 2 — deleg_58fc6f2e (feature/gap-131-ba48-gestao-risco)"
     },
     {
       "id": "gap-127-pilot",
@@ -238,11 +221,35 @@
       "note": "fix(ux) footer 'Hub · {Section}' para biblioteca + trabalhos (5 locales)."
     },
     {
+      "id": "gap-126",
+      "closed_at": "2026-06-30T19:30:00+02:00",
+      "sha": "1f1ab3f",
+      "note": "BA #47 Estratégia Internacional: 4 lições + eiq quiz 10 + i18n 5 locales + CATALOGUE wired."
+    },
+    {
       "id": "gap-127",
       "closed_at": "2026-06-30T19:30:00+02:00",
       "sha": "watchdog-todos.json update",
       "decision_doc": ".state/gap-127-decision.md",
       "note": "DECISION: DEFER. Lesson bodies PT-only são intencionais: Fatma é aluna numa universidade portuguesa, os lições são conteúdo académico PT (Equivalenza SWOT, ISCTE BA, etc.) que ela consome em português para a coursework dela. Daniel's 'traduz tudo' audios foram sobre UI chrome (já fechado, 986/986 em 5 locales), nunca sobre corpos de lição. Cost to translate = ~18 000 strings × 4 locales = ~320-480 h tradutor ($5-8k USD) + 30MB static JSON ou 3MB i18n JSON no boot. ROI: baixa. PILOT disponível (gap-127-pilot): 1 lição (equivalenza/swot) × 1 locale (en), option (b) keyed $t(), ~30 min. Skander 1 / Daniel pode overridar → ship pilot → se verde, expandir."
+    },
+    {
+      "id": "gap-131",
+      "closed_at": "2026-06-30T20:30:00+02:00",
+      "sha": "7abbf3e",
+      "note": "BA #48 Gestão de Risco. 4 lições (32-36 secções) + grq quiz 10 + i18n 5 locales × 7 chaves + CATALOGUE wired. Merged em 7abbf3e + gap-135 i18n en/tn/fr/ar."
+    },
+    {
+      "id": "gap-135",
+      "closed_at": "2026-06-30T20:50:00+02:00",
+      "sha": "7b6d52d",
+      "note": "i18n gestao-risco em 4 locales (en/tn/fr/ar) — 4 keys × 4 locales = 16 entries."
+    },
+    {
+      "id": "gap-140",
+      "closed_at": "2026-06-30T22:00:00+02:00",
+      "sha": "d21138f",
+      "note": "BA #49 Gestão de Projectos. 4 lições (32-39 secções cada) + gpq quiz 10 MCQ + i18n 5 chaves × 5 locales (25 entries) + CATALOGUE wired em 3 ficheiros (escola/+page.svelte, escola/curso/[slug]/+page.svelte, aulas/+page.server.ts). npm run check 0/0, build verde, prod /escola/curso/gestao-projectos/ HTTP 200. Dirty tree limpa. 47 cadeiras BA totais."
     }
   ]
 }
