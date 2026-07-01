@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-01T06:28:09.483074",
+  "lastUpdated": "2026-07-01T07:45:00+02:00",
   "openItems": [
     {
       "id": "gap-028",
@@ -85,6 +85,28 @@
     }
   ],
   "closedItems": [
+    {
+      "id": "gap-153",
+      "category": "auth",
+      "description": "PASS-ORDER DECIDES PROFILE, sem selector: remover profile-picker; inferir selectedProfile a partir de princesa/fofinho/I have the best boyfriend in the world; erro genérico pass-order invalida sem expor profile esperado.",
+      "severity": "alta",
+      "source": "Daniel-2026-07-01",
+      "created_at": "2026-07-01T07:30:00+02:00",
+      "closed_at": "2026-07-01T07:45:00+02:00",
+      "sha": "3b1b821",
+      "note": "src/routes/splash/+page.svelte removeu radio picker e inferProfileFromPassOrder antes do PBKDF2; splash.wrong_password adicionado com paridade i18n 1075/1075. npm run check 0; npm run build 0."
+    },
+    {
+      "id": "gap-154",
+      "category": "UI/UX",
+      "description": "FAB overlap com bottom-nav: XpPill/HeartButton/InstallButton na .fab-stack ficavam visualmente atrás da barra inferior.",
+      "severity": "média",
+      "source": "Daniel-2026-07-01",
+      "created_at": "2026-07-01T07:30:00+02:00",
+      "closed_at": "2026-07-01T07:45:00+02:00",
+      "sha": "6b813c2",
+      "note": "src/routes/+layout.svelte .fab-stack mantém z-index 60 (> bottom-nav 50), bottom calc(env(safe-area-inset-bottom) + 4.5rem), e filhos recebem background/sombra/padding. vite.config.ts swDest fix mantém npm run build verde com @vite-pwa/sveltekit + adapter-static. npm run check 0; npm run build 0."
+    },
     {
       "id": "gap-124",
       "category": "feature-pedida-pelo-Daniel",
