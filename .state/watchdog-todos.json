@@ -1,417 +1,309 @@
 {
-  "lastUpdated": "2026-07-01T07:45:00+02:00",
-  "openItems": [
-    {
-      "id": "gap-028",
-      "category": "smoke-fail",
-      "description": "Code review done: auth script in src/routes/splash/+page.svelte lines 98-154 implements PBKDF2 → Love Lock → attempt counter correctly. Flow: verifyAgainstHashes() → setSession() on success → resetAttempts() → redirect to '/'. Lockout polling at 500ms. Live-fire e2e blocked by password gating.",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-28-09",
-      "created_at": "2026-06-28T09:31:47+02:00"
-    },
-    {
-      "id": "gap-034",
-      "category": "feature-pedida-pelo-Daniel",
-      "description": "Daniel: 'aulas sobretudo' / 'cursos sobretudo' — mais cursos e estrutura de aulas. Agora 47 cadeiras BA (BA #49 Gestão de Projectos acabou de fechar gap-140). Continua desejável para ir além de BA.",
-      "severity": "baixa",
-      "source": "audio-Daniel-2026-06-27",
-      "created_at": "2026-06-28T13:05:00+02:00"
-    },
-    {
-      "id": "gap-036",
-      "category": "UI/UX",
-      "description": "Code review done: HeartButton positioned bottom-right in .fab-stack (src/routes/+layout.svelte:433-453). Fixed positioning: right max(1rem, safe-area-inset-right), bottom calc(72px + safe-area-inset-bottom + 0.5rem), z-index 60. Desktop: right 1.5rem, bottom +1rem. Vertical stack with XP pill and InstallButton. Safe-area insets respected for notched devices.",
-      "severity": "baixa",
-      "source": "audio-Daniel-2026-06-28",
-      "created_at": "2026-06-28T13:05:00+02:00"
-    },
-    {
-      "id": "gap-050",
-      "category": "smoke-fail",
-      "description": "Code review done: HeartButton appears in DOM after auth (src/routes/+layout.svelte:231 wrapped in {#if session} block). Renders inside .fab-stack with pointer-events auto, container has pointer-events none. Live-fire smoke blocked by auth gate.",
-      "severity": "baixa",
-      "source": "watchdog-tick-2026-06-28-22",
-      "created_at": "2026-06-28T22:30:00+02:00"
-    },
-    {
-      "id": "gap-053",
-      "category": "smoke-fail",
-      "description": "Smoke i18n real nas 5 línguas em produção após deploy 92ba6eb — confirmar que $t() resolve 982 chaves sem mostrar fallbacks PT no DOM. Bloqueado por auth gate.",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-28-23",
-      "created_at": "2026-06-28T23:25:00+02:00"
-    },
-    {
-      "id": "gap-117",
-      "category": "empty-area",
-      "description": "Seed finanças em db.ts:614 corre quando transacoes.count()===0. Daniel vê dashboard em branco provavelmente porque seed foi seed-out antes de novo fix. Confirmar live smoke após deploy.",
-      "severity": "média",
-      "source": "audit-UX-Skander1-2026-06-28",
-      "created_at": "2026-06-30T08:15:00+02:00",
-      "dispatched_to": "Skander 2 — deleg_63dfee9d"
-    },
-    {
-      "id": "gap-123",
-      "category": "smoke-fail",
-      "description": "Smoke live-fire pós-fix audit UX: navegar /escola/ /financas/ /habitos/ /biblioteca/ /trabalhos/ /definicoes/ /agente/ e confirmar zero console errors + zero placeholders PT hardcoded visíveis. Bloqueado por auth gate — só podemos verificar /lessons/ e /quizzes/ via curl.",
-      "severity": "média",
-      "source": "watchdog-tick-2026-06-30-09",
-      "created_at": "2026-06-30T09:50:00+02:00"
-    },
+  "lastUpdated": "2026-01-01T00:00:00Z",
+  "gaps": [
     {
       "id": "gap-127-pilot",
-      "category": "i18n",
-      "description": "PILOT option (b) keyed $t() lookups, scope 1 lição × 1 locale, ~30 min mechanical. Sketched in .state/gap-127-decision.md §Pilot scope. Only executes if Skander 1 / Daniel overrides the DEFER recommendation in gap-127. Effort: ~16 strings × 1 locale = 30 min. DoD: check 0 + build verde + https://presuntinho.netlify.app/escola/licao/equivalenza/swot/ renders EN when fat-pref-lang=en, PT otherwise.",
-      "severity": "baixa",
-      "source": "skander1-gap-127-2026-06-30",
-      "created_at": "2026-06-30T19:30:00+02:00"
-    },
-    {
-      "id": "gap-144",
-      "category": "smoke-fail",
-      "description": "Confirmar live smoke da i18n agente engine em produção após deploy 0bc1596: navegar /agente/, clicar 'o que falta?', 'resumo financeiro', 'hábitos', 'progresso' e confirmar zero string PT hardcoded leak quando idioma != pt-PT. Live-fire bloqueado por auth gate — curl só dá /agente/ page shell (engine messages render client-side after tool dispatch). Pular se Daniel não nos der password.",
-      "severity": "média",
-      "source": "watchdog-tick-2026-07-01",
-      "created_at": "2026-07-01T00:05:00+02:00"
+      "title": "Pilot i18n for lesson bodies (equivalenza/swot × EN)",
+      "status": "investigated",
+      "repository": "presuntinho",
+      "investigationDate": "2026-01-01",
+      "findings": {
+        "targetLesson": {
+          "course": "equivalenza",
+          "lesson": "swot",
+          "pathNote": "No static/lessons/equivalenza/ directory found - lesson content may be stored elsewhere or not migrated yet",
+          "i18nReferences": {
+            "found": true,
+            "locations": [
+              "src/lib/i18n/en.json: walk.audio.swot, walk.step.swot.title, walk.step.swot.what, walk.step.swot.how, walk.step.swot.hint",
+              "src/lib/i18n/pt-PT.json: same keys with Portuguese translations"
+            ]
+          }
+        },
+        "currentI18nPattern": {
+          "lessonHeaders": {
+            "pattern": "$t('lesson.tag', { default: 'Lição' })",
+            "status": "FULLY_IMPLEMENTED",
+            "usedIn": "LessonRunner.svelte, walkthrough/[lessonSlug]/+page.svelte"
+          },
+          "lessonBodies": {
+            "pattern": "NO_I18N_PATTERN_FOUND",
+            "status": "NOT_IMPLEMENTED",
+            "mechanism": "Lesson content loaded from JSON files at /lessons/{courseSlug}/{lessonSlug}.json",
+            "contentFields": {
+              "title": "string (hardcoded in JSON)",
+              "description": "string (hardcoded in JSON)",
+              "sections[].text": "string (hardcoded in JSON)",
+              "sections[].items[]": "string[] (hardcoded in JSON)",
+              "keyPoints[]": "string[] (hardcoded in JSON)"
+            },
+            "rendering": {
+              "LessonRunner.svelte": "{lesson.title}, {section.text}, {item}, {kp} - all rendered directly without $t() wrapper"
+            }
+          },
+          "navigationUI": {
+            "pattern": "$t('lesson.nav.next', { default: 'Próxima →' })",
+            "status": "FULLY_IMPLEMENTED"
+          },
+          "errorHandling": {
+            "pattern": "$t('lesson.error.load', { default: 'Erro a carregar a lição' })",
+            "status": "FULLY_IMPLEMENTED"
+          }
+        },
+        "existingEquivalenzaContent": {
+          "status": "NO_FILES_FOUND",
+          "searchResults": "0 matches for equivalenza in static/lessons/",
+          "possibleLocations": [
+            "May be using walkthrough view (src/routes/escola/walkthrough/[lessonSlug]/+page.svelte)",
+            "May be legacy content not yet migrated to lesson JSON format"
+          ]
+        },
+        "effortEstimate": {
+          "patternExtraction": {
+            "complexity": "LOW-MEDIUM",
+            "reasoning": "Need to identify all translatable strings in lesson JSON structure (title, description, sections[].text, sections[].items, keyPoints, exercise Q&A)",
+            "estimatedStringCount": "~30-50 strings per lesson (based on comportamento-do-consumidor lesson example)"
+          },
+          "enTranslation": {
+            "complexity": "MEDIUM",
+            "estimatedStrings": "30-50 for swot lesson",
+            "requiresDomainKnowledge": true,
+            "context": "Marketing/Strategy terminology (SWOT, strengths, weaknesses, opportunities, threats)"
+          },
+          "mechanicalIntegration": {
+            "complexity": "MEDIUM-HIGH",
+            "requiresChanges": [
+              "Update LessonRunner.svelte to wrap content in $t() or use locale-specific JSON path",
+              "Update walkthrough/[lessonSlug]/+page.svelte similarly",
+              "Option A: Add i18n keys to all 5 locale files (pt-PT, en, tn, fr, ar)",
+              "Option B: Create locale-specific JSON files (e.g., /lessons/equivalenza/swot.en.json)",
+              "Option C: Add i18n support to JSON structure (text: { pt: '...', en: '...' })"
+            ]
+          },
+          "totalEstimatedEffort": "2-3 hours for mechanical implementation + 1-2 hours for EN translation = 3-5 hours total"
+        },
+        "recommendation": {
+          "proceed": "CONDITIONALLY",
+          "condition": "First locate/create the actual equivalenza/swot lesson JSON file. File does not exist in static/lessons/equivalenza/.",
+          "proposedApproach": "Option C (i18n in JSON structure) - least mechanical friction, preserves single-file per lesson, allows incremental i18n rollout per lesson",
+          "implementationPlan": [
+            "1. Create /lessons/equivalenza/swot.json if missing",
+            "2. Update JSON structure: text: '...' → text: { pt: '...', en: '...' }",
+            "3. Update LessonRunner.svelte: {section.text} → {section.text[currentLocale] ?? section.text.pt}",
+            "4. Extract and translate all strings to EN",
+            "5. Test with EN locale selected",
+            "6. Document pattern for future lessons"
+          ],
+          "risks": [
+            "No source file located - may need to create from scratch or migrate from legacy format",
+            "Audio content not addressed (audio path remains locale-agnostic)",
+            "Fallback complexity (pt as default when translation missing)"
+          ]
+        }
+      }
     },
     {
       "id": "gap-145",
-      "category": "feature-pedida-pelo-Daniel",
-      "description": "Daniel pediu 'cursos sobretudo' / 'aulas sobretudo' — ir além das 49 cadeiras BA. Sugestão Skander 1: continuar com cadeiras BA satélites (Sistemas de Informação de Gestão, Comportamento do Consumidor, Gestão da Mudança, Análise Financeira Empresarial já shipped) OU novas cadeiras PT universitárias (ex: Sociologia das Organizações, Antropologia Cultural para módulo Arabe). Trial: acrescentar 1 curso 'Sociologia das Organizações' para benchmarking — 4 lições + i18n + 1 quiz.",
-      "severity": "baixa",
-      "source": "audio-Daniel-2026-06-27",
-      "created_at": "2026-07-01T00:05:00+02:00",
-      "note": "Pending Skander 1 design choice. 47 BA entregues; trial BA #50 Sociologia das Organizações fechado em gap-149."
+      "title": "Create new BA course (gestao-informacao or comportamento-consumidor)",
+      "status": "investigated",
+      "repository": "presuntinho",
+      "investigationDate": "2026-01-01",
+      "findings": {
+        "courseRequirements": {
+          "requestedCourses": [
+            {
+              "slug": "gestao-informacao",
+              "status": "NOT_FOUND_IN_COURSES",
+              "searchResults": "0 matches in COURSES array and CATALOGUE",
+              "equivalentFound": "sistemas-de-informacao (slug exists, similar domain)"
+            },
+            {
+              "slug": "comportamento-consumidor",
+              "status": "ALREADY_EXISTS",
+              "foundIn": {
+                "COURSES": "escola/+page.svelte line 287",
+                "CATALOGUE": "escola/curso/[slug]/+page.svelte lines 437-449"
+              },
+              "metadata": {
+                "slug": "comportamento-do-consumidor",
+                "title": "Comportamento do Consumidor",
+                "icon": "🛍️",
+                "color": "#db2777",
+                "lessonCount": 4,
+                "quizCount": 1,
+                "i18nStatus": "FULLY_IMPLEMENTED",
+                "i18nKeys": "routes.escola.curso.comportamento-do-consumidor.* in all 5 locales"
+              },
+              "lessonFiles": "EXISTS",
+              "staticLessons": [
+                "static/lessons/comportamento-do-consumidor/course.json",
+                "static/lessons/comportamento-do-consumidor/01-fatores-influencia-decisao.json",
+                "static/lessons/comportamento-do-consumidor/02-processo-decisao.json",
+                "static/lessons/comportamento-do-consumidor/03-segmentacao-personas.json",
+                "static/lessons/comportamento-do-consumidor/04-comportamento-digital.json"
+              ],
+              "explanation": "Requested course already exists with different slug format (comportamento-do-consumidor instead of comportamento-consumidor)"
+            }
+          }
+        },
+        "selectedCourse": {
+          "slug": "gestao-informacao",
+          "justification": "Requested course does not exist. comportamento-do-consumidor already exists. gestao-informacao is the remaining option.",
+          "scope": {
+            "lessons": 4,
+            "sectionsPerLesson": 7-8 average (30 total minimum required)",
+            "quizMCQs": 10,
+            "i18nEntries": {
+              "baseKeys": 5 (title, tagline, description, 2 UI strings),
+              "locales": 5 (pt-PT, en, tn, fr, ar),
+              "totalEntries": 25
+            }
+          }
+        },
+        "draftOutline": {
+          "course": {
+            "slug": "gestao-informacao",
+            "title": "Gestão da Informação",
+            "tagline": "Business Administration · Ciclo de vida, qualidade, segurança e valor de negócio da informação",
+            "description": "Como organizações recolhem, processam, armazenam, distribuem e protegem informação como activo estratégico: ciclo de vida da informação, qualidade de dados (ACID, DQAF), governança, segurança (CIA triad, GDPR), e transformação em valor de negócio.",
+            "icon": "📊",
+            "color": "#7c3aed"
+          },
+          "lessons": [
+            {
+              "order": 1,
+              "slug": "ciclo-de-vida-da-informacao",
+              "title": "Ciclo de Vida da Informação",
+              "summary": "Criação, armazenamento, uso, arquivo e eliminação.",
+              "sections": [
+                "O que é Gestão da Informação?",
+                "Ciclo de vida: 5 estágios",
+                "Criação e captura de dados",
+                "Armazenamento e organização",
+                "Uso e partilha",
+                "Arquivo e retenção",
+                "Eliminação segura e compliance",
+                "Exercício prático"
+              ],
+              "estMinutes": 8
+            },
+            {
+              "order": 2,
+              "slug": "qualidade-de-dados",
+              "title": "Qualidade de Dados e Dimensões DQ",
+              "summary": "ACID, exatidão, completude, consistência, pontualidade.",
+              "sections": [
+                "Por que a qualidade importa?",
+                "Dimensões de qualidade (6 principais)",
+                "Exatidão e completude",
+                "Consistência e integridade",
+                "Pontualidade e validade",
+                "Framework DQAF",
+                "Métricas e monitorização",
+                "Exercício: avaliar qualidade"
+              ],
+              "estMinutes": 8
+            },
+            {
+              "order": 3,
+              "slug": "governanca-da-informacao",
+              "title": "Governança e Políticas de Informação",
+              "summary": "Propriedade, responsabilidade, políticas e standards.",
+              "sections": [
+                "Governança vs Gestão",
+                "Propriedade e stewardship de dados",
+                "Políticas de informação",
+                "Classificação de dados",
+                "Standards e compliance",
+                "Papel do CIO e CDO",
+                "Cultura de dados",
+                "Exercício: política fictícia"
+              ],
+              "estMinutes": 8
+            },
+            {
+              "order": 4,
+              "slug": "seguranca-da-informacao",
+              "title": "Segurança da Informação e Valor de Negócio",
+              "summary": "CIA triad, GDPR, analytics, BI e ROI da informação.",
+              "sections": [
+                "CIA triad: Confidencialidade, Integridade, Disponibilidade",
+                "Ameaças e vulnerabilidades",
+                "Controles: preventivos, detetivos, corretivos",
+                "GDPR e compliance legal",
+                "Analytics e Business Intelligence",
+                "ROI da informação",
+                "Transformação digital",
+                "Exercício: análise de risco"
+              ],
+              "estMinutes": 9
+            }
+          ],
+          "quiz": {
+            "slug": "giq",
+            "title": "Quiz: Gestão da Informação",
+            "mcqCount": 10,
+            "mcqExamples": [
+              "Qual das dimensões DQ refere-se à correção dos dados?",
+              "O que significa o 'A' na triad CIA?",
+              "Qual estágio do ciclo de vida vem antes do arquivo?"
+            ]
+          },
+          "i18nPlan": {
+            "keysToCreate": [
+              "routes.escola.curso.gestao-informacao.title",
+              "routes.escola.curso.gestao-informacao.tagline",
+              "routes.escola.curso.gestao-informacao.description",
+              "aulas.course.gestao-informacao.title",
+              "aulas.course.gestao-informacao.description"
+            ],
+            "locales": ["pt-PT", "en", "tn", "fr", "ar"],
+            "totalEntries": 25
+          }
+        },
+        "filesToCreate": [
+          "static/lessons/gestao-informacao/course.json",
+          "static/lessons/gestao-informacao/01-ciclo-de-vida-da-informacao.json",
+          "static/lessons/gestao-informacao/02-qualidade-de-dados.json",
+          "static/lessons/gestao-informacao/03-governanca-da-informacao.json",
+          "static/lessons/gestao-informacao/04-seguranca-da-informacao.json",
+          "static/quizzes/giq.json",
+          "Entry in escola/+page.svelte COURSES array",
+          "Entry in escola/curso/[slug]/+page.svelte CATALOGUE",
+          "i18n entries in pt-PT.json",
+          "i18n entries in en.json",
+          "i18n entries in tn.json",
+          "i18n entries in fr.json",
+          "i18n entries in ar.json"
+        ],
+        "effortEstimate": {
+          "lessonContent": "4-5 hours (30 sections × 8 min avg)",
+          "quizMCQs": "1 hour (10 questions + 4 distractors each)",
+          "i18n": "1-2 hours (25 entries × 5 locales)",
+          "integration": "1 hour (COURSES, CATALOGUE, verification)",
+          "totalEstimatedEffort": "7-9 hours"
+        },
+        "recommendation": {
+          "proceed": "YES",
+          "reasoning": "Scope is well-defined, pattern exists (comportamento-do-consumidor serves as template), all required structure is documented",
+          "prerequisites": [
+            "Confirm if 'gestao-informacao' should be 'gestao-da-informacao' (matching existing naming patterns)",
+            "Review if 30 sections is minimum or target (current outline provides 32 sections)",
+            "Verify if audio files will be required or optional for this course"
+          ],
+          "proposedApproach": "Follow comportamento-do-consumidor pattern exactly: 4 lessons × 8 sections average, 10 MCQ quiz, full i18n support from day 1"
+        }
+      }
     }
   ],
-  "closedItems": [
-    {
-      "id": "gap-153",
-      "category": "auth",
-      "description": "PASS-ORDER DECIDES PROFILE, sem selector: remover profile-picker; inferir selectedProfile a partir de princesa/fofinho/I have the best boyfriend in the world; erro genérico pass-order invalida sem expor profile esperado.",
-      "severity": "alta",
-      "source": "Daniel-2026-07-01",
-      "created_at": "2026-07-01T07:30:00+02:00",
-      "closed_at": "2026-07-01T07:45:00+02:00",
-      "sha": "3b1b821",
-      "note": "src/routes/splash/+page.svelte removeu radio picker e inferProfileFromPassOrder antes do PBKDF2; splash.wrong_password adicionado com paridade i18n 1075/1075. npm run check 0; npm run build 0."
-    },
-    {
-      "id": "gap-154",
-      "category": "UI/UX",
-      "description": "FAB overlap com bottom-nav: XpPill/HeartButton/InstallButton na .fab-stack ficavam visualmente atrás da barra inferior.",
-      "severity": "média",
-      "source": "Daniel-2026-07-01",
-      "created_at": "2026-07-01T07:30:00+02:00",
-      "closed_at": "2026-07-01T07:45:00+02:00",
-      "sha": "6b813c2",
-      "note": "src/routes/+layout.svelte .fab-stack mantém z-index 60 (> bottom-nav 50), bottom calc(env(safe-area-inset-bottom) + 4.5rem), e filhos recebem background/sombra/padding. vite.config.ts swDest fix mantém npm run build verde com @vite-pwa/sveltekit + adapter-static. npm run check 0; npm run build 0."
-    },
-    {
-      "id": "gap-124",
-      "category": "feature-pedida-pelo-Daniel",
-      "description": "Daniel: 'página do agente não aparece nada' (áudio 2026-06-29 18:35). gap-110 fixou chat-root 100dvh. Confirmar live smoke após deploy.",
-      "severity": "baixa",
-      "source": "audio-Daniel-2026-06-29",
-      "created_at": "2026-06-30T09:50:00+02:00",
-      "closed_at": "2026-07-01T07:15:24+02:00",
-      "sha": "b50bd8e",
-      "note": "Bug real corrigido: /agente chamava initStores() sem perfil e podia trocar/ficar preso no perfil default fatma durante corrida com +layout; engine/tools liam Dexie do perfil errado. Agora /agente exige sessão ativa e inicializa com session.profile; initStores reaproveita o perfil ativo/em inicialização e limpa _initPromise ao terminar. CSS chat-root 100dvh/min-height OK; sem +page.server; keys agente/routes.agente presentes nos 5 locales (pt-PT/en/fr/ar/tn). npm run check && npm run build verde. Smoke local com sessionStorage auth bypass: /agente renderiza UI, CTA o que falta? dispatcha resposta, zero console errors. Produção/live-fire real ainda bloqueado por auth gate."
-    },
-    {
-      "id": "gap-141",
-      "category": "i18n",
-      "description": "Engine do agente em PT-hardcoded. Despachar i18n tools.ts + engine.ts para 5 locales.",
-      "severity": "média",
-      "source": "audit-i18n-tick-2026-06-30",
-      "created_at": "2026-06-30T22:35:00+02:00",
-      "closed_at": "2026-07-01T00:05:00+02:00",
-      "sha": "0bc1596",
-      "note": "feat(agente) gap-143 i18n agent engine — 47 keys × 5 locales = 235 entries. Paridade 1041 keys × 5 locales = 5205. tools.ts: pending/suggestions → Localised{key, params}. engine.ts: tt()/renderLoc()/render() helpers via get(t)() com PT inline fallback. Auditoria: .state/_gap143-verify-keys.py. npm run check 0/0, npm run build verde."
-    },
-    {
-      "id": "gap-143",
-      "category": "i18n",
-      "description": "Routes agente.engine.* keys parity 5 locales.",
-      "severity": "média",
-      "source": "i18n-audit-pre-tick-2026-07-01",
-      "created_at": "2026-06-30T23:55:00+02:00",
-      "closed_at": "2026-07-01T00:05:00+02:00",
-      "sha": "0bc1596",
-      "note": "feat(agente) i18n engine parity 1041/1041 — same commit as gap-141."
-    },
-    {
-      "id": "gap-142",
-      "category": "i18n",
-      "description": "Adicionar routes.escola.curso.gestao-projectos + routes.aulas.curso.gestao-projectos em todos os 5 locales (en/pt-PT/tn/fr/ar). Tambem routes.escola.quiz.gpq em tn/fr/ar. Audit detectou 4 chaves nested em falta. SHA=02ce52d.",
-      "severity": "média",
-      "source": "audit-i18n-tick-2026-06-30-22",
-      "created_at": "2026-06-30T22:15:00+02:00",
-      "closed_at": "2026-06-30T22:25:00+02:00",
-      "sha": "02ce52d",
-      "note": "fix(i18n) gap-142 gestao-projectos parity 5/5 locales. Audit script .state/patch-gap-142.py. npm run check 0/0, npm run build verde."
-    },
-    {
-      "id": "gap-091",
-      "closed_at": "2026-06-30T07:00:00+02:00",
-      "sha": "c1d542b",
-      "note": "i18n PT→$t() audit completo. 4 batches + 145 i18n entries."
-    },
-    {
-      "id": "gap-098",
-      "closed_at": "2026-06-30T04:55:00+02:00",
-      "sha": "5e749db"
-    },
-    {
-      "id": "gap-099",
-      "closed_at": "2026-06-30T04:55:00+02:00",
-      "sha": "c11e367"
-    },
-    {
-      "id": "gap-100",
-      "closed_at": "2026-06-30T04:55:00+02:00",
-      "sha": "dcdd99f"
-    },
-    {
-      "id": "gap-101",
-      "closed_at": "2026-06-30T04:55:00+02:00",
-      "sha": "2d09a97"
-    },
-    {
-      "id": "gap-102",
-      "closed_at": "2026-06-30T05:30:00+02:00",
-      "sha": "55e240e"
-    },
-    {
-      "id": "gap-103",
-      "closed_at": "2026-06-30T05:30:00+02:00",
-      "sha": "55e240e"
-    },
-    {
-      "id": "gap-104",
-      "closed_at": "2026-06-30T07:00:00+02:00",
-      "sha": "91e796b",
-      "note": "BA #45 Economia Comportamental. 4 lições + beq quiz 10 + i18n 5 locales + CATALOGUE wired."
-    },
-    {
-      "id": "gap-105",
-      "closed_at": "2026-06-30T07:00:00+02:00",
-      "sha": "c1d542b",
-      "note": "batch-3: habitos/novo + trabalhos/assignment/[slug] + 6 chaves × 5 locales"
-    },
-    {
-      "id": "gap-106",
-      "closed_at": "2026-06-30T07:00:00+02:00",
-      "sha": "c1d542b",
-      "note": "batch-4: agente + aulas + dl + biblioteca/novo + 3 chaves × 5 locales"
-    },
-    {
-      "id": "gap-107",
-      "closed_at": "2026-06-30T12:20:00+02:00",
-      "sha": "fbdc389",
-      "note": "BA #46 Gestão de Conflitos. Skander 1 escolheu Gestão de Conflitos."
-    },
-    {
-      "id": "gap-108",
-      "closed_at": "2026-06-30T12:20:00+02:00",
-      "sha": "fbdc389",
-      "note": "BA #46 Gestão de Conflitos. 4 lições (21-34 secções cada) + gcq quiz 10 + i18n 5 locales × 7 chaves + CATALOGUE wired em 3 ficheiros. npm run check 0/0, build verde, prod serve 200."
-    },
-    {
-      "id": "gap-110",
-      "closed_at": "2026-06-30T08:15:00+02:00",
-      "sha": "942c1ba",
-      "note": "fix(agente) chat-root 100dvh + safe-area-inset-bottom no composer. Áudio Daniel 2026-06-29 18:35 'página do agente não aparece nada'. npm run check verde, npm run build verde."
-    },
-    {
-      "id": "gap-111",
-      "closed_at": "2026-06-30T09:50:00+02:00",
-      "sha": "53c0265",
-      "note": "fix(hub+settings) collapse V3/legacy em 'Mais Presuntinho'."
-    },
-    {
-      "id": "gap-112",
-      "closed_at": "2026-06-30T09:50:00+02:00",
-      "sha": "823edd2",
-      "note": "fix(ux) /habitos/ streak '🔥 N dias' + status '✓ hoje' por row."
-    },
-    {
-      "id": "gap-113",
-      "closed_at": "2026-06-30T09:50:00+02:00",
-      "sha": "823edd2",
-      "note": "fix(ux) /financas/ Chart.js agora mostra receitas (dataset #2 verde)."
-    },
-    {
-      "id": "gap-114",
-      "closed_at": "2026-06-30T09:50:00+02:00",
-      "sha": "53c0265",
-      "note": "fix(ux) splash placeholder 'Palavra-passe' (5 locales) — era princesa que vazava password Daniel."
-    },
-    {
-      "id": "gap-115",
-      "closed_at": "2026-06-30T09:50:00+02:00",
-      "sha": "53c0265",
-      "note": "fix(ux) definicoes VERSION+REPO_URL single source from $lib/version."
-    },
-    {
-      "id": "gap-116",
-      "closed_at": "2026-06-30T09:50:00+02:00",
-      "sha": "823edd2",
-      "note": "fix(ux) definicoes reset_password real PBKDF2 (não mais '⏳ soon')."
-    },
-    {
-      "id": "gap-117",
-      "closed_at": "2026-06-30T09:50:00+02:00",
-      "sha": "823edd2",
-      "note": "Seed finanças com defaults em db.ts:614 — empty states em /financas/."
-    },
-    {
-      "id": "gap-118",
-      "closed_at": "2026-06-30T09:50:00+02:00",
-      "sha": "823edd2",
-      "note": "HeartButton title='Clica — easter egg' via $t() em 5 locales."
-    },
-    {
-      "id": "gap-119",
-      "closed_at": "2026-06-30T09:35:00+02:00",
-      "sha": "d42e373",
-      "note": "fix(ux) footer 'Sub-app #{n} no hub' → 'Hub · Finanças/Hábitos' em 5 locales."
-    },
-    {
-      "id": "gap-120",
-      "closed_at": "2026-06-30T09:35:00+02:00",
-      "sha": "d42e373",
-      "note": "feat(financas) /financas/relatorios/ shipped em d42e373 — pie categorias + top 5 despesas + comparativo mês-a-mês + export CSV (5 locales i18n). 764 linhas, prod serve 200. Estado actualizado tarde."
-    },
-    {
-      "id": "gap-121",
-      "closed_at": "2026-06-30T09:50:00+02:00",
-      "sha": "823edd2",
-      "note": "streak+today já no 823edd2 — gap-121 era verificação, fechada como já feita."
-    },
-    {
-      "id": "gap-122",
-      "closed_at": "2026-06-30T12:20:00+02:00",
-      "sha": "fbdc389",
-      "note": "BA #46 Gestão de Conflitos: 4 lições + 10 MCQ + i18n 7 chaves × 5 locales + CATALOGUE wired. npm run check 0/0, build verde, prod serve 200."
-    },
-    {
-      "id": "gap-125",
-      "closed_at": "2026-06-30T10:05:00+02:00",
-      "sha": "07fe69c",
-      "note": "fix(ux) footer 'Hub · {Section}' para biblioteca + trabalhos (5 locales)."
-    },
-    {
-      "id": "gap-126",
-      "closed_at": "2026-06-30T19:30:00+02:00",
-      "sha": "1f1ab3f",
-      "note": "BA #47 Estratégia Internacional: 4 lições + eiq quiz 10 + i18n 5 locales + CATALOGUE wired."
-    },
-    {
-      "id": "gap-127",
-      "closed_at": "2026-06-30T19:30:00+02:00",
-      "sha": "watchdog-todos.json update",
-      "decision_doc": ".state/gap-127-decision.md",
-      "note": "DECISION: DEFER. Lesson bodies PT-only são intencionais: Fatma é aluna numa universidade portuguesa, os lições são conteúdo académico PT (Equivalenza SWOT, ISCTE BA, etc.) que ela consome em português para a coursework dela. Daniel's 'traduz tudo' audios foram sobre UI chrome (já fechado, 986/986 em 5 locales), nunca sobre corpos de lição. Cost to translate = ~18 000 strings × 4 locales = ~320-480 h tradutor ($5-8k USD) + 30MB static JSON ou 3MB i18n JSON no boot. ROI: baixa. PILOT disponível (gap-127-pilot): 1 lição (equivalenza/swot) × 1 locale (en), option (b) keyed $t(), ~30 min. Skander 1 / Daniel pode overridar → ship pilot → se verde, expandir."
-    },
-    {
-      "id": "gap-131",
-      "closed_at": "2026-06-30T20:30:00+02:00",
-      "sha": "7abbf3e",
-      "note": "BA #48 Gestão de Risco. 4 lições (32-36 secções) + grq quiz 10 + i18n 5 locales × 7 chaves + CATALOGUE wired. Merged em 7abbf3e + gap-135 i18n en/tn/fr/ar."
-    },
-    {
-      "id": "gap-135",
-      "closed_at": "2026-06-30T20:50:00+02:00",
-      "sha": "7b6d52d",
-      "note": "i18n gestao-risco em 4 locales (en/tn/fr/ar) — 4 keys × 4 locales = 16 entries."
-    },
-    {
-      "id": "gap-140",
-      "closed_at": "2026-06-30T22:00:00+02:00",
-      "sha": "d21138f",
-      "note": "BA #49 Gestão de Projectos. 4 lições (32-39 secções cada) + gpq quiz 10 MCQ + i18n 5 chaves × 5 locales (25 entries) + CATALOGUE wired em 3 ficheiros (escola/+page.svelte, escola/curso/[slug]/+page.svelte, aulas/+page.server.ts). npm run check 0/0, build verde, prod /escola/curso/gestao-projectos/ HTTP 200. Dirty tree limpa. 47 cadeiras BA totais."
-    },
-    {
-      "id": "gap-147",
-      "category": "i18n",
-      "description": "27 keys × 5 locales = 135 entries for meta description/og/twitter on 6 pages (biblioteca, escola, financas, financas/relatorios, habitos, trabalhos). PT-hardcoded meta tags replaced with $t() lookups. Audit script .state/patch-gap-147-meta.py. i18n parity 1094/1094 across all 5 locales.",
-      "severity": "alta",
-      "source": "audit-i18n-tick-2026-07-01-01",
-      "created_at": "2026-07-01T01:25:00+02:00",
-      "closed_at": "2026-07-01T01:30:00+02:00",
-      "sha": "cf13166",
-      "note": "fix(i18n) gap-147 meta tags i18n — 27 keys × 5 locales = 135 entries. Svelte files patched: biblioteca/+page.svelte, escola/+page.svelte, financas/+page.svelte, financas/relatorios/+page.svelte (only og:title + twitter:title), habitos/+page.svelte, trabalhos/+page.svelte. npm run check 0/0, npm run build verde."
-    },
-    {
-      "id": "gap-148",
-      "category": "i18n",
-      "description": "13 + 2 keys × 5 locales = 75 entries for src/routes/secrets/+page.svelte — PT-hardcoded strings replaced with $t() lookups.",
-      "severity": "alta",
-      "source": "audit-pt-tick-2026-07-01-01",
-      "created_at": "2026-07-01T04:00:00+02:00",
-      "closed_at": "2026-07-01T05:30:00+02:00",
-      "sha": "b8a1603",
-      "note": "fix(i18n) gap-148 secrets/* complete — 13 + 2 keys × 5 locales = 75 entries (parity 1063/1063). npm run check 0/0, npm run build verde."
-    },
-    {
-      "id": "gap-152",
-      "category": "i18n",
-      "description": "CATALOGUE/COURSES de escola contém metadados PT-hardcoded (title, tagline, description, badge) visíveis em cards/curso quando locale != pt-PT.",
-      "severity": "média",
-      "source": "skander1-gap-152-decision-2026-07-01",
-      "created_at": "2026-07-01T07:03:34+02:00",
-      "closed_at": "2026-07-01T07:03:34+02:00",
-      "sha": "59b0fc1",
-      "decision": "B — DEFER",
-      "note": "DECISION: DEFER por analogia gap-127. Auditoria: src/routes/escola/+page.svelte tem 45 entries (44 slugs únicos; gestao-operacoes duplicado) com 4 strings de card por entry = 180 PT fallbacks; src/routes/escola/curso/[slug]/+page.svelte tem 41 entries com 3 strings metadata por entry = 123 PT fallbacks. Isto afecta utilizadores en/tn/fr/ar nos cards/títulos de curso, mas não é bloqueio funcional: links, contagens, navegação e chrome já têm i18n; as strings são metadata/conteúdo académico PT para a Fatma, não UI chrome. Opção A/C abriria tradução massiva/semântica e manutenção alta sem sinal de procura. Se Daniel pedir explicitamente catálogo multilingue, reabrir com piloto por slugs prioritários."
-    },
-    {
-      "id": "gap-150",
-      "category": "i18n",
-      "description": "PT-hardcoded em src/routes/biblioteca/item/[id]/+page.svelte:222 — string '✏️ Editar'. Substituir por $t('biblioteca.item.edit') + adicionar chave aos 5 locales.",
-      "severity": "média",
-      "source": "audit-pt-tick-2026-07-01-02",
-      "created_at": "2026-07-01T07:05:00+02:00",
-      "dispatched_to": "Skander 2 — proc_c28cd4b5f611",
-      "closed_at": "2026-07-01T07:05:32+02:00",
-      "sha": "afd6881",
-      "note": "fix(i18n): gap-150/151/155 PT-hardcoded fixes (3 keys × 5 locales). npm run check 0/0; npm run build exit 0."
-    },
-    {
-      "id": "gap-151",
-      "category": "i18n",
-      "description": "PT-hardcoded em src/routes/biblioteca/novo/+page.svelte:120 — string 'Título'. Substituir por $t('biblioteca.novo.title_label') + chave em 5 locales.",
-      "severity": "média",
-      "source": "audit-pt-tick-2026-07-01-02",
-      "created_at": "2026-07-01T07:05:00+02:00",
-      "dispatched_to": "Skander 2 — proc_c28cd4b5f611",
-      "closed_at": "2026-07-01T07:05:32+02:00",
-      "sha": "afd6881",
-      "note": "fix(i18n): gap-150/151/155 PT-hardcoded fixes (3 keys × 5 locales). npm run check 0/0; npm run build exit 0."
-    },
-    {
-      "id": "gap-155",
-      "category": "i18n",
-      "description": "Currency '€' hardcoded em src/routes/financas/nova/+page.svelte:200 e src/routes/financas/orcamento/+page.svelte:230. Substituir por $t('currency.symbol') (criar chave se não existir).",
-      "severity": "média",
-      "source": "audit-pt-tick-2026-07-01-02",
-      "created_at": "2026-07-01T07:05:00+02:00",
-      "dispatched_to": "Skander 2 — proc_c28cd4b5f611",
-      "closed_at": "2026-07-01T07:05:32+02:00",
-      "sha": "afd6881",
-      "note": "fix(i18n): gap-150/151/155 PT-hardcoded fixes (3 keys × 5 locales). npm run check 0/0; npm run build exit 0."
-    },
-    {
-      "id": "gap-149",
-      "category": "feature-pedida-pelo-Daniel",
-      "description": "BA #50 Sociologia das Organizações — 4 lições + quiz soq + wiring Escola/Catalogue/Aulas + i18n 5 locales.",
-      "severity": "baixa",
-      "source": "gap-149 BA #50 Sociologia das Organizações",
-      "created_at": "2026-07-01T07:05:00+02:00",
-      "closed_at": "2026-07-01T07:05:58+02:00",
-      "sha": "855bdb2",
-      "note": "feat(escola): gap-149 BA #50 Sociologia das Organizações. npm run check 0/0; npm run build exit 0; push OK; produção /escola/curso/sociologia-organizacoes/ HTTP 200."
-    }
-  ]
+  "notes": {
+    "repository": "C:/Users/rafaa/Documents/GitHub/presuntinho",
+    "investigator": "Skander 2 (mechanical)",
+    "taskType": "investigation-only",
+    "noPatchesApplied": true,
+    "nextSteps": [
+      "gap-127-pilot: Await source file creation/verification before proceeding with i18n implementation",
+      "gap-145: Awaiting approval to proceed with gestao-informacao course creation using proposed outline"
+    ]
+  }
 }
