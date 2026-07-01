@@ -2048,6 +2048,12 @@
         "twitter_description": "Trabalhos e entregas com prazos",
         "twitter_title": "Trabalhos · Entregas e Prazos"
       }
+    },
+    "hub": {
+      "dashboard": {
+        "aria": "Estado rápido",
+        "title": "Dashboard"
+      }
     }
   },
   "routes.agente.engine.empty_msg": "Diz-me algo 😊",
@@ -3124,5 +3130,8 @@
     "Usa a primeira pessoa quando faz sentido: \"eu recomendaria...\""
   ],
   "write.tips.voice.problem": "",
-  "write.tips.voice.title": "Voz pessoal"
+  "write.tips.voice.title": "Voz pessoal",
+  "common": {
+    "loading": "A carregar…"
+  }
 }

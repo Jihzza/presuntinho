@@ -35,6 +35,13 @@
   void InstallButton;
   import OnboardingModal from '$lib/components/OnboardingModal.svelte';
 
+  import EscolaCard from '$lib/components/hub/EscolaCard.svelte';
+  import FinancasCard from '$lib/components/hub/FinancasCard.svelte';
+  import HabitosCard from '$lib/components/hub/HabitosCard.svelte';
+  import TrabalhosCard from '$lib/components/hub/TrabalhosCard.svelte';
+  import BibliotecaCard from '$lib/components/hub/BibliotecaCard.svelte';
+  import AgenteCard from '$lib/components/hub/AgenteCard.svelte';
+
   import { subApps, agentEntry, legacySubApp, v3Content } from '$lib/registry';
   import { db } from '$lib/state/db';
   import { xp, initStores } from '$lib/state/stores';
@@ -280,6 +287,24 @@
           {/each}
         </div>
       </section>
+
+  <!--
+    Hub Dashboard (task-023): 6 actionable cards reading real Dexie state.
+    Lives below the legacy sections to preserve all existing work; gives
+    Fátma direct, in-context previews of what's happening in each area.
+    Padding-bottom ensures the last card never sits under the fab-stack.
+  -->
+  <section class="dashboard-section" aria-label={$t('routes.hub.dashboard.aria', { default: 'Estado rápido' })}>
+    <h2 class="section-title">{$t('routes.hub.dashboard.title', { default: 'Dashboard' })}</h2>
+    <div class="dashboard-grid">
+      <EscolaCard />
+      <FinancasCard />
+      <HabitosCard />
+      <TrabalhosCard />
+      <BibliotecaCard />
+      <AgenteCard />
+    </div>
+  </section>
 </div>
 
 <style>
@@ -366,7 +391,8 @@
   .apps,
   .progress-section,
   .badges-section,
-  .more-section {
+  .more-section,
+  .dashboard-section {
     margin-bottom: 2rem;
   }
   .section-title {
@@ -420,6 +446,27 @@
       grid-template-columns: repeat(3, 1fr);
     }
     .more-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Hub Dashboard (task-023) — 6 actionable cards.
+     Padding-bottom >=7rem guarantees the last card never sits under
+     the fab-stack (InstallButton / heart / xp pill) mounted in
+     +layout.svelte. */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding-bottom: 7rem;
+  }
+  @media (min-width: 640px) {
+    .dashboard-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .dashboard-grid {
       grid-template-columns: repeat(3, 1fr);
     }
   }
