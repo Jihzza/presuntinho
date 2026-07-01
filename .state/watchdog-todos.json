@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-01T07:58:00Z",
+  "lastUpdated": "2026-07-01T07:05:00Z",
   "gaps": [
     {
       "id": "gap-127-pilot",
@@ -11,8 +11,6 @@
       "closureCommit": "chore(state): close gap-127 (DECISION: DEFER i18n lesson bodies — see .state/gap-127-decision.md)",
       "closureReason": "Lesson bodies stay PT-only by analogy with established content defer policy. UI chrome and navigation stay fully i18n'd (header labels, next/previous buttons) but the actual lesson narrative JSON content is Portuguese-only, matching how the user studies lessons in PT. Closing per /goal-2026-07-01 directive from CEO.",
       "repository": "presuntinho",
-      "investigationDate": "2026-01-01",
-      "closedDate": "2026-07-01",
       "closedBy": "skander-principal (orchestrator) per CEO /goal"
     },
     {
@@ -20,28 +18,37 @@
       "title": "Create new BA course (gestao-informacao or comportamento-consumidor)",
       "status": "closed",
       "decision": "ALREADY_EXISTS",
-      "closureReason": "Investigation revealed the requested slug 'comportamento-consumidor' already exists in COURSES + CATALOGUE as 'comportamento-do-consumidor' (with full i18n + 4 lessons). 'gestao-informacao' maps to existing 'sistemas-de-informacao'. No new course needed — both slugs are satisfied by existing catalog entries. Closures aligned with .state/gap-149 closure pattern (no creation when equivalents already present).",
+      "closureReason": "Investigation revealed the requested slug 'comportamento-consumidor' already exists in COURSES + CATALOGUE as 'comportamento-do-consumidor' (with full i18n + 4 lessons). 'gestao-informacao' maps to existing 'sistemas-de-informacao'. No new course needed.",
       "repository": "presuntinho",
-      "investigationDate": "2026-01-01",
+      "closedBy": "skander-principal (orchestrator) per CEO /goal"
+    },
+    {
+      "id": "gap-login-redirect-2026-07-01-tick-04",
+      "title": "CEO áudio msg_id 42100: /login → /splash alias (no selector Daniela/Fátima UI)",
+      "status": "closed",
+      "decision": "ALIAS_VIA_REDIRECT_301",
+      "closureSha": "ec5f62b",
+      "closureCommit": "fix(netlify): /login → /splash/ 301 alias per CEO gap-login-redirect-2026-07-01-tick-04",
+      "closureReason": "Auditoria local (src/routes/splash/+page.svelte:102-104 + src/routes/+layout.svelte:135,155 + grep Daniela/Fátima) confirmou: NÃO existe UI 'Eu sou Daniela/Fátima' selector. A inferência do profile é automática pela pass-order (princesa → daniel; fofinho/I have the best boyfriend in the world → fatma). O único gap real era semântico-URL: /login/ devolvia 200 com SPA shell inerte em vez de redirecionar para /splash/. Solução: redirect 301 mínimo em static/_redirects (e propagado para build/_redirects via SvelteKit copy). npm run check 0 erros + npm run build verde + push origin main f7aa357..ec5f62b.",
+      "investigationDate": "2026-07-01",
       "closedDate": "2026-07-01",
-      "closedBy": "skander-principal (orchestrator) per CEO /goal",
+      "closedBy": "skander-principal (orchestrator)",
       "evidence": {
-        "comportamentoConsumidor": {
-          "slug": "comportamento-do-consumidor",
-          "location": "src/routes/escola/+page.svelte line 287 (COURSES), src/routes/escola/curso/[slug]/+page.svelte lines 437-449 (CATALOGUE)",
-          "lessons": 4,
-          "staticLessonFiles": [
-            "static/lessons/comportamento-do-consumidor/course.json",
-            "static/lessons/comportamento-do-consumidor/01-fatores-influencia-decisao.json",
-            "static/lessons/comportamento-do-consumidor/02-processo-decisao.json",
-            "static/lessons/comportamento-do-consumidor/03-segmentacao-personas.json",
-            "static/lessons/comportamento-do-consumidor/04-comportamento-digital.json"
-          ],
-          "i18nStatus": "FULLY_IMPLEMENTED — routes.escola.curso.comportamento-do-consumidor.* in all 5 locales"
+        "auditoriaLocal": {
+          "src/routes/splash/+page.svelte:102-104": "pass-order inference: princesa→daniel, fofinho→fatma, 'I have the best boyfriend in the world'→fatma",
+          "src/routes/+layout.svelte:135,155": "redirect não-autenticados → /splash/",
+          "grep_search": "NÃO encontrado selector Daniela/Fátima na UI (grep Daniela|Fátima|Fatima=0 matches em src/)",
+          "producao": "https://presuntinho.netlify.app/login/ respondia 200 mas com SPA shell inerte antes deste fix"
         },
-        "gestaoInformacao": {
-          "equivalentSlug": "sistemas-de-informacao",
-          "note": "gestao-informacao slug not found; sistemas-de-informacao is the closest domain match in COURSES"
+        "fix": {
+          "file": "static/_redirects (linha +1, depois de /aulas 301)",
+          "buildPropagated": "build/_redirects (verificado após npm run build)",
+          "commit": "ec5f62b em main",
+          "deployStatus": "pendente — verificar https://presuntinho.netlify.app/login/ redirecionar a /splash/ dentro de ~1-2 min após push"
+        },
+        "deferredToSubagents": {
+          "skander1": "A Fazer /tmp/skander1-gap-login.md com análise UX (3 items max) — em background, session proc_1271d40db5a1",
+          "skander2": "A Fazer /tmp/skander2-audit.md com PT-hardcoded + bottom-bar audit — em background, session proc_47a702f210f7"
         }
       }
     }
@@ -49,28 +56,36 @@
   "notes": {
     "repository": "C:/Users/rafaa/Documents/GitHub/presuntinho",
     "investigator": "Skander (orchestrator)",
-    "summary": "All watchdog gaps cleared per CEO /goal directive at 2026-07-01 07:58 BRT.",
+    "summary": "Tick-04 fechado: gap-login-redirect entregue. openGapsAtTick=1 (gap-login-redirect) → 0.",
     "openGapsAtTick": 0,
-    "closedGapsThisTick": ["gap-127-pilot", "gap-145"],
+    "closedGapsThisTick": ["gap-login-redirect-2026-07-01-tick-04"],
     "productionState": {
-      "buildStatus": "GREEN (vite build exit 0)",
+      "buildStatus": "GREEN (vite build exit 0, npm run check exit 0)",
       "smokeCodes": {
         "/splash/": 200,
-        "/escola": 200,
         "/aulas/": 200,
+        "/escola": 200,
         "/financas": 200,
         "/habitos": 200,
         "/biblioteca": 200,
-        "/agente": 200
+        "/agente": 200,
+        "/login/": 200 (será 301→/splash/ dentro de ~1-2min após deploy Netlify do SHA ec5f62b)"
       },
-      "head": "e657e93",
+      "head": "ec5f62b",
       "i18nParity": "1077/1077 × 5 locales",
-      "deployUrl": "https://presuntinho.netlify.app/"
+      "deployUrl": "https://presuntinho.netlify.app/",
+      "recentCommits": [
+        "ec5f62b fix(netlify): /login → /splash/ 301 alias per CEO gap-login-redirect-2026-07-01-tick-04",
+        "f7aa357 chore(state): tick-2026-07-01-02 close gap-127-pilot + gap-145 per CEO /goal directive"
+      ]
+    },
+    "backgroundProcesses": {
+      "skander1": "proc_1271d40db5a1 (reasoning, /tmp/skander1-gap-login.md)",
+      "skander2": "proc_47a702f210f7 (mechanical, /tmp/skander2-audit.md)"
     },
     "nextStepsForCFO": [
-      "Auth pass-order wiring already shipped (gap-153 sha 3b1b821).",
-      "Universidade Fátma BA courses (EU Business School Barcelona): continue receiving direction from CEO via /goal or voice input.",
-      "Bottom-bar mystery button (under HeartButton): deferred — needs DevTools snapshot for identification."
+      "Validar em https://presuntinho.netlify.app/login/ — deve redirecionar a /splash/ (301, depois browser rewrite a /splash/)",
+      "Aguardar ping-back de skander1 (UX analysis) e skander2 (PT-hardcoded audit) — se houver novo gap latente, tratar em tick-05"
     ]
   }
 }
