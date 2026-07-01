@@ -1266,5 +1266,56 @@
   "routes.escola.curso.supply-chain.title": "Supply Chain Management",
   "routes.escola.curso.supply-chain.tagline": "University · Procurement, inventory, logistics and last mile",
   "routes.escola.curso.supply-chain.description": "Design, planning and optimization of the supply chain: upstream/midstream/downstream links, SCOR model, push vs pull systems, inventory management (EOQ, ABC, safety stock), strategic procurement, transport, distribution and last-mile.",
-  "routes.escola.curso.supply-chain.badge": "Uni"
+  "routes.escola.curso.supply-chain.badge": "Uni",
+  "write.head.h1": "✍️ Writing Tips & Anti-AI Detection",
+  "write.cta.next": "Next: Lessons in PT →",
+  "write.tips.variation.icon": "✍️",
+  "write.tips.variation.title": "Sentence variation",
+  "write.tips.variation.problem": "The problem: AI text tends to have uniform sentence length and predictable transitions (\"Moreover,\", \"Furthermore,\", \"Additionally,\").",
+  "write.tips.variation.fix": "The fix:",
+  "write.tips.variation.points": [
+    "Vary lengths: short and direct sentences. Then longer with subordination. Then medium.",
+    "Start in different ways: sometimes with \"I\", sometimes with a question, sometimes with a clause.",
+    "Avoid stacking 3+ \"Moreover-Furthermore-Additionally\" in the same paragraph."
+  ],
+  "write.tips.voice.icon": "🗣️",
+  "write.tips.voice.title": "Personal voice",
+  "write.tips.voice.problem": "",
+  "write.tips.voice.fix": "",
+  "write.tips.voice.points": [
+    "Use contractions: don't, isn't, I'm, let's",
+    "Have opinions: \"what strikes me is\", \"what caught my attention was...\"",
+    "Add your reading: \"this suggests...\" or \"the implication seems to be...\"",
+    "Use first person when it fits: \"I would recommend...\""
+  ],
+  "write.tips.buzzwords.icon": "🚫",
+  "write.tips.buzzwords.title": "Buzzwords to avoid",
+  "write.tips.buzzwords.problem": "AI loves these. Humans use them sparingly:",
+  "write.tips.buzzwords.fix": "",
+  "write.tips.buzzwords.points": [
+    "\"delve into\", \"tapestry\", \"vibrant\", \"robust\", \"leverage\" (use \"use\")",
+    "\"in conclusion\", \"in summary\", \"to summarize\"",
+    "\"It is important to note that...\"",
+    "\"navigate the complexities\", \"in today's fast-paced world\""
+  ],
+  "write.tips.examples.icon": "💎",
+  "write.tips.examples.title": "Specific examples",
+  "write.tips.examples.problem": "Replace generalities with concrete case details:",
+  "write.tips.examples.fix": "",
+  "write.tips.examples.points": [
+    "❌ \"The brand lost market share.\"",
+    "✅ \"Retail sales in Spain dropped from €22M to €14M between 2018 and 2023.\"",
+    "❌ \"Customer satisfaction is low.\"",
+    "✅ \"An NPS of 17 places Equivalenza well below Druni (56) and Primor (46).\""
+  ],
+  "write.tips.hedging.icon": "🤔",
+  "write.tips.hedging.title": "Hedging",
+  "write.tips.hedging.problem": "Strategic uncertainty makes the text feel more human:",
+  "write.tips.hedging.fix": "",
+  "write.tips.hedging.points": [
+    "\"It seems that...\"",
+    "\"This may suggest...\"",
+    "\"One could argue that...\"",
+    "\"Perhaps the most important factor is...\""
+  ]
 }

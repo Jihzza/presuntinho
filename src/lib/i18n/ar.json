@@ -1266,5 +1266,56 @@
   "routes.escola.curso.supply-chain.title": "إدارة سلسلة الإمداد",
   "routes.escola.curso.supply-chain.tagline": "الجامعة · المشتريات والمخزون واللوجستيات والميل الأخير",
   "routes.escola.curso.supply-chain.description": "تصميم وتخطيط وتحسين سلسلة الإمداد: روابط upstream/midstream/downstream، نموذج SCOR، أنظمة push vs pull، إدارة المخزون (EOQ، ABC، safety stock)، المشتريات الاستراتيجية، النقل، التوزيع والميل الأخير.",
-  "routes.escola.curso.supply-chain.badge": "جامعي"
+  "routes.escola.curso.supply-chain.badge": "جامعي",
+  "write.head.h1": "✍️ نصائح الكتابة ومقاومة كشف الذكاء الاصطناعي",
+  "write.cta.next": "التالي: دروس بالبرتغالية →",
+  "write.tips.variation.icon": "✍️",
+  "write.tips.variation.title": "تنويع الجمل",
+  "write.tips.variation.problem": "المشكلة: النصوص المكتوبة بالذكاء الاصطناعي تميل إلى طول جملة موحد وانتقالات متوقعة (\"Moreover,\", \"Furthermore,\", \"Additionally,\").",
+  "write.tips.variation.fix": "الحل:",
+  "write.tips.variation.points": [
+    "تنويع الأطوال: جمل قصيرة ومباشرة. ثم أطول مع التابعية. ثم متوسطة.",
+    "ابدأ بطرق مختلفة: أحياناً بـ \"أنا\"، أحياناً بسؤال، أحياناً بعبارة اعتراضية.",
+    "تجنب تكديس 3+ من \"Moreover-Furthermore-Additionally\" في نفس الفقرة."
+  ],
+  "write.tips.voice.icon": "🗣️",
+  "write.tips.voice.title": "الصوت الشخصي",
+  "write.tips.voice.problem": "",
+  "write.tips.voice.fix": "",
+  "write.tips.voice.points": [
+    "استخدم الاختصارات: لا، هو، أنا ذاهب، هيا",
+    "عندك آراء: \"يبدو لي لافتاً\"، \"ما لفت انتباهي هو...\"",
+    "أضف قراءتك: \"هذا يوحي بـ...\" أو \"التبعات تبدو أنها...\"",
+    "استخدم ضمير المتكلم عندما يناسب: \"أوصي بـ...\""
+  ],
+  "write.tips.buzzwords.icon": "🚫",
+  "write.tips.buzzwords.title": "كلمات فارغة تجنبها",
+  "write.tips.buzzwords.problem": "الذكاء الاصطناعي يحبها. البشر يستخدمونها بقلة:",
+  "write.tips.buzzwords.fix": "",
+  "write.tips.buzzwords.points": [
+    "\"delve into\", \"tapestry\", \"vibrant\", \"robust\", \"leverage\" (استخدم \"يستخدم\")",
+    "\"في الختام\"، \"باختصار\"، \"للتلخيص\"",
+    "\"من المهم ملاحظة أن...\"",
+    "\"التنقل في التعقيدات\"، \"في عالم اليوم سريع الخطى\""
+  ],
+  "write.tips.examples.icon": "💎",
+  "write.tips.examples.title": "أمثلة محددة",
+  "write.tips.examples.problem": "استبدل العموميات بتفاصيل محددة من الحالة:",
+  "write.tips.examples.fix": "",
+  "write.tips.examples.points": [
+    "❌ \"العلامة التجارية فقدت حصة في السوق.\"",
+    "✅ \"انخفضت مبيعات التجزئة في إسبانيا من 22 مليون يورو إلى 14 مليون يورو بين 2018 و2023.\"",
+    "❌ \"رضا العملاء منخفض.\"",
+    "✅ \"NPS قدره 17 يضع Equivalenza أقل بكثير من Druni (56) وPrimor (46).\""
+  ],
+  "write.tips.hedging.icon": "🤔",
+  "write.tips.hedging.title": "التخفيف (الحذر)",
+  "write.tips.hedging.problem": "التردد الاستراتيجي يجعل النص يبدو أكثر بشرياً:",
+  "write.tips.hedging.fix": "",
+  "write.tips.hedging.points": [
+    "\"يبدو أن...\"",
+    "\"قد يشير هذا إلى...\"",
+    "\"يمكن الجدال بأن...\"",
+    "\"ربما أهم عامل هو...\""
+  ]
 }

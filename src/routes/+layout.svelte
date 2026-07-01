@@ -104,13 +104,18 @@
         window.removeEventListener('presuntinho:close-secret-room', onCloseSRoom);
       };
 
-      // Redirect to splash if not authenticated (and not already on /splash/).
-      // Keep the redirect, but give the user immediate visual feedback first;
-      // otherwise a bottom-nav tap looks like it did nothing until the async
-      // redirect wins the race after initial scroll/render work.
-      if (!session && page.url.pathname !== '/splash/') {
-        startAuthRedirect('esta página');
-      }
+      // Auth gate: each route owns its own empty-state ("iniciar sessão").
+            // The layout must NOT redirect-away on user clicks — that turned
+            // bottom-nav taps into silent no-ops (the redirect fired 550ms after
+            // navigation and yanked the user back to /splash/).
+            // Only fire the initial guard once per mount, with a longer delay so
+            // users actively navigating are not interrupted mid-tap.
+            if (!session && page.url.pathname !== '/splash/' && !authRedirectTimer) {
+              authRedirectTimer = setTimeout(() => {
+                authRedirectTimer = null;
+                if (!getSession()) void goto('/splash/');
+              }, 2500);
+            }
 
       // Global key handler — drives Konami code + keyword detector
       function onKey(e: KeyboardEvent) {
@@ -136,26 +141,21 @@
     }, 550);
   }
 
-  function handleNavClick(event: MouseEvent, targetLabel: string): void {
-    const href = (event.currentTarget as HTMLAnchorElement | null)?.getAttribute('href') ?? null;
-
-    // If stores haven't finished booting, *don't* block — let SvelteKit run
-    // its native SPA navigation, which will reliably replace the URL. The
-    // previous behaviour (event.preventDefault + 1.4s toast) was the cause
-    // of "I click Escola and the page just scrolls to the top".
-    if (!storesReady) {
-      console.debug('[presuntinho] handleNavClick early — storesReady=false. Letting native nav through.', href);
-      return;
-    }
-
-    // Session might be null on cold load (Dexie still hydrating). Auth gate
-    // is the responsibility of the destination route (e.g. /agente, /escola
-    // show "iniciar sessão" empty states themselves). Bottom-nav must
-    // NEVER swallow a click for routes that are otherwise public-readable.
-    if (!session) {
-      console.debug('[presuntinho] handleNavClick: session=null. Letting native nav through to', href);
-      return;
-    }
+  // Bottom-nav clicks: ALWAYS let the browser handle them as plain anchor
+  // navigation. No preventDefault, no scrollTop, no toast. If the destination
+  // requires auth, *that* route shows its own empty-state ("iniciar sessão").
+  // (CEO reported: clicking Escola scrolled to top of /escola instead of
+  // navigating anywhere. Root cause: the previous onClick did
+  // preventDefault when !session, but SvelteKit navigation also got
+  // cancelled. Solution: zero handler. <a> does the right thing.)
+  function handleNavClick(_event?: MouseEvent, _targetLabel?: string): void {
+    /* Intentional no-op. Bottom-nav must NEVER preventDefault or scrollTop —
+       keep the function signature compatible with previous call-sites so the
+       hooks still attach, but never touch the event. The native <a> nav does
+       the right thing. Route-level auth (if needed) is the destination's
+       responsibility. */
+    void _event;
+    void _targetLabel;
   }
 
   function logout() {

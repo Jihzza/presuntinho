@@ -1,74 +1,12 @@
 <script lang="ts">
   // Write — Writing Tips & Anti-AI Detection (V4 port of V3 #pg-write).
-  // 5 tip cards in pt-PT (V3 lines 333-390).
+  // All 5 tip cards now i18n-driven via $t(); content lives in
+  // src/lib/i18n/<locale>.json under write.tips.<slug>.* keys.
 
   import { t } from 'svelte-i18n';
 
-  interface Tip {
-    icon: string;
-    title: string;
-    problem?: string;
-    fixLabel?: string;
-    points: string[];
-  }
-
-  const TIPS: Tip[] = [
-    {
-      icon: '✍️',
-      title: 'Variação de frases',
-      problem:
-        'O problema: texto de IA tende a ter comprimento uniforme de frase e transições previsíveis ("Moreover,", "Furthermore,", "Additionally,").',
-      fixLabel: 'A solução:',
-      points: [
-        'Alterna comprimentos: frases curtas e diretas. Depois mais longas com subordinação. Depois médias.',
-        'Começa de formas diferentes: às vezes com "eu", às vezes com uma pergunta, às vezes com uma cláusula.',
-        'Evita empilhar 3+ "Moreover-Furthermore-Additionally" no mesmo parágrafo.'
-      ]
-    },
-    {
-      icon: '🗣️',
-      title: 'Voz pessoal',
-      points: [
-        'Usa contrações: não, é, estou, vamos',
-        'Tens opiniões: "parece-me marcante", "o que me chamou a atenção foi..."',
-        'Acrescenta a tua leitura: "isto sugere..." ou "a implicação parece ser..."',
-        'Usa a primeira pessoa quando faz sentido: "eu recomendaria..."'
-      ]
-    },
-    {
-      icon: '🚫',
-      title: 'Buzzwords a evitar',
-      problem: 'A IA adora estes. Os humanos usam-nos com parcimónia:',
-      points: [
-        '"delve into", "tapestry", "vibrant", "robust", "leverage" (usa "usar")',
-        '"em conclusão", "em resumo", "para resumir"',
-        '"É importante notar que..."',
-        '"navegar pelas complexidades", "no mundo acelerado de hoje"'
-      ]
-    },
-    {
-      icon: '💎',
-      title: 'Exemplos específicos',
-      problem: 'Substitui generalidades por detalhes concretos do caso:',
-      points: [
-        '❌ "A marca perdeu quota de mercado."',
-        '✅ "As vendas a retalho em Espanha caíram de €22M para €14M entre 2018 e 2023."',
-        '❌ "A satisfação do cliente é baixa."',
-        '✅ "Um NPS de 17 coloca a Equivalenza bem abaixo da Druni (56) e da Primor (46)."'
-      ]
-    },
-    {
-      icon: '🤔',
-      title: 'Hedging (precaução)',
-      problem: 'Incerteza estratégica torna o texto mais humano:',
-      points: [
-        '"Parece que..."',
-        '"Isto pode sugerir..."',
-        '"Pode-se argumentar que..."',
-        '"Talvez o fator mais importante seja..."'
-      ]
-    }
-  ];
+  // Slugs must match the keys in the i18n JSON: write.tips.variation.*, etc.
+  const TIP_SLUGS = ['variation', 'voice', 'buzzwords', 'examples', 'hedging'] as const;
 </script>
 
 <svelte:head>
@@ -83,22 +21,26 @@
       <span>{$t('write.breadcrumb.current', { default: 'Writing' })}</span>
     </p>
     <span class="tag">{$t('routes.write.modulo_tag', { default: 'Módulo 5' })}</span>
-    <h1>✍️ Writing Tips & Anti-AI Detection</h1>
+    <h1>{$t('write.head.h1', { default: '✍️ Writing Tips & Anti-AI Detection' })}</h1>
     <p class="sub">{$t('routes.write.subtitle', { default: 'Como escrever Q3-Q5 que soem a ti, não a um bot.' })}</p>
   </header>
 
   <section class="grid" aria-label="{$t('a11y.aria.tips_de_escrita', { default: 'Tips de escrita' })}">
-    {#each TIPS as tip (tip.title)}
+    {#each TIP_SLUGS as slug (slug)}
+      {@const points = $t(`write.tips.${slug}.points`) as unknown as unknown[]}
       <article class="tip-card">
-        <h2><span class="icon" aria-hidden="true">{tip.icon}</span> {tip.title}</h2>
-        {#if tip.problem}
-          <p class="problem">{tip.problem}</p>
+        <h2>
+          <span class="icon" aria-hidden="true">{$t(`write.tips.${slug}.icon`)}</span>
+          {$t(`write.tips.${slug}.title`)}
+        </h2>
+        {#if $t(`write.tips.${slug}.problem`, { default: '' })}
+          <p class="problem">{$t(`write.tips.${slug}.problem`)}</p>
         {/if}
-        {#if tip.fixLabel}
-          <p class="fix-label"><strong>{tip.fixLabel}</strong></p>
+        {#if $t(`write.tips.${slug}.fix`, { default: '' })}
+          <p class="fix-label"><strong>{$t(`write.tips.${slug}.fix`)}</strong></p>
         {/if}
         <ul>
-          {#each tip.points as p (p)}
+          {#each Array.isArray(points) ? points : [points] as p, i (i)}
             <li>{p}</li>
           {/each}
         </ul>
@@ -107,7 +49,7 @@
   </section>
 
   <div class="cta">
-    <a href="/pt/" class="btn primary">Seguinte: Lições em PT →</a>
+    <a href="/pt/" class="btn primary">{$t('write.cta.next', { default: 'Seguinte: Lições em PT →' })}</a>
   </div>
 </div>
 

@@ -1266,5 +1266,56 @@
   "routes.escola.curso.supply-chain.title": "Supply Chain Management",
   "routes.escola.curso.supply-chain.tagline": "Université · Procurement, inventaire, logistique et dernier kilomètre",
   "routes.escola.curso.supply-chain.description": "Conception, planification et optimisation de la chaîne d’approvisionnement : maillons upstream/midstream/downstream, modèle SCOR, systèmes push vs pull, gestion d’inventaire (EOQ, ABC, safety stock), procurement stratégique, transport, distribution et last-mile.",
-  "routes.escola.curso.supply-chain.badge": "Uni"
+  "routes.escola.curso.supply-chain.badge": "Uni",
+  "write.head.h1": "✍️ Astuces d'écriture & Anti-détection IA",
+  "write.cta.next": "Suivant: Leçons en PT →",
+  "write.tips.variation.icon": "✍️",
+  "write.tips.variation.title": "Variation des phrases",
+  "write.tips.variation.problem": "Le problème: les textes d'IA ont tendance à avoir une longueur uniforme de phrase et des transitions prévisibles (\"Moreover,\", \"Furthermore,\", \"Additionally,\").",
+  "write.tips.variation.fix": "La solution:",
+  "write.tips.variation.points": [
+    "Alterne les longueurs: phrases courtes et directes. Puis plus longues avec subordination. Puis moyennes.",
+    "Commencez différemment: parfois par \"je\", parfois par une question, parfois par une proposition.",
+    "Évitez d'empiler 3+ \"Moreover-Furthermore-Additionally\" dans le même paragraphe."
+  ],
+  "write.tips.voice.icon": "🗣️",
+  "write.tips.voice.title": "Voix personnelle",
+  "write.tips.voice.problem": "",
+  "write.tips.voice.fix": "",
+  "write.tips.voice.points": [
+    "Utilisez des contractions: pas, c'est, je suis, on va",
+    "Ayez des opinions: \"ce qui me frappe\", \"ce qui a attiré mon attention...\"",
+    "Ajoutez votre lecture: \"cela suggère...\" ou \"l'implication semble être...\"",
+    "Utilisez la première personne quand ça convient: \"je recommanderais...\""
+  ],
+  "write.tips.buzzwords.icon": "🚫",
+  "write.tips.buzzwords.title": "Buzzwords à éviter",
+  "write.tips.buzzwords.problem": "L'IA les adore. Les humains les utilisent avec parcimonie:",
+  "write.tips.buzzwords.fix": "",
+  "write.tips.buzzwords.points": [
+    "\"delve into\", \"tapestry\", \"vibrant\", \"robust\", \"leverage\" (utilisez \"utiliser\")",
+    "\"en conclusion\", \"en résumé\", \"pour résumer\"",
+    "\"Il est important de noter que...\"",
+    "\"naviguer dans les complexités\", \"dans le monde actuel\""
+  ],
+  "write.tips.examples.icon": "💎",
+  "write.tips.examples.title": "Exemples spécifiques",
+  "write.tips.examples.problem": "Remplacez les généralités par des détails concrets du cas:",
+  "write.tips.examples.fix": "",
+  "write.tips.examples.points": [
+    "❌ \"La marque a perdu des parts de marché.\"",
+    "✅ \"Les ventes au détail en Espagne sont passées de 22M€ à 14M€ entre 2018 et 2023.\"",
+    "❌ \"La satisfaction client est faible.\"",
+    "✅ \"Un NPS de 17 place Equivalenza bien en dessous de Druni (56) et Primor (46).\""
+  ],
+  "write.tips.hedging.icon": "🤔",
+  "write.tips.hedging.title": "Hedging (nuance)",
+  "write.tips.hedging.problem": "L'incertitude stratégique rend le texte plus humain:",
+  "write.tips.hedging.fix": "",
+  "write.tips.hedging.points": [
+    "\"Il semble que...\"",
+    "\"Cela peut suggérer...\"",
+    "\"On pourrait argumenter que...\"",
+    "\"Peut-être que le facteur le plus important est...\""
+  ]
 }

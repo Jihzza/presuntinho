@@ -1266,5 +1266,56 @@
   "routes.escola.curso.supply-chain.title": "Supply Chain Management",
   "routes.escola.curso.supply-chain.tagline": "Université · Procurement, inventaire, logistique w last mile",
   "routes.escola.curso.supply-chain.description": "Design, planning w optimisation mta3 supply chain: liens upstream/midstream/downstream, modèle SCOR, systèmes push vs pull, gestion inventaire (EOQ, ABC, safety stock), procurement stratégique, transport, distribution w last-mile.",
-  "routes.escola.curso.supply-chain.badge": "Uni"
+  "routes.escola.curso.supply-chain.badge": "Uni",
+  "write.head.h1": "✍️ Tips mta3 el Kteb w Anti-AI Detection",
+  "write.cta.next": "El jay: Doureb fel PT →",
+  "write.tips.variation.icon": "✍️",
+  "write.tips.variation.title": "Variations fel phrases",
+  "write.tips.variation.problem": "El problem: text mta3 IA tendi ykoun andou longueur uniforme fel phrases w transitions previsibles (\"Moreover,\", \"Furthermore,\", \"Additionally,\").",
+  "write.tips.variation.fix": "El fix:",
+  "write.tips.variation.points": [
+    "Badel les longueurs: phrases courtes w directes. Ba3d plus longues bin subordinations. Ba3d moyennes.",
+    "Bda b toroq mokhtalfa: har marra b \"ana\", har marra b so2al, har marra b clause.",
+    "Eviti t t3od 3+ \"Moreover-Furthermore-Additionally\" fel nafs el paragraph."
+  ],
+  "write.tips.voice.icon": "🗣️",
+  "write.tips.voice.title": "El voix personnelle",
+  "write.tips.voice.problem": "",
+  "write.tips.voice.fix": "",
+  "write.tips.voice.points": [
+    "Estamel contractions: la, houa, ana nemshi, ya5dem",
+    "3andek arayes: \"yebdou li marrant\", \"elli 3yeb attention mta3i houa...\"",
+    "Zid el qra2a mta3ek: \"hatha yesugger...\" wala \"el implication yebdou...\"",
+    "Estamel el personne loula ki yemchi: \"ana n9oul elli...\""
+  ],
+  "write.tips.buzzwords.icon": "🚫",
+  "write.tips.buzzwords.title": "Buzzwords elli lazem t7ebhom",
+  "write.tips.buzzwords.problem": "El IA t7ebhom. El nas yeset3mlohom b qell:",
+  "write.tips.buzzwords.fix": "",
+  "write.tips.buzzwords.points": [
+    "\"delve into\", \"tapestry\", \"vibrant\", \"robust\", \"leverage\" (estamel \"yesta3mel\")",
+    "\"fel khetam\", \"b ikhtissar\", \"bech njemmel\"",
+    "\"Mhem n7ebou nlawrou elli...\"",
+    "\"Navigation fel complexités\", \"fel 3alem el youm rapide\""
+  ],
+  "write.tips.examples.icon": "💎",
+  "write.tips.examples.title": "Exemples spécifiques",
+  "write.tips.examples.problem": "Bdel el généralités b détails concrets mel cas:",
+  "write.tips.examples.fix": "",
+  "write.tips.examples.points": [
+    "❌ \"El marque khsrat quota fel marché.\"",
+    "✅ \"El ventes au détail fel Espanya n9os mel €22M lel €14M bin 2018 w 2023.\"",
+    "❌ \"El satisfaction du client basse.\"",
+    "✅ \"NPS mta3 17 y7ot Equivalenza t7t Druni (56) w Primor (46) b kther.\""
+  ],
+  "write.tips.hedging.icon": "🤔",
+  "write.tips.hedging.title": "Hedging (precaução)",
+  "write.tips.hedging.problem": "El incertitude stratégique y3amel el text yebda akther insani:",
+  "write.tips.hedging.fix": "",
+  "write.tips.hedging.points": [
+    "\"Yebdou elli...\"",
+    "\"Hatha yemken ysugger...\"",
+    "\"N9oulou elli...\"",
+    "\"Pe3t-ebarre él akther mhem factor houa...\""
+  ]
 }
