@@ -11,6 +11,29 @@ const commitSha = execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).
 const BUILD_ID = `v${version}-${commitSha}-${Date.now()}`;
 const CACHE_NAME = `presuntino-${BUILD_ID}`;
 
+// Define cache-busting plugin inline to avoid separate file
+function cacheBustingPlugin(buildId) {
+  return {
+    name: 'presuntinho:cache-busting',
+    transformIndexHtml(html) {
+      // Add ?v={BUILD_ID} to manifest and other cacheable resources
+      return html
+        .replace(
+          /<link\s+([^>]*?)href="([^"]+)"/g,
+          (match, attrs, href) => {
+            // Only process manifest link
+            if (attrs.includes('rel="manifest"')) {
+              if (!href.startsWith('http') && !href.startsWith('//')) {
+                return match.replace(href, `${href}?v=${buildId}`);
+              }
+            }
+            return match;
+          }
+        );
+    }
+  };
+}
+
 let isSsrBuild = false;
 
 export default defineConfig({
@@ -30,6 +53,8 @@ export default defineConfig({
         }
       }
     },
+    // Add cache-busting to manifest link in HTML
+    cacheBustingPlugin(BUILD_ID),
     // Phase 10: PWA — install as a SPA (adapter-static + ssr=false in +layout.ts).
     // The manifest is shipped as static/manifest.webmanifest and copied into the
     // build as-is (manifest: false). Icons live in static/icons/. The plugin
@@ -43,6 +68,8 @@ export default defineConfig({
         enabled: false // keep dev clean; SW only ships in production build
       },
       workbox: {
+        // Prefix cache name with unique build ID to force cache invalidation on deploy
+        cacheId: CACHE_NAME,
         // @vite-pwa/sveltekit generates the worker during the SSR build, then
         // adapter-static copies client output to build/. Ensure the client dir
         // exists before Workbox writes here (Windows/Node 24 can otherwise race).
