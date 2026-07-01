@@ -17,22 +17,36 @@ import type { ProfileId } from '../auth/hash';
 let _initialized = false;
 let _initializedProfile: ProfileId | null = null;
 let _initPromise: Promise<void> | null = null;
+let _initializingProfile: ProfileId | null = null;
+
+function resolveInitProfile(profile?: ProfileId): ProfileId {
+  return profile ?? _initializedProfile ?? _initializingProfile ?? 'fatma';
+}
 
 /**
  * Initialize all stores: run migration, ensure default rows exist.
  * Idempotent — safe to call from multiple places.
  */
-export async function initStores(profile: ProfileId = 'fatma'): Promise<void> {
-  if (_initialized && _initializedProfile === profile) return;
-  if (_initPromise) return _initPromise;
+export async function initStores(profile?: ProfileId): Promise<void> {
+  const targetProfile = resolveInitProfile(profile);
+  if (_initialized && _initializedProfile === targetProfile) return;
+  if (_initPromise) {
+    if (_initializingProfile === targetProfile) return _initPromise;
+    await _initPromise;
+    return initStores(targetProfile);
+  }
+  _initializingProfile = targetProfile;
   _initPromise = (async () => {
-    setActiveProfile(profile);
-    await bootMigration(profile);
-    await ensureDefaults(profile);
-    await hydrateStores(profile);
+    setActiveProfile(targetProfile);
+    await bootMigration(targetProfile);
+    await ensureDefaults(targetProfile);
+    await hydrateStores(targetProfile);
     _initialized = true;
-    _initializedProfile = profile;
-  })();
+    _initializedProfile = targetProfile;
+  })().finally(() => {
+    _initPromise = null;
+    _initializingProfile = null;
+  });
   return _initPromise;
 }
 

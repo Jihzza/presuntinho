@@ -18,6 +18,7 @@
   } from '$lib/agent/db';
   import type { ChatMessageRow } from '$lib/state/db';
   import { initStores } from '$lib/state/stores';
+  import { getSession } from '$lib/auth/session';
 
   let messages = $state<ChatMessageRow[]>([]);
   let input = $state('');
@@ -35,7 +36,9 @@
 
   async function refreshHistory() {
     try {
-      await initStores();
+      const session = getSession();
+      if (!session) return;
+      await initStores(session.profile);
       messages = await listChatMessages(200);
       await scrollToBottom();
     } catch (e) {
