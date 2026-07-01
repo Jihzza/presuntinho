@@ -1,95 +1,142 @@
+<!--
+  /trabalhos/assignment/[slug] — detail view for a single assignment.
+
+  Loads `db.assignments.get(params.slug)` on mount.  The "slug" URL
+  param is actually the stable id of the row (a1, a2, …) — we keep
+  the param name as `slug` to mirror the old /data/assignments/*.json
+  pack convention so external links don't break.
+
+  Status transitions (Marcar in_progress / Submeter) are applied
+  through `setAssignmentStatus()` in `$lib/trabalhos`, which handles
+  the Dexie write and the XP rewards.
+
+  If the id doesn't resolve to a row, the page renders a 404 state
+  with a link back to /trabalhos/.
+
+  i18n: PT strings inline (task-005 will add en/fr/ar/tn keys).
+-->
 <script lang="ts">
-  import { page } from '$app/state';
+  import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+  import { liveQuery, type Subscription } from 'dexie';
+  import { db } from '$lib/state/db';
+  import {
+    setAssignmentStatus,
+    type Assignment,
+    type AssignmentStatus
+  } from '$lib/trabalhos';
   import Countdown from '$lib/components/Countdown.svelte';
-  import type { AssignmentPack } from '$lib/assignments';
+  import { showToast } from '$lib/components/events';
 
-  // V6 pack shape — single file holds every assignment for the course.
-  // We only need the Assignment fields on the page, so we inline a
-  // narrow type rather than importing the full Assignment interface
-  // (which would force us to handle every optional field).
-
-  import { t } from "svelte-i18n";
-  interface AssignmentFromPack {
-    id: string;
-    slug: string;
-    title: string;
-    weight: number;
-    lessonSlug?: string;
-    audioSlug?: string;
-    whatToDo: string;
-    howToDo: string;
-    hint: string;
-    estimatedMinutes: number;
-  }
-
-  let pack = $state<AssignmentPack | null>(null);
-  let assignment = $state<AssignmentFromPack | null>(null);
+  let assignment = $state<Assignment | null>(null);
   let loading = $state(true);
   let error = $state<string | null>(null);
+  let notFound = $state(false);
+  let busy = $state(false);
 
-  $effect(() => {
-    const slug = page.params.slug;
-    if (!slug) {
-      error = $t('error.trabalho_nao_especificado', { default: 'Trabalho não especificado.' });
+  // Pretty label for the status enum (PT-only for the MVP).
+  function statusLabel(s: AssignmentStatus): string {
+    switch (s) {
+      case 'pending':     return 'Por começar';
+      case 'in_progress': return 'Em curso';
+      case 'submitted':   return 'Entregue';
+      case 'graded':      return 'Avaliado';
+    }
+  }
+
+  // Pretty label for the curso slug.
+  function cursoLabel(slug: string): string {
+    return slug
+      .split('-')
+      .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
+      .join(' ');
+  }
+
+  // Format a deadline timestamp for the meta block ("27 jun 2026, 14:00").
+  function formatDeadline(ts: number): string {
+    if (!ts) return '—';
+    return new Date(ts).toLocaleString('pt-PT', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  onMount(() => {
+    const id = $page.params.slug;
+    if (!id) {
+      error = 'Trabalho não especificado.';
       loading = false;
       return;
     }
-    loading = true;
-    error = null;
-    assignment = null;
-    pack = null;
-    const controller = new AbortController();
 
-    fetch('/data/assignments/equivalenza.json', {
-      cache: 'no-store',
-      signal: controller.signal
-    })
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-        return (await res.json()) as AssignmentPack;
-      })
-      .then((data) => {
-        pack = data;
-        const found = data.assignments.find(
-          (a) => a.slug === slug || a.id === slug
-        );
-        if (!found) {
-          error = `Trabalho "${slug}" não encontrado no pack.`;
+    const sub: Subscription = liveQuery(() => db().assignments.get(id)).subscribe({
+      next: (row) => {
+        error = null;
+        if (!row) {
+          assignment = null;
+          notFound = true;
         } else {
-          assignment = found;
+          assignment = row;
+          notFound = false;
         }
         loading = false;
-      })
-      .catch((e: unknown) => {
-        if (e instanceof DOMException && e.name === 'AbortError') return;
-        error =
-          e instanceof Error
-            ? `Não foi possível carregar o pack: ${e.message}`
-            : 'Não foi possível carregar o pack de trabalhos.';
+      },
+      error: (e: unknown) => {
+        console.error('[trabalhos/assignment] liveQuery failed', e);
+        error = e instanceof Error ? e.message : 'Erro a carregar trabalho';
         loading = false;
-      });
+      }
+    });
 
-    return () => controller.abort();
+    return () => sub.unsubscribe();
   });
 
-  // Combined description: what + how + hint, so the detail page gives
-  // the student everything they need in one place.
-  let descriptionText = $derived(
-    assignment
-      ? [assignment.whatToDo, assignment.howToDo, assignment.hint]
-          .filter((s) => s && s.trim().length > 0)
-          .join(' ')
-      : ''
-  );
+  // Mutation handlers — Dexie liveQuery above reflects the saved row
+  // back into local state, but we also assign the returned row so the
+  // page feels instant on slow IndexedDB writes.
+  async function markInProgress(): Promise<void> {
+    if (!assignment || busy) return;
+    busy = true;
+    try {
+      const updated = await setAssignmentStatus(assignment.id, 'in_progress');
+      if (updated) {
+        assignment = updated;
+        showToast('Marcado como em curso');
+      }
+    } catch (e) {
+      console.error('[trabalhos] setAssignmentStatus failed', e);
+      showToast('Erro a atualizar estado');
+    } finally {
+      busy = false;
+    }
+  }
 
-  // SEO — used by <svelte:head> below.
+  async function submitAssignment(): Promise<void> {
+    if (!assignment || busy) return;
+    busy = true;
+    try {
+      const updated = await setAssignmentStatus(assignment.id, 'submitted');
+      if (updated) {
+        assignment = updated;
+        showToast('Trabalho entregue ✓');
+      }
+    } catch (e) {
+      console.error('[trabalhos] setAssignmentStatus failed', e);
+      showToast('Erro a entregar trabalho');
+    } finally {
+      busy = false;
+    }
+  }
+
+  // ---- SEO ----
   let pageTitle = $derived(
     assignment ? `${assignment.title} · Trabalhos` : 'Trabalho · Trabalhos'
   );
   let metaDescription = $derived(
-    descriptionText.slice(0, 160) || 'Detalhe do trabalho'
+    assignment?.description?.slice(0, 160) || 'Detalhe do trabalho'
   );
 </script>
 
@@ -104,76 +151,97 @@
 </svelte:head>
 
 <div class="detail">
-  <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
+  <nav class="crumbs" aria-label="Caminho de navegação">
     <a href="/">← Hub</a>
     <span aria-hidden="true">/</span>
-    <a href="/trabalhos/">{$t('trabalhos.assignment.breadcrumb.home', { default: '← Trabalhos' })}</a>
+    <a href="/trabalhos/">← Trabalhos</a>
     <span aria-hidden="true">/</span>
-    <span aria-current="page">{page.params.slug ?? '...'}</span>
+    <span aria-current="page">{$page.params.slug ?? '...'}</span>
   </nav>
 
   {#if loading}
-    <p class="state">{$t('trabalhos.assignment.loading', { default: 'A carregar trabalho…' })}</p>
+    <p class="state">A carregar trabalho…</p>
+  {:else if notFound}
+    <div class="state notfound" role="alert">
+      <h1>404 — Trabalho não encontrado</h1>
+      <p>
+        Não existe nenhum trabalho com o identificador
+        <code>{$page.params.slug}</code>.
+      </p>
+      <p>Pode ter sido removido, ou o link está errado.</p>
+      <a class="back-link" href="/trabalhos/">← Voltar à lista de trabalhos</a>
+    </div>
   {:else if error || !assignment}
     <div class="state error" role="alert">
       <p>⚠️ {error ?? 'Trabalho desconhecido.'}</p>
-      <p>
-        Verifica que o slug <code>{page.params.slug}</code> existe no pack
-        <code>{$t('trabalhos.assignment.file_path', { default: 'static/data/assignments/equivalenza.json' })}</code>.
-      </p>
-      <a class="back-link" href="/trabalhos/">{$t('trabalhos.assignment.back_to_list', { default: '← Voltar à lista de trabalhos' })}</a>
+      <a class="back-link" href="/trabalhos/">← Voltar à lista de trabalhos</a>
     </div>
   {:else}
-    <article class="assignment">
+    <article class="assignment" data-status={assignment.status}>
       <header class="header">
         <div class="title-row">
           <h1>{assignment.title}</h1>
-          <span class="weight-pill" aria-label="{$t('a11y.aria.peso', { default: 'Peso' })}">Peso {assignment.weight}%</span>
+          <span class="xp-pill" title="Recompensa ao entregar">⚡ {assignment.xpReward} XP</span>
         </div>
-        <span class="meta-pill" aria-label="{$t('a11y.aria.duracao_estimada', { default: 'Duração estimada' })}">
-          ⏱️ ~{assignment.estimatedMinutes} min
-        </span>
+        <div class="meta-row">
+          <span class="course-pill">{cursoLabel(assignment.curso)}</span>
+          {#if assignment.cadeira}
+            <span class="cadeira-pill">{assignment.cadeira}</span>
+          {/if}
+          <span class="status status-{assignment.status}">{statusLabel(assignment.status)}</span>
+        </div>
       </header>
 
-      <section class="description-block" aria-label="{$t('a11y.aria.descricao_do_trabalho', { default: 'Descrição do trabalho' })}">
-        <h2 class="block-title">{$t('trabalhos.assignment.o_que_fazer', { default: 'O que fazer' })}</h2>
-        <p class="description">{descriptionText}</p>
+      <section class="description-block" aria-label="Descrição do trabalho">
+        <h2 class="block-title">Descrição</h2>
+        <p class="description">{assignment.description}</p>
       </section>
 
-      <section class="meta-block" aria-label="{$t('a11y.aria.prazo', { default: 'Prazo' })}">
-        <h2 class="block-title">{$t('trabalhos.assignment.prazo', { default: 'Prazo' })}</h2>
+      <section class="meta-block" aria-label="Prazo">
+        <h2 class="block-title">Prazo</h2>
         <div class="deadline-row">
-          {#if pack?.deadline}
-            <Countdown deadline={pack.deadline} />
-          {/if}
+          <Countdown deadline={new Date(assignment.deadline).toISOString()} />
+          <span class="deadline-abs">{formatDeadline(assignment.deadline)}</span>
         </div>
       </section>
 
-      <section class="recursos-block" aria-label="{$t('a11y.aria.recursos', { default: 'Recursos' })}">
-        <h2 class="block-title">{$t('trabalhos.assignment.recursos', { default: 'Recursos' })}</h2>
-        <ul class="recursos">
-          {#if assignment.lessonSlug}
-            <li>
-              <a class="recurso-link" href={`/escola/curso/${assignment.lessonSlug}/`}>
-                📖 Ver aula: {assignment.lessonSlug}
-              </a>
-            </li>
+      <section class="actions-block" aria-label="Ações">
+        <h2 class="block-title">Ações</h2>
+        <div class="actions">
+          {#if assignment.status === 'pending'}
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick={markInProgress}
+              disabled={busy}
+            >
+              ▶ Marcar como em curso
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick={submitAssignment}
+              disabled={busy}
+            >
+              ✓ Entregar
+            </button>
+          {:else if assignment.status === 'in_progress'}
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick={submitAssignment}
+              disabled={busy}
+            >
+              ✓ Entregar
+            </button>
+          {:else if assignment.status === 'submitted' || assignment.status === 'graded'}
+            <p class="hint">Trabalho {assignment.status === 'graded' ? 'já avaliado' : 'entregue'}.</p>
           {/if}
-          {#if assignment.audioSlug}
-            <li>
-              <a class="recurso-link" href={`/walk/?slug=${assignment.audioSlug}`}>
-                🎧 Ouvir walkthrough
-              </a>
-            </li>
-          {/if}
-          {#if !assignment.lessonSlug && !assignment.audioSlug}
-            <li class="muted">{$t('trabalhos.assignment.sem_recursos', { default: 'Sem recursos associados.' })}</li>
-          {/if}
-        </ul>
+        </div>
       </section>
 
       <footer class="footer-row">
-        <a class="back-link" href="/trabalhos/">{$t('trabalhos.assignment.back_to_list', { default: '← Voltar à lista de trabalhos' })}</a>
+        <a class="back-link" href="/trabalhos/">← Voltar à lista de trabalhos</a>
       </footer>
     </article>
   {/if}
@@ -206,12 +274,20 @@
     background: var(--card, rgba(255, 255, 255, 0.05));
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
     border-radius: 0.75rem;
-    padding: 1.25rem;
+    padding: 1.5rem;
     color: var(--txt2, #cbd5e1);
-    margin: 0;
   }
   .state.error {
     border-left: 4px solid var(--error, #ef4444);
+  }
+  .state.notfound {
+    text-align: center;
+    border-left: 4px solid var(--warning, #f59e0b);
+  }
+  .state.notfound h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    color: var(--txt, #fff);
   }
   .state code {
     background: rgba(0, 0, 0, 0.25);
@@ -229,38 +305,52 @@
     flex-direction: column;
     gap: 1.25rem;
   }
+  .assignment[data-status='in_progress'] {
+    border-left-color: var(--accent, #ec4899);
+  }
+  .assignment[data-status='submitted'] {
+    border-left-color: var(--success, #10b981);
+  }
+  .assignment[data-status='graded'] {
+    border-left-color: #6366f1;
+  }
   .header {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 0.75rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0.625rem;
   }
   .title-row {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.625rem;
     flex-wrap: wrap;
-    min-width: 0;
   }
   .title-row h1 {
     margin: 0;
     font-size: 1.5rem;
     line-height: 1.25;
     color: var(--txt, #fff);
+    flex: 1 1 auto;
+    min-width: 0;
   }
-  .weight-pill {
-    font-size: 0.75rem;
-    padding: 0.15rem 0.5rem;
+  .xp-pill {
+    font-size: 0.8125rem;
+    padding: 0.25rem 0.7rem;
     border-radius: 999px;
     background: rgba(236, 72, 153, 0.15);
     color: var(--accent, #ec4899);
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    font-weight: 700;
     white-space: nowrap;
+    flex-shrink: 0;
   }
-  .meta-pill {
+  .meta-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .course-pill {
     font-size: 0.75rem;
     padding: 0.2rem 0.6rem;
     border-radius: 999px;
@@ -268,8 +358,41 @@
     color: var(--txt2, #cbd5e1);
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
     font-weight: 600;
-    letter-spacing: 0.02em;
+    text-transform: capitalize;
+  }
+  .cadeira-pill {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+    font-weight: 600;
+  }
+  .status {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
     white-space: nowrap;
+  }
+  .status-pending {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--warning, #f59e0b);
+  }
+  .status-in_progress {
+    background: rgba(236, 72, 153, 0.15);
+    color: var(--accent, #ec4899);
+  }
+  .status-submitted {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success, #10b981);
+  }
+  .status-graded {
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
   }
   .block-title {
     font-size: 0.8125rem;
@@ -284,47 +407,76 @@
     margin: 0;
     font-size: 1rem;
     line-height: 1.55;
+    white-space: pre-wrap;
   }
   .deadline-row {
     background: rgba(0, 0, 0, 0.15);
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
-  }
-  .recursos {
-    list-style: none;
-    padding: 0;
-    margin: 0;
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
   }
-  .recurso-link {
+  .deadline-abs {
+    color: var(--txt3, #94a3b8);
+    font-size: 0.875rem;
+  }
+  .actions {
+    display: flex;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 0.9rem;
-    background: rgba(0, 0, 0, 0.15);
-    border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+    gap: 0.4rem;
+    padding: 0.6rem 1.1rem;
     border-radius: 0.5rem;
-    color: var(--txt, #fff);
-    text-decoration: none;
+    font-family: inherit;
+    font-size: 0.95rem;
     font-weight: 600;
-    font-size: 0.9375rem;
-    transition: background 0.15s;
+    border: 0;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s, transform 0.15s;
   }
-  .recurso-link:hover,
-  .recurso-link:focus-visible {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--accent, #ec4899);
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: var(--accent, #ec4899);
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled),
+  .btn-primary:focus-visible:not(:disabled) {
+    background: #d63384;
     outline: none;
   }
-  .recurso-link:focus-visible {
-    box-shadow: inset 0 0 0 2px var(--accent, #ec4899);
+  .btn-primary:focus-visible {
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.4);
   }
-  .muted {
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--txt, #fff);
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.2));
+  }
+  .btn-secondary:hover:not(:disabled),
+  .btn-secondary:focus-visible:not(:disabled) {
+    background: rgba(255, 255, 255, 0.12);
+    outline: none;
+  }
+  .btn-secondary:focus-visible {
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.4);
+  }
+  .hint {
     color: var(--txt3, #94a3b8);
     font-size: 0.875rem;
     margin: 0;
+    flex-basis: 100%;
   }
   .footer-row {
     display: flex;
@@ -349,5 +501,8 @@
     .title-row h1 {
       font-size: 1.875rem;
     }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn { transition: none; transform: none; }
   }
 </style>

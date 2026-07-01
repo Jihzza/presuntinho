@@ -1,129 +1,190 @@
+<!--
+  /trabalhos — list of school assignments (Escola sub-app, Phase 11).
+
+  MVP (task-004):
+    * Reads the `assignments` Dexie table (added in v7) on mount and
+      shows a filterable, sortable card grid.
+    * Filters: curso (slug from the escola catalogue), status
+      (pending / in_progress / submitted / graded), ordem
+      (deadline asc / desc).  URL params are the single source of
+      truth so filtered views are bookmarkable.
+    * Each card links to /trabalhos/assignment/<id>/ for the detail
+      view.
+    * Each card shows a Countdown pill for the deadline and an XP
+      reward badge.
+    * Empty-state when zero rows AND when filters return nothing.
+
+  The old (pre-task-004) version of this file rendered a hard-coded
+  `Equivalenza — Mid-Term BCOBM311` block from /static + a
+  /data/assignments/equivalenza.json pack fetch.  Both paths are
+  obsolete now that the seed lives in Dexie (`buildDefaultAssignments`
+  in `src/lib/state/assignments-seed.ts`) and the user is expected to
+  own their assignments in IndexedDB.
+
+  i18n: copy is inline PT (task-005 will add en/fr/ar/tn keys).
+-->
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+  import { t } from 'svelte-i18n';
+  import { liveQuery, type Subscription } from 'dexie';
+  import { db } from '$lib/state/db';
+  import {
+    ensureAssignmentDefaults,
+    type Assignment,
+    type AssignmentStatus
+  } from '$lib/trabalhos';
   import Countdown from '$lib/components/Countdown.svelte';
   import EmptyState from '$lib/components/EmptyState.svelte';
   import Skeleton from '$lib/components/Skeleton.svelte';
-  import { t } from 'svelte-i18n';
-  import type { SubApp } from '$lib/registry';
   import { subApps } from '$lib/registry';
-  import { onMount } from 'svelte';
-  import {
-    loadAssignments,
-    setAssignmentStatus,
-    getAllAssignmentStatuses,
-    type Assignment as NewAssignment,
-  } from '$lib/assignments';
 
-  // New: dynamically-loaded assignments (V6 / Phase A)
-  let newAssignments = $state<NewAssignment[]>([]);
-  let newLoading = $state(true);
-  let statuses = $state<Record<string, 'open' | 'in_progress' | 'done'>>({});
+  // ---------------- State ----------------
+  let assignments = $state<Assignment[]>([]);
+  let cursos = $state<string[]>(['todos']);
+  let loading = $state(true);
+  let error = $state<string | null>(null);
 
-  onMount(() => {
-    let mounted = true;
-    const onAssignmentStatus = (e: Event) => {
-      const detail = (e as CustomEvent).detail as { assignmentId: string; status: 'open' | 'in_progress' | 'done' };
-      statuses = { ...statuses, [detail.assignmentId]: detail.status };
-    };
+  // Filter state — mirrored to URL params so filtered views are
+  // bookmarkable and the back button does the right thing.
+  let cursoFiltro = $state<string>('todos');
+  let statusFiltro = $state<AssignmentStatus | 'todos'>('todos');
+  // 'asc' = deadline soonest first (default, matches user mental model).
+  // 'desc' = deadline latest first.
+  let ordem = $state<'asc' | 'desc'>('asc');
 
-    statuses = getAllAssignmentStatuses();
-    window.addEventListener('presuntinho:assignment-status', onAssignmentStatus);
+  const trabalhosApp = subApps.find((a) => a.id === 'trabalhos');
 
-    void loadAssignments('equivalenza').then((pack) => {
-      if (!mounted) return;
-      if (pack) newAssignments = pack.assignments;
-      newLoading = false;
+  // ---------------- Derived: filtered + sorted list ----------------
+  let visible = $derived.by<Assignment[]>(() => {
+    const filtered = assignments.filter((a) => {
+      if (cursoFiltro !== 'todos' && a.curso !== cursoFiltro) return false;
+      if (statusFiltro !== 'todos' && a.status !== statusFiltro) return false;
+      return true;
     });
-
-    return () => {
-      mounted = false;
-      window.removeEventListener('presuntinho:assignment-status', onAssignmentStatus);
-    };
+    return [...filtered].sort((a, b) => {
+      const cmp = a.deadline - b.deadline;
+      return ordem === 'asc' ? cmp : -cmp;
+    });
   });
 
-  function cycleStatus(id: string) {
-    const cur = statuses[id] || 'open';
-    const next = cur === 'open' ? 'in_progress' : cur === 'in_progress' ? 'done' : 'open';
-    setAssignmentStatus(id, next);
-    statuses = { ...statuses, [id]: next };
-  }
-
-  function newStatusLabel(s: 'open' | 'in_progress' | 'done'): string {
-    return s === 'done' ? $t('trabalhos.status.done', { default: 'Concluído' }) : s === 'in_progress' ? $t('trabalhos.status.in_progress', { default: 'Em curso' }) : $t('trabalhos.status.open', { default: 'Por começar' });
-  }
-
-  interface AssignmentDoc {
-    name: string;
-    description: string;
-    path: string;
-    size: number;
-    type: 'pdf' | 'docx' | 'zip' | string;
-  }
-
-  interface Assignment {
-    id: string;
-    title: string;
-    course: string;
-    description: string;
-    deadline: string; // ISO 8601
-    status: 'open' | 'submitted' | 'late' | string;
-    documents: AssignmentDoc[];
-  }
-
-  // Hard-coded list of assignments.  Phase 5 keeps it tiny — the canonical
-  // metadata is duplicated in static/data/assignments/<id>.json so the
-  // detail route can fetch it at runtime without a build-time registry.
-  const assignments: Assignment[] = [
-    {
-      id: 'equivalenza-midterm',
-      title: 'Equivalenza — Mid-Term BCOBM311',
-      course: 'BCOBM311',
-      description:
-        'Trabalho de meio-período sobre a Equivalenza — análise estratégica, persona, e TOWS. Inclui análise SWOT, buyer persona, problema de marketing, TOWS, e recomendação final.',
-      deadline: '2026-06-29T14:00:00+01:00',
-      status: 'open',
-      documents: [
-        {
-          name: 'Equivalenza_Mid_Term_Fatma.pdf',
-          description: 'Versão final em PDF',
-          path: '/legacy/docs/Equivalenza_Mid_Term_Fatma.pdf',
-          size: 161,
-          type: 'pdf'
-        },
-        {
-          name: 'Equivalenza_Mid_Term_Fatma.docx',
-          description: 'Versão editável em Word',
-          path: '/legacy/docs/Equivalenza_Mid_Term_Fatma.docx',
-          size: 2248,
-          type: 'docx'
-        },
-        {
-          name: 'equivalenza-midterm-deliverables-V3.zip',
-          description: 'Pacote completo (PDF + DOCX + anexos)',
-          path: '/legacy/equivalenza-midterm-deliverables-V3.zip',
-          size: 1709,
-          type: 'zip'
-        }
-      ]
-    }
+  // "All" status options (mirrors AssignmentRow['status']).
+  const STATUS_OPTIONS: Array<AssignmentStatus | 'todos'> = [
+    'todos',
+    'pending',
+    'in_progress',
+    'submitted',
+    'graded'
   ];
 
-  // Resolve app metadata from the registry so the back link + colours match
-  // the hub's card.  If the Trabalhos entry is missing we fall back to a
-  // generic "apps" label so the page never crashes.
-  const trabalhosApp: SubApp | undefined = subApps.find((a) => a.id === 'trabalhos');
-
-  function statusLabel(status: Assignment['status']): string {
-    switch (status) {
-      case 'open':
-        return $t('trabalhos.status_legacy.open', { default: 'Em curso' });
-      case 'submitted':
-        return $t('trabalhos.status_legacy.submitted', { default: 'Entregue' });
-      case 'late':
-        return $t('trabalhos.status_legacy.late', { default: 'Atrasado' });
-      default:
-        return status;
+  // Pretty label for each status (PT-only for the MVP — i18n lives
+  // in task-005).
+  function statusLabel(s: AssignmentStatus): string {
+    switch (s) {
+      case 'pending':     return 'Por começar';
+      case 'in_progress': return 'Em curso';
+      case 'submitted':   return 'Entregue';
+      case 'graded':      return 'Avaliado';
     }
   }
+
+  // Friendly curso name: replace dashes with spaces and title-case
+  // the first letter of each word.  We don't ship a curso→title map
+  // here because the escola i18n keys live in pt-PT.json and
+  // task-005 will wire $t() lookups properly.
+  function cursoLabel(slug: string): string {
+    if (slug === 'todos') return 'Todos';
+    return slug
+      .split('-')
+      .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
+      .join(' ');
+  }
+
+  // ---------------- Data loading ----------------
+  function buildCursos(rows: Assignment[]): string[] {
+    const set = new Set(rows.map((a) => a.curso));
+    return ['todos', ...Array.from(set).sort((a, b) => a.localeCompare(b, 'pt-PT'))];
+  }
+
+  function applyRows(rows: Assignment[]): void {
+    assignments = rows;
+    const cs = buildCursos(rows);
+    // Preserve the user's current cursoFiltro when possible; if it
+    // no longer exists in the data, fall back to 'todos' so the
+    // filter chip doesn't silently hide every row.
+    if (cursoFiltro !== 'todos' && !cs.includes(cursoFiltro)) {
+      cursoFiltro = 'todos';
+    }
+    cursos = cs;
+    loading = false;
+  }
+
+  // Hydrate filters from URL params, seed defaults, then subscribe to a
+  // Dexie liveQuery over the assignments table.  This means status
+  // changes made in the detail view immediately update this list if the
+  // route stays mounted in the browser history.
+  onMount(() => {
+    const sp = $page.url.searchParams;
+    const c = sp.get('curso');
+    if (c) cursoFiltro = c;
+    const s = sp.get('status');
+    if (s && STATUS_OPTIONS.includes(s as AssignmentStatus | 'todos')) {
+      statusFiltro = s as AssignmentStatus | 'todos';
+    }
+    const o = sp.get('ordem');
+    if (o === 'asc' || o === 'desc') ordem = o;
+
+    let sub: Subscription | null = null;
+    void ensureAssignmentDefaults()
+      .then(() => {
+        sub = liveQuery(() => db().assignments.orderBy('deadline').toArray()).subscribe({
+          next: (rows) => {
+            error = null;
+            applyRows(rows);
+          },
+          error: (e: unknown) => {
+            console.error('[trabalhos] liveQuery failed', e);
+            error = e instanceof Error ? e.message : 'Erro a carregar trabalhos';
+            loading = false;
+          }
+        });
+      })
+      .catch((e: unknown) => {
+        console.error('[trabalhos] seed failed', e);
+        error = e instanceof Error ? e.message : 'Erro a preparar trabalhos';
+        loading = false;
+      });
+
+    return () => sub?.unsubscribe();
+  });
+
+  // Sync filters → URL params (use replaceState so the back button
+  // doesn't accumulate filter churn).
+  $effect(() => {
+    if (typeof window === 'undefined') return;
+    const sp = new URLSearchParams();
+    if (cursoFiltro !== 'todos') sp.set('curso', cursoFiltro);
+    if (statusFiltro !== 'todos') sp.set('status', statusFiltro);
+    if (ordem !== 'asc') sp.set('ordem', ordem);
+    const qs = sp.toString();
+    const next = qs ? `?${qs}` : window.location.pathname;
+    if (window.location.search !== (qs ? `?${qs}` : '')) {
+      window.history.replaceState(null, '', next);
+    }
+  });
+
+  function clearFilters(): void {
+    cursoFiltro = 'todos';
+    statusFiltro = 'todos';
+    ordem = 'asc';
+  }
+
+  let temFiltroAtivo = $derived(
+    cursoFiltro !== 'todos' || statusFiltro !== 'todos' || ordem !== 'asc'
+  );
+
+  // XP totals for the visible rows (small motivational sub-headline).
+  let xpTotalVisivel = $derived(visible.reduce((acc, a) => acc + a.xpReward, 0));
 </script>
 
 <svelte:head>
@@ -138,105 +199,109 @@
 
 <div class="trabalhos">
   <header class="hero">
-    <h1>{$t('trabalhos.hero.title', { default: '📝 Trabalhos' })}</h1>
-    <p class="sub">{$t('trabalhos.hero.sub', { default: 'Trabalhos e entregas com prazos — começa pelo que tem deadline mais próximo.' })}</p>
+    <h1>📝 Trabalhos</h1>
+    <p class="sub">Trabalhos e entregas com prazos — começa pelo que tem deadline mais próximo.</p>
   </header>
 
-  <nav class="crumbs" aria-label={$t('trabalhos.crumbs.aria', { default: 'Caminho de navegação' })}>
-    <a href="/">{$t('trabalhos.crumbs.home', { default: '← Hub' })}</a>
+  <nav class="crumbs" aria-label="Caminho de navegação">
+    <a href="/">← Hub</a>
     <span aria-hidden="true">/</span>
-    <span aria-current="page">{$t('trabalhos.crumbs.current', { default: 'Trabalhos' })}</span>
+    <span aria-current="page">Trabalhos</span>
   </nav>
 
-  <section class="list" aria-label={$t('trabalhos.list.aria', { default: 'Lista de trabalhos' })}>
-    {#if newLoading}
-      <Skeleton variant="list" lines={4} label={$t('common.loading')} />
-    {:else if newAssignments.length > 0}
-        <header class="progress-bar" aria-live="polite">
-          <p>
-            {$t('trabalhos.progress', { default: 'Progresso geral' })}:
-            <strong>
-              {newAssignments.filter((a) => statuses[a.id] === 'done').length} / {newAssignments.length}
-            </strong>
-            {$t('trabalhos.progress.done', { default: 'concluídos' })}
-          </p>
-        </header>
-        <h2 class="section-title">{$t('trabalhos.section.course', { default: '📚 Trabalhos do curso (BCOBM311)' })}</h2>
-        <ul class="cards">
-          {#each newAssignments as a (a.id)}
-            <li class="card" data-status={statuses[a.id] || 'open'}>
-              <div class="card-header">
-                <div class="title-row">
-                  <h2>
-                    <a href="/trabalhos/assignment/{a.slug}/">{a.title}</a>
-                  </h2>
-                  <span class="course-pill" aria-label={$t('trabalhos.weight', { default: 'Peso' })}>{$t('trabalhos.weight.short', { default: 'Peso' })} {a.weight}%</span>
-                </div>
-                <span class="status status-{statuses[a.id] || 'open'}">{newStatusLabel(statuses[a.id] || 'open')}</span>
-              </div>
-              <p class="description"><strong>{$t('trabalhos.what', { default: 'O quê' })}:</strong> {a.whatToDo}</p>
-              <p class="description"><strong>{$t('trabalhos.how', { default: 'Como' })}:</strong> {a.howToDo}</p>
-              {#if a.hint}
-                <p class="hint"><span aria-hidden="true">💡</span> {a.hint}</p>
-              {/if}
-              <div class="meta">
-                <span class="meta-label">{$t('trabalhos.deadline', { default: 'Prazo' })}:</span>
-                <Countdown deadline={new Date('2026-06-29T14:00:00').toISOString()} />
-              </div>
-              <div class="footer-row">
-                <button
-                  type="button"
-                  class="status-btn"
-                  onclick={() => cycleStatus(a.id)}
-                  aria-label={$t('trabalhos.change_status.aria', { values: { title: a.title }, default: 'Mudar estado de {title}' })}
-                >
-                  🔄 {$t('trabalhos.change_status', { default: 'Mudar estado' })}
-                </button>
-                <a class="open-link" href="/trabalhos/assignment/{a.slug}/">
-                  {$t('trabalhos.open', { default: 'Abrir trabalho' })} →
-                </a>
-              </div>
-            </li>
-          {/each}
-        </ul>
-      {/if}
+  {#if !loading && assignments.length > 0}
+    <section class="filters" aria-label="Filtros">
+      <div class="filters-row">
+        <label class="field">
+          <span class="field-label">Curso</span>
+          <select bind:value={cursoFiltro} aria-label="Filtrar por curso">
+            {#each cursos as c (c)}
+              <option value={c}>{cursoLabel(c)}</option>
+            {/each}
+          </select>
+        </label>
+        <label class="field">
+          <span class="field-label">Estado</span>
+          <select bind:value={statusFiltro} aria-label="Filtrar por estado">
+            {#each STATUS_OPTIONS as s (s)}
+              <option value={s}>{s === 'todos' ? 'Todos' : statusLabel(s as AssignmentStatus)}</option>
+            {/each}
+          </select>
+        </label>
+        <label class="field">
+          <span class="field-label">Ordem</span>
+          <select bind:value={ordem} aria-label="Ordenar por prazo">
+            <option value="asc">Prazo ↑ (mais próximo)</option>
+            <option value="desc">Prazo ↓ (mais longe)</option>
+          </select>
+        </label>
+        {#if temFiltroAtivo}
+          <button
+            type="button"
+            class="clear-btn"
+            onclick={clearFilters}
+            aria-label="Limpar filtros"
+          >
+            Limpar
+          </button>
+        {/if}
+      </div>
+      <div class="summary">
+        <span class="summary-pill">
+          <strong>{visible.length}</strong> de {assignments.length} {assignments.length === 1 ? 'trabalho' : 'trabalhos'}
+        </span>
+        <span class="summary-pill xp" title="Soma de XP dos trabalhos visíveis">
+          ⚡ <strong>{xpTotalVisivel}</strong> XP
+        </span>
+      </div>
+    </section>
+  {/if}
 
-      <h2 class="section-title">{$t('trabalhos.section.package', { default: '📦 Pacote completo (V3 mid-term)' })}</h2>
-      {#if assignments.length === 0}
-        <EmptyState
-          emoji="📭"
-          title={$t('empty.trabalhos.title')}
-          description={$t('empty.trabalhos.desc')}
-        />
-      {:else}
-        <ul class="cards">
-        {#each assignments as a (a.id)}
+  <section class="list" aria-label="Lista de trabalhos">
+    {#if loading}
+      <Skeleton variant="card" lines={4} label="A carregar…" />
+    {:else if error}
+      <p class="empty error" role="alert">⚠️ {error}</p>
+    {:else if assignments.length === 0}
+      <EmptyState
+        emoji="📭"
+        title={$t('empty.trabalhos.title')}
+        description={$t('empty.trabalhos.desc')}
+      />
+    {:else if visible.length === 0}
+      <EmptyState
+        emoji="🔎"
+        title="Nenhum trabalho corresponde aos filtros"
+        description="Limpa os filtros para voltares a ver a lista completa."
+        ctaLabel="Limpar filtros"
+        onCta={clearFilters}
+      />
+    {:else}
+      <ul class="cards">
+        {#each visible as a (a.id)}
           <li class="card" data-status={a.status}>
-            <div class="card-header">
-              <div class="title-row">
-                <h2>
-                  <a href="/trabalhos/assignment/{a.id}/">{a.title}</a>
-                </h2>
-                <span class="course-pill" aria-label={$t('trabalhos.course', { default: 'Curso' })}>{a.course}</span>
+            <a class="card-link" href={`/trabalhos/assignment/${a.id}/`}>
+              <div class="card-header">
+                <h2 class="title">{a.title}</h2>
+                <span class="course-pill" title={`Curso: ${cursoLabel(a.curso)}`}>
+                  {cursoLabel(a.curso)}
+                </span>
               </div>
-              <span class="status status-{a.status}">{statusLabel(a.status)}</span>
-            </div>
 
-            <p class="description">{a.description}</p>
+              {#if a.cadeira}
+                <p class="cadeira">{a.cadeira}</p>
+              {/if}
 
-            <div class="meta">
-              <span class="meta-label">{$t('trabalhos.deadline', { default: 'Prazo' })}:</span>
-              <Countdown deadline={a.deadline} />
-            </div>
+              <p class="description">{a.description}</p>
 
-            <div class="footer-row">
-              <span class="doc-count">
-                {a.documents.length} {a.documents.length === 1 ? $t('trabalhos.doc.singular', { default: 'documento' }) : $t('trabalhos.doc.plural', { default: 'documentos' })}
-              </span>
-              <a class="open-link" href="/trabalhos/assignment/{a.id}/">
-                {$t('trabalhos.open', { default: 'Abrir trabalho' })} →
-              </a>
-            </div>
+              <div class="meta">
+                <Countdown deadline={new Date(a.deadline).toISOString()} />
+                <span class="status status-{a.status}">{statusLabel(a.status)}</span>
+                <span class="xp-pill" title="Recompensa ao entregar">
+                  ⚡ {a.xpReward} XP
+                </span>
+              </div>
+            </a>
           </li>
         {/each}
       </ul>
@@ -246,7 +311,7 @@
   {#if trabalhosApp}
     <footer class="page-footer" aria-hidden="true">
       <span style="--swatch: {trabalhosApp.color}">{trabalhosApp.icon}</span>
-      <span>{$t('trabalhos.footer.position', { default: 'Hub · Trabalhos' })}</span>
+      <span>Hub · Trabalhos</span>
     </footer>
   {/if}
 </div>
@@ -278,6 +343,7 @@
     font-size: 0.875rem;
     color: var(--txt3, #94a3b8);
     margin-bottom: 1rem;
+    flex-wrap: wrap;
   }
   .crumbs a {
     color: var(--accent, #ec4899);
@@ -287,6 +353,89 @@
   .crumbs a:focus-visible {
     text-decoration: underline;
   }
+  .filters {
+    background: var(--card, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+    border-radius: 0.75rem;
+    padding: 0.875rem 1rem 0.75rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+  .filters-row {
+    display: flex;
+    gap: 0.625rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 9rem;
+    flex: 1 1 9rem;
+  }
+  .field-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--txt3, #94a3b8);
+    font-weight: 600;
+  }
+  .field select {
+    background: rgba(0, 0, 0, 0.25);
+    color: var(--txt, #fff);
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
+    border-radius: 0.4rem;
+    padding: 0.45rem 0.55rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .field select:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.4);
+  }
+  .clear-btn {
+    align-self: flex-end;
+    background: transparent;
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
+    color: var(--txt2, #cbd5e1);
+    border-radius: 0.4rem;
+    padding: 0.5rem 0.8rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .clear-btn:hover,
+  .clear-btn:focus-visible {
+    background: rgba(236, 72, 153, 0.15);
+    color: var(--accent, #ec4899);
+    outline: none;
+  }
+  .summary {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-size: 0.8125rem;
+  }
+  .summary-pill {
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--txt2, #cbd5e1);
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+  }
+  .summary-pill strong {
+    color: var(--txt, #fff);
+    font-weight: 700;
+  }
+  .summary-pill.xp strong {
+    color: var(--accent, #ec4899);
+  }
   .empty {
     background: var(--card, rgba(255, 255, 255, 0.05));
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
@@ -294,6 +443,10 @@
     padding: 1.5rem;
     text-align: center;
     color: var(--txt2, #cbd5e1);
+  }
+  .empty.error {
+    border-color: var(--error, #ef4444);
+    color: var(--error, #ef4444);
   }
   .cards {
     list-style: none;
@@ -308,65 +461,99 @@
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
     border-left: 4px solid var(--accent, #f59e0b);
     border-radius: 0.75rem;
-    padding: 1.25rem 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    overflow: hidden;
+    transition: transform 0.15s, background 0.2s;
+  }
+  .card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-1px);
+  }
+  .card[data-status='in_progress'] {
+    border-left-color: var(--accent, #ec4899);
   }
   .card[data-status='submitted'] {
     border-left-color: var(--success, #10b981);
   }
-  .card[data-status='late'] {
-    border-left-color: var(--warning, #f59e0b);
+  .card[data-status='graded'] {
+    border-left-color: #6366f1;
   }
-  .card-header {
+  .card-link {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
-  .title-row {
-    display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 0.5rem;
-    flex-wrap: wrap;
-    min-width: 0;
-  }
-  .title-row h2 {
-    margin: 0;
-    font-size: 1.125rem;
-    line-height: 1.3;
-  }
-  .title-row h2 a {
+    padding: 1.125rem 1rem;
     color: var(--txt, #fff);
     text-decoration: none;
   }
-  .title-row h2 a:hover,
-  .title-row h2 a:focus-visible {
-    color: var(--accent, #ec4899);
-    text-decoration: underline;
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+  }
+  .title {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--txt, #fff);
+    line-height: 1.3;
+    flex: 1 1 auto;
+    min-width: 0;
   }
   .course-pill {
-    font-size: 0.75rem;
-    padding: 0.15rem 0.5rem;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.55rem;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.08);
     color: var(--txt2, #cbd5e1);
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
     font-weight: 600;
     letter-spacing: 0.02em;
+    text-transform: capitalize;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .cadeira {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--txt3, #94a3b8);
+  }
+  .description {
+    color: var(--txt2, #cbd5e1);
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    background: rgba(0, 0, 0, 0.18);
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.5rem;
+    margin-top: 0.125rem;
   }
   .status {
-    font-size: 0.75rem;
-    padding: 0.2rem 0.6rem;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.55rem;
     border-radius: 999px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     white-space: nowrap;
   }
-  .status-open {
+  .status-pending {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--warning, #f59e0b);
+  }
+  .status-in_progress {
     background: rgba(236, 72, 153, 0.15);
     color: var(--accent, #ec4899);
   }
@@ -374,50 +561,19 @@
     background: rgba(16, 185, 129, 0.15);
     color: var(--success, #10b981);
   }
-  .status-late {
-    background: rgba(245, 158, 11, 0.15);
-    color: var(--warning, #f59e0b);
+  .status-graded {
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
   }
-  .description {
-    color: var(--txt2, #cbd5e1);
-    margin: 0;
-    font-size: 0.9375rem;
-    line-height: 1.5;
-  }
-  .meta {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    background: rgba(0, 0, 0, 0.15);
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.5rem;
-  }
-  .meta-label {
-    font-size: 0.8125rem;
-    color: var(--txt3, #94a3b8);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .footer-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    font-size: 0.875rem;
-  }
-  .doc-count {
-    color: var(--txt3, #94a3b8);
-  }
-  .open-link {
+  .xp-pill {
+    margin-left: auto;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(236, 72, 153, 0.12);
     color: var(--accent, #ec4899);
-    text-decoration: none;
     font-weight: 600;
-  }
-  .open-link:hover,
-  .open-link:focus-visible {
-    text-decoration: underline;
+    white-space: nowrap;
   }
   .page-footer {
     display: flex;
@@ -439,5 +595,9 @@
     .hero h1 {
       font-size: 2.5rem;
     }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card { transition: none; transform: none; }
+    .clear-btn { transition: none; }
   }
 </style>
