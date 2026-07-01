@@ -218,17 +218,6 @@
           badge: 'Uni'
         },
         {
-                  slug: 'gestao-operacoes',
-                  title: $t('routes.escola.curso.gestao-operacoes.title', { default: "Gestão de Operações" }),
-                  tagline: $t('routes.escola.curso.gestao-operacoes.tagline', { default: "Business Administration · Processos, qualidade, capacidade e supply chain" }),
-                  description: $t('routes.escola.curso.gestao-operacoes.description', { default: "Como desenhar, operar e melhorar processos que transformam inputs em outputs: estratégia operacional, qualidade e Six Sigma, capacidade e layout, supply chain e Lean." }),
-                  icon: '🏭',
-                  color: '#ea580c',
-                  lessonCount: 4,
-                  quizCount: 1,
-                  badge: 'Uni'
-                },
-                {
                                   slug: 'gestao-conflitos',
                                   title: $t('routes.escola.curso.gestao-conflitos.title', { default: "Gestão de Conflitos" }),
                                   tagline: $t('routes.escola.curso.gestao-conflitos.tagline', { default: "Business Administration · Fontes do conflito, estilos de resposta, negociação integrativa e mediação" }),
