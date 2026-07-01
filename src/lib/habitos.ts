@@ -82,7 +82,7 @@ export async function addHabito(input: NewHabitInput): Promise<number> {
     name: input.name.trim(),
     icon: input.icon || '✅',
     color: input.color || '#ec4899',
-    cadence: input.cadence || 'daily',
+    cadence: 'daily',
     createdAt: Date.now(),
     // task-040: optional meta + reminder.  Trim so accidental spaces
     // don't survive into the detail view.
@@ -110,7 +110,7 @@ export async function editHabito(
   if (typeof patch.name === 'string') safe.name = patch.name.trim();
   if (typeof patch.icon === 'string') safe.icon = patch.icon;
   if (typeof patch.color === 'string') safe.color = patch.color;
-  if (typeof patch.cadence === 'string') safe.cadence = patch.cadence;
+  if (patch.cadence === 'daily') safe.cadence = 'daily';
   if (typeof patch.meta === 'string') safe.meta = patch.meta.trim() || undefined;
   if (typeof patch.reminder === 'string') safe.reminder = patch.reminder.trim() || undefined;
   await db().habitos.update(id, safe);

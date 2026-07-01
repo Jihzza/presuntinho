@@ -8,7 +8,7 @@
   The form exposes the four "complete" fields per the task brief:
     1. nome (name)        — required, max 60 chars
     2. icone (icon)       — optional emoji (≤4 code points)
-    3. frequencia (cadence) — daily / weekly
+    3. frequencia (cadence) — daily
     4. meta (target)      — free-form text ("2L", "30 min", "8h")
     5. lembrete (reminder) — free-form text ("20:00", "manhã")
 
@@ -40,11 +40,7 @@
   let name = $state(untrack(() => habit?.name ?? ''));
   let icon = $state(untrack(() => habit?.icon ?? '✅'));
   let color = $state(untrack(() => habit?.color ?? '#ec4899'));
-  let cadence = $state<'daily' | 'weekly'>(
-    untrack(() =>
-      (habit?.cadence === 'weekly' ? 'weekly' : 'daily') as 'daily' | 'weekly'
-    )
-  );
+  let cadence = $state<'daily'>(untrack(() => 'daily'));
   let meta = $state(untrack(() => habit?.meta ?? ''));
   let reminder = $state(untrack(() => habit?.reminder ?? ''));
 
@@ -161,10 +157,6 @@
       <label class="radio">
         <input type="radio" name="cadence" value="daily" bind:group={cadence} />
         <span>{$t('habitos.form.cadence.daily', { default: 'Diário' })}</span>
-      </label>
-      <label class="radio">
-        <input type="radio" name="cadence" value="weekly" bind:group={cadence} />
-        <span>{$t('habitos.form.cadence.weekly', { default: 'Semanal' })}</span>
       </label>
     </div>
   </fieldset>

@@ -3,7 +3,6 @@
     "aria": {
       "change_language": "Changer de langue — actuelle : {native}",
       "choose_language": "Choisir la langue",
-      "disponivel_em_breve": "Bientôt disponible",
       "progresso_de": "Progression de {label} : {percent}%"
     }
   },

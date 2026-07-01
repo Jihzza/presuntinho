@@ -5,7 +5,7 @@
 //     the app never opens empty for Fátma.  Inlining that into
 //     ensureDefaults() would dwarf the rest of the bootstrap helper.
 //   * Keeping the seed declarative (typed rows in an array) makes it
-//     trivial to edit values, add rows, or change the cadence.
+//     trivial to edit values or add rows.
 //   * When we eventually ship "Reset to demo data" in /definicoes, this
 //     module is the single import to wire it to.
 //
@@ -42,7 +42,7 @@ export interface SeedHabitoTemplate {
   name: string;
   icon: string;
   color: string;
-  cadence: 'daily' | 'weekly' | string;
+  cadence: 'daily';
   /** Per-day log probability (0..1).  0.8 = ~11 logs out of 14 days. */
   completionRate: number;
 }

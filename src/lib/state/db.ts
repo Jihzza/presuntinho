@@ -175,9 +175,8 @@ export interface CategoriaRow {
 /**
  * Phase 7 — Hábitos sub-app.
  *
- * One row per habit definition.  `cadence` is stored as a string so we
- * can add more values later (e.g. "weekdays", "3x/week") without a
- * schema bump.  For the MVP only 'daily' is rendered in the UI.
+ * One row per habit definition.  `cadence` is intentionally restricted
+ * to 'daily' until weekly tracking/stats are implemented end-to-end.
  *
  * task-040 (Hábitos Pro) adds:
  *   - `meta`     — optional target value (e.g. "2L", "30 min", "8h").
@@ -195,7 +194,7 @@ export interface HabitoRow {
   name: string;           // user-entered, pt-PT friendly
   icon: string;           // emoji or short text, e.g. '💧'
   color: string;          // hex (#xxxxxx) — used by the heatmap tint
-  cadence: 'daily' | 'weekly' | string;
+  cadence: 'daily';
   createdAt: number;      // Date.now()
   meta?: string;          // task-040: target / unit string ("2L", "30 min")
   reminder?: string;      // task-040: free-form reminder ("20:00", "manhã")
@@ -628,10 +627,8 @@ export const DEFAULT_CATEGORIAS: CategoriaRow[] = [
    * `createdAt` is the only field we set automatically, so there is no
    * collision risk with future user-created habits.
    *
-   * `cadence` is hard-coded to 'daily' for all eight.  The schema already
-   * allows 'weekly' / arbitrary strings, but the MVP UI only renders
-   * daily habits, so seeding anything else would create rows the user
-   * couldn't see or interact with.
+   * `cadence` is hard-coded to 'daily' for all eight. Weekly cadence is
+   * deliberately not exposed until weekly tracking/stats are implemented.
    */
   export const DEFAULT_HABITOS: HabitoRow[] = [
   { name: 'Beber água 2L',        icon: '💧', color: '#3b82f6', cadence: 'daily', createdAt: 0 },

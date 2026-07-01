@@ -28,7 +28,8 @@
     getDashboardStats,
     type Habit,
     type HabitDashboardStats,
-    type HeatmapData
+    type HeatmapData,
+    type NewHabitInput
   } from '$lib/habitos';
   import { subApps } from '$lib/registry';
   import EmptyState from '$lib/components/EmptyState.svelte';
@@ -172,14 +173,7 @@
     }
   }
 
-  async function onEditSubmit(values: {
-    name: string;
-    icon: string;
-    color: string;
-    cadence: 'daily' | 'weekly' | string;
-    meta?: string;
-    reminder?: string;
-  }): Promise<void> {
+  async function onEditSubmit(values: NewHabitInput): Promise<void> {
     if (!editingHabit || typeof editingHabit.id !== 'number') return;
     await editHabito(editingHabit.id, values);
     showToast(get(t)('habitos.toast.updated', { default: 'Hábito atualizado' }));
@@ -299,7 +293,7 @@
                   <span class="meta">
                     {$t('habitos.created', { default: 'Criado a' })} {formatCreatedAt(h.createdAt)}
                     {#if h.meta} · <span class="meta-pill">{h.meta}</span>{/if}
-                    · {h.cadence === 'daily' ? $t('habitos.cadence.daily', { default: 'diário' }) : h.cadence}
+                    · {$t('habitos.cadence.daily', { default: 'diário' })}
                   </span>
                   <span class="status" aria-label={logged.get(h.id) ? $t('habitos.list.today_done', { default: '✓ hoje' }) : $t('habitos.list.today_pending', { default: '— pendente' })}>
                     <span class="streak">{$t('habitos.list.streak', { default: '🔥 {n} dias', values: { n: streaks.get(h.id) ?? 0 } })}</span>
