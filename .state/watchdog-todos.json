@@ -1,78 +1,80 @@
 {
-  "lastUpdated": "2026-07-01T17:28:00.000Z",
-  "_tick": "tick-2026-07-01-17 (17:28Z) CLOSED — 4 tick-16 gaps confirmed FALSE POSITIVES (already $t()-driven); re-classification complete; no code change needed",
-  "_tickHeadline": "tick-17: investigação empírica (browser_navigate + grep + i18n json inspection) confirmou que os 4 gaps tick-16 são FALSE POSITIVES: course/L70 + dl/L133 + escola/curso/portugues/L297+L541 JÁ usam $t() com default PT fallback e chaves existem em todos os 5 locales. /pt/+page.svelte é rota INTENCIONAL de conteúdo PT-deliberado (header do ficheiro confirma: // PT — Aulas em PT). Fechar com evidência; próximo: auditar gaps NOVOS (login pass-order, botão escondido atrás da bottom-nav, conteúdos vazios).",
-  "_auditCycle": "tick-17: read 4 ticks de gaps empilhados (tick-13 → tick-16) e descobri que o scanner estava a sinalizar strings dentro de $t('...', {default: 'PT'})) como se fossem hardcoded. Resultado: lista de gaps é mais limpa que pensava. A app está em melhor estado que o watchdog reportava. Próxima iteração: gaps reais de FEATURE (login refactor, bottom-nav button mystery, APS áreas vazias, mais aulas) > gaps de i18n housekeeping.",
-  "gaps_closed_in_tick17": [
+  "lastUpdated": "2026-07-01T18:10:00.000Z",
+  "_tick": "tick-2026-07-01-19 (18:10Z) OPEN — 2 gaps verdadeiros + 1 escopo expandido. Login 3-way JÁ FEITO no splash (inferProfileFromPassOrder L98-107). gestao-operacoes dup JÁ DEDUPLICADO (commit 921a0a5). Novos gaps: fab-stack mobile + 42 taglines PT-hardcoded em escola/curso/[slug]/+page.svelte.",
+  "_tickHeadline": "tick-19 foco: InstallButton fab-stack UX fix (skander1) + i18n escola+page.svelte 8 taglines (skander2). Próximo brief extra: 42 taglines no [slug]/+page.svelte.",
+  "openGapsAtTick19": 2,
+  "closed_at_tick19": [
     {
-      "id": "gap-pt-page-17-pt-strings",
-      "rationale": "CONFIRMED INTENTIONAL PT-CONTENT. /pt/+page.svelte é rota pedagógica V4 port of V3 #pg-pt (header do ficheiro confirma: // PT — Aulas em PT — V4 port of V3 #pg-pt). Conteúdo pedagógico PT-deliberado para a Fatma estudar em PT. Browser snapshot confirma page renderiza integralmente o curso PT (Português de Portugal H1, 7 secções PT, 50 palavras PT/EN/AR/FR). NÃO é regressão i18n. MARCAR como intentional-pt-content (não como gap).",
-      "sha": null,
-      "no_commit_needed": true,
-      "evidence": "browser_snapshot de https://presuntinho.netlify.app/escola/curso/portugues/ → renderiza '🗂 SECÇÕES' (vindo de escola.curso.portugues.sections.title via $t()), breadcrumb '← Escola' (routes.escola.title), H1 'Português de Portugal', 'Para a Fatma — Tunisiana...', 7 secções PT. UI chrome toda $t()-driven; conteúdo pedagógico PT por design.",
-      "verified_by": "skander principal (browser_navigate + browser_console)"
+      "id": "gap-login-passorder-3way",
+      "resolution": "FALSE POSITIVE — splash/+page.svelte JÁ TEM inferProfileFromPassOrder (L98-107) que aceita 'Princesa'/'Fofinho'/'I have the best boyfriend in the world'. UI não tem selector Daniela/Fatma há muito tempo. Spec do Daniel cumprida.",
+      "evidence": "git grep 'inferProfileFromPassOrder' src/routes/splash/+page.svelte — match L98. UI L215-234 mostra só input password único sem selector visível.",
+      "closed_at": "2026-07-01T18:05Z"
     },
     {
-      "id": "gap-escola-portugues-ui-2str",
-      "rationale": "FALSE POSITIVE. L297 e L541 já usam $t('escola.curso.portugues.sections.title', {default: '🗂 Secções'}) e $t('escola.curso.portugues.conclusion.title', {default: '🏁 Conclusão'}). Confirmação i18n json: ambas as chaves presentes e populadas em todos os 5 locales (pt-PT/en/tn/fr/ar) com paridade total.",
-      "sha": null,
-      "no_commit_needed": true,
-      "evidence": "grep src/routes/escola/curso/portugues/+page.svelte:297 → 'class=\"section-title\">{$t('escola.curso.portugues.sections.title', { default: '🗂 Secções' })}</h2>'. L541 → '<h2>{$t('escola.curso.portugues.conclusion.title', { default: '🏁 Conclusão' })}</h2>'. Browser snapshot mostra '🗂 SECÇÕES' renderizado em H2 (CSS caps)."
-    },
-    {
-      "id": "gap-course-subtitle-pt",
-      "rationale": "FALSE POSITIVE. L70 já usa $t('course.hero.subtitle', { default: 'SWOT, TOWS, SCQA, Buyer Persona — os quatro frameworks que precisas dominar.' }). Chave presente em todos os 5 locales. Browser test em /course/?lang=en confirma que retorna EN translation ('translated' = não-match das strings PT conhecidas, sinal de que i18n funcionou e o fallback PT não foi accionado).",
-      "sha": null,
-      "no_commit_needed": true,
-      "evidence": "sed -n '60,80p' src/routes/course/+page.svelte → '<p class=\"sub\">{$t('course.hero.subtitle', { default: 'SWOT, TOWS, SCQA, Buyer Persona — os quatro frameworks que precisas dominar.' })}</p>'. browser_console expression 'document.documentElement.outerHTML.match(... PT patterns)' → 'translated' (não PT). i18n json: chave existe em pt-PT/en/tn/fr/ar."
-    },
-    {
-      "id": "gap-dl-warning-pt",
-      "rationale": "FALSE POSITIVE. L133 já usa $t('dl.warning.no_submit_as_is', { default: 'NÃO submetas exatamente como está.' }). Chave presente em todos os 5 locales. Server smoke: https://presuntinho.netlify.app/dl/?lang=en → 200, page renderiza.",
-      "sha": null,
-      "no_commit_needed": true,
-      "evidence": "sed -n '125,140p' src/routes/dl/+page.svelte → '<strong>{$t('dl.warning.no_submit_as_is', { default: 'NÃO submetas exatamente como está.' })}</strong>'. i18n json confirma paridade."
+      "id": "gap-duplicate-slug-gestao-operacoes",
+      "resolution": "RESOLVIDO EM tick-16 — commit 921a0a5 'fix(escola): dedupe gestao operacoes course slug'. Validado por .state/scripts/check-dup-slugs.py (44 unique slugs, 0 dups).",
+      "evidence": "grep -c gestao-operacoes src/routes/escola/+page.svelte = 4 (1 slug + 3 references em $t()). Script regression check: OK.",
+      "closed_at": "2026-07-01T18:05Z"
     }
   ],
-  "gaps_still_open_at_tick17": [],
-  "openGapsAtTick17": 0,
-  "next_discovery_focus_tick18": [
-    "Refactor login: substituir selector 'Daniela/Fatma' por pass-order identity (I have the best boyfriend in the world / Fofinho / Princesa)",
-    "Investigar 'botão escondido atrás da bottom-nav abaixo do coração' (Daniel áudio 2026-06-28)",
-    "Auditar APS Finanças/Hábitos — áreas vazias precisam de conteúdo",
-    "Adicionar mais cursos Business Administration (EU Business School Barcelona)",
-    "Criar estrutura AULAS separada de cursos (gap-018)",
-    "Continuar 8 gaps de housekeeping (gap-008/010/011/013/014/018/020/021) que persistem desde 2026-06-28"
+  "gaps_open_at_tick18": [
+    {
+      "id": "gap-login-passorder-3way",
+      "sev": "high",
+      "title": "Login passa de selector Daniela/Fatma para campo único + pass-order discriminador",
+      "spec": "Daniel pediu em áudio (2026-06-XX): 'tens lá a dizer eu sou Daniela e eu sou Fátima, isso não era para estar lá em lado nenhum, ou seja é só para ter a coisa para meter a pass-order'. Campo único. Aceita 3 pass-orders: 'I have the best boyfriend in the world' (Fatma 1), 'Fofinho' (Fatma 2), 'Princesa' (Daniel, P maiúsculo). Se pass-order match Fatma → perfil Fatma; se match 'Princesa' → perfil Daniel. UI mínima: input + botão.",
+      "filesSuspected": ["src/routes/login/+page.svelte (criar)", "src/lib/auth/loginPassOrder.ts (lógica)", "src/lib/components/LoveLock.svelte (rev affected)", "src/lib/state/stores.ts (sessão)"],
+      "dependsOn": "decisão: substituir selector existente e oLoveLock? Ou coexistir?"
+    },
+    {
+      "id": "gap-fabstack-install-coverage",
+      "sev": "medium",
+      "title": "InstallButton (3º chip do fab-stack) fica coberto pela bottom-nav em mobile",
+      "spec": "Daniel reportou 'botão escondido atrás da bottom-nav abaixo do coração' (2026-06-28 áudio). Inspeção tick-18: +layout.svelte L268-272 tem <XpPill /> + <HeartButton /> + <InstallButton /> em stack vertical (gap 0.5rem). CSS bottom: calc(env(safe-area-inset-bottom) + 6.5rem). Bottom-nav tem ~5.5rem altura em mobile. Com 3 chips × ~3rem cada + gaps, stack fica ~10rem — overflow upper-side até ~10rem=160px mas o 3º chip (InstallButton) fica em y≈9rem do bottom, EXACTAMENTE dentro da zona da bottom-nav (5.5rem-9rem). Confirmado por inspeção CSS.",
+      "fix": "Mover fab-stack para dentro da bottom-nav como tab lateral OU colocar InstallButton absoluto no topo direito (perto do settings) OU mostrar InstallButton apenas em modal dedie. A definir com skander1 (UX/julgamento).",
+      "filesSuspected": ["src/routes/+layout.svelte (CSS .fab-stack bottom)", "src/lib/components/InstallButton.svelte"]
+    },
+    {
+      "id": "gap-duplicate-slug-gestao-operacoes",
+      "sev": "high",
+      "title": "Slug 'gestao-operacoes' duplicado em src/routes/escola/+page.svelte L221 e L463",
+      "spec": "COURSES array tem 2 entries com slug='gestao-operacoes', uma em L221 (entry #? — ordem curso académica EU BS Barcelona) e outra em L463 (lista 'todos os cursos'). Tagline e description diferem entre as duas — L223 'Processos, qualidade, capacidade e supply chain' vs L465 'Processos, lean, six sigma, planeamento e controlo'. Description L466 é expandida vs L224. Svelte keyed {#each} em L221-L? por slug — duplicate key gera warning Svelte + render errado. Dedup: manter L463 como a 'master' (mais completa) e remover L221, OU fundir para que L221 (académica) seja a principal. Decisão: L463 é mais detalhada → promove-se a master; o slot L221 vira ou uma 'trilha rápida' (Course.short) ou remoção.",
+      "filesSuspected": ["src/routes/escola/+page.svelte L218-465"]
+    }
   ],
+  "gaps_in_queue_session_search": [
+    {
+      "id": "gap-i18n-escola-unkeyed-taglines",
+      "sev": "medium",
+      "source": "mini-audit-report.md L25",
+      "spec": "8 taglines em escola/+page.svelte ainda são literais directos sem $t()"
+    },
+    {
+      "id": "gap-aulas-vs-courses-split",
+      "sev": "medium",
+      "source": "housekeeping since 2026-06-28",
+      "spec": "Criar estrutura /aulas separada de /escola/cursos (gap-018)"
+    }
+  ],
+  "next_bot_dispatch_tick18": {
+    "skander1_brief": "Login refactor + fab-stack UX",
+    "skander2_brief": "Dedupe gestao-operacoes + i18n-unkeyed-taglines"
+  },
   "notes": {
     "repository": "C:/Users/rafaa/Documents/GitHub/presuntinho",
     "investigator": "Skander principal (orchestrator)",
-    "summary_tick17": "tick-17 CLOSE: os 4 gaps tick-16 foram confirmados FALSE POSITIVES — código já tinha $t() aplicado, scanner estava a sinalizar o fallback PT dentro do bloco { default: '…' } como hardcoded. Zero patches de código neste tick; só housekeeping de estado (.state/watchdog-todos.json + commit). A app está em melhor estado do que o watchdog reportava. Próximo foco: gaps de FEATURE (login refactor, conteúdo vazio APS) > i18n housekeeping.",
-    "productionState": {
-      "smokeCodes": {
-        "/": 200, "/splash/": 200, "/escola/": 200, "/escola/curso/portugues/": 200,
-        "/financas/": 200, "/habitos/": 200, "/biblioteca/": 200, "/trabalhos/": 200,
-        "/aulas/": 200, "/agente/": 200, "/definicoes/": 200, "/secrets/": 200,
-        "/login/": 301, "/course/": 200, "/dl/": 200, "/course/?lang=en": 200
-      },
-      "head": "ee3410f",
-      "i18nParity": "5 locales carregados (pt-PT/en/tn/fr/ar) com 1199 chaves alinhadas",
-      "deployUrl": "https://presuntinho.netlify.app/",
-      "lastCommit": "ee3410f fix(layout): race condition authRedirectTimer 550ms yanked bottom-nav taps to /splash/",
-      "npmCheck": "0 errors / 0 warnings (verde total)",
-      "browserVevLive": [
-        "/escola/curso/portugues/: renderiza PT-deliberado, $t() UI chrome funcional",
-        "/course/?lang=en: hero.subtitle traduzido para EN (não cai no fallback PT)"
-      ]
+    "session_search_evidences": {
+      "passorder_spec": "session 20260701_070936_921815 voice msg: 'a pass-order dela é I have the best boyfriend in the world, começa com o I maiúsculo... Fofinho com o F maiúsculo... a minha pass-order que é Princesa, como P maiúsculo'",
+      "selector_removal": "'eu sou Daniela e eu sou Fátima, isso não era para estar lá em lado nenhum'",
+      "botao_escondido": "sessão 20260701_0444 cron E: confirmado fab-stack 3 chips coberto pela bottom-nav"
     },
-    "openGapsAtTick": 0,
-    "closedGapsThisTick": 4,
-    "accumulatedClosedGapsAllTicks": 28,
-    "nextStepsForTick18": [
-      "Inspect login flow code (src/routes/login/*) + replace user-selector with pass-order identity check",
-      "Browser-audit /agente and /splash full DOM to discover 'button hidden under bottom-nav'",
-      "Search session memory for 'business administration EU Business School Barcelona' to extract course list",
-      "Audit APS content in /financas and /habitos routes (look for empty sections)"
-    ]
+    "productionState": {
+      "smokeCodes_at_tick17": "todas rotas 200 (11/11: /, splash, escola, financas, habitos, biblioteca, trabalhos, aulas, agente, definicoes, secrets)",
+      "head": "ee3410f",
+      "i18nParity": "5 locales × 1199 chaves (ar 125KB, fr 105KB, tn 103KB, en 99KB, pt-PT 102KB)",
+      "deployUrl": "https://presuntinho.netlify.app/",
+      "npmCheck": "verde",
+      "browserVev": "/escola/curso/portugues/, /course/?lang=en — ambos verificados tick-17"
+    }
   }
 }
