@@ -1,93 +1,103 @@
 {
-  "lastUpdated": "2026-07-01T14:38:30Z",
-  "_tick": "tick-05 (2026-07-01 14:38Z)",
-  "_tickHeadline": "tick-04 fechou gap-login-redirect (ec5f62b em main); bots skander1/skander2 entregaram auditoria local; novo tick-05 despacha skander1 para fix UX /login/ (flash 404 antes do redirect) e skander2 para remover 8 orphan keys splash.choose/profile × 5 locales. i18n parity mantida em 1077/1077 × 5 locales. openGapsAtTick = 1 → após tick-05 fechar",
+  "lastUpdated": "2026-07-01T14:55:00Z",
+  "_tick": "tick-06 (2026-07-01 14:55Z)",
+  "_tickHeadline": "tick-06 identificou 3 gaps latentes a partir do nextStepsForTick06: (A) HEART_TIERS engine-vs-JSON drift — easterEggs.ts tem 23 tiers oficiais mas static/config/easterEggs.json#heartTiers só tem 11; (B) hub.greeting schema mismatch — +page.svelte:211-212 chama hub.greeting.daniel/fatma mas 5 locales só têm hub.greeting (string flat); (C) finanças namespace ausente em pt-PT/en/fr/ar/tn — $t('financas.loading')/card.*/empty.* cai sempre no default. Reconstruído watchdog-todos.json com 2 objetos JSON concatenados corrigidos. Skander1 (UX/audit) + Skander2 (mecânica heartTiers.json) despachados em paralelo. Próximo tick valida fixes e continua caça.",
   "gaps": [
     {
-      "id": "gap-127-pilot",
-      "title": "Pilot i18n for lesson bodies (equivalenza/swot × EN)",
-      "status": "closed",
-      "decision": "DEFER",
-      "decisionDoc": ".state/gap-127-decision.md",
-      "closureSha": "c003c6b",
-      "closureCommit": "chore(state): close gap-127 (DECISION: DEFER i18n lesson bodies — see .state/gap-127-decision.md)",
-      "closureReason": "Lesson bodies stay PT-only by analogy with established content defer policy. UI chrome and navigation stay fully i18n'd (header labels, next/previous buttons) but the actual lesson narrative JSON content is Portuguese-only, matching how the user studies lessons in PT. Closing per /goal-2026-07-01 directive from CEO.",
+      "id": "gap-heart-tiers-engine-vs-json-2026-07-01-tick-06",
+      "title": "HEART_TIERS drift: easterEggs.ts HEART_TIERS (23 tiers) vs static/config/easterEggs.json#heartTiers (11 tiers)",
+      "status": "open",
+      "severity": "medium",
       "repository": "presuntinho",
-      "closedBy": "skander-principal (orchestrator) per CEO /goal"
-    },
-    {
-      "id": "gap-145",
-      "title": "Create new BA course (gestao-informacao or comportamento-consumidor)",
-      "status": "closed",
-      "decision": "ALREADY_EXISTS",
-      "closureReason": "Investigation revealed the requested slug 'comportamento-consumidor' already exists in COURSES + CATALOGUE as 'comportamento-do-consumidor' (with full i18n + 4 lessons). 'gestao-informacao' maps to existing 'sistemas-de-informacao'. No new course needed.",
-      "repository": "presuntinho",
-      "closedBy": "skander-principal (orchestrator) per CEO /goal"
-    },
-    {
-      "id": "gap-login-redirect-2026-07-01-tick-04",
-      "title": "CEO áudio msg_id 42100: /login → /splash alias (no selector Daniela/Fátima UI)",
-      "status": "closed",
-      "decision": "ALIAS_VIA_REDIRECT_301",
-      "closureSha": "ec5f62b",
-      "closureCommit": "fix(netlify): /login → /splash/ 301 alias per CEO gap-login-redirect-2026-07-01-tick-04",
-      "closureReason": "Auditoria local (src/routes/splash/+page.svelte:102-104 + src/routes/+layout.svelte:135,155 + grep Daniela/Fátima) confirmou: NÃO existe UI 'Eu sou Daniela/Fátima' selector. A inferência do profile é automática pela pass-order (princesa → daniel; fofinho/I have the best boyfriend in the world → fatma). O único gap real era semântico-URL: /login/ devolvia 200 com SPA shell inerte em vez de redirecionar para /splash/. Solução: redirect 301 mínimo em static/_redirects (e propagado para build/_redirects via SvelteKit copy). npm run check 0 erros + npm run build verde + push origin main f7aa357..ec5f62b.",
       "investigationDate": "2026-07-01",
-      "closedDate": "2026-07-01",
-      "closedBy": "skander-principal (orchestrator)",
       "evidence": {
-        "auditoriaLocal": {
-          "src/routes/splash/+page.svelte:102-104": "pass-order inference: princesa→daniel, fofinho→fatma, 'I have the best boyfriend in the world'→fatma",
-          "src/routes/+layout.svelte:135,155": "redirect não-autenticados → /splash/",
-          "grep_search": "NÃO encontrado selector Daniela/Fátima na UI (grep Daniela|Fátima|Fatima=0 matches em src/)",
-          "producao": "https://presuntinho.netlify.app/login/ respondia 200 mas com SPA shell inerte antes deste fix"
-        },
-        "fix": {
-          "file": "static/_redirects (linha +1, depois de /aulas 301)",
-          "buildPropagated": "build/_redirects (verificado após npm run build)",
-          "commit": "ec5f62b em main",
-          "deployStatus": "pendente — verificar https://presuntinho.netlify.app/login/ redirecionar a /splash/ dentro de ~1-2 min após push"
-        },
-        "deferredToSubagents": {
-          "skander1": "A Fazer /tmp/skander1-gap-login.md com análise UX (3 items max) — em background, session proc_1271d40db5a1",
-          "skander2": "A Fazer /tmp/skander2-audit.md com PT-hardcoded + bottom-bar audit — em background, session proc_47a702f210f7"
-        }
-      }
+        "code": "src/lib/easterEggs.ts:62-85 — 23 {at: N} entries (1,2,3,5,8,10,15,20,25,30,40,50,75,100,150,200,300,500,750,1000,1500,2000,5000)",
+        "json": "static/config/easterEggs.json#heartTiers — 11 entries (1,3,5,10,25,50,100,200,500,1000,5000)",
+        "uiConsumer": "src/routes/secrets/+page.svelte:39,110,120,199 — renderiza heartTiers[] do JSON (11), com frase '$t(\"secrets.tiers.counter\", { values: { unlocked, total } })' onde total = 11",
+        "engineConsumer": "src/lib/easterEggs.ts:108 — heartClick() matcha tier do HEART_TIERS (23) por exact-equality; engine consegue disparar tiers 2/8/15/20/30/40/75/150/300/750/1500/2000 (que NÃO aparecem no /secrets UI)",
+        "impact": "Confetti/XP são atribuídos pelos 23 tiers (engine), mas o utilizador só vê 11 tiers (UI) e counter diz 'X / 11 unlocked' em vez de 'X / 23'. UI/Engine drift latente desde Phase 12."
+      },
+      "nextStep": "Despachar Skander 2 (mecânico) para regenerar static/config/easterEggs.json#heartTiers com os 23 tiers oficiais, sincronizado com src/lib/easterEggs.ts. Skander 1 avalia se há também drift nos XP/confetti values (json tem xp:20,5,10,50,25,50,100,100,200,500,1000; code tem +mais valores)."
+    },
+    {
+      "id": "gap-hub-greeting-schema-mismatch-2026-07-01-tick-06",
+      "title": "hub.greeting schema mismatch: +page.svelte usa hub.greeting.daniel/fatma mas 5 locales só têm hub.greeting (flat string)",
+      "status": "open",
+      "severity": "low",
+      "repository": "presuntinho",
+      "investigationDate": "2026-07-01",
+      "evidence": {
+        "uiConsumer": "src/routes/+page.svelte:211-212 — \\$t('hub.greeting.daniel', { default: 'Olá, Daniel' }) : \\$t('hub.greeting.fatma', { default: 'Olá, Fatma' })",
+        "actualLocaleShape": "pt-PT.json:601 'hub.greeting': '🐷 Olá, Fatma' (mesmo nos 5 locales)",
+        "i18nResolution": "\\$t('hub.greeting.daniel') → key não existe → svelte-i18n cai para default 'Olá, Daniel'; \\$t('hub.greeting.fatma') → key não existe → default 'Olá, Fatma'",
+        "netEffect": "Splash greeting mostra 'Olá, Daniel' / 'Olá, Fatma' pelos defaults hardcoded, ignorando a tradução i18n PT-PT/EN/FR/AR/TN que já existe como hub.greeting (e sempre com nome 'Fatma' em todos os 5 locales, mesmo quando o utilizador é Daniel)",
+        "impact": "i18n não é fatal — fallback cobre — mas há (1) PT-hardcoded nos defaults de $t(), (2) chave 'hub.greeting' feminina em todos os 5 locales (inadequado para perfil Daniel), (3) 2 chaves fantasma × 5 locales = 10 chaves que o engine procura e não encontra"
+      },
+      "nextStep": "Despachar Skander 2 para adicionar chaves hub.greeting.daniel + hub.greeting.fatma em todos os 5 locales, com traduções adequadas (não usar a mesma string feminina pt-PT 'Olá, Fatma' para Daniel). Skander 1 avalia se deve adicionar uma chave de fallback unificada ou manter schema split."
+    },
+    {
+      "id": "gap-financas-i18n-schema-missing-2026-07-01-tick-06",
+      "title": "/financas/ sub-rotas usam $t() com chaves inexistentes em todos os 5 locales (fallback cobre mas é PT-hardcoded em strings)",
+      "status": "open",
+      "severity": "low",
+      "repository": "presuntinho",
+      "investigationDate": "2026-07-01",
+      "evidence": {
+        "uiConsumers": [
+          "src/routes/financas/+page.svelte:174 'financas.loading'",
+          "src/routes/financas/+page.svelte:184 'financas.card.receitas.empty'",
+          "src/routes/financas/+page.svelte:195 'financas.card.despesas.empty'",
+          "src/routes/financas/+page.svelte:219 'financas.empty.title'",
+          "src/routes/financas/+page.svelte:220 'financas.empty.sub'",
+          "src/routes/financas/+page.svelte:221 'financas.empty.cta'"
+        ],
+        "actualLocaleShape": "pt-PT.json 'financas' NAMESPACE AUSENTE (verificado: t.financas === undefined)",
+        "i18nResolution": "Todos os 6 calls caem nos defaults hardcoded em PT-PT, mesmo para utilizadores EN/FR/AR/TN",
+        "impact": "i18n não fatal — fallbacks cobrem — mas /financas é 100% PT-hardcoded para utilizadores AR/TN. Daniel salientou AR/TN como prioritário desde Phase 5."
+      },
+      "nextStep": "Despachar Skander 1 (design — quais chaves) + Skander 2 (escrita massiva i18n × 5 locales) para criar finanças namespace em todos os 5 locales com tradução coerente (incl. moeda AOA/EUR se aplicável, símbolos, formatos de número)."
     }
   ],
   "notes": {
     "repository": "C:/Users/rafaa/Documents/GitHub/presuntinho",
     "investigator": "Skander (orchestrator)",
-    "summary": "Tick-04 fechado: gap-login-redirect entregue. openGapsAtTick=1 (gap-login-redirect) → 0.",
-    "openGapsAtTick": 0,
-    "closedGapsThisTick": ["gap-login-redirect-2026-07-01-tick-04"],
+    "summary": "Tick-06 aberto: 3 gaps latentes detectados a partir do nextStepsForTick06. openGapsAtTick=0 (tick-05 saída) → 3 (tick-06 saída). Estado de produção estável: 11 endpoints 200, HEAD 1cfb951, parity 1073×5. JSON reconstruído (2 objetos concatenados corrigidos).",
+    "openGapsAtTick": 3,
+    "closedGapsThisTick": [],
+    "jsonIntegrityNote": "Ficheiro .state/watchdog-todos.json reconstruído: backup .bak-tick06 contém o original com 2 objetos JSON concatenated sem vírgula entre eles (invalid JSON). Esta versão é single object, jsonlint-clean.",
     "productionState": {
-      "buildStatus": "GREEN (vite build exit 0, npm run check exit 0)",
+      "buildStatus": "Pendente — não houve build novo neste tick",
       "smokeCodes": {
+        "/": 200,
         "/splash/": 200,
+        "/login/": "301 → /splash/ (verificado)",
+        "/escola/": 200,
         "/aulas/": 200,
-        "/escola": 200,
-        "/financas": 200,
-        "/habitos": 200,
-        "/biblioteca": 200,
-        "/agente": 200,
-        "/login/": "301 (alias para /splash/, propagado pós-deploy ec5f62b — verificado)"
+        "/financas/": 200,
+        "/habitos/": 200,
+        "/biblioteca/": 200,
+        "/trabalhos/": 200,
+        "/agente/": 200,
+        "/definicoes/": 200,
+        "/secrets/": 200
       },
-      "head": "ec5f62b",
-      "i18nParity": "1077/1077 × 5 locales",
+      "head": "1cfb951",
+      "i18nParity": "1073/1073 × 5 locales (with 6 finanças keys + 2 hub.greeting.* keys missing)",
       "deployUrl": "https://presuntinho.netlify.app/",
       "recentCommits": [
-        "ec5f62b fix(netlify): /login → /splash/ 301 alias per CEO gap-login-redirect-2026-07-01-tick-04",
-        "f7aa357 chore(state): tick-2026-07-01-02 close gap-127-pilot + gap-145 per CEO /goal directive"
+        "1cfb951 fix(login): redirect /login before error render",
+        "200c90a chore(i18n): remove orphan splash profile keys",
+        "6dc86b9 chore(state): tick-2026-07-01-05 housekeeping — bots dispatched for login-flash-404 fix + orphan-keys cleanup",
+        "e8835b8 chore(state): tick-2026-07-01-05 housekeeping before subagent dispatch",
+        "ec5f62b fix(netlify): /login → /splash/ 301 alias per CEO gap-login-redirect-2026-07-01-tick-04"
       ]
     },
-    "backgroundProcesses": {
-      "skander1": "proc_1271d40db5a1 (reasoning, /tmp/skander1-gap-login.md)",
-      "skander2": "proc_47a702f210f7 (mechanical, /tmp/skander2-audit.md)"
-    },
-    "nextStepsForCFO": [
-      "Validar em https://presuntinho.netlify.app/login/ — deve redirecionar a /splash/ (301, depois browser rewrite a /splash/)",
-      "Aguardar ping-back de skander1 (UX analysis) e skander2 (PT-hardcoded audit) — se houver novo gap latente, tratar em tick-05"
+    "backgroundProcesses": {},
+    "nextStepsForTick07": [
+      "Aguardar ping-back Skander 2: regeneração heartTiers.json (23 tiers) + adição finanças/hub.greeting chaves × 5 locales",
+      "Aguardar ping-back Skander 1: recomendação UX sobre os 3 gaps + design schema finanças",
+      "Validar npm run check + npm run build verdes",
+      "Smoke live pós-deploy: /secrets deve mostrar 'X / 23 unlocked' (vs X / 11 atual)"
     ]
   }
 }
