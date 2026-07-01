@@ -546,6 +546,18 @@
                                       lessonCount: 4,
                                       quizCount: 1,
                                       badge: 'Uni'
+                                    },
+                                    {
+                                      slug: 'sociologia-organizacoes',
+                                      title: 'Sociologia das Organizações',
+                                      tagline: 'Business Administration · Teorias, burocracia, cultura, poder e instituições — do Taylorismo ao Neo-Institucionalismo',
+                                      description:
+                                        'Sociologia das organizações aplicada à gestão empresarial: fundamentos (organização como sistema social, burocracia weberiana, controlo e poder), teorias clássicas (Taylor, Fayol, Mayo e Barnard), teorias contemporâneas (Merton, Trist, Ouchi, Schein, neo-institucionalismo e garbage can model) e temas aplicados (identidade profissional, género, diversidade cultural, ética e responsabilidade social corporativa).',
+                                      icon: '🧩',
+                                      color: '#9333ea',
+                                      lessonCount: 4,
+                                      quizCount: 1,
+                                      badge: 'Uni'
                                     }
                                   ];
 </script>

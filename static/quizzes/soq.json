@@ -1,0 +1,117 @@
+{
+  "id": "soq",
+  "title": "Quiz: Sociologia das Organizações",
+  "description": "Testa os teus conhecimentos em sociologia organizacional: a organização como sistema social (burocracia weberiana e disfunções segundo Merton, tipos de autoridade, controlo social), teorias clássicas (Scientific Management de Taylor, Administração de Fayol, Human Relations de Mayo, Cooperation System de Barnard), teorias contemporâneas (sistema sociotécnico de Trist, mecanismos de controlo de Ouchi, cultura organizacional de Schein em 3 níveis, neo-institucionalismo de DiMaggio & Powell, garbage can model), e temas aplicados (identidade profissional, género e organizações, cultura em multinacionais com Hofstede, ética empresarial e stakeholder theory de Freeman, triple bottom line de Elkington). 10 perguntas, 4 opções cada, com explicação detalhada.",
+  "questions": [
+    {
+      "q": "Qual das seguintes é a definição sociológica mais precisa de 'organização'?",
+      "opts": [
+        "Qualquer grupo de pessoas que trabalham juntas na mesma empresa, independentemente de estrutura",
+        "Colectividade social orientada para objectivos específicos, com fronteiras relativamente definidas, estrutura de papéis formalizada e sistemas de coordenação",
+        "Apenas empresas com fins lucrativos que estão registadas formalmente no registo comercial",
+        "Sinônimo de 'burocracia' no sentido weberiano, com hierarquia rígida e procedimentos escritos"
+      ],
+      "a": 1,
+      "explanation": "A definição de Etzioni (1961), adoptada pela literatura subsequente, enfatiza 4 elementos: colectividade (mais do que um indivíduo), orientação para objectivos específicos, fronteiras definidas e sistemas de coordenação. Empresas são uma categoria mas não a única — hospitais, igrejas, partidos, ONG, prisões são organizações neste sentido sociológico. Confundir 'organização' com 'empresa' é um erro comum que ignora a diversidade de colectividades organizadas na sociedade."
+    },
+    {
+      "q": "Segundo Robert Merton, qual é a 'disfunção' principal da burocracia que surge da aplicação rígida das regras?",
+      "opts": [
+        "Excesso de flexibilidade e adaptação a contextos novos, com perda de controlo",
+        "Demasiada democracia participativa, com perda de hierarquia funcional",
+        "Displacement of goals — o burocrata segue as regras literalmente e perde de vista os objectivos últimos da organização",
+        "Inexistência de regras escritas, com consequente arbitrariedade na tomada de decisão"
+      ],
+      "a": 2,
+      "explanation": "Merton (1936) identificou a 'disfunção burocrática' como o 'displacement of goals' (deslocação de objectivos): ao seguir as regras literalmente, o burocrata perde de vista os objectivos últimos. Exemplo clássico: o polícia que aplica multas para cumprir a quota (objectivo burocrático) em vez de prevenir crimes (objectivo último). A regra torna-se fim em si mesma, não meio para o objectivo superior. Fenómeno observado em无数的 contextos — desde a administração pública até grandes corporações."
+    },
+    {
+      "q": "Max Weber distinguiu 3 tipos de autoridade legítima. Qual é a base do tipo racional-legal?",
+      "opts": [
+        "Costumes imemoriais e tradição (o rei por direito divino, o patriarca)",
+        "Carisma pessoal de um líder excepcional (o profeta, o revolucionário, o CEO visionário)",
+        "Regras escritas e competência formal, com separação entre propriedade e cargo",
+        "Poder militar e controlo da força armada, característico do Estado absolutista"
+      ],
+      "a": 2,
+      "explanation": "A autoridade racional-legal (terceiro tipo em Weber, ao lado da tradicional e da carismática) baseia-se em regras escritas e na competência formal. A burocracia moderna é a forma organizacional por excelência desta autoridade. Inclui: 1) hierarquia definida; 2) especialização e divisão do trabalho; 3) selecção por mérito; 4) regras escritas; 5) impessoalidade; 6) separação entre propriedade e cargo. A combinação é a base do Estado moderno e da empresa capitalista contemporânea."
+    },
+    {
+      "q": "Quais são os 4 princípios do Scientific Management de Frederick Taylor?",
+      "opts": [
+        "Democracia, meritocracia, transparência e accountability",
+        "Ciência para cada elemento do trabalho, selecção científica, cooperação íntima gestão-trabalhador, divisão do trabalho entre gestores e trabalhadores",
+        "Planeamento estratégico, orçamento anual, avaliação de desempenho e sistema de promoção",
+        "Trabalho em equipa, empowerment, melhoria contínua e orientação para o cliente"
+      ],
+      "a": 1,
+      "explanation": "Os 4 princípios do Scientific Management (Taylor, 1911) são: 1) Desenvolvimento de uma ciência para cada elemento do trabalho (substituir 'rule of thumb' por 'the one best way'); 2) Selecção científica e desenvolvimento progressivo do trabalhador (contratar por aptidão, treinar); 3) Cooperação íntima entre administração e trabalhadores (não conflito); 4) Divisão do trabalho entre gestores e trabalhadores (management by exception). Aplicação clássica: pás da Bethlehem Steel, linha de montagem do Ford T (Fordismo)."
+    },
+    {
+      "q": "Henri Fayol distinguiu 6 funções da administração. Qual das seguintes NÃO é uma função fayoliana?",
+      "opts": [
+        "Prever (planear o futuro)",
+        "Organizar (construir estrutura)",
+        "Comandar (liderar pessoas)",
+        "Auditar externamente (verificar conformidade legal)"
+      ],
+      "a": 3,
+      "explanation": "Fayol (1916) identificou 6 funções: PRÉVOIR (planear), ORGANISER, COMMANDER, COORDONNER, CONTRÔLER. 'Auditar externamente' não é uma — controlo (fayoliano) é interno e integrado na gestão, distinto de auditoria externa (que é verificação independente). Fayol olhava para o topo (perspectiva do director-geral), enquanto Taylor olhava para o chão de fábrica (perspectiva do operário). As duas escolas — científica (Taylor) e administrativa (Fayol) — complementam-se."
+    },
+    {
+      "q": "Qual foi a conclusão fundamental dos Hawthorne Studies conduzidos por Elton Mayo na Western Electric (1924-1932)?",
+      "opts": [
+        "A iluminação era o factor determinante da produtividade — quanto mais luz, mais produção",
+        "O grupo informal, o reconhecimento e o sentimento de ser observado afectam a produtividade mais do que as condições físicas",
+        "Os trabalhadores são motivados exclusivamente por incentivos salariais e rejeitam qualquer factor social",
+        "As condições ergonómicas (cadeiras, mesas, temperatura) determinam totalmente a satisfação dos trabalhadores"
+      ],
+      "a": 1,
+      "explanation": "Os Hawthorne Studies (1924-1932) descobriram que o factor que afectava a produtividade não era a iluminação (esta foi a variável manipulada inicialmente) mas o facto de os trabalhadores se sentirem observados e valorizados — o 'efeito Hawthorne'. Estudos posteriores confirmaram: o grupo informal, a supervisão compreensiva, o reconhecimento e a participação nas decisões têm efeitos profundos na motivação. Conclusão: o trabalhador é Homo Socialis (Mayo), não apenas Homo Economicus (Taylor)."
+    },
+    {
+      "q": "Chester Barnard, no livro 'The Functions of the Executive' (1938), definiu uma 'zona de indiferença' para o subordinado aceitar ordens. Quais são as condições para que uma ordem esteja dentro desta zona?",
+      "opts": [
+        "A ordem vem sempre do chefe directo, sem excepções",
+        "A ordem é congruente com os objectivos da organização, com os objectivos pessoais do subordinado, e dentro do seu campo de percepção",
+        "A ordem é acompanhada de recompensa monetária explícita (bónus, aumento)",
+        "A ordem é publicada formalmente em comunicado interno escrito, assinado por pelo menos 3 gestores"
+      ],
+      "a": 1,
+      "explanation": "Barnard definiu a 'zona de indiferença' como o conjunto de ordens que o colaborador aceita obedecer. Três condições devem estar presentes: 1) a ordem é congruente com os objectivos da organização; 2) é congruente com os objectivos pessoais do subordinado; 3) está dentro do seu campo de percepção (ele compreende-a). Fora desta zona, o colaborador pode recusar — e a recusa é legítima. Esta noção é revolucionária porque coloca a autoridade não no emissor mas no receptor que aceita."
+    },
+    {
+      "q": "William Ouchi, em 'Theory Z' (1981), identificou 3 mecanismos de controlo organizacional. Quais são?",
+      "opts": [
+        "Hierarquia, regras e sanções disciplinares",
+        "Mercado (preços e contratos), burocracia (regras e procedimentos), clã (cultura e socialização)",
+        "Planeamento, execução e avaliação (ciclo PDCA)",
+        "Comando, controlo e comunicação (modelo militar)"
+      ],
+      "a": 1,
+      "explanation": "Ouchi identificou 3 mecanismos: 1) MERCADO — preços, contratos, incentivos externos (apropriado para tarefas mensuráveis); 2) BUROCRACIA — regras, procedimentos, supervisão (apropriado para tarefas padronizadas); 3) CLÃ — cultura, valores, socialização, confiança (apropriado para tarefas complexas e ambíguas). A maioria das organizações reais combina os três — mas frequentemente de forma inconsciente. O gestor eficaz escolhe conscientemente o mecanismo adequado a cada situação."
+    },
+    {
+      "q": "Edgar Schein definiu cultura organizacional em 3 níveis: artefactos, valores e pressupostos básicos. Qual dos seguintes exemplos ilustra melhor o nível dos 'pressupostos básicos'?",
+      "opts": [
+        "O dress code do escritório (business casual) e o open space como layout físico",
+        "A missão escrita da empresa: 'transformar dados em decisões'",
+        "A crença profunda não questionada de que 'as pessoas são fundamentalmente preguiçosas e precisam de vigilância constante'",
+        "Os rituais de celebração mensal dos aniversariantes do mês"
+      ],
+      "a": 2,
+      "explanation": "Os 3 níveis de Schein: 1) ARTEFACTOS (layout, dress code, linguagem, rituais) — nível visível; 2) VALORES (missão, visão, estratégias explícitas) — nível semi-visível; 3) PRESSUPOSTOS BÁSICOS (crenças profundas sobre natureza humana, tempo, espaço, relações) — nível invisível e tido como certo. A frase 'as pessoas são preguiçosas' é o exemplo clássico de pressuposto básico da Teoria X (McGregor), que orienta práticas de controlo apertado. Mudar artefactos sem alterar pressupostos é cosmética que não dura."
+    },
+    {
+      "q": "Paul DiMaggio e Walter Powell, no artigo 'The Iron Cage Revisited' (1983), identificaram 3 mecanismos de isomorfismo organizacional. Quais são?",
+      "opts": [
+        "Capitalismo, socialismo e comunismo como formas de organizar a produção",
+        "Coercivo (pressões formais), mimético (imitação), normativo (profissionalização)",
+        "Vertical (hierarquia), horizontal (pares), diagonal (matricial)",
+        "Estratégico, operativo e cultural como níveis de decisão"
+      ],
+      "a": 1,
+      "explanation": "DiMaggio & Powell identificaram 3 mecanismos de isomorfismo (tendência para organizações se tornarem semelhantes): 1) COERCIVO — pressões formais e informais de outras organizações de que dependem (Estado, regulador, cliente grande); 2) MIMÉTICO — imitação de organizações consideradas legítimas, especialmente em incerteza; 3) NORMATIVO — pressão profissional (formação comum, associações, redes). Os 3 mecanismos operam simultaneamente e são cumulativos — explicando porque é que o tecido organizacional contemporâneo é tão homogéneo (todas as empresas parecem iguais no PowerPoint)."
+    }
+  ]
+}

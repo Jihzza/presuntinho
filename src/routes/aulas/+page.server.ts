@@ -99,7 +99,8 @@ const COURSE_META: Record<string, CourseMeta> = {
           'gestao-conflitos': { slug: 'gestao-conflitos', title: 'Gestão de Conflitos', icon: '🕊️', color: '#65a30d' },
                     'estrategia-internacional': { slug: 'estrategia-internacional', title: 'Estratégia Internacional', icon: '🌍', color: '#0ea5e9' },
               'gestao-risco': { slug: 'gestao-risco', title: 'Gestão de Risco', icon: '⚠️', color: '#dc2626' },
-                                    'gestao-projectos': { slug: 'gestao-projectos', title: 'Gestão de Projectos', icon: '📋', color: '#0d9488' }
+                                    'gestao-projectos': { slug: 'gestao-projectos', title: 'Gestão de Projectos', icon: '📋', color: '#0d9488' },
+                                    'sociologia-organizacoes': { slug: 'sociologia-organizacoes', title: 'Sociologia das Organizações', icon: '🧩', color: '#9333ea' }
                                     };
 
 /** Turn "blue-ocean-strategy" → "Blue Ocean Strategy". */
