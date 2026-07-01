@@ -15,7 +15,7 @@
           "i18nReferences": {
             "found": true,
             "locations": [
-              "src/lib/i18n/en.json: walk.audio.swot, walk.step.swot.title, walk.step.swot.what, walk.step.swot.how, walk.step.swot.hint",
+              "src/lib/i18n/en.json: walk.audio.swot, walk.step.swot.title, walk.step.swot.what, walk.step.swot.hint",
               "src/lib/i18n/pt-PT.json: same keys with Portuguese translations"
             ]
           }
@@ -144,18 +144,18 @@
               ],
               "explanation": "Requested course already exists with different slug format (comportamento-do-consumidor instead of comportamento-consumidor)"
             }
-          }
+          ]
         },
         "selectedCourse": {
           "slug": "gestao-informacao",
-          "justification": "Requested course does not exist. comportamento-do-consumidor already exists. gestao-informacao is the remaining option.",
+          "justification": "Requested course does not exist. comportamento-consumidor already exists. gestao-informacao is the remaining option.",
           "scope": {
             "lessons": 4,
-            "sectionsPerLesson": 7-8 average (30 total minimum required)",
+            "sectionsPerLesson": "7-8 average (30 total minimum required)",
             "quizMCQs": 10,
             "i18nEntries": {
-              "baseKeys": 5 (title, tagline, description, 2 UI strings),
-              "locales": 5 (pt-PT, en, tn, fr, ar),
+              "baseKeys": "5 (title, tagline, description, 2 UI strings)",
+              "locales": "5 (pt-PT, en, tn, fr, ar)",
               "totalEntries": 25
             }
           }
