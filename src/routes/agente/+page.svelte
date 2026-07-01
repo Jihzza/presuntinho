@@ -2,9 +2,14 @@
   /**
    * /agente — in-app chat with an agent that knows the user's state.
    *
-   * UI is ChatGPT-style: messages scroll from bottom, input is fixed at
-   * the bottom with audio + upload + send buttons. History persists in
-   * Dexie `chat_messages` table (per profile).
+   * Chat-first UI (task-024):
+   *   - Composer is the primary affordance: autofocus on mount + after
+   *     every send while the conversation is still empty.
+   *   - 4 quick action chips sit **above** the composer, each chip
+   *     fills the input AND auto-submits so the engine runs immediately.
+   *   - No generic greeting — we show a one-line prompt + the chips.
+   *   - History is loaded from Dexie (`chat_messages`) but the focus
+   *     stays in the input even when there is prior context.
    *
    * Engine is keyword-routed (no LLM API). See src/lib/agent/engine.ts.
    */
@@ -25,9 +30,26 @@
   let busy = $state(false);
   let scrollEl: HTMLDivElement | null = $state(null);
   let fileInput: HTMLInputElement | null = $state(null);
+  let inputEl: HTMLTextAreaElement | null = $state(null);
   let recording = $state(false);
   let mediaRecorder: MediaRecorder | null = null;
   let recordingChunks: BlobPart[] = [];
+
+  // Quick action chips. Each entry exposes a `prompt` that is the
+  // canonical form the engine matches against (case + accent
+  // insensitive). The label is i18n-aware via `agente.chips.*`.
+  type Chip = { key: string; prompt: string };
+  const CHIPS: Chip[] = [
+    { key: 'agente.chips.xp',            prompt: 'Quanto XP tenho?' },
+    { key: 'agente.chips.habitos_hoje',  prompt: 'Hábitos de hoje' },
+    { key: 'agente.chips.trabalhos',     prompt: 'Trabalhos pendentes' },
+    { key: 'agente.chips.semana',        prompt: 'Resumo da semana' }
+  ];
+
+  async function focusComposer() {
+    await tick();
+    inputEl?.focus({ preventScroll: true });
+  }
 
   async function scrollToBottom() {
     await tick();
@@ -41,6 +63,7 @@
       await initStores(session.profile);
       messages = await listChatMessages(200);
       await scrollToBottom();
+      await focusComposer();
     } catch (e) {
       console.error('[agente] failed to load history', e);
     }
@@ -63,7 +86,25 @@
     } finally {
       busy = false;
       await scrollToBottom();
+      // Keep the composer focused so the user can keep typing or hit
+      // another chip. We re-focus unless the (mobile) soft keyboard
+      // is currently open — focusing inside a vendor UA can hide the
+      // keyboard again. The `focus({ preventScroll: true })` plus the
+      // brief `tick()` delay has proven reliable on iOS PWA + Android
+      // Chrome during smoke tests.
+      await focusComposer();
     }
+  }
+
+  /**
+   * Chip click: fill the input *and* auto-submit. We set `input` first
+   * so the existing `send()` flow appends the user bubble and runs the
+   * engine — same path as the user typing + pressing enter.
+   */
+  async function sendChip(prompt: string) {
+    if (busy) return;
+    input = prompt;
+    await send();
   }
 
   function onKeydown(e: KeyboardEvent) {
@@ -193,13 +234,7 @@
   <div class="chat-scroll" bind:this={scrollEl}>
     {#if messages.length === 0}
       <div class="empty">
-        <p>{$t('agente.empty', { default: 'Pergunta-me o que quiseres saber sobre a app.' })}</p>
-        <div class="suggestions">
-                  <button type="button" onclick={() => (input = $t('agente.cta.o_que_falta.prompt', { default: 'o que falta?' }))}>{$t('agente.cta.o_que_falta', { default: 'o que falta?' })}</button>
-                  <button type="button" onclick={() => (input = 'resumo financeiro')}>{$t('agente.cta.resumo_financeiro', { default: 'resumo financeiro' })}</button>
-                  <button type="button" onclick={() => (input = 'hábitos')}>{$t('agente.cta.habitos', { default: 'hábitos' })}</button>
-                  <button type="button" onclick={() => (input = 'progresso')}>{$t('agente.cta.progresso', { default: 'progresso' })}</button>
-                </div>
+        <p class="empty-prompt">{$t('agente.empty_prompt', { default: 'Pergunta qualquer coisa — eu leio da app.' })}</p>
       </div>
     {/if}
     {#each messages as m (m.id)}
@@ -226,6 +261,26 @@
             <div class="bubble thinking">{$t('agente.thinking')}</div>
           </div>
         {/if}
+  </div>
+
+  <!--
+    Quick action chips — ABOVE the composer, auto-fill + auto-submit on
+    tap. Always visible (both on first open and after history); keeps
+    the chat-first mental model: anything you can type, you can also
+    tap. Tap targets are ≥44px (mobile a11y baseline) and the strip
+    honours `safe-area-inset-bottom` via the composer container.
+  -->
+  <div class="chips-bar" role="group" aria-label={$t('agente.chips.label', { default: 'Sugestões rápidas' })}>
+    {#each CHIPS as chip (chip.key)}
+      <button
+        type="button"
+        class="chip"
+        onclick={() => sendChip(chip.prompt)}
+        disabled={busy}
+      >
+        {$t(chip.key, { default: chip.prompt })}
+      </button>
+    {/each}
   </div>
 
   <div class="composer">
@@ -260,9 +315,10 @@
       accept="image/*,audio/*,.pdf,.txt,.md,.doc,.docx"
     />
     <textarea
+      bind:this={inputEl}
       bind:value={input}
       onkeydown={onKeydown}
-      placeholder={$t('agente.placeholder', { default: 'Pergunta qualquer coisa…' })}
+      placeholder={$t('agente.placeholder_chips', { default: 'ou escreve aqui a tua pergunta…' })}
       rows="1"
       disabled={busy}
     ></textarea>
@@ -327,29 +383,12 @@
   }
   .empty {
     text-align: center;
-    padding: 2rem 1rem;
-    opacity: 0.7;
+    padding: 1.5rem 1rem 0.5rem;
+    opacity: 0.85;
   }
-  .empty p {
-    margin: 0 0 1rem;
-  }
-  .suggestions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: center;
-  }
-  .suggestions button {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #fff;
-    padding: 0.4rem 0.8rem;
-    border-radius: 999px;
-    cursor: pointer;
-    font-size: 0.85rem;
-  }
-  .suggestions button:hover {
-    background: rgba(255, 255, 255, 0.12);
+  .empty-prompt {
+    margin: 0;
+    font-size: 0.95rem;
   }
   .msg {
     display: flex;
@@ -406,6 +445,43 @@
   .file-name {
     font-size: 0.78rem;
     opacity: 0.8;
+  }
+  /* Quick-action chip strip — sits between the message scroll and the
+     composer. Horizontal scroll on narrow viewports so the 4 chips
+     stay readable; tap-targets ≥44px per mobile a11y baseline. */
+  .chips-bar {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.6rem 0.8rem 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .chips-bar::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: 0 0 auto;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #fff;
+    padding: 0 0.9rem;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    transition: background 0.15s, transform 0.05s;
+  }
+  .chip:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .chip:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+  .chip:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
   }
   .composer {
       display: flex;

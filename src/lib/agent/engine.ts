@@ -27,6 +27,8 @@ import {
   toolVisitedPages,
   toolProfileSummary,
   toolWhatsMissing,
+  toolAssignmentsPending,
+  toolWeeklySummary,
   type Localised
 } from './tools';
 
@@ -234,6 +236,139 @@ export async function dispatch(userMessage: string): Promise<AgentReply> {
       );
     }
     return { text: lines.join('\n'), tool: 'profile_summary' };
+  }
+
+  // ---- Quick action: "Quanto XP tenho?" ----
+  // Mantém-se distinto do handler genérico "progresso" para devolver
+  // uma resposta mais focada (sem badges / quizzes) — alinha com o
+  // quick-chip que preenche o composer. Lê apenas `state.xp` via
+  // toolProfileSummary (single source of truth — não recalcula daqui).
+  if (matches(msg, ['quanto xp tenho', 'quanto xp', 'xp total', 'total xp', 'o meu xp'])) {
+    const r = await toolProfileSummary();
+    if (!r.ok) return { text: tt('routes.agente.engine.school.error', 'Erro a ler progresso.') };
+    const xp = r.data.xp;
+    return {
+      text:
+        render(tt('routes.agente.engine.xp_only.title', '⭐ XP atual'), {}) +
+        '\n' +
+        render(tt('routes.agente.engine.xp_only.line_total', '• Tens {xp} XP acumulados.'), { xp }) +
+        '\n' +
+        render(tt('routes.agente.engine.xp_only.line_breakdown', '• {badges} badges desbloqueadas · {secrets} secrets.'), {
+          badges: r.data.badgesUnlocked,
+          secrets: r.data.secretsDiscovered
+        }),
+      tool: 'xp_only'
+    };
+  }
+
+  // ---- Quick action: "Hábitos de hoje" ----
+  // Variante dedicada — devolve explicitamente o sub/não sub conjunto
+  // (vs o handler "habitos" mais curto). Aliases em PT e EN.
+  if (matches(msg, ['habitos de hoje', 'habito de hoje', 'habitos hoje', 'meus habitos hoje', 'today habits', "today's habits"])) {
+    const r = await toolHabitsOverview();
+    if (!r.ok) return { text: tt('routes.agente.engine.habits.error', 'Erro a ler hábitos.') };
+    if (r.data.totalHabitos === 0) {
+      return {
+        text: tt(
+          'routes.agente.engine.habits.empty',
+          'Ainda não tens hábitos criados. Vai a /habitos/novo criar o primeiro.'
+        )
+      };
+    }
+    const done = r.data.lista.filter((h) => h.loggedToday);
+    const todo = r.data.lista.filter((h) => !h.loggedToday);
+    const itemTpl = tt('routes.agente.engine.habits.item', '{check} {icon} {name}');
+    const lines: string[] = [
+      render(
+        tt('routes.agente.engine.habits_today.header', '🌱 Hábitos de hoje ({ativos}/{total})'),
+        { ativos: r.data.ativosHoje, total: r.data.totalHabitos }
+      )
+    ];
+    if (done.length > 0) {
+      lines.push(tt('routes.agente.engine.habits_today.done_label', 'Marcados:'));
+      lines.push(...done.map((h) => render(itemTpl, { check: '✅', icon: h.icon, name: h.name })));
+    }
+    if (todo.length > 0) {
+      lines.push(tt('routes.agente.engine.habits_today.todo_label', 'Por marcar:'));
+      lines.push(...todo.map((h) => render(itemTpl, { check: '⬜', icon: h.icon, name: h.name })));
+    }
+    return { text: lines.join('\n'), tool: 'habits_today' };
+  }
+
+  // ---- Quick action: "Trabalhos pendentes" ----
+  // Lista os assignments com status pending/in_progress, ordenados por
+  // deadline asc (urgência) com days-left.
+  if (matches(msg, ['trabalhos pendentes', 'trabalhos por fazer', 'tarefas pendentes', 'assignments pendentes', 'pending assignments', 'open assignments'])) {
+    const r = await toolAssignmentsPending();
+    if (!r.ok) return { text: tt('routes.agente.engine.assignments.error', 'Erro a ler trabalhos.') };
+    if (r.data.total === 0) {
+      return {
+        text: tt(
+          'routes.agente.engine.assignments.empty',
+          '🎉 Não tens trabalhos pendentes. Tudo entregue (ou por começar).'
+        )
+      };
+    }
+    const pluralKey = r.data.total === 1 ? 'routes.agente.engine.assignments.header_one' : 'routes.agente.engine.assignments.header_other';
+    const header = render(tt(pluralKey, r.data.total === 1 ? '📚 {n} trabalho pendente' : '📚 {n} trabalhos pendentes'), { n: r.data.total });
+    const itemTpl = tt('routes.agente.engine.assignments.item', '• {title} — {days}');
+    const lines = [
+      header,
+      ...r.data.pendentes.slice(0, 6).map((p) =>
+        render(itemTpl, {
+          title: p.title,
+          days:
+            p.daysLeft < 0
+              ? render(tt('routes.agente.engine.assignments.days_overdue', 'atrasado {n}d'), { n: Math.abs(p.daysLeft) })
+              : p.daysLeft === 0
+                ? tt('routes.agente.engine.assignments.days_today', 'entrega hoje')
+                : render(tt('routes.agente.engine.assignments.days_left', 'faltam {n}d'), { n: p.daysLeft })
+        })
+      )
+    ];
+    if (r.data.total > 6) {
+      lines.push(
+        render(tt('routes.agente.engine.assignments.more', '…e mais {n}.'), { n: r.data.total - 6 })
+      );
+    }
+    return { text: lines.join('\n'), tool: 'assignments_pending' };
+  }
+
+  // ---- Quick action: "Resumo da semana" ----
+  // Agrega finanças 7d + completion hábitos 7d + assignments próximos 7d.
+  if (matches(msg, ['resumo da semana', 'resumo semanal', 'minha semana', 'como foi a semana', 'weekly summary', 'this week'])) {
+    const r = await toolWeeklySummary();
+    if (!r.ok) return { text: tt('routes.agente.engine.weekly.error', 'Erro a agregar o resumo semanal.') };
+    const d = r.data;
+    const lines = [
+      render(tt('routes.agente.engine.weekly.title', '🗓️ Resumo da semana ({start} → {end})'), {
+        start: d.windowStart,
+        end: d.windowEnd
+      }),
+      '',
+      tt('routes.agente.engine.weekly.finance_header', '💸 Finanças (7d)'),
+      render(tt('routes.agente.engine.weekly.finance_despesas', '• Despesas: {valor}'), { valor: formatEUR(d.financas.despesas) }),
+      render(tt('routes.agente.engine.weekly.finance_receitas', '• Receitas: {valor}'), { valor: formatEUR(d.financas.receitas) }),
+      render(tt('routes.agente.engine.weekly.finance_transacoes', '• {n} transações'), { n: d.financas.transacoes }),
+      '',
+      tt('routes.agente.engine.weekly.habits_header', '🌱 Hábitos (7d)'),
+      d.habitos.total === 0
+        ? render(tt('routes.agente.engine.weekly.habits_none', '• Sem hábitos configurados.'), {})
+        : render(tt('routes.agente.engine.weekly.habits_line', '• {done} logs · {pct}% completion ({total} hábitos)'), {
+            done: d.habitos.logsUltimos7d,
+            pct: d.habitos.completionPct,
+            total: d.habitos.total
+          }),
+      '',
+      tt('routes.agente.engine.weekly.assignments_header', '📚 Trabalhos (próx. 7d)'),
+      d.trabalhos.proximos7d === 0
+        ? render(tt('routes.agente.engine.weekly.assignments_none', '• Sem entregas nesta semana.'), {})
+        : render(tt('routes.agente.engine.weekly.assignments_line', '• {n} com deadline esta semana: {lista}'), {
+            n: d.trabalhos.proximos7d,
+            lista: d.trabalhos.titulosPreview.join(', ')
+          })
+    ];
+    return { text: lines.join('\n'), tool: 'weekly_summary' };
   }
 
   // ---- Fallback ----
