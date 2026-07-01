@@ -219,7 +219,7 @@
         href={`/biblioteca/editar/${item.id}/`}
         aria-label="{$t('a11y.aria.editar_marcador', { default: 'Editar marcador' })}"
       >
-        ✏️ Editar
+        ✏️ {$t('biblioteca.item.edit')}
       </a>
       <button
         type="button"

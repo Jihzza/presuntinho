@@ -218,7 +218,7 @@
                 value={limite || ''}
                 placeholder={$t('placeholder.em_dash', { default: '—' })}
                 disabled={saving === c.id}
-                aria-label={`Limite (€) para ${c.nome}`}
+                aria-label={`Limite (${$t('currency.symbol')}) para ${c.nome}`}
                 onblur={(e) => saveLimite(c.id, (e.currentTarget as HTMLInputElement).value)}
                 onkeydown={(e) => {
                   if (e.key === 'Enter') {
@@ -227,7 +227,7 @@
                   }
                 }}
               />
-              <span class="euro" aria-hidden="true">€</span>
+              <span class="euro" aria-hidden="true">{$t('currency.symbol')}</span>
             </label>
           </div>
 

@@ -197,7 +197,7 @@
           placeholder={$t('placeholder.zero_zero', { default: '0,00' })}
           autocomplete="off"
         />
-        <span class="euro" aria-hidden="true">€</span>
+        <span class="euro" aria-hidden="true">{$t('currency.symbol')}</span>
       </div>
     </div>
 

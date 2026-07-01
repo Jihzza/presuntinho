@@ -117,7 +117,7 @@
   <form class="form" onsubmit={handleSubmit} novalidate>
     <div class="field">
       <label for="bm-title">
-        Título <span aria-hidden="true">*</span>
+        {$t('biblioteca.novo.title_label')} <span aria-hidden="true">*</span>
       </label>
       <input
         id="bm-title"
