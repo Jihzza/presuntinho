@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-01T07:05:32+02:00",
+  "lastUpdated": "2026-07-01T07:05:58+02:00",
   "openItems": [
     {
       "id": "gap-028",
@@ -90,16 +90,6 @@
       "source": "audio-Daniel-2026-06-27",
       "created_at": "2026-07-01T00:05:00+02:00",
       "note": "Pending Skander 1 design choice. 47 BA entregues. gap-149 = Sociologia das Organizações em curso neste tick."
-    },
-    {
-      "id": "gap-149",
-      "category": "feature-pedida-pelo-Daniel",
-      "description": "BA #50 Sociologia das Organizações. Conteúdo JÁ escrito em static/lessons/sociologia-organizacoes/ (4 lições) + static/quizzes/soq.json (10 MCQ). Falta wiring em escola/+page.svelte, escola/curso/[slug]/+page.svelte, aulas/+page.server.ts + i18n 5 chaves × 5 locales + commit + push.",
-      "severity": "média",
-      "source": "tick-2026-07-01-04",
-      "created_at": "2026-07-01T07:05:00+02:00",
-      "dispatched_to": "Skander 2 — proc_31438036e804",
-      "blocked_by": "Bot em execução; ETA 5-10 min."
     }
   ],
   "closedItems": [
@@ -386,6 +376,17 @@
       "closed_at": "2026-07-01T07:05:32+02:00",
       "sha": "afd6881",
       "note": "fix(i18n): gap-150/151/155 PT-hardcoded fixes (3 keys × 5 locales). npm run check 0/0; npm run build exit 0."
+    },
+    {
+      "id": "gap-149",
+      "category": "feature-pedida-pelo-Daniel",
+      "description": "BA #50 Sociologia das Organizações — 4 lições + quiz soq + wiring Escola/Catalogue/Aulas + i18n 5 locales.",
+      "severity": "baixa",
+      "source": "gap-149 BA #50 Sociologia das Organizações",
+      "created_at": "2026-07-01T07:05:00+02:00",
+      "closed_at": "2026-07-01T07:05:58+02:00",
+      "sha": "855bdb2",
+      "note": "feat(escola): gap-149 BA #50 Sociologia das Organizações. npm run check 0/0; npm run build exit 0. Produção /escola/curso/sociologia-organizacoes/ smoke pendente pós-push/deploy."
     }
   ]
 }
