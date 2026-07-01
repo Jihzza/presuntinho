@@ -83,16 +83,18 @@
   <!-- Company Overview ------------------------------------------------- -->
   <section class="card" aria-labelledby="ov-h">
     <h2 id="ov-h">{$t('case.h2.overview', { default: '📋 Visão geral da empresa' })}</h2>
-    <table class="overview">
-      <tbody>
-        {#each OVERVIEW as row (row.labelKey)}
-                  <tr>
-                    <th scope="row">{$t(row.labelKey, { default: row.labelKey })}</th>
-                    <td>{$t(row.valueKey, { default: row.valueKey })}</td>
-                  </tr>
-                {/each}
-      </tbody>
-    </table>
+    <div class="table-wrap">
+      <table class="overview">
+        <tbody>
+          {#each OVERVIEW as row (row.labelKey)}
+            <tr>
+              <th scope="row">{$t(row.labelKey, { default: row.labelKey })}</th>
+              <td>{$t(row.valueKey, { default: row.valueKey })}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <!-- The Decline ------------------------------------------------------ -->
@@ -230,17 +232,22 @@
   }
   .card ul li { margin: 0.3rem 0; }
 
-  /* Overview table */
+  /* Overview table (task-034: wrap in .table-wrap on the markup side,
+     add overflow-wrap defensive rule here so long pt-PT labels break
+     gracefully instead of pushing the table wider than the .card). */
   .overview {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.92rem;
+    table-layout: fixed; /* predictable column widths on narrow phones */
   }
   .overview th,
   .overview td {
     padding: 0.4rem 0.5rem;
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
   .overview th {
     color: var(--accent, #ec4899);
@@ -314,6 +321,6 @@
   .btn.primary:hover { background: #d63780; }
 
   @media (max-width: 480px) {
-    .kpi-grid { grid-template-columns: 1fr; }
+    .kpi-grid { grid-template-columns: minmax(0, 1fr); }
   }
 </style>

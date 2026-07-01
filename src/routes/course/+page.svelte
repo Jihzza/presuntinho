@@ -132,7 +132,7 @@
 
   .grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
   }
   @media (min-width: 720px) {

@@ -623,7 +623,7 @@
 
   .grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
   }
 
@@ -695,7 +695,7 @@
   }
   .sections { margin-top: 2rem; }
   .sections-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .section-card {
     display: flex;
@@ -719,6 +719,6 @@
   .sc-body h3 { margin: 0 0 0.15rem; font-size: 1rem; color: #fff; }
   .sc-body p { margin: 0; font-size: 0.85rem; color: var(--txt2, #cbd5e1); line-height: 1.4; }
   @media (min-width: 600px) {
-    .sections-grid { grid-template-columns: 1fr 1fr; }
+    .sections-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   }
 </style>

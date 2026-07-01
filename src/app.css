@@ -120,6 +120,11 @@ body {
   min-height: 100dvh; /* dynamic viewport for mobile browsers */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Defensive: prevent any rogue descendant (chart canvas, SVG, table,
+     long unbreakable text) from triggering horizontal page scroll on
+     narrow phones (375px). Wrappers inside .card / .grid still own
+     their own overflow-x:auto where it matters. */
+  overflow-x: hidden;
 }
 
 h1 {
@@ -182,6 +187,38 @@ button:not([class]),
 a[role='button']:not([class]) {
   min-height: var(--touch-target);
   min-width: var(--touch-target);
+}
+
+/* ---------- Generic overflow guards (task-034 overflow audit) ---------- */
+
+/* Reusable wrapper for any wide <table> / <svg> / <pre>. On narrow
+   viewports the content scrolls horizontally inside the wrapper
+   instead of pushing the whole document sideways. */
+.table-wrap {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Long, unbreakable strings (URLs, "Mussum-Ipsum" fillers, locale-aware
+   EUR amounts in pt-PT) could blow past narrow cards. Apply only when
+   the explicit parent opted in via this helper class — keeps the rest
+   of the typography crisp. */
+.overflow-safe {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Smallest defensible tap target inside card-like surfaces (HubCard,
+   EscolaCard, FinancasCard, BibliotecaCard, etc.). Bare <a> in a
+   horizontal flex already meets 44px via min-height inherited from
+   .card; this protects variants that render an <a> as a stretched
+   child instead. */
+a.card-link,
+.card a {
+  min-height: var(--touch-target);
 }
 
 /* ---------- Reduced motion: kill all non-essential animations ---------- */

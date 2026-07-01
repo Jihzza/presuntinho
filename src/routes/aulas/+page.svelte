@@ -226,7 +226,7 @@
 
   .grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.75rem;
   }
 
@@ -316,10 +316,10 @@
   }
 
   @media (min-width: 600px) {
-    .grid { grid-template-columns: 1fr 1fr; }
+    .grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   }
   @media (min-width: 900px) {
-    .grid { grid-template-columns: 1fr 1fr 1fr; }
+    .grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); }
   }
   @media (prefers-reduced-motion: reduce) {
     .card,

@@ -584,7 +584,7 @@
 
   .cards {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.75rem;
     margin-bottom: 1.5rem;
   }
@@ -645,11 +645,12 @@
   .chart-wrap {
     position: relative;
     width: 100%;
+    max-width: 100%; /* task-034: defensive against Chart.js overshoot */
     height: 260px;
   }
   .quick-links {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.75rem;
   }
   .quick {

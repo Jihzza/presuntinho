@@ -545,17 +545,22 @@
   }
   .list li { margin-bottom: 0.4rem; }
 
-  .table-wrap { overflow-x: auto; }
+  .table-wrap { overflow-x: auto; max-width: 100%; }
   table {
     width: 100%;
     border-collapse: collapse;
     color: var(--txt2, #cbd5e1);
     font-size: 0.9rem;
+    /* task-034: prevent wide columns in long study-guide tables from
+       pushing the viewport sideways on 375px phones. */
+    table-layout: fixed;
   }
   th, td {
     padding: 0.5rem 0.65rem;
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
   th {
     color: var(--txt3, #94a3b8);

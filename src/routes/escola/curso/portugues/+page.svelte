@@ -688,7 +688,7 @@
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.4rem;
   }
   .nav-link {
