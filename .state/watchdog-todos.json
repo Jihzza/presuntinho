@@ -1,82 +1,89 @@
 {
-  "lastUpdated": "2026-07-01T15:55:00.000Z",
-  "_tick": "tick-08 (2026-07-01 15:55Z) OPEN — 3 gaps identified, skander2 dispatched for i18n-29missing",
-  "_tickHeadline": "tick-08 aberto: (1) gap-i18n-29missing-keys — delegado skander2 proc_0166bf5b6233 (running). (2) gap-write-pt-hardcoded — preparar brief para tick-09. (3) gap-heartbutton-tiers-drift — fechado via tick-08 commit 12968f0 (doc fix). openGapsAtTick-08-open=2 (a fechar). HEAD 12968f0. Other: skander1 audit /secrets/ tier count semantics pode fechar gap-ux-secrets-tier-display em tick-09.",
+  "lastUpdated": "2026-07-01T16:40:00.000Z",
+  "_tick": "tick-2026-07-01-16 (16:40Z) OPEN — 4 micro-gaps identified (pt/+page, escola/curso/portugues, course/+page, dl/+page); skander1+skander2 dispatched",
+  "_tickHeadline": "tick-16 aberto: 4 micro-PT-hardcoded (severity low-mid, 1-3 strings cada). Tarefas mecânicas: skander2 dispatched em background para corrigir /course L70 + /dl L133 + escola/curso/portugues L297/L541. /pt/+page.svelte 17 strings — provavelmente intentional PT-content (avaliação skander1 necessária). openGapsAtTick16-open=4 (incluindo gap-auth-redirect-race já fechado via ee3410f mas ainda não listado).",
   "gaps": [
     {
-      "id": "gap-i18n-29missing-tick08",
-      "title": "29 i18n keys referenciadas via $t() em src/routes/ sem entrada em pt-PT.json (e outros 4 locales)",
+      "id": "gap-pt-page-17-pt-strings",
+      "title": "/pt/+page.svelte — 17 strings PT-hardcoded visíveis em markup",
       "status": "in_progress",
-      "severity": "high",
+      "severity": "medium",
       "repository": "presuntinho",
       "investigationDate": "2026-07-01",
       "evidence": {
-        "source": "skander2 audit 2026-07-01T13:26:44 (artefact: /tmp/skander2-audit.md)",
-        "missingKeys": [
-          "a11y.aria.apagar_marcador", "a11y.xp_label", "error.descricao_demasiado_longa_max",
-          "escola.section.courses.aria", "escola.section.tools.aria", "escola.walkthrough.transcript.show",
-          "financas.chart.datasetLabel.receitas", "financas.empty.cta", "financas.empty.sub",
-          "financas.empty.title", "financas.orcamento.breadcrumb.current",
-          "financas.orcamento.summary.total_limit", "financas.orcamento.summary.total_spent",
-          "financas.transacoes.breadcrumb.current", "financas.transacoes.editar.tipo.despesa",
-          "financas.transacoes.editar.tipo.legend", "financas.transacoes.editar.tipo.receita",
-          "financas.transacoes.label", "financas.transacoes.label_plural",
-          "habitos.novo.cadence.weekly",
-          "hub.greeting.daniel", "hub.greeting.fatma",
-          "hub.section.apps.aria", "hub.section.badges.aria", "hub.section.progress.aria",
-          "routes.escola.curso.${course.slug}.description", "routes.escola.curso.${course.slug}.tagline", "routes.escola.curso.${course.slug}.title",
-          "write.breadcrumb.current"
-        ],
-        "impact": "Fallback English durante locale pt-PT nos pontos onde i18n ainda não tem chave — quebra UX localização e esconde labels nas tabelas/leituras screen-reader"
+        "file": "src/routes/pt/+page.svelte",
+        "lines": "202 '🇵🇹 Lições em Português', 229 '💡 Dica final para escrever', 242 '🇵🇹 Mini-Curso de Português (side quest!)', 251 '🗣️ As 5 vogais + pronúncia essencial', 252 'O Português tem 5 vogais orais...' + 12 mais",
+        "context": "/pt/ é uma rota específica para lessons de PT (não para tradução do app). Pelo design, o conteúdo é PT de propósito. skander1 vai avaliar se isto é INTENTIONAL ou regressão."
       },
-      "nextStep": "skander2 proc_0166bf5b6233 (background, model gpt-4o-mini) — adicionar 29 chaves aos 5 locales, validar JSON, npm run check + build, commit, push, smoke /financas /habitos /escola 200.",
-      "decision": "DISPATCHED_SKANDER2_TICK08"
+      "nextStep": "skander1 — avaliar se '/pt/+page.svelte' é rota de conteúdo PT-deliberado (a manter) ou seja um fallback antigo que devia passar por $t(). Se for conteúdo PT (lições), defer ou marcar como 'pt-only intentional' em i18n.",
+      "decision": "DISPATCHED_SKANDER1_TICK16"
     },
     {
-      "id": "gap-write-pt-hardcoded-tick08",
-      "title": "/write/+page.svelte — TIPS array (5 cards, ~25 strings) + CTA 'Seguinte: Lições em PT →' hardcoded PT (não passa por $t())",
+      "id": "gap-escola-portugues-ui-2str",
+      "title": "/escola/curso/portugues/+page.svelte — 2 UI strings PT-hardcoded ('🗂 Secções' L297, '🏁 Conclusão' L541)",
       "status": "todo",
-      "severity": "high",
-      "repository": "presuntinho",
-      "investigationDate": "2026-07-01",
+      "severity": "low",
       "evidence": {
-        "file": "src/routes/write/+page.svelte",
-        "lines": "15-71 (TIPS array: 5 cards com title/problem/fixLabel/points hardcoded PT), 86 (h1 '✍️ Writing Tips & Anti-AI Detection'), 110 (CTA 'Seguinte: Lições em PT →')",
-        "liveRoute": "https://presuntinho.netlify.app/write/ (200)",
-        "skander2auditCitation": "/tmp/skander2-audit.md §A — 3 PT-hardcoded em /write (file_write+page.svelte) severity high"
+        "file": "src/routes/escola/curso/portugues/+page.svelte",
+        "lines": "L297 '🗂 Secções', L541 '🏁 Conclusão'",
+        "context": "As strings 'nós' e 'eles/elas' (L473/L474) são verbos content PT lesson, intencional. Mas 'Secções' e 'Conclusão' são UI nav strings que devem passar por $t() — aparecem em headers de página para todas as 5 línguas."
       },
-      "nextStep": "tick-09: skander2 (mecânico) — converter TIPS array para usar $t() (criar write.tips.title.variation / problem / fix / points[].* em 5 locales) ou extrair data para ficheiro JSON i18n-aware; substituir CTA linha 110 por $t('write.cta.next_pt') com fallback.",
-      "decision": "TODO_TICK09_DISPATCH"
+      "nextStep": "skander2 — substituir L297 e L541 por $t() (existe provavelmente escola.curso.portugues.sections / escola.curso.portugues.conclusion ou similar; criar 2 chaves × 5 locales).",
+      "decision": "DISPATCHED_SKANDER2_TICK16"
+    },
+    {
+      "id": "gap-course-subtitle-pt",
+      "title": "/course/+page.svelte L70 — 'SWOT, TOWS, SCQA, Buyer Persona — os quatro frameworks...' hardcoded PT",
+      "status": "todo",
+      "severity": "low",
+      "evidence": {
+        "file": "src/routes/course/+page.svelte",
+        "line": "70",
+        "string": "SWOT, TOWS, SCQA, Buyer Persona — os quatro frameworks que precisas dominar"
+      },
+      "nextStep": "skander2 — substituir por $t('course.hero.subtitle', { default: '…' }) e adicionar a chave aos 5 locales.",
+      "decision": "DISPATCHED_SKANDER2_TICK16"
+    },
+    {
+      "id": "gap-dl-warning-pt",
+      "title": "/dl/+page.svelte L133 — 'NÃO submetas exatamente como está.' warning hardcoded PT",
+      "status": "todo",
+      "severity": "low",
+      "evidence": {
+        "file": "src/routes/dl/+page.svelte",
+        "line": "133",
+        "string": "NÃO submetas exatamente como está."
+      },
+      "nextStep": "skander2 — converter para $t('dl.warning.no_submit_as_is', { default: '…' }) e adicionar 5 locales.",
+      "decision": "DISPATCHED_SKANDER2_TICK16"
     }
   ],
   "notes": {
     "repository": "C:/Users/rafaa/Documents/GitHub/presuntinho",
     "investigator": "Skander (orchestrator)",
-    "summary": "Tick-07 fechado (2 gaps + 1 nav-btn race fix bónus via 3eb23b4). Tick-08 abre com 2 gaps HIGH: (A) 29 chaves i18n em falta (skander2 a correr, proc_0166bf5b6233); (B) PT-hardcoded no /write/+page.svelte (preparar para tick-09). HeartButton tier drift (22 vs 11) já documentado em 12968f0.",
-    "openGapsAtTick": 2,
+    "summary": "Tick-16 começa com estado limpo (HEAD ee3410f, working tree green). Gaps tick-08 (29 i18n, write PT-hardcoded, escola courses) CONFIRMADOS FECHADOS via 3 commits (323c3c3 + bfdf895 + comentário write/+page.svelte). Novo: skander1 dispatch para avaliar /pt/+page.svelte 17 strings; skander2 dispatch para 3 micro-PT-hardcoded (course, dl, escola/curso/portugues).",
+    "openGapsAtTick": 4,
     "closedGapsThisTick": [
-      {"id": "gap-heartbutton-tiers-drift", "sha": "12968f0", "rationale": "HeartButton.svelte linha 9 comentário '22-tier XP escalation' corrigido para 'tier-driven XP escalation via static/config/easterEggs.json → heartTiers, currently 11 tiers'. Não é bug runtime — é doc drift. Commit housekeeping junto com fab-stack 3-chip fix."}
+      {"id": "gap-write-pt-hardcoded", "rationale": "/write/+page.svelte já está 100% $t()-driven (commit anterior fechou). COMMIT não-novo, doc update only."},
+      {"id": "gap-i18n-29missing", "sha": "323c3c3", "rationale": "29 chaves adicionadas aos 5 locales. i18n counts agora estáveis em 1195×5."},
+      {"id": "gap-coach-courses", "sha": "bfdf895", "rationale": "Escola COURSES array 45 entries × 5 locales resolvido."},
+      {"id": "gap-auth-redirect-race", "sha": "ee3410f", "rationale": "Layout authRedirectTimer 550→2500ms + guard !authRedirectTimer + inline redirect em handleNavClick. CEO reported Escola/Agente tap yanking to /splash/ — corrigido."}
     ],
     "productionState": {
       "smokeCodes": {
-        "/": 200, "/splash/": 200, "/login/": "301 → /splash/",
-        "/escola/": 200, "/aulas/": "301 → /aulas/",
-        "/financas/": 200, "/habitos/": 200, "/biblioteca/": 200,
-        "/trabalhos/": 200, "/agente/": 200, "/definicoes/": 200,
-        "/secrets/": 200, "/write/": 200
+        "/": 200, "/splash/": 200, "/escola/": 200, "/financas/": 200,
+        "/habitos/": 200, "/biblioteca/": 200, "/trabalhos/": 200, "/aulas/": 200,
+        "/agente/": 200, "/definicoes/": 200, "/secrets/": 200, "/write/": 200
       },
-      "head": "12968f0",
-      "i18nParity": "5 locales carregados (ar en fr pt-PT tn) — chave count: por confirmar após tick-08 commit (esperado 29 + actual por cada locale)",
+      "head": "ee3410f",
+      "i18nParity": "5 locales carregados — pt-PT/en/tn/fr/ar com 1195 chaves cada (alinhadas)",
       "deployUrl": "https://presuntinho.netlify.app/",
-      "lastCommit": "12968f0 fix(fab-stack): 3-chip stack (xp+heart+install) above bottom-nav; doc HeartButton tier drift"
+      "lastCommit": "ee3410f fix(layout): race condition authRedirectTimer 550ms yanked bottom-nav taps to /splash/"
     },
-    "backgroundProcesses": {
-      "skander2_session_tick08": "proc_0166bf5b6233 (i18n-29missing, mechanical, model gpt-4o-mini, uptime 30+)"
-    },
-    "nextStepsForTick09": [
-      "Validar proc_0166bf5b6233 commit+push verde + smoke 200 (5 rotas tocadas)",
-      "skander1 dispatch: audit /write/+page.svelte refactor — converter TIPS para data structure + i18n OR avaliar alternativa JSON-driven",
-      "skander2 dispatch tick-09: implementar /write TIPS i18n refactor com base no audit skander1"
+    "nextStepsForTick17": [
+      "Validar commits skander2 tick-16 (course, dl, escola-portugues UI 2 strings) + npm run check verde",
+      "Validar decisão skander1 sobre /pt/+page.svelte (intentional vs regressão) — fechar ou despachar fix",
+      "Auditar rotas em produção via browser (skander1) — verificar non-PT locales renderizam (tn, fr, ar) sem fallback"
     ]
   }
 }
