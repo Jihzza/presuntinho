@@ -1026,6 +1026,55 @@
           "title": "Quiz: Gestion de Projets",
           "description": "Testa les connaissances mte3ek f gestion de projets: fondements (définition de projet, triangle scope/time/cost/quality, stakeholders w matrice de Mendelow, cycle de vie 5 phases), PMBOK w processus traditionnels (5 groupes de processus × 10 domaines de connaissance, WBS, Gantt, chemin critique, EVM, fast-tracking vs crashing), méthodologies agiles (Manifeste Agile, Scrum b 3 rôles w 5 événements, Kanban b WIP limits, XP, scaling b SAFe), outils (MS Project, Jira, Asana), gestion de risque de projet (stratégie 4T), w certifications (PMP, PRINCE2, CSM). 10 questions, 4 options kol wa7da, b explications détaillées."
         }
+      },
+      "meta": {
+        "description": "Cours, leçons w quizzes taa Fatma",
+        "og_title": "Escola · Cours w Quizzes",
+        "og_description": "Cours, leçons w quizzes taa Fatma",
+        "twitter_title": "Escola · Cours w Quizzes",
+        "twitter_description": "Cours, leçons w quizzes taa Fatma"
+      }
+    },
+    "biblioteca": {
+      "meta": {
+        "description": "Bookmarks, links w références b les tags",
+        "og_title": "Biblioteca · Bookmarks",
+        "og_description": "Bookmarks, links w références b les tags",
+        "twitter_title": "Biblioteca · Bookmarks",
+        "twitter_description": "Bookmarks, links w références b les tags"
+      }
+    },
+    "financas": {
+      "meta": {
+        "description": "Transactions, budget w catégories",
+        "og_title": "Finanças · Dashboard",
+        "og_description": "Transactions, budget w catégories",
+        "twitter_title": "Finanças · Dashboard",
+        "twitter_description": "Transactions, budget w catégories"
+      },
+      "relatorios": {
+        "meta": {
+          "og_title": "Rapports · Finanças",
+          "twitter_title": "Rapports · Finanças"
+        }
+      }
+    },
+    "habitos": {
+      "meta": {
+        "description": "Habits taa koll nhar b streaks",
+        "og_title": "Hábitos · Daily Check-in",
+        "og_description": "Habits taa koll nhar b streaks",
+        "twitter_title": "Hábitos · Daily Check-in",
+        "twitter_description": "Habits taa koll nhar b streaks"
+      }
+    },
+    "trabalhos": {
+      "meta": {
+        "description": "Travaux w livrables b les délais",
+        "og_title": "Trabalhos · Livraisons w Délais",
+        "og_description": "Travaux w livrables b les délais",
+        "twitter_title": "Trabalhos · Livraisons w Délais",
+        "twitter_description": "Travaux w livrables b les délais"
       }
     }
   },

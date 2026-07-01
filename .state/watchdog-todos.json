@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-01T00:05:00+02:00",
+  "lastUpdated": "2026-07-01T01:30:00+02:00",
   "openItems": [
     {
       "id": "gap-028",
@@ -300,6 +300,17 @@
       "closed_at": "2026-06-30T22:00:00+02:00",
       "sha": "d21138f",
       "note": "BA #49 Gestão de Projectos. 4 lições (32-39 secções cada) + gpq quiz 10 MCQ + i18n 5 chaves × 5 locales (25 entries) + CATALOGUE wired em 3 ficheiros (escola/+page.svelte, escola/curso/[slug]/+page.svelte, aulas/+page.server.ts). npm run check 0/0, build verde, prod /escola/curso/gestao-projectos/ HTTP 200. Dirty tree limpa. 47 cadeiras BA totais."
+    },
+    {
+      "id": "gap-147",
+      "category": "i18n",
+      "description": "27 keys × 5 locales = 135 entries for meta description/og/twitter on 6 pages (biblioteca, escola, financas, financas/relatorios, habitos, trabalhos). PT-hardcoded meta tags replaced with $t() lookups. Audit script .state/patch-gap-147-meta.py. i18n parity 1094/1094 across all 5 locales.",
+      "severity": "alta",
+      "source": "audit-i18n-tick-2026-07-01-01",
+      "created_at": "2026-07-01T01:25:00+02:00",
+      "closed_at": "2026-07-01T01:30:00+02:00",
+      "sha": "pending-commit",
+      "note": "fix(i18n) gap-147 meta tags i18n — 27 keys × 5 locales = 135 entries. Svelte files patched: biblioteca/+page.svelte, escola/+page.svelte, financas/+page.svelte, financas/relatorios/+page.svelte (only og:title + twitter:title), habitos/+page.svelte, trabalhos/+page.svelte. npm run check 0/0, npm run build verde."
     }
   ]
 }

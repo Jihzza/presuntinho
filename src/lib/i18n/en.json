@@ -1026,6 +1026,55 @@
           "title": "Quiz: Project Management",
           "description": "Test your project management knowledge: foundations (project definition, scope/time/cost/quality triangle, stakeholders and Mendelow matrix, 5-phase life cycle), PMBOK and traditional processes (5 process groups × 10 knowledge areas, WBS, Gantt, critical path, EVM, fast-tracking vs crashing), agile methodologies (Agile Manifesto, Scrum with 3 roles and 5 events, Kanban with WIP limits, XP, scaling with SAFe), tools (MS Project, Jira, Asana), project risk management (4T strategy), and certifications (PMP, PRINCE2, CSM). 10 questions, 4 options each, with detailed explanations."
         }
+      },
+      "meta": {
+        "description": "Fatma's courses, lessons and quizzes",
+        "og_title": "School · Courses and Quizzes",
+        "og_description": "Fatma's courses, lessons and quizzes",
+        "twitter_title": "School · Courses and Quizzes",
+        "twitter_description": "Fatma's courses, lessons and quizzes"
+      }
+    },
+    "biblioteca": {
+      "meta": {
+        "description": "Bookmarks, links and references with tags",
+        "og_title": "Biblioteca · Bookmarks",
+        "og_description": "Bookmarks, links and references with tags",
+        "twitter_title": "Biblioteca · Bookmarks",
+        "twitter_description": "Bookmarks, links and references with tags"
+      }
+    },
+    "financas": {
+      "meta": {
+        "description": "Transactions, budget and categories",
+        "og_title": "Finanças · Dashboard",
+        "og_description": "Transactions, budget and categories",
+        "twitter_title": "Finanças · Dashboard",
+        "twitter_description": "Transactions, budget and categories"
+      },
+      "relatorios": {
+        "meta": {
+          "og_title": "Reports · Finanças",
+          "twitter_title": "Reports · Finanças"
+        }
+      }
+    },
+    "habitos": {
+      "meta": {
+        "description": "Daily habits with streaks",
+        "og_title": "Hábitos · Daily Check-in",
+        "og_description": "Daily habits with streaks",
+        "twitter_title": "Hábitos · Daily Check-in",
+        "twitter_description": "Daily habits with streaks"
+      }
+    },
+    "trabalhos": {
+      "meta": {
+        "description": "Assignments and submissions with deadlines",
+        "og_title": "Trabalhos · Submissions and Deadlines",
+        "og_description": "Assignments and submissions with deadlines",
+        "twitter_title": "Trabalhos · Submissions and Deadlines",
+        "twitter_description": "Assignments and submissions with deadlines"
       }
     }
   },

@@ -137,12 +137,12 @@
 
 <svelte:head>
   <title>{$t('routes.biblioteca.title', { default: 'Biblioteca · Bookmarks' })} · Presuntinho</title>
-  <meta name="description" content="Bookmarks, links e referências" />
-  <meta property="og:title" content="Biblioteca · Bookmarks" />
-  <meta property="og:description" content="Bookmarks, links e referências" />
+  <meta name="description" content={$t('routes.biblioteca.meta.description', { default: 'Bookmarks, links e referências' })} />
+  <meta property="og:title" content={$t('routes.biblioteca.meta.og_title', { default: 'Biblioteca · Bookmarks' })} />
+  <meta property="og:description" content={$t('routes.biblioteca.meta.og_description', { default: 'Bookmarks, links e referências' })} />
   <meta property="og:url" content="https://presuntinho.netlify.app/biblioteca/" />
-  <meta name="twitter:title" content="Biblioteca · Bookmarks" />
-  <meta name="twitter:description" content="Bookmarks, links e referências" />
+  <meta name="twitter:title" content={$t('routes.biblioteca.meta.twitter_title', { default: 'Biblioteca · Bookmarks' })} />
+  <meta name="twitter:description" content={$t('routes.biblioteca.meta.twitter_description', { default: 'Bookmarks, links e referências' })} />
 </svelte:head>
 
 <div class="biblioteca-page">

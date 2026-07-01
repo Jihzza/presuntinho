@@ -552,12 +552,12 @@
 
 <svelte:head>
   <title>{$t('routes.escola.title', { default: 'Escola · Cursos e Quizzes' })} · Presuntinho</title>
-  <meta name="description" content="Cursos, lições e quizzes da Fatma" />
-  <meta property="og:title" content="Escola · Cursos e Quizzes" />
-  <meta property="og:description" content="Cursos, lições e quizzes da Fatma" />
+  <meta name="description" content={$t('routes.escola.meta.description', { default: 'Cursos, lições e quizzes da Fatma' })} />
+  <meta property="og:title" content={$t('routes.escola.meta.og_title', { default: 'Escola · Cursos e Quizzes' })} />
+  <meta property="og:description" content={$t('routes.escola.meta.og_description', { default: 'Cursos, lições e quizzes da Fatma' })} />
   <meta property="og:url" content="https://presuntinho.netlify.app/escola/" />
-  <meta name="twitter:title" content="Escola · Cursos e Quizzes" />
-  <meta name="twitter:description" content="Cursos, lições e quizzes da Fatma" />
+  <meta name="twitter:title" content={$t('routes.escola.meta.twitter_title', { default: 'Escola · Cursos e Quizzes' })} />
+  <meta name="twitter:description" content={$t('routes.escola.meta.twitter_description', { default: 'Cursos, lições e quizzes da Fatma' })} />
 </svelte:head>
 
 <div class="escola">

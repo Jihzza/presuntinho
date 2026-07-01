@@ -128,12 +128,12 @@
 
 <svelte:head>
   <title>{$t('routes.trabalhos.title', { default: 'Trabalhos · Entregas e Prazos' })} · Presuntinho</title>
-  <meta name="description" content="Trabalhos e entregas com prazos" />
-  <meta property="og:title" content="Trabalhos · Entregas e Prazos" />
-  <meta property="og:description" content="Trabalhos e entregas com prazos" />
+  <meta name="description" content={$t('routes.trabalhos.meta.description', { default: 'Trabalhos e entregas com prazos' })} />
+  <meta property="og:title" content={$t('routes.trabalhos.meta.og_title', { default: 'Trabalhos · Entregas e Prazos' })} />
+  <meta property="og:description" content={$t('routes.trabalhos.meta.og_description', { default: 'Trabalhos e entregas com prazos' })} />
   <meta property="og:url" content="https://presuntinho.netlify.app/trabalhos/" />
-  <meta name="twitter:title" content="Trabalhos · Entregas e Prazos" />
-  <meta name="twitter:description" content="Trabalhos e entregas com prazos" />
+  <meta name="twitter:title" content={$t('routes.trabalhos.meta.twitter_title', { default: 'Trabalhos · Entregas e Prazos' })} />
+  <meta name="twitter:description" content={$t('routes.trabalhos.meta.twitter_description', { default: 'Trabalhos e entregas com prazos' })} />
 </svelte:head>
 
 <div class="trabalhos">

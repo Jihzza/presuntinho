@@ -101,12 +101,12 @@
 
 <svelte:head>
   <title>{$t('routes.habitos.title', { default: 'Hábitos · Daily Check-in' })} · Presuntinho</title>
-  <meta name="description" content="Hábitos diários com streaks" />
-  <meta property="og:title" content="Hábitos · Daily Check-in" />
-  <meta property="og:description" content="Hábitos diários com streaks" />
+  <meta name="description" content={$t('routes.habitos.meta.description', { default: 'Hábitos diários com streaks' })} />
+  <meta property="og:title" content={$t('routes.habitos.meta.og_title', { default: 'Hábitos · Daily Check-in' })} />
+  <meta property="og:description" content={$t('routes.habitos.meta.og_description', { default: 'Hábitos diários com streaks' })} />
   <meta property="og:url" content="https://presuntinho.netlify.app/habitos/" />
-  <meta name="twitter:title" content="Hábitos · Daily Check-in" />
-  <meta name="twitter:description" content="Hábitos diários com streaks" />
+  <meta name="twitter:title" content={$t('routes.habitos.meta.twitter_title', { default: 'Hábitos · Daily Check-in' })} />
+  <meta name="twitter:description" content={$t('routes.habitos.meta.twitter_description', { default: 'Hábitos diários com streaks' })} />
 </svelte:head>
 
 <div class="habitos-page">

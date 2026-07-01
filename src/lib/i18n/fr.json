@@ -1026,6 +1026,55 @@
           "title": "Quiz : Gestion de Projet",
           "description": "Testez vos connaissances en gestion de projet: fondamentaux (définition de projet, triangle scope/time/cost/quality, parties prenantes et matrice de Mendelow, cycle de vie en 5 phases), PMBOK et processus traditionnels (5 groupes de processus × 10 domaines de connaissance, WBS, Gantt, chemin critique, EVM, fast-tracking vs crashing), méthodologies agiles (Manifeste Agile, Scrum avec 3 rôles et 5 événements, Kanban avec WIP limits, XP, scaling avec SAFe), outils (MS Project, Jira, Asana), gestion de risque de projet (stratégie 4T), et certifications (PMP, PRINCE2, CSM). 10 questions, 4 options chacune, avec explications détaillées."
         }
+      },
+      "meta": {
+        "description": "Cours, leçons et quiz de Fatma",
+        "og_title": "École · Cours et Quiz",
+        "og_description": "Cours, leçons et quiz de Fatma",
+        "twitter_title": "École · Cours et Quiz",
+        "twitter_description": "Cours, leçons et quiz de Fatma"
+      }
+    },
+    "biblioteca": {
+      "meta": {
+        "description": "Signets, liens et références avec étiquettes",
+        "og_title": "Biblioteca · Signets",
+        "og_description": "Signets, liens et références avec étiquettes",
+        "twitter_title": "Biblioteca · Signets",
+        "twitter_description": "Signets, liens et références avec étiquettes"
+      }
+    },
+    "financas": {
+      "meta": {
+        "description": "Transactions, budget et catégories",
+        "og_title": "Finanças · Tableau de bord",
+        "og_description": "Transactions, budget et catégories",
+        "twitter_title": "Finanças · Tableau de bord",
+        "twitter_description": "Transactions, budget et catégories"
+      },
+      "relatorios": {
+        "meta": {
+          "og_title": "Rapports · Finanças",
+          "twitter_title": "Rapports · Finanças"
+        }
+      }
+    },
+    "habitos": {
+      "meta": {
+        "description": "Habitudes quotidiennes avec séries",
+        "og_title": "Hábitos · Bilan quotidien",
+        "og_description": "Habitudes quotidiennes avec séries",
+        "twitter_title": "Hábitos · Bilan quotidien",
+        "twitter_description": "Habitudes quotidiennes avec séries"
+      }
+    },
+    "trabalhos": {
+      "meta": {
+        "description": "Devoirs et livraisons avec délais",
+        "og_title": "Trabalhos · Livraisons et Délais",
+        "og_description": "Devoirs et livraisons avec délais",
+        "twitter_title": "Trabalhos · Livraisons et Délais",
+        "twitter_description": "Devoirs et livraisons avec délais"
       }
     }
   },

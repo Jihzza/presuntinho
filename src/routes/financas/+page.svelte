@@ -150,12 +150,12 @@
 
 <svelte:head>
   <title>{$t('routes.financas.title', { default: 'Finanças · Dashboard' })} · Presuntinho</title>
-  <meta name="description" content="Transações, orçamento e categorias" />
-  <meta property="og:title" content="Finanças · Dashboard" />
-  <meta property="og:description" content="Transações, orçamento e categorias" />
+  <meta name="description" content={$t('routes.financas.meta.description', { default: 'Transações, orçamento e categorias' })} />
+  <meta property="og:title" content={$t('routes.financas.meta.og_title', { default: 'Finanças · Dashboard' })} />
+  <meta property="og:description" content={$t('routes.financas.meta.og_description', { default: 'Transações, orçamento e categorias' })} />
   <meta property="og:url" content="https://presuntinho.netlify.app/financas/" />
-  <meta name="twitter:title" content="Finanças · Dashboard" />
-  <meta name="twitter:description" content="Transações, orçamento e categorias" />
+  <meta name="twitter:title" content={$t('routes.financas.meta.twitter_title', { default: 'Finanças · Dashboard' })} />
+  <meta name="twitter:description" content={$t('routes.financas.meta.twitter_description', { default: 'Transações, orçamento e categorias' })} />
 </svelte:head>
 
 <div class="financas-page">

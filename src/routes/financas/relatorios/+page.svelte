@@ -373,10 +373,10 @@
 <svelte:head>
   <title>{$t('financas.relatorios.title', { default: 'Relatórios' })} · Presuntinho</title>
   <meta name="description" content={$t('financas.relatorios.subtitle', { default: 'Visão geral do mês' })} />
-  <meta property="og:title" content="Relatórios · Finanças" />
+  <meta property="og:title" content={$t('routes.financas.relatorios.meta.og_title', { default: 'Relatórios · Finanças' })} />
   <meta property="og:description" content={$t('financas.relatorios.subtitle', { default: 'Visão geral do mês' })} />
   <meta property="og:url" content="https://presuntinho.netlify.app/financas/relatorios/" />
-  <meta name="twitter:title" content="Relatórios · Finanças" />
+  <meta name="twitter:title" content={$t('routes.financas.relatorios.meta.twitter_title', { default: 'Relatórios · Finanças' })} />
   <meta name="twitter:description" content={$t('financas.relatorios.subtitle', { default: 'Visão geral do mês' })} />
 </svelte:head>
 
