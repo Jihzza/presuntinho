@@ -1,11 +1,28 @@
 /// <reference types="vitest" />
+import { mkdirSync } from 'node:fs';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { SvelteKitPWA } from '@vite-pwa/sveltekit';
 import { defineConfig } from 'vitest/config';
 
+let isSsrBuild = false;
+
 export default defineConfig({
   plugins: [
     sveltekit(),
+    {
+      name: 'presuntinho:pwa-client-dir',
+      apply: 'build',
+      configResolved(config) {
+        isSsrBuild = Boolean(config.build.ssr);
+      },
+      closeBundle: {
+        sequential: true,
+        enforce: 'pre',
+        handler() {
+          if (isSsrBuild) mkdirSync('.svelte-kit/output/client', { recursive: true });
+        }
+      }
+    },
     // Phase 10: PWA — install as a SPA (adapter-static + ssr=false in +layout.ts).
     // The manifest is shipped as static/manifest.webmanifest and copied into the
     // build as-is (manifest: false). Icons live in static/icons/. The plugin
@@ -19,9 +36,9 @@ export default defineConfig({
         enabled: false // keep dev clean; SW only ships in production build
       },
       workbox: {
-        // @vite-pwa/sveltekit runs after adapter-static, which removes
-        // .svelte-kit/output/server. Write the generated SW directly into the
-        // static client output so production builds stay green on Windows.
+        // @vite-pwa/sveltekit generates the worker during the SSR build, then
+        // adapter-static copies client output to build/. Ensure the client dir
+        // exists before Workbox writes here (Windows/Node 24 can otherwise race).
         swDest: '.svelte-kit/output/client/sw.js',
         globPatterns: [
           'client/**/*.{js,css,ico,png,svg,webp,woff,woff2,mp3,json,webmanifest}'
