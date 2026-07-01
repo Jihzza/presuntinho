@@ -1,8 +1,31 @@
 {
-  "lastUpdated": "2026-07-01T15:30:00Z",
-  "_tick": "tick-07 (2026-07-01 15:30Z) CLOSED — 2 gaps tick-07 closed via subsequent commits + this commit",
-  "_tickHeadline": "tick-07 fechou: (1) gap-ux-secrets-tier-display-tick07 PARTIAL via 0f9b7a5 (counter progress + next 3 chips); full silhouette timeline defer V8. (2) gap-trabalhos-ui-pt-hardcoded-tick07 FULL via 704d212 (i18n keys + replace PT-hardcoded). Plus THIS tick-07 orchestrator commit 3eb23b4 = fix(layout) nav-btn handleNavClick race condition. openGapsAtTick=2 (tick-07 entrada) → 0 (tick-07 saída). HEAD 3eb23b4. Next tick: tick-08 UX audit + escola COURSES i18n. Layout race-condition fix deployed via unbuilt commit, awaiting build verification.",
+  "lastUpdated": "2026-07-01T16:02:00Z",
+  "_tick": "tick-08 (2026-07-01 16:02Z) CLOSED — mystery-button-found (CEO context pending item #2)",
+  "_tickHeadline": "tick-08 fechou: mystery-button = InstallButton (PWA) tapado por fab-stack baixa anchor em 4.5rem. Fix anchor 6.5rem + overflow:visible. Commit 12968f0. openGapsAtTick remains 0 (this was a CEO-context-pending item, not a watchdog item, but documented for traceability).",
   "gaps": [
+    {
+      "id": "gap-mystery-button-fab-overlap-tick-08",
+      "title": "CEO reported \"mystery button tapado pela barra inferior em baixo do coração\"",
+      "status": "closed",
+      "severity": "medium",
+      "repository": "presuntinho",
+      "investigationDate": "2026-07-01",
+      "closedDate": "2026-07-01",
+      "decision": "IDENTIFIED_AND_FIXED",
+      "closureSha": "12968f0",
+      "closureCommit": "fix(fab-stack): 3-chip stack (xp+heart+install) above bottom-nav; doc HeartButton tier drift",
+      "closureReason": "Mystery button = InstallButton (PWA install prompt) that lives in .fab-stack. Stack had bottom: calc(safe-area+4.5rem) which on short viewports overlapped the fixed bottom-nav, painting a tapado/ghost chip. Fix raises anchor to 6.5rem above safe-area-inset-bottom and adds overflow:visible. Also documents HeartButton tier drift in same commit.",
+      "closedBy": "skander-principal (orchestrator) — investigated + fix coordinated with skander2 (mechanical in parallel)",
+      "evidence": {
+        "identifiedComponent": "src/lib/components/InstallButton.svelte",
+        "livesInWrapper": "src/routes/+layout.svelte .fab-stack (XpPill + HeartButton + InstallButton)",
+        "symptom": "Third chip in vertical stack overlapped the bottom-nav (4.5rem was too low for 3 × ~44px chips with 0.5rem gap).",
+        "fix": {
+          "before": "bottom: calc(env(safe-area-inset-bottom) + 4.5rem)",
+          "after": "bottom: calc(env(safe-area-inset-bottom) + 6.5rem) + max-height + overflow:visible"
+        }
+      }
+    },
     {
       "id": "gap-ux-secrets-tier-display-tick07",
       "title": "UX /secrets/ Heart Tiers: counter X/23 vs current+next 3 silhouettes — recomendação pendente de audit skander1",
