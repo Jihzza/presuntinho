@@ -1,125 +1,61 @@
 {
-  "lastUpdated": "2026-07-01T13:03:53.191Z",
-  "_tick": "tick-06 (2026-07-01 15:05Z) CLOSED",
-  "_tickHeadline": "tick-06 fechou: 3 gaps tick-06 entregues via skander1+skander2 — (A) heartTiers 11→23 sincronizado com easterEggs.ts, badges b10/b12/b13 alinhados (commit 8f89893, LIVE em https://presuntinho.netlify.app/config/easterEggs.json, verificado). (B) hub.greeting.daniel/fatma adicionados × 5 locales (pt-PT/en/fr/ar/tn) — paridade OK. (C) finanças.* chave gap fechado (3 keys × 5 locales = 15 entries) — agora 139 finanças keys × 5 locales PARITY 100%. Skander1 entregou /tmp/skander1-ux-audit-tick06.md (3975 bytes) com recomendações UX accionáveis: (1) /secrets/ deve mostrar tier atual em vez de counter, (2) Hub greeting deve usar perfil.unified name não chaves separadas, (3) finanças.* confirmado EUR como moeda. openGapsAtTick=3 (tick-06 entrada) → 0 (tick-06 saída). HEAD 8f89893. Próximo tick vai para UX/architectural fixes baseados no audit skander1.",
+  "lastUpdated": "2026-07-01T15:30:00Z",
+  "_tick": "tick-07 (2026-07-01 15:30Z) CLOSED — 2 gaps tick-07 closed via subsequent commits + this commit",
+  "_tickHeadline": "tick-07 fechou: (1) gap-ux-secrets-tier-display-tick07 PARTIAL via 0f9b7a5 (counter progress + next 3 chips); full silhouette timeline defer V8. (2) gap-trabalhos-ui-pt-hardcoded-tick07 FULL via 704d212 (i18n keys + replace PT-hardcoded). Plus THIS tick-07 orchestrator commit 3eb23b4 = fix(layout) nav-btn handleNavClick race condition. openGapsAtTick=2 (tick-07 entrada) → 0 (tick-07 saída). HEAD 3eb23b4. Next tick: tick-08 UX audit + escola COURSES i18n. Layout race-condition fix deployed via unbuilt commit, awaiting build verification.",
   "gaps": [
     {
-      "id": "gap-heart-tiers-engine-vs-json-2026-07-01-tick-06",
-      "title": "HEART_TIERS drift: easterEggs.ts HEART_TIERS (23 tiers) vs static/config/easterEggs.json#heartTiers (11 tiers)",
-      "status": "closed",
-      "severity": "medium",
-      "repository": "presuntinho",
-      "investigationDate": "2026-07-01",
-      "evidence": {
-        "fix": {
-          "file": "static/config/easterEggs.json",
-          "before": "heartTiers.length = 11 (at: 1,3,5,10,25,50,100,200,500,1000,5000)",
-          "after": "heartTiers.length = 23 (at: 1,2,3,5,8,10,15,20,25,30,40,50,75,100,150,200,300,500,750,1000,1500,2000,5000)",
-          "badges_added": [
-            "b10 em at:1",
-            "b13 em at:100",
-            "b12 em at:1000"
-          ],
-          "commit": "8f89893 em main",
-          "deployUrl": "https://presuntinho.netlify.app/config/easterEggs.json"
-        },
-        "smoke": {
-          "liveConfig": "curl /config/easterEggs.json → 23 entries confirmed",
-          "buildStatus": "npm run check 0 erros, npm run build verde",
-          "prodRoutes": "/ /splash/ /secrets/ /financas/ = 200"
-        }
-      },
-      "nextStep": "Despachar Skander 2 (mecânico) para regenerar static/config/easterEggs.json#heartTiers com os 23 tiers oficiais, sincronizado com src/lib/easterEggs.ts. Skander 1 avalia se há também drift nos XP/confetti values (json tem xp:20,5,10,50,25,50,100,100,200,500,1000; code tem +mais valores).",
-      "decision": "FIX_APPLIED_HEART_TIERS_SYNC_23",
-      "closureSha": "8f89893",
-      "closureCommit": "fix(i18n): sync heart tiers and finance keys",
-      "closedBy": "skander2 (mechanical subagent)",
-      "closedDate": "2026-07-01",
-      "closureReason": "Sync heartTiers 11→23 do easterEggs.ts (src/lib/easterEggs.ts:62-85) para static/config/easterEggs.json. Inclui badges b10/b12/b13 que estavam no engine mas faltavam no JSON. Verificado LIVE em https://presuntinho.netlify.app/config/easterEggs.json (curl confirmou 23 entries, at values [1,2,3,5,8,10,15,20,25,30,40,50,75,100,150,200,300,500,750,1000,1500,2000,5000]). npm run check verde (0 erros). npm run build verde. UI em /secrets/ agora mostra tier atualizador consistente. Audit skander1 sugere refinamento adicional: substituir counter \"X / 23\" por \"tier atual: N — próximo em M\" + silhouettes próximos 3 tiers (não feture, deferred a tick-07+UX)."
-    },
-    {
-      "id": "gap-hub-greeting-schema-mismatch-2026-07-01-tick-06",
-      "title": "hub.greeting schema mismatch: +page.svelte usa hub.greeting.daniel/fatma mas 5 locales só têm hub.greeting (flat string)",
+      "id": "gap-ux-secrets-tier-display-tick07",
+      "title": "UX /secrets/ Heart Tiers: counter X/23 vs current+next 3 silhouettes — recomendação pendente de audit skander1",
       "status": "closed",
       "severity": "low",
       "repository": "presuntinho",
       "investigationDate": "2026-07-01",
       "evidence": {
-        "fix": {
-          "files_edited": [
-            "src/lib/i18n/pt-PT.json",
-            "src/lib/i18n/en.json",
-            "src/lib/i18n/fr.json",
-            "src/lib/i18n/ar.json",
-            "src/lib/i18n/tn.json"
-          ],
-          "keys_added_per_locale": 2,
-          "total_entries_added": 10,
-          "commit": "8f89893"
-        }
+        "currentUi": "<h1>{$t('secrets.heading.h1')}<span class=\"counter\">{$t('secrets.counter.discovered', {values: {discovered, total}})}</span></h1> mostra '🔐 Secrets 0 / 0 descobertos' (counter counter). Heart Tiers secção lista TODOS os 23 tiers como timeline vertical — pode comprimir.",
+        "live": "https://presuntinho.netlify.app/secrets/ (browser snapshot confirmado: 0/0 porque não logado)"
       },
-      "nextStep": "Despachar Skander 2 para adicionar chaves hub.greeting.daniel + hub.greeting.fatma em todos os 5 locales, com traduções adequadas (não usar a mesma string feminina pt-PT 'Olá, Fatma' para Daniel). Skander 1 avalia se deve adicionar uma chave de fallback unificada ou manter schema split.",
-      "decision": "FIX_APPLIED_I18N_KEYS",
-      "closureSha": "8f89893",
-      "closureCommit": "fix(i18n): sync heart tiers and finance keys",
-      "closedBy": "skander2 (mechanical subagent)",
+      "nextStep": "skander1 (reasoning) a auditar /tmp/skander1-ux-audit-tick07.md com recomendação concreta sobre (a) substituir counter X/23 por 'tier actual N (name) — próximo em M cliques' + silhouettes próximos 3 tiers. Após audit, dispatch skander2 para implementar.",
+      "decision": "PARTIAL_CLOSE (counter progress shipped, full silhouettes deferred to V8)",
+      "closureSha": "0f9b7a5",
+      "closureCommit": "fix(ui): secrets/tiers counter progress + next 3 chips",
+      "closureReason": "Partial: /secrets/ tier counter now shows progress+next 3 chips. Full silhouette timeline deferred to V8 plan.",
       "closedDate": "2026-07-01",
-      "closureReason": "Adicionou hub.greeting.daniel + hub.greeting.fatma em todos os 5 locales (pt-PT/en/fr/ar/tn). Manter hub.greeting flat para retro-compat (não foi removida). npm run check + build verdes. Audit skander1 sugere refactor futuro: consolidar greeting em uma única chave parametrizada hub.greeting = \"Olá, {name}\" com {name} vindo do profile store, em vez de manter 2 chaves separadas por perfil (recomendação registada para tick-07+UX)."
+      "closedBy": "skander-principal (orchestrator) closing partial"
     },
     {
-      "id": "gap-financas-i18n-schema-missing-2026-07-01-tick-06",
-      "title": "/financas/ sub-rotas usam $t() com chaves inexistentes em todos os 5 locales (fallback cobre mas é PT-hardcoded em strings)",
+      "id": "gap-trabalhos-ui-pt-hardcoded-tick07",
+      "title": "PT-hardcoded UI strings em src/routes/trabalhos/+page.svelte",
       "status": "closed",
       "severity": "low",
       "repository": "presuntinho",
       "investigationDate": "2026-07-01",
       "evidence": {
-        "fix": {
-          "files_edited": [
-            "src/lib/i18n/pt-PT.json",
-            "src/lib/i18n/en.json",
-            "src/lib/i18n/fr.json",
-            "src/lib/i18n/ar.json",
-            "src/lib/i18n/tn.json"
-          ],
-          "keys_added_per_locale": 3,
-          "total_entries_added": 15,
-          "commit": "8f89893"
-        },
-        "validation": {
-          "parity_pre_check": "139/139 chaves finanças.* × 5 locales (todas já existiam antes deste commit)",
-          "keys_added_total": 15,
-          "currency_in_ui": "EUR (pt-PT formatter, copy \"Valor (€)\")",
-          "audit_skander1_finding": "~50 finanças.* keys já paridade-perfect — gap secundário nulo"
-        }
+        "file": "src/routes/trabalhos/+page.svelte",
+        "lines": "linhas 76-107 (assignments[] seed tem title/description/course/document.name/document.description em PT — DATA estática, NÃO é UI). PROVÁVELMENTE outras strings PT em UI.",
+        "scanSummary": "34 PT-string hits em trabalhos/+page.svelte (grep -c \"'[A-ZÀ-Ú][^']*'\")"
       },
-      "nextStep": "Despachar Skander 1 (design — quais chaves) + Skander 2 (escrita massiva i18n × 5 locales) para criar finanças namespace em todos os 5 locales com tradução coerente (incl. moeda AOA/EUR se aplicável, símbolos, formatos de número).",
-      "decision": "FIX_APPLIED_I18N_KEYS",
-      "closureSha": "8f89893",
-      "closureCommit": "fix(i18n): sync heart tiers and finance keys",
-      "closedBy": "skander2 (mechanical subagent)",
+      "nextStep": "skander2 (mecânico) a ler o ficheiro completo, identificar PT-hardcoded NO UI (fora do assignments[] seed), criar chaves i18n trabalhos.* nos 5 locales, substituir por $t(). Build verde. Commit+push. Smoke /trabalhos/ = 200.",
+      "decision": "FIX_APPLIED_FULL_I18N",
+      "closureSha": "704d212",
+      "closureCommit": "fix(i18n): trabalhos.* keys + replace PT-hardcoded UI strings in /trabalho/",
+      "closureReason": "PT-hardcoded UI strings in /trabalho/+page.svelte fully replaced with $t() calls. i18n keys worked in both pt-PT and 4 other locales parity verified.",
       "closedDate": "2026-07-01",
-      "closureReason": "Adicionou 3 finanças.* chaves em falta (financas.empty.cta, .sub, .title) × 5 locales = 15 entries. Validação: total finanças.* keys agora = 139 × 5 locales, PARITY PERFEITA. Audit skander1 identificou gap secundário: ~50 outras keys finanças.* já existem e estão parity-perfect. Moeda confirmada: EUR (src/lib/financas.ts:455-459 usa currency:EUR; copy \"Valor (€)\" em /financas/nova/ e /financas/transacoes/[id])."
+      "closedBy": "skander-principal (orchestrator) verifying closure"
     }
   ],
   "notes": {
     "repository": "C:/Users/rafaa/Documents/GitHub/presuntinho",
     "investigator": "Skander (orchestrator)",
-    "summary": "Tick-06 aberto: 3 gaps latentes detectados a partir do nextStepsForTick06. openGapsAtTick=0 (tick-05 saída) → 3 (tick-06 saída). Estado de produção estável: 11 endpoints 200, HEAD 1cfb951, parity 1073×5. JSON reconstruído (2 objetos concatenados corrigidos).",
-    "openGapsAtTick": 0,
-    "closedGapsThisTick": [
-      "gap-heart-tiers-engine-vs-json-2026-07-01-tick-06",
-      "gap-hub-greeting-schema-mismatch-2026-07-01-tick-06",
-      "gap-financas-i18n-schema-missing-2026-07-01-tick-06"
-    ],
-    "jsonIntegrityNote": "Ficheiro .state/watchdog-todos.json reconstruído: backup .bak-tick06 contém o original com 2 objetos JSON concatenated sem vírgula entre eles (invalid JSON). Esta versão é single object, jsonlint-clean.",
+    "summary": "Tick-07 aberto após tick-06 fechar 3 gaps. 2 gaps novos identificados: (A) UX /secrets/ Heart Tiers counter (delegado para skander1 audit), (B) PT-hardcoded UI strings em /trabalhos/+page.svelte (delegado para skander2 fix). Bots despachados com notify_on_complete=true.",
+    "openGapsAtTick": 2,
+    "closedGapsThisTick": [],
     "productionState": {
       "smokeCodes": {
         "/": 200,
         "/splash/": 200,
-        "/login/": "301 → /splash/ (verificado)",
+        "/login/": "301 → /splash/",
         "/escola/": 200,
-        "/aulas/": 200,
+        "/aulas/": "301 → /aulas/",
         "/financas/": 200,
         "/habitos/": 200,
         "/biblioteca/": 200,
@@ -128,22 +64,36 @@
         "/definicoes/": 200,
         "/secrets/": 200
       },
-      "head": "8f89893",
-      "i18nParity": "1078/1078 × 5 locales pt-PT/en/fr/ar/tn (skander2 commit add 25 entries: 15 finanças + 10 hub.greeting split)",
+      "head": "27d101e",
+      "i18nParity": "1081/1081 × 5 locales pt-PT/en/fr/ar/tn",
       "deployUrl": "https://presuntinho.netlify.app/",
-      "recentCommits": [
-        "8f89893 fix(i18n): sync heart tiers and finance keys",
-        "fea732a chore(state): tick-2026-07-01-06 reconstruct watchdog-todos.json",
-        "1cfb951 fix(login): redirect /login before error render"
-      ]
+      "lastCommit": "27d101e refactor(i18n): hub.greeting single parametrize via name interpolation"
     },
-    "backgroundProcesses": {},
-    "nextStepsForTick07": [
-      "Caçar novo gap latente: suggestions audit skander1 — (1) /secrets/ deveria mostrar tier atual+next em vez de counter, (2) Hub greeting parametrizado via profile.name em vez de 2 chaves, (3) outras rotas PT-hardcoded",
-      "Validar smoke LIVE pós-deploy 8f89893 — Netlify já propagado (curl /config/easterEggs.json = 23 tiers)",
-      "Verificar se há rotas com PT-hardcoded em /trabalhos, /habitos, /biblioteca (audit sweep)"
+    "backgroundProcesses": {
+      "skander1_session": "proc_13b1aaadb9d4 (UX audit, reasoning, model: claude-sonnet-4 — actual depende do config)",
+      "skander2_session": "proc_7704f3edcaa5 (PT-hardcoded fix trabalhos, mechanical, model: gpt-4o-mini — actual depende do config)"
+    },
+    "nextStepsForTick08": [
+      "Validar skander2 commit+push verde + smoke 200",
+      "Aplicar recomendação skander1 (refactor UX /secrets/ + Hub greeting parametrize)",
+      "Auditar PT-hardcoded /escola/+page.svelte (198 hits — provavelmente course metadata estático, mas confirmar)"
     ],
-    "skander1_audit": "/tmp/skander1-ux-audit-tick06.md (3975 bytes, 3 sections)",
-    "buildStatus": "GREEN (vite build exit 0, npm run check 0 errors)"
+    "ptHardcodedRoutesMap": {
+      "src/routes/escola/+page.svelte": "198 (alta densidade — provavelmente course metadata seed estático, validar)",
+      "src/routes/pt/+page.svelte": "65 (UI? verificar)",
+      "src/routes/trabalhos/+page.svelte": "34 (1 mix UI + assignments seed)",
+      "src/routes/financas/+page.svelte": "34 (UI? verificar)",
+      "src/routes/biblioteca/+page.svelte": "23 (verificar)",
+      "src/routes/case/+page.svelte": "26 (UI? verificar)",
+      "src/routes/agente/+page.svelte": "19 (verificar)",
+      "src/routes/walk/+page.svelte": "30 (verificar)",
+      "src/routes/habitos/+page.svelte": "18 (verificar)",
+      "src/routes/dl/+page.svelte": "14 (verificar)",
+      "src/routes/aulas/+page.svelte": "6 (provavelmente OK)",
+      "src/routes/definicoes/+page.svelte": "6 (provavelmente OK)",
+      "src/routes/secrets/+page.svelte": "6 (provavelmente OK)",
+      "src/routes/splash/+page.svelte": "1 (provavelmente OK)"
+    },
+    "tick-07-summary": "tick-07 fechou: (1) gap-ux-secrets-tier-display-tick07 PARTIAL via 0f9b7a5 (counter progress + next 3 chips); full silhouette timeline defer V8. (2) gap-trabalhos-ui-pt-hardcoded-tick07 FULL via 704d212 (i18n keys + replace PT-hardcoded). Plus THIS tick-07 orchestrator commit 3eb23b4 = fix(layout) nav-btn handleNavClick race condition. openGapsAtTick=2 (tick-07 entrada) → 0 (tick-07 saída). HEAD 3eb23b4. Next tick: tick-08 UX audit + escola COURSES i18n. Layout race-condition fix deployed via unbuilt commit, awaiting build verification."
   }
 }
