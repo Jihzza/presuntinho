@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-01T07:03:34+02:00",
+  "lastUpdated": "2026-07-01T07:05:32+02:00",
   "openItems": [
     {
       "id": "gap-028",
@@ -100,33 +100,6 @@
       "created_at": "2026-07-01T07:05:00+02:00",
       "dispatched_to": "Skander 2 — proc_31438036e804",
       "blocked_by": "Bot em execução; ETA 5-10 min."
-    },
-    {
-      "id": "gap-150",
-      "category": "i18n",
-      "description": "PT-hardcoded em src/routes/biblioteca/item/[id]/+page.svelte:222 — string '✏️ Editar'. Substituir por $t('biblioteca.item.edit') + adicionar chave aos 5 locales.",
-      "severity": "média",
-      "source": "audit-pt-tick-2026-07-01-02",
-      "created_at": "2026-07-01T07:05:00+02:00",
-      "dispatched_to": "Skander 2 — proc_c28cd4b5f611"
-    },
-    {
-      "id": "gap-151",
-      "category": "i18n",
-      "description": "PT-hardcoded em src/routes/biblioteca/novo/+page.svelte:120 — string 'Título'. Substituir por $t('biblioteca.novo.title_label') + chave em 5 locales.",
-      "severity": "média",
-      "source": "audit-pt-tick-2026-07-01-02",
-      "created_at": "2026-07-01T07:05:00+02:00",
-      "dispatched_to": "Skander 2 — proc_c28cd4b5f611"
-    },
-    {
-      "id": "gap-155",
-      "category": "i18n",
-      "description": "Currency '€' hardcoded em src/routes/financas/nova/+page.svelte:200 e src/routes/financas/orcamento/+page.svelte:230. Substituir por $t('currency.symbol') (criar chave se não existir).",
-      "severity": "média",
-      "source": "audit-pt-tick-2026-07-01-02",
-      "created_at": "2026-07-01T07:05:00+02:00",
-      "dispatched_to": "Skander 2 — proc_c28cd4b5f611"
     }
   ],
   "closedItems": [
@@ -377,6 +350,42 @@
       "sha": "59b0fc1",
       "decision": "B — DEFER",
       "note": "DECISION: DEFER por analogia gap-127. Auditoria: src/routes/escola/+page.svelte tem 45 entries (44 slugs únicos; gestao-operacoes duplicado) com 4 strings de card por entry = 180 PT fallbacks; src/routes/escola/curso/[slug]/+page.svelte tem 41 entries com 3 strings metadata por entry = 123 PT fallbacks. Isto afecta utilizadores en/tn/fr/ar nos cards/títulos de curso, mas não é bloqueio funcional: links, contagens, navegação e chrome já têm i18n; as strings são metadata/conteúdo académico PT para a Fatma, não UI chrome. Opção A/C abriria tradução massiva/semântica e manutenção alta sem sinal de procura. Se Daniel pedir explicitamente catálogo multilingue, reabrir com piloto por slugs prioritários."
+    },
+    {
+      "id": "gap-150",
+      "category": "i18n",
+      "description": "PT-hardcoded em src/routes/biblioteca/item/[id]/+page.svelte:222 — string '✏️ Editar'. Substituir por $t('biblioteca.item.edit') + adicionar chave aos 5 locales.",
+      "severity": "média",
+      "source": "audit-pt-tick-2026-07-01-02",
+      "created_at": "2026-07-01T07:05:00+02:00",
+      "dispatched_to": "Skander 2 — proc_c28cd4b5f611",
+      "closed_at": "2026-07-01T07:05:32+02:00",
+      "sha": "afd6881",
+      "note": "fix(i18n): gap-150/151/155 PT-hardcoded fixes (3 keys × 5 locales). npm run check 0/0; npm run build exit 0."
+    },
+    {
+      "id": "gap-151",
+      "category": "i18n",
+      "description": "PT-hardcoded em src/routes/biblioteca/novo/+page.svelte:120 — string 'Título'. Substituir por $t('biblioteca.novo.title_label') + chave em 5 locales.",
+      "severity": "média",
+      "source": "audit-pt-tick-2026-07-01-02",
+      "created_at": "2026-07-01T07:05:00+02:00",
+      "dispatched_to": "Skander 2 — proc_c28cd4b5f611",
+      "closed_at": "2026-07-01T07:05:32+02:00",
+      "sha": "afd6881",
+      "note": "fix(i18n): gap-150/151/155 PT-hardcoded fixes (3 keys × 5 locales). npm run check 0/0; npm run build exit 0."
+    },
+    {
+      "id": "gap-155",
+      "category": "i18n",
+      "description": "Currency '€' hardcoded em src/routes/financas/nova/+page.svelte:200 e src/routes/financas/orcamento/+page.svelte:230. Substituir por $t('currency.symbol') (criar chave se não existir).",
+      "severity": "média",
+      "source": "audit-pt-tick-2026-07-01-02",
+      "created_at": "2026-07-01T07:05:00+02:00",
+      "dispatched_to": "Skander 2 — proc_c28cd4b5f611",
+      "closed_at": "2026-07-01T07:05:32+02:00",
+      "sha": "afd6881",
+      "note": "fix(i18n): gap-150/151/155 PT-hardcoded fixes (3 keys × 5 locales). npm run check 0/0; npm run build exit 0."
     }
   ]
 }
