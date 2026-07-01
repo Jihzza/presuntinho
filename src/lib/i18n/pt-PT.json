@@ -1088,5 +1088,12 @@
   "routes.agente.tools.pending_habits_other": "{n} hábitos por marcar hoje ({lista}{suffix})",
   "routes.agente.tools.suggestion_open_habitos": "Abrir /habitos e marcar os do dia",
   "routes.agente.tools.pending_no_budget": "Ainda não definiste orçamento para este mês",
-  "routes.agente.tools.suggestion_open_orcamento": "Abrir /financas/orcamento para definir limites por categoria"
+  "routes.agente.tools.suggestion_open_orcamento": "Abrir /financas/orcamento para definir limites por categoria",
+  "escola.curso.lessonsCount": "lições",
+  "escola.curso.minutesTotal": "min no total",
+  "escola.curso.sectionsCount": "secções",
+  "escola.curso.portugues.aria_markStudied": "Marcar \"{sectionTitle}\" como estudado",
+  "escola.curso.portugues.mark_studied_btn": "✓ Marcar como estudado",
+  "escola.curso.pt.tag": "Curso",
+  "financas.relatorios.sub": "Pie · top 5 · comparativo · CSV"
 }

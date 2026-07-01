@@ -1088,5 +1088,12 @@
   "routes.agente.tools.pending_habits_other": "{n} habits la tmarkihom lyoum ({lista}{suffix})",
   "routes.agente.tools.suggestion_open_habitos": "L7el /habitos w marki li t3abi mta3 lyom",
   "routes.agente.tools.pending_no_budget": "Ma3meltch ba3d budget lhedh chahr",
-  "routes.agente.tools.suggestion_open_orcamento": "L7el /financas/orcamento besh t7ot les limites 3la kol catégorie"
+  "routes.agente.tools.suggestion_open_orcamento": "L7el /financas/orcamento besh t7ot les limites 3la kol catégorie",
+  "escola.curso.lessonsCount": "liçons",
+  "escola.curso.minutesTotal": "min total",
+  "escola.curso.sectionsCount": "secçons",
+  "escola.curso.portugues.aria_markStudied": "Marcar \"{sectionTitle}\" como estudado",
+  "escola.curso.portugues.mark_studied_btn": "✓ Marcar como estudado",
+  "escola.curso.pt.tag": "Curso",
+  "financas.relatorios.sub": "Pie · top 5 · comparativo · CSV"
 }

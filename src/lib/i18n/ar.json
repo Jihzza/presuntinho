@@ -1088,5 +1088,12 @@
   "routes.agente.tools.pending_habits_other": "{n} عادات ما علمتهمش اليوم ({lista}{suffix})",
   "routes.agente.tools.suggestion_open_habitos": "حلّ /habitos وعلم عادات اليوم",
   "routes.agente.tools.pending_no_budget": "ما حطيتش ميزانية لهذا الشهر بعد",
-  "routes.agente.tools.suggestion_open_orcamento": "حلّ /financas/orcamento باش تحط حدود لكل صنف"
+  "routes.agente.tools.suggestion_open_orcamento": "حلّ /financas/orcamento باش تحط حدود لكل صنف",
+  "escola.curso.lessonsCount": "دروس",
+  "escola.curso.minutesTotal": "دقيقة إجمالاً",
+  "escola.curso.sectionsCount": "أقسام",
+  "escola.curso.portugues.aria_markStudied": "وضع \"{sectionTitle}\" كمدروس",
+  "escola.curso.portugues.mark_studied_btn": "✓ وضع كمدروس",
+  "escola.curso.pt.tag": "دورة",
+  "financas.relatorios.sub": "دائري · أعلى 5 · مقارنة · CSV"
 }

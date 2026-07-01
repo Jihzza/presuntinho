@@ -727,8 +727,8 @@
                 </div>
                 <p class="desc">{courseDescription}</p>
       <p class="meta">
-        <span>📚 {course.lessons.length} lições</span>
-        <span>⏱ ~{course.lessons.reduce((a, l) => a + l.estMinutes, 0)} min no total</span>
+        <span>📚 {course.lessons.length} {$t('escola.curso.lessonsCount', { default: 'lições' })}</span>
+                <span>⏱ ~{course.lessons.reduce((a, l) => a + l.estMinutes, 0)} {$t('escola.curso.minutesTotal', { default: 'min no total' })}</span>
       </p>
     </header>
 

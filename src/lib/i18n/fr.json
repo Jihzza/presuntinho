@@ -1088,5 +1088,12 @@
   "routes.agente.tools.pending_habits_other": "{n} habitudes à marquer aujourd'hui ({lista}{suffix})",
   "routes.agente.tools.suggestion_open_habitos": "Ouvrir /habitos et marquer celles du jour",
   "routes.agente.tools.pending_no_budget": "Tu n'as pas encore défini de budget pour ce mois",
-  "routes.agente.tools.suggestion_open_orcamento": "Ouvrir /financas/orcamento pour définir des limites par catégorie"
+  "routes.agente.tools.suggestion_open_orcamento": "Ouvrir /financas/orcamento pour définir des limites par catégorie",
+  "escola.curso.lessonsCount": "leçons",
+  "escola.curso.minutesTotal": "min au total",
+  "escola.curso.sectionsCount": "sections",
+  "escola.curso.portugues.aria_markStudied": "Marquer \"{sectionTitle}\" comme étudiée",
+  "escola.curso.portugues.mark_studied_btn": "✓ Marquer comme étudiée",
+  "escola.curso.pt.tag": "Cours",
+  "financas.relatorios.sub": "Camembert · top 5 · comparatif · CSV"
 }

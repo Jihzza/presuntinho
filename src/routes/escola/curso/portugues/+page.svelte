@@ -255,7 +255,7 @@
       <h1>{$t('escola.curso.pt.fallbackTitle')}</h1>
       <p class="sub">{$t('escola.curso.pt.temporarilyUnavailable', { default: 'Conteúdo temporariamente indisponível.' })}</p>
     {:else if course}
-      <span class="tag">🇵🇹 Curso</span>
+      <span class="tag">🇵🇹 {$t('escola.curso.pt.tag', { default: 'Curso' })}</span>
       <h1>
         <span class="icon" aria-hidden="true">{course.icon}</span>
         {course.title}
@@ -263,7 +263,7 @@
       <p class="subtitle">{course.subtitle}</p>
       <p class="meta">
         <span>⏱ ~{course.estimatedMinutes} min</span>
-        <span>📚 {course.sections.length} secções</span>
+        <span>📚 {course.sections.length} {$t('escola.curso.sectionsCount', { default: 'secções' })}</span>
         <span>{$t('escola.curso.pt.badge_inline', { default: '🎯 Badge: 🇵🇹 Lusófono (b11)' })}</span>
       </p>
     {/if}
@@ -524,10 +524,10 @@
                 type="button"
                 class="mark-btn"
                 onclick={() => markSectionStudied(sectionKey(idx, section))}
-                aria-label={`Marcar "${section.title}" como estudado`}
-              >
-                ✓ Marcar como estudado
-              </button>
+                aria-label={$t('escola.curso.portugues.aria_markStudied', { default: `Marcar "${section.title}" como estudado` })}
+                              >
+                                {$t('escola.curso.portugues.mark_studied_btn', { default: '✓ Marcar como estudado' })}
+                              </button>
             {:else}
               <span class="studied-text">{$t('escola.curso.pt.marked_studied', { default: '✓ Marcado como estudado.' })}</span>
             {/if}

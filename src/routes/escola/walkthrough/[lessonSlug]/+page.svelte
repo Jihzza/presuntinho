@@ -230,10 +230,10 @@
             onclick={(e) => {
               e.preventDefault();
               jumpTo('transcript');
-            }}
-          >
-            📝 Transcrição
-          </a>
+                          }}
+                        >
+                          {$t('walkthrough.transcript', { default: '📝 Transcrição' })}
+                        </a>
         </li>
       </ol>
     </aside>
@@ -328,8 +328,8 @@
     <!-- CTA -->
     <div class="cta-row">
       <a class="cta" href={`/trabalhos/assignment/${lessonSlug}/`}>
-        📝 Começar trabalho →
-      </a>
+              {$t('walkthrough.startAssignment', { default: 'Começar trabalho →' })}
+            </a>
       <a class="secondary" href="/escola/curso/equivalenza/">
         {$t('walkthrough.backToCourse', { default: '← Voltar ao curso' })}
       </a>
