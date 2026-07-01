@@ -130,7 +130,7 @@
   <!-- How to use -->
   <article class="card info">
     <h2>{$t('dl.howto.h2', { default: '💡 Como usar o assignment' })}</h2>
-    <p>{$t('dl.howto.p1', { default: '<strong>NÃO submetas exatamente como está.</strong> O objetivo é leres, perceberes a análise, e reescreveres na tua voz. Muda os exemplos, reordena parágrafos, acrescenta a tua perspetiva.' })}</p>
+    <p><strong>{$t('dl.warning.no_submit_as_is', { default: 'NÃO submetas exatamente como está.' })}</strong> O objetivo é leres, perceberes a análise, e reescreveres na tua voz. Muda os exemplos, reordena parágrafos, acrescenta a tua perspetiva.</p>
     <p>{$t('dl.howto.p2', { default: 'Isto garante: (1) o texto soa a ti, (2) passa o Turnitin, (3) consegues defender cada ponto oralmente.' })}</p>
   </article>
 

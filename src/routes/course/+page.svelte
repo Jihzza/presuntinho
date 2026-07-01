@@ -67,7 +67,7 @@
     </p>
     <span class="tag">{$t('routes.course.modulo_tag', { default: 'Módulo 2' })}</span>
     <h1>🎓 Course Theory</h1>
-    <p class="sub">SWOT, TOWS, SCQA, Buyer Persona — os quatro frameworks que precisas dominar.</p>
+    <p class="sub">{$t('course.hero.subtitle', { default: 'SWOT, TOWS, SCQA, Buyer Persona — os quatro frameworks que precisas dominar.' })}</p>
   </header>
 
   <section class="grid" aria-label="{$t('a11y.aria.frameworks', { default: 'Frameworks' })}">

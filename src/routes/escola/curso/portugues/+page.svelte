@@ -294,7 +294,7 @@
 
     <!-- Section navigator -->
     <nav class="section-nav" aria-label="{$t('a11y.aria.navegacao_por_seccao', { default: 'Navegação por secção' })}">
-      <h2 class="section-title">🗂 Secções</h2>
+      <h2 class="section-title">{$t('escola.curso.portugues.sections.title', { default: '🗂 Secções' })}</h2>
       <ul>
         {#each course.sections as section, idx (sectionId(idx, section))}
           {@const studied = isStudied(idx, section)}
@@ -538,7 +538,7 @@
 
     <!-- Course completion -->
     <section class="completion" aria-label="{$t('a11y.aria.conclusao_do_curso', { default: 'Conclusão do curso' })}">
-      <h2>🏁 Conclusão</h2>
+      <h2>{$t('escola.curso.portugues.conclusion.title', { default: '🏁 Conclusão' })}</h2>
       {#if isComplete}
         <p class="completion-msg">{$t('escola.curso.pt.completedAt', { values: { date: new Date(progress.completedAt ?? 0).toLocaleString('pt-PT') }, default: '✅ Curso concluído a {date}.' })}</p>
         <button
