@@ -19,6 +19,8 @@
       blends with both light and dark themes without extra config.
 -->
 <script lang="ts">
+  import { t } from 'svelte-i18n';
+
   type Variant = 'list' | 'card';
 
   interface Props {
@@ -30,7 +32,7 @@
     label?: string;
   }
 
-  let { variant = 'list', lines = 3, label = 'A carregar…' }: Props = $props();
+  let { variant = 'list', lines = 3, label }: Props = $props();
 
   // Clamp the input so a typo can't render 10 000 rows.
   let count = $derived(Math.max(1, Math.min(20, Math.floor(lines))));
@@ -45,7 +47,7 @@
   {#each Array.from({ length: count }, (_, i) => i) as i (i)}
     <div class="block block--{variant}" aria-hidden="true"></div>
   {/each}
-  <span class="sr-only">{label}</span>
+  <span class="sr-only">{label ?? $t('common.loading')}</span>
 </div>
 
 <style>

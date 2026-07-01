@@ -8,6 +8,7 @@
    */
   import { page } from '$app/state';
   import { onDestroy } from 'svelte';
+  import { t } from 'svelte-i18n';
 
   let visible = $state(false);
   let currentUrl = $state('');
@@ -42,7 +43,7 @@
 </script>
 
 {#if visible}
-  <div class="page-loader" role="status" aria-live="polite" aria-label="A carregar página"></div>
+  <div class="page-loader" role="status" aria-live="polite" aria-label={$t('common.loading')}></div>
 {/if}
 
 <style>
