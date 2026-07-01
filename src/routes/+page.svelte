@@ -207,9 +207,12 @@
   <header class="hub-hero" class:hero-in={heroIn}>
     <h1>
       <span class="greeting">
-        🐷 {activeProfile === 'daniel'
-          ? $t('hub.greeting.daniel', { default: 'Olá, Daniel' })
-          : $t('hub.greeting.fatma', { default: 'Olá, Fatma' })}
+        {activeProfile
+          ? $t('hub.greeting', {
+              values: { name: $t(`profile.${activeProfile}`) },
+              default: '🐷 Olá'
+            })
+          : '🐷'}
       </span>
     </h1>
     <div class="hero-actions">
