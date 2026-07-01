@@ -110,6 +110,10 @@
     heartTiers.reduce((acc, t) => acc + (heartClicks >= t.at ? 1 : 0), 0)
   );
 
+  let nextTiers = $derived(heartTiers.filter((t) => heartClicks < t.at).slice(0, 3));
+  let nextTier = $derived(nextTiers[0] ?? null);
+  let clicksToNextTier = $derived(nextTier ? nextTier.at - heartClicks : 0);
+
   onMount(() => {
     // Load all three lists from /config/easterEggs.json in parallel — they
     // share the same underlying cache so this is one network round trip.
@@ -182,19 +186,30 @@
   <section class="tiers" aria-label={$t('secrets.heartTiersTitle')}>
     <header class="section-head">
       <h2>{$t('secrets.heartTiersTitle')}</h2>
-      <span class="counter" aria-live="polite">
-              {$t('secrets.tiers.counter', {
-                values: { unlocked: unlockedTiersCount, total: heartTiers.length }
-              })}
-            </span>
-          </header>
-          <p class="section-sub">
-            {$t('secrets.tiers.help')}
-            <span class="heart-progress">
-              {$t('secrets.tiers.yourClicks', { values: { count: heartClicks } })}
-              <strong>{heartClicks}</strong>
-            </span>
-          </p>
+      <div class="tier-progress-head" aria-live="polite">
+        <span class="counter">
+          {#if clicksToNextTier === 0}
+            {$t('secrets.tiers.progressComplete')}
+          {:else}
+            {$t('secrets.tiers.progress', {
+              values: { current: unlockedTiersCount, remaining: clicksToNextTier }
+            })}
+          {/if}
+        </span>
+        {#each nextTiers as tier (tier.at)}
+          <span class="tier-chip tier-chip--locked">
+            {$t('secrets.tiers.upcomingChip', { values: { at: tier.at } })}
+          </span>
+        {/each}
+      </div>
+    </header>
+    <p class="section-sub">
+      {$t('secrets.tiers.help')}
+      <span class="heart-progress">
+        {$t('secrets.tiers.yourClicks', { values: { count: heartClicks } })}
+        <strong>{heartClicks}</strong>
+      </span>
+    </p>
     <ol class="tier-list" role="list">
       {#each heartTiers as tier (tier.at)}
         {@const isReached = heartClicks >= tier.at}
@@ -402,6 +417,25 @@
    * ------------------------------------------------------------- */
   .tiers {
     margin-top: 2rem;
+  }
+  .tier-progress-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.4rem;
+  }
+  .tier-chip {
+    font-size: 0.8rem;
+    color: var(--txt2, #cbd5e1);
+    background: rgba(100, 116, 139, 0.16);
+    border: 1px solid rgba(148, 163, 184, 0.26);
+    border-radius: 999px;
+    padding: 0.18rem 0.55rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .tier-chip--locked {
+    opacity: 0.8;
   }
   .heart-progress strong {
     color: #fde68a;
