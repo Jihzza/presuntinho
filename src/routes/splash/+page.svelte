@@ -97,10 +97,9 @@
 
   function inferProfileFromPassOrder(rawPassword: string): ProfileId | null {
     const submitted = rawPassword.trim();
-    const submittedLower = submitted.toLowerCase();
 
-    if (submittedLower === 'princesa') return 'daniel';
-    if (submittedLower === 'fofinho') return 'fatma';
+    if (submitted === 'princesa') return 'daniel';
+    if (submitted === 'fofinho') return 'fatma';
     if (submitted === 'I have the best boyfriend in the world') return 'fatma';
 
     return null;
