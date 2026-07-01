@@ -723,6 +723,17 @@
       course ? $t(`routes.escola.curso.${course.slug}.description`, { default: course.description }) : ''
     );
 
+    const lessonTitle = (lesson: LessonRef) =>
+      $t(`routes.escola.curso.${courseSlug}.lessons.${lesson.slug}.title`, { default: lesson.title });
+
+    const lessonSummary = (lesson: LessonRef) =>
+      $t(`routes.escola.curso.${courseSlug}.lessons.${lesson.slug}.summary`, { default: lesson.summary });
+
+    const lessonQuizTitle = (lesson: LessonRef) =>
+      $t(`routes.escola.curso.${courseSlug}.lessons.${lesson.slug}.quizTitle`, {
+        default: lesson.quizTitle ?? 'Quiz'
+      });
+
     let pageTitle = $derived(
       course ? `${courseTitle} · Curso · Escola` : 'Curso · Escola'
     );
@@ -779,8 +790,8 @@
             <a class="lesson-link" href={`/escola/licao/${course.slug}/${lesson.slug}/`}>
               <div class="lesson-num" aria-hidden="true">{i + 1}</div>
               <div class="lesson-meta">
-                <h3>{lesson.title}</h3>
-                <p>{lesson.summary}</p>
+                <h3>{lessonTitle(lesson)}</h3>
+                <p>{lessonSummary(lesson)}</p>
                 <span class="lesson-time">⏱ ~{lesson.estMinutes} min</span>
               </div>
               <span class="lesson-cta" aria-hidden="true">→</span>
@@ -789,9 +800,9 @@
               <a
                 class="quiz-link"
                 href={`/escola/quiz/${lesson.quizSlug}/`}
-                title={lesson.quizTitle ?? 'Quiz'}
+                title={lessonQuizTitle(lesson)}
               >
-                📝 {lesson.quizTitle ?? 'Quiz'}
+                📝 {lessonQuizTitle(lesson)}
               </a>
     {/if}
           </li>
