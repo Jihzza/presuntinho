@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Presuntinho — presunto estilizado fofo">
+  <title>Presuntinho — Presunto estilizado</title>
+  <!--
+    Variante (c) — Presunto/hambúrguer estilizado fofo (com "cara" kawaii).
+    Pendente CEO: confirmar se quer estilo "fatia de presunto fofa" ou "hambúrguer Presuntinho".
+    Paleta coerente: rosa presunto #fda4af com miolo #fecdd3, contorno #be123c.
+  -->
+  <!-- sombra suave -->
+  <ellipse cx="32" cy="56" rx="18" ry="2.4" fill="#1f2e4a" opacity="0.35"/>
+  <!-- forma redonda com ligeiro "bocado" (hambúrguer) -->
+  <path d="M14 26
+           Q14 16 32 16
+           Q50 16 50 26
+           Q50 30 48 32
+           Q50 34 50 38
+           Q50 48 32 48
+           Q14 48 14 38
+           Q14 34 16 32
+           Q14 30 14 26 Z"
+        fill="#fda4af" stroke="#be123c" stroke-width="1.6" stroke-linejoin="round"/>
+  <!-- miolo (camada de queijo/presunto interior) -->
+  <ellipse cx="32" cy="32" rx="13" ry="6" fill="#fecdd3" stroke="#be123c" stroke-width="1"/>
+  <!-- olhinhos kawaii -->
+  <circle cx="26" cy="28" r="1.6" fill="#1f2e4a"/>
+  <circle cx="38" cy="28" r="1.6" fill="#1f2e4a"/>
+  <circle cx="26.6" cy="27.4" r="0.45" fill="#ffffff"/>
+  <circle cx="38.6" cy="27.4" r="0.45" fill="#ffffff"/>
+  <!-- boquinha kawaii -->
+  <path d="M30 34 Q32 36.2 34 34" fill="none" stroke="#be123c" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- bochechas rosadas -->
+  <circle cx="22" cy="32" r="1.6" fill="#ec4899" opacity="0.6"/>
+  <circle cx="42" cy="32" r="1.6" fill="#ec4899" opacity="0.6"/>
+</svg>

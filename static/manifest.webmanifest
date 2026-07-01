@@ -1,11 +1,11 @@
 {
   "name": "Presuntinho — Study Hub",
   "short_name": "Presuntinho",
-  "description": "O teu hub pessoal de estudo e vida.",
+  "description": "Presuntinho — o teu hub pessoal de estudo e vida. Aulas, biblioteca, finanças, hábitos e agente.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#0e1726",
+  "background_color": "#1f2e4a",
   "theme_color": "#1f2e4a",
   "lang": "pt-PT",
   "orientation": "any",

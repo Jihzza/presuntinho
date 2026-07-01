@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Presuntinho — coração estilizado">
+  <title>Presuntinho — Coração estilizado</title>
+  <!--
+    Variante (b) — Coração estilizado com nome "Presuntinho".
+    Pendente CEO: confirmar se quer nome completo dentro do coração, ou só monograma "P".
+    Paleta coerente: gradiente rosa #ec4899 → #db2777, fundo creme escuro.
+  -->
+  <defs>
+    <linearGradient id="heart-fill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f9a8d4"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <!-- forma de coração (suave, fofa) -->
+  <path d="M32 54
+           C18 44 8 36 8 24
+           C8 16 14 10 22 10
+           C27 10 30 13 32 17
+           C34 13 37 10 42 10
+           C50 10 56 16 56 24
+           C56 36 46 44 32 54 Z"
+        fill="url(#heart-fill)" stroke="#db2777" stroke-width="1.6" stroke-linejoin="round"/>
+  <!-- brilho superior (sublinha a forma fofa) -->
+  <path d="M16 20 Q22 14 28 16" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity="0.85"/>
+  <!-- nome "Presuntinho" inline (legível em ≥48px, fallback em tamanhos pequenos via textLength) -->
+  <text x="32" y="34"
+        font-family="'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif"
+        font-size="9"
+        font-weight="700"
+        fill="#ffffff"
+        text-anchor="middle"
+        textLength="38" lengthAdjust="spacingAndGlyphs">Presuntinho</text>
+  <text x="32" y="42"
+        font-family="'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif"
+        font-size="3.2"
+        font-weight="500"
+        fill="#fce7f3"
+        text-anchor="middle"
+        letter-spacing="0.6">study hub</text>
+</svg>
