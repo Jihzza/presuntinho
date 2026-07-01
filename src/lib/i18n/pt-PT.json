@@ -1144,5 +1144,20 @@
   "escola.curso.portugues.aria_markStudied": "Marcar \"{sectionTitle}\" como estudado",
   "escola.curso.portugues.mark_studied_btn": "✓ Marcar como estudado",
   "escola.curso.pt.tag": "Curso",
-  "financas.relatorios.sub": "Pie · top 5 · comparativo · CSV"
+  "financas.relatorios.sub": "Pie · top 5 · comparativo · CSV",
+  "secrets.counter.discovered": "{discovered} / {total} descobertos",
+  "secrets.error.loadFailed": "⚠️ Não foi possível ler o estado: {error}",
+  "secrets.findAll.title": "🗝️ Encontra-os todos",
+  "secrets.findAll.body": "Clica, escreve e explora. Alguns segredos recompensam-te instantaneamente; outros revelam-se quando fores mais fundo. Cada descoberta fica guardada no teu browser — fecha a página e o teu progresso persiste.",
+  "secrets.tiers.counter": "{unlocked} / {total} desbloqueados",
+  "secrets.tiers.help": "Clica no ❤️ no Hub para subir os tiers. Cada tier recompensa-te com XP e confetti.",
+  "secrets.tiers.yourClicks": "Tuas cliques: {count}",
+  "secrets.tiers.aria": "{at} cliques: {msg} — {status}",
+  "secrets.badges.counter": "{unlocked} / {total} desbloqueados",
+  "secrets.badges.body": "15 conquistas para coleccionar. As bloqueadas ficam a cinzento até as desbloqueares.",
+  "secrets.badge.lockedAria": "Conquistado {name}: bloqueado.",
+  "secrets.badge.aria": "Distintivo {name}",
+  "secrets.status.unlocked": "Desbloqueado",
+  "secrets.tag.hidden": "🔐 Escondido",
+  "secrets.heading.h1": "🔐 Secrets"
 }

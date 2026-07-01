@@ -1144,5 +1144,20 @@
   "escola.curso.portugues.aria_markStudied": "Marcar \"{sectionTitle}\" como estudado",
   "escola.curso.portugues.mark_studied_btn": "✓ Marcar como estudado",
   "escola.curso.pt.tag": "Curso",
-  "financas.relatorios.sub": "Pie · top 5 · comparativo · CSV"
+  "financas.relatorios.sub": "Pie · top 5 · comparativo · CSV",
+  "secrets.counter.discovered": "{discovered} / {total} decouverts",
+  "secrets.error.loadFailed": "⚠️ Impossible de lire l'état: {error}",
+  "secrets.findAll.title": "🗝️ Trouvez-les tous",
+  "secrets.findAll.body": "Clique, écrivez et explorez. Certains secrets vous récompensent instantanément ; d'autres se révèlent quand vous allez plus loin. Chaque découverte est sauvegardée dans votre navigateur — fermez la page et votre progression persiste.",
+  "secrets.tiers.counter": "{unlocked} / {total} débloqués",
+  "secrets.tiers.help": "Cliquez sur le ❤️ dans le Hub pour monter les niveaux. Chaque niveau vous récompense avec de l'XP et des confettis.",
+  "secrets.tiers.yourClicks": "Vos clics : {count}",
+  "secrets.tiers.aria": "{at} clics : {msg} — {status}",
+  "secrets.badges.counter": "{unlocked} / {total} débloqués",
+  "secrets.badges.body": "15 succès à collectionner. Ceux qui sont verrouillés restent en niveaux de gris jusqu'à ce que vous les débloquiez.",
+  "secrets.badge.lockedAria": "Gagné {name} : verrouillé.",
+  "secrets.badge.aria": "Badge {name}",
+  "secrets.status.unlocked": "Débloqué",
+  "secrets.tag.hidden": "🔐 Caché",
+  "secrets.heading.h1": "🔐 Secrets"
 }

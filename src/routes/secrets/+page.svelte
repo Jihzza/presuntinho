@@ -147,28 +147,26 @@
       <span class="sep">›</span>
       <span>{$t('secrets.breadcrumb.current', { default: 'Secrets' })}</span>
     </p>
-    <span class="tag">🔐 Escondido</span>
-    <h1>
-      🔐 Secrets
-      <span class="counter" aria-live="polite">
-        {discoveredCount} / {secrets.length} discovered
-      </span>
-    </h1>
+    <span class="tag">{$t('secrets.tag.hidden')}</span>
+        <h1>
+          {$t('secrets.heading.h1')}
+          <span class="counter" aria-live="polite">
+            {$t('secrets.counter.discovered', {
+              values: { discovered: discoveredCount, total: secrets.length }
+            })}
+          </span>
+        </h1>
     <p class="sub">{$t('routes.secrets.subtitle', { default: 'As dicas estão sempre visíveis. As recompensas desbloqueiam à medida que descobres cada easter egg.' })}</p>
   </header>
 
   {#if loadError}
-    <p class="error">⚠️ Não foi possível ler o estado: {loadError}</p>
-  {/if}
+      <p class="error">{$t('secrets.error.loadFailed', { values: { error: loadError } })}</p>
+    {/if}
 
-  <article class="card">
-    <h2>🗝️ Encontra-os todos</h2>
-    <p>
-      Clica, escreve e explora. Alguns segredos recompensam-te instantaneamente; outros
-      revelam-se quando fores mais fundo. Cada descoberta fica guardada no teu browser —
-      fecha a página e o teu progresso persiste.
-    </p>
-  </article>
+    <article class="card">
+      <h2>{$t('secrets.findAll.title')}</h2>
+      <p>{$t('secrets.findAll.body')}</p>
+    </article>
 
   <section class="grid" aria-label="{$t('a11y.aria.segredos', { default: 'Segredos' })}">
     {#each secrets as s (s.id)}
@@ -185,22 +183,33 @@
     <header class="section-head">
       <h2>{$t('secrets.heartTiersTitle')}</h2>
       <span class="counter" aria-live="polite">
-        {unlockedTiersCount} / {heartTiers.length} unlocked
-      </span>
-    </header>
-    <p class="section-sub">
-      Clica no <strong>❤️</strong> no Hub para subir os tiers. Cada tier recompensa-te com XP e confetti.
-      <span class="heart-progress">
-        Tuas cliques: <strong>{heartClicks}</strong>
-      </span>
-    </p>
+              {$t('secrets.tiers.counter', {
+                values: { unlocked: unlockedTiersCount, total: heartTiers.length }
+              })}
+            </span>
+          </header>
+          <p class="section-sub">
+            {$t('secrets.tiers.help')}
+            <span class="heart-progress">
+              {$t('secrets.tiers.yourClicks', { values: { count: heartClicks } })}
+              <strong>{heartClicks}</strong>
+            </span>
+          </p>
     <ol class="tier-list" role="list">
       {#each heartTiers as tier (tier.at)}
         {@const isReached = heartClicks >= tier.at}
         <li
           class="tier"
           class:reached={isReached}
-          aria-label={`${tier.at} cliques: ${tier.msg} — ${isReached ? 'Desbloqueado' : 'Bloqueado'}`}
+          aria-label={$t('secrets.tiers.aria', {
+            values: {
+              at: tier.at,
+              msg: tier.msg,
+              status: isReached
+                ? $t('secrets.status.unlocked')
+                : $t('secrets.locked', { default: 'Bloqueado' })
+            }
+          })}
         >
           <div class="tier-marker" aria-hidden="true">
             <span class="tier-emoji">{tier.emoji}</span>
@@ -232,34 +241,36 @@
     <header class="section-head">
       <h2>{$t('secrets.badgesTitle')}</h2>
       <span class="counter" aria-live="polite">
-        {unlockedBadgesCount} / {badgeCatalog.length} unlocked
-      </span>
-    </header>
-    <p class="section-sub">
-      15 conquistas para coleccionar. As bloqueadas ficam a cinzento até as desbloqueares.
-    </p>
+              {$t('secrets.badges.counter', {
+                values: { unlocked: unlockedBadgesCount, total: badgeCatalog.length }
+              })}
+            </span>
+          </header>
+          <p class="section-sub">
+            {$t('secrets.badges.body')}
+          </p>
     <div class="badge-grid" role="list">
       {#each badgeCatalog as b (b.id)}
         {@const status = badges[b.id]}
         {@const isUnlockedBadge = Boolean(status?.unlocked)}
         {#if isUnlockedBadge}
           <BadgeCard
-            id={b.id}
-            name={b.label}
-            description={`Distintivo ${b.label}`}
-            icon={b.icon}
-            unlocked={true}
-            unlockedAt={status?.unlockedAt}
-          />
+                      id={b.id}
+                      name={b.label}
+                      description={$t('secrets.badge.aria', { values: { name: b.label } })}
+                      icon={b.icon}
+                      unlocked={true}
+                      unlockedAt={status?.unlockedAt}
+                    />
         {:else}
           <!-- Locked tile: grayscale card with "???" label and hidden icon. -->
           <div
-            class="badge-locked"
-            role="group"
-            aria-label={`Conquistado ${b.label}: bloqueado.`}
-            aria-disabled="true"
-            data-badge-id={b.id}
-          >
+                      class="badge-locked"
+                      role="group"
+                      aria-label={$t('secrets.badge.lockedAria', { values: { name: b.label } })}
+                      aria-disabled="true"
+                      data-badge-id={b.id}
+                    >
             <div class="icon" aria-hidden="true">???</div>
             <h3 class="name">{b.label}</h3>
             <p class="desc">🔒 {b.id}</p>

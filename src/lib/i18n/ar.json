@@ -1144,5 +1144,20 @@
   "escola.curso.portugues.aria_markStudied": "وضع \"{sectionTitle}\" كمدروس",
   "escola.curso.portugues.mark_studied_btn": "✓ وضع كمدروس",
   "escola.curso.pt.tag": "دورة",
-  "financas.relatorios.sub": "دائري · أعلى 5 · مقارنة · CSV"
+  "financas.relatorios.sub": "دائري · أعلى 5 · مقارنة · CSV",
+  "secrets.counter.discovered": "{discovered} / {total} مكتشفة",
+  "secrets.error.loadFailed": "⚠️ تعذّرت قراءة الحالة: {error}",
+  "secrets.findAll.title": "🗝️ اعثر عليها كلها",
+  "secrets.findAll.body": "انقر واكتب واستكشف. بعض الأسرار تكافئك فورًا؛ وأخرى تكشف عن نفسها عندما تتعمّق أكثر. كل اكتشاف يُحفظ في متصفحك — أغلق الصفحة ويبقى تقدّمك محفوظًا.",
+  "secrets.tiers.counter": "{unlocked} / {total} مفتوحة",
+  "secrets.tiers.help": "انقر على ❤️ في الـ Hub لتصعد المستويات. كل مستوى يكافئك بـ XP وأوراق احتفال.",
+  "secrets.tiers.yourClicks": "نقراتك: {count}",
+  "secrets.tiers.aria": "{at} نقرات: {msg} — {status}",
+  "secrets.badges.counter": "{unlocked} / {total} مفتوحة",
+  "secrets.badges.body": "15 إنجازات لجمعها. تبقى المقفلة رمادية حتى تفتحها.",
+  "secrets.badge.lockedAria": "مكسوب {name}: مقفل.",
+  "secrets.badge.aria": "شارة {name}",
+  "secrets.status.unlocked": "مفتوح",
+  "secrets.tag.hidden": "🔐 مخفي",
+  "secrets.heading.h1": "🔐 Secrets"
 }

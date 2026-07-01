@@ -1144,5 +1144,20 @@
   "escola.curso.portugues.aria_markStudied": "Mark \"{sectionTitle}\" as studied",
   "escola.curso.portugues.mark_studied_btn": "✓ Mark as studied",
   "escola.curso.pt.tag": "Course",
-  "financas.relatorios.sub": "Pie · top 5 · comparison · CSV"
+  "financas.relatorios.sub": "Pie · top 5 · comparison · CSV",
+  "secrets.counter.discovered": "{discovered} / {total} discovered",
+  "secrets.error.loadFailed": "⚠️ Couldn't read state: {error}",
+  "secrets.findAll.title": "🗝️ Find them all",
+  "secrets.findAll.body": "Click, type, and explore. Some secrets reward you instantly; others reveal themselves when you go deeper. Each discovery is saved in your browser — close the page and your progress persists.",
+  "secrets.tiers.counter": "{unlocked} / {total} unlocked",
+  "secrets.tiers.help": "Click the ❤️ on the Hub to climb tiers. Each tier rewards you with XP and confetti.",
+  "secrets.tiers.yourClicks": "Your clicks: {count}",
+  "secrets.tiers.aria": "{at} clicks: {msg} — {status}",
+  "secrets.badges.counter": "{unlocked} / {total} unlocked",
+  "secrets.badges.body": "15 achievements to collect. Locked ones stay grayscale until you unlock them.",
+  "secrets.badge.lockedAria": "Earned {name}: locked.",
+  "secrets.badge.aria": "Badge {name}",
+  "secrets.status.unlocked": "Unlocked",
+  "secrets.tag.hidden": "🔐 Hidden",
+  "secrets.heading.h1": "🔐 Secrets"
 }
