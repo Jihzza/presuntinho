@@ -309,7 +309,7 @@
       "source": "audit-i18n-tick-2026-07-01-01",
       "created_at": "2026-07-01T01:25:00+02:00",
       "closed_at": "2026-07-01T01:30:00+02:00",
-      "sha": "pending-commit",
+      "sha": "cf13166",
       "note": "fix(i18n) gap-147 meta tags i18n — 27 keys × 5 locales = 135 entries. Svelte files patched: biblioteca/+page.svelte, escola/+page.svelte, financas/+page.svelte, financas/relatorios/+page.svelte (only og:title + twitter:title), habitos/+page.svelte, trabalhos/+page.svelte. npm run check 0/0, npm run build verde."
     }
   ]
