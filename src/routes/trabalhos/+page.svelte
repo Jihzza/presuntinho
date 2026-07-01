@@ -188,7 +188,7 @@
                   type="button"
                   class="status-btn"
                   onclick={() => cycleStatus(a.id)}
-                  aria-label={$t('trabalhos.change_status.aria', { default: 'Mudar estado' }).replace('{title}', a.title)}
+                  aria-label={$t('trabalhos.change_status.aria', { values: { title: a.title }, default: 'Mudar estado de {title}' })}
                 >
                   🔄 {$t('trabalhos.change_status', { default: 'Mudar estado' })}
                 </button>
