@@ -18,8 +18,10 @@
 //   - Phase 7 / Hábitos:    habitos, habit_logs                  (added in v3)
 //   - Phase 8 / Biblioteca: biblioteca                          (added in v4)
 //   - Phase 10 / Caderno:    notes                               (added in v5)
+//   - Phase V7+ / Agente:    chat_messages                       (added in v6)
+//   - Phase 11 / Trabalhos:  assignments                         (added in v7)
 //
-// Dexie version: 6.  When the schema changes again, bump to 7 and add a
+// Dexie version: 7.  When the schema changes again, bump to 8 and add a
 // `.upgrade()` block.  Versions are additive — older versions stay in
 // place so existing IndexedDB databases still open cleanly on first
 // load after the deploy.
@@ -269,6 +271,48 @@ export interface ChatMessageRow {
   createdAt: number;
 }
 
+/**
+ * Phase 11 / Trabalhos (Escola sub-app) — added in v7.
+ *
+ * One row per school assignment the user has on their plate
+ * (a "trabalho").  `id` is a stable slug ('a1', 'a2', …) so we can
+ * deep-link to `/trabalhos/assignment/<id>` without colliding with
+ * Dexie's auto-increment space and so a user's "in-progress" set can
+ * be identified across reloads even if the row order changes.
+ *
+ * `curso` is a slug from the escola catalogue (e.g. 'marketing-digital',
+ * 'branding', 'estrategia', 'comportamento-organizacional',
+ * 'gestao-financeira') and is the secondary index the `/trabalhos`
+ * list view groups by.  `cadeira` is optional metadata for finer
+ * grouping within a curso — kept free-form so the seed row
+ * can carry ('SEO', 'Branding', 'Liderança', …) without a schema
+ * bump if we add more later.
+ *
+ * `status` is the lifecycle: the user starts at 'pending', flips to
+ * 'in_progress' when they actually sit down to do it, 'submitted'
+ * once they hand it in, and 'graded' once it's been marked.  The XP
+ * reward is awarded once `status` reaches 'submitted' (the
+ * 'graded' step is informational only and does not pay out extra
+ * XP in the MVP).
+ *
+ * `deadline` is a Unix-ms timestamp; 30-60 days ahead for the seed
+ * rows so the dashboard shows real urgency when the user first
+ * opens the app.  `updatedAt` is the secondary index powering the
+ * "recently touched" pill on `/trabalhos`.
+ */
+export interface AssignmentRow {
+  id: string;               // 'a1', 'a2', ... or slug
+  title: string;            // PT
+  description: string;      // PT
+  curso: string;            // curso slug
+  cadeira?: string;         // optional: cadeira/módulo
+  deadline: number;         // timestamp ms
+  status: 'pending' | 'in_progress' | 'submitted' | 'graded';
+  xpReward: number;         // XP awarded when status -> submitted
+  createdAt: number;
+  updatedAt: number;
+}
+
 // ---------------------------------------------------------------------------
 // Database class
 // ---------------------------------------------------------------------------
@@ -318,6 +362,15 @@ class PresuntinhoDB extends Dexie {
         //   chat_messages: one row per message. `createdAt` is the
         //                  secondary index powering newest-first ordering.
         chat_messages!: Table<ChatMessageRow, number>;
+        // Phase 11 / Trabalhos — added in v7.
+        //   assignments: PK is the stable id slug ('a1', 'a2', …).
+        //                Secondary indexes on `curso` (group by curso
+        //                in the /trabalhos list), `status` (filter
+        //                pending vs submitted), `deadline` (sort by
+        //                urgency), and `updatedAt` (recently touched).
+        //                No `.upgrade()` body — brand-new table, Dexie
+        //                creates it empty on the first open after deploy.
+        assignments!: Table<AssignmentRow, string>;
 
     constructor(name = 'presuntinho') {
       super(name);
@@ -419,6 +472,31 @@ class PresuntinhoDB extends Dexie {
               biblioteca:    '++id, *tags, createdAt',
               notes:         '++id, category, createdAt',
               chat_messages: '++id, createdAt'
+            });
+            // v7: Phase 11 / Trabalhos — Escola sub-app. Brand-new table,
+            // no upgrade body needed — Dexie creates it empty on the first
+            // open after deploy.  `assignments` uses an explicit string PK
+            // ('a1', 'a2', …) declared as `id` (no `++`), with secondary
+            // indexes on `curso`, `status`, `deadline` and `updatedAt`
+            // matching the indexes declared in the brief.  All prior
+            // stores are re-declared so Dexie's version chain can
+            // validate the cumulative schema.
+            this.version(7).stores({
+              state:         'id',
+              badges:        'id',
+              visited:       'id',
+              quizScores:    'id',
+              secrets:       'id',
+              settings:      'id',
+              transacoes:    '++id, tipo, data, [tipo+data], categoria',
+              orcamentos:    'id, mes',
+              categorias:    'id, tipo',
+              habitos:       '++id, createdAt',
+              habit_logs:    '++id, [habitId+date], habitId, date, createdAt',
+              biblioteca:    '++id, *tags, createdAt',
+              notes:         '++id, category, createdAt',
+              chat_messages: '++id, createdAt',
+              assignments:   'id, curso, status, deadline, updatedAt'
             });
           }
         }
