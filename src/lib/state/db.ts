@@ -217,6 +217,13 @@ export interface HabitLogRow {
  * `url` is stored verbatim — we don't try to normalise it (stripping
  * trailing slashes, lower-casing host, etc.) because the user
  * probably wants to land on exactly the URL they pasted.
+ *
+ * `curso_id` (Phase 11 / task-025) and `assignment_id` (task-025)
+ * are OPTIONAL fields added on top of the existing v4 schema.  They
+ * are stored as plain columns — NOT indexed — and the Dexie version
+ * is unchanged so existing rows survive the upgrade.  Old rows have
+ * `undefined` for both fields; the UI treats them as "no curso /
+ * no assignment link".
  */
 export interface BibliotecaRow {
   id?: number;            // auto-incremented by Dexie (++)
@@ -225,6 +232,8 @@ export interface BibliotecaRow {
   tags: string[];         // user-entered labels
   description: string;    // free-form notes (Markdown NOT rendered in MVP)
   createdAt: number;      // Date.now() at insert
+  curso_id?: string;      // optional: escolar curso slug (e.g. 'marketing-digital')
+  assignment_id?: string; // optional: Trabalho id (e.g. 'a3') to attach this bookmark as a resource
 }
 
 /**

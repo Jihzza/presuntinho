@@ -3170,5 +3170,23 @@
   "routes.agente.tools.pending_assignments_one": "{n} trabalho pendente ({lista})",
   "routes.agente.tools.pending_assignments_other": "{n} trabalhos pendentes ({lista})",
   "routes.agente.tools.suggestion_open_trabalhos": "Abrir /trabalhos e ver a lista filtrável",
-  "agente.empty_prompt": "Pergunta qualquer coisa — eu leio da app."
+  "agente.empty_prompt": "Pergunta qualquer coisa — eu leio da app.",
+  "biblioteca": {
+    "search_placeholder": "بحث…",
+    "add_button": "+ إضافة إشارة",
+    "edit_button": "تعديل",
+    "delete_button": "حذف",
+    "confirm_delete": "حذف هذه الإشارة؟",
+    "empty_state_title": "مكتبتك فارغة",
+    "empty_state_body": "احفظ المقالات وملفات PDF والدروس المفيدة لواجباتك.",
+    "add_first_button": "أضف إشارتك الأولى",
+    "export_button": "تصدير JSON",
+    "import_button": "استيراد JSON",
+    "xp_earned_message": "+{xp} نقطة",
+    "curso_label": "مساق",
+    "assignment_label": "واجب",
+    "attach_to_assignment_label": "إرفاق بالواجب",
+    "no_assignment": "— لا يوجد —",
+    "no_curso": "— لا يوجد —"
+  }
 }

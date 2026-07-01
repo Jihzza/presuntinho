@@ -3170,5 +3170,23 @@
   "routes.agente.tools.pending_assignments_one": "{n} trabalho pendente ({lista})",
   "routes.agente.tools.pending_assignments_other": "{n} trabalhos pendentes ({lista})",
   "routes.agente.tools.suggestion_open_trabalhos": "Abrir /trabalhos e ver a lista filtrável",
-  "agente.empty_prompt": "Pergunta qualquer coisa — eu leio da app."
+  "agente.empty_prompt": "Pergunta qualquer coisa — eu leio da app.",
+  "biblioteca": {
+    "search_placeholder": "Search…",
+    "add_button": "+ Add bookmark",
+    "edit_button": "Edit",
+    "delete_button": "Delete",
+    "confirm_delete": "Delete this bookmark?",
+    "empty_state_title": "Your library is empty",
+    "empty_state_body": "Save articles, PDFs and tutorials that help with your assignments.",
+    "add_first_button": "Add your first bookmark",
+    "export_button": "Export JSON",
+    "import_button": "Import JSON",
+    "xp_earned_message": "+{xp} XP",
+    "curso_label": "Course",
+    "assignment_label": "Assignment",
+    "attach_to_assignment_label": "Attach to assignment",
+    "no_assignment": "— none —",
+    "no_curso": "— none —"
+  }
 }

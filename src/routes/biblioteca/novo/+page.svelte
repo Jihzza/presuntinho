@@ -12,15 +12,79 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
     import { addItem, parseTagsInput } from '$lib/biblioteca';
+    import { listAssignments, type Assignment } from '$lib/trabalhos';
     import { showToast } from '$lib/components/events';
     import { t } from 'svelte-i18n';
+
+  /**
+   * Known escola curso slugs — same source as the edit page.
+   * Kept inline (not re-exported from /escola/) to avoid a cyclic
+   * import surface between the two routes.
+   */
+  const CURSOS: { slug: string; title: string }[] = [
+    { slug: 'equivalenza',           title: 'Equivalenza' },
+    { slug: 'portugues',             title: 'Português' },
+    { slug: 'marketing-digital',     title: 'Marketing Digital' },
+    { slug: 'branding',              title: 'Branding' },
+    { slug: 'estrategia',            title: 'Estratégia' },
+    { slug: 'estrategia-corporativa',title: 'Estratégia Corporativa' },
+    { slug: 'marketing-internacional', title: 'Marketing Internacional' },
+    { slug: 'gestao-financeira',     title: 'Gestão Financeira' },
+    { slug: 'contabilidade',         title: 'Contabilidade' },
+    { slug: 'microeconomia',         title: 'Microeconomia' },
+    { slug: 'recursos-humanos',      title: 'Recursos Humanos' },
+    { slug: 'comportamento-organizacional', title: 'Comportamento Organizacional' },
+    { slug: 'gestao-inovacao',       title: 'Gestão da Inovação' },
+    { slug: 'comercio-internacional',title: 'Comércio Internacional' },
+    { slug: 'macroeconomia',         title: 'Macroeconomia' },
+    { slug: 'marketing-estrategico', title: 'Marketing Estratégico' },
+    { slug: 'etica-negocios',        title: 'Ética nos Negócios' },
+    { slug: 'direito-empresarial',   title: 'Direito Empresarial' },
+    { slug: 'analise-financeira',    title: 'Análise Financeira' },
+    { slug: 'comportamento-do-consumidor', title: 'Comportamento do Consumidor' },
+    { slug: 'pesquisa-de-marketing', title: 'Pesquisa de Marketing' },
+    { slug: 'gestao-risco',          title: 'Gestão de Risco' },
+    { slug: 'analise-investimentos', title: 'Análise de Investimentos' }
+  ];
 
   let title = $state('');
   let url = $state('');
   let description = $state('');
   let tagsInput = $state('');
+  let cursoId = $state<string>('');
+  let assignmentId = $state<string>('');
   let submitting = $state(false);
   let error = $state<string | null>(null);
+  let assignments = $state<Assignment[]>([]);
+  let assignmentsLoaded = $state(false);
+
+  // Load assignments once on mount so the dropdown is populated.
+  $effect(() => {
+    if (assignmentsLoaded) return;
+    (async () => {
+      try {
+        assignments = await listAssignments();
+      } catch (e) {
+        console.warn('[biblioteca/novo] listAssignments failed (non-fatal):', e);
+        assignments = [];
+      } finally {
+        assignmentsLoaded = true;
+      }
+    })();
+  });
+
+  // Auto-fill curso when an assignment is picked AND the user hasn't
+  // already manually chosen one.
+  let lastAutoFill = $state<string>('');
+  $effect(() => {
+    if (!assignmentId || !assignmentsLoaded) return;
+    if (assignmentId === lastAutoFill) return;
+    const found = assignments.find((a) => a.id === assignmentId);
+    if (found && !cursoId) {
+      cursoId = found.curso;
+      lastAutoFill = assignmentId;
+    }
+  });
 
   /**
    * Lightweight URL validator.  We require:
@@ -78,7 +142,9 @@
         title: trimmedTitle,
         url: trimmedUrl,
         description: trimmedDesc,
-        tags: parsedTags
+        tags: parsedTags,
+        curso_id: cursoId || undefined,
+        assignment_id: assignmentId || undefined
       });
       showToast($t('biblioteca.novo.toast.criado', { default: 'Marcador criado' }));
       goto('/biblioteca/');
@@ -171,6 +237,28 @@
       <span class="hint">{$t('biblioteca.new.tags.hint', { default: 'Separa com vírgulas. Até 10 tags por marcador.' })}</span>
     </div>
 
+    <div class="field">
+      <label for="bm-curso">Curso (escola) — opcional</label>
+      <select id="bm-curso" bind:value={cursoId}>
+        <option value="">— Nenhum —</option>
+        {#each CURSOS as c (c.slug)}
+          <option value={c.slug}>{c.title}</option>
+        {/each}
+      </select>
+      <span class="hint">Liga este marcador a um curso da escola para o veres nas estatísticas por área.</span>
+    </div>
+
+    <div class="field">
+      <label for="bm-assignment">Trabalho (anexar como recurso) — opcional</label>
+      <select id="bm-assignment" bind:value={assignmentId}>
+        <option value="">— Nenhum —</option>
+        {#each assignments as a (a.id)}
+          <option value={a.id}>{a.id} · {a.title}</option>
+        {/each}
+      </select>
+      <span class="hint">Atrelar este marcador a um trabalho permite usá-lo como referência ao escrever a entrega.</span>
+    </div>
+
     {#if error}
       <p class="error" role="alert">⚠️ {error}</p>
     {/if}
@@ -245,7 +333,8 @@
   }
   .field input[type='text'],
   .field input[type='url'],
-  .field textarea {
+  .field textarea,
+  .field select {
     width: 100%;
     padding: 0.625rem 0.75rem;
     background: rgba(0, 0, 0, 0.25);
@@ -262,7 +351,8 @@
     line-height: 1.5;
   }
   .field input:focus-visible,
-  .field textarea:focus-visible {
+  .field textarea:focus-visible,
+  .field select:focus-visible {
     outline: none;
     border-color: var(--accent, #ec4899);
     box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.25);

@@ -3170,5 +3170,23 @@
   "routes.agente.tools.pending_assignments_one": "{n} trabalho pendente ({lista})",
   "routes.agente.tools.pending_assignments_other": "{n} trabalhos pendentes ({lista})",
   "routes.agente.tools.suggestion_open_trabalhos": "Abrir /trabalhos e ver a lista filtrável",
-  "agente.empty_prompt": "Pergunta qualquer coisa — eu leio da app."
+  "agente.empty_prompt": "Pergunta qualquer coisa — eu leio da app.",
+  "biblioteca": {
+    "search_placeholder": "Rechercher…",
+    "add_button": "+ Ajouter un signet",
+    "edit_button": "Modifier",
+    "delete_button": "Supprimer",
+    "confirm_delete": "Supprimer ce signet ?",
+    "empty_state_title": "Votre bibliothèque est vide",
+    "empty_state_body": "Enregistrez des articles, PDF et tutoriels utiles pour vos devoirs.",
+    "add_first_button": "Ajouter votre premier signet",
+    "export_button": "Exporter JSON",
+    "import_button": "Importer JSON",
+    "xp_earned_message": "+{xp} XP",
+    "curso_label": "Cours",
+    "assignment_label": "Devoir",
+    "attach_to_assignment_label": "Attacher au devoir",
+    "no_assignment": "— aucun —",
+    "no_curso": "— aucun —"
+  }
 }

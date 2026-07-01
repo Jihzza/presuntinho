@@ -79,6 +79,9 @@ export const XP_TABLE: Readonly<Record<string, number>> = Object.freeze({
   // Biblioteca
   biblioteca_add: 4,
   biblioteca_use_tag: 1,
+  // task-025 — attach an existing bookmark to a Trabalho so it shows
+  // up as a resource on the assignment detail page.
+  biblioteca_attach: 5,
 
   // Easter eggs (replaces direct addXP calls)
   easteregg_heart_tier: 0, // amount passed explicitly; lookup is fallback

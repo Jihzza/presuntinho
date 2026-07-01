@@ -28,7 +28,13 @@
   import { t } from 'svelte-i18n';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
-  import { getItem, deleteItem, type Item } from '$lib/biblioteca';
+  import {
+    getItem,
+    deleteItem,
+    attachBookmarkToAssignment,
+    type Item
+  } from '$lib/biblioteca';
+  import { listAssignments, type Assignment } from '$lib/trabalhos';
   import { showToast } from '$lib/components/events';
 
   // Parse `id` as a positive integer.  Anything else (missing,
@@ -46,6 +52,37 @@
   let error = $state<string | null>(null);
   let confirmingDelete = $state(false);
   let deleting = $state(false);
+
+  // Assignment-attachment UI state.
+  let assignments = $state<Assignment[]>([]);
+  let assignmentsLoaded = $state(false);
+  let attachBusy = $state(false);
+  let attachDraft = $state<string>('');
+
+  // Load the assignment list ONCE on mount so the "Attach to assignment"
+  // dropdown is populated even before the user opens it.
+  $effect(() => {
+    if (assignmentsLoaded) return;
+    (async () => {
+      try {
+        assignments = await listAssignments();
+      } catch (e) {
+        console.warn('[biblioteca/item] listAssignments failed (non-fatal):', e);
+        assignments = [];
+      } finally {
+        assignmentsLoaded = true;
+      }
+    })();
+  });
+
+  // Mirror the loaded bookmark's assignment into the local draft so the
+  // dropdown shows what's currently attached.
+  $effect(() => {
+    const a = item?.assignment_id;
+    if (a !== undefined) {
+      untrack(() => { attachDraft = a ?? ''; });
+    }
+  });
 
   async function reload(id: number): Promise<void> {
     loading = true;
@@ -117,6 +154,36 @@
     // Pass the tag as a query string so the list page can hydrate
     // its filter from the URL on first render.
     void goto(`/biblioteca/?tag=${encodeURIComponent(tag)}`);
+  }
+
+  /**
+   * Persist the user's draft assignment selection.  Empty string
+   * detaches the bookmark (clears `assignment_id`).
+   */
+  async function applyAttach(): Promise<void> {
+    if (!item || attachBusy) return;
+    const next = attachDraft || '';
+    const current = item.assignment_id ?? '';
+    if (next === current) return; // no-op
+    attachBusy = true;
+    try {
+      const target = next || null;
+      const updated = await attachBookmarkToAssignment(item.id, target, item.curso_id ?? null);
+      if (updated) {
+        item = updated;
+        showToast(
+          next
+            ? $t('biblioteca.item.toast.associado', { default: 'Marcador anexado ao trabalho' })
+            : $t('biblioteca.item.toast.desassociado', { default: 'Associação removida' })
+        );
+      }
+    } catch (e) {
+      console.error('[biblioteca/item] attachBookmarkToAssignment failed', e);
+      showToast($t('biblioteca.item.toast.erro_associar', { default: 'Erro a atualizar associação' }));
+      attachDraft = item.assignment_id ?? '';
+    } finally {
+      attachBusy = false;
+    }
   }
 
   // SEO — used by <svelte:head> below.
@@ -212,6 +279,39 @@
         <p class="notes">{item.description}</p>
       </section>
     {/if}
+
+    <section class="attach-block" aria-label="Anexar a trabalho">
+      <span class="label">📎 {$t('biblioteca.item.attach.label', { default: 'Anexar a trabalho' })}</span>
+      {#if assignmentsLoaded}
+        <div class="attach-row">
+          <select bind:value={attachDraft} disabled={attachBusy}>
+            <option value="">— Nenhum —</option>
+            {#each assignments as a (a.id)}
+              <option value={a.id}>{a.id} · {a.title}</option>
+            {/each}
+          </select>
+          <button
+            type="button"
+            class="apply-btn"
+            onclick={applyAttach}
+            disabled={attachBusy || (attachDraft || '') === (item.assignment_id ?? '')}
+          >
+            {attachBusy ? 'A guardar…' : 'Aplicar'}
+          </button>
+        </div>
+        {#if item.assignment_id}
+          <p class="attach-current">
+            Atado a <strong>{item.assignment_id}</strong>.
+            <a href={`/trabalhos/assignment/${item.assignment_id}/`}>
+              Ver trabalho →
+            </a>
+          </p>
+        {/if}
+        <span class="hint">Atrelar este marcador a um trabalho dá-te +5 XP e torna-o utilizável como referência ao escrever a entrega.</span>
+      {:else}
+        <span class="hint">A carregar lista de trabalhos…</span>
+      {/if}
+    </section>
 
     <section class="actions" aria-label="{$t('a11y.aria.acoes', { default: 'Ações' })}">
       <a
@@ -309,12 +409,80 @@
   }
   .url-block,
   .tags-block,
-  .notes-block {
+  .notes-block,
+  .attach-block {
     background: var(--card, rgba(255, 255, 255, 0.05));
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
     border-radius: 0.75rem;
     padding: 1rem;
     margin-bottom: 1rem;
+  }
+  .attach-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .attach-row select {
+    flex: 1;
+    min-width: 180px;
+    padding: 0.5rem 0.625rem;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
+    border-radius: 0.5rem;
+    color: var(--txt, #fff);
+    font-size: 0.9375rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    min-height: 44px;
+  }
+  .attach-row select:focus-visible {
+    outline: none;
+    border-color: var(--accent, #ec4899);
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.25);
+  }
+  .apply-btn {
+    display: inline-block;
+    background: var(--accent, #ec4899);
+    color: #fff;
+    border: 0;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.875rem;
+    min-height: 44px;
+    min-width: 88px;
+    transition: background 0.15s;
+  }
+  .apply-btn:hover:not(:disabled),
+  .apply-btn:focus-visible:not(:disabled) {
+    background: #d63384;
+    outline: none;
+  }
+  .apply-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .attach-current {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.8125rem;
+    color: var(--txt2, #cbd5e1);
+  }
+  .attach-current a {
+    color: var(--accent, #ec4899);
+    text-decoration: none;
+  }
+  .attach-current a:hover,
+  .attach-current a:focus-visible {
+    text-decoration: underline;
+  }
+  .hint {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--txt3, #94a3b8);
+    margin-top: 0.5rem;
   }
   .url-row {
     display: flex;
