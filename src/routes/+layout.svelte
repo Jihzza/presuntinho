@@ -6,6 +6,7 @@
   import { initStores, markVisited } from '$lib/state/stores';
   import Confetti from '$lib/components/Confetti.svelte';
   import Toast from '$lib/components/Toast.svelte';
+  import PageLoader from '$lib/components/PageLoader.svelte';
   import Mascot from '$lib/components/Mascot.svelte';
   import SecretModal from '$lib/components/SecretModal.svelte';
   import OfflineIndicator from '$lib/components/OfflineIndicator.svelte';
@@ -14,6 +15,7 @@
   import HeartButton from '$lib/components/HeartButton.svelte';
   import XpPill from '$lib/components/XpPill.svelte';
   import InstallButton from '$lib/components/InstallButton.svelte';
+  import { showToast } from '$lib/components/events';
   import { t } from 'svelte-i18n';
   import { onMount } from 'svelte';
   import { pwaInfo } from 'virtual:pwa-info';
@@ -22,6 +24,7 @@
   let session = $state(getSession());
   let storesReady = $state(false);
   let secretRoomOpen = $state(false);
+  let authRedirectTimer: ReturnType<typeof setTimeout> | null = null;
 
   // Tag <link rel="manifest"> gerada pelo plugin (caso o PWA esteja ativo).
   // O fallback manual já vive em src/app.html, por isso esta tag é só aditiva.
@@ -101,10 +104,12 @@
         window.removeEventListener('presuntinho:close-secret-room', onCloseSRoom);
       };
 
-      // Redirect to splash if not authenticated (and not already on /splash/')
-      // Note: trailingSlash='always' in +layout.ts forces /splash → /splash/ at runtime.
+      // Redirect to splash if not authenticated (and not already on /splash/).
+      // Keep the redirect, but give the user immediate visual feedback first;
+      // otherwise a bottom-nav tap looks like it did nothing until the async
+      // redirect wins the race after initial scroll/render work.
       if (!session && page.url.pathname !== '/splash/') {
-        goto('/splash/');
+        startAuthRedirect('esta página');
       }
 
       // Global key handler — drives Konami code + keyword detector
@@ -118,8 +123,31 @@
     return () => {
       if (unbindKey) unbindKey();
       if (unbindExtra) unbindExtra();
+      if (authRedirectTimer) clearTimeout(authRedirectTimer);
     };
   });
+
+  function startAuthRedirect(targetLabel: string): void {
+    showToast(`Precisas iniciar sessão para abrir ${targetLabel}.`, 2400);
+    if (authRedirectTimer) clearTimeout(authRedirectTimer);
+    authRedirectTimer = setTimeout(() => {
+      authRedirectTimer = null;
+      void goto('/splash/');
+    }, 550);
+  }
+
+  function handleNavClick(event: MouseEvent, targetLabel: string): void {
+    if (!storesReady) {
+      event.preventDefault();
+      showToast('A preparar sessão… tenta novamente daqui a um instante.', 1400);
+      return;
+    }
+
+    if (!session) {
+      event.preventDefault();
+      startAuthRedirect(targetLabel);
+    }
+  }
 
   function logout() {
     clearSession();
@@ -133,6 +161,8 @@
     {@html webManifestLink}
   {/if}
 </svelte:head>
+
+<PageLoader />
 
 {#if page.url.pathname === '/splash/'}
   {@render children?.()}
@@ -188,23 +218,23 @@
             </main>
 
             <nav class="bottom-nav" aria-label={$t('nav.bottom.aria', { default: 'Navegação principal' })}>
-                  <a href="/" class="nav-btn" aria-label={$t('nav.home.aria', { default: 'Home — dashboard principal' })} data-sveltekit-preload-data>
+                  <a href="/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Home')} aria-label={$t('nav.home.aria', { default: 'Home — dashboard principal' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">🏠</span>
                     <span class="nav-label">{$t('nav.home', { default: 'Home' })}</span>
                   </a>
-                  <a href="/escola" class="nav-btn" aria-label={$t('nav.escola.aria', { default: 'Escola — cursos e lições' })} data-sveltekit-preload-data>
+                  <a href="/escola" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Escola')} aria-label={$t('nav.escola.aria', { default: 'Escola — cursos e lições' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">📚</span>
                     <span class="nav-label">{$t('nav.escola', { default: 'Escola' })}</span>
                   </a>
-                  <a href="/aulas" class="nav-btn" aria-label={$t('nav.aulas.aria', { default: 'Aulas — todas as lições agregadas' })} data-sveltekit-preload-data>
+                  <a href="/aulas" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Aulas')} aria-label={$t('nav.aulas.aria', { default: 'Aulas — todas as lições agregadas' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">🎓</span>
                     <span class="nav-label">{$t('nav.aulas', { default: 'Aulas' })}</span>
                   </a>
-                  <a href="/financas" class="nav-btn" aria-label={$t('nav.financas.aria', { default: 'Finanças — despesas e contas' })} data-sveltekit-preload-data>
+                  <a href="/financas" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Finanças')} aria-label={$t('nav.financas.aria', { default: 'Finanças — despesas e contas' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">💰</span>
                     <span class="nav-label">{$t('nav.financas', { default: 'Finanças' })}</span>
                   </a>
-                  <a href="/habitos" class="nav-btn" aria-label={$t('nav.habitos.aria', { default: 'Hábitos — tracking diário' })} data-sveltekit-preload-data>
+                  <a href="/habitos" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Hábitos')} aria-label={$t('nav.habitos.aria', { default: 'Hábitos — tracking diário' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">🌱</span>
                     <span class="nav-label">{$t('nav.habitos', { default: 'Hábitos' })}</span>
                   </a>
@@ -403,6 +433,16 @@
     }
     .nav-btn:focus-visible {
       box-shadow: 0 0 0 2px var(--accent, #ec4899);
+    }
+    .nav-btn-disabled {
+      color: rgba(255, 255, 255, 0.42);
+      cursor: not-allowed;
+      filter: grayscale(0.35);
+    }
+    .nav-btn-disabled:hover,
+    .nav-btn-disabled:focus-visible {
+      color: rgba(255, 255, 255, 0.56);
+      background: rgba(255, 255, 255, 0.03);
     }
     .nav-icon {
       font-size: 1.5rem;
