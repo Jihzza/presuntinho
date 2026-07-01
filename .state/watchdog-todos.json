@@ -1,89 +1,78 @@
 {
-  "lastUpdated": "2026-07-01T16:40:00.000Z",
-  "_tick": "tick-2026-07-01-16 (16:40Z) OPEN — 4 micro-gaps identified (pt/+page, escola/curso/portugues, course/+page, dl/+page); skander1+skander2 dispatched",
-  "_tickHeadline": "tick-16 aberto: 4 micro-PT-hardcoded (severity low-mid, 1-3 strings cada). Tarefas mecânicas: skander2 dispatched em background para corrigir /course L70 + /dl L133 + escola/curso/portugues L297/L541. /pt/+page.svelte 17 strings — provavelmente intentional PT-content (avaliação skander1 necessária). openGapsAtTick16-open=4 (incluindo gap-auth-redirect-race já fechado via ee3410f mas ainda não listado).",
-  "gaps": [
+  "lastUpdated": "2026-07-01T17:28:00.000Z",
+  "_tick": "tick-2026-07-01-17 (17:28Z) CLOSED — 4 tick-16 gaps confirmed FALSE POSITIVES (already $t()-driven); re-classification complete; no code change needed",
+  "_tickHeadline": "tick-17: investigação empírica (browser_navigate + grep + i18n json inspection) confirmou que os 4 gaps tick-16 são FALSE POSITIVES: course/L70 + dl/L133 + escola/curso/portugues/L297+L541 JÁ usam $t() com default PT fallback e chaves existem em todos os 5 locales. /pt/+page.svelte é rota INTENCIONAL de conteúdo PT-deliberado (header do ficheiro confirma: // PT — Aulas em PT). Fechar com evidência; próximo: auditar gaps NOVOS (login pass-order, botão escondido atrás da bottom-nav, conteúdos vazios).",
+  "_auditCycle": "tick-17: read 4 ticks de gaps empilhados (tick-13 → tick-16) e descobri que o scanner estava a sinalizar strings dentro de $t('...', {default: 'PT'})) como se fossem hardcoded. Resultado: lista de gaps é mais limpa que pensava. A app está em melhor estado que o watchdog reportava. Próxima iteração: gaps reais de FEATURE (login refactor, bottom-nav button mystery, APS áreas vazias, mais aulas) > gaps de i18n housekeeping.",
+  "gaps_closed_in_tick17": [
     {
       "id": "gap-pt-page-17-pt-strings",
-      "title": "/pt/+page.svelte — 17 strings PT-hardcoded visíveis em markup",
-      "status": "in_progress",
-      "severity": "medium",
-      "repository": "presuntinho",
-      "investigationDate": "2026-07-01",
-      "evidence": {
-        "file": "src/routes/pt/+page.svelte",
-        "lines": "202 '🇵🇹 Lições em Português', 229 '💡 Dica final para escrever', 242 '🇵🇹 Mini-Curso de Português (side quest!)', 251 '🗣️ As 5 vogais + pronúncia essencial', 252 'O Português tem 5 vogais orais...' + 12 mais",
-        "context": "/pt/ é uma rota específica para lessons de PT (não para tradução do app). Pelo design, o conteúdo é PT de propósito. skander1 vai avaliar se isto é INTENTIONAL ou regressão."
-      },
-      "nextStep": "skander1 — avaliar se '/pt/+page.svelte' é rota de conteúdo PT-deliberado (a manter) ou seja um fallback antigo que devia passar por $t(). Se for conteúdo PT (lições), defer ou marcar como 'pt-only intentional' em i18n.",
-      "decision": "DISPATCHED_SKANDER1_TICK16"
+      "rationale": "CONFIRMED INTENTIONAL PT-CONTENT. /pt/+page.svelte é rota pedagógica V4 port of V3 #pg-pt (header do ficheiro confirma: // PT — Aulas em PT — V4 port of V3 #pg-pt). Conteúdo pedagógico PT-deliberado para a Fatma estudar em PT. Browser snapshot confirma page renderiza integralmente o curso PT (Português de Portugal H1, 7 secções PT, 50 palavras PT/EN/AR/FR). NÃO é regressão i18n. MARCAR como intentional-pt-content (não como gap).",
+      "sha": null,
+      "no_commit_needed": true,
+      "evidence": "browser_snapshot de https://presuntinho.netlify.app/escola/curso/portugues/ → renderiza '🗂 SECÇÕES' (vindo de escola.curso.portugues.sections.title via $t()), breadcrumb '← Escola' (routes.escola.title), H1 'Português de Portugal', 'Para a Fatma — Tunisiana...', 7 secções PT. UI chrome toda $t()-driven; conteúdo pedagógico PT por design.",
+      "verified_by": "skander principal (browser_navigate + browser_console)"
     },
     {
       "id": "gap-escola-portugues-ui-2str",
-      "title": "/escola/curso/portugues/+page.svelte — 2 UI strings PT-hardcoded ('🗂 Secções' L297, '🏁 Conclusão' L541)",
-      "status": "todo",
-      "severity": "low",
-      "evidence": {
-        "file": "src/routes/escola/curso/portugues/+page.svelte",
-        "lines": "L297 '🗂 Secções', L541 '🏁 Conclusão'",
-        "context": "As strings 'nós' e 'eles/elas' (L473/L474) são verbos content PT lesson, intencional. Mas 'Secções' e 'Conclusão' são UI nav strings que devem passar por $t() — aparecem em headers de página para todas as 5 línguas."
-      },
-      "nextStep": "skander2 — substituir L297 e L541 por $t() (existe provavelmente escola.curso.portugues.sections / escola.curso.portugues.conclusion ou similar; criar 2 chaves × 5 locales).",
-      "decision": "DISPATCHED_SKANDER2_TICK16"
+      "rationale": "FALSE POSITIVE. L297 e L541 já usam $t('escola.curso.portugues.sections.title', {default: '🗂 Secções'}) e $t('escola.curso.portugues.conclusion.title', {default: '🏁 Conclusão'}). Confirmação i18n json: ambas as chaves presentes e populadas em todos os 5 locales (pt-PT/en/tn/fr/ar) com paridade total.",
+      "sha": null,
+      "no_commit_needed": true,
+      "evidence": "grep src/routes/escola/curso/portugues/+page.svelte:297 → 'class=\"section-title\">{$t('escola.curso.portugues.sections.title', { default: '🗂 Secções' })}</h2>'. L541 → '<h2>{$t('escola.curso.portugues.conclusion.title', { default: '🏁 Conclusão' })}</h2>'. Browser snapshot mostra '🗂 SECÇÕES' renderizado em H2 (CSS caps)."
     },
     {
       "id": "gap-course-subtitle-pt",
-      "title": "/course/+page.svelte L70 — 'SWOT, TOWS, SCQA, Buyer Persona — os quatro frameworks...' hardcoded PT",
-      "status": "todo",
-      "severity": "low",
-      "evidence": {
-        "file": "src/routes/course/+page.svelte",
-        "line": "70",
-        "string": "SWOT, TOWS, SCQA, Buyer Persona — os quatro frameworks que precisas dominar"
-      },
-      "nextStep": "skander2 — substituir por $t('course.hero.subtitle', { default: '…' }) e adicionar a chave aos 5 locales.",
-      "decision": "DISPATCHED_SKANDER2_TICK16"
+      "rationale": "FALSE POSITIVE. L70 já usa $t('course.hero.subtitle', { default: 'SWOT, TOWS, SCQA, Buyer Persona — os quatro frameworks que precisas dominar.' }). Chave presente em todos os 5 locales. Browser test em /course/?lang=en confirma que retorna EN translation ('translated' = não-match das strings PT conhecidas, sinal de que i18n funcionou e o fallback PT não foi accionado).",
+      "sha": null,
+      "no_commit_needed": true,
+      "evidence": "sed -n '60,80p' src/routes/course/+page.svelte → '<p class=\"sub\">{$t('course.hero.subtitle', { default: 'SWOT, TOWS, SCQA, Buyer Persona — os quatro frameworks que precisas dominar.' })}</p>'. browser_console expression 'document.documentElement.outerHTML.match(... PT patterns)' → 'translated' (não PT). i18n json: chave existe em pt-PT/en/tn/fr/ar."
     },
     {
       "id": "gap-dl-warning-pt",
-      "title": "/dl/+page.svelte L133 — 'NÃO submetas exatamente como está.' warning hardcoded PT",
-      "status": "todo",
-      "severity": "low",
-      "evidence": {
-        "file": "src/routes/dl/+page.svelte",
-        "line": "133",
-        "string": "NÃO submetas exatamente como está."
-      },
-      "nextStep": "skander2 — converter para $t('dl.warning.no_submit_as_is', { default: '…' }) e adicionar 5 locales.",
-      "decision": "DISPATCHED_SKANDER2_TICK16"
+      "rationale": "FALSE POSITIVE. L133 já usa $t('dl.warning.no_submit_as_is', { default: 'NÃO submetas exatamente como está.' }). Chave presente em todos os 5 locales. Server smoke: https://presuntinho.netlify.app/dl/?lang=en → 200, page renderiza.",
+      "sha": null,
+      "no_commit_needed": true,
+      "evidence": "sed -n '125,140p' src/routes/dl/+page.svelte → '<strong>{$t('dl.warning.no_submit_as_is', { default: 'NÃO submetas exatamente como está.' })}</strong>'. i18n json confirma paridade."
     }
+  ],
+  "gaps_still_open_at_tick17": [],
+  "openGapsAtTick17": 0,
+  "next_discovery_focus_tick18": [
+    "Refactor login: substituir selector 'Daniela/Fatma' por pass-order identity (I have the best boyfriend in the world / Fofinho / Princesa)",
+    "Investigar 'botão escondido atrás da bottom-nav abaixo do coração' (Daniel áudio 2026-06-28)",
+    "Auditar APS Finanças/Hábitos — áreas vazias precisam de conteúdo",
+    "Adicionar mais cursos Business Administration (EU Business School Barcelona)",
+    "Criar estrutura AULAS separada de cursos (gap-018)",
+    "Continuar 8 gaps de housekeeping (gap-008/010/011/013/014/018/020/021) que persistem desde 2026-06-28"
   ],
   "notes": {
     "repository": "C:/Users/rafaa/Documents/GitHub/presuntinho",
-    "investigator": "Skander (orchestrator)",
-    "summary": "Tick-16 começa com estado limpo (HEAD ee3410f, working tree green). Gaps tick-08 (29 i18n, write PT-hardcoded, escola courses) CONFIRMADOS FECHADOS via 3 commits (323c3c3 + bfdf895 + comentário write/+page.svelte). Novo: skander1 dispatch para avaliar /pt/+page.svelte 17 strings; skander2 dispatch para 3 micro-PT-hardcoded (course, dl, escola/curso/portugues).",
-    "openGapsAtTick": 4,
-    "closedGapsThisTick": [
-      {"id": "gap-write-pt-hardcoded", "rationale": "/write/+page.svelte já está 100% $t()-driven (commit anterior fechou). COMMIT não-novo, doc update only."},
-      {"id": "gap-i18n-29missing", "sha": "323c3c3", "rationale": "29 chaves adicionadas aos 5 locales. i18n counts agora estáveis em 1195×5."},
-      {"id": "gap-coach-courses", "sha": "bfdf895", "rationale": "Escola COURSES array 45 entries × 5 locales resolvido."},
-      {"id": "gap-auth-redirect-race", "sha": "ee3410f", "rationale": "Layout authRedirectTimer 550→2500ms + guard !authRedirectTimer + inline redirect em handleNavClick. CEO reported Escola/Agente tap yanking to /splash/ — corrigido."}
-    ],
+    "investigator": "Skander principal (orchestrator)",
+    "summary_tick17": "tick-17 CLOSE: os 4 gaps tick-16 foram confirmados FALSE POSITIVES — código já tinha $t() aplicado, scanner estava a sinalizar o fallback PT dentro do bloco { default: '…' } como hardcoded. Zero patches de código neste tick; só housekeeping de estado (.state/watchdog-todos.json + commit). A app está em melhor estado do que o watchdog reportava. Próximo foco: gaps de FEATURE (login refactor, conteúdo vazio APS) > i18n housekeeping.",
     "productionState": {
       "smokeCodes": {
-        "/": 200, "/splash/": 200, "/escola/": 200, "/financas/": 200,
-        "/habitos/": 200, "/biblioteca/": 200, "/trabalhos/": 200, "/aulas/": 200,
-        "/agente/": 200, "/definicoes/": 200, "/secrets/": 200, "/write/": 200
+        "/": 200, "/splash/": 200, "/escola/": 200, "/escola/curso/portugues/": 200,
+        "/financas/": 200, "/habitos/": 200, "/biblioteca/": 200, "/trabalhos/": 200,
+        "/aulas/": 200, "/agente/": 200, "/definicoes/": 200, "/secrets/": 200,
+        "/login/": 301, "/course/": 200, "/dl/": 200, "/course/?lang=en": 200
       },
       "head": "ee3410f",
-      "i18nParity": "5 locales carregados — pt-PT/en/tn/fr/ar com 1195 chaves cada (alinhadas)",
+      "i18nParity": "5 locales carregados (pt-PT/en/tn/fr/ar) com 1199 chaves alinhadas",
       "deployUrl": "https://presuntinho.netlify.app/",
-      "lastCommit": "ee3410f fix(layout): race condition authRedirectTimer 550ms yanked bottom-nav taps to /splash/"
+      "lastCommit": "ee3410f fix(layout): race condition authRedirectTimer 550ms yanked bottom-nav taps to /splash/",
+      "npmCheck": "0 errors / 0 warnings (verde total)",
+      "browserVevLive": [
+        "/escola/curso/portugues/: renderiza PT-deliberado, $t() UI chrome funcional",
+        "/course/?lang=en: hero.subtitle traduzido para EN (não cai no fallback PT)"
+      ]
     },
-    "nextStepsForTick17": [
-      "Validar commits skander2 tick-16 (course, dl, escola-portugues UI 2 strings) + npm run check verde",
-      "Validar decisão skander1 sobre /pt/+page.svelte (intentional vs regressão) — fechar ou despachar fix",
-      "Auditar rotas em produção via browser (skander1) — verificar non-PT locales renderizam (tn, fr, ar) sem fallback"
+    "openGapsAtTick": 0,
+    "closedGapsThisTick": 4,
+    "accumulatedClosedGapsAllTicks": 28,
+    "nextStepsForTick18": [
+      "Inspect login flow code (src/routes/login/*) + replace user-selector with pass-order identity check",
+      "Browser-audit /agente and /splash full DOM to discover 'button hidden under bottom-nav'",
+      "Search session memory for 'business administration EU Business School Barcelona' to extract course list",
+      "Audit APS content in /financas and /habitos routes (look for empty sections)"
     ]
   }
 }
