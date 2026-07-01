@@ -42,12 +42,18 @@ export const XP_CHANGED_EVENT = 'presuntinho:xp-changed';
  */
 export const XP_TABLE: Readonly<Record<string, number>> = Object.freeze({
   // Finanças
-  transacao_add_despesa: 3,
-  transacao_add_receita: 3,
-  transacao_edit: 1,
-  transacao_delete: -1,
-  orcamento_define: 5,
-  orcamento_remove: 0,
+    transacao_add_despesa: 3,
+    transacao_add_receita: 3,
+    transacao_edit: 1,
+    transacao_delete: -1,
+    orcamento_define: 5,
+    orcamento_remove: 0,
+    // task-038 — first dashboard visit of the day (idempotent per day).
+    financas_dashboard_first_view: 2,
+    // task-038 — user defined a monthly budget cap and stayed under it
+    // at end-of-month evaluation.  Bonus is paid once per category per
+    // month; awarded only when saldo >= 0 for that month's spend.
+    financas_orcamento_meta_batida: 50,
 
   // Hábitos
   habito_create: 5,
