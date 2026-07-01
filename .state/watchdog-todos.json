@@ -374,7 +374,7 @@
       "source": "skander1-gap-152-decision-2026-07-01",
       "created_at": "2026-07-01T07:03:34+02:00",
       "closed_at": "2026-07-01T07:03:34+02:00",
-      "sha": "92b4359",
+      "sha": "59b0fc1",
       "decision": "B — DEFER",
       "note": "DECISION: DEFER por analogia gap-127. Auditoria: src/routes/escola/+page.svelte tem 45 entries (44 slugs únicos; gestao-operacoes duplicado) com 4 strings de card por entry = 180 PT fallbacks; src/routes/escola/curso/[slug]/+page.svelte tem 41 entries com 3 strings metadata por entry = 123 PT fallbacks. Isto afecta utilizadores en/tn/fr/ar nos cards/títulos de curso, mas não é bloqueio funcional: links, contagens, navegação e chrome já têm i18n; as strings são metadata/conteúdo académico PT para a Fatma, não UI chrome. Opção A/C abriria tradução massiva/semântica e manutenção alta sem sinal de procura. Se Daniel pedir explicitamente catálogo multilingue, reabrir com piloto por slugs prioritários."
     }
