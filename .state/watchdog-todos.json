@@ -1,14 +1,28 @@
 {
-  "lastUpdated": "2026-07-01T19:45:00.000Z",
-  "_tick": "tick-21 OPEN (19:45Z) — tick-20 fechada em produção: 8 slugs carregam, i18n parity 1754×5 verde, npm check+build verde, todas 11 rotas 200.",
+  "lastUpdated": "2026-07-01T22:04:18.312Z",
+  "_tick": "tick-22 CLOSED — gap CATALOGUE i18n resolvido (commits 26d2dc4/f10f3c5/840b1b0). tick-23/24: agente chat-first (36b2854) + hub actionable cards (cdd226f) shipped. tick-25 (este): working tree cleanup (a1fa1cc) pushed. watchdog-todos.json re-auditado.",
   "tickContext": {
-    "head": "840b1b0",
-    "productionSmoke": "11/11 rotas 200 (incl. /escola/curso/{8-slugs-antes-broken}/)",
-    "i18nParity": "5 locales × 1754 chaves",
-    "stash": "stash@{0}: tick-21-wip-i18n-rework-i18n-files-only (9852+/3612- linhas no i18n/* massivo, staging apenas — não commitado por a Svelte page ainda não migrou para $t())",
-    "workingTreeClean": "1 ficheiro órfão: .state/i18n-insert-lessons-final.py (script concluído, pode ficar como referência)"
+    "head": "a1fa1cc",
+    "productionSmoke": "11/11 rotas 200 (verificado em tick-21, head agora a1fa1cc)",
+    "i18nParity": "5 locales × 1800 chaves (após CATALOGUE lessons[] i18n em 840b1b0)",
+    "workingTreeClean": "TRUE após a1fa1cc — build-id.mjs removido, vite-cache-busting-plugin.mjs removido (inlined em vite.config.ts), vite.config.ts mantém cacheBustingPlugin() inline + workbox.cacheId dinâmico",
+    "orphanRoutes_suspeito": "src/routes/{case,course,dl,write,walk,secrets}/ — apenas /case/ tem auto-link em si próprio; restantes (course, dl, write, walk, secrets) não linkados pela bottom-nav nem por outros +page.svelte. Possível limpeza ou activação futura."
   },
-  "openGapsAtTick21": 1,
+  "openGapsAtTick21": 0,
+  "closed_since_tick21": [
+    {
+      "id": "gap-escola-curso-i18n-49-44-44",
+      "resolution": "RESOLVIDO via 3 commits: 840b1b0 (i18nize CATALOGUE lessons[].title/summary), f10f3c5 (migrate CATALOGUE to $t()), 26d2dc4 (merge tick-21). 6 ficheiros tocados, +2764/-18 linhas. Smoke /escola/curso/equivalenza/ 200.",
+      "evidence": "npm run check 0/0, npm run build verde. i18n parity 1800×5.",
+      "closed_at": "2026-07-01T21:58Z"
+    },
+    {
+      "id": "task-041-working-tree-cleanup",
+      "resolution": "DONE commit a1fa1cc — vite-cache-busting-plugin.mjs + build-id.mjs removidos; vite.config.ts mantém inlined cacheBustingPlugin + workbox.cacheId. npm run check 0/0, npm run build green. pushed to origin/main.",
+      "evidence": "git log -1 mostra a1fa1cc; git status --short agora limpo.",
+      "closed_at": "2026-07-01T21:58Z"
+    }
+  ],
   "closed_at_tick21": [
     {
       "id": "gap-catalogue-coverage-8-44",
@@ -17,34 +31,69 @@
       "closed_at": "2026-07-01T19:45Z"
     }
   ],
-  "open_gaps_tick21": [
+  "open_gaps_tick21": [],
+  "open_gaps_tick25": [
     {
-      "id": "gap-escola-curso-i18n-49-44-44",
+      "id": "gap-orphan-routes",
+      "sev": "LOW",
+      "title": "Rotas órfãs src/routes/{course,dl,write,walk,secrets}/ não linkadas pelo bottom-nav nem por outras rotas (apenas /case/ auto-linka-se)",
+      "evidence": "grep -rE 'href=\"/(course|dl|write|walk|secrets)/?\"' src/ devolve 0 resultados",
+      "impact": "0 impacto funcional (rotas ainda respondem 200), mas entulho no directório; pode confundir CEO em smoke",
+      "fix_opcoes": "(a) delete + 404 explícito; (b) ligar ao hub/nav se roadmap reactivar; (c) ignorar (deixar como easter eggs escondidos)",
+      "owner": "skander1 decide se remove ou reactiva",
+      "dispatched_at": "2026-07-01T21:58Z"
+    },
+    {
+      "id": "gap-minimax-429-rate-limit",
       "sev": "HIGH",
-      "title": "49 CATALOGUE titles + 44 descriptions + 44 taglines HARDCODED PT em escola/curso/[slug]/+page.svelte — em qualquer locale ≠ PT mostra PT cru",
-      "stack_available": "i18n/*.json TEM nested keys 'routes.escola.curso.{slug}.{title,tagline,description,badge}' prontas (já em stash) — só falta migrar +page.svelte para as usar",
-      "impact": "~620 strings PT visíveis em en/fr/ar/tn",
-      "fix": "skander1 raciocínio: confirmar arquitetura i18n (a=catálogo nested + $t lookup / b=split JS module / c=hybrid). skander2 implementação: migra CATALOGUE[i].title='…' → i.title=$t('routes.escola.curso.{slug}.title'){}, etc.",
-      "owner": "skander1 (architect) + skander2 (implementer)",
-      "dispatched_at": "2026-07-01T19:45Z",
-      "branch": "fix/tick-21-catalogue-i18n-49",
-      "dependsOn": "skander1 → skander2"
+      "title": "MiniMax OAuth 429 Weekly/Monthly Limit Exhausted. Reset 2026-07-02 20:35.",
+      "evidence": "ver task-042. Sub-agentes falham silenciosamente após 3 retries. Despachos paralelos suspendidos.",
+      "impact": "Sprint i18n massivo (task-045) usa 1-2 sub-agentes/tick durante janela de reset",
+      "fix": "PREFER fixes mecânicos locais (sed/patch/python/jq) sobre delegação. Fallback chain: MiniMax → sed local. Switch estrutural para DeepSeek V3 via OpenRouter pendente CEO (task-036).",
+      "owner": "execute-agent (self-discipline) + CEO (decide modelo alternativo)",
+      "dispatched_at": "2026-07-01T21:58Z"
     }
   ],
   "productionState": {
     "smokeCodes_tick21": "todas 11 rotas 200",
-    "head": "840b1b0",
-    "i18nParity": "5 locales × 1754 chaves (parity confirmada)",
+    "head": "a1fa1cc",
+    "i18nParity": "5 locales × 1800 chaves (parity confirmada)",
     "deployUrl": "https://presuntinho.netlify.app/",
-    "knownIssue": "49 CATALOGUE entries exibem PT em qualquer locale ≠ PT"
+    "knownIssue": "61 ficheiros PT-hardcoded (1443 linhas) ainda por migrar — task-045 batch mecânico Skander 2 em curso. orphan-routes baixo risco."
   },
-  "next_bot_dispatch_tick21": {
-    "skander1_brief": "[em despacho agora] Validar 3 arquitecturas i18n CATALOGUE + decidir qual implementar — recomendado ler +page.svelte L700-1100 e stash@{0} para referência",
-    "skander2_brief": "[em despacho agora] Após decisão skander1: implementar migração e commitar em fix/tick-21-catalogue-i18n-49"
+  "next_bot_dispatch_tick25": {
+    "skander1_brief": "[OPCIONAL] orphan-routes decisão (delete vs reactivate vs easter-egg); task-036 modelo switch (CEO pendente)",
+    "skander2_brief": "[EM SÉRIE] task-045 batch mecânico: 1-2 ficheiros PT-hardcoded/tick, adicionar keys 5 locales + substituir strings"
   },
   "notes": {
     "repository": "C:/Users/rafaa/Documents/GitHub/presuntinho",
     "investigator": "Skander principal (orchestrator)",
     "constraint": "NÃO EDITAR C:\\Users\\rafaa\\Desktop\\Code\\Projects\\Fatma\\equivalenza-midterm\\presuntinho.html"
-  }
+  },
+  "openItems": [
+    {
+      "id": "gap-2",
+      "sev": "HIGH",
+      "category": "i18n",
+      "source": {
+        "sessionId": "watchdog-tick",
+        "msgId": "auto-ptleak"
+      },
+      "text": "PT-leak: 69 ficheiros com strings PT-hardcoded (3331 hits)",
+      "createdAt": "2026-07-01T22:04:18.311Z"
+    },
+    {
+      "id": "gap-3",
+      "sev": "MED",
+      "category": "pipeline",
+      "source": {
+        "sessionId": "watchdog-tick",
+        "msgId": "auto-tasks"
+      },
+      "text": "tasks.html: 31 tasks pendentes (open/in_progress) — task-020, task-029, task-030, task-032, task-036…",
+      "createdAt": "2026-07-01T22:04:18.312Z"
+    }
+  ],
+  "closedItems": [],
+  "nextCounter": 4
 }
