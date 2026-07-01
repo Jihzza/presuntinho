@@ -1321,5 +1321,13 @@
     "\"قد يشير هذا إلى...\"",
     "\"يمكن الجدال بأن...\"",
     "\"ربما أهم عامل هو...\""
-  ]
+  ],
+  "routes.escola.curso.direito-empresarial.tagline": "إدارة الأعمال · أنواع الكيانات، العقود، الملكية الفكرية والتحكيم",
+  "routes.escola.curso.analise-financeira.tagline": "إدارة الأعمال · النسب، التدفق النقدي والتقييم",
+  "routes.escola.curso.gestao-mudanca.tagline": "إدارة الأعمال · نماذج كوتر، ADKAR، المقاومة والثقافة",
+  "routes.escola.curso.negociacao.tagline": "إدارة الأعمال · BATNA، ZOPA، التفاوض المبدئي ومتعدد الثقافات",
+  "routes.escola.curso.introducao-ao-direito.tagline": "الجامعة · المصادر، الأشخاص، الالتزامات والمسؤولية المدنية",
+  "routes.escola.curso.logistica.tagline": "الجامعة · سلسلة التوريد، المخزون، النقل والعمليات الدولية",
+  "routes.escola.curso.gestao-financeira-empresarial.tagline": "إدارة الأعمال · البيانات المالية، النسب، الميزانية الرأسمالية وWACC",
+  "routes.escola.curso.contabilidade-gerencial.tagline": "إدارة الأعمال · التكاليف، CVP، الميزانية وABC"
 }

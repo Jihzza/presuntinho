@@ -209,7 +209,7 @@
         {
           slug: 'direito-empresarial',
           title: $t('routes.escola.curso.direito-empresarial.title', { default: "Direito Empresarial" }),
-          tagline: 'Business Administration · Tipos societários, contratos, propriedade intelectual e arbitragem',
+          tagline: $t('routes.escola.curso.direito-empresarial.tagline', { default: "Business Administration · Tipos societários, contratos, propriedade intelectual e arbitragem" }),
           description: $t('routes.escola.curso.direito-empresarial.description', { default: "Fundamentos jurídicos da empresa em Portugal: tipos societários (Lda., SA, Unipessoal), contratos comerciais e cláusulas essenciais, marcas, patentes e resolução de litígios." }),
           icon: '⚖️',
           color: '#7e22ce',
@@ -242,7 +242,7 @@
         {
                   slug: 'analise-financeira',
                   title: $t('routes.escola.curso.analise-financeira.title', { default: "Análise Financeira" }),
-                  tagline: 'Business Administration · Rácios, fluxos de caixa e valuation',
+                  tagline: $t('routes.escola.curso.analise-financeira.tagline', { default: "Business Administration · Rácios, fluxos de caixa e valuation" }),
                   description: $t('routes.escola.curso.analise-financeira.description', { default: "Como interpretar as demonstrações financeiras para avaliar desempenho e valor: rácios de liquidez, solvência e rentabilidade, free cash flow e métodos de valuation." }),
                   icon: '📈',
                   color: '#0d9488',
@@ -275,7 +275,7 @@
                                 {
                                   slug: 'gestao-mudanca',
                                   title: $t('routes.escola.curso.gestao-mudanca.title', { default: "Gestão da Mudança Organizacional" }),
-                                  tagline: 'Business Administration · Modelos de Kotter, ADKAR, resistência e cultura',
+                                  tagline: $t('routes.escola.curso.gestao-mudanca.tagline', { default: "Business Administration · Modelos de Kotter, ADKAR, resistência e cultura" }),
                                   description: $t('routes.escola.curso.gestao-mudanca.description', { default: "Como planear, conduzir e ancorar a mudança em organizações: tipos de mudança, modelo de 8 passos de Kotter, ADKAR da Prosci, fontes de resistência (Kotter-Schlesinger) e cultura organizacional segundo Schein." }),
                                   icon: '🔄',
                                   color: '#14b8a6',
@@ -286,7 +286,7 @@
                                 {
                                   slug: 'negociacao',
                                   title: $t('routes.escola.curso.negociacao.title', { default: "Técnicas de Negociação Empresarial" }),
-                                  tagline: 'Business Administration · BATNA, ZOPA, negociação de princípios e cross-cultural',
+                                  tagline: $t('routes.escola.curso.negociacao.tagline', { default: "Business Administration · BATNA, ZOPA, negociação de princípios e cross-cultural" }),
                                   description: $t('routes.escola.curso.negociacao.description', { default: "Como negociar de forma eficaz em contexto empresarial: fundamentos, BATNA e ZOPA, negociação baseada em princípios de Fisher & Ury, comunicação (escuta activa e CNV) e negociação internacional cross-cultural (Hofstede, Hall)." }),
                                   icon: '🤝',
                                   color: '#0369a1',
@@ -297,7 +297,7 @@
                                 {
                                   slug: 'introducao-ao-direito',
                                   title: $t('routes.escola.curso.introducao-ao-direito.title', { default: "Introdução ao Direito" }),
-                                  tagline: 'Universidade · Fontes, pessoa, obrigações e responsabilidade civil',
+                                  tagline: $t('routes.escola.curso.introducao-ao-direito.tagline', { default: "Universidade · Fontes, pessoa, obrigações e responsabilidade civil" }),
                                   description: $t('routes.escola.curso.introducao-ao-direito.description', { default: "Fundamentos jurídicos para gestores: fontes do Direito (Constituição, lei, costume, jurisprudência), pessoa e capacidade, obrigações e contratos, e responsabilidade civil. Essencial para contratos, riscos e compliance." }),
                                   icon: '⚖️',
                                   color: '#7c2d12',
@@ -308,7 +308,7 @@
                                 {
                                   slug: 'logistica',
                                   title: $t('routes.escola.curso.logistica.title', { default: "Logística" }),
-                                  tagline: 'Universidade · Cadeia de suprimentos, stocks, transporte e operações internacionais',
+                                  tagline: $t('routes.escola.curso.logistica.tagline', { default: "Universidade · Cadeia de suprimentos, stocks, transporte e operações internacionais" }),
                                   description: $t('routes.escola.curso.logistica.description', { default: "Gestão logística e da cadeia de suprimentos: supply chain end-to-end, gestão de estoques (just-in-time, EOQ), transporte e distribuição, e logística internacional (incoterms, alfândega)." }),
                                   icon: '🚚',
                                   color: '#0f766e',
@@ -396,7 +396,7 @@
                                 {
                                   slug: 'gestao-financeira-empresarial',
                                   title: $t('routes.escola.curso.gestao-financeira-empresarial.title', { default: "Gestão Financeira Empresarial" }),
-                                  tagline: 'Business Administration · Demonstrações financeiras, rácios, orçamento de capital e WACC',
+                                  tagline: $t('routes.escola.curso.gestao-financeira-empresarial.tagline', { default: "Business Administration · Demonstrações financeiras, rácios, orçamento de capital e WACC" }),
                                   description: $t('routes.escola.curso.gestao-financeira-empresarial.description', { default: "Finanças corporativas na prática: como ler e construir as três demonstrações financeiras (DRE, Balanço, DFC), analisar rácios de liquidez, rentabilidade e endividamento, avaliar projectos de investimento com VPL/TIR/payback e decidir a melhor estrutura de capital (WACC, equity vs. dívida)." }),
                                   icon: '💼',
                                   color: '#0e7490',
@@ -407,7 +407,7 @@
                                 {
                                   slug: 'contabilidade-gerencial',
                                   title: $t('routes.escola.curso.contabilidade-gerencial.title', { default: "Contabilidade Gerencial" }),
-                                  tagline: 'Business Administration · Custos, CVP, orçamento industrial e ABC',
+                                  tagline: $t('routes.escola.curso.contabilidade-gerencial.tagline', { default: "Business Administration · Custos, CVP, orçamento industrial e ABC" }),
                                   description: $t('routes.escola.curso.contabilidade-gerencial.description', { default: "Como os gestores usam informação de custos para decidir, planear e controlar: classificação de custos (fixos, variáveis, directos, indirectos), análise custo-volume-lucro (CVP) e break-even, orçamento industrial e controlo orçamental, ABC e Balanced Scorecard." }),
                                   icon: '📊',
                                   color: '#b91c1c',

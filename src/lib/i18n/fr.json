@@ -1321,5 +1321,13 @@
     "\"Cela peut suggérer...\"",
     "\"On pourrait argumenter que...\"",
     "\"Peut-être que le facteur le plus important est...\""
-  ]
+  ],
+  "routes.escola.curso.direito-empresarial.tagline": "Business Administration · Types d'entités, contrats, PI et arbitrage",
+  "routes.escola.curso.analise-financeira.tagline": "Business Administration · Ratios, cash flow et valorisation",
+  "routes.escola.curso.gestao-mudanca.tagline": "Business Administration · Modèles de Kotter, ADKAR, résistance et culture",
+  "routes.escola.curso.negociacao.tagline": "Business Administration · BATNA, ZOPA, négociation de principes et interculturelle",
+  "routes.escola.curso.introducao-ao-direito.tagline": "Universidade · Sources, personnes, obligations et responsabilité civile",
+  "routes.escola.curso.logistica.tagline": "Universidade · Chaîne d'approvisionnement, stocks, transport et opérations internationales",
+  "routes.escola.curso.gestao-financeira-empresarial.tagline": "Business Administration · États financiers, ratios, budgeting et WACC",
+  "routes.escola.curso.contabilidade-gerencial.tagline": "Business Administration · Coûts, CVP, budgeting et ABC"
 }

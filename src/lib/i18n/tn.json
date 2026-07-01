@@ -1321,5 +1321,13 @@
     "\"Hatha yemken ysugger...\"",
     "\"N9oulou elli...\"",
     "\"Pe3t-ebarre él akther mhem factor houa...\""
-  ]
+  ],
+  "routes.escola.curso.direito-empresarial.tagline": "Business Administration · Entity types, contracts, IP and arbitration",
+  "routes.escola.curso.analise-financeira.tagline": "Business Administration · Ratios, cash flow and valuation",
+  "routes.escola.curso.gestao-mudanca.tagline": "Business Administration · Kotter models, ADKAR, resistance and culture",
+  "routes.escola.curso.negociacao.tagline": "Business Administration · BATNA, ZOPA, principled negotiation and cross-cultural",
+  "routes.escola.curso.introducao-ao-direito.tagline": "Universidade · Sources, persons, obligations and civil liability",
+  "routes.escola.curso.logistica.tagline": "Universidade · Supply chain, inventory, transport and international operations",
+  "routes.escola.curso.gestao-financeira-empresarial.tagline": "Business Administration · Financial statements, ratios, capital budgeting and WACC",
+  "routes.escola.curso.contabilidade-gerencial.tagline": "Business Administration · Costs, CVP, budgeting and ABC"
 }
