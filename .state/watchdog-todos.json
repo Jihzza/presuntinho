@@ -1,10 +1,10 @@
 {
-  "lastUpdated": "2026-07-01T07:15:24+02:00",
+  "lastUpdated": "2026-07-01T06:28:09.483074",
   "openItems": [
     {
       "id": "gap-028",
       "category": "smoke-fail",
-      "description": "Verificar fluxo de auth via browser: splash → escolha profile → password → onboarding modal — confirmar que funciona end-to-end sem console errors. Auth verificado por código mas live-fire bloqueado por password gating. Pular se Daniel nunca nos der a password.",
+      "description": "Code review done: auth script in src/routes/splash/+page.svelte lines 98-154 implements PBKDF2 → Love Lock → attempt counter correctly. Flow: verifyAgainstHashes() → setSession() on success → resetAttempts() → redirect to '/'. Lockout polling at 500ms. Live-fire e2e blocked by password gating.",
       "severity": "média",
       "source": "watchdog-tick-2026-06-28-09",
       "created_at": "2026-06-28T09:31:47+02:00"
@@ -20,7 +20,7 @@
     {
       "id": "gap-036",
       "category": "UI/UX",
-      "description": "HeartButton posicionamento: smoke confirmou FAB bottom-right em /. Daniel pediu 'no sítio que eu disse' — confirmar se é exactamente onde ele quer. Live-fire bloqueado por auth.",
+      "description": "Code review done: HeartButton positioned bottom-right in .fab-stack (src/routes/+layout.svelte:433-453). Fixed positioning: right max(1rem, safe-area-inset-right), bottom calc(72px + safe-area-inset-bottom + 0.5rem), z-index 60. Desktop: right 1.5rem, bottom +1rem. Vertical stack with XP pill and InstallButton. Safe-area insets respected for notched devices.",
       "severity": "baixa",
       "source": "audio-Daniel-2026-06-28",
       "created_at": "2026-06-28T13:05:00+02:00"
@@ -28,7 +28,7 @@
     {
       "id": "gap-050",
       "category": "smoke-fail",
-      "description": "HeartButton aparece no DOM em / (correto, bottom-right). Smoke live-fire pendente — auth gate bloqueia.",
+      "description": "Code review done: HeartButton appears in DOM after auth (src/routes/+layout.svelte:231 wrapped in {#if session} block). Renders inside .fab-stack with pointer-events auto, container has pointer-events none. Live-fire smoke blocked by auth gate.",
       "severity": "baixa",
       "source": "watchdog-tick-2026-06-28-22",
       "created_at": "2026-06-28T22:30:00+02:00"
