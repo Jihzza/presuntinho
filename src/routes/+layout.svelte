@@ -429,11 +429,11 @@
       }
     }
 
-    /* Floating action button stack (XP pill + heart) — bottom-right corner. */
+    /* Floating action button stack (XP pill + heart) — above the bottom-nav. */
     .fab-stack {
       position: fixed;
       right: max(1rem, env(safe-area-inset-right));
-      bottom: calc(72px + env(safe-area-inset-bottom) + 0.5rem);
+      bottom: calc(env(safe-area-inset-bottom) + 4.5rem);
       display: flex;
       flex-direction: column;
       align-items: flex-end;
@@ -443,12 +443,16 @@
     }
     .fab-stack > :global(*) {
       pointer-events: auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 0.5rem 0.75rem;
+      color: #1f2e4a;
     }
     /* On wide screens give a little extra breathing room from the edge. */
     @media (min-width: 768px) {
       .fab-stack {
         right: max(1.5rem, env(safe-area-inset-right));
-        bottom: calc(72px + env(safe-area-inset-bottom) + 1rem);
       }
     }
 </style>

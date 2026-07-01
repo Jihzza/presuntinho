@@ -19,6 +19,10 @@ export default defineConfig({
         enabled: false // keep dev clean; SW only ships in production build
       },
       workbox: {
+        // @vite-pwa/sveltekit runs after adapter-static, which removes
+        // .svelte-kit/output/server. Write the generated SW directly into the
+        // static client output so production builds stay green on Windows.
+        swDest: '.svelte-kit/output/client/sw.js',
         globPatterns: [
           'client/**/*.{js,css,ico,png,svg,webp,woff,woff2,mp3,json,webmanifest}'
         ],
