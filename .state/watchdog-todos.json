@@ -1,80 +1,77 @@
 {
-  "lastUpdated": "2026-07-01T18:10:00.000Z",
-  "_tick": "tick-2026-07-01-19 (18:10Z) OPEN — 2 gaps verdadeiros + 1 escopo expandido. Login 3-way JÁ FEITO no splash (inferProfileFromPassOrder L98-107). gestao-operacoes dup JÁ DEDUPLICADO (commit 921a0a5). Novos gaps: fab-stack mobile + 42 taglines PT-hardcoded em escola/curso/[slug]/+page.svelte.",
-  "_tickHeadline": "tick-19 foco: InstallButton fab-stack UX fix (skander1) + i18n escola+page.svelte 8 taglines (skander2). Próximo brief extra: 42 taglines no [slug]/+page.svelte.",
-  "openGapsAtTick19": 2,
-  "closed_at_tick19": [
-    {
-      "id": "gap-login-passorder-3way",
-      "resolution": "FALSE POSITIVE — splash/+page.svelte JÁ TEM inferProfileFromPassOrder (L98-107) que aceita 'Princesa'/'Fofinho'/'I have the best boyfriend in the world'. UI não tem selector Daniela/Fatma há muito tempo. Spec do Daniel cumprida.",
-      "evidence": "git grep 'inferProfileFromPassOrder' src/routes/splash/+page.svelte — match L98. UI L215-234 mostra só input password único sem selector visível.",
-      "closed_at": "2026-07-01T18:05Z"
-    },
-    {
-      "id": "gap-duplicate-slug-gestao-operacoes",
-      "resolution": "RESOLVIDO EM tick-16 — commit 921a0a5 'fix(escola): dedupe gestao operacoes course slug'. Validado por .state/scripts/check-dup-slugs.py (44 unique slugs, 0 dups).",
-      "evidence": "grep -c gestao-operacoes src/routes/escola/+page.svelte = 4 (1 slug + 3 references em $t()). Script regression check: OK.",
-      "closed_at": "2026-07-01T18:05Z"
-    }
-  ],
-  "gaps_open_at_tick18": [
-    {
-      "id": "gap-login-passorder-3way",
-      "sev": "high",
-      "title": "Login passa de selector Daniela/Fatma para campo único + pass-order discriminador",
-      "spec": "Daniel pediu em áudio (2026-06-XX): 'tens lá a dizer eu sou Daniela e eu sou Fátima, isso não era para estar lá em lado nenhum, ou seja é só para ter a coisa para meter a pass-order'. Campo único. Aceita 3 pass-orders: 'I have the best boyfriend in the world' (Fatma 1), 'Fofinho' (Fatma 2), 'Princesa' (Daniel, P maiúsculo). Se pass-order match Fatma → perfil Fatma; se match 'Princesa' → perfil Daniel. UI mínima: input + botão.",
-      "filesSuspected": ["src/routes/login/+page.svelte (criar)", "src/lib/auth/loginPassOrder.ts (lógica)", "src/lib/components/LoveLock.svelte (rev affected)", "src/lib/state/stores.ts (sessão)"],
-      "dependsOn": "decisão: substituir selector existente e oLoveLock? Ou coexistir?"
-    },
+  "lastUpdated": "2026-07-01T19:15:00.000Z",
+  "_tick": "tick-2026-07-01-20 (19:15Z) OPEN — 2 gaps verdadeiros: (1) [HIGH] 8 slugs em escola/+page sem entry no CATALOGUE → /escola/curso/X/ loading infinito, (2) [HIGH] 36 CATALOGUE entries HARDCODED PT — i18n broken em qualquer locale ≠ PT. Estado tick-19 obsoleto (3 gaps já resolvidos em commits 0cdc488, 921a0a5, f47f179).",
+  "_tickHeadline": "tick-20 foco: skander2 tapar 8 slugs faltantes do CATALOGUE (commit verde). skander1 raciocinar arquitectura i18n (a=inline / b=split / c=compacta).",
+  "openGapsAtTick20": 2,
+  "closed_at_tick20": [
     {
       "id": "gap-fabstack-install-coverage",
-      "sev": "medium",
-      "title": "InstallButton (3º chip do fab-stack) fica coberto pela bottom-nav em mobile",
-      "spec": "Daniel reportou 'botão escondido atrás da bottom-nav abaixo do coração' (2026-06-28 áudio). Inspeção tick-18: +layout.svelte L268-272 tem <XpPill /> + <HeartButton /> + <InstallButton /> em stack vertical (gap 0.5rem). CSS bottom: calc(env(safe-area-inset-bottom) + 6.5rem). Bottom-nav tem ~5.5rem altura em mobile. Com 3 chips × ~3rem cada + gaps, stack fica ~10rem — overflow upper-side até ~10rem=160px mas o 3º chip (InstallButton) fica em y≈9rem do bottom, EXACTAMENTE dentro da zona da bottom-nav (5.5rem-9rem). Confirmado por inspeção CSS.",
-      "fix": "Mover fab-stack para dentro da bottom-nav como tab lateral OU colocar InstallButton absoluto no topo direito (perto do settings) OU mostrar InstallButton apenas em modal dedie. A definir com skander1 (UX/julgamento).",
-      "filesSuspected": ["src/routes/+layout.svelte (CSS .fab-stack bottom)", "src/lib/components/InstallButton.svelte"]
+      "resolution": "RESOLVIDO tick-19 — commit 0cdc488 'fix(ui): raise fab-stack to 7rem to prevent InstallButton overlap with bottom-nav'",
+      "evidence": "git log --oneline | grep 0cdc488 — confirmado; commit já em main.",
+      "closed_at": "2026-07-01T19:05Z"
+    },
+    {
+      "id": "gap-login-passorder-3way",
+      "resolution": "FALSE POSITIVE — splash/+page.svelte JÁ TEM inferProfileFromPassOrder (L98-107) a aceitar 'Princesa'/'Fofinho'/'I have the best boyfriend in the world'.",
+      "evidence": "git grep 'inferProfileFromPassOrder' src/routes/splash/+page.svelte — match L98.",
+      "closed_at": "2026-07-01T18:05Z"
     },
     {
       "id": "gap-duplicate-slug-gestao-operacoes",
-      "sev": "high",
-      "title": "Slug 'gestao-operacoes' duplicado em src/routes/escola/+page.svelte L221 e L463",
-      "spec": "COURSES array tem 2 entries com slug='gestao-operacoes', uma em L221 (entry #? — ordem curso académica EU BS Barcelona) e outra em L463 (lista 'todos os cursos'). Tagline e description diferem entre as duas — L223 'Processos, qualidade, capacidade e supply chain' vs L465 'Processos, lean, six sigma, planeamento e controlo'. Description L466 é expandida vs L224. Svelte keyed {#each} em L221-L? por slug — duplicate key gera warning Svelte + render errado. Dedup: manter L463 como a 'master' (mais completa) e remover L221, OU fundir para que L221 (académica) seja a principal. Decisão: L463 é mais detalhada → promove-se a master; o slot L221 vira ou uma 'trilha rápida' (Course.short) ou remoção.",
-      "filesSuspected": ["src/routes/escola/+page.svelte L218-465"]
-    }
-  ],
-  "gaps_in_queue_session_search": [
-    {
-      "id": "gap-i18n-escola-unkeyed-taglines",
-      "sev": "medium",
-      "source": "mini-audit-report.md L25",
-      "spec": "8 taglines em escola/+page.svelte ainda são literais directos sem $t()"
+      "resolution": "RESOLVIDO tick-16 — commit 921a0a5 'fix(escola): dedupe gestao operacoes course slug'.",
+      "evidence": "git log --oneline | grep 921a0a5 — confirmado.",
+      "closed_at": "2026-07-01T18:05Z"
     },
     {
-      "id": "gap-aulas-vs-courses-split",
-      "sev": "medium",
-      "source": "housekeeping since 2026-06-28",
-      "spec": "Criar estrutura /aulas separada de /escola/cursos (gap-018)"
+      "id": "gap-i18n-escola-unkeyed-taglines",
+      "resolution": "RESOLVIDO tick-17 — commit f47f179 'fix(i18n): close gap-tick16 micro-PT-hardcoded — add 8 missing tagline keys for escola courses'.",
+      "evidence": "git log --oneline | grep f47f179 — confirmado; i18n parity 1207×5 mantida.",
+      "closed_at": "2026-07-01T19:05Z"
     }
   ],
-  "next_bot_dispatch_tick18": {
-    "skander1_brief": "Login refactor + fab-stack UX",
-    "skander2_brief": "Dedupe gestao-operacoes + i18n-unkeyed-taglines"
+  "open_gaps_tick20": [
+    {
+      "id": "gap-catalogue-coverage-8-44",
+      "sev": "HIGH",
+      "title": "8 slugs em escola/+page.svelte (44 total) NÃO TÊM entry no CATALOGUE de escola/curso/[slug]/+page.svelte (36 entries)",
+      "missingSlugs": ["branding", "contabilidade", "empreendedorismo", "equivalenza", "estrategia", "macroeconomia", "microeconomia", "portugues"],
+      "impact": "Cada click nesses 8 cursos mostra 'A carregar curso…' infinite (loading state visível para sempre porque o CATALOGUE[slug] = undefined). Confirmado em browser_navigate https://presuntinho.netlify.app/escola/curso/portugues/.",
+      "fix": "skander2 dispatch: adicionar 8 entries (4 lições cada, copiar template de curso existente). Commit chore(escola): add 8 missing catalogue entries.",
+      "owner": "skander2 (mecânico)",
+      "dispatched_at": "2026-07-01T19:15Z",
+      "branch": "fix/tick-20-catalogue-coverage-8",
+      "dependsOn": "nenhum"
+    },
+    {
+      "id": "gap-catalogue-i18n-all-36",
+      "sev": "HIGH",
+      "title": "36 CATALOGUE entries (title/tagline/description + lessons[].title/summary) HARDCODED PT — i18n broken em qualquer locale ≠ PT",
+      "impact": "Em en/fr/ar/tn, todos os /escola/curso/X/ mostram PT cru. ~620 strings PT-hardcoded.",
+      "fix": "skander1 dispatch: raciocinar 3 arquitecturas (a=inline fallback, b=JSON estático split, c=JSON único nested i18n). Recomendar + 3 passos.",
+      "owner": "skander1 (reasoning)",
+      "dispatched_at": "2026-07-01T19:15Z",
+      "dependsOn": "recomendação skander1 → depois skander2 implementa"
+    }
+  ],
+  "productionState": {
+    "smokeCodes_tick20": "todas rotas 200 (11/11)",
+    "head": "f47f179",
+    "i18nParity": "5 locales × 1207 chaves (parity confirmada)",
+    "deployUrl": "https://presuntinho.netlify.app/",
+    "knownIssue": "/escola/curso/{branding,contabilidade,empreendedorismo,equivalenza,estrategia,macroeconomia,microeconomia,portugues}/ → loading infinito"
+  },
+  "session_search_evidences": {
+    "session_20260701_0444_cronE": "Daniel áudio: 'botão escondido atrás da bottom-nav abaixo do coração' → resolvido 0cdc488",
+    "session_20260628_230839": "Daniel áudio: 'completa a parte dos cursos... ela está na universidade, é Business Administration' → explica porque é que o CATALOGUE está inchado com 36 cursos BA.",
+    "equivalenza_case": "Daniel referiu 'BCOBM311 Mid-Term · Case study completo' como equivalenza (já é slug separado)."
+  },
+  "next_bot_dispatch_tick20": {
+    "skander1_brief": "Arquitectura i18n para 36 CATALOGUE entries (já despachado, background)",
+    "skander2_brief": "Adicionar 8 CATALOGUE entries faltantes (já despachado, background)"
   },
   "notes": {
     "repository": "C:/Users/rafaa/Documents/GitHub/presuntinho",
     "investigator": "Skander principal (orchestrator)",
-    "session_search_evidences": {
-      "passorder_spec": "session 20260701_070936_921815 voice msg: 'a pass-order dela é I have the best boyfriend in the world, começa com o I maiúsculo... Fofinho com o F maiúsculo... a minha pass-order que é Princesa, como P maiúsculo'",
-      "selector_removal": "'eu sou Daniela e eu sou Fátima, isso não era para estar lá em lado nenhum'",
-      "botao_escondido": "sessão 20260701_0444 cron E: confirmado fab-stack 3 chips coberto pela bottom-nav"
-    },
-    "productionState": {
-      "smokeCodes_at_tick17": "todas rotas 200 (11/11: /, splash, escola, financas, habitos, biblioteca, trabalhos, aulas, agente, definicoes, secrets)",
-      "head": "ee3410f",
-      "i18nParity": "5 locales × 1199 chaves (ar 125KB, fr 105KB, tn 103KB, en 99KB, pt-PT 102KB)",
-      "deployUrl": "https://presuntinho.netlify.app/",
-      "npmCheck": "verde",
-      "browserVev": "/escola/curso/portugues/, /course/?lang=en — ambos verificados tick-17"
-    }
+    "constraint": "NÃO EDITAR C:\\Users\\rafaa\\Desktop\\Code\\Projects\\Fatma\\equivalenza-midterm\\presuntinho.html"
   }
 }

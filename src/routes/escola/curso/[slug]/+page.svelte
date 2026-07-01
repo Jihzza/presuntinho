@@ -671,7 +671,32 @@
                             { slug: '03-inteligencia-emocional-lider', title: '3. Inteligência Emocional do Líder: Os 5 Pilares de Goleman e a Ciência do Self-Management', summary: '5 pilares de Goleman (autoconsciência, autogestão, motivação, empatia, habilidades sociais) e neurociência da auto-regulação.', quizSlug: 'lcq', quizTitle: 'Quiz: Liderança e Coaching', estMinutes: 7 },
                             { slug: '04-desenvolvimento-sucessao', title: '4. Desenvolvimento de Sucessão: Pipelines de Liderança, Mentoring e High-Potential Programs (Chamorro-Premuzic, Kram, HBR)', summary: 'Pipelines de Charan, 9-box, Hogan assessments, mentoring vs sponsorship (Ibarra/Hewlett), modelo 70-20-10 e sucessão em PME.', quizSlug: 'lcq', quizTitle: 'Quiz: Liderança e Coaching', estMinutes: 7 }
                           ]
-                        }
+                        },
+    portugues: {
+      slug: 'portugues',
+      title: 'Português de Portugal 🇵🇹',
+      tagline: 'Mini-curso desenhado para Tunisianos',
+      description: 'Aprende Português de Portugal com comparações ao Árabe Tunisiano + Francês + Inglês. Vogais, vocabulário, diálogos, verbos essenciais e quiz rápido.',
+      icon: '🇵🇹',
+      color: '#10b981',
+      lessons: [
+        { slug: '01-alfabeto-e-vogais', title: '1. Alfabeto e Vogais', summary: 'As 5 vogais do português europeu e sons únicos como o ão.', estMinutes: 7 }
+      ]
+    },
+    empreendedorismo: {
+      slug: 'empreendedorismo',
+      title: 'Empreendedorismo',
+      tagline: 'Business Administration · Ideação, validação e modelo de negócio',
+      description: 'De ideia a negócio: identificar oportunidades, validar com o mercado, construir MVP e definir o modelo de negócio.',
+      icon: '🚀',
+      color: '#f59e0b',
+      lessons: [
+        { slug: '01-ideias-e-oportunidades', title: '1. Ideias e Oportunidades', summary: 'Diferença entre ideia e oportunidade, pain points e jobs-to-be-done.', estMinutes: 8 },
+        { slug: '02-validacao-mercado', title: '2. Validação de Mercado', summary: 'Customer discovery, entrevistas e hipóteses testáveis.', estMinutes: 8 },
+        { slug: '03-mvp-e-product-market-fit', title: '3. MVP e Product-Market Fit', summary: 'Construir o mínimo viável, medir feedback e atingir PMF.', estMinutes: 8 },
+        { slug: '04-modelo-negocio', title: '4. Modelo de Negócio', summary: 'Business Model Canvas e como monetizar a solução.', estMinutes: 9 }
+      ]
+    }
                       };
 
   let courseSlug = $derived(page.params.slug ?? '');
