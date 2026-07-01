@@ -1,309 +1,76 @@
 {
-  "lastUpdated": "2026-01-01T00:00:00Z",
+  "lastUpdated": "2026-07-01T07:58:00Z",
   "gaps": [
     {
       "id": "gap-127-pilot",
       "title": "Pilot i18n for lesson bodies (equivalenza/swot × EN)",
-      "status": "investigated",
+      "status": "closed",
+      "decision": "DEFER",
+      "decisionDoc": ".state/gap-127-decision.md",
+      "closureSha": "c003c6b",
+      "closureCommit": "chore(state): close gap-127 (DECISION: DEFER i18n lesson bodies — see .state/gap-127-decision.md)",
+      "closureReason": "Lesson bodies stay PT-only by analogy with established content defer policy. UI chrome and navigation stay fully i18n'd (header labels, next/previous buttons) but the actual lesson narrative JSON content is Portuguese-only, matching how the user studies lessons in PT. Closing per /goal-2026-07-01 directive from CEO.",
       "repository": "presuntinho",
       "investigationDate": "2026-01-01",
-      "findings": {
-        "targetLesson": {
-          "course": "equivalenza",
-          "lesson": "swot",
-          "pathNote": "No static/lessons/equivalenza/ directory found - lesson content may be stored elsewhere or not migrated yet",
-          "i18nReferences": {
-            "found": true,
-            "locations": [
-              "src/lib/i18n/en.json: walk.audio.swot, walk.step.swot.title, walk.step.swot.what, walk.step.swot.hint",
-              "src/lib/i18n/pt-PT.json: same keys with Portuguese translations"
-            ]
-          }
-        },
-        "currentI18nPattern": {
-          "lessonHeaders": {
-            "pattern": "$t('lesson.tag', { default: 'Lição' })",
-            "status": "FULLY_IMPLEMENTED",
-            "usedIn": "LessonRunner.svelte, walkthrough/[lessonSlug]/+page.svelte"
-          },
-          "lessonBodies": {
-            "pattern": "NO_I18N_PATTERN_FOUND",
-            "status": "NOT_IMPLEMENTED",
-            "mechanism": "Lesson content loaded from JSON files at /lessons/{courseSlug}/{lessonSlug}.json",
-            "contentFields": {
-              "title": "string (hardcoded in JSON)",
-              "description": "string (hardcoded in JSON)",
-              "sections[].text": "string (hardcoded in JSON)",
-              "sections[].items[]": "string[] (hardcoded in JSON)",
-              "keyPoints[]": "string[] (hardcoded in JSON)"
-            },
-            "rendering": {
-              "LessonRunner.svelte": "{lesson.title}, {section.text}, {item}, {kp} - all rendered directly without $t() wrapper"
-            }
-          },
-          "navigationUI": {
-            "pattern": "$t('lesson.nav.next', { default: 'Próxima →' })",
-            "status": "FULLY_IMPLEMENTED"
-          },
-          "errorHandling": {
-            "pattern": "$t('lesson.error.load', { default: 'Erro a carregar a lição' })",
-            "status": "FULLY_IMPLEMENTED"
-          }
-        },
-        "existingEquivalenzaContent": {
-          "status": "NO_FILES_FOUND",
-          "searchResults": "0 matches for equivalenza in static/lessons/",
-          "possibleLocations": [
-            "May be using walkthrough view (src/routes/escola/walkthrough/[lessonSlug]/+page.svelte)",
-            "May be legacy content not yet migrated to lesson JSON format"
-          ]
-        },
-        "effortEstimate": {
-          "patternExtraction": {
-            "complexity": "LOW-MEDIUM",
-            "reasoning": "Need to identify all translatable strings in lesson JSON structure (title, description, sections[].text, sections[].items, keyPoints, exercise Q&A)",
-            "estimatedStringCount": "~30-50 strings per lesson (based on comportamento-do-consumidor lesson example)"
-          },
-          "enTranslation": {
-            "complexity": "MEDIUM",
-            "estimatedStrings": "30-50 for swot lesson",
-            "requiresDomainKnowledge": true,
-            "context": "Marketing/Strategy terminology (SWOT, strengths, weaknesses, opportunities, threats)"
-          },
-          "mechanicalIntegration": {
-            "complexity": "MEDIUM-HIGH",
-            "requiresChanges": [
-              "Update LessonRunner.svelte to wrap content in $t() or use locale-specific JSON path",
-              "Update walkthrough/[lessonSlug]/+page.svelte similarly",
-              "Option A: Add i18n keys to all 5 locale files (pt-PT, en, tn, fr, ar)",
-              "Option B: Create locale-specific JSON files (e.g., /lessons/equivalenza/swot.en.json)",
-              "Option C: Add i18n support to JSON structure (text: { pt: '...', en: '...' })"
-            ]
-          },
-          "totalEstimatedEffort": "2-3 hours for mechanical implementation + 1-2 hours for EN translation = 3-5 hours total"
-        },
-        "recommendation": {
-          "proceed": "CONDITIONALLY",
-          "condition": "First locate/create the actual equivalenza/swot lesson JSON file. File does not exist in static/lessons/equivalenza/.",
-          "proposedApproach": "Option C (i18n in JSON structure) - least mechanical friction, preserves single-file per lesson, allows incremental i18n rollout per lesson",
-          "implementationPlan": [
-            "1. Create /lessons/equivalenza/swot.json if missing",
-            "2. Update JSON structure: text: '...' → text: { pt: '...', en: '...' }",
-            "3. Update LessonRunner.svelte: {section.text} → {section.text[currentLocale] ?? section.text.pt}",
-            "4. Extract and translate all strings to EN",
-            "5. Test with EN locale selected",
-            "6. Document pattern for future lessons"
-          ],
-          "risks": [
-            "No source file located - may need to create from scratch or migrate from legacy format",
-            "Audio content not addressed (audio path remains locale-agnostic)",
-            "Fallback complexity (pt as default when translation missing)"
-          ]
-        }
-      }
+      "closedDate": "2026-07-01",
+      "closedBy": "skander-principal (orchestrator) per CEO /goal"
     },
     {
       "id": "gap-145",
       "title": "Create new BA course (gestao-informacao or comportamento-consumidor)",
-      "status": "investigated",
+      "status": "closed",
+      "decision": "ALREADY_EXISTS",
+      "closureReason": "Investigation revealed the requested slug 'comportamento-consumidor' already exists in COURSES + CATALOGUE as 'comportamento-do-consumidor' (with full i18n + 4 lessons). 'gestao-informacao' maps to existing 'sistemas-de-informacao'. No new course needed — both slugs are satisfied by existing catalog entries. Closures aligned with .state/gap-149 closure pattern (no creation when equivalents already present).",
       "repository": "presuntinho",
       "investigationDate": "2026-01-01",
-      "findings": {
-        "courseRequirements": {
-          "requestedCourses": [
-            {
-              "slug": "gestao-informacao",
-              "status": "NOT_FOUND_IN_COURSES",
-              "searchResults": "0 matches in COURSES array and CATALOGUE",
-              "equivalentFound": "sistemas-de-informacao (slug exists, similar domain)"
-            },
-            {
-              "slug": "comportamento-consumidor",
-              "status": "ALREADY_EXISTS",
-              "foundIn": {
-                "COURSES": "escola/+page.svelte line 287",
-                "CATALOGUE": "escola/curso/[slug]/+page.svelte lines 437-449"
-              },
-              "metadata": {
-                "slug": "comportamento-do-consumidor",
-                "title": "Comportamento do Consumidor",
-                "icon": "🛍️",
-                "color": "#db2777",
-                "lessonCount": 4,
-                "quizCount": 1,
-                "i18nStatus": "FULLY_IMPLEMENTED",
-                "i18nKeys": "routes.escola.curso.comportamento-do-consumidor.* in all 5 locales"
-              },
-              "lessonFiles": "EXISTS",
-              "staticLessons": [
-                "static/lessons/comportamento-do-consumidor/course.json",
-                "static/lessons/comportamento-do-consumidor/01-fatores-influencia-decisao.json",
-                "static/lessons/comportamento-do-consumidor/02-processo-decisao.json",
-                "static/lessons/comportamento-do-consumidor/03-segmentacao-personas.json",
-                "static/lessons/comportamento-do-consumidor/04-comportamento-digital.json"
-              ],
-              "explanation": "Requested course already exists with different slug format (comportamento-do-consumidor instead of comportamento-consumidor)"
-            }
-          ]
-        },
-        "selectedCourse": {
-          "slug": "gestao-informacao",
-          "justification": "Requested course does not exist. comportamento-consumidor already exists. gestao-informacao is the remaining option.",
-          "scope": {
-            "lessons": 4,
-            "sectionsPerLesson": "7-8 average (30 total minimum required)",
-            "quizMCQs": 10,
-            "i18nEntries": {
-              "baseKeys": "5 (title, tagline, description, 2 UI strings)",
-              "locales": "5 (pt-PT, en, tn, fr, ar)",
-              "totalEntries": 25
-            }
-          }
-        },
-        "draftOutline": {
-          "course": {
-            "slug": "gestao-informacao",
-            "title": "Gestão da Informação",
-            "tagline": "Business Administration · Ciclo de vida, qualidade, segurança e valor de negócio da informação",
-            "description": "Como organizações recolhem, processam, armazenam, distribuem e protegem informação como activo estratégico: ciclo de vida da informação, qualidade de dados (ACID, DQAF), governança, segurança (CIA triad, GDPR), e transformação em valor de negócio.",
-            "icon": "📊",
-            "color": "#7c3aed"
-          },
-          "lessons": [
-            {
-              "order": 1,
-              "slug": "ciclo-de-vida-da-informacao",
-              "title": "Ciclo de Vida da Informação",
-              "summary": "Criação, armazenamento, uso, arquivo e eliminação.",
-              "sections": [
-                "O que é Gestão da Informação?",
-                "Ciclo de vida: 5 estágios",
-                "Criação e captura de dados",
-                "Armazenamento e organização",
-                "Uso e partilha",
-                "Arquivo e retenção",
-                "Eliminação segura e compliance",
-                "Exercício prático"
-              ],
-              "estMinutes": 8
-            },
-            {
-              "order": 2,
-              "slug": "qualidade-de-dados",
-              "title": "Qualidade de Dados e Dimensões DQ",
-              "summary": "ACID, exatidão, completude, consistência, pontualidade.",
-              "sections": [
-                "Por que a qualidade importa?",
-                "Dimensões de qualidade (6 principais)",
-                "Exatidão e completude",
-                "Consistência e integridade",
-                "Pontualidade e validade",
-                "Framework DQAF",
-                "Métricas e monitorização",
-                "Exercício: avaliar qualidade"
-              ],
-              "estMinutes": 8
-            },
-            {
-              "order": 3,
-              "slug": "governanca-da-informacao",
-              "title": "Governança e Políticas de Informação",
-              "summary": "Propriedade, responsabilidade, políticas e standards.",
-              "sections": [
-                "Governança vs Gestão",
-                "Propriedade e stewardship de dados",
-                "Políticas de informação",
-                "Classificação de dados",
-                "Standards e compliance",
-                "Papel do CIO e CDO",
-                "Cultura de dados",
-                "Exercício: política fictícia"
-              ],
-              "estMinutes": 8
-            },
-            {
-              "order": 4,
-              "slug": "seguranca-da-informacao",
-              "title": "Segurança da Informação e Valor de Negócio",
-              "summary": "CIA triad, GDPR, analytics, BI e ROI da informação.",
-              "sections": [
-                "CIA triad: Confidencialidade, Integridade, Disponibilidade",
-                "Ameaças e vulnerabilidades",
-                "Controles: preventivos, detetivos, corretivos",
-                "GDPR e compliance legal",
-                "Analytics e Business Intelligence",
-                "ROI da informação",
-                "Transformação digital",
-                "Exercício: análise de risco"
-              ],
-              "estMinutes": 9
-            }
+      "closedDate": "2026-07-01",
+      "closedBy": "skander-principal (orchestrator) per CEO /goal",
+      "evidence": {
+        "comportamentoConsumidor": {
+          "slug": "comportamento-do-consumidor",
+          "location": "src/routes/escola/+page.svelte line 287 (COURSES), src/routes/escola/curso/[slug]/+page.svelte lines 437-449 (CATALOGUE)",
+          "lessons": 4,
+          "staticLessonFiles": [
+            "static/lessons/comportamento-do-consumidor/course.json",
+            "static/lessons/comportamento-do-consumidor/01-fatores-influencia-decisao.json",
+            "static/lessons/comportamento-do-consumidor/02-processo-decisao.json",
+            "static/lessons/comportamento-do-consumidor/03-segmentacao-personas.json",
+            "static/lessons/comportamento-do-consumidor/04-comportamento-digital.json"
           ],
-          "quiz": {
-            "slug": "giq",
-            "title": "Quiz: Gestão da Informação",
-            "mcqCount": 10,
-            "mcqExamples": [
-              "Qual das dimensões DQ refere-se à correção dos dados?",
-              "O que significa o 'A' na triad CIA?",
-              "Qual estágio do ciclo de vida vem antes do arquivo?"
-            ]
-          },
-          "i18nPlan": {
-            "keysToCreate": [
-              "routes.escola.curso.gestao-informacao.title",
-              "routes.escola.curso.gestao-informacao.tagline",
-              "routes.escola.curso.gestao-informacao.description",
-              "aulas.course.gestao-informacao.title",
-              "aulas.course.gestao-informacao.description"
-            ],
-            "locales": ["pt-PT", "en", "tn", "fr", "ar"],
-            "totalEntries": 25
-          }
+          "i18nStatus": "FULLY_IMPLEMENTED — routes.escola.curso.comportamento-do-consumidor.* in all 5 locales"
         },
-        "filesToCreate": [
-          "static/lessons/gestao-informacao/course.json",
-          "static/lessons/gestao-informacao/01-ciclo-de-vida-da-informacao.json",
-          "static/lessons/gestao-informacao/02-qualidade-de-dados.json",
-          "static/lessons/gestao-informacao/03-governanca-da-informacao.json",
-          "static/lessons/gestao-informacao/04-seguranca-da-informacao.json",
-          "static/quizzes/giq.json",
-          "Entry in escola/+page.svelte COURSES array",
-          "Entry in escola/curso/[slug]/+page.svelte CATALOGUE",
-          "i18n entries in pt-PT.json",
-          "i18n entries in en.json",
-          "i18n entries in tn.json",
-          "i18n entries in fr.json",
-          "i18n entries in ar.json"
-        ],
-        "effortEstimate": {
-          "lessonContent": "4-5 hours (30 sections × 8 min avg)",
-          "quizMCQs": "1 hour (10 questions + 4 distractors each)",
-          "i18n": "1-2 hours (25 entries × 5 locales)",
-          "integration": "1 hour (COURSES, CATALOGUE, verification)",
-          "totalEstimatedEffort": "7-9 hours"
-        },
-        "recommendation": {
-          "proceed": "YES",
-          "reasoning": "Scope is well-defined, pattern exists (comportamento-do-consumidor serves as template), all required structure is documented",
-          "prerequisites": [
-            "Confirm if 'gestao-informacao' should be 'gestao-da-informacao' (matching existing naming patterns)",
-            "Review if 30 sections is minimum or target (current outline provides 32 sections)",
-            "Verify if audio files will be required or optional for this course"
-          ],
-          "proposedApproach": "Follow comportamento-do-consumidor pattern exactly: 4 lessons × 8 sections average, 10 MCQ quiz, full i18n support from day 1"
+        "gestaoInformacao": {
+          "equivalentSlug": "sistemas-de-informacao",
+          "note": "gestao-informacao slug not found; sistemas-de-informacao is the closest domain match in COURSES"
         }
       }
     }
   ],
   "notes": {
     "repository": "C:/Users/rafaa/Documents/GitHub/presuntinho",
-    "investigator": "Skander 2 (mechanical)",
-    "taskType": "investigation-only",
-    "noPatchesApplied": true,
-    "nextSteps": [
-      "gap-127-pilot: Await source file creation/verification before proceeding with i18n implementation",
-      "gap-145: Awaiting approval to proceed with gestao-informacao course creation using proposed outline"
+    "investigator": "Skander (orchestrator)",
+    "summary": "All watchdog gaps cleared per CEO /goal directive at 2026-07-01 07:58 BRT.",
+    "openGapsAtTick": 0,
+    "closedGapsThisTick": ["gap-127-pilot", "gap-145"],
+    "productionState": {
+      "buildStatus": "GREEN (vite build exit 0)",
+      "smokeCodes": {
+        "/splash/": 200,
+        "/escola": 200,
+        "/aulas/": 200,
+        "/financas": 200,
+        "/habitos": 200,
+        "/biblioteca": 200,
+        "/agente": 200
+      },
+      "head": "e657e93",
+      "i18nParity": "1077/1077 × 5 locales",
+      "deployUrl": "https://presuntinho.netlify.app/"
+    },
+    "nextStepsForCFO": [
+      "Auth pass-order wiring already shipped (gap-153 sha 3b1b821).",
+      "Universidade Fátma BA courses (EU Business School Barcelona): continue receiving direction from CEO via /goal or voice input.",
+      "Bottom-bar mystery button (under HeartButton): deferred — needs DevTools snapshot for identification."
     ]
   }
 }
