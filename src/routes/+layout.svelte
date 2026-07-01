@@ -137,15 +137,24 @@
   }
 
   function handleNavClick(event: MouseEvent, targetLabel: string): void {
+    const href = (event.currentTarget as HTMLAnchorElement | null)?.getAttribute('href') ?? null;
+
+    // If stores haven't finished booting, *don't* block — let SvelteKit run
+    // its native SPA navigation, which will reliably replace the URL. The
+    // previous behaviour (event.preventDefault + 1.4s toast) was the cause
+    // of "I click Escola and the page just scrolls to the top".
     if (!storesReady) {
-      event.preventDefault();
-      showToast('A preparar sessão… tenta novamente daqui a um instante.', 1400);
+      console.debug('[presuntinho] handleNavClick early — storesReady=false. Letting native nav through.', href);
       return;
     }
 
+    // Session might be null on cold load (Dexie still hydrating). Auth gate
+    // is the responsibility of the destination route (e.g. /agente, /escola
+    // show "iniciar sessão" empty states themselves). Bottom-nav must
+    // NEVER swallow a click for routes that are otherwise public-readable.
     if (!session) {
-      event.preventDefault();
-      startAuthRedirect(targetLabel);
+      console.debug('[presuntinho] handleNavClick: session=null. Letting native nav through to', href);
+      return;
     }
   }
 
