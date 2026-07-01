@@ -29,6 +29,7 @@
 import Dexie, { type Table } from 'dexie';
 import type { ProfileId } from '../auth/hash';
 import { buildSeedTransacoes } from './financas-seed';
+import { seedHabitosPro } from './habitos-seed';
 
 // ---------------------------------------------------------------------------
 // Row interfaces
@@ -177,6 +178,17 @@ export interface CategoriaRow {
  * One row per habit definition.  `cadence` is stored as a string so we
  * can add more values later (e.g. "weekdays", "3x/week") without a
  * schema bump.  For the MVP only 'daily' is rendered in the UI.
+ *
+ * task-040 (Hábitos Pro) adds:
+ *   - `meta`     — optional target value (e.g. "2L", "30 min", "8h").
+ *                  Display only; not used for completion math.
+ *   - `reminder` — optional reminder label, free-form (e.g. "20:00",
+ *                  "ao pequeno-almoço").  Reminders are NOT triggered
+ *                  by the system in the MVP — the field is shown in
+ *                  the form and on the detail page as a hint.
+ *
+ * Both new fields are OPTIONAL so existing rows and the seed
+ * `DEFAULT_HABITOS` list keep working without a backfill.
  */
 export interface HabitoRow {
   id?: number;            // auto-incremented by Dexie (++)
@@ -185,6 +197,8 @@ export interface HabitoRow {
   color: string;          // hex (#xxxxxx) — used by the heatmap tint
   cadence: 'daily' | 'weekly' | string;
   createdAt: number;      // Date.now()
+  meta?: string;          // task-040: target / unit string ("2L", "30 min")
+  reminder?: string;      // task-040: free-form reminder ("20:00", "manhã")
 }
 
 /**
@@ -675,34 +689,30 @@ export async function ensureDefaults(profile: ProfileId = activeProfile): Promis
   if (existingCategoryCount === 0) {
     await d.categorias.bulkPut(DEFAULT_CATEGORIAS);
   }
-  // Seed the eight default habits (Phase 7) only on a fresh DB —
-  // same idempotent pattern as `categorias` above.  We stamp
-  // `createdAt` here so the list comes out newest-first within the
-  // seed batch and any user-created habit added later naturally sorts
-  // after all eight seeds (because Dexie auto-assigns a higher id AND
-  // we use createdAt+1 ms increments between the seeds to make the
-  // ordering deterministic on first render).
+  // Seed the eight default habits (Phase 7) only on a fresh DB — same
+  // idempotent pattern as `categorias` above.  As of task-040 (Hábitos
+  // Pro) the 5 demo habits below replace this inline 8-habit list for
+  // fresh installs; the new seeder also writes 14 days of habit_logs
+  // so the dashboard is populated on first open.  Existing users who
+  // already have rows from this legacy seed are NOT touched — the
+  // seeder only runs when the table is empty.
   const existingHabitCount = await d.habitos.count();
   if (existingHabitCount === 0) {
-    const seeded = DEFAULT_HABITOS.map((h, i) => ({
-      ...h,
-      // createdAt: 0 would sort to the very back of the `orderBy('createdAt')`
-      // query and put all eight seeds at the bottom of the list.  Add a
-      // small per-index delta so the seed order is stable and predictable.
-      createdAt: now + i
-    }));
-    await d.habitos.bulkPut(seeded);
+    // task-040: delegating to seedHabitosPro() replaces the prior
+    // inline DEFAULT_HABITOS list.  This branch only fires on a brand
+    // new database (no user rows to stomp).
+    await seedHabitosPro(d.habitos, d.habit_logs, now);
   }
   // Seed a handful of example transactions (task-038) so the /financas
-    // dashboard is populated on first open.  Twenty realistic rows
-    // spanning two months and eight categories — gives the chart, totals
-    // and category breakdown real shape from the first render.  The seed
-    // lives in its own module (`./financas-seed.ts`) so it stays editable
-    // without bloating `ensureDefaults`.  Only runs when the table is
-    // empty, so users who have already added their own transactions will
-    // never see their list stomped.
-    const existingTransacaoCount = await d.transacoes.count();
-    if (existingTransacaoCount === 0) {
-      await d.transacoes.bulkPut(buildSeedTransacoes(now));
-    }
+  // dashboard is populated on first open.  Twenty realistic rows
+  // spanning two months and eight categories — gives the chart, totals
+  // and category breakdown real shape from the first render.  The seed
+  // lives in its own module (`./financas-seed.ts`) so it stays editable
+  // without bloating `ensureDefaults`.  Only runs when the table is
+  // empty, so users who have already added their own transactions will
+  // never see their list stomped.
+  const existingTransacaoCount = await d.transacoes.count();
+  if (existingTransacaoCount === 0) {
+    await d.transacoes.bulkPut(buildSeedTransacoes(now));
   }
+}

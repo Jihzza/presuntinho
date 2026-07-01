@@ -58,10 +58,21 @@ export const XP_TABLE: Readonly<Record<string, number>> = Object.freeze({
   // Hábitos
   habito_create: 5,
   habito_edit: 1,
+  // task-040 (Hábitos Pro): brief specifies the marker XP for "marcar
+  // feito" is +2.  The pre-task-040 value was +4 (kept as
+  // `habito_log_today` for backwards compatibility — any code that
+  // still references it gets the same +4).
+  habito_mark_done: 2,
   habito_log_today: 4,
-  habito_streak_7: 20,
+  // task-040 (Hábitos Pro): brief specifies
+  //   - streak 7 days  → +30 XP + badge (b16)
+  //   - streak 30 days → +200 XP + badge (b17)
+  // Pre-task-040 values were 20 / 75 / 100 / 250 / 1000 for 7/14/30/50/100/365.
+  // We add new keys for the brief-aligned rewards and keep the
+  // legacy keys untouched so older code paths (or tests) still work.
+  habito_streak_7: 30,
   habito_streak_14: 40,
-  habito_streak_30: 75,
+  habito_streak_30: 200,
   habito_streak_50: 100,
   habito_streak_100: 250,
   habito_streak_365: 1000,
