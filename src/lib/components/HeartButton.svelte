@@ -6,7 +6,7 @@
    * (next to the XP pill) but is reusable anywhere.
    *
    * Behaviour:
-   *   - click → heartClick() (22-tier XP escalation + custom events)
+   *   - click → heartClick() (tier-driven XP escalation via static/config/easterEggs.json → heartTiers, currently 11 tiers + custom events)
    *   - listens for `presuntinho:heart-visual` → swaps emoji + class
    *     `intensity-0..4` based on click count
    *   - listens for `presuntinho:heart-pulse` → 300 ms pulse animation

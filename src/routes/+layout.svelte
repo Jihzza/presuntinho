@@ -478,17 +478,21 @@
       }
     }
 
-    /* Floating action button stack (XP pill + heart) — above the bottom-nav. */
+    /* Floating action button stack (XP pill + heart + install). */
     .fab-stack {
       position: fixed;
       right: max(1rem, env(safe-area-inset-right));
-      bottom: calc(env(safe-area-inset-bottom) + 4.5rem);
+      bottom: calc(env(safe-area-inset-bottom) + 6.5rem);
       display: flex;
       flex-direction: column;
       align-items: flex-end;
       gap: 0.5rem;
       z-index: 60;
       pointer-events: none; /* container ignores — children re-enable */
+      /* Allow the stack (potentially 3 chips tall) to overflow upward
+         without being clipped by fixed-positioned ancestors. */
+      max-height: calc(100vh - 7rem);
+      overflow: visible;
     }
     .fab-stack > :global(*) {
       pointer-events: auto;
