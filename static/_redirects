@@ -16,6 +16,7 @@
 # --- Static assets (skip SPA fallback) ---
 
 /aulas                 /aulas/                301
+/login                /splash/              301
 
 /robots.txt            /robots.txt            200
 /sitemap.xml           /sitemap.xml           200
