@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "test": "vitest run --passWithNoTests",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "auth:bypass:daniel": "node scripts/dev-auth-bypass.mjs daniel",
+    "auth:bypass:fatma": "node scripts/dev-auth-bypass.mjs fatma"
   },
   "devDependencies": {
     "@playwright/test": "^1.45.0",
