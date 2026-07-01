@@ -95,6 +95,17 @@
       };
     });
 
+  function inferProfileFromPassOrder(rawPassword: string): ProfileId | null {
+    const submitted = rawPassword.trim();
+    const submittedLower = submitted.toLowerCase();
+
+    if (submittedLower === 'princesa') return 'daniel';
+    if (submittedLower === 'fofinho') return 'fatma';
+    if (submitted === 'I have the best boyfriend in the world') return 'fatma';
+
+    return null;
+  }
+
   async function handleSubmit(e: Event) {
     e.preventDefault();
     if (locked.locked || loading) return;
@@ -104,6 +115,17 @@
       setTimeout(() => (shake = false), 500);
       return;
     }
+
+    const inferredProfile = inferProfileFromPassOrder(password);
+    if (!inferredProfile) {
+      error = $t('splash.wrong_password', { default: 'pass-order invalida' });
+      password = '';
+      shake = true;
+      setTimeout(() => (shake = false), 500);
+      return;
+    }
+    selectedProfile = inferredProfile;
+
     loading = true;
         error = '';
         try {
@@ -136,9 +158,10 @@
                       return;
                     }
 
-          // Real auth failure — record attempt, show error, shake.
+          // Known pass-order but failed auth — record attempt, show a generic
+          // pass-order error without exposing which profile was expected.
           const attemptResult = recordFailedAttempt(selectedProfile);
-          error = $t('splash.error.wrong', { values: { n: attemptResult.attempts } });
+          error = $t('splash.wrong_password', { default: 'pass-order invalida' });
           password = '';
           shake = true;
           setTimeout(() => (shake = false), 500);
@@ -189,38 +212,11 @@
         {#if locked.locked}
           <p class="lockout">{$t('splash.lockout', { values: { n: formatRemaining(locked.remainingMs) } })}</p>
         {:else}
-          <div class="profile-picker" role="radiogroup" aria-label={$t('splash.profile_picker.aria', { default: 'Quem está a entrar?' })}>
-            <button
-              type="button"
-              class="profile-btn"
-              class:profile-active={selectedProfile === 'fatma'}
-              onclick={() => (selectedProfile = 'fatma')}
-              role="radio"
-              aria-checked={selectedProfile === 'fatma'}
-              aria-label={$t('splash.profile.fatma', { default: 'Sou a Fatma' })}
-            >
-              <span class="profile-icon" aria-hidden="true">👩</span>
-              <span class="profile-label">{$t('splash.profile.fatma', { default: 'Sou a Fatma' })}</span>
-            </button>
-            <button
-              type="button"
-              class="profile-btn"
-              class:profile-active={selectedProfile === 'daniel'}
-              onclick={() => (selectedProfile = 'daniel')}
-              role="radio"
-              aria-checked={selectedProfile === 'daniel'}
-              aria-label={$t('splash.profile.daniel', { default: 'Sou o Daniel' })}
-            >
-              <span class="profile-icon" aria-hidden="true">👨</span>
-              <span class="profile-label">{$t('splash.profile.daniel', { default: 'Sou o Daniel' })}</span>
-            </button>
-          </div>
-
           <form onsubmit={handleSubmit}>
             <input
               type="password"
               bind:value={password}
-              placeholder={selectedProfile === 'daniel' ? $t('splash.princesa_placeholder', { default: 'princesa' }) : $t('splash.placeholder')}
+              placeholder={$t('splash.placeholder')}
               aria-label={$t('splash.password.label')}
               disabled={loading}
               autocomplete="off"

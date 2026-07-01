@@ -1064,6 +1064,7 @@
   "splash.subtitle.daniel": "Hi, Daniel 🛠️ — technical profile (debug/admin)",
   "splash.subtitle.fatma": "Hi, Fatma 🌸 — your password",
   "splash.title": "Presuntinho",
+  "splash.wrong_password": "invalid pass-order",
   "toast.habito_criado": "Habit created",
   "toast.limite_invalido": "Invalid limit",
   "toast.marcacao_removida": "Check-in removed",
