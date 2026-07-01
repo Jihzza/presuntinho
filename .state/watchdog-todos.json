@@ -1,5 +1,7 @@
 {
-  "lastUpdated": "2026-07-01T07:05:00Z",
+  "lastUpdated": "2026-07-01T14:38:30Z",
+  "_tick": "tick-05 (2026-07-01 14:38Z)",
+  "_tickHeadline": "tick-04 fechou gap-login-redirect (ec5f62b em main); bots skander1/skander2 entregaram auditoria local; novo tick-05 despacha skander1 para fix UX /login/ (flash 404 antes do redirect) e skander2 para remover 8 orphan keys splash.choose/profile × 5 locales. i18n parity mantida em 1077/1077 × 5 locales. openGapsAtTick = 1 → após tick-05 fechar",
   "gaps": [
     {
       "id": "gap-127-pilot",
@@ -69,7 +71,7 @@
         "/habitos": 200,
         "/biblioteca": 200,
         "/agente": 200,
-        "/login/": 200 (será 301→/splash/ dentro de ~1-2min após deploy Netlify do SHA ec5f62b)"
+        "/login/": "301 (alias para /splash/, propagado pós-deploy ec5f62b — verificado)"
       },
       "head": "ec5f62b",
       "i18nParity": "1077/1077 × 5 locales",
