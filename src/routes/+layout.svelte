@@ -128,7 +128,7 @@
   });
 
   function startAuthRedirect(targetLabel: string): void {
-    showToast(`Precisas iniciar sessão para abrir ${targetLabel}.`, 2400);
+      showToast($t('auth.redirect_toast', { values: { target: targetLabel }, default: `Precisas iniciar sessão para abrir ${targetLabel}.` }), 2400);
     if (authRedirectTimer) clearTimeout(authRedirectTimer);
     authRedirectTimer = setTimeout(() => {
       authRedirectTimer = null;

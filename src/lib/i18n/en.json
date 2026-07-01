@@ -1171,5 +1171,9 @@
   "walkthrough.verify.exists": "exists.",
   "walkthrough.verify.text": "Check that",
   "write.breadcrumb.home": "← Hub",
-  "write.head.title": "Writing · Anti-AI Tips"
+  "write.head.title": "Writing · Anti-AI Tips",
+  "auth.redirect_toast": "You need to sign in to open {target}.",
+  "auth": {
+    "redirect_toast": "You need to sign in to open {target}."
+  }
 }

@@ -1171,5 +1171,9 @@
   "walkthrough.verify.exists": "existe.",
   "walkthrough.verify.text": "Vérifie que",
   "write.breadcrumb.home": "← Hub",
-  "write.head.title": "Ticra · Tiɣbula Anti-AI"
+  "write.head.title": "Ticra · Tiɣbula Anti-AI",
+  "auth.redirect_toast": "Lazem t7el {target}, lazem todkhol.",
+  "auth": {
+    "redirect_toast": "Lazem t7el {target}, lazem todkhol."
+  }
 }

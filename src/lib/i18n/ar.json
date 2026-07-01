@@ -1171,5 +1171,9 @@
   "walkthrough.verify.exists": "موجود.",
   "walkthrough.verify.text": "تأكد من",
   "write.breadcrumb.home": "← المحور",
-  "write.head.title": "الكتابة · نصائح لمكافحة الذكاء الاصطناعي"
+  "write.head.title": "الكتابة · نصائح لمكافحة الذكاء الاصطناعي",
+  "auth.redirect_toast": "تحتاج إلى تسجيل الدخول لفتح {target}.",
+  "auth": {
+    "redirect_toast": "تحتاج إلى تسجيل الدخول لفتح {target}."
+  }
 }
