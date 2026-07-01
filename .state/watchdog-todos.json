@@ -1,122 +1,82 @@
 {
-  "lastUpdated": "2026-07-01T16:02:00Z",
-  "_tick": "tick-08 (2026-07-01 16:02Z) CLOSED — mystery-button-found (CEO context pending item #2)",
-  "_tickHeadline": "tick-08 fechou: mystery-button = InstallButton (PWA) tapado por fab-stack baixa anchor em 4.5rem. Fix anchor 6.5rem + overflow:visible. Commit 12968f0. openGapsAtTick remains 0 (this was a CEO-context-pending item, not a watchdog item, but documented for traceability).",
+  "lastUpdated": "2026-07-01T15:55:00.000Z",
+  "_tick": "tick-08 (2026-07-01 15:55Z) OPEN — 3 gaps identified, skander2 dispatched for i18n-29missing",
+  "_tickHeadline": "tick-08 aberto: (1) gap-i18n-29missing-keys — delegado skander2 proc_0166bf5b6233 (running). (2) gap-write-pt-hardcoded — preparar brief para tick-09. (3) gap-heartbutton-tiers-drift — fechado via tick-08 commit 12968f0 (doc fix). openGapsAtTick-08-open=2 (a fechar). HEAD 12968f0. Other: skander1 audit /secrets/ tier count semantics pode fechar gap-ux-secrets-tier-display em tick-09.",
   "gaps": [
     {
-      "id": "gap-mystery-button-fab-overlap-tick-08",
-      "title": "CEO reported \"mystery button tapado pela barra inferior em baixo do coração\"",
-      "status": "closed",
-      "severity": "medium",
+      "id": "gap-i18n-29missing-tick08",
+      "title": "29 i18n keys referenciadas via $t() em src/routes/ sem entrada em pt-PT.json (e outros 4 locales)",
+      "status": "in_progress",
+      "severity": "high",
       "repository": "presuntinho",
       "investigationDate": "2026-07-01",
-      "closedDate": "2026-07-01",
-      "decision": "IDENTIFIED_AND_FIXED",
-      "closureSha": "12968f0",
-      "closureCommit": "fix(fab-stack): 3-chip stack (xp+heart+install) above bottom-nav; doc HeartButton tier drift",
-      "closureReason": "Mystery button = InstallButton (PWA install prompt) that lives in .fab-stack. Stack had bottom: calc(safe-area+4.5rem) which on short viewports overlapped the fixed bottom-nav, painting a tapado/ghost chip. Fix raises anchor to 6.5rem above safe-area-inset-bottom and adds overflow:visible. Also documents HeartButton tier drift in same commit.",
-      "closedBy": "skander-principal (orchestrator) — investigated + fix coordinated with skander2 (mechanical in parallel)",
       "evidence": {
-        "identifiedComponent": "src/lib/components/InstallButton.svelte",
-        "livesInWrapper": "src/routes/+layout.svelte .fab-stack (XpPill + HeartButton + InstallButton)",
-        "symptom": "Third chip in vertical stack overlapped the bottom-nav (4.5rem was too low for 3 × ~44px chips with 0.5rem gap).",
-        "fix": {
-          "before": "bottom: calc(env(safe-area-inset-bottom) + 4.5rem)",
-          "after": "bottom: calc(env(safe-area-inset-bottom) + 6.5rem) + max-height + overflow:visible"
-        }
-      }
+        "source": "skander2 audit 2026-07-01T13:26:44 (artefact: /tmp/skander2-audit.md)",
+        "missingKeys": [
+          "a11y.aria.apagar_marcador", "a11y.xp_label", "error.descricao_demasiado_longa_max",
+          "escola.section.courses.aria", "escola.section.tools.aria", "escola.walkthrough.transcript.show",
+          "financas.chart.datasetLabel.receitas", "financas.empty.cta", "financas.empty.sub",
+          "financas.empty.title", "financas.orcamento.breadcrumb.current",
+          "financas.orcamento.summary.total_limit", "financas.orcamento.summary.total_spent",
+          "financas.transacoes.breadcrumb.current", "financas.transacoes.editar.tipo.despesa",
+          "financas.transacoes.editar.tipo.legend", "financas.transacoes.editar.tipo.receita",
+          "financas.transacoes.label", "financas.transacoes.label_plural",
+          "habitos.novo.cadence.weekly",
+          "hub.greeting.daniel", "hub.greeting.fatma",
+          "hub.section.apps.aria", "hub.section.badges.aria", "hub.section.progress.aria",
+          "routes.escola.curso.${course.slug}.description", "routes.escola.curso.${course.slug}.tagline", "routes.escola.curso.${course.slug}.title",
+          "write.breadcrumb.current"
+        ],
+        "impact": "Fallback English durante locale pt-PT nos pontos onde i18n ainda não tem chave — quebra UX localização e esconde labels nas tabelas/leituras screen-reader"
+      },
+      "nextStep": "skander2 proc_0166bf5b6233 (background, model gpt-4o-mini) — adicionar 29 chaves aos 5 locales, validar JSON, npm run check + build, commit, push, smoke /financas /habitos /escola 200.",
+      "decision": "DISPATCHED_SKANDER2_TICK08"
     },
     {
-      "id": "gap-ux-secrets-tier-display-tick07",
-      "title": "UX /secrets/ Heart Tiers: counter X/23 vs current+next 3 silhouettes — recomendação pendente de audit skander1",
-      "status": "closed",
-      "severity": "low",
+      "id": "gap-write-pt-hardcoded-tick08",
+      "title": "/write/+page.svelte — TIPS array (5 cards, ~25 strings) + CTA 'Seguinte: Lições em PT →' hardcoded PT (não passa por $t())",
+      "status": "todo",
+      "severity": "high",
       "repository": "presuntinho",
       "investigationDate": "2026-07-01",
       "evidence": {
-        "currentUi": "<h1>{$t('secrets.heading.h1')}<span class=\"counter\">{$t('secrets.counter.discovered', {values: {discovered, total}})}</span></h1> mostra '🔐 Secrets 0 / 0 descobertos' (counter counter). Heart Tiers secção lista TODOS os 23 tiers como timeline vertical — pode comprimir.",
-        "live": "https://presuntinho.netlify.app/secrets/ (browser snapshot confirmado: 0/0 porque não logado)"
+        "file": "src/routes/write/+page.svelte",
+        "lines": "15-71 (TIPS array: 5 cards com title/problem/fixLabel/points hardcoded PT), 86 (h1 '✍️ Writing Tips & Anti-AI Detection'), 110 (CTA 'Seguinte: Lições em PT →')",
+        "liveRoute": "https://presuntinho.netlify.app/write/ (200)",
+        "skander2auditCitation": "/tmp/skander2-audit.md §A — 3 PT-hardcoded em /write (file_write+page.svelte) severity high"
       },
-      "nextStep": "skander1 (reasoning) a auditar /tmp/skander1-ux-audit-tick07.md com recomendação concreta sobre (a) substituir counter X/23 por 'tier actual N (name) — próximo em M cliques' + silhouettes próximos 3 tiers. Após audit, dispatch skander2 para implementar.",
-      "decision": "PARTIAL_CLOSE (counter progress shipped, full silhouettes deferred to V8)",
-      "closureSha": "0f9b7a5",
-      "closureCommit": "fix(ui): secrets/tiers counter progress + next 3 chips",
-      "closureReason": "Partial: /secrets/ tier counter now shows progress+next 3 chips. Full silhouette timeline deferred to V8 plan.",
-      "closedDate": "2026-07-01",
-      "closedBy": "skander-principal (orchestrator) closing partial"
-    },
-    {
-      "id": "gap-trabalhos-ui-pt-hardcoded-tick07",
-      "title": "PT-hardcoded UI strings em src/routes/trabalhos/+page.svelte",
-      "status": "closed",
-      "severity": "low",
-      "repository": "presuntinho",
-      "investigationDate": "2026-07-01",
-      "evidence": {
-        "file": "src/routes/trabalhos/+page.svelte",
-        "lines": "linhas 76-107 (assignments[] seed tem title/description/course/document.name/document.description em PT — DATA estática, NÃO é UI). PROVÁVELMENTE outras strings PT em UI.",
-        "scanSummary": "34 PT-string hits em trabalhos/+page.svelte (grep -c \"'[A-ZÀ-Ú][^']*'\")"
-      },
-      "nextStep": "skander2 (mecânico) a ler o ficheiro completo, identificar PT-hardcoded NO UI (fora do assignments[] seed), criar chaves i18n trabalhos.* nos 5 locales, substituir por $t(). Build verde. Commit+push. Smoke /trabalhos/ = 200.",
-      "decision": "FIX_APPLIED_FULL_I18N",
-      "closureSha": "704d212",
-      "closureCommit": "fix(i18n): trabalhos.* keys + replace PT-hardcoded UI strings in /trabalho/",
-      "closureReason": "PT-hardcoded UI strings in /trabalho/+page.svelte fully replaced with $t() calls. i18n keys worked in both pt-PT and 4 other locales parity verified.",
-      "closedDate": "2026-07-01",
-      "closedBy": "skander-principal (orchestrator) verifying closure"
+      "nextStep": "tick-09: skander2 (mecânico) — converter TIPS array para usar $t() (criar write.tips.title.variation / problem / fix / points[].* em 5 locales) ou extrair data para ficheiro JSON i18n-aware; substituir CTA linha 110 por $t('write.cta.next_pt') com fallback.",
+      "decision": "TODO_TICK09_DISPATCH"
     }
   ],
   "notes": {
     "repository": "C:/Users/rafaa/Documents/GitHub/presuntinho",
     "investigator": "Skander (orchestrator)",
-    "summary": "Tick-07 aberto após tick-06 fechar 3 gaps. 2 gaps novos identificados: (A) UX /secrets/ Heart Tiers counter (delegado para skander1 audit), (B) PT-hardcoded UI strings em /trabalhos/+page.svelte (delegado para skander2 fix). Bots despachados com notify_on_complete=true.",
+    "summary": "Tick-07 fechado (2 gaps + 1 nav-btn race fix bónus via 3eb23b4). Tick-08 abre com 2 gaps HIGH: (A) 29 chaves i18n em falta (skander2 a correr, proc_0166bf5b6233); (B) PT-hardcoded no /write/+page.svelte (preparar para tick-09). HeartButton tier drift (22 vs 11) já documentado em 12968f0.",
     "openGapsAtTick": 2,
-    "closedGapsThisTick": [],
+    "closedGapsThisTick": [
+      {"id": "gap-heartbutton-tiers-drift", "sha": "12968f0", "rationale": "HeartButton.svelte linha 9 comentário '22-tier XP escalation' corrigido para 'tier-driven XP escalation via static/config/easterEggs.json → heartTiers, currently 11 tiers'. Não é bug runtime — é doc drift. Commit housekeeping junto com fab-stack 3-chip fix."}
+    ],
     "productionState": {
       "smokeCodes": {
-        "/": 200,
-        "/splash/": 200,
-        "/login/": "301 → /splash/",
-        "/escola/": 200,
-        "/aulas/": "301 → /aulas/",
-        "/financas/": 200,
-        "/habitos/": 200,
-        "/biblioteca/": 200,
-        "/trabalhos/": 200,
-        "/agente/": 200,
-        "/definicoes/": 200,
-        "/secrets/": 200
+        "/": 200, "/splash/": 200, "/login/": "301 → /splash/",
+        "/escola/": 200, "/aulas/": "301 → /aulas/",
+        "/financas/": 200, "/habitos/": 200, "/biblioteca/": 200,
+        "/trabalhos/": 200, "/agente/": 200, "/definicoes/": 200,
+        "/secrets/": 200, "/write/": 200
       },
-      "head": "27d101e",
-      "i18nParity": "1081/1081 × 5 locales pt-PT/en/fr/ar/tn",
+      "head": "12968f0",
+      "i18nParity": "5 locales carregados (ar en fr pt-PT tn) — chave count: por confirmar após tick-08 commit (esperado 29 + actual por cada locale)",
       "deployUrl": "https://presuntinho.netlify.app/",
-      "lastCommit": "27d101e refactor(i18n): hub.greeting single parametrize via name interpolation"
+      "lastCommit": "12968f0 fix(fab-stack): 3-chip stack (xp+heart+install) above bottom-nav; doc HeartButton tier drift"
     },
     "backgroundProcesses": {
-      "skander1_session": "proc_13b1aaadb9d4 (UX audit, reasoning, model: claude-sonnet-4 — actual depende do config)",
-      "skander2_session": "proc_7704f3edcaa5 (PT-hardcoded fix trabalhos, mechanical, model: gpt-4o-mini — actual depende do config)"
+      "skander2_session_tick08": "proc_0166bf5b6233 (i18n-29missing, mechanical, model gpt-4o-mini, uptime 30+)"
     },
-    "nextStepsForTick08": [
-      "Validar skander2 commit+push verde + smoke 200",
-      "Aplicar recomendação skander1 (refactor UX /secrets/ + Hub greeting parametrize)",
-      "Auditar PT-hardcoded /escola/+page.svelte (198 hits — provavelmente course metadata estático, mas confirmar)"
-    ],
-    "ptHardcodedRoutesMap": {
-      "src/routes/escola/+page.svelte": "198 (alta densidade — provavelmente course metadata seed estático, validar)",
-      "src/routes/pt/+page.svelte": "65 (UI? verificar)",
-      "src/routes/trabalhos/+page.svelte": "34 (1 mix UI + assignments seed)",
-      "src/routes/financas/+page.svelte": "34 (UI? verificar)",
-      "src/routes/biblioteca/+page.svelte": "23 (verificar)",
-      "src/routes/case/+page.svelte": "26 (UI? verificar)",
-      "src/routes/agente/+page.svelte": "19 (verificar)",
-      "src/routes/walk/+page.svelte": "30 (verificar)",
-      "src/routes/habitos/+page.svelte": "18 (verificar)",
-      "src/routes/dl/+page.svelte": "14 (verificar)",
-      "src/routes/aulas/+page.svelte": "6 (provavelmente OK)",
-      "src/routes/definicoes/+page.svelte": "6 (provavelmente OK)",
-      "src/routes/secrets/+page.svelte": "6 (provavelmente OK)",
-      "src/routes/splash/+page.svelte": "1 (provavelmente OK)"
-    },
-    "tick-07-summary": "tick-07 fechou: (1) gap-ux-secrets-tier-display-tick07 PARTIAL via 0f9b7a5 (counter progress + next 3 chips); full silhouette timeline defer V8. (2) gap-trabalhos-ui-pt-hardcoded-tick07 FULL via 704d212 (i18n keys + replace PT-hardcoded). Plus THIS tick-07 orchestrator commit 3eb23b4 = fix(layout) nav-btn handleNavClick race condition. openGapsAtTick=2 (tick-07 entrada) → 0 (tick-07 saída). HEAD 3eb23b4. Next tick: tick-08 UX audit + escola COURSES i18n. Layout race-condition fix deployed via unbuilt commit, awaiting build verification."
+    "nextStepsForTick09": [
+      "Validar proc_0166bf5b6233 commit+push verde + smoke 200 (5 rotas tocadas)",
+      "skander1 dispatch: audit /write/+page.svelte refactor — converter TIPS para data structure + i18n OR avaliar alternativa JSON-driven",
+      "skander2 dispatch tick-09: implementar /write TIPS i18n refactor com base no audit skander1"
+    ]
   }
 }
