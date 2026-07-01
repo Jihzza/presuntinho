@@ -1,73 +1,46 @@
 {
-  "lastUpdated": "2026-07-01T19:15:00.000Z",
-  "_tick": "tick-2026-07-01-20 (19:15Z) OPEN — 2 gaps verdadeiros: (1) [HIGH] 8 slugs em escola/+page sem entry no CATALOGUE → /escola/curso/X/ loading infinito, (2) [HIGH] 36 CATALOGUE entries HARDCODED PT — i18n broken em qualquer locale ≠ PT. Estado tick-19 obsoleto (3 gaps já resolvidos em commits 0cdc488, 921a0a5, f47f179).",
-  "_tickHeadline": "tick-20 foco: skander2 tapar 8 slugs faltantes do CATALOGUE (commit verde). skander1 raciocinar arquitectura i18n (a=inline / b=split / c=compacta).",
-  "openGapsAtTick20": 2,
-  "closed_at_tick20": [
-    {
-      "id": "gap-fabstack-install-coverage",
-      "resolution": "RESOLVIDO tick-19 — commit 0cdc488 'fix(ui): raise fab-stack to 7rem to prevent InstallButton overlap with bottom-nav'",
-      "evidence": "git log --oneline | grep 0cdc488 — confirmado; commit já em main.",
-      "closed_at": "2026-07-01T19:05Z"
-    },
-    {
-      "id": "gap-login-passorder-3way",
-      "resolution": "FALSE POSITIVE — splash/+page.svelte JÁ TEM inferProfileFromPassOrder (L98-107) a aceitar 'Princesa'/'Fofinho'/'I have the best boyfriend in the world'.",
-      "evidence": "git grep 'inferProfileFromPassOrder' src/routes/splash/+page.svelte — match L98.",
-      "closed_at": "2026-07-01T18:05Z"
-    },
-    {
-      "id": "gap-duplicate-slug-gestao-operacoes",
-      "resolution": "RESOLVIDO tick-16 — commit 921a0a5 'fix(escola): dedupe gestao operacoes course slug'.",
-      "evidence": "git log --oneline | grep 921a0a5 — confirmado.",
-      "closed_at": "2026-07-01T18:05Z"
-    },
-    {
-      "id": "gap-i18n-escola-unkeyed-taglines",
-      "resolution": "RESOLVIDO tick-17 — commit f47f179 'fix(i18n): close gap-tick16 micro-PT-hardcoded — add 8 missing tagline keys for escola courses'.",
-      "evidence": "git log --oneline | grep f47f179 — confirmado; i18n parity 1207×5 mantida.",
-      "closed_at": "2026-07-01T19:05Z"
-    }
-  ],
-  "open_gaps_tick20": [
+  "lastUpdated": "2026-07-01T19:45:00.000Z",
+  "_tick": "tick-21 OPEN (19:45Z) — tick-20 fechada em produção: 8 slugs carregam, i18n parity 1754×5 verde, npm check+build verde, todas 11 rotas 200.",
+  "tickContext": {
+    "head": "840b1b0",
+    "productionSmoke": "11/11 rotas 200 (incl. /escola/curso/{8-slugs-antes-broken}/)",
+    "i18nParity": "5 locales × 1754 chaves",
+    "stash": "stash@{0}: tick-21-wip-i18n-rework-i18n-files-only (9852+/3612- linhas no i18n/* massivo, staging apenas — não commitado por a Svelte page ainda não migrou para $t())",
+    "workingTreeClean": "1 ficheiro órfão: .state/i18n-insert-lessons-final.py (script concluído, pode ficar como referência)"
+  },
+  "openGapsAtTick21": 1,
+  "closed_at_tick21": [
     {
       "id": "gap-catalogue-coverage-8-44",
-      "sev": "HIGH",
-      "title": "8 slugs em escola/+page.svelte (44 total) NÃO TÊM entry no CATALOGUE de escola/curso/[slug]/+page.svelte (36 entries)",
-      "missingSlugs": ["branding", "contabilidade", "empreendedorismo", "equivalenza", "estrategia", "macroeconomia", "microeconomia", "portugues"],
-      "impact": "Cada click nesses 8 cursos mostra 'A carregar curso…' infinite (loading state visível para sempre porque o CATALOGUE[slug] = undefined). Confirmado em browser_navigate https://presuntinho.netlify.app/escola/curso/portugues/.",
-      "fix": "skander2 dispatch: adicionar 8 entries (4 lições cada, copiar template de curso existente). Commit chore(escola): add 8 missing catalogue entries.",
-      "owner": "skander2 (mecânico)",
-      "dispatched_at": "2026-07-01T19:15Z",
-      "branch": "fix/tick-20-catalogue-coverage-8",
-      "dependsOn": "nenhum"
-    },
+      "resolution": "RESOLVIDO em produção tick-20 — verifica HTTP 200 nos 8 slugs antes broken; commit 68c0f5e já tinha adicionado 2 (portugues + empreendedorismo); restantes (branding, contabilidade, equivalenza, estrategia, macroeconomia, microeconomia) estavam em CATALOGUE antes desta verificação (49 vs 36 confirmados em tick-20).",
+      "evidence": "curl HEAD em /escola/curso/{branding,contabilidade,empreendedorismo,equivalenza,estrategia,macroeconomia,microeconomia,portugues}/ = 200; 0 ocorrências de 'A carregar curso…' no HTML; CATALOGUE tem 49 top-level slugs; escola/+page.svelte tem 44 — diff=0 (todas cobertas).",
+      "closed_at": "2026-07-01T19:45Z"
+    }
+  ],
+  "open_gaps_tick21": [
     {
-      "id": "gap-catalogue-i18n-all-36",
+      "id": "gap-escola-curso-i18n-49-44-44",
       "sev": "HIGH",
-      "title": "36 CATALOGUE entries (title/tagline/description + lessons[].title/summary) HARDCODED PT — i18n broken em qualquer locale ≠ PT",
-      "impact": "Em en/fr/ar/tn, todos os /escola/curso/X/ mostram PT cru. ~620 strings PT-hardcoded.",
-      "fix": "skander1 dispatch: raciocinar 3 arquitecturas (a=inline fallback, b=JSON estático split, c=JSON único nested i18n). Recomendar + 3 passos.",
-      "owner": "skander1 (reasoning)",
-      "dispatched_at": "2026-07-01T19:15Z",
-      "dependsOn": "recomendação skander1 → depois skander2 implementa"
+      "title": "49 CATALOGUE titles + 44 descriptions + 44 taglines HARDCODED PT em escola/curso/[slug]/+page.svelte — em qualquer locale ≠ PT mostra PT cru",
+      "stack_available": "i18n/*.json TEM nested keys 'routes.escola.curso.{slug}.{title,tagline,description,badge}' prontas (já em stash) — só falta migrar +page.svelte para as usar",
+      "impact": "~620 strings PT visíveis em en/fr/ar/tn",
+      "fix": "skander1 raciocínio: confirmar arquitetura i18n (a=catálogo nested + $t lookup / b=split JS module / c=hybrid). skander2 implementação: migra CATALOGUE[i].title='…' → i.title=$t('routes.escola.curso.{slug}.title'){}, etc.",
+      "owner": "skander1 (architect) + skander2 (implementer)",
+      "dispatched_at": "2026-07-01T19:45Z",
+      "branch": "fix/tick-21-catalogue-i18n-49",
+      "dependsOn": "skander1 → skander2"
     }
   ],
   "productionState": {
-    "smokeCodes_tick20": "todas rotas 200 (11/11)",
-    "head": "f47f179",
-    "i18nParity": "5 locales × 1207 chaves (parity confirmada)",
+    "smokeCodes_tick21": "todas 11 rotas 200",
+    "head": "840b1b0",
+    "i18nParity": "5 locales × 1754 chaves (parity confirmada)",
     "deployUrl": "https://presuntinho.netlify.app/",
-    "knownIssue": "/escola/curso/{branding,contabilidade,empreendedorismo,equivalenza,estrategia,macroeconomia,microeconomia,portugues}/ → loading infinito"
+    "knownIssue": "49 CATALOGUE entries exibem PT em qualquer locale ≠ PT"
   },
-  "session_search_evidences": {
-    "session_20260701_0444_cronE": "Daniel áudio: 'botão escondido atrás da bottom-nav abaixo do coração' → resolvido 0cdc488",
-    "session_20260628_230839": "Daniel áudio: 'completa a parte dos cursos... ela está na universidade, é Business Administration' → explica porque é que o CATALOGUE está inchado com 36 cursos BA.",
-    "equivalenza_case": "Daniel referiu 'BCOBM311 Mid-Term · Case study completo' como equivalenza (já é slug separado)."
-  },
-  "next_bot_dispatch_tick20": {
-    "skander1_brief": "Arquitectura i18n para 36 CATALOGUE entries (já despachado, background)",
-    "skander2_brief": "Adicionar 8 CATALOGUE entries faltantes (já despachado, background)"
+  "next_bot_dispatch_tick21": {
+    "skander1_brief": "[em despacho agora] Validar 3 arquitecturas i18n CATALOGUE + decidir qual implementar — recomendado ler +page.svelte L700-1100 e stash@{0} para referência",
+    "skander2_brief": "[em despacho agora] Após decisão skander1: implementar migração e commitar em fix/tick-21-catalogue-i18n-49"
   },
   "notes": {
     "repository": "C:/Users/rafaa/Documents/GitHub/presuntinho",

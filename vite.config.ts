@@ -1,8 +1,15 @@
 /// <reference types="vitest" />
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { SvelteKitPWA } from '@vite-pwa/sveltekit';
 import { defineConfig } from 'vitest/config';
+
+// Generate build ID: v{VERSION}-{GIT_SHA}-{TIMESTAMP}
+const version = JSON.parse(readFileSync('package.json', 'utf-8')).version;
+const commitSha = execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim();
+const BUILD_ID = `v${version}-${commitSha}-${Date.now()}`;
+const CACHE_NAME = `presuntino-${BUILD_ID}`;
 
 let isSsrBuild = false;
 

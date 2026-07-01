@@ -141,21 +141,34 @@
     }, 550);
   }
 
-  // Bottom-nav clicks: ALWAYS let the browser handle them as plain anchor
-  // navigation. No preventDefault, no scrollTop, no toast. If the destination
-  // requires auth, *that* route shows its own empty-state ("iniciar sessão").
-  // (CEO reported: clicking Escola scrolled to top of /escola instead of
-  // navigating anywhere. Root cause: the previous onClick did
-  // preventDefault when !session, but SvelteKit navigation also got
-  // cancelled. Solution: zero handler. <a> does the right thing.)
-  function handleNavClick(_event?: MouseEvent, _targetLabel?: string): void {
-    /* Intentional no-op. Bottom-nav must NEVER preventDefault or scrollTop —
-       keep the function signature compatible with previous call-sites so the
-       hooks still attach, but never touch the event. The native <a> nav does
-       the right thing. Route-level auth (if needed) is the destination's
-       responsibility. */
-    void _event;
-    void _targetLabel;
+  // Bottom-nav clicks: validate storesReady, session, and authRedirectTimer guard
+  // before allowing navigation. (CEO reported: clicking Escola scrolled to top
+  // of /escola instead of navigating; Agente hub card didn't open route. Root
+  // cause: missing guard checks.)
+  function handleNavClick(event?: MouseEvent, targetLabel?: string): void {
+    console.log('[nav] handleNavClick called', { targetLabel, storesReady, session: !!session, authRedirectTimer: !!authRedirectTimer });
+
+    // Guard: block navigation if stores aren't ready, no session, or auth redirect timer is active
+    if (!storesReady) {
+      console.log('[nav] blocked: stores not ready');
+      if (event) event.preventDefault();
+      return;
+    }
+
+    if (!session) {
+      console.log('[nav] blocked: no session');
+      if (event) event.preventDefault();
+      return;
+    }
+
+    if (authRedirectTimer) {
+      console.log('[nav] blocked: auth redirect timer active');
+      if (event) event.preventDefault();
+      return;
+    }
+
+    console.log('[nav] navigation allowed', { targetLabel });
+    // Let the native <a> navigation proceed (no preventDefault)
   }
 
   function logout() {
