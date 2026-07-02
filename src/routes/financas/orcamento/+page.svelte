@@ -17,20 +17,21 @@
   import { onMount } from 'svelte';
   import {
     listCategorias,
-    listOrcamentos,
     setOrcamento,
     totaisPorCategoria,
+    getOrcamentoStatus,
     getMesAtual,
     formatMes,
     formatValor,
     type CategoriaRow,
-    type OrcamentoRow,
+    type OrcamentoStatus,
     type TotaisPorCategoria
   } from '$lib/financas';
   import { showToast } from '$lib/components/events';
-    import { t } from 'svelte-i18n';
+  import { t } from 'svelte-i18n';
 
-    let todasCategorias = $state<CategoriaRow[]>([]);
+  let todasCategorias = $state<CategoriaRow[]>([]);
+  let orcamentoStatus = $state<OrcamentoStatus[]>([]);
   let orcamentosMes = $state<Record<string, number>>({});   // categoriaId → limite
   let gastosMes = $state<TotaisPorCategoria>({});
   let loading = $state(true);
@@ -38,7 +39,7 @@
   let saving = $state<string | null>(null);   // categoriaId currently saving
   let mesFiltro = $state(getMesAtual());
 
-  // Só despesas + "ambos" recebem orçamento.  Receita fica fora.
+  // Só despesas + "ambos" recebem orçamento. Receita fica fora.
   let categoriasDespesa = $derived(
     todasCategorias
       .filter((c) => c.tipo === 'despesa' || c.tipo === 'ambos')
@@ -59,21 +60,15 @@
     loading = true;
     error = null;
     try {
-      const [cats, orcs, gastos] = await Promise.all([
+      const [cats, gastos, statusRows] = await Promise.all([
         listCategorias(),
-        listOrcamentos(mesFiltro),
-        totaisPorCategoria(mesFiltro)
+        totaisPorCategoria(mesFiltro),
+        getOrcamentoStatus(mesFiltro)
       ]);
       todasCategorias = cats;
-      const map: Record<string, number> = {};
-      for (const o of orcs) {
-        // o.id = `${categoriaId}_${mes}` → extrair categoriaId
-        const sep = o.id.lastIndexOf('_');
-        const catId = sep >= 0 ? o.id.slice(0, sep) : o.id;
-        map[catId] = o.limite;
-      }
-      orcamentosMes = map;
       gastosMes = gastos;
+      orcamentoStatus = statusRows;
+      orcamentosMes = Object.fromEntries(statusRows.map((row) => [row.categoria.id, row.limite]));
     } catch (e) {
       console.error('[financas/orcamento] refresh failed', e);
       error = e instanceof Error ? e.message : 'Erro a carregar orçamento';
@@ -84,32 +79,18 @@
 
   async function saveLimite(categoriaId: string, raw: string): Promise<void> {
     const trimmed = raw.trim();
-    if (trimmed === '' || trimmed === '0') {
-      // Apagar limite = não tem orçamento.  Não gravamos porque o
-      // schema atual usa `put()` — mas se o utilizador quiser mesmo
-      // "remover", pode deixar vazio e gravamos 0.
-      // Para já, 0 é tratado como "sem limite definido" no template.
-      orcamentosMes = { ...orcamentosMes, [categoriaId]: 0 };
-      try {
-        saving = categoriaId;
-        await setOrcamento(categoriaId, 0, mesFiltro);
-      } catch (e) {
-        console.error('[financas/orcamento] save failed', e);
-        showToast($t('financas.orcamento.erro.gravar', { default: 'Erro a gravar limite' }));
-      } finally {
-        saving = null;
-      }
-      return;
-    }
-    const num = Number(trimmed.replace(',', '.'));
+    const num = trimmed === '' ? 0 : Number(trimmed.replace(',', '.'));
     if (!Number.isFinite(num) || num < 0) {
       showToast($t('toast.limite_invalido', { default: 'Limite inválido' }));
       return;
     }
+
     orcamentosMes = { ...orcamentosMes, [categoriaId]: num };
     try {
       saving = categoriaId;
       await setOrcamento(categoriaId, num, mesFiltro);
+      await refresh();
+      showToast($t('financas.orcamento.toast.saved', { default: 'Orçamento guardado' }));
     } catch (e) {
       console.error('[financas/orcamento] save failed', e);
       showToast($t('financas.orcamento.erro.gravar', { default: 'Erro a gravar limite' }));
@@ -118,27 +99,24 @@
     }
   }
 
-  function progressClass(gasto: number, limite: number): string {
-    if (!limite || limite <= 0) return 'none';
-    const pct = (gasto / limite) * 100;
-    if (pct >= 100) return 'over';
-    if (pct >= 70) return 'warn';
-    return 'ok';
+  function progressWidth(percent: number): number {
+    return Math.min(Math.max(percent, 0), 130);
   }
 
-  function pct(gasto: number, limite: number): number {
-    if (!limite || limite <= 0) return 0;
-    const p = (gasto / limite) * 100;
-    return Math.min(p, 130);  // cap visual para não esticar a barra
+  function statusLabel(status: OrcamentoStatus['status']): string {
+    return $t(`financas.orcamento.status.${status}`, { default: status });
   }
+
+  let statusByCategoria = $derived(
+    Object.fromEntries(orcamentoStatus.map((row) => [row.categoria.id, row])) as Record<string, OrcamentoStatus>
+  );
 
   // Total agregado de orçamento vs gasto (só categorias com limite > 0).
-  let totalLimite = $derived(
-    Object.values(orcamentosMes).reduce((s, v) => s + (v > 0 ? v : 0), 0)
-  );
-  let totalGasto = $derived(
-    categoriasDespesa.reduce((s, c) => s + (gastosMes[c.id] || 0), 0)
-  );
+  let totalLimite = $derived(orcamentoStatus.reduce((s, row) => s + row.limite, 0));
+  let totalGasto = $derived(orcamentoStatus.reduce((s, row) => s + row.gasto, 0));
+  let totalRestante = $derived(totalLimite - totalGasto);
+  let dangerCount = $derived(orcamentoStatus.filter((row) => row.status === 'danger' || row.status === 'over').length);
+  let overCount = $derived(orcamentoStatus.filter((row) => row.status === 'over').length);
 
   // SEO — used by <svelte:head> below.
   let pageTitle = $derived('Orçamento · Finanças');
@@ -181,7 +159,7 @@
   {:else if error}
     <p class="empty error" role="alert">⚠️ {error}</p>
   {:else if categoriasDespesa.length === 0}
-    <p class="empty">{$t('financas.orcamento.empty', { default: 'Sem categorias de despesa configuradas.' })}</p>
+    <p class="empty">{$t('financas.orcamento.empty.categorias', { default: 'Sem categorias de despesa configuradas.' })}</p>
   {:else}
     <section class="summary" aria-label="{$t('a11y.aria.resumo_do_orcamento', { default: 'Resumo do orçamento' })}">
       <div class="summary-row">
@@ -194,20 +172,46 @@
           {formatValor(totalGasto)}
         </span>
       </div>
+      <div class="summary-row">
+        <span class="summary-label">{$t('financas.orcamento.summary.remaining', { default: 'Saldo restante' })}</span>
+        <span class="summary-value" class:over={totalRestante < 0}>
+          {formatValor(totalRestante)}
+        </span>
+      </div>
     </section>
+
+    {#if orcamentoStatus.length === 0}
+      <p class="empty empty-budget">
+        {$t('financas.orcamento.empty.budgets', { default: 'Nenhum orçamento definido. Define um limite numa categoria para começar.' })}
+      </p>
+    {:else if dangerCount > 0}
+      <p class="budget-alert" class:over={overCount > 0} role="status">
+        {overCount > 0
+          ? $t('financas.orcamento.alert.over', { values: { n: overCount }, default: '{n} orçamento(s) ultrapassado(s).' })
+          : $t('financas.orcamento.alert.danger', { values: { n: dangerCount }, default: '{n} orçamento(s) acima de 90%.' })}
+      </p>
+    {/if}
 
     <section class="categories" aria-label="{$t('a11y.aria.limites_por_categoria', { default: 'Limites por categoria' })}">
       {#each categoriasDespesa as c (c.id)}
+        {@const row = statusByCategoria[c.id]}
         {@const gasto = gastosMes[c.id] || 0}
         {@const limite = orcamentosMes[c.id] || 0}
-        {@const classe = progressClass(gasto, limite)}
-        {@const percent = pct(gasto, limite)}
-        <article class="cat-row" data-state={classe}>
+        {@const percent = row?.percent ?? 0}
+        {@const classe = row?.status ?? 'none'}
+        <article class="cat-row" data-state={classe} style="--cat-cor: {c.cor}">
           <div class="cat-head">
             <span class="cat-icon" style="--cat-cor: {c.cor}" aria-hidden="true">
               {c.icone}
             </span>
-            <span class="cat-name">{c.nome}</span>
+            <div class="cat-title">
+              <span class="cat-name">{c.nome}</span>
+              {#if row}
+                <span class="status-badge" class:warning={classe === 'warning'} class:danger={classe === 'danger'} class:over={classe === 'over'}>
+                  {statusLabel(row.status)}
+                </span>
+              {/if}
+            </div>
             <label class="limite-input">
               <span class="sr-only">{$t('placeholder.limite_para', { values: { nome: c.nome }, default: 'Limite para {nome}' })}</span>
               <input
@@ -232,7 +236,13 @@
           </div>
 
           <div class="bar-wrap" aria-hidden="true">
-            <div class="bar" class:over={classe === 'over'} class:warn={classe === 'warn'} style="width: {percent}%"></div>
+            <div
+              class="bar"
+              class:warning={classe === 'warning'}
+              class:danger={classe === 'danger'}
+              class:over={classe === 'over'}
+              style="width: {progressWidth(percent)}%"
+            ></div>
           </div>
 
           <div class="cat-foot">
@@ -243,17 +253,21 @@
               {/if}
             </span>
             {#if limite > 0}
-              <span class="percent-label" class:over={classe === 'over'} class:warn={classe === 'warn'}>
-                {Math.round((gasto / limite) * 100)}%
+              <span class="percent-label" class:warning={classe === 'warning'} class:danger={classe === 'danger'} class:over={classe === 'over'}>
+                {Math.round(percent)}%
               </span>
             {:else if gasto > 0}
               <span class="percent-label muted">{$t('financas.orcamento.sem_limite', { default: 'sem limite' })}</span>
             {/if}
           </div>
 
-          {#if limite > 0 && gasto > limite}
+          {#if row && row.status === 'over'}
             <p class="over-msg" role="status">
-              ⚠️ {formatValor(gasto - limite)} acima do orçamento
+              ⚠️ {$t('financas.orcamento.over_by', { values: { valor: formatValor(Math.abs(row.restante)) }, default: '{valor} acima do orçamento' })}
+            </p>
+          {:else if row && row.status === 'danger'}
+            <p class="danger-msg" role="status">
+              {$t('financas.orcamento.near_limit', { default: 'Quase no limite — abranda aqui.' })}
             </p>
           {/if}
 
@@ -351,6 +365,23 @@
     border-color: var(--error, #ef4444);
     color: var(--error, #ef4444);
   }
+  .empty-budget {
+    margin-bottom: 1rem;
+  }
+  .budget-alert {
+    margin: 0 0 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    background: rgba(249, 115, 22, 0.12);
+    border: 1px solid rgba(249, 115, 22, 0.35);
+    color: #fed7aa;
+    font-weight: 700;
+  }
+  .budget-alert.over {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.35);
+    color: #fecaca;
+  }
   .summary {
     background: var(--card, rgba(255, 255, 255, 0.05));
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
@@ -415,13 +446,42 @@
     flex-shrink: 0;
   }
   .cat-name {
-    flex: 1;
     font-size: 0.9375rem;
     font-weight: 600;
     color: var(--txt, #fff);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .cat-title {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .status-badge {
+    width: fit-content;
+    padding: 0.125rem 0.45rem;
+    border-radius: 999px;
+    background: rgba(16, 185, 129, 0.14);
+    color: var(--success, #10b981);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .status-badge.warning {
+    background: rgba(245, 158, 11, 0.14);
+    color: var(--warning, #f59e0b);
+  }
+  .status-badge.danger {
+    background: rgba(249, 115, 22, 0.16);
+    color: #fb923c;
+  }
+  .status-badge.over {
+    background: rgba(239, 68, 68, 0.16);
+    color: var(--error, #ef4444);
   }
   .limite-input {
     display: inline-flex;
@@ -468,8 +528,11 @@
     border-radius: 999px;
     transition: width 0.3s ease, background 0.2s;
   }
-  .bar.warn {
+  .bar.warning {
     background: var(--warning, #f59e0b);
+  }
+  .bar.danger {
+    background: #fb923c;
   }
   .bar.over {
     background: var(--error, #ef4444);
@@ -493,8 +556,11 @@
     font-weight: 600;
     color: var(--success, #10b981);
   }
-  .percent-label.warn {
+  .percent-label.warning {
     color: var(--warning, #f59e0b);
+  }
+  .percent-label.danger {
+    color: #fb923c;
   }
   .percent-label.over {
     color: var(--error, #ef4444);
@@ -503,11 +569,17 @@
     color: var(--txt3, #94a3b8);
     font-weight: 400;
   }
-  .over-msg {
+  .over-msg,
+  .danger-msg {
     margin: 0;
     font-size: 0.8125rem;
-    color: var(--error, #ef4444);
     font-weight: 600;
+  }
+  .over-msg {
+    color: var(--error, #ef4444);
+  }
+  .danger-msg {
+    color: #fb923c;
   }
   .saving {
     font-size: 0.75rem;

@@ -1,9 +1,9 @@
 {
   "version": "7.0.0-rc",
-  "lastUpdated": "2026-07-02T07:25:00+02:00",
+  "lastUpdated": "2026-07-02T07:50:51+02:00",
   "activePlan": "PRESUNTINHO_V7_DELIVERY",
   "currentPhase": "execution",
-  "currentStep": "M1-S4",
+  "currentStep": "M1-S5",
   "production": {
     "url": "https://presuntinho.netlify.app",
     "live": true,
@@ -51,10 +51,14 @@
           "evidence": "smoke-categorias-crud 68/68 PASS; npm run check 0; npm run build 0; npm test 0; deleteCategoria orçamento composite fixed; seed no-overwrite; duplicate add blocked."
         },
         "M1-S4": {
-          "status": "NEXT"
+          "status": "DONE",
+          "branch": "main",
+          "owner": "Skander principal",
+          "merged": "local-pending-commit",
+          "evidence": "smoke-orcamento-progresso 72/72 PASS; npm run check 0; npm run build 0; npm test 0; getOrcamentoStatus thresholds 70/90/100/>100; empty budget state + alerts + remaining balance."
         },
         "M1-S5": {
-          "status": "PENDING"
+          "status": "NEXT"
         },
         "M1-S6": {
           "status": "PENDING"
@@ -81,20 +85,21 @@
     }
   },
   "gates": {
-    "svelteCheck": "0 errors, 0 warnings (verified 2026-07-02 M1-S3 hardening)",
-    "npmBuild": "exit 0 (verified 2026-07-02 M1-S3 hardening)",
-    "npmTest": "exit 0 (Vitest no test files, verified 2026-07-02)"
+    "svelteCheck": "0 errors, 0 warnings (verified 2026-07-02 M1-S4 orçamento progresso)",
+    "npmBuild": "exit 0 (verified 2026-07-02 M1-S4 orçamento progresso)",
+    "npmTest": "exit 0 (Vitest no test files, verified 2026-07-02 M1-S4)"
   },
   "smokeTests": {
     "smoke-xppill.test.mjs": "17/17 PASS",
     "smoke-xp-actions.test.mjs": "35/35 PASS",
     "smoke-transacoes-edit.test.mjs": "16/16 PASS",
     "smoke-transacoes-filtros.test.mjs": "11/12 PASS (1 cosmetic regex relaxed)",
-    "smoke-categorias-crud.test.mjs": "68/68 PASS (M1-S3 hardening)"
+    "smoke-categorias-crud.test.mjs": "68/68 PASS (M1-S3 hardening)",
+    "smoke-orcamento-progresso.test.mjs": "72/72 PASS (M1-S4 orçamento progresso)"
   },
   "orchestration": {
     "skander1": "STANDBY — pending M0-S3 review task",
-    "skander2": "STANDBY — M1-S3 hardening verified; next M1-S4",
+    "skander2": "STANDBY — M1-S4 orçamento progresso verified; next M1-S5 dashboard rico",
     "telegramGroup": "-1003969565875 (Fatma ❤️) — reports pending M0-S3..M1-S2"
   }
 }

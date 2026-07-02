@@ -3261,5 +3261,17 @@
   "settings.backup.tables.biblioteca": "Biblioteca",
   "settings.backup.tables.notes": "Notas",
   "settings.backup.tables.chat_messages": "Chat do agente",
-  "settings.backup.tables.assignments": "Trabalhos"
+  "settings.backup.tables.assignments": "Trabalhos",
+  "financas.orcamento.empty.categorias": "No expense categories configured.",
+  "financas.orcamento.empty.budgets": "No budgets set. Add a limit to any category to start.",
+  "financas.orcamento.summary.remaining": "Remaining balance",
+  "financas.orcamento.alert.over": "{n} budget(s) exceeded.",
+  "financas.orcamento.alert.danger": "{n} budget(s) above 90%.",
+  "financas.orcamento.status.ok": "OK",
+  "financas.orcamento.status.warning": "Warning",
+  "financas.orcamento.status.danger": "Danger",
+  "financas.orcamento.status.over": "Over",
+  "financas.orcamento.over_by": "{valor} over budget",
+  "financas.orcamento.near_limit": "Nearly at the limit — slow down here.",
+  "financas.orcamento.toast.saved": "Budget saved"
 }

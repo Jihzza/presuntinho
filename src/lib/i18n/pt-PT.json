@@ -3261,5 +3261,17 @@
   "settings.backup.tables.biblioteca": "Biblioteca",
   "settings.backup.tables.notes": "Notas",
   "settings.backup.tables.chat_messages": "Chat do agente",
-  "settings.backup.tables.assignments": "Trabalhos"
+  "settings.backup.tables.assignments": "Trabalhos",
+  "financas.orcamento.empty.categorias": "Sem categorias de despesa configuradas.",
+  "financas.orcamento.empty.budgets": "Nenhum orçamento definido. Define um limite numa categoria para começar.",
+  "financas.orcamento.summary.remaining": "Saldo restante",
+  "financas.orcamento.alert.over": "{n} orçamento(s) ultrapassado(s).",
+  "financas.orcamento.alert.danger": "{n} orçamento(s) acima de 90%.",
+  "financas.orcamento.status.ok": "OK",
+  "financas.orcamento.status.warning": "Atenção",
+  "financas.orcamento.status.danger": "Perigo",
+  "financas.orcamento.status.over": "Ultrapassado",
+  "financas.orcamento.over_by": "{valor} acima do orçamento",
+  "financas.orcamento.near_limit": "Quase no limite — abranda aqui.",
+  "financas.orcamento.toast.saved": "Orçamento guardado"
 }

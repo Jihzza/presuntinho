@@ -3261,5 +3261,17 @@
   "settings.backup.tables.biblioteca": "Biblioteca",
   "settings.backup.tables.notes": "Notas",
   "settings.backup.tables.chat_messages": "Chat do agente",
-  "settings.backup.tables.assignments": "Trabalhos"
+  "settings.backup.tables.assignments": "Trabalhos",
+  "financas.orcamento.empty.categorias": "لا توجد فئات مصروفات مكوّنة.",
+  "financas.orcamento.empty.budgets": "لا توجد ميزانيات محددة. أضف حدّاً لإحدى الفئات للبدء.",
+  "financas.orcamento.summary.remaining": "الرصيد المتبقي",
+  "financas.orcamento.alert.over": "تم تجاوز {n} ميزانية.",
+  "financas.orcamento.alert.danger": "{n} ميزانية فوق 90٪.",
+  "financas.orcamento.status.ok": "جيد",
+  "financas.orcamento.status.warning": "تنبيه",
+  "financas.orcamento.status.danger": "خطر",
+  "financas.orcamento.status.over": "متجاوز",
+  "financas.orcamento.over_by": "{valor} فوق الميزانية",
+  "financas.orcamento.near_limit": "قريب من الحد — خفّف هنا.",
+  "financas.orcamento.toast.saved": "تم حفظ الميزانية"
 }

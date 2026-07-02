@@ -66,6 +66,16 @@ export interface PontoMensal {
   receitas: number;
 }
 
+/** Budget progress row for /financas/orcamento (M1-S4). */
+export interface OrcamentoStatus {
+  categoria: CategoriaRow;
+  limite: number;
+  gasto: number;
+  percent: number;
+  restante: number;
+  status: 'ok' | 'warning' | 'danger' | 'over';
+}
+
 // ---------------------------------------------------------------------------
 // Categorias
 // ---------------------------------------------------------------------------
@@ -422,6 +432,47 @@ export async function setOrcamento(
  */
 export async function listOrcamentos(mes: string): Promise<OrcamentoRow[]> {
   return await db().orcamentos.where('mes').equals(mes).toArray();
+}
+
+/**
+ * M1-S4: compute visual budget progress for every expense category that has
+ * a positive limit in the selected month. Thresholds match the V7 brief:
+ * 0-70 ok, 70-90 warning, 90-100 danger, >100 over.
+ */
+export async function getOrcamentoStatus(mes: string): Promise<OrcamentoStatus[]> {
+  const [categorias, orcamentos, gastos] = await Promise.all([
+    listCategorias(),
+    listOrcamentos(mes),
+    totaisPorCategoria(mes)
+  ]);
+
+  const categoriasById = new Map(categorias.map((c) => [c.id, c]));
+  const rows: OrcamentoStatus[] = [];
+
+  for (const o of orcamentos) {
+    if (!Number.isFinite(o.limite) || o.limite <= 0) continue;
+    const sep = o.id.lastIndexOf('_');
+    const categoriaId = sep >= 0 ? o.id.slice(0, sep) : o.id;
+    const categoria = categoriasById.get(categoriaId);
+    if (!categoria) continue;
+    if (categoria.tipo !== 'despesa' && categoria.tipo !== 'ambos') continue;
+
+    const gasto = gastos[categoriaId] || 0;
+    const percent = o.limite > 0 ? (gasto / o.limite) * 100 : 0;
+    const status: OrcamentoStatus['status'] =
+      percent > 100 ? 'over' : percent >= 90 ? 'danger' : percent >= 70 ? 'warning' : 'ok';
+
+    rows.push({
+      categoria,
+      limite: o.limite,
+      gasto,
+      percent,
+      restante: o.limite - gasto,
+      status
+    });
+  }
+
+  return rows.sort((a, b) => b.percent - a.percent || b.gasto - a.gasto);
 }
 
 // ---------------------------------------------------------------------------
