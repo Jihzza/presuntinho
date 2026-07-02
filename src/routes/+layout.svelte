@@ -2,7 +2,7 @@
   import '../app.css';
   import { page } from '$app/state';
   import { goto } from '$app/navigation';
-  import { getSession, clearSession } from '$lib/auth/session';
+  import { getSession, setSession, clearSession } from '$lib/auth/session';
   import { initStores, markVisited } from '$lib/state/stores';
   import Confetti from '$lib/components/Confetti.svelte';
   import Toast from '$lib/components/Toast.svelte';
@@ -43,11 +43,24 @@
 
     async function refreshMood(): Promise<void> {
       const mood = await readActiveMood();
-      activeMood = mood && isMoodIntroAcknowledged(mood) ? mood : null;
+      const acknowledgedMood = mood && isMoodIntroAcknowledged(mood) ? mood : null;
+      activeMood = acknowledgedMood;
+      if (acknowledgedMood && !getSession()) {
+        setSession('fatma', 'secret');
+        session = getSession();
+        if (session && !storesReady) {
+          await initStores(session.profile);
+          storesReady = true;
+        }
+      }
     }
     const onMoodChanged = (event: Event) => {
       const mood = event instanceof CustomEvent ? (event.detail as ActiveMood | null) : null;
       activeMood = mood && isMoodIntroAcknowledged(mood) ? mood : null;
+      if (activeMood && !getSession()) {
+        setSession('fatma', 'secret');
+        session = getSession();
+      }
       void refreshMood();
     };
     void refreshMood();
@@ -335,6 +348,7 @@
   .app-mood .bottom-nav {
     background: linear-gradient(180deg, rgba(0,0,0,.22), color-mix(in srgb, rgba(0,0,0,.42) 82%, var(--mood-accent)));
     border-top-color: color-mix(in srgb, var(--mood-accent) 28%, rgba(255,255,255,.12));
+    z-index: 9701;
   }
   .app-mood .nav-btn:hover,
   .app-mood .nav-btn:focus-visible {

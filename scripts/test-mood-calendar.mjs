@@ -29,8 +29,11 @@ assert('mood.ts exposes agent-ready activateMood', /export async function activa
 assert('mood metadata includes sick/sad/love', /sick:\s*{[\s\S]*sad:\s*{[\s\S]*love:\s*{/.test(mood));
 assert('mood change event exists', mood.includes("presuntinho:mood-changed"));
 assert('splash acknowledges intro instead of clearing mood', splash.includes('acknowledgeMoodIntro(loveLockState)') && !splash.includes('await clearLoveLock()'));
+assert('splash grants normal app session after mood intro', splash.includes("setSession('fatma', 'secret')") && splash.includes("resetAttempts('fatma')"));
 assert('layout renders MoodLayer after acknowledged mood', layout.includes('<MoodLayer mood={activeMood}') && layout.includes('isMoodIntroAcknowledged'));
 assert('layout listens to mood event', layout.includes('window.addEventListener(MOOD_EVENT'));
+assert('layout keeps footer navigation enabled during active mood', layout.includes("setSession('fatma', 'secret')") && layout.includes('await initStores(session.profile)'));
+assert('mood bottom nav stays above mood layer', layout.includes('z-index: 9701'));
 assert('MoodLayer has recovery CTA', layer.includes('Já me sinto melhor 🤍') || layer.includes('meta.action'));
 assert('MoodLayer has interactive care actions', layer.includes('careActions') && layer.includes('care-grid') && layer.includes('comfort-note'));
 assert('layout applies app-wide mood ambience', layout.includes('app-mood') && layout.includes('--mood-accent'));

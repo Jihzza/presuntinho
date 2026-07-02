@@ -194,6 +194,14 @@
 
   async function handleLoveUnlock() {
       if (loveLockState) acknowledgeMoodIntro(loveLockState);
+      // Mood passwords are meant to adapt the whole app experience, not leave
+      // Fatma stuck on a half-authenticated Home. Grant the normal Fatma
+      // session when she accepts the mood intro so footer navigation, stores,
+      // and route guards keep working while the mood remains active.
+      if (!getSession()) {
+        setSession('fatma', 'secret');
+        resetAttempts('fatma');
+      }
       loveLockState = null;
       // The intro screen is acknowledged, but the mood/vibe remains active in
       // the app until she presses the recovery button in the mood chip.
