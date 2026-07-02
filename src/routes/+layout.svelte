@@ -12,6 +12,7 @@
   import OfflineIndicator from '$lib/components/OfflineIndicator.svelte';
   import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
   import { handleKonamiKey, logoClick } from '$lib/easterEggs';
+  import HeartButton from '$lib/components/HeartButton.svelte';
   import XpPill from '$lib/components/XpPill.svelte';
   import XpToast from '$lib/components/XpToast.svelte';
 
@@ -242,12 +243,7 @@
               {@render children?.()}
             </main>
 
-            <!--
-              Footer principal: Home / Calendário / Agente / Vida / Escola.
-              O antigo botão 🐷 no footer era só um easter egg/copyright, mas
-              confundia a navegação e ocupava uma 5.ª tab. O easter egg do porco
-              fica no logo do topo; o footer passa a ter apenas tabs reais.
-            -->
+            <!-- Footer principal: Home / Calendário / Agente / Vida / Escola. -->
             <nav class="bottom-nav" aria-label={$t('nav.bottom.aria', { default: 'Navegação principal' })}>
                   <a href="/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Home')} aria-label={$t('nav.home.aria', { default: 'Home — dashboard principal' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">🏠</span>
@@ -272,14 +268,14 @@
                 </nav>
 
                 <!--
-                  Floating XP pill only. The old floating HeartButton could
-                  overlap the bottom nav on mobile/tablet viewports and look
-                  like a hidden footer tab; keep the heart easter-egg out of
-                  the global navigation layer.
+                  Floating XP + Heart easter egg.
+                  The heart is intentionally preserved; keep the whole stack
+                  above (not on top of) the bottom nav so it cannot hide tabs.
                 -->
                 {#if !isAgentRoute}
                   <div class="fab-stack" aria-live="polite">
                     <XpPill />
+                    <HeartButton />
                   </div>
                 {/if}
   </div>
@@ -483,11 +479,11 @@
       }
     }
 
-    /* Floating action button stack (XP pill only). */
+    /* Floating action button stack (XP pill + heart easter egg). */
     .fab-stack {
       position: fixed;
       right: max(1rem, env(safe-area-inset-right));
-      bottom: calc(env(safe-area-inset-bottom) + 7rem);
+      bottom: calc(env(safe-area-inset-bottom) + 5.75rem);
       display: flex;
       flex-direction: column;
       align-items: flex-end;
@@ -496,7 +492,7 @@
       pointer-events: none; /* container ignores — children re-enable */
       /* Allow the stack (potentially 3 chips tall) to overflow upward
          without being clipped by fixed-positioned ancestors. */
-      max-height: calc(100vh - 7.5rem);
+      max-height: calc(100vh - 6.25rem);
       overflow: visible;
     }
     .fab-stack > :global(*) {
