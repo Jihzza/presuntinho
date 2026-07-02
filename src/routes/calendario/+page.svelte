@@ -62,8 +62,15 @@
   <header class="hero">
     <span>🗓️ Vida + Escola</span>
     <h1>Calendário</h1>
-    <p>Vista semanal por defeito. Arrasta o calendário para baixo para abrir o mês completo.</p>
+    <p>Centro dedicado para organizar a vida: semana por defeito, mês ao arrastar para baixo e tasks logo por baixo.</p>
   </header>
+
+  <nav class="subnav" aria-label="Áreas do calendário">
+    <a href="/calendario/">🗓️ Calendário</a>
+    <a href="/notificacoes/">🔔 Notificações</a>
+    <a href="/escola/trabalhos/">📝 Trabalhos</a>
+    <a href="/habitos/">✅ Hábitos</a>
+  </nav>
 
   <section class="calendar-card" aria-label="Calendário">
     <div class="section-head">
@@ -121,6 +128,9 @@
   .calendar-page { max-width: 880px; margin: 0 auto; padding: 1.25rem 1rem 8rem; color: #fff; }
   .back { color: #bfdbfe; text-decoration: none; font-weight: 800; }
   .hero, .calendar-card, .tasks { margin-top: 1rem; padding: 1rem; border-radius: 1.25rem; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.11); }
+  .subnav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; margin-top: 1rem; }
+  .subnav a { color: #fff; text-decoration: none; padding: .75rem; border-radius: .9rem; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.1); font-weight: 800; text-align: center; }
+  .subnav a:hover, .subnav a:focus-visible { background: rgba(255,255,255,.09); outline: none; }
   .hero span { color: #fde68a; text-transform: uppercase; font-size: .72rem; font-weight: 900; letter-spacing: .07em; }
   .hero h1 { margin: .35rem 0; font-size: clamp(2rem, 8vw, 3.2rem); }
   .hero p, .section-head p, .task small, .empty { color: #cbd5e1; }

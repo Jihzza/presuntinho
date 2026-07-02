@@ -21,7 +21,6 @@
     formatDayLabel,
     loadAgendaItems,
     localDateKey,
-    monthGridDays,
     weekDays,
     type AgendaItem,
     type NotificationItem
@@ -48,17 +47,14 @@
   let heroIn = $state(false);
   let agendaItems = $state<AgendaItem[]>([]);
   let notifications = $state<NotificationItem[]>([]);
-  let calendarExpanded = $state(false);
-  let dragStartY = $state<number | null>(null);
 
   const today = new Date();
   const todayKey = localDateKey(today);
-  const currentMonthLabel = today.toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' });
 
   let xpLabel = $derived(new Intl.NumberFormat('pt-PT').format(currentXp) + ' XP');
   let unlockedBadges = $derived(Object.values(badgesMap).filter((b) => b.unlocked).length);
   let schoolProgress = $derived(Math.round(((lessonsVisited + quizzesAnswered + assignmentsDone) / (TOTAL_LESSONS + TOTAL_QUIZZES + TOTAL_ASSIGNMENTS)) * 100));
-  let visibleDays = $derived(calendarExpanded ? monthGridDays(today) : weekDays(today));
+  let weekPreviewDays = $derived(weekDays(today));
   let todaysItems = $derived(agendaItems.filter((item) => item.date === todayKey));
   let nextItems = $derived(agendaItems.filter((item) => item.date >= todayKey && item.status !== 'done').slice(0, 5));
   let urgentCount = $derived(notifications.filter((item) => item.tone === 'danger' || item.tone === 'warning').length);
@@ -75,18 +71,6 @@
     if (items.some((item) => item.tone === 'warning')) return 'warning';
     if (items.length > 0) return 'busy';
     return 'quiet';
-  }
-
-  function onCalendarPointerDown(event: PointerEvent): void {
-    dragStartY = event.clientY;
-  }
-
-  function onCalendarPointerUp(event: PointerEvent): void {
-    if (dragStartY === null) return;
-    const delta = event.clientY - dragStartY;
-    dragStartY = null;
-    if (delta > 28) calendarExpanded = true;
-    if (delta < -28) calendarExpanded = false;
   }
 
   async function refreshAgenda(): Promise<void> {
@@ -189,30 +173,25 @@
     <a href="/notificacoes/" class="notify-link">🔔 {notifications.length}</a>
   </section>
 
-  <section class="calendar-card" aria-label="Calendário e tarefas">
+  <section class="calendar-card" aria-label="Resumo do calendário e tarefas">
     <div class="section-head">
       <div>
-        <h2>Calendário</h2>
-        <span>{calendarExpanded ? currentMonthLabel : 'Vista semanal · arrasta para baixo para ver o mês'}</span>
+        <h2>Agenda</h2>
+        <span>Resumo rápido — a organização completa vive no Calendário.</span>
       </div>
-      <button type="button" class="toggle-view" onclick={() => (calendarExpanded = !calendarExpanded)}>
-        {calendarExpanded ? 'Semana' : 'Mês'}
-      </button>
+      <a class="open-calendar" href="/calendario/">Abrir calendário →</a>
     </div>
 
     <div
-      class="calendar-grid"
-      class:month-view={calendarExpanded}
-      onpointerdown={onCalendarPointerDown}
-      onpointerup={onCalendarPointerUp}
+      class="calendar-grid compact"
       role="group"
-      aria-label={calendarExpanded ? 'Vista mensal do calendário' : 'Vista semanal do calendário'}
+      aria-label="Resumo semanal"
     >
-      {#each visibleDays as day (localDateKey(day))}
+      {#each weekPreviewDays as day (localDateKey(day))}
         <a
           class="day-cell"
           data-tone={dayTone(day)}
-          data-outside={day.getMonth() === today.getMonth() ? 'false' : 'true'}
+          data-outside="false"
           href="/calendario/"
           aria-label={`${formatDayLabel(localDateKey(day))}: ${itemsForDate(day).length} itens`}
         >
@@ -227,13 +206,13 @@
 
     <div class="agenda-list" aria-label="Tarefas próximas">
       <div class="section-head compact">
-        <h3>Tasks e próximos passos</h3>
-        <a href="/calendario/">Abrir calendário →</a>
+        <h3>Próximas 3 tasks</h3>
+        <a href="/calendario/">Gerir tudo →</a>
       </div>
       {#if nextItems.length === 0}
         <p class="empty-line">Nada urgente. Planeia a próxima semana.</p>
       {:else}
-        {#each nextItems as item (item.id)}
+        {#each nextItems.slice(0, 3) as item (item.id)}
           <a class="agenda-item" data-tone={item.tone} href={item.href}>
             <span class="agenda-date">{formatDayLabel(item.date)}</span>
             <span class="agenda-main"><strong>{item.title}</strong><small>{item.subtitle}</small></span>
@@ -397,7 +376,7 @@
   .today-strip h2 { margin: 0.2rem 0; font-size: 1.15rem; }
   .today-strip p { margin: 0; color: #cbd5e1; }
   .notify-link,
-  .toggle-view {
+  .open-calendar {
     min-height: 44px;
     display: inline-flex;
     align-items: center;
@@ -408,7 +387,6 @@
     color: #fff;
     text-decoration: none;
     border: 1px solid rgba(255, 255, 255, 0.14);
-    font: inherit;
     font-weight: 800;
   }
   .calendar-card,
@@ -430,7 +408,6 @@
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 0.45rem;
-    touch-action: pan-y;
   }
   .day-cell {
     min-height: 72px;
@@ -444,7 +421,6 @@
     flex-direction: column;
     gap: 0.15rem;
   }
-  .day-cell[data-outside='true'] { opacity: 0.42; }
   .day-cell span { color: #94a3b8; font-size: 0.65rem; text-transform: uppercase; }
   .day-cell strong { font-size: 1.1rem; }
   .day-cell small {

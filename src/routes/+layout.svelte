@@ -244,7 +244,7 @@
             </main>
 
             <!--
-              IA-S1 (task-086) footer 4 tabs: Home / Agente / Escola / Vida.
+              Footer principal: Home / Agente / Calendário / Escola / Vida.
               O antigo botão 🐷 no footer era só um easter egg/copyright, mas
               confundia a navegação e ocupava uma 5.ª tab. O easter egg do porco
               fica no logo do topo; o footer passa a ter apenas tabs reais.
@@ -257,6 +257,10 @@
                   <a href="/agente/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Agente')} aria-label={$t('nav.agente.aria', { default: 'Agente — chat com IA' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">🤖</span>
                     <span class="nav-label">{$t('nav.agente', { default: 'Agente' })}</span>
+                  </a>
+                  <a href="/calendario/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Calendário')} aria-label="Calendário — agenda, mês e tasks" data-sveltekit-preload-data>
+                    <span class="nav-icon" aria-hidden="true">🗓️</span>
+                    <span class="nav-label">Calendário</span>
                   </a>
                   <a href="/escola/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Escola')} aria-label={$t('nav.escola.aria', { default: 'Escola — cursos e lições' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">📚</span>
@@ -436,7 +440,7 @@
       text-decoration: none;
       font: inherit;
       cursor: pointer;
-      padding: 0.45rem 0.25rem;
+      padding: 0.42rem 0.12rem;
       min-height: 56px;
       min-width: 44px;
       border-radius: 0.5rem;
@@ -466,11 +470,11 @@
       background: rgba(255, 255, 255, 0.03);
     }
     .nav-icon {
-      font-size: 1.5rem;
+      font-size: 1.35rem;
       line-height: 1;
     }
     .nav-label {
-      font-size: 0.7rem;
+      font-size: 0.62rem;
       font-weight: 500;
       letter-spacing: 0.01em;
     }
