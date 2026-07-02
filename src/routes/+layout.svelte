@@ -15,7 +15,7 @@
   import HeartButton from '$lib/components/HeartButton.svelte';
   import XpPill from '$lib/components/XpPill.svelte';
   import XpToast from '$lib/components/XpToast.svelte';
-  import InstallButton from '$lib/components/InstallButton.svelte';
+
   import { showToast } from '$lib/components/events';
   import { t } from 'svelte-i18n';
   import { onMount } from 'svelte';
@@ -279,7 +279,7 @@
                   <div class="fab-stack" aria-live="polite">
                     <XpPill />
                     <HeartButton />
-                    <InstallButton />
+
                   </div>
                 {/if}
   </div>

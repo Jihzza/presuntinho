@@ -3,8 +3,8 @@
    * /agente — in-app chat with an agent that knows the user's state.
    *
    * Chat-first UI (task-024):
-   *   - Composer is the primary affordance: autofocus on mount + after
-   *     every send while the conversation is still empty.
+   *   - Composer is the primary affordance, but does NOT autofocus on
+   *     mobile: the soft keyboard only opens after the user taps the field.
    *   - 4 quick action chips sit **above** the composer, each chip
    *     fills the input AND auto-submits so the engine runs immediately.
    *   - No generic greeting — we show a one-line prompt + the chips.
@@ -47,11 +47,6 @@
     { key: 'agente.chips.semana',        prompt: 'Resumo da semana' }
   ];
 
-  async function focusComposer() {
-    await tick();
-    inputEl?.focus({ preventScroll: true });
-  }
-
   async function scrollToBottom() {
     await tick();
     if (scrollEl) scrollEl.scrollTop = scrollEl.scrollHeight;
@@ -64,7 +59,6 @@
       await initStores(session.profile);
       messages = await listChatMessages(200);
       await scrollToBottom();
-      await focusComposer();
     } catch (e) {
       console.error('[agente] failed to load history', e);
     }
@@ -97,13 +91,11 @@
     } finally {
       busy = false;
       await scrollToBottom();
-      // Keep the composer focused so the user can keep typing or hit
-      // another chip. We re-focus unless the (mobile) soft keyboard
-      // is currently open — focusing inside a vendor UA can hide the
-      // keyboard again. The `focus({ preventScroll: true })` plus the
-      // brief `tick()` delay has proven reliable on iOS PWA + Android
-      // Chrome during smoke tests.
-      await focusComposer();
+      // Do not force-focus the composer here. On mobile that opens the
+      // soft keyboard even when the user only tapped a chip or navigated
+      // into the page; the keyboard must open only after a direct tap in
+      // the textarea. If the textarea was already focused while typing,
+      // the browser naturally keeps it focused.
     }
   }
 
