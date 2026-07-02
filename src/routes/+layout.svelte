@@ -11,7 +11,7 @@
   import SecretModal from '$lib/components/SecretModal.svelte';
   import OfflineIndicator from '$lib/components/OfflineIndicator.svelte';
   import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
-  import { handleKonamiKey, logoClick, footerClick } from '$lib/easterEggs';
+  import { handleKonamiKey, logoClick } from '$lib/easterEggs';
   import HeartButton from '$lib/components/HeartButton.svelte';
   import XpPill from '$lib/components/XpPill.svelte';
   import XpToast from '$lib/components/XpToast.svelte';
@@ -30,6 +30,7 @@
   // Tag <link rel="manifest"> gerada pelo plugin (caso o PWA esteja ativo).
   // O fallback manual já vive em src/app.html, por isso esta tag é só aditiva.
   const webManifestLink = $derived(pwaInfo ? pwaInfo.webManifest.linkTag : '');
+  const isAgentRoute = $derived(page.url.pathname.startsWith('/agente'));
 
   onMount(() => {
     let unbindKey: (() => void) | null = null;
@@ -244,14 +245,9 @@
 
             <!--
               IA-S1 (task-086) footer 4 tabs: Home / Agente / Escola / Vida.
-              Aulas was merged into Escola (task-088); Finanças/Hábitos were
-              merged into Vida (IA-S4); Trabalhos/Biblioteca migrated into
-              Escola (task-088). The secret pig button stays so the
-              footerClick() easter egg (5 taps → b15 badge + 'perfume' /
-              'behi' hint) is preserved.
-              Tabs route to canonical landing pages; per-tab 301 redirects
-              live in src/routes for legacy URLs (/aulas/, /financas/,
-              /habitos/, /trabalhos/, /biblioteca/).
+              O antigo botão 🐷 no footer era só um easter egg/copyright, mas
+              confundia a navegação e ocupava uma 5.ª tab. O easter egg do porco
+              fica no logo do topo; o footer passa a ter apenas tabs reais.
             -->
             <nav class="bottom-nav" aria-label={$t('nav.bottom.aria', { default: 'Navegação principal' })}>
                   <a href="/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Home')} aria-label={$t('nav.home.aria', { default: 'Home — dashboard principal' })} data-sveltekit-preload-data>
@@ -270,15 +266,6 @@
                     <span class="nav-icon" aria-hidden="true">🌿</span>
                     <span class="nav-label">{$t('nav.vida', { default: 'Vida' })}</span>
                   </a>
-                  <button
-                    type="button"
-                    class="nav-btn nav-btn-secret"
-                    onclick={() => footerClick()}
-                    aria-label={$t('nav.bottom.copyright.aria', { default: '© 2026 Presuntinho — easter egg' })}
-                  >
-                    <span class="nav-icon" aria-hidden="true">🐷</span>
-                    <span class="nav-label">{$t('nav.bottom.copyright.label', { default: '©' })}</span>
-                  </button>
                 </nav>
 
                 <!--
@@ -288,11 +275,13 @@
                   and BELOW modal overlays (which are typically 100+).
                   Respects iOS safe-area for notched devices.
                 -->
-                <div class="fab-stack" aria-live="polite">
-                  <XpPill />
-                  <HeartButton />
-                  <InstallButton />
-                </div>
+                {#if !isAgentRoute}
+                  <div class="fab-stack" aria-live="polite">
+                    <XpPill />
+                    <HeartButton />
+                    <InstallButton />
+                  </div>
+                {/if}
   </div>
 {/if}
 
@@ -484,13 +473,6 @@
       font-size: 0.7rem;
       font-weight: 500;
       letter-spacing: 0.01em;
-    }
-    .nav-btn-secret {
-      opacity: 0.75;
-    }
-    .nav-btn-secret:hover,
-    .nav-btn-secret:focus-visible {
-      opacity: 1;
     }
     @media (prefers-reduced-motion: reduce) {
       .nav-btn {

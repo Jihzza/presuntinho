@@ -122,11 +122,13 @@ export async function heartClick(): Promise<void> {
         emoji: lastHeartTierEmoji(clicks)
       }
     }));
-    // Body pulse for every click past 100 (300ms)
-    if (clicks >= 100) {
-      window.dispatchEvent(new CustomEvent(HEART_PULSE_EVENT));
-    }
+    // Body pulse + micro-confetti on every click keeps the easter egg feeling
+    // energetic without requiring the user to hit rare tier thresholds.
+    window.dispatchEvent(new CustomEvent(HEART_PULSE_EVENT));
+    window.dispatchEvent(new CustomEvent('presuntinho:screen-shake'));
   }
+
+  fireConfettiEvent(speedBonus ? 18 : 10);
 
   if (tier) {
     showToast(tier.msg);

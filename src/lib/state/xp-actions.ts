@@ -32,7 +32,6 @@
 
 import { get } from 'svelte/store';
 import { addXP, xp } from './stores';
-import { showToast } from '../components/events';
 
 export const XP_CHANGED_EVENT = 'presuntinho:xp-changed';
 
@@ -150,12 +149,10 @@ export async function awardXP(reason: string, amount?: number): Promise<void> {
 
   await addXP(finalAmount);
 
-  // Toast feedback (pt-PT format) + notify subscribers (XpPill, XpToast,
-  // dashboard counters, etc.). See file header for the detail schema.
+  // Notify subscribers (XpToast, XpPill, dashboard counters, etc.).
+  // Do not also call the generic Toast channel here: that produced two
+  // simultaneous “+XP” notifications for one click/action.
   if (typeof window !== 'undefined') {
-    const sign = finalAmount > 0 ? '+' : '';
-    showToast(`${sign}${finalAmount} XP`);
-
     const total = get(xp);
     window.dispatchEvent(
       new CustomEvent(XP_CHANGED_EVENT, {

@@ -35,8 +35,19 @@
       const ce = e as CustomEvent<number>;
       fire(ce.detail ?? count);
     };
+    const shake = () => {
+      if (prefersReducedMotion()) return;
+      document.body.classList.remove('presuntinho-shake');
+      void document.body.offsetWidth;
+      document.body.classList.add('presuntinho-shake');
+      setTimeout(() => document.body.classList.remove('presuntinho-shake'), 420);
+    };
     window.addEventListener(CONFETTI_EVENT, handler);
-    return () => window.removeEventListener(CONFETTI_EVENT, handler);
+    window.addEventListener('presuntinho:screen-shake', shake);
+    return () => {
+      window.removeEventListener(CONFETTI_EVENT, handler);
+      window.removeEventListener('presuntinho:screen-shake', shake);
+    };
   });
 </script>
 
@@ -53,10 +64,23 @@
   :global(.confetti-piece) {
     position: absolute;
     top: -10px;
-    width: 8px;
-    height: 14px;
-    border-radius: 2px;
-    animation: fall 4s linear forwards;
+    width: 10px;
+    height: 16px;
+    border-radius: 4px;
+    animation: fall 3.2s cubic-bezier(.17,.67,.2,1) forwards;
+  }
+  :global(body.presuntinho-shake) {
+    animation: presuntinho-screen-shake 420ms cubic-bezier(.36,.07,.19,.97) both;
+  }
+  @keyframes presuntinho-screen-shake {
+    0%, 100% { transform: translate3d(0,0,0) rotate(0); }
+    12% { transform: translate3d(-3px,2px,0) rotate(-0.35deg); }
+    24% { transform: translate3d(4px,-2px,0) rotate(0.35deg); }
+    36% { transform: translate3d(-5px,1px,0) rotate(-0.25deg); }
+    48% { transform: translate3d(5px,2px,0) rotate(0.25deg); }
+    60% { transform: translate3d(-3px,-1px,0) rotate(-0.18deg); }
+    72% { transform: translate3d(3px,1px,0) rotate(0.18deg); }
+    84% { transform: translate3d(-1px,0,0) rotate(-0.08deg); }
   }
   @keyframes fall {
     0% { transform: translateY(0) rotate(0deg); opacity: 1; }
@@ -66,6 +90,9 @@
     :global(.confetti-piece) {
       animation: none;
       display: none;
+    }
+    :global(body.presuntinho-shake) {
+      animation: none;
     }
   }
 </style>

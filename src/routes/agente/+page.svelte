@@ -270,67 +270,71 @@
     tap. Tap targets are ≥44px (mobile a11y baseline) and the strip
     honours `safe-area-inset-bottom` via the composer container.
   -->
-  <div class="chips-bar" role="group" aria-label={$t('agente.chips.label', { default: 'Sugestões rápidas' })}>
-    {#each CHIPS as chip (chip.key)}
+  <div class="composer-dock">
+    <div class="chips-bar" role="group" aria-label={$t('agente.chips.label', { default: 'Sugestões rápidas' })}>
+      {#each CHIPS as chip (chip.key)}
+        <button
+          type="button"
+          class="chip"
+          onclick={() => sendChip(chip.prompt)}
+          disabled={busy}
+        >
+          {$t(chip.key, { default: chip.prompt })}
+        </button>
+      {/each}
+    </div>
+
+    <div class="composer">
       <button
         type="button"
-        class="chip"
-        onclick={() => sendChip(chip.prompt)}
-        disabled={busy}
+        class="icon-btn"
+        onclick={triggerFilePicker}
+        aria-label="{$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}"
+        title={$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}
       >
-        {$t(chip.key, { default: chip.prompt })}
+        📎
       </button>
-    {/each}
-  </div>
-
-  <div class="composer">
-    <button
-      type="button"
-      class="icon-btn"
-      onclick={toggleRecording}
-      aria-label={recording
-              ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
-              : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
-            title={recording
-              ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
-              : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
-      class:recording
-    >
-      {recording ? '⏹️' : '🎤'}
-    </button>
-    <button
-      type="button"
-      class="icon-btn"
-      onclick={triggerFilePicker}
-      aria-label="{$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}"
-      title={$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}
-    >
-      📎
-    </button>
-    <input
-      type="file"
-      bind:this={fileInput}
-      onchange={onFileChosen}
-      hidden
-      accept="image/*,audio/*,.pdf,.txt,.md,.doc,.docx"
-    />
-    <textarea
-      bind:this={inputEl}
-      bind:value={input}
-      onkeydown={onKeydown}
-      placeholder={$t('agente.placeholder_chips', { default: 'ou escreve aqui a tua pergunta…' })}
-      rows="1"
-      disabled={busy}
-    ></textarea>
-    <button
-      type="button"
-      class="send"
-      onclick={send}
-      disabled={busy || !input.trim()}
-      aria-label="{$t('a11y.aria.enviar', { default: 'Enviar' })}"
-    >
-      ➤
-    </button>
+      <input
+        type="file"
+        bind:this={fileInput}
+        onchange={onFileChosen}
+        hidden
+        accept="image/*,audio/*,.pdf,.txt,.md,.doc,.docx"
+      />
+      <textarea
+        bind:this={inputEl}
+        bind:value={input}
+        onkeydown={onKeydown}
+        placeholder={$t('agente.placeholder_chips', { default: 'ou escreve aqui a tua pergunta…' })}
+        rows="1"
+        disabled={busy}
+      ></textarea>
+      <button
+        type="button"
+        class="action-btn"
+        class:recording
+        onclick={() => input.trim() ? send() : toggleRecording()}
+        disabled={busy && !recording}
+        aria-label={input.trim()
+          ? $t('a11y.aria.enviar', { default: 'Enviar' })
+          : recording
+            ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
+            : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
+        title={input.trim()
+          ? $t('a11y.aria.enviar', { default: 'Enviar' })
+          : recording
+            ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
+            : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
+      >
+        {#if input.trim()}
+          ➤
+        {:else if recording}
+          ⏹️
+        {:else}
+          🎤
+        {/if}
+      </button>
+    </div>
   </div>
 </div>
 
@@ -338,15 +342,10 @@
   .chat-root {
       display: flex;
       flex-direction: column;
-      /* Use 100dvh (dynamic viewport height) to account for mobile browser chrome.
-         The previous `calc(100vh - 64px - 64px)` was fragile: in PWA standalone
-         the bottom-nav is ~80px (not 64) due to env(safe-area-inset-bottom),
-         and 100vh on iOS standalone eats extra space at top. 100dvh reflects
-         the actually visible viewport after chrome, and we use flex so the
-         composer can grow inside rather than depend on absolute heights. */
-      min-height: calc(100dvh - 64px - 80px);
+      min-height: calc(100dvh - 64px);
       max-width: 800px;
       margin: 0 auto;
+      padding-bottom: calc(9.25rem + env(safe-area-inset-bottom));
       background: var(--bg, #1f2e4a);
       color: var(--txt, #fff);
     }
@@ -449,10 +448,24 @@
   /* Quick-action chip strip — sits between the message scroll and the
      composer. Horizontal scroll on narrow viewports so the 4 chips
      stay readable; tap-targets ≥44px per mobile a11y baseline. */
+  .composer-dock {
+    position: fixed;
+    left: 50%;
+    right: auto;
+    bottom: calc(4.85rem + env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    width: min(800px, 100vw);
+    z-index: 55;
+    background: rgba(12, 18, 32, 0.94);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
   .chips-bar {
     display: flex;
     gap: 0.5rem;
-    padding: 0.6rem 0.8rem 0;
+    padding: 0.55rem 0.8rem 0;
     overflow-x: auto;
     scrollbar-width: none;
   }
@@ -486,14 +499,8 @@
   .composer {
       display: flex;
       align-items: flex-end;
-      gap: 0.4rem;
-      padding: 0.6rem 0.6rem calc(0.6rem + env(safe-area-inset-bottom));
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(0, 0, 0, 0.2);
-      /* Stay glued to the bottom even if .chat-root shrinks below its
-         min-height (e.g. when keyboard is open on mobile). */
-      position: sticky;
-      bottom: 0;
+      gap: 0.45rem;
+      padding: 0.55rem 0.65rem 0.65rem;
     }
   .icon-btn {
     background: transparent;
@@ -534,22 +541,36 @@
     outline: none;
     border-color: var(--accent, #ec4899);
   }
-  .send {
+  .action-btn {
     background: var(--accent, #ec4899);
     color: #fff;
     border: 0;
-    border-radius: 0.5rem;
-    padding: 0.5rem 1rem;
+    border-radius: 50%;
     cursor: pointer;
-    font-weight: 600;
-    min-width: 44px;
-    min-height: 44px;
+    font-weight: 700;
+    min-width: 48px;
+    min-height: 48px;
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.18rem;
+    box-shadow: 0 8px 18px rgba(236, 72, 153, 0.32);
+    transition: transform 120ms ease, filter 120ms ease, background 120ms ease;
   }
-  .send:hover:not(:disabled) {
+  .action-btn:hover:not(:disabled) {
     filter: brightness(1.1);
   }
-  .send:disabled {
-    opacity: 0.4;
+  .action-btn:active:not(:disabled) {
+    transform: scale(0.94);
+  }
+  .action-btn.recording {
+    background: #ef4444;
+    box-shadow: 0 8px 18px rgba(239, 68, 68, 0.35);
+  }
+  .action-btn:disabled {
+    opacity: 0.45;
     cursor: not-allowed;
   }
 </style>
