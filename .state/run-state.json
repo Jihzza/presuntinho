@@ -1,9 +1,9 @@
 {
   "version": "7.0.0-rc",
-  "lastUpdated": "2026-06-28T05:30:00Z",
+  "lastUpdated": "2026-07-02T07:25:00+02:00",
   "activePlan": "PRESUNTINHO_V7_DELIVERY",
   "currentPhase": "execution",
-  "currentStep": "M1-S3",
+  "currentStep": "M1-S4",
   "production": {
     "url": "https://presuntinho.netlify.app",
     "live": true,
@@ -14,43 +14,87 @@
     "M0-quick-wins": {
       "status": "DONE",
       "steps": {
-        "M0-S1": { "status": "DONE", "branch": "feature/m0-s1-xppill-conditional-visibility", "merged": "7e9207d" },
-        "M0-S2": { "status": "DONE", "branch": "feature/m0-s2-xp-award-helper", "merged": "7e9207d" },
-        "M0-S3": { "status": "PENDING", "owner": "Skander 1 (review)" }
+        "M0-S1": {
+          "status": "DONE",
+          "branch": "feature/m0-s1-xppill-conditional-visibility",
+          "merged": "7e9207d"
+        },
+        "M0-S2": {
+          "status": "DONE",
+          "branch": "feature/m0-s2-xp-award-helper",
+          "merged": "7e9207d"
+        },
+        "M0-S3": {
+          "status": "PENDING",
+          "owner": "Skander 1 (review)"
+        }
       }
     },
     "M1-financas-pro": {
       "status": "IN_PROGRESS",
       "steps": {
-        "M1-S1": { "status": "DONE", "branch": "feature/m1-s1-edit-transacao", "merged": "3ee6627" },
-        "M1-S2": { "status": "DONE", "branch": "feature/m1-s2-transacoes-filtros", "merged": "45945fa" },
-        "M1-S3": { "status": "IN_PROGRESS", "branch": "feature/m1-s3-categorias-crud", "owner": "Skander 2" },
-        "M1-S4": { "status": "PENDING" },
-        "M1-S5": { "status": "PENDING" },
-        "M1-S6": { "status": "PENDING" },
-        "M1-S7": { "status": "PENDING" },
-        "M1-S8": { "status": "PENDING" },
-        "M1-S9": { "status": "PENDING" },
-        "M1-S10": { "status": "PENDING" }
+        "M1-S1": {
+          "status": "DONE",
+          "branch": "feature/m1-s1-edit-transacao",
+          "merged": "3ee6627"
+        },
+        "M1-S2": {
+          "status": "DONE",
+          "branch": "feature/m1-s2-transacoes-filtros",
+          "merged": "45945fa"
+        },
+        "M1-S3": {
+          "status": "DONE",
+          "branch": "feature/m1-s3-categorias-crud",
+          "owner": "Skander 2",
+          "merged": "3f06930+hardening-local",
+          "evidence": "smoke-categorias-crud 68/68 PASS; npm run check 0; npm run build 0; npm test 0; deleteCategoria orçamento composite fixed; seed no-overwrite; duplicate add blocked."
+        },
+        "M1-S4": {
+          "status": "NEXT"
+        },
+        "M1-S5": {
+          "status": "PENDING"
+        },
+        "M1-S6": {
+          "status": "PENDING"
+        },
+        "M1-S7": {
+          "status": "PENDING"
+        },
+        "M1-S8": {
+          "status": "PENDING"
+        },
+        "M1-S9": {
+          "status": "PENDING"
+        },
+        "M1-S10": {
+          "status": "PENDING"
+        }
       }
     },
-    "M2-habitos-pro": { "status": "PENDING" },
-    "M3-quality-gate": { "status": "PENDING" }
+    "M2-habitos-pro": {
+      "status": "PENDING"
+    },
+    "M3-quality-gate": {
+      "status": "PENDING"
+    }
   },
   "gates": {
-    "svelteCheck": "0 errors, 0 warnings (last verified M1-S2)",
-    "npmBuild": "exit 0 (last verified M1-S2)",
-    "npmTest": "exit 0 (Vitest)"
+    "svelteCheck": "0 errors, 0 warnings (verified 2026-07-02 M1-S3 hardening)",
+    "npmBuild": "exit 0 (verified 2026-07-02 M1-S3 hardening)",
+    "npmTest": "exit 0 (Vitest no test files, verified 2026-07-02)"
   },
   "smokeTests": {
     "smoke-xppill.test.mjs": "17/17 PASS",
     "smoke-xp-actions.test.mjs": "35/35 PASS",
     "smoke-transacoes-edit.test.mjs": "16/16 PASS",
-    "smoke-transacoes-filtros.test.mjs": "11/12 PASS (1 cosmetic regex relaxed)"
+    "smoke-transacoes-filtros.test.mjs": "11/12 PASS (1 cosmetic regex relaxed)",
+    "smoke-categorias-crud.test.mjs": "68/68 PASS (M1-S3 hardening)"
   },
   "orchestration": {
     "skander1": "STANDBY — pending M0-S3 review task",
-    "skander2": "ACTIVE — executing M1-S3 (categorias CRUD)",
+    "skander2": "STANDBY — M1-S3 hardening verified; next M1-S4",
     "telegramGroup": "-1003969565875 (Fatma ❤️) — reports pending M0-S3..M1-S2"
   }
 }

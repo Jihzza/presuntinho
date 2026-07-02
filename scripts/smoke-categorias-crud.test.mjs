@@ -34,8 +34,11 @@ for (const sym of [
   check(`exports ${sym}`, financas.includes(`export (async )?function ${sym}`) || financas.includes(`${sym}(`));
 }
 
-// 2. seed has 12+ categories
-const seedCount = (financas.match(/id:\s*'[a-z_]+',\s+nome:/g) || []).length;
+// 2. seed has 12+ categories (canonical seed + V7 extras)
+const db = readFileSync(join(ROOT, 'src/lib/state/db.ts'), 'utf8');
+const defaultSeedCount = (db.match(/id:\s*'[a-z_]+',\s+nome:/g) || []).length;
+const extraSeedCount = (financas.match(/id:\s*'[a-z_]+',\s+nome:/g) || []).length;
+const seedCount = defaultSeedCount + extraSeedCount;
 check(`seed has >=12 categories (found ${seedCount})`, seedCount >= 12);
 
 // Helper: locate function body via brace-counting from the function's opening line.
@@ -172,14 +175,18 @@ for (const loc of ['pt-PT', 'en', 'fr', 'ar', 'tn']) {
   }
 }
 
-// 8. ensureCategoriasDefaults is idempotent (uses bulkPut by id)
-check('ensureCategoriasDefaults uses bulkPut (idempotent)', financas.includes('categorias.bulkPut(defaults)'));
+// 8. ensureCategoriasDefaults is idempotent without overwriting user edits.
+check('ensureCategoriasDefaults imports canonical DEFAULT_CATEGORIAS', financas.includes('DEFAULT_CATEGORIAS'));
+check('ensureCategoriasDefaults only adds missing rows', financas.includes('existingIds') && financas.includes('missing'));
+check('ensureCategoriasDefaults avoids bulkPut overwrite', !financas.includes('categorias.bulkPut(defaults)'));
 
-// 9. deleteCategoria returns discriminated union
+// 9. deleteCategoria returns discriminated union and checks composite budget ids.
 check('deleteCategoria returns { ok: true } | { ok: false; refs }',
   !!deleteSrc &&
   deleteSrc.includes('{ ok: true }') &&
   deleteSrc.includes('{ ok: false'));
+check('deleteCategoria checks composite orcamento ids', !!deleteSrc && deleteSrc.includes('startsWith(`${id}_`)'));
+check('addCategoria refuses duplicate ids', !!addSrc && addSrc.includes('categoria.duplicada') && addSrc.includes('table.add(row)'));
 
 console.log(`\n=== Result: ${passed}/${passed + failed} PASS ===`);
 process.exit(failed === 0 ? 0 : 1);

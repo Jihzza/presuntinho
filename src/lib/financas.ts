@@ -23,7 +23,7 @@
 //   * `formatValor` uses pt-PT locale with EUR currency — this matches
 //     the "Língua: pt-PT" setting in Phase 9's i18n.
 
-import { db } from './state/db';
+import { db, DEFAULT_CATEGORIAS } from './state/db';
 import { awardXP } from './state/xp-actions';
 import type { TransacaoRow, OrcamentoRow, CategoriaRow } from './state/db';
 
@@ -92,24 +92,21 @@ export async function listCategorias(): Promise<CategoriaRow[]> {
  */
 export async function ensureCategoriasDefaults(): Promise<void> {
   const defaults: CategoriaRow[] = [
-    { id: 'alimentacao',  nome: 'Alimentação',      icone: '🛒', cor: '#e67e22', tipo: 'despesa' },
-    { id: 'transporte',   nome: 'Transporte',       icone: '🚌', cor: '#3498db', tipo: 'despesa' },
-    { id: 'habitacao',    nome: 'Habitação',        icone: '🏠', cor: '#9b59b6', tipo: 'despesa' },
-    { id: 'saude',        nome: 'Saúde',            icone: '💊', cor: '#1abc9c', tipo: 'despesa' },
-    { id: 'educacao',     nome: 'Educação',         icone: '📚', cor: '#2ecc71', tipo: 'despesa' },
-    { id: 'lazer',        nome: 'Lazer',            icone: '🎮', cor: '#e74c3c', tipo: 'despesa' },
-    { id: 'vestuario',    nome: 'Vestuário',        icone: '👕', cor: '#f39c12', tipo: 'despesa' },
-    { id: 'comunicacoes', nome: 'Comunicações',     icone: '📱', cor: '#16a085', tipo: 'despesa' },
-    { id: 'seguros',      nome: 'Seguros',          icone: '🛡️', cor: '#34495e', tipo: 'despesa' },
-    { id: 'impostos',     nome: 'Impostos',         icone: '🧾', cor: '#7f8c8d', tipo: 'despesa' },
-    { id: 'outros_dep',   nome: 'Outros (despesa)', icone: '📦', cor: '#95a5a6', tipo: 'despesa' },
-    { id: 'ordenado',     nome: 'Ordenado',         icone: '💼', cor: '#27ae60', tipo: 'receita' },
-    { id: 'extra',        nome: 'Rendimento extra', icone: '💸', cor: '#2980b9', tipo: 'receita' },
-    { id: 'investimento', nome: 'Investimentos',    icone: '📈', cor: '#8e44ad', tipo: 'receita' },
-    { id: 'outros_rec',   nome: 'Outros (receita)', icone: '🎁', cor: '#c0392b', tipo: 'receita' },
-    { id: 'geral',        nome: 'Geral',            icone: '🏷️', cor: '#607d8b', tipo: 'ambos'   }
+    ...DEFAULT_CATEGORIAS,
+    { id: 'freelance',     nome: 'Freelance',      icone: '💻', cor: '#0ea5e9', tipo: 'receita'  },
+    { id: 'investimentos', nome: 'Investimentos',  icone: '📈', cor: '#8e44ad', tipo: 'receita'  },
+    { id: 'poupanca',      nome: 'Poupança',       icone: '🏦', cor: '#14b8a6', tipo: 'ambos'    },
+    { id: 'comunicacoes',  nome: 'Comunicações',   icone: '📱', cor: '#16a085', tipo: 'despesa' },
+    { id: 'impostos',      nome: 'Impostos',       icone: '🧾', cor: '#7f8c8d', tipo: 'despesa' }
   ];
-  await db().categorias.bulkPut(defaults);
+
+  const table = db().categorias;
+  const existingRows = await table.toArray();
+  const existingIds = new Set(existingRows.map((c) => c.id));
+  const missing = defaults.filter((c) => !existingIds.has(c.id));
+  if (missing.length > 0) {
+    await table.bulkAdd(missing);
+  }
 }
 
 /** A safe id derived from a category name (lowercase, no accents, dashes for spaces). */
@@ -135,16 +132,26 @@ export async function addCategoria(input: {
   id?: string;
 }): Promise<string> {
   const id = (input.id?.trim()) || slugifyCategoriaNome(input.nome);
+  const nome = input.nome.trim();
   if (!id) throw new Error('categoria.id vazio');
-  if (!input.nome.trim()) throw new Error('categoria.nome vazio');
+  if (!nome) throw new Error('categoria.nome vazio');
+  const table = db().categorias;
+  const existingById = await table.get(id);
+  if (existingById) throw new Error('categoria.duplicada');
+  const duplicateName = (await table.toArray()).find(
+    (c) =>
+      c.nome.trim().localeCompare(nome, 'pt-PT', { sensitivity: 'accent' }) === 0 &&
+      (c.tipo === input.tipo || c.tipo === 'ambos' || input.tipo === 'ambos')
+  );
+  if (duplicateName) throw new Error('categoria.nome_duplicado');
   const row: CategoriaRow = {
     id,
-    nome: input.nome.trim(),
+    nome,
     icone: input.icone?.trim() || '🏷️',
     cor: input.cor || '#607d8b',
     tipo: input.tipo
   };
-  await db().categorias.put(row); // throws if PK collision
+  await table.add(row);
   return id;
 }
 
@@ -171,9 +178,11 @@ export async function updateCategoria(
 export async function deleteCategoria(id: string): Promise<{ ok: true } | { ok: false; refs: string[] }> {
   if (!id) throw new Error('categoria.id vazio');
   const refs: string[] = [];
-  const txCount = await db().transacoes.where('categoria').equals(id).count();
+  const d = db();
+  const txCount = await d.transacoes.where('categoria').equals(id).count();
   if (txCount > 0) refs.push(`transacoes (${txCount})`);
-  const orcCount = await db().orcamentos.where('categoriaId').equals(id).count();
+  const orcamentos = await d.orcamentos.toArray();
+  const orcCount = orcamentos.filter((o) => o.id === id || o.id.startsWith(`${id}_`)).length;
   if (orcCount > 0) refs.push(`orçamentos (${orcCount})`);
   if (refs.length > 0) return { ok: false, refs };
   await db().categorias.delete(id);
