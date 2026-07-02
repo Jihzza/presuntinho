@@ -244,7 +244,7 @@
             </main>
 
             <!--
-              Footer principal: Home / Agente / Calendário / Escola / Vida.
+              Footer principal: Home / Calendário / Agente / Vida / Escola.
               O antigo botão 🐷 no footer era só um easter egg/copyright, mas
               confundia a navegação e ocupava uma 5.ª tab. O easter egg do porco
               fica no logo do topo; o footer passa a ter apenas tabs reais.
@@ -254,21 +254,21 @@
                     <span class="nav-icon" aria-hidden="true">🏠</span>
                     <span class="nav-label">{$t('nav.home', { default: 'Home' })}</span>
                   </a>
+                  <a href="/calendario/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Calendário')} aria-label={$t('nav.calendario.aria', { default: 'Calendário — agenda, mês e tasks' })} data-sveltekit-preload-data>
+                    <span class="nav-icon" aria-hidden="true">🗓️</span>
+                    <span class="nav-label">{$t('nav.calendario', { default: 'Calendário' })}</span>
+                  </a>
                   <a href="/agente/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Agente')} aria-label={$t('nav.agente.aria', { default: 'Agente — chat com IA' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">🤖</span>
                     <span class="nav-label">{$t('nav.agente', { default: 'Agente' })}</span>
                   </a>
-                  <a href="/calendario/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Calendário')} aria-label="Calendário — agenda, mês e tasks" data-sveltekit-preload-data>
-                    <span class="nav-icon" aria-hidden="true">🗓️</span>
-                    <span class="nav-label">Calendário</span>
+                  <a href="/vida/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Vida')} aria-label={$t('nav.vida.aria', { default: 'Vida — finanças, hábitos e vícios' })} data-sveltekit-preload-data>
+                    <span class="nav-icon" aria-hidden="true">🌿</span>
+                    <span class="nav-label">{$t('nav.vida', { default: 'Vida' })}</span>
                   </a>
                   <a href="/escola/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Escola')} aria-label={$t('nav.escola.aria', { default: 'Escola — cursos e lições' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">📚</span>
                     <span class="nav-label">{$t('nav.escola', { default: 'Escola' })}</span>
-                  </a>
-                  <a href="/vida/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Vida')} aria-label={$t('nav.vida.aria', { default: 'Vida — finanças, hábitos e vícios' })} data-sveltekit-preload-data>
-                    <span class="nav-icon" aria-hidden="true">🌿</span>
-                    <span class="nav-label">{$t('nav.vida', { default: 'Vida' })}</span>
                   </a>
                 </nav>
 

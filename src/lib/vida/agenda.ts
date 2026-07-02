@@ -52,8 +52,8 @@ export function monthGridDays(date = new Date()): Date[] {
   return Array.from({ length: 42 }, (_, i) => new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + i));
 }
 
-export function formatDayLabel(dateKey: string): string {
-  return new Date(`${dateKey}T12:00:00`).toLocaleDateString('pt-PT', {
+export function formatDayLabel(dateKey: string, locale = 'pt-PT'): string {
+  return new Date(`${dateKey}T12:00:00`).toLocaleDateString(locale, {
     weekday: 'short',
     day: '2-digit',
     month: 'short'

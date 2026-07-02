@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { locale, t } from 'svelte-i18n';
   import {
     formatDayLabel,
     loadAgendaItems,
@@ -12,11 +13,13 @@
   let items = $state<AgendaItem[]>([]);
   let expanded = $state(false);
   let dragStartY = $state<number | null>(null);
+  let dragCurrentY = $state<number | null>(null);
   let loading = $state(true);
 
   const today = new Date();
   const todayKey = localDateKey(today);
-  const monthLabel = today.toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' });
+  const dateLocale = $derived($locale || 'pt-PT');
+  const monthLabel = $derived(today.toLocaleDateString(dateLocale, { month: 'long', year: 'numeric' }));
   let visibleDays = $derived(expanded ? monthGridDays(today) : weekDays(today));
   let upcoming = $derived(items.filter((item) => item.date >= todayKey && item.status !== 'done').slice(0, 12));
 
@@ -36,18 +39,51 @@
 
   function onPointerDown(event: PointerEvent): void {
     dragStartY = event.clientY;
+    dragCurrentY = event.clientY;
+    (event.currentTarget as HTMLElement | null)?.setPointerCapture?.(event.pointerId);
+  }
+
+  function onPointerMove(event: PointerEvent): void {
+    if (dragStartY === null) return;
+    dragCurrentY = event.clientY;
   }
 
   function onPointerUp(event: PointerEvent): void {
     if (dragStartY === null) return;
-    const delta = event.clientY - dragStartY;
+    commitSwipe(event.clientY - dragStartY);
+    (event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
+  }
+
+  function onTouchStart(event: TouchEvent): void {
+    const y = event.touches[0]?.clientY;
+    if (typeof y !== 'number') return;
+    dragStartY = y;
+    dragCurrentY = y;
+  }
+
+  function onTouchMove(event: TouchEvent): void {
+    if (dragStartY === null) return;
+    const y = event.touches[0]?.clientY;
+    if (typeof y !== 'number') return;
+    dragCurrentY = y;
+    if (Math.abs(y - dragStartY) > 8) event.preventDefault();
+  }
+
+  function onTouchEnd(): void {
+    if (dragStartY === null || dragCurrentY === null) return;
+    commitSwipe(dragCurrentY - dragStartY);
+  }
+
+  function commitSwipe(delta: number): void {
     dragStartY = null;
+    dragCurrentY = null;
     if (delta > 28) expanded = true;
     if (delta < -28) expanded = false;
   }
 
   function onPointerCancel(): void {
     dragStartY = null;
+    dragCurrentY = null;
   }
 
   onMount(() => {
@@ -58,15 +94,15 @@
 </script>
 
 <svelte:head>
-  <title>Calendário · Presuntinho</title>
+  <title>{$t('calendar.meta.title', { default: 'Calendário · Presuntinho' })}</title>
 </svelte:head>
 
 <div class="calendar-page">
-  <section class="calendar-card" aria-label="Calendário">
+  <section class="calendar-card" aria-label={$t('calendar.aria.calendar', { default: 'Calendário' })}>
     <div class="section-head">
       <div>
-        <h2>{expanded ? monthLabel : 'Esta semana'}</h2>
-        <p>{expanded ? 'Arrasta para cima para voltar à semana' : 'Arrasta para baixo para abrir o mês'}</p>
+        <h2>{expanded ? monthLabel : $t('calendar.week.title', { default: 'Esta semana' })}</h2>
+        <p>{expanded ? $t('calendar.hint.collapse', { default: 'Arrasta para cima para voltar à semana' }) : $t('calendar.hint.expand', { default: 'Arrasta para baixo para abrir o mês' })}</p>
       </div>
     </div>
 
@@ -74,14 +110,18 @@
       class="calendar-grid"
       class:month-view={expanded}
       onpointerdown={onPointerDown}
+      onpointermove={onPointerMove}
       onpointerup={onPointerUp}
       onpointercancel={onPointerCancel}
+      ontouchstart={onTouchStart}
+      ontouchmove={onTouchMove}
+      ontouchend={onTouchEnd}
       role="group"
-      aria-label={expanded ? 'Vista mensal do calendário' : 'Vista semanal do calendário'}
+      aria-label={expanded ? $t('calendar.aria.month', { default: 'Vista mensal do calendário' }) : $t('calendar.aria.week', { default: 'Vista semanal do calendário' })}
     >
       {#each visibleDays as day (localDateKey(day))}
         <div class="day-cell" data-tone={dayTone(day)} data-outside={day.getMonth() === today.getMonth() ? 'false' : 'true'}>
-          <span>{day.toLocaleDateString('pt-PT', { weekday: 'short' })}</span>
+          <span>{day.toLocaleDateString(dateLocale, { weekday: 'short' })}</span>
           <strong>{day.getDate()}</strong>
           {#if itemsForDate(day).length > 0}
             <small>{itemsForDate(day).length}</small>
@@ -91,19 +131,19 @@
     </div>
   </section>
 
-  <section class="tasks" aria-label="Tasks próximas">
+  <section class="tasks" aria-label={$t('calendar.tasks.aria', { default: 'Tasks próximas' })}>
     <div class="section-head">
-      <h2>Tasks</h2>
+      <h2>{$t('calendar.tasks.title', { default: 'Tasks' })}</h2>
     </div>
     {#if loading}
-      <p class="empty">A carregar calendário…</p>
+      <p class="empty">{$t('calendar.loading', { default: 'A carregar calendário…' })}</p>
     {:else if upcoming.length === 0}
-      <p class="empty">Nada urgente. Planeia uma tarefa nova ou revê os hábitos.</p>
+      <p class="empty">{$t('calendar.empty', { default: 'Nada urgente. Planeia uma tarefa nova ou revê os hábitos.' })}</p>
     {:else}
       <div class="task-list">
         {#each upcoming as item (item.id)}
           <a class="task" data-tone={item.tone} href={item.href}>
-            <span>{formatDayLabel(item.date)}</span>
+            <span>{formatDayLabel(item.date, dateLocale)}</span>
             <strong>{item.title}</strong>
             <small>{item.subtitle}</small>
           </a>
@@ -120,7 +160,8 @@
   .section-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .8rem; }
   .section-head h2 { margin: 0; font-size: 1rem; }
   .section-head p { margin: .15rem 0 0; font-size: .82rem; }
-  .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .45rem; touch-action: pan-y; }
+  .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .45rem; touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; }
+  .calendar-grid:active { cursor: grabbing; }
   .day-cell { min-height: 76px; border-radius: .95rem; padding: .45rem; background: rgba(0,0,0,.22); border: 1px solid rgba(255,255,255,.08); display: flex; flex-direction: column; gap: .15rem; }
   .day-cell[data-outside='true'] { opacity: .42; }
   .day-cell span { color: #94a3b8; font-size: .65rem; text-transform: uppercase; }

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { t } from 'svelte-i18n';
   import {
     buildNotifications,
     loadAgendaItems,
@@ -17,20 +18,20 @@
 </script>
 
 <svelte:head>
-  <title>Notificações · Presuntinho</title>
+  <title>{$t('notifications.meta.title', { default: 'Notificações · Presuntinho' })}</title>
 </svelte:head>
 
 <div class="notifications-page">
-  <a class="back" href="/">← Home</a>
+  <a class="back" href="/">← {$t('nav.home', { default: 'Home' })}</a>
   <header class="hero">
-    <span>🔔 Centro de atenção</span>
-    <h1>Notificações</h1>
-    <p>Prazos, hábitos e alertas que a Fatma deve ver antes de se perder nas apps.</p>
+    <span>🔔 {$t('notifications.hero.eyebrow', { default: 'Centro de atenção' })}</span>
+    <h1>{$t('notifications.hero.title', { default: 'Notificações' })}</h1>
+    <p>{$t('notifications.hero.subtitle', { default: 'Prazos, hábitos e alertas que a Fatma deve ver antes de se perder nas apps.' })}</p>
   </header>
 
-  <section class="list" aria-label="Lista de notificações">
+  <section class="list" aria-label={$t('notifications.list.aria', { default: 'Lista de notificações' })}>
     {#if loading}
-      <p class="empty">A carregar notificações…</p>
+      <p class="empty">{$t('notifications.loading', { default: 'A carregar notificações…' })}</p>
     {:else}
       {#each notifications as item (item.id)}
         <a class="notification" data-tone={item.tone} href={item.href}>
@@ -45,9 +46,9 @@
     {/if}
   </section>
 
-  <section class="settings-card" aria-label="Próximo passo de notificações">
-    <h2>Próximo nível</h2>
-    <p>Esta página já agrega alertas locais. Quando houver permissões de push, pode passar a enviar lembretes reais no telemóvel.</p>
+  <section class="settings-card" aria-label={$t('notifications.next.aria', { default: 'Próximo passo de notificações' })}>
+    <h2>{$t('notifications.next.title', { default: 'Próximo nível' })}</h2>
+    <p>{$t('notifications.next.body', { default: 'Esta página já agrega alertas locais. Quando houver permissões de push, pode passar a enviar lembretes reais no telemóvel.' })}</p>
   </section>
 </div>
 

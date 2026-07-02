@@ -18,8 +18,8 @@
    */
 
   import { onMount, tick } from 'svelte';
-  import { db, DEFAULT_SETTINGS } from '$lib/state/db';
-  import { theme as themeStore, lang as langStore, funMode as funModeStore } from '$lib/state/stores';
+  import { db, DEFAULT_SETTINGS, type ThemeChoice } from '$lib/state/db';
+  import { theme as themeStore, lang as langStore, funMode as funModeStore, xp as xpStore } from '$lib/state/stores';
   import { locale, waitLocale } from 'svelte-i18n';
   import { setLocale, LOCALES, LOCALE_META, type Locale } from '$lib/i18n';
   import {
@@ -35,9 +35,6 @@
     type BackupPayload,
     type ImportReport
   } from '$lib/backup';
-  import Sun from 'lucide-svelte/icons/sun';
-  import Moon from 'lucide-svelte/icons/moon';
-  import Monitor from 'lucide-svelte/icons/monitor';
   import Languages from 'lucide-svelte/icons/languages';
   import Key from 'lucide-svelte/icons/key-round';
   import Trash from 'lucide-svelte/icons/trash-2';
@@ -72,9 +69,21 @@
   });
 
   // ----- Theme -----
-  type ThemeChoice = 'light' | 'dark' | 'auto';
+  const THEME_OPTIONS: Array<{ id: ThemeChoice; icon: string; minXp: number }> = [
+    { id: 'auto', icon: '🪄', minXp: 0 },
+    { id: 'dark', icon: '🌙', minXp: 0 },
+    { id: 'light', icon: '☀️', minXp: 0 },
+    { id: 'barca', icon: '🔵🔴', minXp: 100 },
+    { id: 'gamer', icon: '🎮', minXp: 250 },
+    { id: 'anime', icon: '🌸', minXp: 500 },
+    { id: 'moto', icon: '🏍️', minXp: 750 },
+    { id: 'tunisia', icon: '🇹🇳', minXp: 1000 }
+  ];
+
+  const THEME_CLASSES = THEME_OPTIONS.map((option) => `theme-${option.id}`);
   // $themeStore auto-subscribes via Svelte's `$` prefix on stores.
   let currentTheme: ThemeChoice = $state('auto');
+  let currentXp = $state(0);
 
   // Hydrate from Dexie once stores are ready (the store factory also
   // hydrates asynchronously; we wait for it).
@@ -83,9 +92,10 @@
     // the choice survives a Dexie wipe via Definições → Limpar dados.
     try {
       const ls = localStorage.getItem('fat-theme') as ThemeChoice | null;
-      if (ls === 'light' || ls === 'dark' || ls === 'auto') {
-        currentTheme = ls;
-        themeStore.set(ls);
+      const matched = THEME_OPTIONS.find((option) => option.id === ls);
+      if (matched) {
+        currentTheme = matched.id;
+        themeStore.set(matched.id);
       }
     } catch {
       // localStorage may be unavailable (private mode, SSR).
@@ -96,6 +106,8 @@
     return unsub;
   });
 
+  onMount(() => xpStore.subscribe((v) => (currentXp = v)));
+
   /**
    * Apply the chosen theme to documentElement. Uses BOTH the legacy
    * `theme-light` / `theme-dark` classes (already styled) AND the
@@ -105,7 +117,7 @@
   function applyTheme(t: ThemeChoice): void {
     if (typeof document === 'undefined') return;
     const root = document.documentElement;
-    root.classList.remove('theme-light', 'theme-dark');
+    root.classList.remove(...THEME_CLASSES);
     root.removeAttribute('data-theme');
     if (t === 'light') {
       root.classList.add('theme-light');
@@ -113,6 +125,9 @@
     } else if (t === 'dark') {
       root.classList.add('theme-dark');
       root.setAttribute('data-theme', 'dark');
+    } else if (t !== 'auto') {
+      root.classList.add(`theme-${t}`);
+      root.setAttribute('data-theme', t);
     } else {
       // auto: respect OS preference.
       const mql = window.matchMedia('(prefers-color-scheme: dark)');
@@ -123,6 +138,7 @@
   }
 
   function pickTheme(t: ThemeChoice): void {
+    if (!isThemeUnlocked(t)) return;
     currentTheme = t;
     themeStore.set(t);
     try {
@@ -131,6 +147,11 @@
       // Ignore — localStorage unavailable.
     }
     applyTheme(t);
+  }
+
+  function isThemeUnlocked(t: ThemeChoice): boolean {
+    const option = THEME_OPTIONS.find((item) => item.id === t);
+    return !option || currentXp >= option.minXp;
   }
 
   // Apply on mount (in case settings already exist in Dexie).
@@ -544,37 +565,32 @@
       <span class="icon-wrap"><Palette size={18} /></span>
       <h2 id="theme-h">{$t('settings.theme')}</h2>
     </div>
-    <div class="seg" role="radiogroup" aria-label={$t('settings.theme')}>
-      <button
-        type="button"
-        role="radio"
-        aria-checked={currentTheme === 'light'}
-        class:active={currentTheme === 'light'}
-        onclick={() => pickTheme('light')}
-      >
-        <Sun size={16} aria-hidden="true" />
-        {$t('settings.theme.light')}
-      </button>
-      <button
-        type="button"
-        role="radio"
-        aria-checked={currentTheme === 'dark'}
-        class:active={currentTheme === 'dark'}
-        onclick={() => pickTheme('dark')}
-      >
-        <Moon size={16} aria-hidden="true" />
-        {$t('settings.theme.dark')}
-      </button>
-      <button
-        type="button"
-        role="radio"
-        aria-checked={currentTheme === 'auto'}
-        class:active={currentTheme === 'auto'}
-        onclick={() => pickTheme('auto')}
-      >
-        <Monitor size={16} aria-hidden="true" />
-        {$t('settings.theme.auto')}
-      </button>
+    <p class="theme-intro">{$t('settings.theme.intro', { default: 'Escolhe um visual para a app. Alguns temas desbloqueiam com XP.' })}</p>
+    <div class="theme-grid" role="radiogroup" aria-label={$t('settings.theme')}>
+      {#each THEME_OPTIONS as option (option.id)}
+        {@const unlocked = isThemeUnlocked(option.id)}
+        <button
+          type="button"
+          role="radio"
+          aria-checked={currentTheme === option.id}
+          aria-disabled={!unlocked}
+          class:active={currentTheme === option.id}
+          class:locked={!unlocked}
+          onclick={() => pickTheme(option.id)}
+        >
+          <span class="theme-swatch theme-swatch-{option.id}" aria-hidden="true">{option.icon}</span>
+          <span class="theme-copy">
+            <strong>{$t(`settings.theme.${option.id}`, { default: option.id })}</strong>
+            <small>
+              {#if unlocked}
+                {$t(`settings.theme.${option.id}.desc`, { default: 'Disponível' })}
+              {:else}
+                {$t('settings.theme.locked', { values: { xp: option.minXp }, default: 'Bloqueado até {xp} XP' })}
+              {/if}
+            </small>
+          </span>
+        </button>
+      {/each}
     </div>
   </section>
 
@@ -970,6 +986,72 @@
       border-color: #ec4899;
       color: #fff;
     }
+    .theme-intro {
+      margin: 0 0 0.75rem;
+      color: var(--txt2);
+      font-size: 0.9rem;
+    }
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+      gap: 0.65rem;
+    }
+    .theme-grid button {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 0.7rem;
+      min-height: 74px;
+      padding: 0.7rem;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 0.8rem;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
+    }
+    .theme-grid button:hover,
+    .theme-grid button:focus-visible {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.08);
+      outline: none;
+    }
+    .theme-grid button.active {
+      border-color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 22%, transparent);
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent);
+    }
+    .theme-grid button.locked {
+      opacity: 0.58;
+      cursor: not-allowed;
+      filter: grayscale(0.35);
+    }
+    .theme-grid button.locked:hover {
+      transform: none;
+    }
+    .theme-swatch {
+      width: 2.55rem;
+      height: 2.55rem;
+      border-radius: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 1.1rem;
+    }
+    .theme-swatch-light { background: linear-gradient(135deg, #fff, #dbeafe); color: #0f172a; }
+    .theme-swatch-dark { background: linear-gradient(135deg, #1f2e4a, #ec4899); }
+    .theme-swatch-auto { background: linear-gradient(135deg, #fff 0 48%, #1f2e4a 52% 100%); }
+    .theme-swatch-barca { background: linear-gradient(135deg, #004d98 0 50%, #a50044 50% 100%); }
+    .theme-swatch-gamer { background: linear-gradient(135deg, #050816, #22c55e); }
+    .theme-swatch-anime { background: linear-gradient(135deg, #f472b6, #c084fc); }
+    .theme-swatch-moto { background: linear-gradient(135deg, #111827, #ef4444); }
+    .theme-swatch-tunisia { background: linear-gradient(135deg, #fff, #e70013); }
+    .theme-copy { min-width: 0; display: grid; gap: 0.15rem; }
+    .theme-copy strong { color: inherit; font-size: 0.92rem; }
+    .theme-copy small { color: #cbd5e1; font-size: 0.74rem; line-height: 1.25; }
     /* Language switcher: 5 buttons laid out as a wrapping grid so they
        stay touch-friendly on narrow phones without overflowing. */
     .seg-lang {

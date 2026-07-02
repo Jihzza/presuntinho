@@ -6,7 +6,7 @@
 // db.ts → StateRow exactly (additional V3 fields preserved for fidelity).
 
 import { writable, type Writable } from 'svelte/store';
-import { db, DEFAULT_STATE, DEFAULT_SETTINGS, ensureDefaults, resetDbCache, setActiveProfile } from './db';
+import { db, DEFAULT_STATE, DEFAULT_SETTINGS, ensureDefaults, resetDbCache, setActiveProfile, type ThemeChoice } from './db';
 import { bootMigration } from './migration';
 import type { ProfileId } from '../auth/hash';
 
@@ -138,7 +138,7 @@ function createSettingsStore<K extends keyof Omit<typeof DEFAULT_SETTINGS, 'id' 
   return store;
 }
 
-export const theme = createSettingsStore('theme', DEFAULT_SETTINGS.theme) as Writable<'light' | 'dark' | 'auto'>;
+export const theme = createSettingsStore('theme', DEFAULT_SETTINGS.theme) as Writable<ThemeChoice>;
 export const lang = createSettingsStore('lang', DEFAULT_SETTINGS.lang) as Writable<'pt-PT' | 'en' | 'tn' | 'fr' | 'ar'>;
 export const funMode = createSettingsStore('funMode', DEFAULT_SETTINGS.funMode) as Writable<boolean>;
 
