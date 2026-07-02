@@ -3273,5 +3273,6 @@
   "financas.orcamento.status.over": "متجاوز",
   "financas.orcamento.over_by": "{valor} فوق الميزانية",
   "financas.orcamento.near_limit": "قريب من الحد — خفّف هنا.",
-  "financas.orcamento.toast.saved": "تم حفظ الميزانية"
+  "financas.orcamento.toast.saved": "تم حفظ الميزانية",
+  "settings.backup.errors.unsupported_version": "تم إنشاء هذه النسخة الاحتياطية بإصدار أحدث من Presuntinho. حدّث التطبيق قبل الاستيراد."
 }

@@ -411,12 +411,7 @@
       const localised = $t(key, { default: key });
       // svelte-i18n returns the key itself when missing — fall back to the
       // English-ish message baked into the error, then to the caller's fallback.
-      if (localised !== key) {
-        if (e.code === 'parse_failed' || e.code === 'read_failed') {
-          return $t('settings.backup.errors.parse_failed', { values: { msg: e.message } });
-        }
-        return localised;
-      }
+      if (localised !== key) return localised;
     }
     const msg = e instanceof Error ? e.message : String(e);
     return $t(fallbackKey, { values: { msg } });

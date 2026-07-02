@@ -95,6 +95,14 @@ export interface BackupMeta {
   counts: Record<string, number>;
 }
 
+/** JSON-safe representation of a Blob/File stored inside Dexie rows. */
+interface SerializedBlob {
+  __presuntinhoBlob: true;
+  type: string;
+  name?: string;
+  data: string;
+}
+
 /**
  * Backup payload (current version 6).
  *
@@ -270,7 +278,7 @@ export async function exportData(profile: ProfileId = 'fatma'): Promise<BackupPa
   try {
     const d = db(profile);
     const rows = await Promise.all(
-      BACKUP_TABLES.map(async (t) => [t, await d[t].toArray()] as const)
+      BACKUP_TABLES.map(async (t) => [t, await serializeRows(await d[t].toArray())] as const)
     );
     for (const [t, arr] of rows) {
       payload.dexie[t] = arr;
@@ -319,6 +327,80 @@ export async function exportData(profile: ProfileId = 'fatma'): Promise<BackupPa
  */
 export function payloadToBlob(payload: BackupPayload): Blob {
   return new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+}
+
+async function serializeRows(rows: unknown[]): Promise<unknown[]> {
+  return Promise.all(rows.map((row) => serializeValue(row)));
+}
+
+async function serializeValue(value: unknown): Promise<unknown> {
+  if (typeof Blob !== 'undefined' && value instanceof Blob) {
+    const data = await blobToBase64(value);
+    const fileName = typeof File !== 'undefined' && value instanceof File ? value.name : undefined;
+    const out: SerializedBlob = { __presuntinhoBlob: true, type: value.type || 'application/octet-stream', data };
+    if (fileName) out.name = fileName;
+    return out;
+  }
+  if (Array.isArray(value)) {
+    return Promise.all(value.map((item) => serializeValue(item)));
+  }
+  if (value && typeof value === 'object') {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      out[k] = await serializeValue(v);
+    }
+    return out;
+  }
+  return value;
+}
+
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error ?? new Error('failed to read blob'));
+    reader.onload = () => {
+      const result = String(reader.result ?? '');
+      resolve(result.includes(',') ? result.slice(result.indexOf(',') + 1) : result);
+    };
+    reader.readAsDataURL(blob);
+  });
+}
+
+function deserializeRows(rows: unknown[]): unknown[] {
+  return rows.map((row) => deserializeValue(row));
+}
+
+function deserializeValue(value: unknown): unknown {
+  if (isSerializedBlob(value)) {
+    return base64ToBlob(value.data, value.type);
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => deserializeValue(item));
+  }
+  if (value && typeof value === 'object') {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      out[k] = deserializeValue(v);
+    }
+    return out;
+  }
+  return value;
+}
+
+function isSerializedBlob(value: unknown): value is SerializedBlob {
+  return Boolean(
+    value &&
+    typeof value === 'object' &&
+    (value as SerializedBlob).__presuntinhoBlob === true &&
+    typeof (value as SerializedBlob).data === 'string'
+  );
+}
+
+function base64ToBlob(data: string, type: string): Blob {
+  const binary = atob(data);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return new Blob([bytes], { type: type || 'application/octet-stream' });
 }
 
 /**
@@ -372,8 +454,13 @@ export function validateSchema(input: unknown): ValidationResult {
       reason: `unsupported version ${obj.version} (need >= ${BACKUP_MIN_VERSION})`
     };
   }
-  // Forward-compat: don't reject payloads from a future-version export,
-  // but tell the UI we're skipping validation so it can warn.
+  if (obj.version > BACKUP_VERSION) {
+    return {
+      ok: false,
+      code: 'unsupported_version',
+      reason: `backup version ${obj.version} is newer than this app supports (${BACKUP_VERSION})`
+    };
+  }
   if (obj.dexie !== undefined && (typeof obj.dexie !== 'object' || obj.dexie === null)) {
     return {
       ok: false,
@@ -455,10 +542,7 @@ export async function importBackup(
   // 2. Validate shape.
   const v = validateBackup(parsed);
   if (!v.ok) {
-    // Decide between shape/too-old for the right i18n key.
-    const code: BackupErrorCode =
-      v.code === 'too_old' ? 'too_old' : 'shape_invalid';
-    throw new BackupError(code, v.reason ?? 'invalid backup payload');
+    throw new BackupError(v.code ?? 'shape_invalid', v.reason ?? 'invalid backup payload');
   }
   const payload = parsed as BackupPayload;
 
@@ -506,73 +590,71 @@ async function applyPayload(
   let totalReplaced = 0;
   let totalSkipped = 0;
 
-  for (const table of BACKUP_TABLES) {
-    const arr = dexieTableToArray(dexieTables[table]);
-    if (!arr) {
-      inserted[table] = 0;
-      replaced[table] = 0;
-      skipped[table] = 0;
-      continue;
-    }
+  await d.transaction(
+    'rw',
+    BACKUP_TABLES.map((table) => d[table]),
+    async () => {
+      for (const table of BACKUP_TABLES) {
+        const arr = dexieTableToArray(dexieTables[table]);
 
-    // Replace mode: drop whatever is there first.
-    // @ts-ignore — table typings are unions; trust the JSON contract.
-    if (mode === 'replace') await d[table].clear();
+        inserted[table] = 0;
+        replaced[table] = 0;
+        skipped[table] = 0;
 
-    if (arr.length === 0) {
-      inserted[table] = 0;
-      replaced[table] = 0;
-      skipped[table] = 0;
-      continue;
-    }
-
-    // Split rows by whether they declare a usable PK.  Anything
-    // missing its PK would be silently auto-assigned by Dexie — we
-    // surface that as "skipped" so the report is honest.
-    const withPk: unknown[] = [];
-    let skippedCount = 0;
-    for (const row of arr) {
-      if (row && typeof row === 'object' && hasPrimaryKey(row as Record<string, unknown>, table)) {
-        withPk.push(row);
-      } else {
-        skippedCount++;
-      }
-    }
-
-    // For "replace" mode every row is, by definition, a fresh write —
-    // we can't tell "replaced" from "inserted" without inspecting
-    // pre-state, so we report the lot under `inserted`.  For "merge"
-    // we do a best-effort pre-count by PK to attribute writes.
-    if (mode === 'merge') {
-      const pks = withPk
-        .map((r) => (r as Record<string, unknown>).id)
-        .filter((v): v is string | number => v !== undefined);
-      let existing = 0;
-      if (pks.length > 0) {
-        try {
-          // @ts-ignore
-          existing = await d[table].where('id').anyOf(pks).count();
-        } catch {
-          existing = 0;
+        // Replace means “substituir tudo”: every known table is cleared even
+        // when an older backup omitted that table. Without this, importing a
+        // v3-v5 backup left v6/v7 data mixed into the restored profile.
+        if (mode === 'replace') {
+          // @ts-ignore — table typings are unions; trust the JSON contract.
+          await d[table].clear();
         }
+
+        if (!arr || arr.length === 0) continue;
+
+        // Split rows by whether they declare a usable PK. Anything missing
+        // its PK would be silently auto-assigned by Dexie — report it.
+        const withPk: unknown[] = [];
+        let skippedCount = 0;
+        for (const row of deserializeRows(arr)) {
+          if (row && typeof row === 'object' && hasPrimaryKey(row as Record<string, unknown>, table)) {
+            withPk.push(row);
+          } else {
+            skippedCount++;
+          }
+        }
+
+        if (mode === 'merge') {
+          const pks = withPk
+            .map((r) => (r as Record<string, unknown>).id)
+            .filter((v): v is string | number => v !== undefined);
+          let existing = 0;
+          if (pks.length > 0) {
+            try {
+              // @ts-ignore
+              existing = await d[table].where('id').anyOf(pks).count();
+            } catch {
+              existing = 0;
+            }
+          }
+          replaced[table] = existing;
+          inserted[table] = withPk.length - existing;
+        } else {
+          inserted[table] = withPk.length;
+          replaced[table] = 0;
+        }
+        skipped[table] = skippedCount;
+
+        if (withPk.length > 0) {
+          // @ts-ignore — table typings are unions; trust the JSON contract.
+          await d[table].bulkPut(withPk);
+        }
+
+        totalInserted += inserted[table];
+        totalReplaced += replaced[table];
+        totalSkipped += skipped[table];
       }
-      replaced[table] = existing;
-      inserted[table] = withPk.length - existing;
-    } else {
-      inserted[table] = withPk.length;
-      replaced[table] = 0;
     }
-    skipped[table] = skippedCount;
-
-    if (withPk.length > 0) {
-      // @ts-ignore — table typings are unions; trust the JSON contract.
-      await d[table].bulkPut(withPk);
-    }
-
-    totalInserted += inserted[table];
-    totalReplaced += replaced[table];
-    totalSkipped += skipped[table];
-  }
+  );
 
   // 5. localStorage — wipe wholesale in replace, merge in merge.
   let lsKeys = 0;
@@ -626,7 +708,7 @@ async function applyPayload(
     inserted,
     replaced,
     skipped,
-    totals: { inserted: totalInserted, replaced: totalSkipped === 0 ? totalReplaced : totalReplaced, skipped: totalSkipped },
+    totals: { inserted: totalInserted, replaced: totalReplaced, skipped: totalSkipped },
     localStorageKeys: lsKeys,
     sessionStorageKeys: ssKeys
   };
@@ -668,10 +750,7 @@ export async function importData(
   }
   const v = validateBackup(payload);
   if (!v.ok) {
-    throw new BackupError(
-      v.code === 'too_old' ? 'too_old' : 'shape_invalid',
-      v.reason ?? 'invalid payload'
-    );
+    throw new BackupError(v.code ?? 'shape_invalid', v.reason ?? 'invalid payload');
   }
   return applyPayload(payload, 'replace', profile);
 }
@@ -694,10 +773,7 @@ export function parseBackup(text: string): BackupPayload {
   }
   const v = validateBackup(parsed);
   if (!v.ok) {
-    throw new BackupError(
-      v.code === 'too_old' ? 'too_old' : 'shape_invalid',
-      v.reason ?? 'invalid backup'
-    );
+    throw new BackupError(v.code ?? 'shape_invalid', v.reason ?? 'invalid backup');
   }
   return parsed as BackupPayload;
 }

@@ -39,6 +39,10 @@ check('validateBackup exported', /export function validateBackup/.test(backup));
 check('downloadBackup exported', /export async function downloadBackup/.test(backup));
 check('importBackup supports merge|replace', /mode: 'merge' \| 'replace' = 'replace'/.test(backup));
 check('importBackup refuses empty payloads', backup.includes('empty_payload'));
+check('replace import is Dexie-transactional', backup.includes('await d.transaction') && backup.includes('BACKUP_TABLES.map((table) => d[table])'));
+check('replace clears omitted legacy tables', backup.includes('when an older backup omitted that table') && backup.includes("if (mode === 'replace')"));
+check('backup serializes Dexie Blob/File values', backup.includes('__presuntinhoBlob') && backup.includes('blobToBase64') && backup.includes('deserializeRows'));
+check('future backup versions are rejected safely', backup.includes('unsupported_version') && backup.includes('obj.version > BACKUP_VERSION'));
 check('merge mode counts replaced rows before bulkPut', backup.includes("mode === 'merge'") && backup.includes("where('id').anyOf"));
 check('missing PK rows are skipped', backup.includes('hasPrimaryKey') && backup.includes('skippedCount++'));
 check('sessionStorage restore is allowlisted', backup.includes('BACKUP_SESSION_KEYS') && backup.includes('includes(k)'));
@@ -62,6 +66,7 @@ const requiredKeys = [
   'settings.backup.errors.parse_failed',
   'settings.backup.errors.shape_invalid',
   'settings.backup.errors.too_old',
+  'settings.backup.errors.unsupported_version',
   'settings.backup.errors.empty_payload',
   'settings.backup.errors.browser_only',
   'settings.backup.errors.file_missing',

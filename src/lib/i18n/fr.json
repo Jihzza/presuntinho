@@ -3273,5 +3273,6 @@
   "financas.orcamento.status.over": "Dépassé",
   "financas.orcamento.over_by": "{valor} au-dessus du budget",
   "financas.orcamento.near_limit": "Presque à la limite — ralentis ici.",
-  "financas.orcamento.toast.saved": "Budget enregistré"
+  "financas.orcamento.toast.saved": "Budget enregistré",
+  "settings.backup.errors.unsupported_version": "Cette sauvegarde a été créée par une version plus récente de Presuntinho. Mets l’app à jour avant d’importer."
 }
