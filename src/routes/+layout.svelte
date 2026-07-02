@@ -242,26 +242,33 @@
               {@render children?.()}
             </main>
 
+            <!--
+              IA-S1 (task-086) footer 4 tabs: Home / Agente / Escola / Vida.
+              Aulas was merged into Escola (task-088); Finanças/Hábitos were
+              merged into Vida (IA-S4); Trabalhos/Biblioteca migrated into
+              Escola (task-088). The secret pig button stays so the
+              footerClick() easter egg (5 taps → b15 badge + 'perfume' /
+              'behi' hint) is preserved.
+              Tabs route to canonical landing pages; per-tab 301 redirects
+              live in src/routes for legacy URLs (/aulas/, /financas/,
+              /habitos/, /trabalhos/, /biblioteca/).
+            -->
             <nav class="bottom-nav" aria-label={$t('nav.bottom.aria', { default: 'Navegação principal' })}>
                   <a href="/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Home')} aria-label={$t('nav.home.aria', { default: 'Home — dashboard principal' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">🏠</span>
                     <span class="nav-label">{$t('nav.home', { default: 'Home' })}</span>
                   </a>
+                  <a href="/agente/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Agente')} aria-label={$t('nav.agente.aria', { default: 'Agente — chat com IA' })} data-sveltekit-preload-data>
+                    <span class="nav-icon" aria-hidden="true">🤖</span>
+                    <span class="nav-label">{$t('nav.agente', { default: 'Agente' })}</span>
+                  </a>
                   <a href="/escola/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Escola')} aria-label={$t('nav.escola.aria', { default: 'Escola — cursos e lições' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">📚</span>
                     <span class="nav-label">{$t('nav.escola', { default: 'Escola' })}</span>
                   </a>
-                  <a href="/aulas/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Aulas')} aria-label={$t('nav.aulas.aria', { default: 'Aulas — todas as lições agregadas' })} data-sveltekit-preload-data>
-                    <span class="nav-icon" aria-hidden="true">🎓</span>
-                    <span class="nav-label">{$t('nav.aulas', { default: 'Aulas' })}</span>
-                  </a>
-                  <a href="/financas/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Finanças')} aria-label={$t('nav.financas.aria', { default: 'Finanças — despesas e contas' })} data-sveltekit-preload-data>
-                    <span class="nav-icon" aria-hidden="true">💰</span>
-                    <span class="nav-label">{$t('nav.financas', { default: 'Finanças' })}</span>
-                  </a>
-                  <a href="/habitos/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Hábitos')} aria-label={$t('nav.habitos.aria', { default: 'Hábitos — tracking diário' })} data-sveltekit-preload-data>
-                    <span class="nav-icon" aria-hidden="true">🌱</span>
-                    <span class="nav-label">{$t('nav.habitos', { default: 'Hábitos' })}</span>
+                  <a href="/vida/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Vida')} aria-label={$t('nav.vida.aria', { default: 'Vida — finanças, hábitos e vícios' })} data-sveltekit-preload-data>
+                    <span class="nav-icon" aria-hidden="true">🌿</span>
+                    <span class="nav-label">{$t('nav.vida', { default: 'Vida' })}</span>
                   </a>
                   <button
                     type="button"
