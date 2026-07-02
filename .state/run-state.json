@@ -1,9 +1,9 @@
 {
   "version": "7.0.0-rc",
-  "lastUpdated": "2026-07-02T07:50:51+02:00",
+  "lastUpdated": "2026-07-02T08:42:50+02:00",
   "activePlan": "PRESUNTINHO_V7_DELIVERY",
   "currentPhase": "execution",
-  "currentStep": "M1-S5",
+  "currentStep": "V7.1-IA-REORG",
   "production": {
     "url": "https://presuntinho.netlify.app",
     "live": true,
@@ -82,12 +82,44 @@
     },
     "M3-quality-gate": {
       "status": "PENDING"
+    },
+    "V7.1-ia-reorg": {
+      "status": "NEXT",
+      "source": "voice feedback 2026-07-02: footer Home/Agente/Escola/Vida, Duolingo-style Escola, Vida finances/habits/vices, visual QA/screenshots",
+      "steps": {
+        "IA-S1": {
+          "status": "NEXT",
+          "title": "Footer 4 tabs + route ownership"
+        },
+        "IA-S2": {
+          "status": "PENDING",
+          "title": "Home dashboard KPIs/badges/progresso"
+        },
+        "IA-S3": {
+          "status": "PENDING",
+          "title": "Escola hierarchy courses/cadeiras/aulas/quizzes/trabalhos/biblioteca"
+        },
+        "IA-S4": {
+          "status": "PENDING",
+          "title": "Vida finances/habits/vices"
+        },
+        "IA-S5": {
+          "status": "PENDING",
+          "title": "Agente multimodal"
+        },
+        "IA-S6": {
+          "status": "PENDING",
+          "title": "Feedback engine + visual screenshots QA"
+        }
+      },
+      "evidence": "brain-dump/plan/tasks pipeline ingested voice feedback; tasks task-086..094 added."
     }
   },
   "gates": {
     "svelteCheck": "0 errors, 0 warnings (verified 2026-07-02 M1-S4 orçamento progresso)",
     "npmBuild": "exit 0 (verified 2026-07-02 M1-S4 orçamento progresso)",
-    "npmTest": "exit 0 (Vitest no test files, verified 2026-07-02 M1-S4)"
+    "npmTest": "exit 0 (Vitest no test files, verified 2026-07-02 M1-S4)",
+    "latestProductDirection": "V7.1 IA reorg supersedes continuing isolated M1-S5 before route ownership is corrected."
   },
   "smokeTests": {
     "smoke-xppill.test.mjs": "17/17 PASS",
@@ -95,7 +127,8 @@
     "smoke-transacoes-edit.test.mjs": "16/16 PASS",
     "smoke-transacoes-filtros.test.mjs": "11/12 PASS (1 cosmetic regex relaxed)",
     "smoke-categorias-crud.test.mjs": "68/68 PASS (M1-S3 hardening)",
-    "smoke-orcamento-progresso.test.mjs": "72/72 PASS (M1-S4 orçamento progresso)"
+    "smoke-orcamento-progresso.test.mjs": "72/72 PASS (M1-S4 orçamento progresso)",
+    "visual-qa-needed": "PENDING: screenshot mobile/desktop footer hidden button + Home/Escola/Vida/Agente."
   },
   "orchestration": {
     "skander1": "STANDBY — pending M0-S3 review task",
