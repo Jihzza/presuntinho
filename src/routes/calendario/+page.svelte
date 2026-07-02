@@ -46,6 +46,10 @@
     if (delta < -28) expanded = false;
   }
 
+  function onPointerCancel(): void {
+    dragStartY = null;
+  }
+
   onMount(() => {
     void loadAgendaItems()
       .then((rows) => (items = rows))
@@ -58,27 +62,12 @@
 </svelte:head>
 
 <div class="calendar-page">
-  <a class="back" href="/">← Home</a>
-  <header class="hero">
-    <span>🗓️ Vida + Escola</span>
-    <h1>Calendário</h1>
-    <p>Centro dedicado para organizar a vida: semana por defeito, mês ao arrastar para baixo e tasks logo por baixo.</p>
-  </header>
-
-  <nav class="subnav" aria-label="Áreas do calendário">
-    <a href="/calendario/">🗓️ Calendário</a>
-    <a href="/notificacoes/">🔔 Notificações</a>
-    <a href="/escola/trabalhos/">📝 Trabalhos</a>
-    <a href="/habitos/">✅ Hábitos</a>
-  </nav>
-
   <section class="calendar-card" aria-label="Calendário">
     <div class="section-head">
       <div>
         <h2>{expanded ? monthLabel : 'Esta semana'}</h2>
-        <p>{expanded ? 'Vista mensal' : 'Vista semanal'}</p>
+        <p>{expanded ? 'Arrasta para cima para voltar à semana' : 'Arrasta para baixo para abrir o mês'}</p>
       </div>
-      <button type="button" onclick={() => (expanded = !expanded)}>{expanded ? 'Semana' : 'Mês'}</button>
     </div>
 
     <div
@@ -86,6 +75,7 @@
       class:month-view={expanded}
       onpointerdown={onPointerDown}
       onpointerup={onPointerUp}
+      onpointercancel={onPointerCancel}
       role="group"
       aria-label={expanded ? 'Vista mensal do calendário' : 'Vista semanal do calendário'}
     >
@@ -103,8 +93,7 @@
 
   <section class="tasks" aria-label="Tasks próximas">
     <div class="section-head">
-      <h2>Tasks por baixo</h2>
-      <a href="/notificacoes/">Notificações →</a>
+      <h2>Tasks</h2>
     </div>
     {#if loading}
       <p class="empty">A carregar calendário…</p>
@@ -125,20 +114,12 @@
 </div>
 
 <style>
-  .calendar-page { max-width: 880px; margin: 0 auto; padding: 1.25rem 1rem 8rem; color: #fff; }
-  .back { color: #bfdbfe; text-decoration: none; font-weight: 800; }
-  .hero, .calendar-card, .tasks { margin-top: 1rem; padding: 1rem; border-radius: 1.25rem; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.11); }
-  .subnav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; margin-top: 1rem; }
-  .subnav a { color: #fff; text-decoration: none; padding: .75rem; border-radius: .9rem; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.1); font-weight: 800; text-align: center; }
-  .subnav a:hover, .subnav a:focus-visible { background: rgba(255,255,255,.09); outline: none; }
-  .hero span { color: #fde68a; text-transform: uppercase; font-size: .72rem; font-weight: 900; letter-spacing: .07em; }
-  .hero h1 { margin: .35rem 0; font-size: clamp(2rem, 8vw, 3.2rem); }
-  .hero p, .section-head p, .task small, .empty { color: #cbd5e1; }
+  .calendar-page { max-width: 880px; margin: 0 auto; padding: .85rem 1rem 8rem; color: #fff; }
+  .calendar-card, .tasks { margin-top: .75rem; padding: 1rem; border-radius: 1.25rem; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.11); }
+  .section-head p, .task small, .empty { color: #cbd5e1; }
   .section-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .8rem; }
   .section-head h2 { margin: 0; font-size: 1rem; }
   .section-head p { margin: .15rem 0 0; font-size: .82rem; }
-  .section-head a { color: #f9a8d4; text-decoration: none; font-weight: 800; }
-  button { border: 1px solid rgba(255,255,255,.14); border-radius: 999px; min-height: 44px; padding: .65rem .95rem; background: rgba(255,255,255,.1); color: #fff; font: inherit; font-weight: 900; }
   .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .45rem; touch-action: pan-y; }
   .day-cell { min-height: 76px; border-radius: .95rem; padding: .45rem; background: rgba(0,0,0,.22); border: 1px solid rgba(255,255,255,.08); display: flex; flex-direction: column; gap: .15rem; }
   .day-cell[data-outside='true'] { opacity: .42; }
