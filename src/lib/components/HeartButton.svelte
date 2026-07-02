@@ -66,9 +66,10 @@
     height: 56px;
     min-width: 56px;
     min-height: 56px;
+    box-sizing: border-box;
     border-radius: 50%;
-    border: 1px solid rgba(236, 72, 153, 0.35);
-    background: rgba(236, 72, 153, 0.08);
+    border: 1px solid rgba(236, 72, 153, 0.42);
+    background: rgba(236, 72, 153, 0.16);
     color: #fff;
     cursor: pointer;
     display: inline-flex;
@@ -92,7 +93,7 @@
   .heart-btn:focus-visible {
     box-shadow: 0 0 0 2px var(--accent, #ec4899);
   }
-  .heart-btn:active {
+  .heart-btn:active .emoji {
     transform: scale(0.92);
   }
   .emoji {
@@ -128,7 +129,7 @@
      Phase 25 audit: pulse already present + prefers-reduced-motion guard
      already present (see both @media block below and the
      prefersReducedMotion() runtime check in the script). No change needed. */
-  .heart-btn.pulse {
+  .heart-btn.pulse .emoji {
     animation: heart-pulse 0.3s ease;
   }
   @keyframes heart-pulse {
@@ -140,11 +141,11 @@
     .heart-btn {
       transition: none;
     }
-    .heart-btn:active,
+    .heart-btn:active .emoji,
     .heart-btn:hover .emoji {
       transform: none;
     }
-    .heart-btn.pulse {
+    .heart-btn.pulse .emoji {
       animation: none;
     }
   }

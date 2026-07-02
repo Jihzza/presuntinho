@@ -501,11 +501,6 @@
     }
     .fab-stack > :global(*) {
       pointer-events: auto;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 1rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 0.5rem 0.75rem;
-      color: #1f2e4a;
     }
     /* On wide screens give a little extra breathing room from the edge. */
     @media (min-width: 768px) {

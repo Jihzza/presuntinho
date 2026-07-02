@@ -32,6 +32,7 @@
   let fileInput: HTMLInputElement | null = $state(null);
   let inputEl: HTMLTextAreaElement | null = $state(null);
   let recording = $state(false);
+  let keyboardInset = $state(0);
   let mediaRecorder: MediaRecorder | null = null;
   let recordingChunks: BlobPart[] = [];
 
@@ -67,6 +68,16 @@
     } catch (e) {
       console.error('[agente] failed to load history', e);
     }
+  }
+
+  function syncKeyboardInset(): void {
+    if (typeof window === 'undefined') return;
+    const vv = window.visualViewport;
+    if (!vv) {
+      keyboardInset = 0;
+      return;
+    }
+    keyboardInset = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
   }
 
   async function send() {
@@ -215,7 +226,15 @@
   }
 
   onMount(() => {
+    syncKeyboardInset();
+    window.visualViewport?.addEventListener('resize', syncKeyboardInset);
+    window.visualViewport?.addEventListener('scroll', syncKeyboardInset);
     void refreshHistory();
+    return () => {
+      window.visualViewport?.removeEventListener('resize', syncKeyboardInset);
+      window.visualViewport?.removeEventListener('scroll', syncKeyboardInset);
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+    };
   });
 </script>
 
@@ -270,7 +289,7 @@
     tap. Tap targets are ≥44px (mobile a11y baseline) and the strip
     honours `safe-area-inset-bottom` via the composer container.
   -->
-  <div class="composer-dock">
+  <div class="composer-dock" style={`--keyboard-inset: ${keyboardInset}px`}>
     <div class="chips-bar" role="group" aria-label={$t('agente.chips.label', { default: 'Sugestões rápidas' })}>
       {#each CHIPS as chip (chip.key)}
         <button
@@ -285,15 +304,6 @@
     </div>
 
     <div class="composer">
-      <button
-        type="button"
-        class="icon-btn"
-        onclick={triggerFilePicker}
-        aria-label="{$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}"
-        title={$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}
-      >
-        📎
-      </button>
       <input
         type="file"
         bind:this={fileInput}
@@ -301,14 +311,25 @@
         hidden
         accept="image/*,audio/*,.pdf,.txt,.md,.doc,.docx"
       />
-      <textarea
-        bind:this={inputEl}
-        bind:value={input}
-        onkeydown={onKeydown}
-        placeholder={$t('agente.placeholder_chips', { default: 'ou escreve aqui a tua pergunta…' })}
-        rows="1"
-        disabled={busy}
-      ></textarea>
+      <div class="input-shell">
+        <button
+          type="button"
+          class="attach-btn"
+          onclick={triggerFilePicker}
+          aria-label="{$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}"
+          title={$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}
+        >
+          📎
+        </button>
+        <textarea
+          bind:this={inputEl}
+          bind:value={input}
+          onkeydown={onKeydown}
+          placeholder={$t('agente.placeholder_chips', { default: 'ou escreve aqui a tua pergunta…' })}
+          rows="1"
+          disabled={busy}
+        ></textarea>
+      </div>
       <button
         type="button"
         class="action-btn"
@@ -452,13 +473,17 @@
     position: fixed;
     left: 50%;
     right: auto;
-    bottom: calc(4.85rem + env(safe-area-inset-bottom));
+    bottom: max(
+      calc(4.25rem + env(safe-area-inset-bottom)),
+      calc(var(--keyboard-inset, 0px) + 0.55rem)
+    );
     transform: translateX(-50%);
-    width: min(800px, 100vw);
+    width: min(800px, calc(100vw - 0.75rem));
     z-index: 55;
-    background: rgba(12, 18, 32, 0.94);
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
+    background: rgba(12, 18, 32, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 1.15rem 1.15rem 0.95rem 0.95rem;
+    box-shadow: 0 -8px 26px rgba(0, 0, 0, 0.32);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
   }
@@ -499,16 +524,32 @@
   .composer {
       display: flex;
       align-items: flex-end;
-      gap: 0.45rem;
-      padding: 0.55rem 0.65rem 0.65rem;
+      gap: 0.5rem;
+      padding: 0.5rem 0.55rem 0.55rem;
     }
-  .icon-btn {
+  .input-shell {
+    flex: 1;
+    min-height: 52px;
+    display: flex;
+    align-items: flex-end;
+    gap: 0.25rem;
+    background: rgba(255, 255, 255, 0.09);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    padding: 0.25rem 0.35rem;
+    transition: border-color 120ms ease, background 120ms ease;
+  }
+  .input-shell:focus-within {
+    border-color: var(--accent, #ec4899);
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .attach-btn {
     background: transparent;
     border: 0;
     color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
     padding: 0.5rem;
-    border-radius: 0.5rem;
+    border-radius: 999px;
     font-size: 1.2rem;
     min-width: 44px;
     min-height: 44px;
@@ -516,30 +557,25 @@
     align-items: center;
     justify-content: center;
   }
-  .icon-btn:hover {
+  .attach-btn:hover {
     background: rgba(255, 255, 255, 0.08);
     color: #fff;
-  }
-  .icon-btn.recording {
-    background: rgba(239, 68, 68, 0.25);
-    color: #fca5a5;
   }
   .composer textarea {
     flex: 1;
     resize: none;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: transparent;
+    border: 0;
     color: #fff;
-    padding: 0.6rem 0.8rem;
-    border-radius: 14px;
+    padding: 0.72rem 0.45rem 0.58rem 0.1rem;
+    border-radius: 0;
     font: inherit;
-    max-height: 120px;
+    max-height: 132px;
     min-height: 44px;
     line-height: 1.4;
   }
   .composer textarea:focus {
     outline: none;
-    border-color: var(--accent, #ec4899);
   }
   .action-btn {
     background: var(--accent, #ec4899);
