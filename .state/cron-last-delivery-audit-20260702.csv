@@ -1,0 +1,6 @@
+job_id,name,schedule,deliver,last_status,last_run_at,last_error,last_delivery_error,verdict
+1294be4dbb4a,presuntinho-brain-dump,every 10m,local,ok,2026-07-02T12:53:45+02:00,,,ok
+0da7f81f70fd,presuntinho-plan,every 30m,local,error,2026-07-02T12:27:34+02:00,"TimeoutError: Cron job 'presuntinho-plan' idle for 604s (limit 600s) — last activity: tool completed: read_file (0.5s)",,execution_timeout
+b21ec6a274ef,presuntinho-tasks,every 15m,local,ok,2026-07-02T12:46:24+02:00,,,ok
+285b92153801,presuntinho-execute,every 20m,local,ok,2026-07-02T12:32:35+02:00,,,ok
+03721ad45157,presuntinho-questions,every 360m,local,ok,2026-07-02T08:45:20+02:00,,,ok
