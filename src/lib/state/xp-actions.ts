@@ -20,9 +20,18 @@
 //   * If `reason` is unknown, we log a warning and no-op. This catches
 //     typos at runtime in dev without breaking prod.
 //   * awardXP fires a 'presuntinho:xp-changed' window event so other
-//     components (XpPill, dashboard, badge grids) can react.
+//     components (XpPill, XpToast, dashboard, badge grids) can react.
+//     Event detail shape:
+//       { reason, amount, delta, total, source }
+//     - reason  : XP_TABLE key (e.g. 'habito_mark_done'). Internal use.
+//     - amount  : signed delta applied (back-compat field name).
+//     - delta   : alias of `amount`, kept for forward-compat with consumers
+//                 that follow the spec contract `{delta, total, source}`.
+//     - total   : xp store snapshot AFTER the award.
+//     - source  : same value as `reason` for external consumers.
 
-import { addXP } from './stores';
+import { get } from 'svelte/store';
+import { addXP, xp } from './stores';
 import { showToast } from '../components/events';
 
 export const XP_CHANGED_EVENT = 'presuntinho:xp-changed';
@@ -42,18 +51,18 @@ export const XP_CHANGED_EVENT = 'presuntinho:xp-changed';
  */
 export const XP_TABLE: Readonly<Record<string, number>> = Object.freeze({
   // Finanças
-    transacao_add_despesa: 3,
-    transacao_add_receita: 3,
-    transacao_edit: 1,
-    transacao_delete: -1,
-    orcamento_define: 5,
-    orcamento_remove: 0,
-    // task-038 — first dashboard visit of the day (idempotent per day).
-    financas_dashboard_first_view: 2,
-    // task-038 — user defined a monthly budget cap and stayed under it
-    // at end-of-month evaluation.  Bonus is paid once per category per
-    // month; awarded only when saldo >= 0 for that month's spend.
-    financas_orcamento_meta_batida: 50,
+   transacao_add_despesa: 3,
+   transacao_add_receita: 3,
+   transacao_edit: 1,
+   transacao_delete: -1,
+   orcamento_define: 5,
+   orcamento_remove: 0,
+   // task-038 — first dashboard visit of the day (idempotent per day).
+   financas_dashboard_first_view: 2,
+   // task-038 — user defined a monthly budget cap and stayed under it
+   // at end-of-month evaluation.  Bonus is paid once per category per
+   // month; awarded only when saldo >= 0 for that month's spend.
+   financas_orcamento_meta_batida: 50,
 
   // Hábitos
   habito_create: 5,
@@ -141,15 +150,22 @@ export async function awardXP(reason: string, amount?: number): Promise<void> {
 
   await addXP(finalAmount);
 
-  // Toast feedback (pt-PT format)
+  // Toast feedback (pt-PT format) + notify subscribers (XpPill, XpToast,
+  // dashboard counters, etc.). See file header for the detail schema.
   if (typeof window !== 'undefined') {
     const sign = finalAmount > 0 ? '+' : '';
     showToast(`${sign}${finalAmount} XP`);
 
-    // Notify subscribers (XpPill, dashboard counters, etc.)
+    const total = get(xp);
     window.dispatchEvent(
       new CustomEvent(XP_CHANGED_EVENT, {
-        detail: { reason, amount: finalAmount }
+        detail: {
+          reason,
+          amount: finalAmount,
+          delta: finalAmount,
+          total,
+          source: reason
+        }
       })
     );
   }

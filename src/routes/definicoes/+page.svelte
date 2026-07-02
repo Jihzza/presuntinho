@@ -23,11 +23,17 @@
   import { locale, waitLocale } from 'svelte-i18n';
   import { setLocale, LOCALES, LOCALE_META, type Locale } from '$lib/i18n';
   import {
-    exportData as backupExport,
+    // task-051 — extended backup surface.
+    exportAllData,
+    importBackup,
+    getTableCounts,
     parseBackup,
     payloadToBlob,
     suggestedFilename,
-    type BackupPayload
+    BACKUP_TABLES,
+    BackupError,
+    type BackupPayload,
+    type ImportReport
   } from '$lib/backup';
   import Sun from 'lucide-svelte/icons/sun';
   import Moon from 'lucide-svelte/icons/moon';
@@ -318,48 +324,132 @@
   }
 
   // ----- Export JSON -----
-  // Delegates the actual snapshot to $lib/backup so the same logic is
-  // reusable from any future 'share backup' / Drive-upload flow.
+  // Delegates the actual snapshot + download to $lib/backup so the
+  // same logic is reusable from any future 'share backup' / Drive-upload
+  // flow.  task-051 uses the new `downloadBackup()` helper which is a
+  // one-shot version of exportAllData() + anchor-click.
   let exporting = $state(false);
-  async function exportData(): Promise<void> {
+  let exportHint = $state<string | null>(null);
+  let tableCounts = $state<Record<string, number>>({});
+  let countsLoaded = $state(false);
+  const TABLE_LABEL_KEY: Record<string, string> = {
+    state: 'settings.backup.tables.state',
+    settings: 'settings.backup.tables.settings',
+    badges: 'settings.backup.tables.badges',
+    visited: 'settings.backup.tables.visited',
+    quizScores: 'settings.backup.tables.quizScores',
+    secrets: 'settings.backup.tables.secrets',
+    transacoes: 'settings.backup.tables.transacoes',
+    orcamentos: 'settings.backup.tables.orcamentos',
+    categorias: 'settings.backup.tables.categorias',
+    habitos: 'settings.backup.tables.habitos',
+    habit_logs: 'settings.backup.tables.habit_logs',
+    biblioteca: 'settings.backup.tables.biblioteca',
+    notes: 'settings.backup.tables.notes',
+    chat_messages: 'settings.backup.tables.chat_messages',
+    assignments: 'settings.backup.tables.assignments'
+  };
+
+  async function refreshCounts(): Promise<void> {
+    tableCounts = await getTableCounts();
+    countsLoaded = true;
+  }
+
+  // task-051: pre-compute the per-table label strings once per locale
+  // change so the {#each} block below can render them without forcing
+  // svelte-i18n to re-subscribe per row (the compiler refuses `$t(...)`
+  // inside an `each` when the key depends on the loop variable, AND
+  // inside `$derived.by` lambdas).
+  const translate = $derived($t);
+  const TABLE_LABELS: { name: string; count: number }[] = $derived(
+    BACKUP_TABLES.map((table) => ({
+      name: translate(TABLE_LABEL_KEY[table] ?? table),
+      count: tableCounts[table] ?? 0
+    }))
+  );
+
+  // Populate the table-preview list once on first paint so the user
+  // sees "what's about to come out" before clicking Export.
+  onMount(() => {
+    void refreshCounts();
+  });
+
+  async function doExport(): Promise<void> {
     if (exporting) return;
     exporting = true;
+    exportHint = null;
     try {
-      const payload = await backupExport();
-      const blob = payloadToBlob(payload);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = suggestedFilename();
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+      const payload = await exportAllData();
+      // Browser-only filename/anchor click here so the function reads
+      // just as cleanly from a future Service-Worker context.
+      if (typeof document !== 'undefined') {
+        const blob = payloadToBlob(payload);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = suggestedFilename();
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+      // Refresh counts so the next visit reflects any writes done since.
+      await refreshCounts();
+      exportHint = $t('settings.backup.export.done');
     } catch (e) {
       console.error('[definicoes] export failed', e);
+      exportHint = errorMessage(e, 'settings.backup.error.export_failed');
     } finally {
       exporting = false;
     }
   }
 
+  // Translate a BackupError.code into the matching `settings.backup.errors.*` key.
+  function errorMessage(e: unknown, fallbackKey: string): string {
+    if (e instanceof BackupError) {
+      const key = `settings.backup.errors.${e.code}`;
+      const localised = $t(key, { default: key });
+      // svelte-i18n returns the key itself when missing — fall back to the
+      // English-ish message baked into the error, then to the caller's fallback.
+      if (localised !== key) {
+        if (e.code === 'parse_failed' || e.code === 'read_failed') {
+          return $t('settings.backup.errors.parse_failed', { values: { msg: e.message } });
+        }
+        return localised;
+      }
+    }
+    const msg = e instanceof Error ? e.message : String(e);
+    return $t(fallbackKey, { values: { msg } });
+  }
+
   // ----- Import JSON -----
-  // Two-step flow: file select parses + validates, then a confirmation
-  // modal shows the user what's about to be overwritten.  The actual
-  // destructive write only runs when they click 'Substituir'.
+  // task-051: file-based flow with a merge/replace selector and a
+  // per-table preview of what the payload contains.  Two-step flow:
+  //   1. file select → parse + validate + show modal with payload meta
+  //   2. confirm → importBackup(file, mode) → ImportReport → reload
   let importing = $state(false);
+  let importMode = $state<'merge' | 'replace'>('replace');
   let importMessage = $state<{ kind: 'success' | 'error'; text: string } | null>(null);
+  let pendingReport = $state<ImportReport | null>(null);
   let fileInput: HTMLInputElement | null = $state(null);
 
   // Stash the parsed payload between file-select and modal confirmation.
   // Lives only in memory; reload clears it.
   let pendingPayload: BackupPayload | null = $state(null);
+  let pendingFile: File | null = $state(null);
   let pendingFileName: string = $state('');
   let pendingFileDate: string = $state('');
+
+  function setImportMode(mode: 'merge' | 'replace'): void {
+    importMode = mode;
+  }
 
   function triggerImport(): void {
     if (importing) return;
     importMessage = null;
+    pendingReport = null;
     pendingPayload = null;
+    pendingFile = null;
     pendingFileName = '';
     pendingFileDate = '';
     fileInput?.click();
@@ -370,12 +460,15 @@
     const file = target.files?.[0];
     if (!file) return;
     importMessage = null;
+    pendingReport = null;
     try {
+      // Read once so we can both validate and run importBackup() — the
+      // latter re-parses internally but a parse failure here gives us
+      // a nicer message in the modal than a late one.
       const text = await file.text();
-      // parseBackup throws on invalid JSON or schema violations; we
-      // surface the reason in the error hint and abort (no modal).
       const payload = parseBackup(text);
       pendingPayload = payload;
+      pendingFile = file;
       pendingFileName = file.name;
       pendingFileDate = (payload.exportedAt ?? '').slice(0, 10);
     } catch (e) {
@@ -383,10 +476,9 @@
       const msg = e instanceof Error ? e.message : String(e);
       importMessage = {
         kind: 'error',
-        text: $t('settings.import.error', { values: { msg } })
+        text: errorMessage(e, 'settings.import.error')
       };
     } finally {
-      // Allow re-selecting the same file.
       if (target) target.value = '';
     }
   }
@@ -394,31 +486,43 @@
   function cancelImport(): void {
     if (importing) return;
     pendingPayload = null;
+    pendingFile = null;
     pendingFileName = '';
     pendingFileDate = '';
+    pendingReport = null;
   }
 
   async function confirmImport(): Promise<void> {
-    if (!pendingPayload || importing) return;
+    if (!pendingFile || importing) return;
     importing = true;
     try {
-      // Lazy-import so the import-only code path doesn't pull
-      // $lib/state/db into the module-init graph of this page.
-      const mod = await import('$lib/backup');
-      await mod.importData(pendingPayload);
+      const report = await importBackup(pendingFile, importMode);
+      pendingReport = report;
+      pendingPayload = null;
+      // Build a short summary the user can scan before the reload.
+      // Cache the i18n strings up here so Svelte's "stores must be
+      // subscribed at the top level" rule doesn't trip on $t(...)
+      // inside a nested expression.
+      const totals = report.totals;
+      const modeLabel = $t(`settings.backup.import_mode.${report.mode}`);
       importMessage = {
         kind: 'success',
-        text: $t('settings.import.success')
+        text: $t('settings.backup.import.report', {
+          values: {
+            inserted: totals.inserted,
+            replaced: totals.replaced,
+            skipped: totals.skipped,
+            mode: modeLabel
+          }
+        })
       };
-      pendingPayload = null;
       // Reload so every store re-hydrates from the freshly-imported data.
-      setTimeout(() => location.reload(), 600);
+      setTimeout(() => location.reload(), 1200);
     } catch (e) {
       console.error('[definicoes] import failed', e);
-      const msg = e instanceof Error ? e.message : String(e);
       importMessage = {
         kind: 'error',
-        text: $t('settings.import.error', { values: { msg } })
+        text: errorMessage(e, 'settings.import.error')
       };
     } finally {
       importing = false;
@@ -528,7 +632,7 @@
     </div>
 
     <div class="data-actions">
-      <button type="button" class="btn btn-secondary" onclick={exportData} disabled={exporting}>
+      <button type="button" class="btn btn-secondary" onclick={doExport} disabled={exporting}>
         <Download size={16} aria-hidden="true" />
         {exporting ? '…' : $t('settings.export')}
       </button>
@@ -551,6 +655,23 @@
       </button>
     </div>
 
+    {#if countsLoaded}
+      <details class="backup-preview">
+        <summary>{$t('settings.backup.tables_label')}</summary>
+        <ul class="backup-table-list">
+          {#each TABLE_LABELS as row, i (i)}
+            <li>
+              <span class="t-name">{row.name}</span>
+              <span class="t-count" class:zero={row.count === 0}>{row.count}</span>
+            </li>
+          {/each}
+        </ul>
+      </details>
+    {/if}
+
+    {#if exportHint}
+      <p class="hint" class:ok={!importMessage || importMessage.kind !== 'error'}>{exportHint}</p>
+    {/if}
     {#if importMessage}
       <p class="hint" class:err={importMessage.kind === 'error'} class:ok={importMessage.kind === 'success'}>
         {importMessage.text}
@@ -613,13 +734,42 @@
       {#if pendingFileDate}
         <p class="hint">{$t('settings.import.exported_at', { values: { date: pendingFileDate } })}</p>
       {/if}
+
+      <fieldset class="mode-select" disabled={importing}>
+        <legend>{$t('settings.backup.import_mode_label')}</legend>
+        <label class="mode-opt">
+          <input
+            type="radio"
+            name="import-mode"
+            value="merge"
+            checked={importMode === 'merge'}
+            onchange={() => setImportMode('merge')}
+            disabled={importing}
+          />
+          <span>{$t('settings.backup.import_mode.merge')}</span>
+          <small class="muted">{$t('settings.backup.import_mode.merge_help')}</small>
+        </label>
+        <label class="mode-opt">
+          <input
+            type="radio"
+            name="import-mode"
+            value="replace"
+            checked={importMode === 'replace'}
+            onchange={() => setImportMode('replace')}
+            disabled={importing}
+          />
+          <span>{$t('settings.backup.import_mode.replace')}</span>
+          <small class="muted">{$t('settings.backup.import_mode.replace_help')}</small>
+        </label>
+      </fieldset>
+
       <div class="modal-actions">
         <button type="button" class="btn btn-secondary" onclick={cancelImport} disabled={importing}>
           {$t('settings.cancel')}
         </button>
         <button type="button" class="btn btn-danger" onclick={confirmImport} disabled={importing}>
           <Upload size={14} aria-hidden="true" />
-          {importing ? '…' : $t('settings.import.confirm_button')}
+          {importing ? '…' : $t(`settings.backup.import_mode.${importMode}_button`)}
         </button>
       </div>
     </div>
@@ -1054,6 +1204,97 @@
   }
   .reset-form .modal-actions {
     margin-top: 0.25rem;
+  }
+  /* task-051: per-table preview list of what the export will include */
+  .backup-preview {
+    margin-top: 0.75rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.6rem;
+    padding: 0.5rem 0.75rem;
+  }
+  .backup-preview summary {
+    cursor: pointer;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    list-style: none;
+  }
+  .backup-preview summary::-webkit-details-marker {
+    display: none;
+  }
+  .backup-preview summary::before {
+    content: '▶';
+    display: inline-block;
+    margin-right: 0.5rem;
+    color: #94a3b8;
+    transition: transform 0.15s;
+  }
+  .backup-preview[open] summary::before {
+    transform: rotate(90deg);
+  }
+  .backup-table-list {
+    list-style: none;
+    padding: 0.5rem 0 0 0;
+    margin: 0.5rem 0 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.25rem 0.75rem;
+  }
+  .backup-table-list li {
+    display: flex;
+    justify-content: space-between;
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    padding: 0.15rem 0;
+  }
+  .backup-table-list .t-name {
+    color: #e2e8f0;
+  }
+  .backup-table-list .t-count {
+    font-variant-numeric: tabular-nums;
+    color: #94a3b8;
+  }
+  .backup-table-list .t-count.zero {
+    color: #475569;
+  }
+  /* task-051: merge/replace selector in the import modal */
+  .mode-select {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0.6rem;
+    padding: 0.6rem 0.8rem 0.75rem;
+    margin: 0.75rem 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .mode-select legend {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    padding: 0 0.25rem;
+  }
+  .mode-opt {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 0.5rem;
+    align-items: center;
+    cursor: pointer;
+  }
+  .mode-opt input[type='radio'] {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    accent-color: #ec4899;
+  }
+  .mode-opt span {
+    color: #fff;
+    font-size: 0.92rem;
+  }
+  .mode-opt small {
+    grid-column: 2;
+    grid-row: 2;
+    color: #94a3b8;
+    font-size: 0.78rem;
+    line-height: 1.3;
   }
   @media (min-width: 640px) {
     .definicoes {
