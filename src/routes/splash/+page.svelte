@@ -116,17 +116,33 @@
     }
 
     const inferredProfile = inferProfileFromPassOrder(password);
+
+    loading = true;
+    error = '';
+
+    // Love Lock triggers are intentionally NOT pass-order passwords. They must
+    // be allowed through before the pass-order guard, otherwise phrases like
+    // "Sick" / "sad" / "love" are rejected as an invalid profile password
+    // before the mood lock code ever runs.
     if (!inferredProfile) {
+      const loveKind = detectLoveLock(password);
+      if (loveKind) {
+        const newLock = await activateLoveLock(loveKind);
+        if (newLock) loveLockState = newLock;
+        password = '';
+        loading = false;
+        return;
+      }
+
       error = $t('splash.wrong_password', { default: 'pass-order invalida' });
       password = '';
       shake = true;
       setTimeout(() => (shake = false), 500);
+      loading = false;
       return;
     }
     selectedProfile = inferredProfile;
 
-    loading = true;
-        error = '';
         try {
           // ── PBKDF2 check FIRST ──
           // Critical ordering: if Fatma's real password happens to contain the

@@ -281,6 +281,25 @@ console.log('\nTest 10: GET on expired blob triggers lazy GC');
   assert('blob gc\'d', !memStore().has('love-lock:current'));
 }
 
+// ── Test 11: Splash pass-order guard must not block emotional triggers ──
+console.log('\nTest 11: splash routes Sick through LoveLock before pass-order error');
+{
+  const splashPath = path.join(repoRoot, 'src', 'routes', 'splash', '+page.svelte');
+  const splash = await fs.readFile(splashPath, 'utf8');
+  const passOrderGuard = splash.indexOf('if (!inferredProfile)');
+  const guardEnd = splash.indexOf('selectedProfile = inferredProfile', passOrderGuard);
+  const guardBlock = passOrderGuard >= 0 && guardEnd > passOrderGuard ? splash.slice(passOrderGuard, guardEnd) : '';
+  assert('pass-order guard exists', !!guardBlock);
+  assert('guard checks detectLoveLock before wrong_password',
+    guardBlock.indexOf('detectLoveLock(password)') >= 0 &&
+      guardBlock.indexOf('detectLoveLock(password)') < guardBlock.indexOf('splash.wrong_password'),
+    guardBlock.replace(/\s+/g, ' ').slice(0, 260));
+  assert('guard activates love lock before returning invalid pass-order',
+    guardBlock.indexOf('activateLoveLock(loveKind)') >= 0 &&
+      guardBlock.indexOf('activateLoveLock(loveKind)') < guardBlock.indexOf('splash.wrong_password'),
+    guardBlock.replace(/\s+/g, ' ').slice(0, 260));
+}
+
 // ── Summary ──
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed === 0 ? 0 : 1);
