@@ -196,3 +196,23 @@ export function schoolTotals() {
     quizzes: allUnits.reduce((sum, unit) => sum + unit.lessons.filter((lesson) => Boolean(lesson.quizSlug)).length, 0)
   };
 }
+
+export function schoolLessonDirectoryOrder(): string[] {
+  return [
+    ...businessCustomLessons.map((unit) => unit.slug),
+    portugueseCourse.slug,
+    ...businessSubjects.map((unit) => unit.slug)
+  ];
+}
+
+export function schoolMetaForSlug(slug: string): Pick<SchoolUnit, 'slug' | 'title' | 'icon' | 'color'> | undefined {
+  const course = schoolCourses.find((item) => item.slug === slug);
+  if (course) {
+    return { slug: course.slug, title: course.title, icon: course.icon, color: course.color };
+  }
+  const unit = findSchoolUnit(slug);
+  if (unit) {
+    return { slug: unit.slug, title: unit.title, icon: unit.icon, color: unit.color };
+  }
+  return undefined;
+}
