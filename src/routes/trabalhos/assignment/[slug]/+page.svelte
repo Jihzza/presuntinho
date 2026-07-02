@@ -251,7 +251,7 @@
   .detail {
     max-width: 800px;
     margin: 0 auto;
-    padding: 1.5rem 1rem 2rem;
+    padding: 1.5rem 1rem calc(8rem + env(safe-area-inset-bottom));
   }
   .crumbs {
     display: flex;
@@ -496,7 +496,7 @@
   }
   @media (min-width: 640px) {
     .detail {
-      padding: 2rem 1.5rem 3rem;
+      padding: 2rem 1.5rem calc(8rem + env(safe-area-inset-bottom));
     }
     .title-row h1 {
       font-size: 1.875rem;

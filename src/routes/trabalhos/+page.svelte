@@ -320,7 +320,7 @@
   .trabalhos {
     max-width: 800px;
     margin: 0 auto;
-    padding: 1.5rem 1rem 2rem;
+    padding: 1.5rem 1rem calc(8rem + env(safe-area-inset-bottom));
   }
   .hero {
     text-align: center;
@@ -590,7 +590,7 @@
   }
   @media (min-width: 640px) {
     .trabalhos {
-      padding: 2rem 1.5rem 3rem;
+      padding: 2rem 1.5rem calc(8rem + env(safe-area-inset-bottom));
     }
     .hero h1 {
       font-size: 2.5rem;
