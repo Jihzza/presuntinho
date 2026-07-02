@@ -11,7 +11,8 @@
     "test": "vitest run --passWithNoTests",
     "test:e2e": "playwright test",
     "auth:bypass:daniel": "node scripts/dev-auth-bypass.mjs daniel",
-    "auth:bypass:fatma": "node scripts/dev-auth-bypass.mjs fatma"
+    "auth:bypass:fatma": "node scripts/dev-auth-bypass.mjs fatma",
+    "check:depth": "node scripts/depth-gates.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.45.0",

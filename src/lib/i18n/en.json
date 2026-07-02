@@ -2084,6 +2084,12 @@
         "twitter_description": "Assignments and submissions with deadlines",
         "twitter_title": "Trabalhos · Submissions and Deadlines"
       }
+    },
+    "hub": {
+      "dashboard": {
+        "aria": "Quick status",
+        "title": "Dashboard"
+      }
     }
   },
   "routes.agente.engine.empty_msg": "Tell me something 😊",

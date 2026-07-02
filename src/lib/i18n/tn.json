@@ -2084,6 +2084,12 @@
         "twitter_description": "Travaux w livrables b les délais",
         "twitter_title": "Trabalhos · Livraisons w Délais"
       }
+    },
+    "hub": {
+      "dashboard": {
+        "aria": "Status srii3",
+        "title": "Dashboard"
+      }
     }
   },
   "routes.agente.engine.empty_msg": "Goulli li kima 😊",

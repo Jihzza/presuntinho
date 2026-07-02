@@ -2084,6 +2084,12 @@
         "twitter_description": "Devoirs et livraisons avec délais",
         "twitter_title": "Trabalhos · Livraisons et Délais"
       }
+    },
+    "hub": {
+      "dashboard": {
+        "aria": "Statut rapide",
+        "title": "Tableau de bord"
+      }
     }
   },
   "routes.agente.engine.empty_msg": "Dis-moi quelque chose 😊",

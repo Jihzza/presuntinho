@@ -2084,6 +2084,12 @@
         "twitter_description": "وظائف وتسليمات مع مواعيد نهائية",
         "twitter_title": "Trabalhos · التسليمات والمواعيد"
       }
+    },
+    "hub": {
+      "dashboard": {
+        "aria": "حالة سريعة",
+        "title": "لوحة القيادة"
+      }
     }
   },
   "routes.agente.engine.empty_msg": "قولي حاجة 😊",
