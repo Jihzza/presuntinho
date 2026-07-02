@@ -93,7 +93,7 @@
           <p>Aula/case personalizado dentro de Business Administration, ligado ao trabalho que fizemos.</p>
         </div>
       </a>
-      <a class="tool-card" href="/trabalhos/" style="--accent: #f59e0b;">
+      <a class="tool-card" href="/escola/trabalhos/" style="--accent: #f59e0b;">
         <span>📝</span>
         <div>
           <h3>Trabalhos</h3>

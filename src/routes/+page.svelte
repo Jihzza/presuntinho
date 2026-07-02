@@ -189,7 +189,7 @@
     </div>
     <div class="map-grid">
       <a href="/escola/">🎓 Escola <small>cursos, cadeiras, aulas</small></a>
-      <a href="/trabalhos/">📝 Trabalhos <small>assignments e entregas</small></a>
+      <a href="/escola/trabalhos/">📝 Trabalhos <small>assignments e entregas</small></a>
       <a href="/biblioteca/">📚 Biblioteca <small>materiais e ficheiros</small></a>
       <a href="/financas/orcamento/">📊 Orçamento <small>estado do mês</small></a>
       <a href="/financas/transacoes/">💳 Transacções <small>entradas e gastos</small></a>
