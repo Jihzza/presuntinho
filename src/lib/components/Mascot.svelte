@@ -2,8 +2,9 @@
   /**
    * Mascot — Floating Action Button (FAB).
    *
-   * Mirrors V3's mascot icon (🧴) that lives in the bottom-right and
-   * surfaces random pro-tips.  Visibility is gated by the user's
+   * Mirrors V3's mascot icon (🧴) and surfaces random pro-tips.
+   * The layout places it in the shared FAB stack above the footer.
+   * Visibility is gated by the user's
    * exploration: only shown after ≥ 4 distinct routes have been visited.
    *
    * Honours `prefers-reduced-motion` — when reduced motion is requested
@@ -78,11 +79,9 @@
     align-items: center;
     justify-content: center;
     padding: 0;
-    /* Fixed bottom-right with safe-area inset for iOS notch. */
-    position: fixed;
-    right: max(1rem, env(safe-area-inset-right));
-    bottom: max(1rem, env(safe-area-inset-bottom));
-    z-index: 50;
+    /* Position is owned by the shared .fab-stack in +layout.svelte. Keeping
+       this component non-fixed prevents it sitting behind the Vida footer tab. */
+    position: static;
     box-shadow:
       0 6px 18px rgba(236, 72, 153, 0.45),
       0 2px 6px rgba(0, 0, 0, 0.35);

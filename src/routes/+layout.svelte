@@ -195,7 +195,6 @@
   <Confetti />
   <Toast />
   <XpToast />
-  <Mascot />
   <SecretModal bind:open={secretRoomOpen} />
   <!-- Phase 15: offline status banner (listens to online/offline events). -->
   <OfflineIndicator />
@@ -268,14 +267,16 @@
                 </nav>
 
                 <!--
-                  Floating XP + Heart easter egg.
-                  The heart is intentionally preserved; keep the whole stack
-                  above (not on top of) the bottom nav so it cannot hide tabs.
+                  Floating XP + easter eggs.
+                  Keep these in one stack above the bottom nav. Mascot used to
+                  be an independent fixed button at bottom-right, which made it
+                  sit behind the Vida footer tab on mobile.
                 -->
                 {#if !isAgentRoute}
                   <div class="fab-stack" aria-live="polite">
                     <XpPill />
                     <HeartButton />
+                    <Mascot />
                   </div>
                 {/if}
   </div>
@@ -479,7 +480,7 @@
       }
     }
 
-    /* Floating action button stack (XP pill + heart easter egg). */
+    /* Floating action button stack (XP pill + easter eggs). */
     .fab-stack {
       position: fixed;
       right: max(1rem, env(safe-area-inset-right));
