@@ -2,12 +2,16 @@
   import { page } from '$app/state';
   import { t } from 'svelte-i18n';
   import QuizRunner from '$lib/components/QuizRunner.svelte';
+  import { schoolQuizContextForSlug } from '$lib/escola/catalog';
 
   // Quiz route. Maps slug → JSON file. All 5 quizzes live under /quizzes/
   // (static/quizzes/q1.json, q2.json, q3.json, q4.json, ptq.json).
 
   let quizSlug = $derived(page.params.quizSlug ?? '');
   let jsonPath = $derived(`/quizzes/${quizSlug}.json`);
+  let quizContext = $derived(schoolQuizContextForSlug(quizSlug));
+  let courseHref = $derived(quizContext?.courseHref ?? '/escola/');
+  let courseTitle = $derived(quizContext?.courseTitle ?? 'Escola');
 
   // SEO — used by <svelte:head> below.
   let pageTitle = $derived(`${quizSlug.toUpperCase()} · Quiz · Escola`);
@@ -29,7 +33,7 @@
     <p class="breadcrumb">
       <a href="/escola/">{$t('escola.quiz.breadcrumb.home', { default: '← Escola' })}</a>
       <span class="sep">›</span>
-      <a href="/escola/curso/equivalenza/">{$t('escola.quiz.breadcrumb.curso', { default: 'Equivalenza' })}</a>
+      <a href={courseHref}>{$t('escola.quiz.breadcrumb.curso', { default: courseTitle })}</a>
       <span class="sep">›</span>
       <span>{$t('escola.quiz.breadcrumb.current', { default: 'Quiz' })} {quizSlug.toUpperCase()}</span>
     </p>
@@ -40,7 +44,7 @@
   {/key}
 
   <p class="back-link">
-    <a href="/escola/curso/equivalenza/">{$t('escola.quiz.back_to_course', { default: '← Voltar ao curso' })}</a>
+    <a href={courseHref}>{$t('escola.quiz.back_to_course', { default: `← Voltar a ${courseTitle}` })}</a>
   </p>
 </div>
 

@@ -1,3 +1,5 @@
+import { legacyCourseDetails } from './legacy-course-details';
+
 export type SchoolCourseType = 'primary' | 'extra';
 
 export interface SchoolLessonRef {
@@ -32,6 +34,26 @@ export interface SchoolCourse {
   units: SchoolUnit[];
   extras?: SchoolUnit[];
 }
+
+export interface SchoolCourseLessonDetail {
+  slug: string;
+  title: string;
+  summary: string;
+  quizSlug?: string;
+  quizTitle?: string;
+  estMinutes: number;
+}
+
+export interface SchoolCourseDetail {
+  slug: string;
+  title: string;
+  tagline: string;
+  description: string;
+  icon: string;
+  color: string;
+  lessons: SchoolCourseLessonDetail[];
+}
+
 
 const businessUnits: SchoolUnit[] = [
   {
@@ -215,4 +237,44 @@ export function schoolMetaForSlug(slug: string): Pick<SchoolUnit, 'slug' | 'titl
     return { slug: unit.slug, title: unit.title, icon: unit.icon, color: unit.color };
   }
   return undefined;
+}
+
+
+function detailFromSchoolUnit(unit: SchoolUnit): SchoolCourseDetail {
+  const parent = courseForUnit(unit.slug);
+  return {
+    slug: unit.slug,
+    title: unit.title,
+    tagline: parent?.slug === 'business-administration' ? 'Business Administration · cadeira/extra' : (parent?.tagline ?? 'Curso'),
+    description: unit.summary,
+    icon: unit.icon,
+    color: unit.color,
+    lessons: unit.lessons.map((lesson) => ({
+      slug: lesson.slug,
+      title: lesson.title,
+      summary: lesson.summary,
+      quizSlug: lesson.quizSlug,
+      quizTitle: lesson.quizTitle,
+      estMinutes: lesson.estMinutes ?? 8
+    }))
+  };
+}
+
+export function schoolCourseDetailForSlug(slug: string): SchoolCourseDetail | undefined {
+  const unit = findSchoolUnit(slug);
+  return unit ? detailFromSchoolUnit(unit) : legacyCourseDetails[slug];
+}
+
+export function schoolQuizContextForSlug(quizSlug: string): { courseSlug: string; courseTitle: string; courseHref: string } | undefined {
+  const catalogueDetails = schoolCourses.flatMap((course) => [...course.units, ...(course.extras ?? [])]).map(detailFromSchoolUnit);
+  const details = [...catalogueDetails, ...Object.values(legacyCourseDetails)];
+  const match = details.find((detail) => detail.lessons.some((lesson) => lesson.quizSlug === quizSlug));
+
+  if (!match) return undefined;
+
+  return {
+    courseSlug: match.slug,
+    courseTitle: match.title,
+    courseHref: `/escola/curso/${match.slug}/`
+  };
 }
