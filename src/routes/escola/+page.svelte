@@ -1,23 +1,9 @@
 <script lang="ts">
   import { t } from 'svelte-i18n';
+  import { businessAdministration, businessCustomLessons, businessSubjects, mainSchoolCourses } from '$lib/escola/catalog';
 
-  interface Subject {
-    slug: string;
-    title: string;
-    icon: string;
-    summary: string;
-    lessons: number;
-    quizzes: number;
-  }
-
-  const BUSINESS_SUBJECTS: Subject[] = [
-    { slug: 'marketing-digital', title: 'Marketing Digital', icon: '📱', summary: 'SEO, SEM, redes sociais, paid media, funis e ROI.', lessons: 4, quizzes: 2 },
-    { slug: 'gestao-financeira', title: 'Gestão Financeira', icon: '💰', summary: 'Demonstrações financeiras, rácios, orçamento e caixa.', lessons: 8, quizzes: 2 },
-    { slug: 'contabilidade', title: 'Contabilidade', icon: '📊', summary: 'Partida dobrada, diário, amortizações, IVA e fecho.', lessons: 8, quizzes: 2 },
-    { slug: 'microeconomia', title: 'Microeconomia', icon: '📉', summary: 'Oferta, procura, elasticidade e estruturas de mercado.', lessons: 8, quizzes: 2 },
-    { slug: 'comportamento-organizacional', title: 'Comportamento Organizacional', icon: '🧠', summary: 'Motivação, equipas, cultura, liderança e conflitos.', lessons: 4, quizzes: 1 },
-    { slug: 'marketing-internacional', title: 'Marketing Internacional', icon: '🌍', summary: 'STP global, 4Ps internacionais e modos de entrada.', lessons: 4, quizzes: 1 }
-  ];
+  function lessonCount(unit: { lessons: unknown[] }) { return unit.lessons.length; }
+  function quizCount(unit: { lessons: Array<{ quizSlug?: string }> }) { return unit.lessons.filter((lesson) => Boolean(lesson.quizSlug)).length; }
 </script>
 
 <svelte:head>
@@ -35,43 +21,36 @@
   <section class="main-courses" aria-label="Cursos principais">
     <h2 class="section-title">Cursos principais</h2>
     <div class="course-grid">
-      <a class="course-card business" href="/escola/curso/business-administration/">
-        <span class="course-icon">🎓</span>
+      {#each mainSchoolCourses as course (course.slug)}
+      <a class="course-card" class:business={course.slug === 'business-administration'} class:portuguese={course.slug === 'portugues'} href={course.href}>
+        <span class="course-icon">{course.icon}</span>
         <div>
-          <p class="kicker">Curso universitário</p>
-          <h3>Business Administration</h3>
-          <p>Cadeiras de gestão, marketing, finanças, economia, operações e estratégia.</p>
-          <strong>{BUSINESS_SUBJECTS.length} cadeiras organizadas →</strong>
+          <p class="kicker">{course.tagline}</p>
+          <h3>{course.title}</h3>
+          <p>{course.summary}</p>
+          <strong>{course.units.length} {course.slug === 'business-administration' ? 'cadeiras' : 'módulo'} →</strong>
         </div>
       </a>
-      <a class="course-card portuguese" href="/escola/curso/portugues/">
-        <span class="course-icon">🇵🇹</span>
-        <div>
-          <p class="kicker">Curso independente</p>
-          <h3>Português de Portugal</h3>
-          <p>Português para a Fatma aprender como língua separada, sem misturar com Business.</p>
-          <strong>Abrir curso →</strong>
-        </div>
-      </a>
+      {/each}
     </div>
   </section>
 
   <section id="business-administration" class="business-section" aria-label="Business Administration">
     <div class="section-head">
       <div>
-        <h2>Business Administration</h2>
+        <h2>{businessAdministration.title}</h2>
         <p>Cadeiras do curso — cada uma abre a sua área de aulas, teoria e quizzes.</p>
       </div>
-      <span>{BUSINESS_SUBJECTS.length} cadeiras</span>
+      <span>{businessSubjects.length} cadeiras</span>
     </div>
     <div class="subject-grid">
-      {#each BUSINESS_SUBJECTS as subject (subject.slug)}
+      {#each businessSubjects as subject (subject.slug)}
         <a class="subject-card" href={`/escola/curso/${subject.slug}/`}>
           <span class="subject-icon">{subject.icon}</span>
           <div>
             <h3>{subject.title}</h3>
             <p>{subject.summary}</p>
-            <small>{subject.lessons} aulas · {subject.quizzes} quizzes</small>
+            <small>{lessonCount(subject)} aulas · {quizCount(subject)} quizzes</small>
           </div>
         </a>
       {/each}
@@ -86,13 +65,15 @@
       </div>
     </div>
     <div class="tool-grid">
-      <a class="tool-card" href="/escola/curso/equivalenza/" style="--accent: #ec4899;">
-        <span>🌸</span>
+      {#each businessCustomLessons as extra (extra.slug)}
+      <a class="tool-card" href={`/escola/curso/${extra.slug}/`} style="--accent: {extra.color};">
+        <span>{extra.icon}</span>
         <div>
-          <h3>Equivalenza</h3>
-          <p>Aula/case personalizado dentro de Business Administration, ligado ao trabalho que fizemos.</p>
+          <h3>{extra.title}</h3>
+          <p>{extra.summary}</p>
         </div>
       </a>
+      {/each}
       <a class="tool-card" href="/escola/trabalhos/" style="--accent: #f59e0b;">
         <span>📝</span>
         <div>

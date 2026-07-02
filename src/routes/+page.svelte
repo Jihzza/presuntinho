@@ -15,10 +15,12 @@
   import { db } from '$lib/state/db';
   import { xp, initStores } from '$lib/state/stores';
   import { getSession } from '$lib/auth/session';
+  import { mainSchoolCourses, schoolTotals, businessAdministration, portugueseCourse } from '$lib/escola/catalog';
   import { t } from 'svelte-i18n';
 
-  const TOTAL_LESSONS = 5;
-  const TOTAL_QUIZZES = 5;
+  const TOTALS = schoolTotals();
+  const TOTAL_LESSONS = TOTALS.lessons;
+  const TOTAL_QUIZZES = TOTALS.quizzes;
   const TOTAL_ASSIGNMENTS = 1;
 
   interface BadgeStatus {
@@ -138,8 +140,8 @@
         <span class="icon">🎓</span>
         <div>
           <p class="label">Escola</p>
-          <h3>Business Administration e Português</h3>
-          <p>Ver cursos, cadeiras, aulas, quizzes e trabalhos.</p>
+          <h3>{businessAdministration.title} e {portugueseCourse.title}</h3>
+          <p>{mainSchoolCourses.length} cursos principais · {businessAdministration.units.length} cadeiras · extras e trabalhos.</p>
         </div>
         <strong>{schoolProgress}%</strong>
       </a>

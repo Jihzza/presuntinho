@@ -28,13 +28,13 @@ const DAY_MS = 24 * 60 * 60 * 1000;
  */
 export function buildDefaultAssignments(now: number = Date.now()): AssignmentRow[] {
   return [
-    // --- Marketing Digital ----------------------------------------------
+    // --- Business Administration > Marketing Digital ----------------------------------------------
     {
       id: 'a1',
       title: 'Plano de Marketing para PME Tunisina',
       description:
         'Elabora um plano de marketing digital completo para uma PME local (café, loja de roupas, agência de viagens, à tua escolha): público-alvo, canais, calendário editorial, KPIs e orçamento mensal em dinar.',
-      curso: 'marketing-digital',
+      curso: 'business-administration',
       cadeira: 'Fundamentos',
       deadline: now + 45 * DAY_MS,
       status: 'pending',
@@ -47,7 +47,7 @@ export function buildDefaultAssignments(now: number = Date.now()): AssignmentRow
       title: 'Calendário Editorial Instagram 30 dias',
       description:
         'Cria um calendário editorial de 30 dias para o Instagram de uma marca real (não precisa ser tua): temas por dia, tipo de conteúdo (reel, carrossel, story), copy curta e hashtags relevantes.',
-      curso: 'marketing-digital',
+      curso: 'business-administration',
       cadeira: 'Redes Sociais',
       deadline: now + 35 * DAY_MS,
       status: 'pending',
@@ -56,13 +56,13 @@ export function buildDefaultAssignments(now: number = Date.now()): AssignmentRow
       updatedAt: now
     },
 
-    // --- Branding --------------------------------------------------------
+    // --- Business Administration > Branding --------------------------------------------------------
     {
       id: 'a3',
       title: 'Brand Book Startup Local',
       description:
         'Brand book mínimo (10-15 páginas) para uma startup tunisina fictícia: missão, valores, personalidade verbal, paleta de cores com hex, tipografia, logo em várias versões e exemplos de aplicação.',
-      curso: 'branding',
+      curso: 'business-administration',
       cadeira: 'Identidade',
       deadline: now + 50 * DAY_MS,
       status: 'pending',
@@ -75,7 +75,7 @@ export function buildDefaultAssignments(now: number = Date.now()): AssignmentRow
       title: 'Identidade Visual Restaurante',
       description:
         'Conceito de identidade visual para um restaurante tunisino (escolhe cozinha: tradicional, fusão, street food): logo, menu tipográfico, postais de mesa e tom de comunicação para Instagram.',
-      curso: 'branding',
+      curso: 'business-administration',
       cadeira: 'Visual',
       deadline: now + 40 * DAY_MS,
       status: 'pending',
@@ -84,13 +84,13 @@ export function buildDefaultAssignments(now: number = Date.now()): AssignmentRow
       updatedAt: now
     },
 
-    // --- Estratégia ------------------------------------------------------
+    // --- Business Administration > Estratégia ------------------------------------------------------
     {
       id: 'a5',
       title: 'Análise SWOT Empresa Real',
       description:
         'Análise SWOT (Forças, Fraquezas, Oportunidades, Ameaças) de uma empresa real da Tunísia ou Portugal — pode ser uma que conheças bem. Inclui 3-5 ações por quadrante com horizonte temporal.',
-      curso: 'estrategia',
+      curso: 'business-administration',
       cadeira: 'Diagnóstico',
       deadline: now + 30 * DAY_MS,
       status: 'pending',
@@ -103,7 +103,7 @@ export function buildDefaultAssignments(now: number = Date.now()): AssignmentRow
       title: 'Business Model Canvas',
       description:
         'Preenche o Business Model Canvas da Osterwalder para o teu próprio projeto (ou um que aches viável): segmentos de cliente, proposta de valor, canais, relacionamento, fontes de receita e estrutura de custos.',
-      curso: 'estrategia',
+      curso: 'business-administration',
       cadeira: 'Modelo de Negócio',
       deadline: now + 38 * DAY_MS,
       status: 'pending',
@@ -112,13 +112,13 @@ export function buildDefaultAssignments(now: number = Date.now()): AssignmentRow
       updatedAt: now
     },
 
-    // --- Comportamental --------------------------------------------------
+    // --- Business Administration > Comportamento / Consumidor --------------------------------------------------
     {
       id: 'a7',
       title: 'Estudo de Caso Liderança',
       description:
         'Estudo de caso (2-3 páginas) sobre um líder real que admiras: contexto, decisões-chave, estilo de liderança observado, dilemas, e o que tiraste para a tua própria prática enquanto futura gestora.',
-      curso: 'comportamento-organizacional',
+      curso: 'business-administration',
       cadeira: 'Liderança',
       deadline: now + 55 * DAY_MS,
       status: 'pending',
@@ -131,7 +131,7 @@ export function buildDefaultAssignments(now: number = Date.now()): AssignmentRow
       title: 'Mapa de Empatia Cliente',
       description:
         'Mapa de empatia (o que vê, ouve, pensa/sente, diz/faz, dores, ganhos) para uma persona cliente do teu projeto. Usa um nome fictício, demografia real e cita frases entre aspas para tornar a persona viva.',
-      curso: 'comportamento-do-consumidor',
+      curso: 'business-administration',
       cadeira: 'Pesquisa de Mercado',
       deadline: now + 32 * DAY_MS,
       status: 'pending',
@@ -140,13 +140,13 @@ export function buildDefaultAssignments(now: number = Date.now()): AssignmentRow
       updatedAt: now
     },
 
-    // --- Gestão ----------------------------------------------------------
+    // --- Business Administration > Gestão ----------------------------------------------------------
     {
       id: 'a9',
       title: 'Fluxo de Caixa Trimestral',
       description:
         'Demonstração de fluxos de caixa projetada para um trimestre (3 meses): receitas previstas, despesas fixas e variáveis, saldo mensal e comentário final sobre o ponto de equilíbrio.',
-      curso: 'gestao-financeira',
+      curso: 'business-administration',
       cadeira: 'Contabilidade',
       deadline: now + 42 * DAY_MS,
       status: 'pending',
@@ -159,7 +159,7 @@ export function buildDefaultAssignments(now: number = Date.now()): AssignmentRow
       title: 'OKRs Q3 2026',
       description:
         'Define 3 Objectives e 3-5 Key Results por Objective para o Q3 2026 do teu projeto pessoal/profissional. Inclui métrica baseline, valor-alvo e data de check-in quinzenal.',
-      curso: 'gestao-inovacao',
+      curso: 'business-administration',
       cadeira: 'Gestão por Objetivos',
       deadline: now + 60 * DAY_MS,
       status: 'pending',

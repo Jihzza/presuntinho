@@ -2,6 +2,7 @@
   import { page } from '$app/state';
   import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
+  import { courseForUnit, findSchoolUnit, type SchoolUnit } from '$lib/escola/catalog';
 
   // Course detail. Phase 4 ships with one course (Equivalenza) hardcoded
   // here. When a 2nd course ships, move this into static/courses.json
@@ -23,6 +24,26 @@
     icon: string;
     color: string;
     lessons: LessonRef[];
+  }
+
+  function fromSchoolUnit(unit: SchoolUnit): CourseDetail {
+    const parent = courseForUnit(unit.slug);
+    return {
+      slug: unit.slug,
+      title: unit.title,
+      tagline: parent?.slug === 'business-administration' ? 'Business Administration · cadeira/extra' : (parent?.tagline ?? 'Curso'),
+      description: unit.summary,
+      icon: unit.icon,
+      color: unit.color,
+      lessons: unit.lessons.map((lesson) => ({
+        slug: lesson.slug,
+        title: lesson.title,
+        summary: lesson.summary,
+        quizSlug: lesson.quizSlug,
+        quizTitle: lesson.quizTitle,
+        estMinutes: lesson.estMinutes ?? 8
+      }))
+    };
   }
 
   // Hardcoded catalogue for Phase 4 (matches static/lessons/equivalenza/*.json).
@@ -700,7 +721,8 @@
                       };
 
   let courseSlug = $derived(page.params.slug ?? '');
-  let course = $derived<CourseDetail | undefined>(CATALOGUE[courseSlug]);
+  let catalogueUnit = $derived(findSchoolUnit(courseSlug));
+  let course = $derived<CourseDetail | undefined>(catalogueUnit ? fromSchoolUnit(catalogueUnit) : CATALOGUE[courseSlug]);
   let loadError = $state<string | null>(null);
 
   onMount(() => {

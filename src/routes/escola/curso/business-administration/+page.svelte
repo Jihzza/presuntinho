@@ -1,21 +1,7 @@
 <script lang="ts">
-  interface Subject {
-    slug: string;
-    title: string;
-    icon: string;
-    summary: string;
-    lessons: number;
-    quizzes: number;
-  }
+  import { businessAdministration, businessCustomLessons, businessSubjects } from '$lib/escola/catalog';
 
-  const SUBJECTS: Subject[] = [
-    { slug: 'marketing-digital', title: 'Marketing Digital', icon: '📱', summary: 'SEO, SEM, redes sociais, paid media, funis e ROI.', lessons: 4, quizzes: 2 },
-    { slug: 'gestao-financeira', title: 'Gestão Financeira', icon: '💰', summary: 'Demonstrações financeiras, rácios, orçamento e caixa.', lessons: 8, quizzes: 2 },
-    { slug: 'contabilidade', title: 'Contabilidade', icon: '📊', summary: 'Partida dobrada, diário, amortizações, IVA e fecho.', lessons: 8, quizzes: 2 },
-    { slug: 'microeconomia', title: 'Microeconomia', icon: '📉', summary: 'Oferta, procura, elasticidade e estruturas de mercado.', lessons: 8, quizzes: 2 },
-    { slug: 'comportamento-organizacional', title: 'Comportamento Organizacional', icon: '🧠', summary: 'Motivação, equipas, cultura, liderança e conflitos.', lessons: 4, quizzes: 1 },
-    { slug: 'marketing-internacional', title: 'Marketing Internacional', icon: '🌍', summary: 'STP global, 4Ps internacionais e modos de entrada.', lessons: 4, quizzes: 1 }
-  ];
+  function quizCount(unit: { lessons: Array<{ quizSlug?: string }> }) { return unit.lessons.filter((lesson) => Boolean(lesson.quizSlug)).length; }
 </script>
 
 <svelte:head>
@@ -26,23 +12,23 @@
   <a class="back" href="/escola/">← Escola</a>
   <header class="hero">
     <span>🎓 Curso universitário</span>
-    <h1>Business Administration</h1>
-    <p>Primeiro escolhes a cadeira. Dentro de cada cadeira abres as aulas, teoria, quizzes e testes.</p>
+    <h1>{businessAdministration.title}</h1>
+    <p>{businessAdministration.summary} Primeiro escolhes a cadeira. Dentro de cada cadeira abres aulas, teoria, quizzes e testes.</p>
   </header>
 
   <section aria-label="Cadeiras de Business Administration">
     <div class="section-head">
       <h2>Cadeiras</h2>
-      <p>{SUBJECTS.length} áreas organizadas</p>
+      <p>{businessSubjects.length} áreas organizadas</p>
     </div>
     <div class="grid">
-      {#each SUBJECTS as subject (subject.slug)}
+      {#each businessSubjects as subject (subject.slug)}
         <a class="card" href={`/escola/curso/${subject.slug}/`}>
           <span class="icon">{subject.icon}</span>
           <div>
             <h3>{subject.title}</h3>
             <p>{subject.summary}</p>
-            <small>{subject.lessons} aulas · {subject.quizzes} quizzes · abrir cadeira →</small>
+            <small>{subject.lessons.length} aulas · {quizCount(subject)} quizzes · abrir cadeira →</small>
           </div>
         </a>
       {/each}
@@ -54,14 +40,16 @@
       <h2>Extras de Business</h2>
       <p>Conteúdo criado para trabalhos reais, não cursos principais.</p>
     </div>
-    <a class="card equivalenza" href="/escola/curso/equivalenza/">
-      <span class="icon">🌸</span>
-      <div>
-        <h3>Equivalenza — case personalizado</h3>
-        <p>Aula/case ligado ao trabalho da Fatma: SWOT, persona, SCQA, TOWS e recomendação.</p>
-        <small>Abrir extra →</small>
-      </div>
-    </a>
+    {#each businessCustomLessons as extra (extra.slug)}
+      <a class="card equivalenza" href={`/escola/curso/${extra.slug}/`}>
+        <span class="icon">{extra.icon}</span>
+        <div>
+          <h3>{extra.title}</h3>
+          <p>{extra.summary}</p>
+          <small>Abrir extra →</small>
+        </div>
+      </a>
+    {/each}
   </section>
 </div>
 

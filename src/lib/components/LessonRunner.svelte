@@ -144,9 +144,29 @@
       </section>
     {/if}
 
+    <!-- IA V7.1: every aula is framed as Teoria → Quiz → Teste/Trabalho. -->
+    <section class="activity-map" aria-label="Estrutura da aula">
+      <div class="activity-step active">
+        <span aria-hidden="true">📖</span>
+        <strong>Teoria</strong>
+        <small>Conteúdo principal</small>
+      </div>
+      <button type="button" class="activity-step" class:disabled={!lesson.quizSlug} onclick={goQuiz} disabled={!lesson.quizSlug}>
+        <span aria-hidden="true">📝</span>
+        <strong>Quiz</strong>
+        <small>{lesson.quizSlug ? 'Validar conhecimento' : 'Sem quiz ligado'}</small>
+      </button>
+      <div class="activity-step muted">
+        <span aria-hidden="true">🎯</span>
+        <strong>Teste / trabalho</strong>
+        <small>Actividade relacionada</small>
+      </div>
+    </section>
+
     <!-- Body + Key points sidebar ---------------------------------------- -->
     <div class="lesson-grid">
       <div class="lesson-body">
+        <h2 class="lane-title">📖 Teoria</h2>
         {#each lesson.sections as section, i (i)}
           {#if section.type === 'h2'}
             <h2>{section.text}</h2>
@@ -181,6 +201,7 @@
           {/each}
         </ol>
         {#if lesson.quizSlug}
+          <p class="quiz-context">📝 Quiz ligado a esta aula</p>
           <button type="button" class="quiz-btn" onclick={goQuiz}>
             {$t('lesson.quiz.cta', { default: 'Ir para o quiz →' })}
           </button>
@@ -272,6 +293,37 @@
      Presuntinho a11y contract (tappable on mobile, keyboard reachable). */
   .audio-card audio { min-height: 44px; min-width: 44px; }
 
+  .activity-map {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+    margin: 0 0 1.2rem;
+  }
+  .activity-step {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.65rem;
+    align-items: center;
+    min-height: 64px;
+    padding: 0.75rem 0.85rem;
+    border-radius: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    text-align: left;
+    font: inherit;
+  }
+  button.activity-step { cursor: pointer; }
+  .activity-step.active { border-color: rgba(59, 130, 246, 0.35); background: rgba(59, 130, 246, 0.13); }
+  .activity-step.muted { opacity: 0.82; }
+  .activity-step.disabled { opacity: 0.45; cursor: not-allowed; }
+  .activity-step span { grid-row: span 2; font-size: 1.35rem; }
+  .activity-step strong { line-height: 1; }
+  .activity-step small { color: var(--txt3, #94a3b8); }
+  @media (min-width: 720px) {
+    .activity-map { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
   /* Grid layout: body + sidebar */
   .lesson-grid {
     display: grid;
@@ -284,6 +336,11 @@
 
   /* Body */
   .lesson-body { color: var(--txt, #fff); line-height: 1.6; }
+  .lane-title {
+    margin-top: 0 !important;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
   .lesson-body h2 {
     color: #fff;
     font-size: 1.25rem;
