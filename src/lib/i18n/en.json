@@ -713,6 +713,7 @@
   "calendar.hint.expand": "Swipe down to open the month",
   "calendar.hint.collapse": "Swipe up to return to the week",
   "calendar.tasks.aria": "Upcoming tasks",
+  "calendar.tasks.jump": "See tasks ↓",
   "calendar.tasks.title": "Tasks",
   "calendar.loading": "Loading calendar…",
   "calendar.empty": "Nothing urgent. Plan a new task or review habits.",

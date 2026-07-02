@@ -713,6 +713,7 @@
   "calendar.hint.expand": "اسحبي للأسفل لفتح الشهر",
   "calendar.hint.collapse": "اسحبي للأعلى للعودة للأسبوع",
   "calendar.tasks.aria": "المهام القادمة",
+  "calendar.tasks.jump": "شاهدي المهام ↓",
   "calendar.tasks.title": "المهام",
   "calendar.loading": "جارٍ تحميل التقويم…",
   "calendar.empty": "لا شيء عاجل. خططي لمهمة جديدة أو راجعي العادات.",

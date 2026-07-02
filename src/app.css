@@ -55,34 +55,34 @@
    Currently the app is dark by default; this gives us a hook for Phase 11+
    without breaking Phase 0-9 visuals. */
 [data-theme='light'] {
-  --bg: #f8fafc;
+  --bg: #eef4ff;
   --bg-elev: #ffffff;
-  --txt: #0f172a;
-  --txt2: #334155;
-  --txt3: #64748b;
-  --accent: #db2777;
-  --accent-hover: #be185d;
-  --border: rgba(15, 23, 42, 0.08);
-  --border-strong: rgba(15, 23, 42, 0.18);
-  --card: rgba(15, 23, 42, 0.03);
-  --card-hover: rgba(15, 23, 42, 0.06);
+  --txt: #111827;
+  --txt2: #273449;
+  --txt3: #475569;
+  --accent: #b91c66;
+  --accent-hover: #9d174d;
+  --border: rgba(17, 24, 39, 0.16);
+  --border-strong: rgba(17, 24, 39, 0.3);
+  --card: rgba(255, 255, 255, 0.92);
+  --card-hover: rgba(255, 255, 255, 1);
 }
 
 /* Legacy `.theme-light` / `.theme-dark` class hook (Phase 9 Definições).
    Kept for compatibility with the settings page, which toggles these
    classes alongside the data-theme attribute. */
 .theme-light {
-  --bg: #f8fafc;
+  --bg: #eef4ff;
   --bg-elev: #ffffff;
-  --txt: #0f172a;
-  --txt2: #334155;
-  --txt3: #64748b;
-  --accent: #db2777;
-  --accent-hover: #be185d;
-  --border: rgba(15, 23, 42, 0.08);
-  --border-strong: rgba(15, 23, 42, 0.18);
-  --card: rgba(15, 23, 42, 0.03);
-  --card-hover: rgba(15, 23, 42, 0.06);
+  --txt: #111827;
+  --txt2: #273449;
+  --txt3: #475569;
+  --accent: #b91c66;
+  --accent-hover: #9d174d;
+  --border: rgba(17, 24, 39, 0.16);
+  --border-strong: rgba(17, 24, 39, 0.3);
+  --card: rgba(255, 255, 255, 0.92);
+  --card-hover: rgba(255, 255, 255, 1);
 }
 .theme-dark {
   /* Explicit dark tokens (same as :root). Kept for symmetry. */
@@ -156,17 +156,17 @@
 }
 
 [data-theme='tunisia'], .theme-tunisia {
-  --bg: #fff7f7;
+  --bg: #fff1f2;
   --bg-elev: #ffffff;
   --txt: #2f0f13;
-  --txt2: #6b1d26;
-  --txt3: #9f343d;
-  --accent: #e70013;
-  --accent-hover: #be123c;
-  --border: rgba(190, 18, 60, 0.18);
-  --border-strong: rgba(190, 18, 60, 0.32);
-  --card: rgba(231, 0, 19, 0.06);
-  --card-hover: rgba(231, 0, 19, 0.1);
+  --txt2: #4c1620;
+  --txt3: #7f1d1d;
+  --accent: #c1121f;
+  --accent-hover: #9f1239;
+  --border: rgba(127, 29, 29, 0.18);
+  --border-strong: rgba(127, 29, 29, 0.34);
+  --card: rgba(255, 255, 255, 0.92);
+  --card-hover: rgba(255, 255, 255, 1);
 }
 
 /* Light/readable theme repair: many route components still use local
@@ -177,11 +177,19 @@
 [data-theme='light'] .definicoes,
 [data-theme='light'] .calendar-page,
 [data-theme='light'] .notifications-page,
+[data-theme='light'] .map-section,
+[data-theme='light'] .control-section,
+[data-theme='light'] .status-section,
+[data-theme='light'] .badges-section,
 [data-theme='tunisia'] .app,
 [data-theme='tunisia'] .hub,
 [data-theme='tunisia'] .definicoes,
 [data-theme='tunisia'] .calendar-page,
-[data-theme='tunisia'] .notifications-page {
+[data-theme='tunisia'] .notifications-page,
+[data-theme='tunisia'] .map-section,
+[data-theme='tunisia'] .control-section,
+[data-theme='tunisia'] .status-section,
+[data-theme='tunisia'] .badges-section {
   color: var(--txt) !important;
 }
 
@@ -194,6 +202,10 @@
 [data-theme='light'] .notifications-card,
 [data-theme='light'] .tasks,
 [data-theme='light'] .settings-card,
+[data-theme='light'] .control-card,
+[data-theme='light'] .day-cell,
+[data-theme='light'] .task,
+[data-theme='light'] .notification,
 [data-theme='tunisia'] .nav,
 [data-theme='tunisia'] .bottom-nav,
 [data-theme='tunisia'] .card,
@@ -202,10 +214,37 @@
 [data-theme='tunisia'] .calendar-card,
 [data-theme='tunisia'] .notifications-card,
 [data-theme='tunisia'] .tasks,
-[data-theme='tunisia'] .settings-card {
+[data-theme='tunisia'] .settings-card,
+[data-theme='tunisia'] .control-card,
+[data-theme='tunisia'] .day-cell,
+[data-theme='tunisia'] .task,
+[data-theme='tunisia'] .notification {
   background: var(--bg-elev) !important;
   border-color: var(--border) !important;
   color: var(--txt) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+[data-theme='light'] h1,
+[data-theme='light'] h2,
+[data-theme='light'] h3,
+[data-theme='light'] strong,
+[data-theme='light'] .nav-label,
+[data-theme='light'] .logo,
+[data-theme='light'] .logo-text,
+[data-theme='tunisia'] h1,
+[data-theme='tunisia'] h2,
+[data-theme='tunisia'] h3,
+[data-theme='tunisia'] strong,
+[data-theme='tunisia'] .nav-label,
+[data-theme='tunisia'] .logo,
+[data-theme='tunisia'] .logo-text {
+  color: var(--txt) !important;
+}
+
+[data-theme='light'] a:not(.btn),
+[data-theme='tunisia'] a:not(.btn) {
+  color: var(--accent);
 }
 
 [data-theme='light'] p,
@@ -217,6 +256,19 @@
 [data-theme='tunisia'] span,
 [data-theme='tunisia'] label {
   color: inherit;
+}
+
+[data-theme='light'] .section-head span,
+[data-theme='light'] .section-head p,
+[data-theme='light'] .sub,
+[data-theme='light'] .empty,
+[data-theme='light'] .theme-copy small,
+[data-theme='tunisia'] .section-head span,
+[data-theme='tunisia'] .section-head p,
+[data-theme='tunisia'] .sub,
+[data-theme='tunisia'] .empty,
+[data-theme='tunisia'] .theme-copy small {
+  color: var(--txt2) !important;
 }
 
 [data-theme='light'] input,

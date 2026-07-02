@@ -713,6 +713,7 @@
   "calendar.hint.expand": "Glisse vers le bas pour ouvrir le mois",
   "calendar.hint.collapse": "Glisse vers le haut pour revenir à la semaine",
   "calendar.tasks.aria": "Tâches à venir",
+  "calendar.tasks.jump": "Voir tâches ↓",
   "calendar.tasks.title": "Tâches",
   "calendar.loading": "Chargement du calendrier…",
   "calendar.empty": "Rien d’urgent. Planifie une nouvelle tâche ou vérifie les habitudes.",

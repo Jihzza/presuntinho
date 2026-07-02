@@ -40,7 +40,6 @@
   function onPointerDown(event: PointerEvent): void {
     dragStartY = event.clientY;
     dragCurrentY = event.clientY;
-    (event.currentTarget as HTMLElement | null)?.setPointerCapture?.(event.pointerId);
   }
 
   function onPointerMove(event: PointerEvent): void {
@@ -51,7 +50,6 @@
   function onPointerUp(event: PointerEvent): void {
     if (dragStartY === null) return;
     commitSwipe(event.clientY - dragStartY);
-    (event.currentTarget as HTMLElement | null)?.releasePointerCapture?.(event.pointerId);
   }
 
   function onTouchStart(event: TouchEvent): void {
@@ -66,7 +64,6 @@
     const y = event.touches[0]?.clientY;
     if (typeof y !== 'number') return;
     dragCurrentY = y;
-    if (Math.abs(y - dragStartY) > 8) event.preventDefault();
   }
 
   function onTouchEnd(): void {
@@ -77,8 +74,8 @@
   function commitSwipe(delta: number): void {
     dragStartY = null;
     dragCurrentY = null;
-    if (delta > 28) expanded = true;
-    if (delta < -28) expanded = false;
+    if (delta > 56) expanded = true;
+    if (delta < -56) expanded = false;
   }
 
   function onPointerCancel(): void {
@@ -104,6 +101,7 @@
         <h2>{expanded ? monthLabel : $t('calendar.week.title', { default: 'Esta semana' })}</h2>
         <p>{expanded ? $t('calendar.hint.collapse', { default: 'Arrasta para cima para voltar à semana' }) : $t('calendar.hint.expand', { default: 'Arrasta para baixo para abrir o mês' })}</p>
       </div>
+      <a class="tasks-jump" href="#calendar-tasks">{$t('calendar.tasks.jump', { default: 'Ver tasks ↓' })}</a>
     </div>
 
     <div
@@ -131,7 +129,7 @@
     </div>
   </section>
 
-  <section class="tasks" aria-label={$t('calendar.tasks.aria', { default: 'Tasks próximas' })}>
+  <section id="calendar-tasks" class="tasks" aria-label={$t('calendar.tasks.aria', { default: 'Tasks próximas' })}>
     <div class="section-head">
       <h2>{$t('calendar.tasks.title', { default: 'Tasks' })}</h2>
     </div>
@@ -154,26 +152,26 @@
 </div>
 
 <style>
-  .calendar-page { max-width: 880px; margin: 0 auto; padding: .85rem 1rem 8rem; color: #fff; }
-  .calendar-card, .tasks { margin-top: .75rem; padding: 1rem; border-radius: 1.25rem; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.11); }
-  .section-head p, .task small, .empty { color: #cbd5e1; }
+  .calendar-page { max-width: 880px; margin: 0 auto; padding: .85rem 1rem 8rem; color: var(--txt, #fff); }
+  .calendar-card, .tasks { margin-top: .75rem; padding: 1rem; border-radius: 1.25rem; background: var(--card, rgba(255,255,255,.055)); border: 1px solid var(--border, rgba(255,255,255,.11)); }
+  .section-head p, .task small, .empty { color: var(--txt2, #cbd5e1); }
   .section-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .8rem; }
   .section-head h2 { margin: 0; font-size: 1rem; }
   .section-head p { margin: .15rem 0 0; font-size: .82rem; }
-  .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .45rem; touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; }
-  .calendar-grid:active { cursor: grabbing; }
-  .day-cell { min-height: 76px; border-radius: .95rem; padding: .45rem; background: rgba(0,0,0,.22); border: 1px solid rgba(255,255,255,.08); display: flex; flex-direction: column; gap: .15rem; }
+  .tasks-jump { color: var(--accent, #ec4899); text-decoration: none; font-weight: 900; font-size: .78rem; white-space: nowrap; padding: .42rem .55rem; border-radius: 999px; background: color-mix(in srgb, var(--accent, #ec4899) 14%, transparent); }
+  .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .45rem; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+  .day-cell { min-height: 76px; border-radius: .95rem; padding: .45rem; background: color-mix(in srgb, var(--txt, #fff) 8%, transparent); border: 1px solid var(--border, rgba(255,255,255,.08)); display: flex; flex-direction: column; gap: .15rem; }
   .day-cell[data-outside='true'] { opacity: .42; }
-  .day-cell span { color: #94a3b8; font-size: .65rem; text-transform: uppercase; }
+  .day-cell span { color: var(--txt3, #94a3b8); font-size: .65rem; text-transform: uppercase; }
   .day-cell strong { font-size: 1.15rem; }
-  .day-cell small { margin-top: auto; width: fit-content; padding: .08rem .35rem; border-radius: 999px; background: rgba(255,255,255,.16); }
+  .day-cell small { margin-top: auto; width: fit-content; padding: .08rem .35rem; border-radius: 999px; background: color-mix(in srgb, var(--accent, #ec4899) 18%, transparent); }
   .day-cell[data-tone='today'] { border-color: rgba(236,72,153,.65); background: rgba(236,72,153,.16); }
   .day-cell[data-tone='danger'] { border-color: rgba(239,68,68,.65); }
   .day-cell[data-tone='warning'] { border-color: rgba(245,158,11,.65); }
   .day-cell[data-tone='busy'] { border-color: rgba(59,130,246,.5); }
   .task-list { display: grid; gap: .6rem; }
-  .task { display: grid; gap: .15rem; color: #fff; text-decoration: none; padding: .85rem; border-radius: 1rem; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.09); }
-  .task span { color: #bfdbfe; font-size: .75rem; font-weight: 900; }
+  .task { display: grid; gap: .15rem; color: var(--txt, #fff); text-decoration: none; padding: .85rem; border-radius: 1rem; background: color-mix(in srgb, var(--txt, #fff) 7%, transparent); border: 1px solid var(--border, rgba(255,255,255,.09)); }
+  .task span { color: var(--accent, #bfdbfe); font-size: .75rem; font-weight: 900; }
   .task[data-tone='danger'] { border-color: rgba(239,68,68,.5); }
   .task[data-tone='warning'] { border-color: rgba(245,158,11,.5); }
   .empty { margin: 0; }

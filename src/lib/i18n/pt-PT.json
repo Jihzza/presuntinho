@@ -713,6 +713,7 @@
   "calendar.hint.expand": "Arrasta para baixo para abrir o mês",
   "calendar.hint.collapse": "Arrasta para cima para voltar à semana",
   "calendar.tasks.aria": "Tasks próximas",
+  "calendar.tasks.jump": "Ver tasks ↓",
   "calendar.tasks.title": "Tasks",
   "calendar.loading": "A carregar calendário…",
   "calendar.empty": "Nada urgente. Planeia uma tarefa nova ou revê os hábitos.",
