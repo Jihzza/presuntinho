@@ -69,6 +69,30 @@
         });
     }
 
+    // Secret Room listeners + Konami key handler must be bound BEFORE any
+    // async work. Previously these were registered after `await markVisited`,
+    // which swallowed failures silently and left the modal un-wired if the
+    // visit-tracking throw — breaking the 7×-logo-click easter egg path
+    // (task-073). Bind eagerly; cleanup still runs in the same return().
+    function onOpenSRoom() {
+      secretRoomOpen = true;
+    }
+    function onCloseSRoom() {
+      secretRoomOpen = false;
+    }
+    window.addEventListener('presuntinho:open-secret-room', onOpenSRoom);
+    window.addEventListener('presuntinho:close-secret-room', onCloseSRoom);
+    unbindExtra = () => {
+      window.removeEventListener('presuntinho:open-secret-room', onOpenSRoom);
+      window.removeEventListener('presuntinho:close-secret-room', onCloseSRoom);
+    };
+
+    function onKey(e: KeyboardEvent) {
+      void handleKonamiKey(e.key, e.keyCode);
+    }
+    window.addEventListener('keydown', onKey);
+    unbindKey = () => window.removeEventListener('keydown', onKey);
+
     void (async () => {
       // Initialise Dexie-backed stores + run migration (Phase 3 #17)
       try {
@@ -89,22 +113,6 @@
         console.error('[presuntinho] markVisited failed:', e);
       }
 
-      // Secret Room: when easterEggs.ts opens the room we mirror the
-      // state here so SecretModal renders. The modal emits a close
-      // event back into easterEggs via SecretModal itself.
-      function onOpenSRoom() {
-        secretRoomOpen = true;
-      }
-      function onCloseSRoom() {
-        secretRoomOpen = false;
-      }
-      window.addEventListener('presuntinho:open-secret-room', onOpenSRoom);
-      window.addEventListener('presuntinho:close-secret-room', onCloseSRoom);
-      unbindExtra = () => {
-        window.removeEventListener('presuntinho:open-secret-room', onOpenSRoom);
-        window.removeEventListener('presuntinho:close-secret-room', onCloseSRoom);
-      };
-
       // Auth gate: each route owns its own empty-state ("iniciar sessão").
             // The layout must NOT redirect-away on user clicks — that turned
             // bottom-nav taps into silent no-ops (the redirect fired 550ms after
@@ -117,13 +125,6 @@
                 if (!getSession()) void goto('/splash/');
               }, 2500);
             }
-
-      // Global key handler — drives Konami code + keyword detector
-      function onKey(e: KeyboardEvent) {
-        void handleKonamiKey(e.key, e.keyCode);
-      }
-      window.addEventListener('keydown', onKey);
-      unbindKey = () => window.removeEventListener('keydown', onKey);
     })();
 
     return () => {
