@@ -24,7 +24,7 @@
     /** Optional href override (defaults to /escola). */
     href?: string;
   }
-  let { href = '/escola/curso/equivalenza' }: Props = $props();
+  let { href = '/escola/' }: Props = $props();
 
   // The "current" course slug — matches the badge 'Atual' on /escola.
   const CURRENT_CURSO = 'equivalenza';

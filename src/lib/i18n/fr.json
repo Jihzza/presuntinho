@@ -3215,5 +3215,8 @@
     "attach_to_assignment_label": "Attacher au devoir",
     "no_assignment": "— aucun —",
     "no_curso": "— aucun —"
+  },
+  "common": {
+    "loading": "Chargement…"
   }
 }

@@ -244,19 +244,19 @@
                     <span class="nav-icon" aria-hidden="true">🏠</span>
                     <span class="nav-label">{$t('nav.home', { default: 'Home' })}</span>
                   </a>
-                  <a href="/escola" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Escola')} aria-label={$t('nav.escola.aria', { default: 'Escola — cursos e lições' })} data-sveltekit-preload-data>
+                  <a href="/escola/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Escola')} aria-label={$t('nav.escola.aria', { default: 'Escola — cursos e lições' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">📚</span>
                     <span class="nav-label">{$t('nav.escola', { default: 'Escola' })}</span>
                   </a>
-                  <a href="/aulas" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Aulas')} aria-label={$t('nav.aulas.aria', { default: 'Aulas — todas as lições agregadas' })} data-sveltekit-preload-data>
+                  <a href="/aulas/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Aulas')} aria-label={$t('nav.aulas.aria', { default: 'Aulas — todas as lições agregadas' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">🎓</span>
                     <span class="nav-label">{$t('nav.aulas', { default: 'Aulas' })}</span>
                   </a>
-                  <a href="/financas" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Finanças')} aria-label={$t('nav.financas.aria', { default: 'Finanças — despesas e contas' })} data-sveltekit-preload-data>
+                  <a href="/financas/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Finanças')} aria-label={$t('nav.financas.aria', { default: 'Finanças — despesas e contas' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">💰</span>
                     <span class="nav-label">{$t('nav.financas', { default: 'Finanças' })}</span>
                   </a>
-                  <a href="/habitos" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Hábitos')} aria-label={$t('nav.habitos.aria', { default: 'Hábitos — tracking diário' })} data-sveltekit-preload-data>
+                  <a href="/habitos/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Hábitos')} aria-label={$t('nav.habitos.aria', { default: 'Hábitos — tracking diário' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">🌱</span>
                     <span class="nav-label">{$t('nav.habitos', { default: 'Hábitos' })}</span>
                   </a>

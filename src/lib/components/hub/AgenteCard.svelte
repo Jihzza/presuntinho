@@ -11,7 +11,7 @@
   interface Props {
     href?: string;
   }
-  let { href = '/agente' }: Props = $props();
+  let { href = '/agente/' }: Props = $props();
 </script>
 
 <a

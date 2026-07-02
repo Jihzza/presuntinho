@@ -3215,5 +3215,8 @@
     "attach_to_assignment_label": "Attach to assignment",
     "no_assignment": "— none —",
     "no_curso": "— none —"
+  },
+  "common": {
+    "loading": "Loading…"
   }
 }
