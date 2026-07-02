@@ -35,11 +35,14 @@
   let visible = $state(false);
   let hidden = $state(true); // display:none when true
   let pulse = $state(false);
+  let delta = $state<number | null>(null);
   let pulseTimer: ReturnType<typeof setTimeout> | null = null;
+  let deltaTimer: ReturnType<typeof setTimeout> | null = null;
   let hideTimer: ReturnType<typeof setTimeout> | null = null;
   let lastSeenXp = $state<number | null>(null);
 
   let label = $derived(new Intl.NumberFormat('pt-PT').format(currentXp) + ' XP');
+  let deltaLabel = $derived(delta === null ? '' : `${delta > 0 ? '+' : ''}${delta} XP`);
 
   function prefersReducedMotion(): boolean {
     if (typeof window === 'undefined') return false;
@@ -80,10 +83,20 @@
     }, 350);
   }
 
+  function showDelta(amount: number): void {
+    delta = amount;
+    if (deltaTimer) clearTimeout(deltaTimer);
+    deltaTimer = setTimeout(() => {
+      delta = null;
+      deltaTimer = null;
+    }, prefersReducedMotion() ? 3000 : 2400);
+  }
+
   function onXpChanged(newXp: number): void {
     currentXp = newXp;
     if (lastSeenXp !== null && newXp !== lastSeenXp) {
-      // Real change → make visible + pulse + restart hide timer
+      // Real change → show +/-N badge, make visible + pulse + restart hide timer
+      showDelta(newXp - lastSeenXp);
       show();
       triggerPulse();
       if (mode === 'onChange') scheduleHide(3000);
@@ -112,6 +125,7 @@
 
     return () => {
       if (pulseTimer) clearTimeout(pulseTimer);
+      if (deltaTimer) clearTimeout(deltaTimer);
       if (hideTimer) clearTimeout(hideTimer);
     };
   });
@@ -134,6 +148,11 @@
 >
   <span class="dot" aria-hidden="true"></span>
   <span class="label">{label}</span>
+  {#if delta !== null}
+    <span class="delta" class:delta--positive={delta > 0} class:delta--negative={delta < 0}>
+      {deltaLabel}
+    </span>
+  {/if}
 </span>
 
 <style>
@@ -187,6 +206,35 @@
   }
   .label {
     letter-spacing: 0.02em;
+  }
+  .delta {
+    margin-left: 0.15rem;
+    padding: 0.12rem 0.38rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    line-height: 1;
+    animation: xp-delta-in 0.24s ease both;
+  }
+  .delta--positive {
+    background: rgba(16, 185, 129, 0.28);
+    color: #d1fae5;
+  }
+  .delta--negative {
+    background: rgba(239, 68, 68, 0.28);
+    color: #fee2e2;
+  }
+  @keyframes xp-delta-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px) scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
   }
   /* Pulse animation when XP changes. */
   .xp-pill.pulse {
