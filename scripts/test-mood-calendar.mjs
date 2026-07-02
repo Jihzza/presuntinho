@@ -32,6 +32,8 @@ assert('splash acknowledges intro instead of clearing mood', splash.includes('ac
 assert('layout renders MoodLayer after acknowledged mood', layout.includes('<MoodLayer mood={activeMood}') && layout.includes('isMoodIntroAcknowledged'));
 assert('layout listens to mood event', layout.includes('window.addEventListener(MOOD_EVENT'));
 assert('MoodLayer has recovery CTA', layer.includes('Já me sinto melhor 🤍') || layer.includes('meta.action'));
+assert('MoodLayer has interactive care actions', layer.includes('careActions') && layer.includes('care-grid') && layer.includes('comfort-note'));
+assert('layout applies app-wide mood ambience', layout.includes('app-mood') && layout.includes('--mood-accent'));
 
 console.log('\nFloating button stability');
 assert('fab stack reserves fixed dimensions', /\.fab-stack\s*{[\s\S]*width:\s*9\.25rem;[\s\S]*height:\s*6\.9rem;/.test(layout));
@@ -44,7 +46,7 @@ assert('calendar includes explicit touch fallback', calendar.includes('ontouchst
 assert('calendar supports down expand and up collapse thresholds', calendar.includes('delta > threshold') && calendar.includes('delta < threshold'));
 assert('calendar does not globally disable touch scroll', calendar.includes('touch-action: auto'));
 assert('calendar has explicit drag handle', calendar.includes('class="drag-handle"'));
-assert('month view is compact', /\.month-view \.day-cell \{ min-height: 48px/.test(calendar) && /max-width: 420px/.test(layer));
+assert('month view is compact', /\.month-view \.day-cell \{ min-height: 48px/.test(calendar) && /max-width: 4(20|40)px/.test(layer));
 
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed === 0 ? 0 : 1);

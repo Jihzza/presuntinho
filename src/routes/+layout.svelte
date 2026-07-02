@@ -16,7 +16,7 @@
   import XpPill from '$lib/components/XpPill.svelte';
   import XpToast from '$lib/components/XpToast.svelte';
   import MoodLayer from '$lib/components/MoodLayer.svelte';
-  import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, type ActiveMood } from '$lib/mood';
+  import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, MOOD_META, type ActiveMood } from '$lib/mood';
 
   import { showToast } from '$lib/components/events';
   import { t } from 'svelte-i18n';
@@ -34,6 +34,7 @@
   // O fallback manual já vive em src/app.html, por isso esta tag é só aditiva.
   const webManifestLink = $derived(pwaInfo ? pwaInfo.webManifest.linkTag : '');
   const isAgentRoute = $derived(page.url.pathname.startsWith('/agente'));
+  const moodAccent = $derived(activeMood ? MOOD_META[activeMood.kind].accent : null);
 
   onMount(() => {
     let unbindKey: (() => void) | null = null;
@@ -221,7 +222,10 @@
   <!-- Phase 15: offline status banner (listens to online/offline events). -->
   <OfflineIndicator />
   <a class="skip-link" href="#main-content">{$t('a11y.skipToContent')}</a>
-  <div class="app">
+  <div
+    class={`app ${activeMood ? `app-mood app-mood-${activeMood.kind}` : ''}`}
+    style={moodAccent ? `--mood-accent: ${moodAccent};` : undefined}
+  >
     <header class="nav">
       <div class="nav-inner">
         <!--
@@ -313,6 +317,28 @@
     color: var(--txt, #fff);
     display: flex;
     flex-direction: column;
+    transition: background 220ms ease;
+  }
+  .app-mood {
+    background:
+      radial-gradient(circle at 12% 4%, color-mix(in srgb, var(--mood-accent) 22%, transparent) 0, transparent 34rem),
+      radial-gradient(circle at 92% 18%, color-mix(in srgb, var(--mood-accent) 14%, transparent) 0, transparent 26rem),
+      linear-gradient(180deg, color-mix(in srgb, var(--bg, #1f2e4a) 88%, var(--mood-accent)), var(--bg, #1f2e4a));
+  }
+  .app-mood .nav {
+    border-bottom-color: color-mix(in srgb, var(--mood-accent) 26%, rgba(255,255,255,.12));
+    box-shadow: 0 10px 34px color-mix(in srgb, var(--mood-accent) 12%, transparent);
+  }
+  .app-mood .logo-pig {
+    text-shadow: 0 0 18px color-mix(in srgb, var(--mood-accent) 72%, transparent);
+  }
+  .app-mood .bottom-nav {
+    background: linear-gradient(180deg, rgba(0,0,0,.22), color-mix(in srgb, rgba(0,0,0,.42) 82%, var(--mood-accent)));
+    border-top-color: color-mix(in srgb, var(--mood-accent) 28%, rgba(255,255,255,.12));
+  }
+  .app-mood .nav-btn:hover,
+  .app-mood .nav-btn:focus-visible {
+    background: color-mix(in srgb, var(--mood-accent) 14%, rgba(255,255,255,.06));
   }
   /* WCAG 2.4.1 — visible only when focused via keyboard. */
   .skip-link {

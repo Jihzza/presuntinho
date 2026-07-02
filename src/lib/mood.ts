@@ -79,19 +79,39 @@ export const MOOD_META: Record<MoodKind, {
   accent: string;
   body: string;
   action: string;
+  detailTitle: string;
+  detailLead: string;
+  ambience: string[];
+  careActions: Array<{ id: string; emoji: string; label: string; done: string }>;
+  affirmations: string[];
   microcopy: string[];
 }> = {
   sick: {
     label: 'Sick Mode',
     emoji: '🤍',
     accent: '#60a5fa',
-    body: 'Modo cuidado activo: água, mantinha, descanso e só uma coisa pequenina de cada vez.',
-    action: 'Já me sinto melhor 🤍',
+    body: 'Modo cuidado activo: água, mantinha, descanso e só uma coisa pequenina de cada vez. A app fica mais macia até voltares ao normal.',
+    action: 'Já estou recuperada 🤍',
+    detailTitle: 'Plano de mimo sem pressão',
+    detailLead: 'Marca coisinhas simples quando conseguires. Não é checklist de produtividade — é cuidado.',
+    ambience: ['☁️', '🤍', '☕', '🫧', '🧸'],
+    careActions: [
+      { id: 'water', emoji: '💧', label: 'Bebi água', done: 'água feita' },
+      { id: 'rest', emoji: '🛌', label: 'Vou descansar', done: 'descanso combinado' },
+      { id: 'food', emoji: '🍲', label: 'Comi algo leve', done: 'comidinha leve' }
+    ],
+    affirmations: [
+      'Hoje o mínimo bem feito já é muito.',
+      'Se o corpo pediu pausa, a app abranda contigo.',
+      'Não tens de ganhar o dia — só tens de ficar um bocadinho melhor.',
+      'O Presuntinho fica de guarda. Tu recuperas.'
+    ],
     microcopy: [
       'Pausa fofinha: bebe um bocadinho de água.',
       'Hoje produtividade também é descansar.',
       'Mantinha, comida leve e zero culpa.',
-      'Uma tarefa pequena chega. O resto espera por ti.'
+      'Uma tarefa pequena chega. O resto espera por ti.',
+      'Modo cuidado ligado: a app está a falar baixinho contigo.'
     ]
   },
   sad: {
@@ -100,10 +120,25 @@ export const MOOD_META: Record<MoodKind, {
     accent: '#f472b6',
     body: 'A app fica mais calma e lembra-te com carinho que fazer as pazes também conta.',
     action: 'Já estou melhor 🫶',
+    detailTitle: 'Modo calma e carinho',
+    detailLead: 'Pequenos passos para baixar a intensidade sem bloquear o dia.',
+    ambience: ['🌙', '🫶', '🕯️', '💌', '☁️'],
+    careActions: [
+      { id: 'breathe', emoji: '🌬️', label: 'Respirei fundo', done: 'respiração feita' },
+      { id: 'soft-message', emoji: '💌', label: 'Mensagem fofinha', done: 'paz encaminhada' },
+      { id: 'tiny-step', emoji: '✨', label: 'Só um passo', done: 'um passo chega' }
+    ],
+    affirmations: [
+      'Não precisas resolver tudo de uma vez.',
+      'Fazer as pazes também pode começar pequenino.',
+      'Tu mereces calma antes de exigência.',
+      'O dia pode continuar suave, mesmo que tenha começado pesado.'
+    ],
     microcopy: [
       'Respira. O fofinho está do teu lado.',
       'Uma mensagem fofinha pode resolver muita coisa.',
-      'Sem pressa: primeiro acalmar, depois estudar.'
+      'Sem pressa: primeiro acalmar, depois estudar.',
+      'Hoje a app tira os cantos afiados ao dia.'
     ]
   },
   love: {
@@ -111,14 +146,34 @@ export const MOOD_META: Record<MoodKind, {
     emoji: '💕',
     accent: '#ec4899',
     body: 'Vibe carinhosa activa: pequenos detalhes mais quentinhos pela app.',
-    action: 'Guardar esta vibe ✨',
+    action: 'Voltar ao normal ✨',
+    detailTitle: 'Modo carinho ligado',
+    detailLead: 'A app fica mais quente, mais cúmplice e com pequenos miminhos pelo caminho.',
+    ambience: ['💕', '✨', '💗', '🐷', '🌸'],
+    careActions: [
+      { id: 'kiss', emoji: '😘', label: 'Mandar beijo', done: 'beijinho enviado' },
+      { id: 'memory', emoji: '📸', label: 'Lembrar um momento', done: 'momento guardado' },
+      { id: 'hug', emoji: '🫂', label: 'Abraço virtual', done: 'abraço apertado' }
+    ],
+    affirmations: [
+      'Há carinho nos detalhes pequenos.',
+      'O Presuntinho está em modo saudades boas.',
+      'Hoje até as tarefas vêm com beijinho na testa.',
+      'Vibe fofinha, mas ainda útil — prometido.'
+    ],
     microcopy: [
       'Fofinho tem saudades tuas.',
       'Hoje a app está em modo carinho.',
-      'Vai com calma, princesa.'
+      'Vai com calma, princesa.',
+      'Pequenos detalhes, muito coração.'
     ]
   }
 };
+
+export function moodAffirmation(kind: MoodKind, seed = Date.now()): string {
+  const lines = MOOD_META[kind].affirmations;
+  return lines[Math.abs(seed) % lines.length];
+}
 
 export function moodMicrocopy(kind: MoodKind, seed = Date.now()): string {
   const lines = MOOD_META[kind].microcopy;
