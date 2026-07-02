@@ -7,12 +7,13 @@
   import { locale as localeStore } from '$lib/i18n';
   import LoveLock from '$lib/components/LoveLock.svelte';
   import {
-    detectLoveLock,
-    activateLoveLock,
-    readLoveLock,
-    clearLoveLock,
-    type LoveLockState,
-  } from '$lib/auth/loveLock';
+    detectMoodTrigger,
+    activateMood,
+    readActiveMood,
+    acknowledgeMoodIntro,
+    isMoodIntroAcknowledged,
+    type ActiveMood,
+  } from '$lib/mood';
   // svelte-i18n 4 ships `$t` as the message-formatter store.  In a
   // <script lang="ts"> block we call it as `$t(...)` via Svelte's
   // store auto-subscription — `t(...)` would try to call the store
@@ -27,7 +28,7 @@
   let selectedProfile = $state<ProfileId>('fatma');
   // Love Lock state — when non-null the splash card is replaced by the
   // LoveLock full-screen modal until the user clicks the confirmation.
-  let loveLockState = $state<LoveLockState | null>(null);
+  let loveLockState = $state<ActiveMood | null>(null);
   // Locale reactive — used by LoveLock to pick the right copy. Defaults to
   // 'en' until svelte-i18n has hydrated (LoveLock falls back to en anyway).
   let currentLocale = $state<string>('en');
@@ -49,8 +50,8 @@
       void (async () => {
         // If a Love Lock is active (persisted from a previous tab or refresh),
         // surface it before the lockout-counter logic.
-        const existingLock = await readLoveLock();
-        if (existingLock) {
+        const existingLock = await readActiveMood();
+        if (existingLock && !isMoodIntroAcknowledged(existingLock)) {
           loveLockState = existingLock;
           // Don't return — still wire up the lockout counter underneath for the
           // case where the user lets the love-lock TTL expire mid-session.
@@ -72,7 +73,7 @@
       let lovePoll: ReturnType<typeof setInterval> | undefined;
       if (loveLockState) {
         lovePoll = setInterval(async () => {
-          const fresh = await readLoveLock();
+          const fresh = await readActiveMood();
           if (!fresh) {
             // Server says no lock → drop it locally too.
             loveLockState = null;
@@ -125,9 +126,9 @@
     // "Sick" / "sad" / "love" are rejected as an invalid profile password
     // before the mood lock code ever runs.
     if (!inferredProfile) {
-      const loveKind = detectLoveLock(password);
+      const loveKind = detectMoodTrigger(password);
       if (loveKind) {
-        const newLock = await activateLoveLock(loveKind);
+        const newLock = await activateMood(loveKind);
         if (newLock) loveLockState = newLock;
         password = '';
         loading = false;
@@ -164,9 +165,9 @@
           // declaration. "love" alone, "sad" alone, "i love you", "amo-te" — all
           // trigger here. We DO NOT burn a failed-attempt counter (this is
           // emotional, not adversarial).
-          const loveKind = detectLoveLock(password);
+          const loveKind = detectMoodTrigger(password);
                     if (loveKind) {
-                      const newLock = await activateLoveLock(loveKind);
+                      const newLock = await activateMood(loveKind);
                       if (newLock) loveLockState = newLock;
                       password = '';
                       loading = false;
@@ -192,12 +193,10 @@
       }
 
   async function handleLoveUnlock() {
-      await clearLoveLock();
+      if (loveLockState) acknowledgeMoodIntro(loveLockState);
       loveLockState = null;
-      // The user did the emotional work — drop them at the hub without forcing
-      // them to type their real password a second time. (They still have to
-      // authenticate normally on the next cold-load because the session is
-      // separate from the love-lock state.)
+      // The intro screen is acknowledged, but the mood/vibe remains active in
+      // the app until she presses the recovery button in the mood chip.
       void goto('/');
     }
 

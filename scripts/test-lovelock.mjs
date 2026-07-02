@@ -290,13 +290,13 @@ console.log('\nTest 11: splash routes Sick through LoveLock before pass-order er
   const guardEnd = splash.indexOf('selectedProfile = inferredProfile', passOrderGuard);
   const guardBlock = passOrderGuard >= 0 && guardEnd > passOrderGuard ? splash.slice(passOrderGuard, guardEnd) : '';
   assert('pass-order guard exists', !!guardBlock);
-  assert('guard checks detectLoveLock before wrong_password',
-    guardBlock.indexOf('detectLoveLock(password)') >= 0 &&
-      guardBlock.indexOf('detectLoveLock(password)') < guardBlock.indexOf('splash.wrong_password'),
+  assert('guard checks detectMoodTrigger before wrong_password',
+    guardBlock.indexOf('detectMoodTrigger(password)') >= 0 &&
+      guardBlock.indexOf('detectMoodTrigger(password)') < guardBlock.indexOf('splash.wrong_password'),
     guardBlock.replace(/\s+/g, ' ').slice(0, 260));
-  assert('guard activates love lock before returning invalid pass-order',
-    guardBlock.indexOf('activateLoveLock(loveKind)') >= 0 &&
-      guardBlock.indexOf('activateLoveLock(loveKind)') < guardBlock.indexOf('splash.wrong_password'),
+  assert('guard activates mood before returning invalid pass-order',
+    guardBlock.indexOf('activateMood(loveKind)') >= 0 &&
+      guardBlock.indexOf('activateMood(loveKind)') < guardBlock.indexOf('splash.wrong_password'),
     guardBlock.replace(/\s+/g, ' ').slice(0, 260));
 }
 

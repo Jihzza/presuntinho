@@ -15,6 +15,8 @@
   import HeartButton from '$lib/components/HeartButton.svelte';
   import XpPill from '$lib/components/XpPill.svelte';
   import XpToast from '$lib/components/XpToast.svelte';
+  import MoodLayer from '$lib/components/MoodLayer.svelte';
+  import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, type ActiveMood } from '$lib/mood';
 
   import { showToast } from '$lib/components/events';
   import { t } from 'svelte-i18n';
@@ -25,6 +27,7 @@
   let session = $state(getSession());
   let storesReady = $state(false);
   let secretRoomOpen = $state(false);
+  let activeMood = $state<ActiveMood | null>(null);
   let authRedirectTimer: ReturnType<typeof setTimeout> | null = null;
 
   // Tag <link rel="manifest"> gerada pelo plugin (caso o PWA esteja ativo).
@@ -35,6 +38,20 @@
   onMount(() => {
     let unbindKey: (() => void) | null = null;
     let unbindExtra: (() => void) | null = null;
+    let moodPoll: ReturnType<typeof setInterval> | null = null;
+
+    async function refreshMood(): Promise<void> {
+      const mood = await readActiveMood();
+      activeMood = mood && isMoodIntroAcknowledged(mood) ? mood : null;
+    }
+    const onMoodChanged = (event: Event) => {
+      const mood = event instanceof CustomEvent ? (event.detail as ActiveMood | null) : null;
+      activeMood = mood && isMoodIntroAcknowledged(mood) ? mood : null;
+      void refreshMood();
+    };
+    void refreshMood();
+    window.addEventListener(MOOD_EVENT, onMoodChanged);
+    moodPoll = setInterval(refreshMood, 30_000);
 
     // PWA: regista o service worker gerado pelo @vite-pwa/sveltekit.
     // Em dev (devOptions.enabled = false) o módulo virtual:pwa-register não
@@ -132,6 +149,8 @@
       if (unbindKey) unbindKey();
       if (unbindExtra) unbindExtra();
       if (authRedirectTimer) clearTimeout(authRedirectTimer);
+      window.removeEventListener(MOOD_EVENT, onMoodChanged);
+      if (moodPoll) clearInterval(moodPoll);
     };
   });
 
@@ -195,6 +214,9 @@
   <Confetti />
   <Toast />
   <XpToast />
+  {#if activeMood}
+    <MoodLayer mood={activeMood} onCleared={() => (activeMood = null)} />
+  {/if}
   <SecretModal bind:open={secretRoomOpen} />
   <!-- Phase 15: offline status banner (listens to online/offline events). -->
   <OfflineIndicator />
@@ -487,19 +509,25 @@
       position: fixed;
       right: max(1rem, env(safe-area-inset-right));
       bottom: calc(env(safe-area-inset-bottom) + 5.75rem);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.5rem;
+      width: 9.25rem;
+      height: 6.9rem;
       z-index: 60;
       pointer-events: none; /* container ignores — children re-enable */
-      /* Allow the stack (potentially 3 chips tall) to overflow upward
-         without being clipped by fixed-positioned ancestors. */
-      max-height: calc(100vh - 6.25rem);
-      overflow: visible;
     }
     .fab-stack > :global(*) {
       pointer-events: auto;
+    }
+    /* Stable anchoring: XP can appear/disappear above the heart without moving
+       the bottom-right click target. */
+    .fab-stack > :global(:first-child) {
+      position: absolute;
+      right: 0;
+      bottom: 4.05rem;
+    }
+    .fab-stack > :global(:last-child) {
+      position: absolute;
+      right: 0;
+      bottom: 0;
     }
     .mascot-corner {
       position: fixed;
