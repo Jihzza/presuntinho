@@ -8,6 +8,7 @@
   // Two visual variants:
   //   - sad  → pink pastel gradient, droopy Fofinho SVG, soft pulse
   //   - love → warm red gradient, hearts-emit Fofinho SVG, faster pulse
+  //   - sick → cosy cream/blue gradient, blanket-and-tea care message
   //
   // The component owns its own countdown timer for the "stale" copy escalation
   // and calls `onUnlock` when the user taps the confirmation button. The
@@ -77,6 +78,7 @@
   class="lock"
   class:sad={lockState.kind === 'sad'}
   class:love={lockState.kind === 'love'}
+  class:sick={lockState.kind === 'sick'}
   role="alertdialog"
   aria-modal="true"
   aria-labelledby="lovelock-title"
@@ -104,6 +106,22 @@
           <path d="M 48 70 Q 47 76 48 80 Q 49 76 48 70 Z" fill="#7ec5ff" class="tear" />
           <!-- Mouth (small frown) -->
           <path d="M 50 92 Q 60 88 70 92" stroke="#3d2a3a" stroke-width="2" fill="none" stroke-linecap="round" />
+        </svg>
+      </div>
+    {:else if lockState.kind === 'sick'}
+      <div class="mascot sick-mascot" aria-hidden="true">
+        <svg viewBox="0 0 120 120" width="120" height="120">
+          <ellipse cx="60" cy="76" rx="40" ry="30" fill="#f9c5d1" />
+          <path d="M24 82 C35 58, 83 58, 96 82 L88 106 H32 Z" fill="#bfdbfe" />
+          <path d="M35 86 H85" stroke="#60a5fa" stroke-width="3" stroke-linecap="round" opacity="0.65" />
+          <ellipse cx="60" cy="78" rx="21" ry="13" fill="#fbb6ce" />
+          <circle cx="52" cy="78" r="2" fill="#7a3b4f" />
+          <circle cx="68" cy="78" r="2" fill="#7a3b4f" />
+          <path d="M43 61 Q49 65 55 61" stroke="#3d2a3a" stroke-width="2.5" fill="none" stroke-linecap="round" />
+          <path d="M65 61 Q71 65 77 61" stroke="#3d2a3a" stroke-width="2.5" fill="none" stroke-linecap="round" />
+          <path d="M52 93 Q60 96 68 93" stroke="#3d2a3a" stroke-width="2" fill="none" stroke-linecap="round" />
+          <text x="86" y="48" font-size="18" class="steam">☕</text>
+          <text x="14" y="45" font-size="16" class="steam delay">🤍</text>
         </svg>
       </div>
     {:else}
@@ -160,6 +178,8 @@
     <p class="hint">
       {#if lockState.kind === 'sad'}
         ✨ {$t('lovelock.hint.sad', { default: 'Fofinho perdoa tudo.' })}
+      {:else if lockState.kind === 'sick'}
+        ✨ Descansa. Hoje produtividade é cuidar de ti.
       {:else}
         ✨ {$t('lovelock.hint.love', { default: 'Fofinho acredita em ti.' })}
       {/if}
@@ -185,6 +205,12 @@
 
   .lock.love {
     background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 60%, #fb7185 100%);
+  }
+
+  .lock.sick {
+    background:
+      radial-gradient(circle at 20% 18%, rgba(191, 219, 254, 0.9), transparent 34%),
+      linear-gradient(135deg, #fff7ed 0%, #eff6ff 58%, #dbeafe 100%);
   }
 
   .card {
@@ -228,6 +254,10 @@
     animation: bounce 1.2s ease-in-out infinite;
   }
 
+  .sick-mascot {
+    animation: breathe 3.4s ease-in-out infinite;
+  }
+
   @keyframes droop {
     0%, 100% {
       transform: translateY(0) rotate(-1deg);
@@ -244,6 +274,23 @@
     50% {
       transform: translateY(-6px) scale(1.04);
     }
+  }
+
+  @keyframes breathe {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(2px) scale(1.015);
+    }
+  }
+
+  .steam {
+    opacity: 0;
+    animation: floatUp 3.2s ease-out infinite;
+  }
+  .steam.delay {
+    animation-delay: 1.1s;
   }
 
   /* Sad tear animation */
@@ -376,8 +423,10 @@
     .card,
     .sad-mascot,
     .love-mascot,
+    .sick-mascot,
     .tear,
     .float-heart,
+    .steam,
     .pulse {
       animation: none;
     }

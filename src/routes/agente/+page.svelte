@@ -472,26 +472,26 @@
     transform: translateX(-50%);
     width: min(800px, calc(100vw - 0.75rem));
     z-index: 55;
-    background: rgba(12, 18, 32, 0.96);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 1.15rem 1.15rem 0.95rem 0.95rem;
-    box-shadow: 0 -8px 26px rgba(0, 0, 0, 0.32);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
   .chips-bar {
     display: flex;
     gap: 0.5rem;
-    padding: 0.55rem 0.8rem 0;
+    padding: 0 0.25rem 0.42rem;
     overflow-x: auto;
     scrollbar-width: none;
   }
   .chips-bar::-webkit-scrollbar { display: none; }
   .chip {
     flex: 0 0 auto;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    color: #fff;
+    background: color-mix(in srgb, var(--bg-elev, #111827) 82%, transparent);
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.16));
+    color: var(--txt, #fff);
     padding: 0 0.9rem;
     border-radius: 999px;
     cursor: pointer;
@@ -501,10 +501,14 @@
     align-items: center;
     justify-content: center;
     white-space: nowrap;
-    transition: background 0.15s, transform 0.05s;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: background 0.15s, transform 0.05s, border-color 0.15s;
   }
   .chip:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.12);
+    background: color-mix(in srgb, var(--accent, #ec4899) 16%, var(--bg-elev, #111827));
+    border-color: color-mix(in srgb, var(--accent, #ec4899) 36%, var(--border, rgba(255, 255, 255, 0.16)));
   }
   .chip:active:not(:disabled) {
     transform: scale(0.97);
@@ -517,7 +521,7 @@
       display: flex;
       align-items: flex-end;
       gap: 0.5rem;
-      padding: 0.5rem 0.55rem 0.55rem;
+      padding: 0;
     }
   .input-shell {
     flex: 1;
@@ -525,20 +529,24 @@
     display: flex;
     align-items: flex-end;
     gap: 0.25rem;
-    background: rgba(255, 255, 255, 0.09);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 999px;
-    padding: 0.25rem 0.35rem;
-    transition: border-color 120ms ease, background 120ms ease;
+    background: color-mix(in srgb, var(--bg-elev, #111827) 88%, transparent);
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.16));
+    border-radius: 1.25rem;
+    padding: 0.3rem 0.4rem;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    transition: border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
   }
   .input-shell:focus-within {
     border-color: var(--accent, #ec4899);
-    background: rgba(255, 255, 255, 0.12);
+    background: color-mix(in srgb, var(--bg-elev, #111827) 94%, var(--accent, #ec4899) 6%);
+    box-shadow: 0 14px 42px rgba(0, 0, 0, 0.26), 0 0 0 3px color-mix(in srgb, var(--accent, #ec4899) 18%, transparent);
   }
   .attach-btn {
     background: transparent;
     border: 0;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--txt2, rgba(255, 255, 255, 0.7));
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 999px;
@@ -550,15 +558,15 @@
     justify-content: center;
   }
   .attach-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
+    background: color-mix(in srgb, var(--accent, #ec4899) 12%, transparent);
+    color: var(--txt, #fff);
   }
   .composer textarea {
     flex: 1;
     resize: none;
     background: transparent;
     border: 0;
-    color: #fff;
+    color: var(--txt, #fff);
     padding: 0.72rem 0.45rem 0.58rem 0.1rem;
     border-radius: 0;
     font: inherit;

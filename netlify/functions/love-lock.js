@@ -10,8 +10,8 @@
 // HMAC-signed 18-byte session token (lovelock_id), rotated on every POST.
 //
 // Endpoints:
-//   GET    /  → { active: bool, kind: 'sad'|'love'|null, expiresAt: ts|null }
-//   POST   /  body { kind: 'sad'|'love' } → sets blob + new id cookie
+//   GET    /  → { active: bool, kind: 'sad'|'love'|'sick'|null, expiresAt: ts|null }
+//   POST   /  body { kind: 'sad'|'love'|'sick' } → sets blob + new id cookie
 //   DELETE /  → clears blob + cookie
 //
 // The client (src/lib/auth/loveLock.ts) is responsible for already validating
@@ -214,7 +214,7 @@ export const handler = async (event) => {
       return buildResponse(200, { active: false, kind: null, expiresAt: null });
     }
 
-    if (blob.kind !== 'sad' && blob.kind !== 'love') {
+    if (blob.kind !== 'sad' && blob.kind !== 'love' && blob.kind !== 'sick') {
       // Blob is corrupt (shape mismatch). Treat as expired + try to clear it.
       try {
         blobStore(event).delete(BLOB_KEY).catch(() => {});
@@ -244,7 +244,7 @@ export const handler = async (event) => {
       return buildResponse(400, { error: 'invalid_json' });
     }
     const kind = payload.kind;
-    if (kind !== 'sad' && kind !== 'love') {
+    if (kind !== 'sad' && kind !== 'love' && kind !== 'sick') {
       return buildResponse(400, { error: 'invalid_kind' });
     }
 

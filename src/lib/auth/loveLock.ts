@@ -1,7 +1,7 @@
 // src/lib/auth/loveLock.ts (REWRITTEN — cross-browser via Netlify Function)
 //
 // Love Lock — emotional gate that catches passwords of distress / affection.
-// If the user types "Sad" or "I love you" (case-insensitive, flexible) on the
+// If the user types "Sad", "I love you", or "Sick" (case-insensitive) on the
 // splash screen, the app stays locked behind a cute Fofinho message until the
 // Fatma taps the "I'm okay with fofinho" / "I said it again" button.
 //
@@ -18,7 +18,7 @@
 
 import { browser } from '$app/environment';
 
-export type LoveLockKind = 'sad' | 'love';
+export type LoveLockKind = 'sad' | 'love' | 'sick';
 
 export interface LoveLockState {
   kind: LoveLockKind;
@@ -45,6 +45,8 @@ export function detectLoveLock(rawPassword: string): LoveLockKind | null {
 
   const sadTriggers = new Set(['sad', 'triste', 'estou triste', 'estou zangada']);
   if (sadTriggers.has(cleaned)) return 'sad';
+
+  if (cleaned === 'sick' || cleaned === 'doente' || cleaned === 'estou doente') return 'sick';
 
   if (
     cleaned === 'i love you' ||
@@ -174,6 +176,22 @@ export const LOVE_LOCK_MESSAGES = {
     stale: {
       en: "Fofinho is still waiting… he really, really misses you.",
       'pt-PT': 'O fofinho continua à espera… ele tem imensas saudades tuas.',
+    },
+  },
+  sick: {
+    title: { en: 'Get well soon, my little warrior 🤍', 'pt-PT': 'As melhoras, minha guerreira 🤍' },
+    body: {
+      en: 'Fofinho knows you are not feeling well, so today the mission is tiny and cosy: drink water, rest, eat something gentle, keep warm, and do one small thing at a time. The app will wait for you — your health comes first. 🫶',
+      'pt-PT':
+        'O fofinho sabe que não te estás a sentir bem, por isso hoje a missão é pequenina e fofinha: beber água, descansar, comer algo leve, manter-te quentinha e fazer só uma coisa de cada vez. A app espera por ti — a tua saúde vem primeiro. 🫶',
+    },
+    button: {
+      en: 'I drank water and I will rest now 🤍',
+      'pt-PT': 'Bebi água e vou descansar um bocadinho 🤍',
+    },
+    stale: {
+      en: 'Still here? Blanket, water, and a little pause. Fofinho orders it gently.',
+      'pt-PT': 'Ainda aqui? Mantinha, água e uma pausa pequenina. O fofinho manda com carinho.',
     },
   },
 } as const;

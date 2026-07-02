@@ -3,7 +3,7 @@
    * Mascot — Floating Action Button (FAB).
    *
    * Mirrors V3's mascot icon (🧴) and surfaces random pro-tips.
-   * The layout places it in the shared FAB stack above the footer.
+   * The layout places it as a quiet bottom-left affordance above the footer.
    * Visibility is gated by the user's
    * exploration: only shown after ≥ 4 distinct routes have been visited.
    *
@@ -65,14 +65,14 @@
 
 <style>
   .mascot-fab {
-    /* 60 × 60 px touch target — exceeds WCAG 44 px baseline. */
-    width: 60px;
-    height: 60px;
-    min-width: 60px;
-    min-height: 60px;
-    border-radius: 50%;
-    border: 0;
-    background: linear-gradient(135deg, var(--accent, #ec4899) 0%, #f59e0b 100%);
+    /* 48 × 48 px touch target — still accessible, but visually quiet. */
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: transparent;
     color: #fff;
     cursor: pointer;
     display: inline-flex;
@@ -82,31 +82,30 @@
     /* Position is owned by the shared .fab-stack in +layout.svelte. Keeping
        this component non-fixed prevents it sitting behind the Vida footer tab. */
     position: static;
-    box-shadow:
-      0 6px 18px rgba(236, 72, 153, 0.45),
-      0 2px 6px rgba(0, 0, 0, 0.35);
+    opacity: 0.64;
+    filter: drop-shadow(0 3px 8px rgba(15, 23, 42, 0.42));
     transition:
       transform 0.18s ease,
-      box-shadow 0.2s ease;
+      opacity 0.18s ease,
+      background 0.18s ease,
+      border-color 0.18s ease;
   }
   .mascot-fab:hover,
   .mascot-fab:focus-visible {
-    transform: translateY(-2px) scale(1.04);
-    box-shadow:
-      0 10px 24px rgba(236, 72, 153, 0.55),
-      0 3px 8px rgba(0, 0, 0, 0.4);
+    opacity: 1;
+    transform: translateY(-1px) scale(1.03);
+    background: color-mix(in srgb, var(--accent, #ec4899) 10%, transparent);
+    border-color: color-mix(in srgb, var(--accent, #ec4899) 26%, transparent);
     outline: none;
   }
   .mascot-fab:focus-visible {
-    box-shadow:
-      0 0 0 3px rgba(255, 255, 255, 0.55),
-      0 6px 18px rgba(236, 72, 153, 0.55);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #ec4899) 30%, transparent);
   }
   .mascot-fab:active {
     transform: scale(0.95);
   }
   .emoji {
-    font-size: 1.85rem;
+    font-size: 1.65rem;
     line-height: 1;
     user-select: none;
     -webkit-user-select: none;

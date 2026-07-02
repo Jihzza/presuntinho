@@ -55,34 +55,34 @@
    Currently the app is dark by default; this gives us a hook for Phase 11+
    without breaking Phase 0-9 visuals. */
 [data-theme='light'] {
-  --bg: #eef4ff;
-  --bg-elev: #ffffff;
-  --txt: #111827;
-  --txt2: #273449;
-  --txt3: #475569;
+  --bg: radial-gradient(circle at 18% 8%, rgba(255, 240, 246, 0.95), transparent 34%), linear-gradient(155deg, #f8fbff 0%, #eef4ff 48%, #fff7ed 100%);
+  --bg-elev: rgba(255, 255, 255, 0.88);
+  --txt: #172033;
+  --txt2: #334155;
+  --txt3: #64748b;
   --accent: #b91c66;
   --accent-hover: #9d174d;
-  --border: rgba(17, 24, 39, 0.16);
-  --border-strong: rgba(17, 24, 39, 0.3);
-  --card: rgba(255, 255, 255, 0.92);
-  --card-hover: rgba(255, 255, 255, 1);
+  --border: rgba(148, 163, 184, 0.32);
+  --border-strong: rgba(71, 85, 105, 0.34);
+  --card: rgba(255, 255, 255, 0.76);
+  --card-hover: rgba(255, 255, 255, 0.96);
 }
 
 /* Legacy `.theme-light` / `.theme-dark` class hook (Phase 9 Definições).
    Kept for compatibility with the settings page, which toggles these
    classes alongside the data-theme attribute. */
 .theme-light {
-  --bg: #eef4ff;
-  --bg-elev: #ffffff;
-  --txt: #111827;
-  --txt2: #273449;
-  --txt3: #475569;
+  --bg: radial-gradient(circle at 18% 8%, rgba(255, 240, 246, 0.95), transparent 34%), linear-gradient(155deg, #f8fbff 0%, #eef4ff 48%, #fff7ed 100%);
+  --bg-elev: rgba(255, 255, 255, 0.88);
+  --txt: #172033;
+  --txt2: #334155;
+  --txt3: #64748b;
   --accent: #b91c66;
   --accent-hover: #9d174d;
-  --border: rgba(17, 24, 39, 0.16);
-  --border-strong: rgba(17, 24, 39, 0.3);
-  --card: rgba(255, 255, 255, 0.92);
-  --card-hover: rgba(255, 255, 255, 1);
+  --border: rgba(148, 163, 184, 0.32);
+  --border-strong: rgba(71, 85, 105, 0.34);
+  --card: rgba(255, 255, 255, 0.76);
+  --card-hover: rgba(255, 255, 255, 0.96);
 }
 .theme-dark {
   /* Explicit dark tokens (same as :root). Kept for symmetry. */
@@ -100,8 +100,8 @@
 }
 
 [data-theme='barca'], .theme-barca {
-  --bg: #08143f;
-  --bg-elev: #12245f;
+  --bg: radial-gradient(circle at 16% 14%, rgba(237, 187, 0, 0.22), transparent 27%), linear-gradient(135deg, #07133f 0%, #13245f 45%, #530026 100%);
+  --bg-elev: rgba(13, 30, 82, 0.84);
   --txt: #ffffff;
   --txt2: #dbeafe;
   --txt3: #93c5fd;
@@ -109,13 +109,13 @@
   --accent-hover: #edbb00;
   --border: rgba(237, 187, 0, 0.22);
   --border-strong: rgba(237, 187, 0, 0.4);
-  --card: rgba(165, 0, 68, 0.18);
-  --card-hover: rgba(237, 187, 0, 0.14);
+  --card: linear-gradient(145deg, rgba(19, 36, 95, 0.74), rgba(83, 0, 38, 0.46));
+  --card-hover: linear-gradient(145deg, rgba(19, 36, 95, 0.88), rgba(165, 0, 68, 0.42));
 }
 
 [data-theme='gamer'], .theme-gamer {
-  --bg: #050816;
-  --bg-elev: #111827;
+  --bg: radial-gradient(circle at 80% 8%, rgba(6, 182, 212, 0.22), transparent 32%), radial-gradient(circle at 10% 82%, rgba(34, 197, 94, 0.22), transparent 30%), #050816;
+  --bg-elev: rgba(10, 18, 38, 0.86);
   --txt: #ecfeff;
   --txt2: #a7f3d0;
   --txt3: #67e8f9;
@@ -123,13 +123,13 @@
   --accent-hover: #06b6d4;
   --border: rgba(34, 197, 94, 0.24);
   --border-strong: rgba(6, 182, 212, 0.42);
-  --card: rgba(34, 197, 94, 0.08);
-  --card-hover: rgba(6, 182, 212, 0.12);
+  --card: linear-gradient(145deg, rgba(15, 23, 42, 0.78), rgba(34, 197, 94, 0.10));
+  --card-hover: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(6, 182, 212, 0.14));
 }
 
 [data-theme='moto'], .theme-moto {
-  --bg: #12080a;
-  --bg-elev: #2a1014;
+  --bg: radial-gradient(circle at 78% 14%, rgba(249, 115, 22, 0.26), transparent 30%), linear-gradient(145deg, #12080a 0%, #2a1014 54%, #050505 100%);
+  --bg-elev: rgba(42, 16, 20, 0.88);
   --txt: #fff7ed;
   --txt2: #fed7aa;
   --txt3: #fdba74;
@@ -137,13 +137,13 @@
   --accent-hover: #f97316;
   --border: rgba(239, 68, 68, 0.25);
   --border-strong: rgba(249, 115, 22, 0.45);
-  --card: rgba(239, 68, 68, 0.11);
-  --card-hover: rgba(249, 115, 22, 0.14);
+  --card: linear-gradient(145deg, rgba(39, 14, 18, 0.82), rgba(239, 68, 68, 0.12));
+  --card-hover: linear-gradient(145deg, rgba(42, 16, 20, 0.92), rgba(249, 115, 22, 0.18));
 }
 
 [data-theme='anime'], .theme-anime {
-  --bg: #2a1233;
-  --bg-elev: #43205a;
+  --bg: radial-gradient(circle at 22% 18%, rgba(244, 114, 182, 0.28), transparent 30%), radial-gradient(circle at 82% 78%, rgba(192, 132, 252, 0.24), transparent 32%), linear-gradient(145deg, #2a1233 0%, #43205a 55%, #1f1638 100%);
+  --bg-elev: rgba(67, 32, 90, 0.84);
   --txt: #fff1f2;
   --txt2: #fbcfe8;
   --txt3: #f0abfc;
@@ -151,22 +151,82 @@
   --accent-hover: #c084fc;
   --border: rgba(244, 114, 182, 0.25);
   --border-strong: rgba(192, 132, 252, 0.45);
-  --card: rgba(244, 114, 182, 0.11);
-  --card-hover: rgba(192, 132, 252, 0.14);
+  --card: linear-gradient(145deg, rgba(67, 32, 90, 0.72), rgba(244, 114, 182, 0.13));
+  --card-hover: linear-gradient(145deg, rgba(67, 32, 90, 0.88), rgba(192, 132, 252, 0.18));
 }
 
 [data-theme='tunisia'], .theme-tunisia {
-  --bg: #fff1f2;
-  --bg-elev: #ffffff;
+  --bg: radial-gradient(circle at 18% 12%, rgba(193, 18, 31, 0.13), transparent 30%), linear-gradient(150deg, #fffafa 0%, #fff1f2 46%, #ffe4e6 100%);
+  --bg-elev: rgba(255, 255, 255, 0.9);
   --txt: #2f0f13;
   --txt2: #4c1620;
   --txt3: #7f1d1d;
   --accent: #c1121f;
   --accent-hover: #9f1239;
-  --border: rgba(127, 29, 29, 0.18);
-  --border-strong: rgba(127, 29, 29, 0.34);
-  --card: rgba(255, 255, 255, 0.92);
-  --card-hover: rgba(255, 255, 255, 1);
+  --border: rgba(127, 29, 29, 0.22);
+  --border-strong: rgba(127, 29, 29, 0.38);
+  --card: rgba(255, 255, 255, 0.78);
+  --card-hover: rgba(255, 255, 255, 0.98);
+}
+
+[data-theme='barca'] body,
+[data-theme='gamer'] body,
+[data-theme='moto'] body,
+[data-theme='anime'] body,
+[data-theme='light'] body,
+[data-theme='tunisia'] body {
+  background: var(--bg);
+}
+
+[data-theme='barca'] .app,
+[data-theme='gamer'] .app,
+[data-theme='moto'] .app,
+[data-theme='anime'] .app,
+[data-theme='light'] .app,
+[data-theme='tunisia'] .app {
+  background: var(--bg);
+}
+
+[data-theme='barca'] .card,
+[data-theme='barca'] .hub-hero,
+[data-theme='barca'] .today-strip,
+[data-theme='barca'] .calendar-card,
+[data-theme='barca'] .notifications-card,
+[data-theme='barca'] .control-card,
+[data-theme='gamer'] .card,
+[data-theme='gamer'] .hub-hero,
+[data-theme='gamer'] .today-strip,
+[data-theme='gamer'] .calendar-card,
+[data-theme='gamer'] .notifications-card,
+[data-theme='gamer'] .control-card,
+[data-theme='moto'] .card,
+[data-theme='moto'] .hub-hero,
+[data-theme='moto'] .today-strip,
+[data-theme='moto'] .calendar-card,
+[data-theme='moto'] .notifications-card,
+[data-theme='moto'] .control-card,
+[data-theme='anime'] .card,
+[data-theme='anime'] .hub-hero,
+[data-theme='anime'] .today-strip,
+[data-theme='anime'] .calendar-card,
+[data-theme='anime'] .notifications-card,
+[data-theme='anime'] .control-card {
+  background: var(--card) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='barca'] .nav,
+[data-theme='barca'] .bottom-nav,
+[data-theme='gamer'] .nav,
+[data-theme='gamer'] .bottom-nav,
+[data-theme='moto'] .nav,
+[data-theme='moto'] .bottom-nav,
+[data-theme='anime'] .nav,
+[data-theme='anime'] .bottom-nav {
+  background: color-mix(in srgb, var(--bg-elev) 84%, transparent) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 -10px 32px rgba(0, 0, 0, 0.26);
 }
 
 /* Light/readable theme repair: many route components still use local

@@ -276,6 +276,8 @@
                   <div class="fab-stack" aria-live="polite">
                     <XpPill />
                     <HeartButton />
+                  </div>
+                  <div class="mascot-corner" aria-live="polite">
                     <Mascot />
                   </div>
                 {/if}
@@ -499,10 +501,23 @@
     .fab-stack > :global(*) {
       pointer-events: auto;
     }
+    .mascot-corner {
+      position: fixed;
+      left: max(0.85rem, env(safe-area-inset-left));
+      bottom: calc(env(safe-area-inset-bottom) + 5.55rem);
+      z-index: 60;
+      pointer-events: none;
+    }
+    .mascot-corner > :global(*) {
+      pointer-events: auto;
+    }
     /* On wide screens give a little extra breathing room from the edge. */
     @media (min-width: 768px) {
       .fab-stack {
         right: max(1.5rem, env(safe-area-inset-right));
+      }
+      .mascot-corner {
+        left: max(1.25rem, env(safe-area-inset-left));
       }
     }
 </style>

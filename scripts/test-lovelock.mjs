@@ -25,6 +25,7 @@ globalThis.__LOVE_LOCK_MEM_STORE__ = new Map(); // key → JSON string
 
 const mockGetStoreSource = `
 const __mem = globalThis.__LOVE_LOCK_MEM_STORE__;
+function connectLambda(_event) {}
 function getStore(input) {
   // Accept both the string form (production-safe: getStore(name)) and the
   // object form. The string form is the correct one in production — the
@@ -55,7 +56,7 @@ let src = await fs.readFile(fnPath, 'utf8');
 
 // Strip the @netlify/blobs import and inject our mock in its place.
 src = src.replace(
-  /import\s*\{\s*getStore\s*\}\s*from\s*['"]@netlify\/blobs['"];?/,
+  /import\s*\{\s*connectLambda\s*,\s*getStore\s*\}\s*from\s*['"]@netlify\/blobs['"];?/,
   mockGetStoreSource
 );
 
@@ -237,6 +238,24 @@ console.log('\nTest 8: DELETE');
   const sc = getSetCookie(res);
   assert('Set-Cookie present', !!sc);
   assert('Max-Age=0', /Max-Age=0/.test(sc));
+}
+
+// ── Test 8b: POST accepts sick lock kind ──
+console.log('\nTest 8b: POST accepts sick kind');
+{
+  const res = await handler(
+    makeEvent({
+      method: 'POST',
+      body: { kind: 'sick' },
+      headers: { origin: 'https://presuntinho.netlify.app' },
+    })
+  );
+  assert('status 200', res.statusCode === 200, `got ${res.statusCode}`);
+  const body = JSON.parse(res.body);
+  assert('active:true', body.active === true);
+  assert('kind:sick', body.kind === 'sick');
+  assert('blob stores sick', JSON.parse(memStore().get('love-lock:current')).kind === 'sick');
+  await handler(makeEvent({ method: 'DELETE' }));
 }
 
 // ── Test 9: GET after DELETE → active:false ──
