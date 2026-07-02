@@ -34,6 +34,7 @@ assert('layout listens to mood event', layout.includes('window.addEventListener(
 assert('MoodLayer has recovery CTA', layer.includes('Já me sinto melhor 🤍') || layer.includes('meta.action'));
 assert('MoodLayer has interactive care actions', layer.includes('careActions') && layer.includes('care-grid') && layer.includes('comfort-note'));
 assert('layout applies app-wide mood ambience', layout.includes('app-mood') && layout.includes('--mood-accent'));
+assert('MoodLayer keeps app usable while active', layer.includes('class:compact={!expanded}') && layer.includes('pointer-events: none') && layer.includes('pointer-events: auto') && layer.includes('max-height: min(54vh, 460px)'));
 
 console.log('\nFloating button stability');
 assert('fab stack reserves fixed dimensions', /\.fab-stack\s*{[\s\S]*width:\s*9\.25rem;[\s\S]*height:\s*6\.9rem;/.test(layout));

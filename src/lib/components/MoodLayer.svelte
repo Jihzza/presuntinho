@@ -85,7 +85,7 @@
     <small>experiência adaptada</small>
   </div>
 
-  <aside class="mood-chip" class:expanded class:sparkle aria-label={`${meta.label}: ${line}`}>
+  <aside class="mood-chip" class:expanded class:compact={!expanded} class:sparkle aria-label={`${meta.label}: ${line}`}>
     <button type="button" class="mood-main" onclick={() => (expanded = !expanded)} aria-expanded={expanded}>
       <span class="mood-emoji" aria-hidden="true">{meta.emoji}</span>
       <span class="mood-copy">
@@ -152,6 +152,7 @@
     overflow: hidden;
     opacity: 0.58;
     mask-image: linear-gradient(to bottom, black 0 58%, transparent 96%);
+    pointer-events: none;
   }
   .mood-ambience span {
     position: absolute;
@@ -185,8 +186,9 @@
   .mood-chip {
     position: absolute;
     left: max(.75rem, env(safe-area-inset-left));
-    right: max(.75rem, env(safe-area-inset-right));
-    bottom: calc(5.55rem + env(safe-area-inset-bottom));
+    right: auto;
+    bottom: calc(5.85rem + env(safe-area-inset-bottom));
+    width: min(440px, calc(100vw - 1.5rem));
     max-width: 440px;
     pointer-events: auto;
     border: 1px solid color-mix(in srgb, var(--mood-accent) 50%, rgba(255,255,255,.25));
@@ -210,6 +212,10 @@
     pointer-events: none;
   }
   .mood-chip.expanded { transform: translateY(-.18rem); box-shadow: 0 22px 56px rgba(15, 23, 42, 0.27); }
+  .mood-chip.compact {
+    width: min(360px, calc(100vw - 6.8rem));
+    min-width: 236px;
+  }
   .mood-chip.sparkle::before { animation: shimmer .52s ease; }
   .mood-main {
     position: relative;
@@ -227,6 +233,12 @@
     cursor: pointer;
     font: inherit;
   }
+  .mood-chip.compact .mood-main {
+    min-height: 54px;
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    gap: .55rem;
+    padding: .52rem .62rem;
+  }
   .mood-main:focus-visible, .recover:focus-visible, .care-action:focus-visible, .comfort-note:focus-visible {
     outline: 3px solid color-mix(in srgb, var(--mood-accent) 55%, white);
     outline-offset: 2px;
@@ -241,10 +253,22 @@
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.82), 0 8px 18px color-mix(in srgb, var(--mood-accent) 24%, transparent);
     flex: 0 0 auto;
   }
+  .mood-chip.compact .mood-emoji {
+    width: 36px;
+    height: 36px;
+  }
   strong, small { display: block; }
   .mood-copy { min-width: 0; }
   .mood-copy strong { font-size: .9rem; letter-spacing: .01em; }
   .mood-copy small { margin-top: .14rem; color: rgba(23,32,51,.72); line-height: 1.28; }
+  .mood-chip.compact .mood-copy strong { font-size: .82rem; }
+  .mood-chip.compact .mood-copy small {
+    display: -webkit-box;
+    line-clamp: 1;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
   .mood-progress {
     min-width: 2.4rem;
     padding: .28rem .42rem;
@@ -257,6 +281,9 @@
   }
   .mood-panel {
     position: relative;
+    max-height: min(54vh, 460px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 0 .88rem .9rem;
     display: grid;
     gap: .72rem;
@@ -353,9 +380,11 @@
 
   @media (min-width: 768px) {
     .mood-chip { left: max(1.25rem, env(safe-area-inset-left)); right: auto; bottom: calc(1.2rem + env(safe-area-inset-bottom)); }
+    .mood-chip.compact { width: 360px; }
     .mood-ribbon { top: calc(1rem + env(safe-area-inset-top)); }
   }
   @media (max-width: 380px) {
+    .mood-chip.compact { width: min(310px, calc(100vw - 5.6rem)); min-width: 218px; }
     .recover-zone { grid-template-columns: 1fr; }
     .recover { width: 100%; }
   }
