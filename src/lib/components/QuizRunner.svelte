@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { recordQuizSubmission } from '$lib/easterEggs';
+  import { awardXP } from '$lib/state/xp-actions';
   import { t } from 'svelte-i18n';
 
   // Match the V3 quiz shape (static/legacy/assets/js/quizzes.js)
@@ -59,6 +60,12 @@
 
     const result = await recordQuizSubmission(quizId, correct, total, answeredIndices);
     scoreInfo = { score: result.score, correct, total, perfect: result.perfect, pt: result.pt };
+
+    // Gate 6 (XP wiring): quiz perfeito → +25 XP (XP_TABLE.quiz_perfect_score).
+    // Idempotente via debounce interno de awardXP em 50ms.
+    if (result.perfect) {
+      void awardXP('quiz_perfect_score');
+    }
   }
 
   function reset() {
