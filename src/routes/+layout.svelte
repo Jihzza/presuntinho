@@ -12,7 +12,6 @@
   import OfflineIndicator from '$lib/components/OfflineIndicator.svelte';
   import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
   import { handleKonamiKey, logoClick } from '$lib/easterEggs';
-  import HeartButton from '$lib/components/HeartButton.svelte';
   import XpPill from '$lib/components/XpPill.svelte';
   import XpToast from '$lib/components/XpToast.svelte';
 
@@ -273,17 +272,14 @@
                 </nav>
 
                 <!--
-                  Floating XP + Heart, fixed to the bottom-right corner.
-                  Lives OUTSIDE the header / bottom-nav so it doesn't
-                  shift layout. Sits ABOVE the bottom-nav (z-index 50)
-                  and BELOW modal overlays (which are typically 100+).
-                  Respects iOS safe-area for notched devices.
+                  Floating XP pill only. The old floating HeartButton could
+                  overlap the bottom nav on mobile/tablet viewports and look
+                  like a hidden footer tab; keep the heart easter-egg out of
+                  the global navigation layer.
                 -->
                 {#if !isAgentRoute}
                   <div class="fab-stack" aria-live="polite">
                     <XpPill />
-                    <HeartButton />
-
                   </div>
                 {/if}
   </div>
@@ -487,7 +483,7 @@
       }
     }
 
-    /* Floating action button stack (XP pill + heart + install). */
+    /* Floating action button stack (XP pill only). */
     .fab-stack {
       position: fixed;
       right: max(1rem, env(safe-area-inset-right));
