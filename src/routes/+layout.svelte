@@ -14,6 +14,7 @@
   import { handleKonamiKey, logoClick, footerClick } from '$lib/easterEggs';
   import HeartButton from '$lib/components/HeartButton.svelte';
   import XpPill from '$lib/components/XpPill.svelte';
+  import XpToast from '$lib/components/XpToast.svelte';
   import InstallButton from '$lib/components/InstallButton.svelte';
   import { showToast } from '$lib/components/events';
   import { t } from 'svelte-i18n';
@@ -191,6 +192,7 @@
 {:else}
   <Confetti />
   <Toast />
+  <XpToast />
   <Mascot />
   <SecretModal bind:open={secretRoomOpen} />
   <!-- Phase 15: offline status banner (listens to online/offline events). -->
