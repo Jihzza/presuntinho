@@ -44,6 +44,7 @@
   import { awardXP } from '$lib/state/xp-actions';
     import { showToast } from '$lib/components/events';
     import { db } from '$lib/state/db';
+  import { useMoodState, moodMicrocopyHint } from '$lib/mood/useMoodState';
 
   // chart.js/auto regista todos os controllers + scales + elements
   // automaticamente.  Importado dinamicamente em onMount para evitar
@@ -62,8 +63,28 @@
   let totalTransacoesMes = $state(0);
   let exporting = $state(false);
 
-  const financasApp = subApps.find((a) => a.id === 'financas');
-  const mesAtual = getMesAtual();
+  let financasApp = subApps.find((a) => a.id === 'financas');
+    const mesAtual = getMesAtual();
+    const moodState = useMoodState();
+    const sickHint = $derived(moodMicrocopyHint(moodState.mood?.kind ?? null));
+    // Quando o mood é 'sick' ou 'sad' escondemos o atalho "Nova transação"
+    // (fricção reduzida) e mostramos uma faixa calma. Para 'love' mantemos
+    // tudo normal mas com cor mais quente.
+    const shortcuts = $derived(() => {
+      const all = [
+        { href: '/financas/nova', title: 'Nova transação', icon: '➕', prio: 'normal' },
+        { href: '/financas/lista', title: 'Ver todas', icon: '📋', prio: 'normal' },
+        { href: '/financas/orcamento', title: 'Orçamento', icon: '🎯', prio: 'normal' },
+        { href: '/financas/categorias', title: 'Categorias', icon: '🏷️', prio: 'normal' },
+        { href: '/financas/relatorios', title: 'Relatórios', icon: '📊', prio: 'normal' },
+        { href: '/financas/exportar', title: 'Exportar JSON', icon: '💾', prio: 'normal' }
+      ];
+      if (!moodState.isSick && !moodState.isSoft) return all;
+      // Em modo cuidado, escondemos criação nova (só ver) e empurramos
+      // "Ver todas" para o topo — facilita olhar sem mexer.
+      const filtered = all.filter((s) => s.href !== '/financas/nova');
+      return [{ href: '/financas/lista', title: 'Ver todas (só leitura)', icon: '📋', prio: 'top' }, ...filtered];
+    });
 
   onMount(() => {
     void (async () => {
@@ -291,6 +312,12 @@
   <header class="hero">
     <h1>{$t('financas.hero.title', { default: '💰 Finanças' })}</h1>
     <p class="sub">{$t('financas.hero.sub', { default: 'Resumo de' })} <strong>{formatMes(mesAtual)}</strong></p>
+    {#if sickHint}
+      <p class="mood-hint" role="note" aria-live="polite">
+        <span aria-hidden="true">🤍</span>
+        {sickHint}
+      </p>
+    {/if}
   </header>
 
   <nav class="crumbs" aria-label={$t('financas.crumbs.aria', { default: 'Caminho de navegação' })}>
@@ -393,13 +420,20 @@
     </section>
 
     <section class="quick-links" aria-label={$t('financas.shortcuts.aria', { default: 'Atalhos' })}>
-      <a class="quick" href="/financas/nova/">
-        <span class="quick-icon" aria-hidden="true">➕</span>
-        <span class="quick-text">
-          <span class="quick-title">{$t('financas.shortcuts.new.title', { default: 'Nova transação' })}</span>
-          <span class="quick-sub">{$t('financas.shortcuts.new.sub', { default: 'Adicionar receita ou despesa' })}</span>
-        </span>
-      </a>
+      {#if !moodState.isSick && !moodState.isSoft}
+        <a class="quick" href="/financas/nova/">
+          <span class="quick-icon" aria-hidden="true">➕</span>
+          <span class="quick-text">
+            <span class="quick-title">{$t('financas.shortcuts.new.title', { default: 'Nova transação' })}</span>
+            <span class="quick-sub">{$t('financas.shortcuts.new.sub', { default: 'Adicionar receita ou despesa' })}</span>
+          </span>
+        </a>
+      {:else}
+        <p class="mood-readonly" role="note">
+          <span aria-hidden="true">🌿</span>
+          {$t('financas.shortcuts.readonly_hint', { default: 'Modo cuidado: criação pausada — só leitura hoje.' })}
+        </p>
+      {/if}
       <a class="quick" href="/financas/transacoes/">
         <span class="quick-icon" aria-hidden="true">📋</span>
         <span class="quick-text">
@@ -478,6 +512,31 @@
     color: var(--txt, #fff);
     font-weight: 600;
     text-transform: capitalize;
+  }
+  .mood-hint {
+    margin: 0.8rem auto 0;
+    padding: 0.55rem 0.85rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--mood-accent, #60a5fa) 18%, rgba(255,255,255,.85));
+    color: var(--txt, #1f2e4a);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.86rem;
+    border: 1px solid color-mix(in srgb, var(--mood-accent, #60a5fa) 35%, rgba(255,255,255,.4));
+  }
+  .mood-readonly {
+    margin: 0 0 0.85rem 0;
+    padding: 0.7rem 0.9rem;
+    border-radius: 0.9rem;
+    background: color-mix(in srgb, var(--mood-accent, #60a5fa) 14%, rgba(255,255,255,.6));
+    color: var(--txt, #1f2e4a);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    grid-column: 1 / -1;
+    border: 1px dashed color-mix(in srgb, var(--mood-accent, #60a5fa) 40%, rgba(255,255,255,.5));
   }
   .crumbs {
     display: flex;
