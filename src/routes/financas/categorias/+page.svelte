@@ -22,7 +22,6 @@
 -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { get } from 'svelte/store';
   import { t } from 'svelte-i18n';
   import { browser } from '$app/environment';
   import {
@@ -39,37 +38,36 @@
   import ColorPicker from '$lib/components/ColorPicker.svelte';
   import { showToast } from '$lib/components/events';
 
-  // Strings i18n resolvidas uma vez (não usar $t dentro de @const).
-  const STRINGS = {
-    title: get(t)('financas.categorias.title', { default: 'Categorias' }),
-    subtitle: get(t)('financas.categorias.subtitle', { default: 'Gere as categorias das tuas transações' }),
-    newBtn: get(t)('financas.categorias.new', { default: 'Nova categoria' }),
-    editAria: get(t)('financas.categorias.edit.aria', { default: 'Editar categoria' }),
-    deleteAria: get(t)('financas.categorias.delete.aria', { default: 'Apagar categoria' }),
-    deleteConfirm: get(t)('financas.categorias.delete.confirm', { default: 'Confirmar remoção?' }),
-    formTitleNew: get(t)('financas.categorias.form.new', { default: 'Nova categoria' }),
-    formTitleEdit: get(t)('financas.categorias.form.edit', { default: 'Editar categoria' }),
-    labelNome: get(t)('financas.categorias.form.nome', { default: 'Nome' }),
-    labelIcone: get(t)('financas.categorias.form.icone', { default: 'Ícone (emoji)' }),
-    labelCor: get(t)('financas.categorias.form.cor', { default: 'Cor (hex)' }),
-    labelTipo: get(t)('financas.categorias.form.tipo', { default: 'Tipo' }),
-    tipoDespesa: get(t)('financas.categorias.tipo.despesa', { default: 'Despesa' }),
-    tipoReceita: get(t)('financas.categorias.tipo.receita', { default: 'Receita' }),
-    tipoAmbos: get(t)('financas.categorias.tipo.ambos', { default: 'Ambas' }),
-    btnSave: get(t)('financas.categorias.form.save', { default: 'Guardar' }),
-    btnCancel: get(t)('financas.categorias.form.cancel', { default: 'Cancelar' }),
-    errNomeRequired: get(t)('financas.categorias.form.errors.nomeRequired', { default: 'Nome obrigatório' }),
-    errNomeTooLong: get(t)('financas.categorias.form.errors.nomeTooLong', { default: 'Nome demasiado longo (max 40)' }),
-    errCorInvalida: get(t)('financas.categorias.form.errors.corInvalida', { default: 'Cor inválida (use #rgb ou #rrggbb)' }),
-    toastSaved: get(t)('financas.categorias.toast.saved', { default: 'Categoria guardada' }),
-    toastDeleted: get(t)('financas.categorias.toast.deleted', { default: 'Categoria apagada' }),
-    toastError: get(t)('financas.categorias.toast.error', { default: 'Erro a guardar categoria' }),
-    toastRefused: get(t)('financas.categorias.toast.refused', { default: 'Categoria em uso: {refs}' }),
-    txCount: get(t)('financas.categorias.tx_count', { default: '{n} transações' }),
-    groupDespesa: get(t)('financas.categorias.group.despesa', { default: 'Despesas' }),
-    groupReceita: get(t)('financas.categorias.group.receita', { default: 'Receitas' }),
-    groupAmbos: get(t)('financas.categorias.group.ambos', { default: 'Ambas' })
-  };
+  // Strings i18n reativas: não congelar `get(t)` no idioma inicial.
+  const STRINGS = $derived({
+    title: $t('financas.categorias.title', { default: 'Categorias' }),
+    subtitle: $t('financas.categorias.subtitle', { default: 'Gere as categorias das tuas transações' }),
+    newBtn: $t('financas.categorias.new', { default: 'Nova categoria' }),
+    editAria: $t('financas.categorias.edit.aria', { default: 'Editar categoria' }),
+    deleteAria: $t('financas.categorias.delete.aria', { default: 'Apagar categoria' }),
+    formTitleNew: $t('financas.categorias.form.new', { default: 'Nova categoria' }),
+    formTitleEdit: $t('financas.categorias.form.edit', { default: 'Editar categoria' }),
+    labelNome: $t('financas.categorias.form.nome', { default: 'Nome' }),
+    labelIcone: $t('financas.categorias.form.icone', { default: 'Ícone (emoji)' }),
+    labelCor: $t('financas.categorias.form.cor', { default: 'Cor (hex)' }),
+    labelTipo: $t('financas.categorias.form.tipo', { default: 'Tipo' }),
+    tipoDespesa: $t('financas.categorias.tipo.despesa', { default: 'Despesa' }),
+    tipoReceita: $t('financas.categorias.tipo.receita', { default: 'Receita' }),
+    tipoAmbos: $t('financas.categorias.tipo.ambos', { default: 'Ambas' }),
+    btnSave: $t('financas.categorias.form.save', { default: 'Guardar' }),
+    btnCancel: $t('financas.categorias.form.cancel', { default: 'Cancelar' }),
+    errNomeRequired: $t('financas.categorias.form.errors.nomeRequired', { default: 'Nome obrigatório' }),
+    errNomeTooLong: $t('financas.categorias.form.errors.nomeTooLong', { default: 'Nome demasiado longo (max 40)' }),
+    errCorInvalida: $t('financas.categorias.form.errors.corInvalida', { default: 'Cor inválida (use #rgb ou #rrggbb)' }),
+    toastSaved: $t('financas.categorias.toast.saved', { default: 'Categoria guardada' }),
+    toastDeleted: $t('financas.categorias.toast.deleted', { default: 'Categoria apagada' }),
+    toastError: $t('financas.categorias.toast.error', { default: 'Erro a guardar categoria' }),
+    toastRefused: $t('financas.categorias.toast.refused', { default: 'Categoria em uso: {refs}' }),
+    txCount: $t('financas.categorias.tx_count', { default: '{n} transações' }),
+    groupDespesa: $t('financas.categorias.group.despesa', { default: 'Despesas' }),
+    groupReceita: $t('financas.categorias.group.receita', { default: 'Receitas' }),
+    groupAmbos: $t('financas.categorias.group.ambos', { default: 'Ambas' })
+  });
 
   let categorias = $state<CategoriaRow[]>([]);
   let txCounts = $state<Record<string, number>>({});

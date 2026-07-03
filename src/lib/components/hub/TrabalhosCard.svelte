@@ -10,7 +10,7 @@
    * because the user has nothing to do for those.
    */
   import { onMount } from 'svelte';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
   import { db, type AssignmentRow } from '$lib/state/db';
 
   interface Props {
@@ -20,6 +20,7 @@
 
   const DAY_MS = 24 * 60 * 60 * 1000;
   const WINDOW_DAYS = 7;
+  const dateLocale = $derived($locale || 'pt-PT');
 
   interface Upcoming {
     id: string;
@@ -72,7 +73,7 @@
       return $t('routes.hub.card.trabalhos.tomorrow', { default: 'Amanhã' });
     }
     const d = new Date(deadline);
-    return d.toLocaleDateString('pt-PT', { day: '2-digit', month: 'short' });
+    return d.toLocaleDateString(dateLocale, { day: '2-digit', month: 'short' });
   }
 
   function urgency(daysLeft: number): 'soon' | 'mid' | 'late' {

@@ -15,7 +15,7 @@
    * reason to tap the card.
    */
   import { onMount } from 'svelte';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
   import { db, type CategoriaRow } from '$lib/state/db';
 
   interface Props {
@@ -43,8 +43,10 @@
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
   }
 
-  function formatValor(v: number): string {
-    return new Intl.NumberFormat('pt-PT', {
+  const numberLocale = $derived($locale || 'pt-PT');
+
+  function formatValor(v: number, loc = numberLocale): string {
+    return new Intl.NumberFormat(loc, {
       style: 'currency',
       currency: 'EUR',
       maximumFractionDigits: 0
@@ -105,7 +107,7 @@
   });
 
   // Locale-aware EUR formatter with cents (used for the balance line).
-  let saldoLabel = $derived(formatValor(saldo));
+  let saldoLabel = $derived(formatValor(saldo, numberLocale));
   let saldoClass = $derived(saldo > 0 ? 'pos' : saldo < 0 ? 'neg' : 'zero');
 </script>
 
@@ -121,7 +123,7 @@
     <p class="balance {saldoClass}">{saldoLabel}</p>
     <p class="sub">
       {$t('routes.hub.card.financas.sub', {
-        values: { rec: formatValor(receitas), desp: formatValor(despesas) },
+        values: { rec: formatValor(receitas, numberLocale), desp: formatValor(despesas, numberLocale) },
         default: '↗ {rec} · ↘ {desp}'
       })}
     </p>
@@ -142,7 +144,7 @@
             <span class="dot" style="background: {cat.cor}" aria-hidden="true"></span>
             <span class="cat-icon" aria-hidden="true">{cat.icone}</span>
             <span class="cat-name">{cat.nome}</span>
-            <span class="cat-val">{formatValor(cat.total)}</span>
+            <span class="cat-val">{formatValor(cat.total, numberLocale)}</span>
           </li>
         {/each}
       </ul>

@@ -26,7 +26,7 @@
     type AgendaItem,
     type NotificationItem
   } from '$lib/vida/agenda';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
 
   const TOTALS = schoolTotals();
   const TOTAL_LESSONS = TOTALS.lessons;
@@ -53,6 +53,7 @@
 
   const today = new Date();
   const todayKey = localDateKey(today);
+  const dateLocale = $derived($locale || 'pt-PT');
 
   let xpLabel = $derived(new Intl.NumberFormat('pt-PT').format(currentXp) + ' XP');
   let unlockedBadges = $derived(Object.values(badgesMap).filter((b) => b.unlocked).length);
@@ -129,6 +130,9 @@
     activeProfile = getSession()?.profile ?? null;
     heroIn = true;
     const unsubXp = xp.subscribe((v) => (currentXp = v));
+    const unsubLocale = locale.subscribe(() => {
+      void refreshAgenda();
+    });
 
     void (async () => {
       await initStores();
@@ -151,6 +155,7 @@
     return () => {
       document.removeEventListener('visibilitychange', onVis);
       unsubXp();
+      unsubLocale();
     };
   });
 </script>
@@ -190,7 +195,7 @@
   <section class="today-strip" aria-label={$t('hub.today.aria')}>
     <div>
       <span class="eyebrow">{$t('hub.today.eyebrow')}</span>
-      <h2>{formatDayLabel(todayKey)}</h2>
+      <h2>{formatDayLabel(todayKey, dateLocale)}</h2>
       <p>{todaysItems.length ? $t('hub.today.items', { values: { count: todaysItems.length, suffix: todaysItems.length === 1 ? '' : 's' } }) : $t('hub.today.empty')}</p>
     </div>
     <a href="/notificacoes/" class="notify-link">🔔 {notifications.length}</a>
@@ -216,9 +221,9 @@
           data-tone={dayTone(day)}
           data-outside="false"
           href="/calendario/"
-          aria-label={$t('hub.calendar.day_aria', { values: { day: formatDayLabel(localDateKey(day)), count: itemsForDate(day).length } })}
+          aria-label={$t('hub.calendar.day_aria', { values: { day: formatDayLabel(localDateKey(day), dateLocale), count: itemsForDate(day).length } })}
         >
-          <span>{day.toLocaleDateString('pt-PT', { weekday: 'short' })}</span>
+          <span>{day.toLocaleDateString(dateLocale, { weekday: 'short' })}</span>
           <strong>{day.getDate()}</strong>
           {#if itemsForDate(day).length > 0}
             <small>{itemsForDate(day).length}</small>
@@ -237,7 +242,7 @@
       {:else}
         {#each nextItems.slice(0, 3) as item (item.id)}
           <a class="agenda-item" data-tone={item.tone} href={item.href}>
-            <span class="agenda-date">{formatDayLabel(item.date)}</span>
+            <span class="agenda-date">{formatDayLabel(item.date, dateLocale)}</span>
             <span class="agenda-main"><strong>{item.title}</strong><small>{item.subtitle}</small></span>
             <span aria-hidden="true">→</span>
           </a>

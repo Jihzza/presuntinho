@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
   import {
     buildNotifications,
     loadAgendaItems,
@@ -11,9 +11,14 @@
   let loading = $state(true);
 
   onMount(() => {
-    void loadAgendaItems()
-      .then((items) => (notifications = buildNotifications(items)))
-      .finally(() => (loading = false));
+    const refresh = () => {
+      loading = true;
+      void loadAgendaItems()
+        .then((items) => (notifications = buildNotifications(items)))
+        .finally(() => (loading = false));
+    };
+    const unsubLocale = locale.subscribe(refresh);
+    return unsubLocale;
   });
 </script>
 

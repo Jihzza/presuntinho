@@ -222,12 +222,20 @@
   // the same union; we keep this state variable loose and cast on hydrate.
   let currentLang: Locale = $state('pt-PT');
   onMount(() => {
-    const unsub = langStore.subscribe((v) => {
+    const unsubLang = langStore.subscribe((v) => {
       if (typeof v === 'string' && (LOCALES as string[]).includes(v)) {
         currentLang = v as Locale;
       }
     });
-    return unsub;
+    const unsubLocale = locale.subscribe((v) => {
+      if (typeof v === 'string' && (LOCALES as string[]).includes(v)) {
+        currentLang = v as Locale;
+      }
+    });
+    return () => {
+      unsubLang();
+      unsubLocale();
+    };
   });
 
   async function pickLang(loc: Locale): Promise<void> {

@@ -1,5 +1,7 @@
 import { listHabitos, isLoggedToday, type Habit } from '../habitos';
 import { ensureAssignmentDefaults, listAssignments, type Assignment } from '../trabalhos';
+import { get } from 'svelte/store';
+import { t } from 'svelte-i18n';
 
 export type AgendaItemKind = 'assignment' | 'habit' | 'life';
 export type AgendaItemTone = 'danger' | 'warning' | 'school' | 'habit' | 'life' | 'done';
@@ -25,6 +27,10 @@ export interface NotificationItem {
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;
+
+function tr(key: string, fallback: string, values?: Record<string, string | number>): string {
+  return get(t)(key, values ? { values, default: fallback } : { default: fallback });
+}
 
 export function localDateKey(date: Date): string {
   const year = date.getFullYear();
@@ -72,10 +78,10 @@ function assignmentTone(a: Assignment): AgendaItemTone {
 
 function assignmentStatusLabel(status: Assignment['status']): string {
   switch (status) {
-    case 'pending': return 'por começar';
-    case 'in_progress': return 'em curso';
-    case 'submitted': return 'entregue';
-    case 'graded': return 'avaliado';
+    case 'pending': return tr('agenda.assignment.status.pending', 'por começar');
+    case 'in_progress': return tr('agenda.assignment.status.in_progress', 'em curso');
+    case 'submitted': return tr('agenda.assignment.status.submitted', 'entregue');
+    case 'graded': return tr('agenda.assignment.status.graded', 'avaliado');
   }
 }
 
@@ -101,7 +107,11 @@ export async function loadAgendaItems(): Promise<AgendaItem[]> {
   const habitItems: AgendaItem[] = habitStates.map(({ habit, done }) => ({
     id: `habit:${habit.id}`,
     title: `${habit.icon} ${habit.name}`,
-    subtitle: done ? 'feito hoje' : (habit.reminder ? `lembrar: ${habit.reminder}` : 'hábito de hoje'),
+    subtitle: done
+      ? tr('agenda.habit.done_today', 'feito hoje')
+      : (habit.reminder
+        ? tr('agenda.habit.reminder', 'lembrar: {reminder}', { reminder: habit.reminder })
+        : tr('agenda.habit.today', 'hábito de hoje')),
     href: '/habitos/',
     date: todayKey,
     kind: 'habit',
@@ -132,8 +142,12 @@ export function buildNotifications(items: AgendaItem[]): NotificationItem[] {
   if (overdue.length > 0) {
     notifications.push({
       id: 'overdue-assignments',
-      title: `${overdue.length} prazo${overdue.length === 1 ? '' : 's'} em atraso`,
-      body: 'Começa por limpar os trabalhos que já passaram do prazo.',
+      title: tr(
+        overdue.length === 1 ? 'agenda.notifications.overdue.one' : 'agenda.notifications.overdue.other',
+        overdue.length === 1 ? '{n} prazo em atraso' : '{n} prazos em atraso',
+        { n: overdue.length }
+      ),
+      body: tr('agenda.notifications.overdue.body', 'Começa por limpar os trabalhos que já passaram do prazo.'),
       href: '/escola/trabalhos/',
       tone: 'danger',
       priority: 1
@@ -142,8 +156,12 @@ export function buildNotifications(items: AgendaItem[]): NotificationItem[] {
   if (urgent.length > 0) {
     notifications.push({
       id: 'urgent-assignments',
-      title: `${urgent.length} entrega${urgent.length === 1 ? '' : 's'} nos próximos 7 dias`,
-      body: 'Toca para ver a lista de trabalhos por prioridade.',
+      title: tr(
+        urgent.length === 1 ? 'agenda.notifications.urgent.one' : 'agenda.notifications.urgent.other',
+        urgent.length === 1 ? '{n} entrega nos próximos 7 dias' : '{n} entregas nos próximos 7 dias',
+        { n: urgent.length }
+      ),
+      body: tr('agenda.notifications.urgent.body', 'Toca para ver a lista de trabalhos por prioridade.'),
       href: '/escola/trabalhos/',
       tone: 'warning',
       priority: 2
@@ -152,8 +170,12 @@ export function buildNotifications(items: AgendaItem[]): NotificationItem[] {
   if (todayHabits.length > 0) {
     notifications.push({
       id: 'today-habits',
-      title: `${todayHabits.length} hábito${todayHabits.length === 1 ? '' : 's'} por fechar hoje`,
-      body: 'Mantém a streak viva antes do fim do dia.',
+      title: tr(
+        todayHabits.length === 1 ? 'agenda.notifications.habits.one' : 'agenda.notifications.habits.other',
+        todayHabits.length === 1 ? '{n} hábito por fechar hoje' : '{n} hábitos por fechar hoje',
+        { n: todayHabits.length }
+      ),
+      body: tr('agenda.notifications.habits.body', 'Mantém a streak viva antes do fim do dia.'),
       href: '/habitos/',
       tone: 'habit',
       priority: 3
@@ -162,8 +184,8 @@ export function buildNotifications(items: AgendaItem[]): NotificationItem[] {
   if (notifications.length === 0) {
     notifications.push({
       id: 'all-clear',
-      title: 'Nada urgente agora',
-      body: 'A Home está limpa. Bom momento para planear a semana.',
+      title: tr('agenda.notifications.clear.title', 'Nada urgente agora'),
+      body: tr('agenda.notifications.clear.body', 'A Home está limpa. Bom momento para planear a semana.'),
       href: '/',
       tone: 'done',
       priority: 9

@@ -118,9 +118,14 @@
   }
 
   onMount(() => {
-    void loadAgendaItems()
-      .then((rows) => (items = rows))
-      .finally(() => (loading = false));
+    const refresh = () => {
+      loading = true;
+      void loadAgendaItems()
+        .then((rows) => (items = rows))
+        .finally(() => (loading = false));
+    };
+    const unsubLocale = locale.subscribe(refresh);
+    return unsubLocale;
   });
 </script>
 

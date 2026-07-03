@@ -15,7 +15,6 @@
 -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { get } from 'svelte/store';
   import { t } from 'svelte-i18n';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
@@ -35,18 +34,18 @@
   import Skeleton from '$lib/components/Skeleton.svelte';
   import { showToast } from '$lib/components/events';
 
-  // Localised strings used inside the {#each} loop. We can't use $t
-  // inside a Svelte @const block (it's a store subscription, not a
-  // function call), so we resolve these once via the `ti()` helper at
-  // the top level of the component.
-  const ARIA_RECEITA = get(t)('transacoes.tipo.receita', { default: 'Receita' });
-  const ARIA_DESPESA = get(t)('transacoes.tipo.despesa', { default: 'Despesa' });
-  const ARIA_DELETE = get(t)('transacoes.delete.aria', { default: 'Remover transação' });
-  const ARIA_CONFIRM = get(t)('transacoes.delete.confirm', { default: 'Confirmar remoção' });
-  const CONFIRM_SHORT = get(t)('transacoes.delete.confirm_short', { default: 'Confirmar?' });
-  const TOAST_REMOVED = get(t)('transacoes.toast.removed', { default: 'Transação removida' });
-  const TOAST_DELETE_FAILED = get(t)('transacoes.toast.delete_failed', { default: 'Erro a remover transação' });
-  const SALDO_LABEL = get(t)('transacoes.saldo', { default: 'Saldo' });
+  // Localised strings used inside loops/actions. Keep them reactive so a
+  // language switch while this page is open updates labels/toasts too.
+  const STRINGS = $derived({
+    ariaReceita: $t('transacoes.tipo.receita', { default: 'Receita' }),
+    ariaDespesa: $t('transacoes.tipo.despesa', { default: 'Despesa' }),
+    ariaDelete: $t('transacoes.delete.aria', { default: 'Remover transação' }),
+    ariaConfirm: $t('transacoes.delete.confirm', { default: 'Confirmar remoção' }),
+    confirmShort: $t('transacoes.delete.confirm_short', { default: 'Confirmar?' }),
+    toastRemoved: $t('transacoes.toast.removed', { default: 'Transação removida' }),
+    toastDeleteFailed: $t('transacoes.toast.delete_failed', { default: 'Erro a remover transação' }),
+    saldoLabel: $t('transacoes.saldo', { default: 'Saldo' })
+  });
 
   let transacoes = $state<Transacao[]>([]);
   let categorias = $state<CategoriaRow[]>([]);
@@ -164,10 +163,10 @@
     try {
       await deleteTransacao(id);
       await refresh();
-      showToast(TOAST_REMOVED);
+      showToast(STRINGS.toastRemoved);
     } catch (e) {
       console.error('[financas] delete failed', e);
-      showToast(TOAST_DELETE_FAILED);
+      showToast(STRINGS.toastDeleteFailed);
     }
   }
 
@@ -323,7 +322,7 @@
         − {formatValor(totalVisivel.despesas)}
       </span>
       <span class="total-pill saldo" class:negativo={totalVisivel.receitas - totalVisivel.despesas < 0}>
-        {SALDO_LABEL}: {formatValor(totalVisivel.receitas - totalVisivel.despesas)}
+        {STRINGS.saldoLabel}: {formatValor(totalVisivel.receitas - totalVisivel.despesas)}
       </span>
     </div>
   </section>
@@ -370,20 +369,20 @@
                 <span class="row-main">
                   <span class="row-desc">{tx.descricao || (c?.nome ?? $t('financas.transacoes.sem_descricao', { default: 'Sem descrição' }))}</span>
                   <span class="row-meta">
-                    {c?.nome ?? tx.categoria} · {isReceita ? ARIA_RECEITA : ARIA_DESPESA}
+                    {c?.nome ?? tx.categoria} · {isReceita ? STRINGS.ariaReceita : STRINGS.ariaDespesa}
                   </span>
                 </span>
-                <span class="row-valor" aria-label={isReceita ? ARIA_RECEITA : ARIA_DESPESA}>
+                <span class="row-valor" aria-label={isReceita ? STRINGS.ariaReceita : STRINGS.ariaDespesa}>
                   {isReceita ? '+' : '−'}{formatValor(tx.valor)}
                 </span>
                 <button
                   type="button"
                   class="delete-btn"
                   onclick={() => confirmDelete(tx.id)}
-                  aria-label={confirmingDelete === tx.id ? ARIA_CONFIRM : ARIA_DELETE}
+                  aria-label={confirmingDelete === tx.id ? STRINGS.ariaConfirm : STRINGS.ariaDelete}
                   data-confirming={confirmingDelete === tx.id}
                 >
-                  {confirmingDelete === tx.id ? CONFIRM_SHORT : '🗑️'}
+                  {confirmingDelete === tx.id ? STRINGS.confirmShort : '🗑️'}
                 </button>
               </li>
             {/each}
