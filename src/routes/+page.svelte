@@ -126,11 +126,10 @@
   onMount(() => {
     activeProfile = getSession()?.profile ?? null;
     heroIn = true;
+    const unsubXp = xp.subscribe((v) => (currentXp = v));
 
     void (async () => {
       await initStores();
-      currentXp = get(xp);
-      xp.subscribe((v) => (currentXp = v));
       await Promise.all([refreshDashboard(), refreshAgenda()]);
       const mood = await readActiveMood();
       activeMood = mood && isMoodIntroAcknowledged(mood) ? mood : null;
@@ -147,7 +146,10 @@
       charmSeed = Date.now();
     };
     document.addEventListener('visibilitychange', onVis);
-    return () => document.removeEventListener('visibilitychange', onVis);
+    return () => {
+      document.removeEventListener('visibilitychange', onVis);
+      unsubXp();
+    };
   });
 </script>
 
