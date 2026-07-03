@@ -242,7 +242,7 @@
   </header>
 
   <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
-    <a href="/">← Hub</a>
+    <a href="/">{$t('financas.crumbs.hub', { default: '← Hub' })}</a>
     <span aria-hidden="true">/</span>
     <a href="/financas/">{$t('financas.transacoes.breadcrumb.home', { default: '← Finanças' })}</a>
     <span aria-hidden="true">/</span>
@@ -310,7 +310,7 @@
           onclick={clearFilters}
           aria-label="{$t('a11y.aria.limpar_filtros', { default: 'Limpar filtros' })}"
         >
-          Limpar filtros
+          {$t('financas.transacoes.clear_filters', { default: 'Limpar filtros' })}
         </button>
       {/if}
     </div>

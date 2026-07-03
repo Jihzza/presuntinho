@@ -121,7 +121,7 @@
       assignmentId = row.assignment_id ?? '';
     } catch (e) {
       console.error('[biblioteca/editar] loadRow failed', e);
-      error = e instanceof Error ? e.message : 'Erro a carregar marcador';
+      error = e instanceof Error ? e.message : $t('biblioteca.item.loadFailed', { default: 'Erro a carregar marcador' }) as string;
     } finally {
       loading = false;
     }
@@ -184,24 +184,24 @@
     const d = description.trim();
 
     if (!t1) {
-      error = 'O título é obrigatório.';
+      error = $t('error.o_titulo_obrigatorio', { default: 'O título é obrigatório.' }) as string;
       return;
     }
     if (t1.length > 120) {
-      error = 'Título demasiado longo (máx. 120 caracteres).';
+      error = $t('error.titulo_demasiado_longo_max_120', { default: 'Título demasiado longo (máx. 120 caracteres).' }) as string;
       return;
     }
     if (!isValidUrl(u)) {
-      error = 'O URL tem de começar por http:// ou https://.';
+      error = $t('error.o_url_tem_de_comecar_por_http', { default: 'O URL tem de começar por http:// ou https://.' }) as string;
       return;
     }
     if (d.length > 500) {
-      error = 'Descrição demasiado longa (máx. 500 caracteres).';
+      error = $t('error.descricao_demasiado_longa_max_500', { default: 'Descrição demasiado longa (máx. 500 caracteres).' }) as string;
       return;
     }
     const parsedTags = parseTagsInput(tagsInput);
     if (parsedTags.length > 10) {
-      error = 'Máximo de 10 tags por marcador.';
+      error = $t('error.maximo_de_10_tags_por_marcador', { default: 'Máximo de 10 tags por marcador.' }) as string;
       return;
     }
 
@@ -219,7 +219,7 @@
       void goto(`/biblioteca/item/${itemId}/`);
     } catch (e) {
       console.error('[biblioteca/editar] updateItem failed', e);
-      error = e instanceof Error ? e.message : 'Erro a guardar marcador';
+      error = e instanceof Error ? e.message : $t('biblioteca.novo.erro.guardar', { default: 'Erro a guardar marcador' }) as string;
       saving = false;
     }
   }
@@ -235,39 +235,39 @@
       void goto('/biblioteca/');
     } catch (e) {
       console.error('[biblioteca/editar] delete failed', e);
-      error = e instanceof Error ? e.message : 'Erro a remover marcador';
+      error = e instanceof Error ? e.message : $t('biblioteca.item.toast.erro_remover', { default: 'Erro a remover marcador' }) as string;
       removing = false;
     }
   }
 </script>
 
 <svelte:head>
-  <title>Editar marcador · Biblioteca · Presuntinho</title>
+  <title>{$t('biblioteca.edit.seo.title', { default: 'Editar marcador · Biblioteca' })} · Presuntinho</title>
 </svelte:head>
 
 <div class="editar">
   <header class="hero">
-    <h1>✏️ Editar marcador</h1>
-    <p class="sub">Atualiza título, URL, descrição, tags ou o curso / trabalho a que está anexado.</p>
+    <h1>{$t('biblioteca.edit.hero.title', { default: '✏️ Editar marcador' })}</h1>
+    <p class="sub">{$t('biblioteca.edit.hero.sub', { default: 'Atualiza título, URL, descrição, tags ou o curso / trabalho a que está anexado.' })}</p>
   </header>
 
   <nav class="crumbs">
-    <a href="/">← Hub</a>
+    <a href="/">{$t('biblioteca.crumbs.home', { default: '← Hub' })}</a>
     <span aria-hidden="true">/</span>
-    <a href="/biblioteca/">← Biblioteca</a>
+    <a href="/biblioteca/">{$t('biblioteca.novo.breadcrumb.home', { default: '← Biblioteca' })}</a>
     <span aria-hidden="true">/</span>
-    <span aria-current="page">Editar</span>
+    <span aria-current="page">{$t('biblioteca.edit.breadcrumb.current', { default: 'Editar' })}</span>
   </nav>
 
   {#if loading}
-    <p class="empty">A carregar…</p>
+    <p class="empty">{$t('biblioteca.edit.loading', { default: 'A carregar…' })}</p>
   {:else if notFound}
-    <p class="empty error" role="alert">⚠️ Marcador não encontrado.</p>
-    <p class="back-row"><a href="/biblioteca/">← Voltar à Biblioteca</a></p>
+    <p class="empty error" role="alert">⚠️ {$t('biblioteca.edit.not_found', { default: 'Marcador não encontrado.' })}</p>
+    <p class="back-row"><a href="/biblioteca/">{$t('biblioteca.edit.back', { default: '← Voltar à Biblioteca' })}</a></p>
   {:else}
     <form class="form" onsubmit={handleSubmit} novalidate>
       <div class="field">
-        <label for="bm-title">Título <span aria-hidden="true">*</span></label>
+        <label for="bm-title">{$t('biblioteca.edit.title_label', { default: 'Título' })} <span aria-hidden="true">*</span></label>
         <input
           id="bm-title"
           type="text"
@@ -291,7 +291,7 @@
       </div>
 
       <div class="field">
-        <label for="bm-desc">Descrição</label>
+        <label for="bm-desc">{$t('biblioteca.edit.description_label', { default: 'Descrição' })}</label>
         <textarea
           id="bm-desc"
           bind:value={description}
@@ -307,16 +307,16 @@
           id="bm-tags"
           type="text"
           bind:value={tagsInput}
-          placeholder="python, docs, performance"
+          placeholder={$t('biblioteca.novo.placeholder.tags', { default: 'python, docs, performance' })}
           autocomplete="off"
         />
-        <span class="hint">Separa com vírgulas. Até 10 tags por marcador.</span>
+        <span class="hint">{$t('biblioteca.edit.tags_hint', { default: 'Separa com vírgulas. Até 10 tags por marcador.' })}</span>
       </div>
 
       <div class="field">
-        <label for="bm-curso">Curso (escola)</label>
+        <label for="bm-curso">{$t('biblioteca.edit.course_label', { default: 'Curso (escola)' })}</label>
         <select id="bm-curso" bind:value={cursoId}>
-          <option value="">— Nenhum —</option>
+          <option value="">{$t('biblioteca.edit.none', { default: '— Nenhum —' })}</option>
           {#each CURSOS as c (c.slug)}
             <option value={c.slug}>{c.title}</option>
           {/each}
@@ -324,14 +324,14 @@
       </div>
 
       <div class="field">
-        <label for="bm-assignment">Trabalho (anexar como recurso)</label>
+        <label for="bm-assignment">{$t('biblioteca.edit.assignment_label', { default: 'Trabalho (anexar como recurso)' })}</label>
         <select id="bm-assignment" bind:value={assignmentId}>
-          <option value="">— Nenhum —</option>
+          <option value="">{$t('biblioteca.edit.none', { default: '— Nenhum —' })}</option>
           {#each assignments as a (a.id)}
             <option value={a.id}>{a.id} · {a.title}</option>
           {/each}
         </select>
-        <span class="hint">Atrelar este marcador a um trabalho permite usá-lo como referência ao escrever a entrega.</span>
+        <span class="hint">{$t('biblioteca.edit.assignment_hint', { default: 'Atrelar este marcador a um trabalho permite usá-lo como referência ao escrever a entrega.' })}</span>
       </div>
 
       {#if error}
@@ -340,11 +340,11 @@
 
       <div class="actions">
         <button type="button" class="btn-danger" onclick={handleDelete} disabled={removing || saving}>
-          {removing ? 'A apagar…' : '🗑️ Apagar'}
+          {removing ? $t('biblioteca.edit.deleting', { default: 'A apagar…' }) : $t('biblioteca.edit.delete', { default: '🗑️ Apagar' })}
         </button>
-        <a class="btn-secondary" href={itemId !== null ? `/biblioteca/item/${itemId}/` : '/biblioteca/'}>Cancelar</a>
+        <a class="btn-secondary" href={itemId !== null ? `/biblioteca/item/${itemId}/` : '/biblioteca/'}>{$t('biblioteca.edit.cancel', { default: 'Cancelar' })}</a>
         <button type="submit" class="btn-primary" disabled={saving}>
-          {saving ? 'A guardar…' : 'Guardar alterações'}
+          {saving ? $t('biblioteca.edit.saving', { default: 'A guardar…' }) : $t('biblioteca.edit.save', { default: 'Guardar alterações' })}
         </button>
       </div>
     </form>

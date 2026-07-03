@@ -17,9 +17,9 @@
     <h1>{$t('school.hero.title')}</h1>
     <p class="sub">{$t('school.hero.subtitle')}</p>
     <div class="school-loop" aria-label={$t('school.loop.aria')}>
-      <span><strong>🔥 7</strong><small>{$t('school.loop.streak')}</small></span>
-      <span><strong>⚡ +25 XP</strong><small>{$t('school.loop.xp')}</small></span>
-      <span><strong>💚 3 vidas</strong><small>{$t('school.loop.lives')}</small></span>
+      <span><strong>{$t('school.loop.streak_value', { default: '🔥 7' })}</strong><small>{$t('school.loop.streak')}</small></span>
+      <span><strong>{$t('school.loop.xp_value', { default: '⚡ +25 XP' })}</strong><small>{$t('school.loop.xp')}</small></span>
+      <span><strong>{$t('school.loop.lives_value', { default: '💚 3 vidas' })}</strong><small>{$t('school.loop.lives')}</small></span>
     </div>
   </header>
 

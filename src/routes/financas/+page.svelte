@@ -44,7 +44,7 @@
   import { awardXP } from '$lib/state/xp-actions';
     import { showToast } from '$lib/components/events';
     import { db } from '$lib/state/db';
-  import { useMoodState, moodMicrocopyHint } from '$lib/mood/useMoodState';
+  import { useMoodState, moodMicrocopyHint } from '$lib/mood/useMoodState.svelte';
 
   // chart.js/auto regista todos os controllers + scales + elements
   // automaticamente.  Importado dinamicamente em onMount para evitar

@@ -238,25 +238,25 @@
     </div>
 
     <div class="field">
-      <label for="bm-curso">Curso (escola) — opcional</label>
+      <label for="bm-curso">{$t('biblioteca.new.course_optional', { default: 'Curso (escola) — opcional' })}</label>
       <select id="bm-curso" bind:value={cursoId}>
-        <option value="">— Nenhum —</option>
+        <option value="">{$t('biblioteca.edit.none', { default: '— Nenhum —' })}</option>
         {#each CURSOS as c (c.slug)}
           <option value={c.slug}>{c.title}</option>
         {/each}
       </select>
-      <span class="hint">Liga este marcador a um curso da escola para o veres nas estatísticas por área.</span>
+      <span class="hint">{$t('biblioteca.new.course_hint', { default: 'Liga este marcador a um curso da escola para o veres nas estatísticas por área.' })}</span>
     </div>
 
     <div class="field">
-      <label for="bm-assignment">Trabalho (anexar como recurso) — opcional</label>
+      <label for="bm-assignment">{$t('biblioteca.new.assignment_optional', { default: 'Trabalho (anexar como recurso) — opcional' })}</label>
       <select id="bm-assignment" bind:value={assignmentId}>
-        <option value="">— Nenhum —</option>
+        <option value="">{$t('biblioteca.edit.none', { default: '— Nenhum —' })}</option>
         {#each assignments as a (a.id)}
           <option value={a.id}>{a.id} · {a.title}</option>
         {/each}
       </select>
-      <span class="hint">Atrelar este marcador a um trabalho permite usá-lo como referência ao escrever a entrega.</span>
+      <span class="hint">{$t('biblioteca.edit.assignment_hint', { default: 'Atrelar este marcador a um trabalho permite usá-lo como referência ao escrever a entrega.' })}</span>
     </div>
 
     {#if error}

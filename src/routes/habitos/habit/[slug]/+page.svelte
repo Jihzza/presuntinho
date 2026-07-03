@@ -154,7 +154,7 @@
 
 <div class="detail">
   <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
-    <a href="/">← Hub</a>
+    <a href="/">{$t('habitos.crumbs.hub', { default: '← Hub' })}</a>
     <span aria-hidden="true">/</span>
     <a href="/habitos/">{$t('habitos.habit.breadcrumb.home', { default: '← Hábitos' })}</a>
     <span aria-hidden="true">/</span>

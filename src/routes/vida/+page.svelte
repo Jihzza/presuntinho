@@ -44,7 +44,7 @@
       <span class="vida-card vida-card-soon" aria-disabled="true">
         <span class="vida-card-icon" aria-hidden="true">🚭</span>
         <span class="vida-card-title">{$t('vida.vicios.title', { default: 'Vícios' })}</span>
-        <span class="vida-card-desc">{$t('vida.vicios.desc', { default: 'Registo de ocorrências e metas — planeado na task-094 (roadmap Vida 2).' })}</span>
+        <span class="vida-card-desc">{$t('vida.vicios.desc', { default: 'Registo de ocorrências, metas e pequenos passos para ficares no controlo.' })}</span>
       </span>
     </li>
   </ul>

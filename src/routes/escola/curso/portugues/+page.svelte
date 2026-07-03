@@ -281,7 +281,7 @@
     <!-- Progress bar -->
     <section class="progress" aria-label="{$t('a11y.aria.progresso_do_curso', { default: 'Progresso do curso' })}">
       <div class="progress-meta">
-        <span><strong>{studiedCount}</strong> / {totalSections} secções estudadas</span>
+        <span>{@html $t('escola.curso.pt.progress.sections_studied', { values: { done: `<strong>${studiedCount}</strong>`, total: totalSections }, default: '{done} / {total} secções estudadas' })}</span>
         <span aria-label="{$t('a11y.aria.percentagem', { default: 'Percentagem' })}">{progressPct}%</span>
       </div>
       <div class="progress-track" role="progressbar"
@@ -332,7 +332,7 @@
               {section.title}
             </h2>
             {#if studied}
-              <span class="studied-badge" aria-label="{$t('a11y.aria.estudado', { default: 'Estudado' })}">✓ Estudado</span>
+              <span class="studied-badge" aria-label="{$t('a11y.aria.estudado', { default: 'Estudado' })}">{$t('escola.curso.pt.studied', { default: '✓ Estudado' })}</span>
             {/if}
           </header>
 
@@ -513,7 +513,7 @@
                 href={`/escola/curso/portugues/quiz/`}
                 aria-label="{$t('a11y.aria.ir_para_o_quiz_de_portugues', { default: 'Ir para o quiz de Português' })}"
               >
-                🎯 Começar quiz · Ganhar badge Lusófono (b11)
+                {$t('escola.curso.pt.quiz_cta', { default: '🎯 Começar quiz · Ganhar badge Lusófono (b11)' })}
               </a>
             </div>
           {/if}
@@ -547,7 +547,7 @@
           onclick={unmarkCourseComplete}
           aria-label="{$t('a11y.aria.reabrir_curso_desmarcar_como', { default: 'Reabrir curso (desmarcar como concluído)' })}"
         >
-          ↩ Reabrir curso
+          {$t('escola.curso.pt.reopen', { default: '↩ Reabrir curso' })}
         </button>
       {:else}
         <p>
@@ -563,7 +563,7 @@
           onclick={markCourseComplete}
           aria-label="{$t('a11y.aria.marcar_curso_como_concluido', { default: 'Marcar curso como concluído' })}"
         >
-          🏆 Marcar curso como concluído
+          {$t('escola.curso.pt.complete', { default: '🏆 Marcar curso como concluído' })}
         </button>
       {/if}
     </section>

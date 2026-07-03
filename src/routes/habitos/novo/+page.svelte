@@ -23,8 +23,8 @@
     void id;
   }
 
-  let pageTitle = $derived('Novo Hábito · Hábitos');
-  let description = $derived('Criar hábito diário');
+  let pageTitle = $derived($t('habitos.novo.seo.title', { default: 'Novo Hábito · Hábitos' }) as string);
+  let description = $derived($t('habitos.novo.seo.description', { default: 'Criar hábito diário' }) as string);
 </script>
 
 <svelte:head>
@@ -44,7 +44,7 @@
   </header>
 
   <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
-    <a href="/">← Hub</a>
+    <a href="/">{$t('habitos.crumbs.hub', { default: '← Hub' })}</a>
     <span aria-hidden="true">/</span>
     <a href="/habitos/">{$t('habitos.novo.breadcrumb.home', { default: '← Hábitos' })}</a>
     <span aria-hidden="true">/</span>

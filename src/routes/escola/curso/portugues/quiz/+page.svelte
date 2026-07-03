@@ -74,8 +74,8 @@
     <p class="sub">{$t('escola.curso.pt.quiz.subtitle', { default: '5 perguntas · Ganha a badge 🇵🇹 Lusófono (b11) com 5/5 certas.' })}</p>
     {#if previousScore !== null}
       <p class="prev" aria-live="polite">
-        Melhor resultado anterior: <strong>{previousScore}%</strong>
-        {#if previousCompleted}— ✅ concluído{/if}
+        {$t('escola.curso.pt.quiz.previous', { default: 'Melhor resultado anterior:' })} <strong>{previousScore}%</strong>
+        {#if previousCompleted}{$t('escola.curso.pt.quiz.completed', { default: '— ✅ concluído' })}{/if}
       </p>
     {/if}
   </header>

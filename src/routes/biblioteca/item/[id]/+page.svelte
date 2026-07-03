@@ -264,7 +264,7 @@
               type="button"
               class="tag-chip"
               onclick={() => goToTag(tag)}
-              aria-label={`Filtrar por ${tag}`}
+              aria-label={$t('biblioteca.item.filter_tag', { values: { tag }, default: `Filtrar por ${tag}` })}
             >
               #{tag}
             </button>
@@ -280,12 +280,12 @@
       </section>
     {/if}
 
-    <section class="attach-block" aria-label="Anexar a trabalho">
+    <section class="attach-block" aria-label={$t('biblioteca.item.attach.aria', { default: 'Anexar a trabalho' })}>
       <span class="label">📎 {$t('biblioteca.item.attach.label', { default: 'Anexar a trabalho' })}</span>
       {#if assignmentsLoaded}
         <div class="attach-row">
           <select bind:value={attachDraft} disabled={attachBusy}>
-            <option value="">— Nenhum —</option>
+            <option value="">{$t('biblioteca.item.attach.none', { default: '— Nenhum —' })}</option>
             {#each assignments as a (a.id)}
               <option value={a.id}>{a.id} · {a.title}</option>
             {/each}
@@ -296,20 +296,20 @@
             onclick={applyAttach}
             disabled={attachBusy || (attachDraft || '') === (item.assignment_id ?? '')}
           >
-            {attachBusy ? 'A guardar…' : 'Aplicar'}
+            {attachBusy ? $t('biblioteca.item.attach.saving', { default: 'A guardar…' }) : $t('biblioteca.item.attach.apply', { default: 'Aplicar' })}
           </button>
         </div>
         {#if item.assignment_id}
           <p class="attach-current">
-            Atado a <strong>{item.assignment_id}</strong>.
+            {@html $t('biblioteca.item.attach.current', { values: { id: `<strong>${item.assignment_id}</strong>` }, default: 'Atado a {id}.' })}
             <a href={`/trabalhos/assignment/${item.assignment_id}/`}>
-              Ver trabalho →
+              {$t('biblioteca.item.attach.view', { default: 'Ver trabalho →' })}
             </a>
           </p>
         {/if}
-        <span class="hint">Atrelar este marcador a um trabalho dá-te +5 XP e torna-o utilizável como referência ao escrever a entrega.</span>
+        <span class="hint">{$t('biblioteca.item.attach.hint', { default: 'Atrelar este marcador a um trabalho dá-te +5 XP e torna-o utilizável como referência ao escrever a entrega.' })}</span>
       {:else}
-        <span class="hint">A carregar lista de trabalhos…</span>
+        <span class="hint">{$t('biblioteca.item.attach.loading', { default: 'A carregar lista de trabalhos…' })}</span>
       {/if}
     </section>
 

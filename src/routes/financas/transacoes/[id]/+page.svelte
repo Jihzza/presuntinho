@@ -143,7 +143,7 @@
 <main class="container" aria-labelledby="page-title">
   <header class="page-header">
     <a href="/financas/transacoes" class="back-link" aria-label="{$t('a11y.aria.voltar_a_lista', { default: 'Voltar à lista' })}">
-      ← Transações
+      {$t('financas.transacoes.edit.back', { default: '← Transações' })}
     </a>
     <h1 id="page-title">{$t('financas.transacoes.editar.titulo', { default: 'Editar transação' })}</h1>
   </header>
@@ -208,7 +208,7 @@
 
       <div class="actions">
         <button type="submit" class="btn-primary" disabled={submitting}>
-          {submitting ? 'A guardar…' : 'Gravar'}
+          {submitting ? $t('financas.transacoes.editar.guardando', { default: 'A guardar…' }) : $t('financas.transacoes.edit.save', { default: 'Gravar' })}
         </button>
         <button
           type="button"
@@ -216,7 +216,7 @@
           onclick={() => goto('/financas/transacoes')}
           disabled={submitting}
         >
-          Cancelar
+          {$t('financas.transacoes.edit.cancel', { default: 'Cancelar' })}
         </button>
         <button
           type="button"
@@ -225,7 +225,7 @@
           disabled={submitting}
           aria-label="{$t('a11y.aria.eliminar_transacao', { default: 'Eliminar transação' })}"
         >
-          {confirmarEliminar ? 'Confirmar?' : 'Eliminar'}
+          {confirmarEliminar ? $t('financas.transacoes.edit.confirm', { default: 'Confirmar?' }) : $t('financas.transacoes.edit.delete', { default: 'Eliminar' })}
         </button>
       </div>
     </form>

@@ -160,7 +160,7 @@
     </nav>
     <!-- Hero -->
     <header class="head">
-      <span class="tag">🎧 Walkthrough</span>
+      <span class="tag">{$t('walkthrough.tag', { default: '🎧 Walkthrough' })}</span>
       <h1>{lesson.title}</h1>
       {#if lesson.audioLabel}
         <p class="sub">{lesson.audioLabel}</p>
@@ -177,13 +177,13 @@
             controls
             preload="metadata"
             src={audioSrc}
-            aria-label={`Audio walkthrough da lição ${lesson.title}`}
+            aria-label={$t('a11y.aria.audio_walkthrough', { default: 'Audio walkthrough' }) + ` ${lesson.title}`}
           >
             <track kind="captions" />
             <a href={audioSrc}>{$t('walkthrough.audio.download', { default: 'Descarregar áudio' })}</a>
           </audio>
           <p class="audio-fallback">
-            Não consegues ouvir? <a href={audioSrc} download>{$t('walkthrough.audio.download', { default: 'Descarregar áudio' })}</a>.
+            {$t('walkthrough.audio.cant_hear', { default: 'Não consegues ouvir?' })} <a href={audioSrc} download>{$t('walkthrough.audio.download', { default: 'Descarregar áudio' })}</a>.
           </p>
         </div>
       {:else}
@@ -193,7 +193,7 @@
 
     <!-- Sticky mini-nav (desktop) -->
     <aside class="mini-nav" aria-label="{$t('a11y.aria.saltar_para_seccao', { default: 'Saltar para secção' })}">
-      <h2>🗂 Saltar</h2>
+      <h2>{$t('walkthrough.mini_nav.title', { default: '🗂 Saltar' })}</h2>
       <ol>
         {#each lesson.sections as section, idx (idx)}
           <li>
@@ -219,7 +219,7 @@
                 jumpTo('key-points');
               }}
             >
-              ⭐ Pontos-chave
+              ⭐ {$t('walkthrough.key_points', { default: 'Pontos-chave' })}
             </a>
           </li>
         {/if}
@@ -296,7 +296,7 @@
         >
           <h2 id="key-points-h">
             <span class="section-num">⭐</span>
-            Pontos-chave
+            {$t('walkthrough.key_points', { default: 'Pontos-chave' })}
           </h2>
           <ul class="key-list">
             {#each lesson.keyPoints as kp, i (i)}
@@ -315,7 +315,7 @@
         >
           <h2 id="transcript-h">
             <span class="section-num">📝</span>
-            Transcrição
+            {$t('walkthrough.transcript_plain', { default: 'Transcrição' })}
           </h2>
           <details>
             <summary>{$t('escola.walkthrough.transcript.show', { default: 'Mostrar transcrição completa' })}</summary>

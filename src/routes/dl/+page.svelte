@@ -95,7 +95,7 @@
       <span>{$t('dl.breadcrumb.current', { default: 'Downloads' })}</span>
     </p>
     <span class="tag">{$t('routes.dl.modulo_tag', { default: 'Módulo 6' })}</span>
-    <h1>📥 Download Center</h1>
+    <h1>{$t('dl.hero.title', { default: '📥 Download Center' })}</h1>
     <p class="sub">{$t('dl.sub', { default: 'Ficheiros do assignment e materiais de estudo.' })}</p>
   </header>
 
@@ -109,10 +109,10 @@
         <h2>{$t(d.titleKey, { default: d.titleDefault })}</h2>
         <p>{$t(d.descKey, { default: d.descDefault })}</p>
         <div class="dl-actions">
-          <a class="btn primary" href={d.href} download>⬇ Descarregar</a>
+          <a class="btn primary" href={d.href} download>{$t('dl.action.download', { default: '⬇ Descarregar' })}</a>
           {#if d.extra}
             <details class="extras">
-              <summary>+ outras faixas ({d.extra.length})</summary>
+              <summary>{$t('dl.extra.summary', { values: { n: d.extra.length }, default: '+ outras faixas ({n})' })}</summary>
               <ul>
                 {#each d.extra as e (e.href)}
                   <li>
@@ -130,7 +130,7 @@
   <!-- How to use -->
   <article class="card info">
     <h2>{$t('dl.howto.h2', { default: '💡 Como usar o assignment' })}</h2>
-    <p><strong>{$t('dl.warning.no_submit_as_is', { default: 'NÃO submetas exatamente como está.' })}</strong> O objetivo é leres, perceberes a análise, e reescreveres na tua voz. Muda os exemplos, reordena parágrafos, acrescenta a tua perspetiva.</p>
+    <p><strong>{$t('dl.warning.no_submit_as_is', { default: 'NÃO submetas exatamente como está.' })}</strong> {$t('dl.howto.body', { default: 'O objetivo é leres, perceberes a análise, e reescreveres na tua voz. Muda os exemplos, reordena parágrafos, acrescenta a tua perspetiva.' })}</p>
     <p>{$t('dl.howto.p2', { default: 'Isto garante: (1) o texto soa a ti, (2) passa o Turnitin, (3) consegues defender cada ponto oralmente.' })}</p>
   </article>
 
@@ -140,7 +140,7 @@
     <p>{$t('dl.warning.p')}</p>
   </article>
 
-  <p class="footer-note" aria-hidden="true">🐷 Presuntinho — Built with ❤️ for Fatma</p>
+  <p class="footer-note" aria-hidden="true">{$t('dl.footer', { default: '🐷 Presuntinho — Built with ❤️ for Fatma' })}</p>
 </div>
 
 <style>

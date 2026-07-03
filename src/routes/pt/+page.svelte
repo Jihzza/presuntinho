@@ -88,13 +88,13 @@
 
   const WORDS: Record<string, WordItem[]> = {
     'Cumprimentos': [
-      { pt: 'Olá',           en: 'Hello',          ar: 'مرحبا' },
-      { pt: 'Bom dia',       en: 'Good morning',   ar: 'صباح الخير' },
-      { pt: 'Boa tarde',     en: 'Good afternoon', ar: 'مساء الخير' },
-      { pt: 'Boa noite',     en: 'Good night',     ar: 'تصبح على خير' },
-      { pt: 'Tchau / Adeus', en: 'Bye',            ar: 'وداعا' },
-      { pt: 'Por favor',     en: 'Please',         ar: 'من فضلك' },
-      { pt: 'Obrigado/a',    en: 'Thanks',         ar: 'شكرا' }
+      { pt: 'Olá',           en: 'Hello',          ar: 'ahlan' },
+      { pt: 'Bom dia',       en: 'Good morning',   ar: 'sbe7 el khir' },
+      { pt: 'Boa tarde',     en: 'Good afternoon', ar: 'masa el khir' },
+      { pt: 'Boa noite',     en: 'Good night',     ar: 'tesba7 3la khir' },
+      { pt: 'Tchau / Adeus', en: 'Bye',            ar: 'besslema' },
+      { pt: 'Por favor',     en: 'Please',         ar: 'min fadlek' },
+      { pt: 'Obrigado/a',    en: 'Thanks',         ar: '3aychek' }
     ],
     'Números 1-10': [
       { pt: '1 um · 2 dois · 3 três · 4 quatro · 5 cinco' },

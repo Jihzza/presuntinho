@@ -140,7 +140,7 @@
   </header>
 
   <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
-    <a href="/">← Hub</a>
+    <a href="/">{$t('financas.crumbs.hub', { default: '← Hub' })}</a>
     <span aria-hidden="true">/</span>
     <a href="/financas/">{$t('financas.orcamento.breadcrumb.home', { default: '← Finanças' })}</a>
     <span aria-hidden="true">/</span>
