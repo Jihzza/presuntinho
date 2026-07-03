@@ -11,11 +11,24 @@
    *   - History is loaded from Dexie (`chat_messages`) but the focus
    *     stays in the input even when there is prior context.
    *
-   * Engine is keyword-routed (no LLM API). See src/lib/agent/engine.ts.
+   * Brain: when a Hermes gateway is configured in /definicoes, every
+   * message streams through it (src/lib/agent/hermes.ts) with a compact
+   * app-data snapshot as system_message. The keyword engine
+   * (src/lib/agent/engine.ts) stays as the offline/unreachable fallback,
+   * keeping the page fully functional as a PWA without the gateway.
    */
   import { onMount, tick } from 'svelte';
   import { t } from 'svelte-i18n';
   import { dispatch, type AgentReply } from '$lib/agent/engine';
+  import {
+    getHermesConfig,
+    hermesSessionId,
+    ensureHermesSession,
+    deleteHermesSession,
+    forgetHermesSession,
+    streamHermesChat
+  } from '$lib/agent/hermes';
+  import { buildContextSummary } from '$lib/agent/context';
   import {
     listChatMessages,
     appendChatMessage,
@@ -28,6 +41,9 @@
   let messages = $state<ChatMessageRow[]>([]);
   let input = $state('');
   let busy = $state(false);
+  // Non-null while a Hermes reply is streaming in ('' until first token).
+  let streamingText = $state<string | null>(null);
+  let abortCtrl: AbortController | null = null;
   let scrollEl: HTMLDivElement | null = $state(null);
   let fileInput: HTMLInputElement | null = $state(null);
   let inputEl: HTMLTextAreaElement | null = $state(null);
@@ -74,6 +90,61 @@
     keyboardInset = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
   }
 
+  function isAbortError(e: unknown): boolean {
+    return e instanceof DOMException && e.name === 'AbortError';
+  }
+
+  /** Legacy path — local keyword engine (also the Hermes fallback). */
+  async function replyWithEngine(text: string, offlinePrefix = false): Promise<void> {
+    const reply: AgentReply = await dispatch(text);
+    const prefix = offlinePrefix ? `${$t('agente.hermes.offline_prefix')}\n` : '';
+    await appendChatMessage('assistant', prefix + reply.text);
+  }
+
+  async function replyWithHermes(text: string): Promise<void> {
+    const cfg = getHermesConfig();
+    const session = getSession();
+    if (!cfg || !session) {
+      await replyWithEngine(text);
+      return;
+    }
+    abortCtrl = new AbortController();
+    streamingText = '';
+    try {
+      const sid = hermesSessionId(session.profile);
+      await ensureHermesSession(cfg, sid, `Presuntinho ${session.profile}`);
+      const system = await buildContextSummary(session.profile);
+      const final = await streamHermesChat({
+        cfg,
+        sessionId: sid,
+        message: text,
+        systemMessage: system,
+        signal: abortCtrl.signal,
+        onDelta: (d) => {
+          streamingText = (streamingText ?? '') + d;
+          void scrollToBottom();
+        }
+      });
+      await appendChatMessage('assistant', final || streamingText || $t('agente.hermes.error_stream'));
+    } catch (e) {
+      if (isAbortError(e)) {
+        // User pressed stop — keep whatever streamed in so far.
+        const partial = streamingText?.trim();
+        if (partial) await appendChatMessage('assistant', `${partial}\n${$t('agente.hermes.stopped')}`);
+      } else {
+        console.error('[agente] hermes stream failed, falling back to engine', e);
+        await replyWithEngine(text, true);
+      }
+    } finally {
+      streamingText = null;
+      abortCtrl = null;
+    }
+  }
+
+  function stopStreaming() {
+    abortCtrl?.abort();
+  }
+
   async function send() {
     const text = input.trim();
     if (!text || busy) return;
@@ -81,8 +152,9 @@
     input = '';
     try {
       await appendChatMessage('user', text);
-      const reply: AgentReply = await dispatch(text);
-      await appendChatMessage('assistant', reply.text);
+      messages = await listChatMessages(200);
+      await scrollToBottom();
+      await replyWithHermes(text);
       messages = await listChatMessages(200);
     } catch (e) {
       console.error('[agente] send failed', e);
@@ -206,6 +278,18 @@
     if (!confirm($t('agente.chat.clear_confirm', { default: 'Limpar todo o histórico do chat?' }))) return;
         try {
           await clearChatHistory();
+          // Keep the Hermes transcript in sync — best-effort: a fresh
+          // session is recreated on the next message.
+          const cfg = getHermesConfig();
+          const session = getSession();
+          if (cfg && session) {
+            const sid = hermesSessionId(session.profile);
+            try {
+              await deleteHermesSession(cfg, sid);
+            } catch {
+              forgetHermesSession(sid);
+            }
+          }
           messages = [];
           await appendChatMessage(
             'assistant',
@@ -267,7 +351,15 @@
         </div>
       </div>
     {/each}
-    {#if busy}
+    {#if streamingText !== null}
+          <div class="msg msg-assistant">
+            {#if streamingText === ''}
+              <div class="bubble thinking">{$t('agente.thinking')}</div>
+            {:else}
+              <div class="bubble"><div class="text">{streamingText}</div></div>
+            {/if}
+          </div>
+        {:else if busy}
           <div class="msg msg-assistant">
             <div class="bubble thinking">{$t('agente.thinking')}</div>
           </div>
@@ -326,20 +418,26 @@
         type="button"
         class="action-btn"
         class:recording
-        onclick={() => input.trim() ? send() : toggleRecording()}
-        disabled={busy && !recording}
-        aria-label={input.trim()
-          ? $t('a11y.aria.enviar', { default: 'Enviar' })
-          : recording
-            ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
-            : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
-        title={input.trim()
-          ? $t('a11y.aria.enviar', { default: 'Enviar' })
-          : recording
-            ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
-            : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
+        onclick={() => streamingText !== null ? stopStreaming() : input.trim() ? send() : toggleRecording()}
+        disabled={busy && !recording && streamingText === null}
+        aria-label={streamingText !== null
+          ? $t('agente.hermes.stop', { default: 'Parar resposta' })
+          : input.trim()
+            ? $t('a11y.aria.enviar', { default: 'Enviar' })
+            : recording
+              ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
+              : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
+        title={streamingText !== null
+          ? $t('agente.hermes.stop', { default: 'Parar resposta' })
+          : input.trim()
+            ? $t('a11y.aria.enviar', { default: 'Enviar' })
+            : recording
+              ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
+              : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
       >
-        {#if input.trim()}
+        {#if streamingText !== null}
+          ⏹
+        {:else if input.trim()}
           ➤
         {:else if recording}
           ⏹️

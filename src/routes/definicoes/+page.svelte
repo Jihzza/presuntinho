@@ -48,6 +48,8 @@
   import Heart from 'lucide-svelte/icons/heart';
   import Github from 'lucide-svelte/icons/github';
   import ExternalLink from 'lucide-svelte/icons/external-link';
+  import Bot from 'lucide-svelte/icons/bot';
+  import { getHermesConfig, setHermesConfig, checkHermesHealth } from '$lib/agent/hermes';
   // gap-116: real PBKDF2 reset-password flow imports.
   import { getSession } from '$lib/auth/session';
   import {
@@ -601,6 +603,42 @@
     }
   }
 
+  // ----- Hermes agent connection -----
+  // Tunnel URL + API key for the Hermes gateway that powers /agente.
+  // Per-device (localStorage) so the secret is never in the deployed bundle.
+  let hermesUrl = $state('');
+  let hermesKey = $state('');
+  let hermesTesting = $state(false);
+  let hermesStatus = $state<'ok' | 'fail' | null>(null);
+
+  onMount(() => {
+    const cfg = getHermesConfig();
+    if (cfg) {
+      hermesUrl = cfg.url;
+      hermesKey = cfg.key;
+    }
+  });
+
+  function saveHermes(): void {
+    setHermesConfig({ url: hermesUrl, key: hermesKey });
+    hermesStatus = null;
+    showToast($t('settings.hermes.saved'));
+  }
+
+  async function testHermes(): Promise<void> {
+    if (hermesTesting) return;
+    hermesTesting = true;
+    hermesStatus = null;
+    try {
+      const url = hermesUrl.trim().replace(/\/+$/, '');
+      const key = hermesKey.trim();
+      const ok = url && key ? await checkHermesHealth({ url, key }) : false;
+      hermesStatus = ok ? 'ok' : 'fail';
+    } finally {
+      hermesTesting = false;
+    }
+  }
+
   // Misc — gap-115: read version from a single source of truth
   // (src/lib/version.ts) so the About card never shows a misleading date.
   void REPO_URL;
@@ -717,6 +755,50 @@
       <Key size={16} aria-hidden="true" />
       {$t('settings.reset_password.button')}
     </button>
+  </section>
+
+  <!-- ============ Hermes agent ============ -->
+  <section class="card" aria-labelledby="hermes-h">
+    <div class="card-head">
+      <span class="icon-wrap"><Bot size={18} /></span>
+      <h2 id="hermes-h">{$t('settings.hermes.title')}</h2>
+    </div>
+    <p class="muted">{$t('settings.hermes.hint')}</p>
+    <form
+      class="hermes-form"
+      onsubmit={(e) => { e.preventDefault(); saveHermes(); }}
+    >
+      <label class="field">
+        <span class="field-label">{$t('settings.hermes.url_label')}</span>
+        <input
+          type="url"
+          placeholder="https://…"
+          bind:value={hermesUrl}
+          autocomplete="off"
+        />
+      </label>
+      <label class="field">
+        <span class="field-label">{$t('settings.hermes.key_label')}</span>
+        <input
+          type="password"
+          bind:value={hermesKey}
+          autocomplete="off"
+        />
+      </label>
+      <div class="data-actions">
+        <button type="submit" class="btn">
+          {$t('settings.hermes.save')}
+        </button>
+        <button type="button" class="btn btn-secondary" onclick={testHermes} disabled={hermesTesting}>
+          {hermesTesting ? '…' : $t('settings.hermes.test')}
+        </button>
+      </div>
+    </form>
+    {#if hermesStatus === 'ok'}
+      <p class="hint ok">{$t('settings.hermes.test_ok')}</p>
+    {:else if hermesStatus === 'fail'}
+      <p class="hint err">{$t('settings.hermes.test_fail')}</p>
+    {/if}
   </section>
 
   <!-- ============ Data ============ -->
@@ -1411,6 +1493,13 @@
   .reset-form .modal-actions {
     margin-top: 0.25rem;
   }
+  /* Hermes agent connection card — reuses the .field input styling. */
+  .hermes-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
   /* task-051: per-table preview list of what the export will include */
   .backup-preview {
     margin-top: 0.75rem;
