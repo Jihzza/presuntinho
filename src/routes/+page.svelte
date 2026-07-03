@@ -31,7 +31,6 @@
   const TOTALS = schoolTotals();
   const TOTAL_LESSONS = TOTALS.lessons;
   const TOTAL_QUIZZES = TOTALS.quizzes;
-  const TOTAL_ASSIGNMENTS = 1;
 
   interface BadgeStatus {
     unlocked: boolean;
@@ -44,6 +43,7 @@
   let quizzesAnswered = $state(0);
   let lessonsVisited = $state(0);
   let assignmentsDone = $state(0);
+  let totalAssignments = $state(1);
   let showOnboarding = $state(false);
   let heroIn = $state(false);
   let agendaItems = $state<AgendaItem[]>([]);
@@ -56,7 +56,7 @@
 
   let xpLabel = $derived(new Intl.NumberFormat('pt-PT').format(currentXp) + ' XP');
   let unlockedBadges = $derived(Object.values(badgesMap).filter((b) => b.unlocked).length);
-  let schoolProgress = $derived(Math.round(((lessonsVisited + quizzesAnswered + assignmentsDone) / (TOTAL_LESSONS + TOTAL_QUIZZES + TOTAL_ASSIGNMENTS)) * 100));
+  let schoolProgress = $derived(Math.round(((lessonsVisited + quizzesAnswered + assignmentsDone) / (TOTAL_LESSONS + TOTAL_QUIZZES + totalAssignments)) * 100));
   let weekPreviewDays = $derived(weekDays(today));
   let todaysItems = $derived(agendaItems.filter((item) => item.date === todayKey));
   let nextItems = $derived(agendaItems.filter((item) => item.date >= todayKey && item.status !== 'done').slice(0, 5));
@@ -108,7 +108,9 @@
 
       quizzesAnswered = quizRows.filter((r) => Array.isArray(r.answered) && r.answered.length > 0).length;
       lessonsVisited = visitedRows.filter((r) => typeof r.id === 'string' && r.id.startsWith('lesson:')).length;
-      assignmentsDone = assignmentRows.filter((a) => a.status === 'submitted' || a.status === 'graded').length;
+      const completedAssignments = assignmentRows.filter((a) => a.status === 'submitted' || a.status === 'graded').length;
+      assignmentsDone = completedAssignments;
+      totalAssignments = Math.max(assignmentRows.length, completedAssignments, 1);
     } catch (e) {
       console.error('[hub] refreshDashboard failed', e);
     }
@@ -309,7 +311,7 @@
     <div class="progress-grid">
       <ProgressBar label={$t('hub.progress.lessons')} icon="📖" accent="#3b82f6" current={lessonsVisited} total={TOTAL_LESSONS} />
       <ProgressBar label={$t('hub.progress.quizzes')} icon="❓" accent="#f59e0b" current={quizzesAnswered} total={TOTAL_QUIZZES} />
-      <ProgressBar label={$t('hub.progress.assignments')} icon="✍️" accent="#10b981" current={assignmentsDone} total={TOTAL_ASSIGNMENTS} />
+      <ProgressBar label={$t('hub.progress.assignments')} icon="✍️" accent="#10b981" current={assignmentsDone} total={totalAssignments} />
     </div>
   </section>
 

@@ -7,6 +7,7 @@
     MOOD_META,
     type ActiveMood
   } from '$lib/mood';
+  import { t } from 'svelte-i18n';
 
   type Props = { mood: ActiveMood; onCleared: () => void };
   let { mood, onCleared }: Props = $props();
@@ -82,7 +83,7 @@
   <div class="mood-ribbon" aria-hidden="true">
     <span>{meta.emoji}</span>
     <strong>{meta.label}</strong>
-    <small>experiência adaptada</small>
+    <small>{$t('mood.layer.adapted')}</small>
   </div>
 
   <aside class="mood-chip" class:expanded class:compact={!expanded} class:sparkle aria-label={`${meta.label}: ${line}`}>
@@ -107,7 +108,7 @@
           </div>
         </div>
 
-        <div class="care-grid" aria-label="Pequenos cuidados do mood">
+        <div class="care-grid" aria-label={$t('mood.layer.care_aria')}>
           {#each meta.careActions as action (action.id)}
             <button
               type="button"
@@ -122,10 +123,10 @@
           {/each}
         </div>
 
-        <button type="button" class="comfort-note" onclick={nextNote} aria-label="Mostrar outro mimo">
-          <span>mimo do Presuntinho</span>
+        <button type="button" class="comfort-note" onclick={nextNote} aria-label={$t('mood.layer.next_aria')}>
+          <span>{$t('mood.layer.note_label')}</span>
           <strong>{note}</strong>
-          <small>toca para outro ✨</small>
+          <small>{$t('mood.layer.next_hint')}</small>
         </button>
 
         <div class="recover-zone">

@@ -20,6 +20,7 @@
 
   import { showToast } from '$lib/components/events';
   import { t } from 'svelte-i18n';
+  import { applyInitialDocumentLocale } from '$lib/i18n';
   import { onMount } from 'svelte';
   import { pwaInfo } from 'virtual:pwa-info';
 
@@ -36,6 +37,8 @@
   const moodAccent = $derived(activeMood ? MOOD_META[activeMood.kind].accent : null);
 
   onMount(() => {
+    applyInitialDocumentLocale();
+
     let unbindKey: (() => void) | null = null;
     let unbindExtra: (() => void) | null = null;
     let moodPoll: ReturnType<typeof setInterval> | null = null;

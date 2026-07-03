@@ -147,6 +147,32 @@ const businessUnits: SchoolUnit[] = [
       { slug: 'balanced-scorecard', title: 'Balanced Scorecard', summary: 'Perspectivas financeira, cliente, processos internos e aprendizagem.', quizSlug: 'cgq', quizTitle: 'Quiz: Contabilidade de Gestão', estMinutes: 9, activityType: 'quiz' },
       { slug: 'analise-desvios', title: 'Análise de Desvios', summary: 'Desvios de preço, quantidade, eficiência e interpretação de performance.', quizSlug: 'cgq', quizTitle: 'Quiz: Contabilidade de Gestão', estMinutes: 9, activityType: 'test' }
     ]
+  },
+  {
+    slug: 'gestao-operacoes',
+    title: 'Gestão de Operações',
+    icon: '⚙️',
+    color: '#0891b2',
+    summary: 'Processos, capacidade, Lean, Six Sigma, MRP, EOQ, SPC e teoria das filas.',
+    lessons: [
+      { slug: '01-fundamentos-gestao-operacoes', title: 'Fundamentos de Gestão de Operações', summary: 'Processos, cadeia de valor de Porter e prioridades competitivas.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 10, activityType: 'theory' },
+      { slug: '02-design-processos-layout-flow', title: 'Design de Processos, Layout e Flow', summary: 'Bottleneck, throughput, Little’s Law, layout e gestão de capacidade.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 10, activityType: 'theory' },
+      { slug: '03-lean-toyota-six-sigma', title: 'Lean, Toyota Production System e Six Sigma', summary: 'TIMWOOD, 5S, kanban, JIT, jidoka, kaizen e DMAIC.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 10, activityType: 'quiz' },
+      { slug: '04-planeamento-controlo-operacoes', title: 'Planeamento e Controlo de Operações', summary: 'MRP, EOQ, classificação ABC, SPC, capacidade e teoria das filas.', quizSlug: 'goq', quizTitle: 'Quiz: Gestão de Operações', estMinutes: 10, activityType: 'test' }
+    ]
+  },
+  {
+    slug: 'direito-empresarial',
+    title: 'Direito Empresarial',
+    icon: '⚖️',
+    color: '#7e22ce',
+    summary: 'Fontes de direito, tipos societários, contratos, propriedade intelectual e litígios.',
+    lessons: [
+      { slug: '01-fontes-e-tipos-societarios', title: 'Fontes de Direito e Tipos Societários', summary: 'Fontes jurídicas da empresa e formas societárias em Portugal.', quizSlug: 'deq', quizTitle: 'Quiz: Direito Empresarial', estMinutes: 8, activityType: 'theory' },
+      { slug: '02-contratos-comerciais', title: 'Contratos Comerciais e Obrigações', summary: 'Contratos, requisitos de validade, cláusulas essenciais e incumprimento.', quizSlug: 'deq', quizTitle: 'Quiz: Direito Empresarial', estMinutes: 8, activityType: 'theory' },
+      { slug: '03-propriedade-intelectual', title: 'Propriedade Intelectual e Marcas', summary: 'Marcas, patentes, direitos de autor, segredos de negócio e concorrência desleal.', quizSlug: 'deq', quizTitle: 'Quiz: Direito Empresarial', estMinutes: 8, activityType: 'quiz' },
+      { slug: '04-litigios-e-arbitragem', title: 'Resolução de Litígios e Arbitragem', summary: 'Tribunais, mediação, conciliação, arbitragem e cláusulas compromissórias.', quizSlug: 'deq', quizTitle: 'Quiz: Direito Empresarial', estMinutes: 8, activityType: 'test' }
+    ]
   }
 ];
 

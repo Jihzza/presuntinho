@@ -145,28 +145,28 @@
     {/if}
 
     <!-- IA V7.1: every aula is framed as Teoria → Quiz → Teste/Trabalho. -->
-    <section class="activity-map" aria-label="Estrutura da aula">
+    <section class="activity-map" aria-label={$t('lesson.activity.aria')}>
       <div class="activity-step active">
         <span aria-hidden="true">📖</span>
-        <strong>Teoria</strong>
-        <small>Conteúdo principal</small>
+        <strong>{$t('lesson.activity.theory.title')}</strong>
+        <small>{$t('lesson.activity.theory.body')}</small>
       </div>
       <button type="button" class="activity-step" class:disabled={!lesson.quizSlug} onclick={goQuiz} disabled={!lesson.quizSlug}>
         <span aria-hidden="true">📝</span>
         <strong>Quiz</strong>
-        <small>{lesson.quizSlug ? 'Validar conhecimento' : 'Sem quiz ligado'}</small>
+        <small>{lesson.quizSlug ? $t('lesson.activity.quiz.ready') : $t('lesson.activity.quiz.none')}</small>
       </button>
       <div class="activity-step muted">
         <span aria-hidden="true">🎯</span>
-        <strong>Teste / trabalho</strong>
-        <small>Actividade relacionada</small>
+        <strong>{$t('lesson.activity.assignment.title')}</strong>
+        <small>{$t('lesson.activity.assignment.body')}</small>
       </div>
     </section>
 
     <!-- Body + Key points sidebar ---------------------------------------- -->
     <div class="lesson-grid">
       <div class="lesson-body">
-        <h2 class="lane-title">📖 Teoria</h2>
+        <h2 class="lane-title">{$t('lesson.activity.theory.heading')}</h2>
         {#each lesson.sections as section, i (i)}
           {#if section.type === 'h2'}
             <h2>{section.text}</h2>
@@ -201,7 +201,7 @@
           {/each}
         </ol>
         {#if lesson.quizSlug}
-          <p class="quiz-context">📝 Quiz ligado a esta aula</p>
+          <p class="quiz-context">{$t('lesson.quiz.linked')}</p>
           <button type="button" class="quiz-btn" onclick={goQuiz}>
             {$t('lesson.quiz.cta', { default: 'Ir para o quiz →' })}
           </button>

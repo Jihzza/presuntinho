@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { t } from 'svelte-i18n';
 
   function openTrabalhos(): void {
     void goto('/trabalhos/');
@@ -7,30 +8,30 @@
 </script>
 
 <svelte:head>
-  <title>Trabalhos · Escola · Presuntinho</title>
+  <title>{$t('school.work.seo.title')} · Presuntinho</title>
 </svelte:head>
 
 <div class="school-work">
-  <a class="back" href="/escola/">← Escola</a>
+  <a class="back" href="/escola/">{$t('school.work.back')}</a>
   <section class="hero">
-    <span>📝 Área da Escola</span>
-    <h1>Trabalhos</h1>
-    <p>Assignments, entregas, drafts e próximos passos ficam dentro da Escola. A área completa ainda usa o motor robusto de trabalhos existente.</p>
-    <button type="button" onclick={openTrabalhos}>Abrir trabalhos →</button>
+    <span>{$t('school.work.kicker')}</span>
+    <h1>{$t('school.work.title')}</h1>
+    <p>{$t('school.work.body')}</p>
+    <button type="button" onclick={openTrabalhos}>{$t('school.work.cta')}</button>
   </section>
 
-  <div class="cards" aria-label="Contexto dos trabalhos">
+  <div class="cards" aria-label={$t('school.work.cards_aria')}>
     <article>
-      <strong>Curso</strong>
-      <p>Os trabalhos devem ficar ligados ao curso e à cadeira certa.</p>
+      <strong>{$t('school.work.card.course.title')}</strong>
+      <p>{$t('school.work.card.course.body')}</p>
     </article>
     <article>
-      <strong>Estado</strong>
-      <p>Por começar, em curso, entregue ou avaliado.</p>
+      <strong>{$t('school.work.card.status.title')}</strong>
+      <p>{$t('school.work.card.status.body')}</p>
     </article>
     <article>
-      <strong>Próximo passo</strong>
-      <p>A Home deve mostrar o que precisa de atenção.</p>
+      <strong>{$t('school.work.card.next.title')}</strong>
+      <p>{$t('school.work.card.next.body')}</p>
     </article>
   </div>
 </div>
