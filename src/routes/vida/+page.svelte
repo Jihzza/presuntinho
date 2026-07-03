@@ -22,7 +22,7 @@
   <header class="vida-hero">
     <span class="vida-icon" aria-hidden="true">🌿</span>
     <h1>{$t('nav.vida', { default: 'Vida' })}</h1>
-    <p class="vida-sub">Finanças, hábitos e vícios num só lugar.</p>
+    <p class="vida-sub">{$t('vida.subtitle', { default: 'Finanças, hábitos e vícios num só lugar.' })}</p>
   </header>
 
   <ul class="vida-grid">
@@ -30,21 +30,21 @@
       <a href="/financas/" class="vida-card" data-sveltekit-preload-data>
         <span class="vida-card-icon" aria-hidden="true">💰</span>
         <span class="vida-card-title">{$t('nav.financas', { default: 'Finanças' })}</span>
-        <span class="vida-card-desc">Despesas, contas e orçamento mensal.</span>
+        <span class="vida-card-desc">{$t('vida.financas.desc', { default: 'Despesas, contas e orçamento mensal.' })}</span>
       </a>
     </li>
     <li>
       <a href="/habitos/" class="vida-card" data-sveltekit-preload-data>
         <span class="vida-card-icon" aria-hidden="true">🌱</span>
         <span class="vida-card-title">{$t('nav.habitos', { default: 'Hábitos' })}</span>
-        <span class="vida-card-desc">Tracking diário e streaks.</span>
+        <span class="vida-card-desc">{$t('vida.habitos.desc', { default: 'Tracking diário e streaks.' })}</span>
       </a>
     </li>
     <li>
       <span class="vida-card vida-card-soon" aria-disabled="true">
         <span class="vida-card-icon" aria-hidden="true">🚭</span>
-        <span class="vida-card-title">Vícios</span>
-        <span class="vida-card-desc">Registo de ocorrências e metas — planeado na task-094 (roadmap Vida 2).</span>
+        <span class="vida-card-title">{$t('vida.vicios.title', { default: 'Vícios' })}</span>
+        <span class="vida-card-desc">{$t('vida.vicios.desc', { default: 'Registo de ocorrências e metas — planeado na task-094 (roadmap Vida 2).' })}</span>
       </span>
     </li>
   </ul>

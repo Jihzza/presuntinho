@@ -142,8 +142,8 @@
     <p class="sub">{$t('routes.financas.nova.subtitle', { default: 'Adiciona uma receita ou despesa.' })}</p>
   </header>
 
-  <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
-    <a href="/">← Hub</a>
+  <nav class="crumbs" aria-label={$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}>
+    <a href="/">{$t('financas.nova.breadcrumb.hub', { default: '← Hub' })}</a>
     <span aria-hidden="true">/</span>
     <a href="/financas/">{$t('financas.nova.breadcrumb.home', { default: '← Finanças' })}</a>
     <span aria-hidden="true">/</span>
@@ -236,7 +236,7 @@
         type="text"
         bind:value={descricao}
         maxlength="120"
-        placeholder="{$t('placeholder.ex_almoco_com_a_equipa', { default: 'Ex.: Almoço com a equipa' })}"
+        placeholder={$t('placeholder.ex_almoco_com_a_equipa', { default: 'Ex.: Almoço com a equipa' })}
         autocomplete="off"
       />
       <span class="hint">{$t('financas.nova.opcional', { default: 'Opcional' })}. {$t('financas.nova.maxCaracteres', { default: 'Máx. 120 caracteres.' })}</span>

@@ -3439,5 +3439,11 @@
   "school.library.title": "Biblioteca",
   "school.library.body": "Materiais, ficheiros, PDFs e recursos para estudar.",
   "school.notebook.title": "Caderno",
-  "school.notebook.body": "Notas, resumos e apontamentos da Fatma."
+  "school.notebook.body": "Notas, resumos e apontamentos da Fatma.",
+  "financas.nova.breadcrumb.hub": "← Hub",
+  "vida.subtitle": "Finanças, hábitos e vícios num só lugar.",
+  "vida.financas.desc": "Despesas, contas e orçamento mensal.",
+  "vida.habitos.desc": "Tracking diário e streaks.",
+  "vida.vicios.title": "Vícios",
+  "vida.vicios.desc": "Registo de ocorrências e metas — planeado na task-094 (roadmap Vida 2)."
 }
