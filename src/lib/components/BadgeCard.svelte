@@ -26,14 +26,15 @@
   let stateLabel = $derived(unlocked
     ? $t('components.badge.unlocked', { default: 'Desbloqueado' })
     : $t('components.badge.locked', { default: 'Bloqueado' }));
+  // Bug-fix (task-181): pass `values` (not just `default`) so svelte-i18n
+  // interpolates {name}/{description}/{status}/{state} placeholders. The
+  // old pattern only used `default` and chained `.replace()`, which left
+  // literals visible if any placeholder was missed (e.g. {state}).
   let ariaLabel = $derived(
     $t('components.badge.card.aria', {
+      values: { name, description, status: stateLabel, state: stateLabel },
       default: `Conquista ${name}: ${description}. Estado: ${stateLabel}.`
     })
-      .replace('{name}', name)
-      .replace('{description}', description)
-      .replace('{status}', stateLabel)
-      .replace('{state}', stateLabel)
   );
 
   const dateLocale = $derived($locale || 'pt-PT');
