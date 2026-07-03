@@ -56,6 +56,16 @@
       type ProfileId
   } from '$lib/auth/hash';
   import { showToast } from '$lib/components/events';
+  import {
+    activateMood,
+    acknowledgeMoodIntro,
+    clearActiveMood,
+    isMoodIntroAcknowledged,
+    MOOD_EVENT,
+    MOOD_META,
+    readActiveMood,
+    type MoodKind
+  } from '$lib/mood';
 
   // ----- i18n -----
   // svelte-i18n 4 ships `$t` as the message-formatter store.  In a
@@ -73,6 +83,11 @@
     { id: 'auto', icon: '🪄', minXp: 0 },
     { id: 'dark', icon: '🌙', minXp: 0 },
     { id: 'light', icon: '☀️', minXp: 0 },
+    { id: 'vanilla', icon: '🍦', minXp: 0 },
+    { id: 'garden', icon: '🌿', minXp: 0 },
+    { id: 'midnight', icon: '💗', minXp: 0 },
+    { id: 'cozy', icon: '🧸', minXp: 0 },
+    { id: 'fresh', icon: '🟢', minXp: 0 },
     { id: 'barca', icon: '🔵🔴', minXp: 100 },
     { id: 'gamer', icon: '🎮', minXp: 250 },
     { id: 'anime', icon: '🌸', minXp: 500 },
@@ -158,6 +173,47 @@
   onMount(() => {
     applyTheme(currentTheme);
   });
+
+  // ----- Mood / Vibe -----
+  const MOOD_OPTIONS: Array<{ id: 'normal' | MoodKind; emoji: string; accent: string }> = [
+    { id: 'normal', emoji: '✨', accent: '#ec4899' },
+    { id: 'love', emoji: MOOD_META.love.emoji, accent: MOOD_META.love.accent },
+    { id: 'sad', emoji: MOOD_META.sad.emoji, accent: MOOD_META.sad.accent },
+    { id: 'sick', emoji: MOOD_META.sick.emoji, accent: MOOD_META.sick.accent }
+  ];
+  let currentMood: 'normal' | MoodKind = $state('normal');
+  let moodBusy = $state(false);
+
+  async function refreshMoodChoice(): Promise<void> {
+    const mood = await readActiveMood();
+    currentMood = mood && isMoodIntroAcknowledged(mood) ? mood.kind : 'normal';
+  }
+
+  onMount(() => {
+    void refreshMoodChoice();
+    const onMoodChanged = () => void refreshMoodChoice();
+    window.addEventListener(MOOD_EVENT, onMoodChanged);
+    return () => window.removeEventListener(MOOD_EVENT, onMoodChanged);
+  });
+
+  async function pickMoodChoice(kind: 'normal' | MoodKind): Promise<void> {
+    if (moodBusy || currentMood === kind) return;
+    moodBusy = true;
+    try {
+      if (kind === 'normal') {
+        await clearActiveMood();
+        currentMood = 'normal';
+        showToast($t('settings.mood.toast.normal'));
+        return;
+      }
+      const mood = await activateMood(kind, 'manual');
+      if (mood) acknowledgeMoodIntro(mood);
+      currentMood = kind;
+      showToast($t('settings.mood.toast.changed', { values: { mood: $t(`settings.mood.${kind}`) } }));
+    } finally {
+      moodBusy = false;
+    }
+  }
 
   // ----- Language -----
   // `lang` covers all 5 UI locales.  The store in stores.ts is typed with
@@ -588,6 +644,34 @@
                 {$t('settings.theme.locked', { values: { xp: option.minXp }, default: 'Bloqueado até {xp} XP' })}
               {/if}
             </small>
+          </span>
+        </button>
+      {/each}
+    </div>
+  </section>
+
+  <!-- ============ Mood / Vibe ============ -->
+  <section class="card" aria-labelledby="mood-h">
+    <div class="card-head">
+      <span class="icon-wrap"><Heart size={18} /></span>
+      <h2 id="mood-h">{$t('settings.mood')}</h2>
+    </div>
+    <p class="theme-intro">{$t('settings.mood.intro')}</p>
+    <div class="mood-grid" role="radiogroup" aria-label={$t('settings.mood')}>
+      {#each MOOD_OPTIONS as option (option.id)}
+        <button
+          type="button"
+          role="radio"
+          aria-checked={currentMood === option.id}
+          class:active={currentMood === option.id}
+          disabled={moodBusy}
+          style={`--mood-option-accent: ${option.accent}`}
+          onclick={() => pickMoodChoice(option.id)}
+        >
+          <span class="mood-swatch" aria-hidden="true">{option.emoji}</span>
+          <span class="theme-copy">
+            <strong>{$t(`settings.mood.${option.id}`)}</strong>
+            <small>{$t(`settings.mood.${option.id}.desc`)}</small>
           </span>
         </button>
       {/each}
@@ -1049,9 +1133,54 @@
     .theme-swatch-anime { background: linear-gradient(135deg, #f472b6, #c084fc); }
     .theme-swatch-moto { background: linear-gradient(135deg, #111827, #ef4444); }
     .theme-swatch-tunisia { background: linear-gradient(135deg, #fff, #e70013); }
+    .theme-swatch-vanilla { background: linear-gradient(135deg, #fff7ed, #f9a8d4); color: #7c2d12; }
+    .theme-swatch-garden { background: linear-gradient(135deg, #ecfdf5, #16a34a); color: #064e3b; }
+    .theme-swatch-midnight { background: linear-gradient(135deg, #12091f, #db2777); }
+    .theme-swatch-cozy { background: linear-gradient(135deg, #eff6ff, #fdba74); color: #1e3a8a; }
+    .theme-swatch-fresh { background: linear-gradient(135deg, #58cc02, #1cb0f6); color: #052e16; }
     .theme-copy { min-width: 0; display: grid; gap: 0.15rem; }
     .theme-copy strong { color: inherit; font-size: 0.92rem; }
     .theme-copy small { color: #cbd5e1; font-size: 0.74rem; line-height: 1.25; }
+    .mood-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      gap: 0.65rem;
+    }
+    .mood-grid button {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 0.68rem;
+      min-height: 76px;
+      padding: 0.72rem;
+      text-align: left;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--mood-option-accent) 12%, rgba(255,255,255,.045)), rgba(255,255,255,.035));
+      border: 1px solid color-mix(in srgb, var(--mood-option-accent) 24%, rgba(255,255,255,.12));
+      border-radius: 0.9rem;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease, opacity 0.12s ease;
+    }
+    .mood-grid button:hover:not(:disabled),
+    .mood-grid button:focus-visible {
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--mood-option-accent) 60%, white);
+      outline: none;
+    }
+    .mood-grid button.active {
+      background: linear-gradient(135deg, color-mix(in srgb, var(--mood-option-accent) 28%, rgba(255,255,255,.08)), rgba(255,255,255,.06));
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--mood-option-accent) 50%, transparent), 0 14px 34px color-mix(in srgb, var(--mood-option-accent) 18%, transparent);
+    }
+    .mood-grid button:disabled { opacity: .72; cursor: wait; }
+    .mood-swatch {
+      width: 2.6rem;
+      height: 2.6rem;
+      display: inline-grid;
+      place-items: center;
+      border-radius: .9rem;
+      background: color-mix(in srgb, var(--mood-option-accent) 22%, white);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.32);
+    }
     /* Language switcher: 5 buttons laid out as a wrapping grid so they
        stay touch-friendly on narrow phones without overflowing. */
     .seg-lang {

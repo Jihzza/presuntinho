@@ -120,7 +120,20 @@ export interface SecretRow {
  * values persist across reloads and are available before any UI
  * renders (the V4 splash screen reads them on first paint).
  */
-export type ThemeChoice = 'light' | 'dark' | 'auto' | 'barca' | 'gamer' | 'moto' | 'anime' | 'tunisia';
+export type ThemeChoice =
+  | 'light'
+  | 'dark'
+  | 'auto'
+  | 'barca'
+  | 'gamer'
+  | 'moto'
+  | 'anime'
+  | 'tunisia'
+  | 'vanilla'
+  | 'garden'
+  | 'midnight'
+  | 'cozy'
+  | 'fresh';
 
 export interface SettingsRow {
   id: 'main';

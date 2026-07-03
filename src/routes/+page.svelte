@@ -16,6 +16,7 @@
   import { xp, initStores } from '$lib/state/stores';
   import { getSession } from '$lib/auth/session';
   import { mainSchoolCourses, schoolTotals, businessAdministration, portugueseCourse } from '$lib/escola/catalog';
+  import { isMoodIntroAcknowledged, moodAffirmation, moodMicrocopy, readActiveMood, MOOD_META, type ActiveMood } from '$lib/mood';
   import {
     buildNotifications,
     formatDayLabel,
@@ -47,6 +48,8 @@
   let heroIn = $state(false);
   let agendaItems = $state<AgendaItem[]>([]);
   let notifications = $state<NotificationItem[]>([]);
+  let activeMood = $state<ActiveMood | null>(null);
+  let charmSeed = $state(Date.now());
 
   const today = new Date();
   const todayKey = localDateKey(today);
@@ -58,6 +61,9 @@
   let todaysItems = $derived(agendaItems.filter((item) => item.date === todayKey));
   let nextItems = $derived(agendaItems.filter((item) => item.date >= todayKey && item.status !== 'done').slice(0, 5));
   let urgentCount = $derived(notifications.filter((item) => item.tone === 'danger' || item.tone === 'warning').length);
+  let moodMeta = $derived(activeMood ? MOOD_META[activeMood.kind] : null);
+  let moodLine = $derived(activeMood ? moodMicrocopy(activeMood.kind, charmSeed) : $t('hub.default.mood_line'));
+  let moodNote = $derived(activeMood ? moodAffirmation(activeMood.kind, charmSeed) : $t('hub.default.mood_note'));
 
   function itemsForDate(date: Date): AgendaItem[] {
     const key = localDateKey(date);
@@ -126,6 +132,8 @@
       currentXp = get(xp);
       xp.subscribe((v) => (currentXp = v));
       await Promise.all([refreshDashboard(), refreshAgenda()]);
+      const mood = await readActiveMood();
+      activeMood = mood && isMoodIntroAcknowledged(mood) ? mood : null;
     })();
 
     try {
@@ -136,6 +144,7 @@
 
     const onVis = () => {
       if (document.visibilityState === 'visible') void Promise.all([refreshDashboard(), refreshAgenda()]);
+      charmSeed = Date.now();
     };
     document.addEventListener('visibilitychange', onVis);
     return () => document.removeEventListener('visibilitychange', onVis);
@@ -150,42 +159,52 @@
 
 <div class="hub">
   <header class="hub-hero" class:hero-in={heroIn}>
-    <span class="eyebrow">Painel de controlo</span>
+    <span class="eyebrow">{activeMood ? `${moodMeta?.emoji} ${moodMeta?.label}` : $t('hub.hero.eyebrow')}</span>
     <h1>
       {activeProfile
         ? $t('hub.greeting', { values: { name: $t(`profile.${activeProfile}`) }, default: 'Olá Fatma' })
-        : 'Olá'}
+        : $t('hub.hero.greeting_fallback')}
     </h1>
-    <p class="sub">Hoje, semana, escola e vida — tudo pronto para decidir o próximo passo.</p>
-    <div class="hero-metrics" aria-label="Resumo rápido">
-      <span><strong>{xpLabel}</strong><small>experiência</small></span>
-      <span><strong>{schoolProgress}%</strong><small>escola activa</small></span>
-      <span><strong>{urgentCount}</strong><small>alertas</small></span>
+    <p class="sub">{moodLine}</p>
+    <div class="hero-metrics" aria-label={$t('hub.hero.metrics.aria')}>
+      <span><strong>{xpLabel}</strong><small>{$t('hub.hero.metric.xp')}</small></span>
+      <span><strong>{schoolProgress}%</strong><small>{$t('hub.hero.metric.school')}</small></span>
+      <span><strong>{urgentCount}</strong><small>{$t('hub.hero.metric.alerts')}</small></span>
     </div>
   </header>
 
-  <section class="today-strip" aria-label="Hoje">
+  <section class="presuntinho-quest" class:mooded={Boolean(activeMood)} aria-label={$t('hub.quest.aria')}>
+    <div class="quest-orb" aria-hidden="true">{moodMeta?.emoji ?? '🐷'}</div>
     <div>
-      <span class="eyebrow">Hoje</span>
+      <span class="eyebrow">{$t('hub.quest.eyebrow')}</span>
+      <h2>{activeMood?.kind === 'sick' ? $t('hub.quest.title.sick') : activeMood?.kind === 'sad' ? $t('hub.quest.title.sad') : activeMood?.kind === 'love' ? $t('hub.quest.title.love') : $t('hub.quest.title.default')}</h2>
+      <p>{moodNote}</p>
+    </div>
+    <a href={activeMood?.kind === 'sick' ? '/vida/' : '/escola/'}>{activeMood?.kind === 'sick' ? $t('hub.quest.cta.sick') : $t('hub.quest.cta.default')}</a>
+  </section>
+
+  <section class="today-strip" aria-label={$t('hub.today.aria')}>
+    <div>
+      <span class="eyebrow">{$t('hub.today.eyebrow')}</span>
       <h2>{formatDayLabel(todayKey)}</h2>
-      <p>{todaysItems.length ? `${todaysItems.length} item${todaysItems.length === 1 ? '' : 's'} no dia` : 'Dia livre — bom para planear.'}</p>
+      <p>{todaysItems.length ? $t('hub.today.items', { values: { count: todaysItems.length, suffix: todaysItems.length === 1 ? '' : 's' } }) : $t('hub.today.empty')}</p>
     </div>
     <a href="/notificacoes/" class="notify-link">🔔 {notifications.length}</a>
   </section>
 
-  <section class="calendar-card" aria-label="Resumo do calendário e tarefas">
+  <section class="calendar-card" aria-label={$t('hub.calendar.aria')}>
     <div class="section-head">
       <div>
-        <h2>Agenda</h2>
-        <span>Resumo rápido — a organização completa vive no Calendário.</span>
+        <h2>{$t('hub.calendar.title')}</h2>
+        <span>{$t('hub.calendar.subtitle')}</span>
       </div>
-      <a class="open-calendar" href="/calendario/">Abrir calendário →</a>
+      <a class="open-calendar" href="/calendario/">{$t('hub.calendar.open')}</a>
     </div>
 
     <div
       class="calendar-grid compact"
       role="group"
-      aria-label="Resumo semanal"
+      aria-label={$t('hub.calendar.week_aria')}
     >
       {#each weekPreviewDays as day (localDateKey(day))}
         <a
@@ -193,7 +212,7 @@
           data-tone={dayTone(day)}
           data-outside="false"
           href="/calendario/"
-          aria-label={`${formatDayLabel(localDateKey(day))}: ${itemsForDate(day).length} itens`}
+          aria-label={$t('hub.calendar.day_aria', { values: { day: formatDayLabel(localDateKey(day)), count: itemsForDate(day).length } })}
         >
           <span>{day.toLocaleDateString('pt-PT', { weekday: 'short' })}</span>
           <strong>{day.getDate()}</strong>
@@ -204,13 +223,13 @@
       {/each}
     </div>
 
-    <div class="agenda-list" aria-label="Tarefas próximas">
+    <div class="agenda-list" aria-label={$t('hub.calendar.tasks_aria')}>
       <div class="section-head compact">
-        <h3>Próximas 3 tasks</h3>
-        <a href="/calendario/">Gerir tudo →</a>
+        <h3>{$t('hub.calendar.next_tasks')}</h3>
+        <a href="/calendario/">{$t('hub.calendar.manage')}</a>
       </div>
       {#if nextItems.length === 0}
-        <p class="empty-line">Nada urgente. Planeia a próxima semana.</p>
+        <p class="empty-line">{$t('hub.calendar.empty')}</p>
       {:else}
         {#each nextItems.slice(0, 3) as item (item.id)}
           <a class="agenda-item" data-tone={item.tone} href={item.href}>
@@ -223,10 +242,10 @@
     </div>
   </section>
 
-  <section class="notifications-card" aria-label="Notificações">
+  <section class="notifications-card" aria-label={$t('hub.notifications.title')}>
     <div class="section-head">
-      <h2>Notificações</h2>
-      <a href="/notificacoes/">Ver todas →</a>
+      <h2>{$t('hub.notifications.title')}</h2>
+      <a href="/notificacoes/">{$t('hub.notifications.all')}</a>
     </div>
     <div class="notification-list">
       {#each notifications.slice(0, 3) as n (n.id)}
@@ -238,79 +257,79 @@
     </div>
   </section>
 
-  <section class="control-section" aria-label="Controlo geral">
+  <section class="control-section" aria-label={$t('hub.control.aria')}>
     <div class="section-head">
-      <h2>Agora importa</h2>
-      <a href="/agente/">Perguntar ao agente →</a>
+      <h2>{$t('hub.control.title')}</h2>
+      <a href="/agente/">{$t('hub.control.agent')}</a>
     </div>
     <div class="control-grid">
       <a class="control-card primary" href="/escola/">
         <span class="icon">🎓</span>
         <div>
-          <p class="label">Escola</p>
+          <p class="label">{$t('hub.control.school.label')}</p>
           <h3>{businessAdministration.title} e {portugueseCourse.title}</h3>
-          <p>{mainSchoolCourses.length} cursos principais · {businessAdministration.units.length} cadeiras · extras e trabalhos.</p>
+          <p>{$t('hub.control.school.summary', { values: { courses: mainSchoolCourses.length, subjects: businessAdministration.units.length } })}</p>
         </div>
         <strong>{schoolProgress}%</strong>
       </a>
       <a class="control-card" href="/vida/">
         <span class="icon">🌿</span>
         <div>
-          <p class="label">Vida</p>
-          <h3>Rotinas, hábitos e energia</h3>
-          <p>Controlar o dia e manter consistência.</p>
+          <p class="label">{$t('hub.control.life.label')}</p>
+          <h3>{$t('hub.control.life.title')}</h3>
+          <p>{$t('hub.control.life.summary')}</p>
         </div>
       </a>
       <a class="control-card" href="/financas/">
         <span class="icon">💸</span>
         <div>
-          <p class="label">Finanças</p>
-          <h3>Dinheiro e orçamento</h3>
-          <p>Transacções, orçamento e relatórios.</p>
+          <p class="label">{$t('hub.control.finances.label')}</p>
+          <h3>{$t('hub.control.finances.title')}</h3>
+          <p>{$t('hub.control.finances.summary')}</p>
         </div>
       </a>
       <a class="control-card" href="/habitos/">
         <span class="icon">✅</span>
         <div>
-          <p class="label">Hábitos</p>
-          <h3>Progresso diário</h3>
-          <p>Ver o que está feito e o que falta hoje.</p>
+          <p class="label">{$t('hub.control.habits.label')}</p>
+          <h3>{$t('hub.control.habits.title')}</h3>
+          <p>{$t('hub.control.habits.summary')}</p>
         </div>
       </a>
     </div>
   </section>
 
-  <section class="status-section" aria-label="Estado e progresso">
+  <section class="status-section" aria-label={$t('hub.status.aria')}>
     <div class="section-head">
-      <h2>Progresso</h2>
-      <span>Actualizado quando voltas à Home</span>
+      <h2>{$t('hub.status.title')}</h2>
+      <span>{$t('hub.status.updated')}</span>
     </div>
     <div class="progress-grid">
-      <ProgressBar label="Lições vistas" icon="📖" accent="#3b82f6" current={lessonsVisited} total={TOTAL_LESSONS} />
-      <ProgressBar label="Quizzes iniciados" icon="❓" accent="#f59e0b" current={quizzesAnswered} total={TOTAL_QUIZZES} />
-      <ProgressBar label="Trabalhos tratados" icon="✍️" accent="#10b981" current={assignmentsDone} total={TOTAL_ASSIGNMENTS} />
+      <ProgressBar label={$t('hub.progress.lessons')} icon="📖" accent="#3b82f6" current={lessonsVisited} total={TOTAL_LESSONS} />
+      <ProgressBar label={$t('hub.progress.quizzes')} icon="❓" accent="#f59e0b" current={quizzesAnswered} total={TOTAL_QUIZZES} />
+      <ProgressBar label={$t('hub.progress.assignments')} icon="✍️" accent="#10b981" current={assignmentsDone} total={TOTAL_ASSIGNMENTS} />
     </div>
   </section>
 
-  <section class="map-section" aria-label="Mapa da app">
+  <section class="map-section" aria-label={$t('hub.map.aria')}>
     <div class="section-head">
-      <h2>Mapa rápido</h2>
-      <span>Entrar directamente onde é preciso agir</span>
+      <h2>{$t('hub.map.title')}</h2>
+      <span>{$t('hub.map.subtitle')}</span>
     </div>
     <div class="map-grid">
-      <a href="/calendario/">🗓️ Calendário <small>semana, mês e tasks</small></a>
-      <a href="/notificacoes/">🔔 Notificações <small>alertas e prioridades</small></a>
-      <a href="/escola/">🎓 Escola <small>cursos, cadeiras, aulas</small></a>
-      <a href="/escola/trabalhos/">📝 Trabalhos <small>assignments e entregas</small></a>
-      <a href="/financas/orcamento/">📊 Orçamento <small>estado do mês</small></a>
-      <a href="/agente/">🤖 Agente <small>perguntar e decidir</small></a>
+      <a href="/calendario/">🗓️ {$t('hub.map.calendar')} <small>{$t('hub.map.calendar.desc')}</small></a>
+      <a href="/notificacoes/">🔔 {$t('hub.map.notifications')} <small>{$t('hub.map.notifications.desc')}</small></a>
+      <a href="/escola/">🎓 {$t('hub.map.school')} <small>{$t('hub.map.school.desc')}</small></a>
+      <a href="/escola/trabalhos/">📝 {$t('hub.map.assignments')} <small>{$t('hub.map.assignments.desc')}</small></a>
+      <a href="/financas/orcamento/">📊 {$t('hub.map.budget')} <small>{$t('hub.map.budget.desc')}</small></a>
+      <a href="/agente/">🤖 {$t('hub.map.agent')} <small>{$t('hub.map.agent.desc')}</small></a>
     </div>
   </section>
 
   <section class="badges-section" aria-label={$t('hub.section.badges.aria', { default: 'Conquistas' })}>
     <div class="section-head">
       <h2>{$t('hub.section.badges', { default: 'Conquistas' })}</h2>
-      <span>{unlockedBadges} desbloqueadas</span>
+      <span>{$t('hub.badges.unlocked', { values: { count: unlockedBadges } })}</span>
     </div>
     <BadgeGrid badges={badgesMap} />
   </section>
@@ -325,7 +344,8 @@
   .hub-hero,
   .today-strip,
   .calendar-card,
-  .notifications-card {
+  .notifications-card,
+  .presuntinho-quest {
     border-radius: 1.25rem;
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.11);
@@ -339,6 +359,42 @@
     background: radial-gradient(circle at top left, rgba(236, 72, 153, 0.3), transparent 34%), rgba(255, 255, 255, 0.055);
   }
   .hub-hero.hero-in { animation: hub-hero-in 360ms ease-out forwards; }
+  .presuntinho-quest {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: .85rem;
+    align-items: center;
+    padding: 1rem;
+    margin-top: 1rem;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--mood-accent, var(--accent, #ec4899)) 18%, rgba(255,255,255,.06)), rgba(255,255,255,.045));
+    box-shadow: 0 18px 46px color-mix(in srgb, var(--mood-accent, #ec4899) 12%, transparent);
+  }
+  .presuntinho-quest.mooded { border-color: color-mix(in srgb, var(--mood-accent, #ec4899) 28%, rgba(255,255,255,.12)); }
+  .quest-orb {
+    width: 3rem;
+    height: 3rem;
+    display: grid;
+    place-items: center;
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--mood-accent, #ec4899) 18%, rgba(255,255,255,.16));
+    font-size: 1.35rem;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+  }
+  .presuntinho-quest h2 { margin: .15rem 0 .2rem; font-size: 1rem; color: #fff; }
+  .presuntinho-quest p { margin: 0; color: #cbd5e1; }
+  .presuntinho-quest a {
+    grid-column: 1 / -1;
+    width: fit-content;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    padding: .55rem .8rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--mood-accent, var(--accent, #ec4899)) 28%, rgba(255,255,255,.08));
+    color: #fff;
+    text-decoration: none;
+    font-weight: 900;
+  }
   @keyframes hub-hero-in { to { opacity: 1; transform: translateY(0); } }
   .eyebrow,
   .label {

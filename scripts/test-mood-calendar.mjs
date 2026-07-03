@@ -22,6 +22,15 @@ const layout = read('src/routes/+layout.svelte');
 const splash = read('src/routes/splash/+page.svelte');
 const layer = read('src/lib/components/MoodLayer.svelte');
 const calendar = read('src/routes/calendario/+page.svelte');
+const settings = read('src/routes/definicoes/+page.svelte');
+const heart = read('src/lib/components/HeartButton.svelte');
+const confetti = read('src/lib/components/Confetti.svelte');
+const events = read('src/lib/components/events.ts');
+const easter = read('src/lib/easterEggs.ts');
+const home = read('src/routes/+page.svelte');
+const school = read('src/routes/escola/+page.svelte');
+const appCss = read('src/app.css');
+const db = read('src/lib/state/db.ts');
 
 console.log('\nMood/Vibe architecture');
 assert('mood.ts defines ActiveMood', /export interface ActiveMood/.test(mood));
@@ -38,11 +47,22 @@ assert('MoodLayer has recovery CTA', layer.includes('Já me sinto melhor 🤍') 
 assert('MoodLayer has interactive care actions', layer.includes('careActions') && layer.includes('care-grid') && layer.includes('comfort-note'));
 assert('layout applies app-wide mood ambience', layout.includes('app-mood') && layout.includes('--mood-accent'));
 assert('MoodLayer keeps app usable while active', layer.includes('class:compact={!expanded}') && layer.includes('pointer-events: none') && layer.includes('pointer-events: auto') && layer.includes('max-height: min(54vh, 460px)'));
+assert('settings exposes mood selector using existing mood helpers', settings.includes('MOOD_OPTIONS') && settings.includes('activateMood(kind, \'manual\')') && settings.includes('clearActiveMood()'));
+assert('home adapts hero/quest copy to active mood', home.includes('readActiveMood') && home.includes('presuntinho-quest') && home.includes('moodMicrocopy'));
 
 console.log('\nFloating button stability');
 assert('fab stack reserves fixed dimensions', /\.fab-stack\s*{[\s\S]*width:\s*9\.25rem;[\s\S]*height:\s*6\.9rem;/.test(layout));
 assert('heart anchored to bottom-right independent of XP pill', /\.fab-stack > :global\(:last-child\)\s*{[\s\S]*position:\s*absolute;[\s\S]*bottom:\s*0;/.test(layout));
 assert('xp anchored above heart', /\.fab-stack > :global\(:first-child\)\s*{[\s\S]*bottom:\s*4\.05rem;/.test(layout));
+assert('heart removes native blue tap highlight and keeps custom focus', heart.includes('-webkit-tap-highlight-color: transparent') && heart.includes('.heart-btn:focus-visible') && heart.includes('box-shadow: 0 0 0 3px'));
+assert('heart animations avoid layout-changing properties', heart.includes('only inner transform/opacity/glow') && !/\.heart-btn\.burst-[\s\S]*?(?:width|height|right|bottom):/.test(heart));
+
+console.log('\nDeep polish / themes / gamification');
+assert('confetti supports structured heart-origin bursts', events.includes('export interface ConfettiBurst') && confetti.includes('confetti-heart') && confetti.includes('origin === \'heart\''));
+assert('heart click computes burst density for spam taps', easter.includes('recordHeartBurst') && easter.includes('recentClicks * recentClicks') && easter.includes('burstLevel'));
+assert('theme system includes new professional themes', db.includes("'vanilla'") && db.includes("'garden'") && db.includes("'midnight'") && db.includes("'cozy'") && db.includes("'fresh'"));
+assert('theme CSS defines premium palettes', appCss.includes("[data-theme='vanilla']") && appCss.includes("[data-theme='fresh']") && appCss.includes("[data-theme='midnight']"));
+assert('school includes Duolingo-inspired lesson path', school.includes('lesson-path') && school.includes("$t('school.loop.streak')") && school.includes("$t('school.path.reward.title')"));
 
 console.log('\nCalendar gesture/design');
 assert('calendar uses pointer capture with guarded fallback', calendar.includes('setPointerCapture') && calendar.includes('catch'));

@@ -100,9 +100,12 @@ export async function heartClick(): Promise<void> {
   const clicks = get(heartClicks);
   if (clicks > get(heartMaxClicks)) heartMaxClicks.set(clicks);
 
-  // Speed bonus (V3: 350ms)
+  // Speed bonus (V3: 350ms) + burst-density model for spam-taps.
   const speedBonus = now - getLastHeartClickTime() < 350;
   setLastHeartClickTime(now);
+  const recentClicks = recordHeartBurst(now);
+  const burstLevel = Math.min(5, Math.max(0, recentClicks - 1));
+  const burstConfetti = Math.min(260, 8 + recentClicks * recentClicks * 3 + (speedBonus ? 12 : 0));
 
   // Find exact-match tier (V3: clicks === tier.at)
   const tier = HEART_TIERS.find((t) => t.at === clicks) ?? null;
@@ -119,7 +122,9 @@ export async function heartClick(): Promise<void> {
       detail: {
         clicks,
         intensity,
-        emoji: lastHeartTierEmoji(clicks)
+        emoji: lastHeartTierEmoji(clicks),
+        burstLevel,
+        recentClicks
       }
     }));
     // Body pulse + micro-confetti on every click keeps the easter egg feeling
@@ -128,7 +133,7 @@ export async function heartClick(): Promise<void> {
     window.dispatchEvent(new CustomEvent('presuntinho:screen-shake'));
   }
 
-  fireConfettiEvent(speedBonus ? 18 : 10);
+  fireConfettiEvent({ count: burstConfetti, origin: 'heart', intensity: burstLevel });
 
   if (tier) {
     showToast(tier.msg);
@@ -155,6 +160,11 @@ export async function heartClick(): Promise<void> {
 let _lastHeartClickTime = 0;
 function getLastHeartClickTime(): number { return _lastHeartClickTime; }
 function setLastHeartClickTime(t: number): void { _lastHeartClickTime = t; }
+let _heartBurstWindow: number[] = [];
+function recordHeartBurst(now: number): number {
+  _heartBurstWindow = [..._heartBurstWindow.filter((time) => now - time < 1200), now].slice(-12);
+  return _heartBurstWindow.length;
+}
 
 // ============================================================================
 // LOGO CLICK

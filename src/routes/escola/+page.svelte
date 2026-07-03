@@ -13,13 +13,26 @@
 
 <div class="escola">
   <header class="hero">
-    <span class="hero-tag">🎓 Escola</span>
-    <h1>Escola da Fatma</h1>
-    <p class="sub">Primeiro escolhes o curso. Dentro do curso vês as cadeiras. Dentro da cadeira vês aulas, teoria, quizzes e testes.</p>
+    <span class="hero-tag">{$t('school.hero.tag')}</span>
+    <h1>{$t('school.hero.title')}</h1>
+    <p class="sub">{$t('school.hero.subtitle')}</p>
+    <div class="school-loop" aria-label={$t('school.loop.aria')}>
+      <span><strong>🔥 7</strong><small>{$t('school.loop.streak')}</small></span>
+      <span><strong>⚡ +25 XP</strong><small>{$t('school.loop.xp')}</small></span>
+      <span><strong>💚 3 vidas</strong><small>{$t('school.loop.lives')}</small></span>
+    </div>
   </header>
 
+  <section class="lesson-path" aria-label={$t('school.path.aria')}>
+    <div class="path-node active"><span>1</span><strong>{$t('school.path.choose.title')}</strong><small>{$t('school.path.choose.body')}</small></div>
+    <div class="path-line" aria-hidden="true"></div>
+    <div class="path-node"><span>2</span><strong>{$t('school.path.lesson.title')}</strong><small>{$t('school.path.lesson.body')}</small></div>
+    <div class="path-line" aria-hidden="true"></div>
+    <div class="path-node reward"><span>🏆</span><strong>{$t('school.path.reward.title')}</strong><small>{$t('school.path.reward.body')}</small></div>
+  </section>
+
   <section class="main-courses" aria-label="Cursos principais">
-    <h2 class="section-title">Cursos principais</h2>
+    <h2 class="section-title">{$t('school.main.title')}</h2>
     <div class="course-grid">
       {#each mainSchoolCourses as course (course.slug)}
       <a class="course-card" class:business={course.slug === 'business-administration'} class:portuguese={course.slug === 'portugues'} href={course.href}>
@@ -28,7 +41,7 @@
           <p class="kicker">{course.tagline}</p>
           <h3>{course.title}</h3>
           <p>{course.summary}</p>
-          <strong>{course.units.length} {course.slug === 'business-administration' ? 'cadeiras' : 'módulo'} →</strong>
+          <strong>{course.units.length} {course.slug === 'business-administration' ? $t('school.course.subjects') : $t('school.course.module')} →</strong>
         </div>
       </a>
       {/each}
@@ -39,9 +52,9 @@
     <div class="section-head">
       <div>
         <h2>{businessAdministration.title}</h2>
-        <p>Cadeiras do curso — cada uma abre a sua área de aulas, teoria e quizzes.</p>
+        <p>{$t('school.business.body')}</p>
       </div>
-      <span>{businessSubjects.length} cadeiras</span>
+      <span>{$t('school.business.subject_count', { values: { count: businessSubjects.length } })}</span>
     </div>
     <div class="subject-grid">
       {#each businessSubjects as subject (subject.slug)}
@@ -50,7 +63,7 @@
           <div>
             <h3>{subject.title}</h3>
             <p>{subject.summary}</p>
-            <small>{lessonCount(subject)} aulas · {quizCount(subject)} quizzes</small>
+            <small>{$t('school.subject.meta', { values: { lessons: lessonCount(subject), quizzes: quizCount(subject) } })}</small>
           </div>
         </a>
       {/each}
@@ -60,8 +73,8 @@
   <section class="extras-section" aria-label="Extras e trabalhos da escola">
     <div class="section-head">
       <div>
-        <h2>Extras, trabalhos e materiais</h2>
-        <p>Isto não são cursos principais. São áreas de apoio à escola.</p>
+        <h2>{$t('school.extras.title')}</h2>
+        <p>{$t('school.extras.body')}</p>
       </div>
     </div>
     <div class="tool-grid">
@@ -77,22 +90,22 @@
       <a class="tool-card" href="/escola/trabalhos/" style="--accent: #f59e0b;">
         <span>📝</span>
         <div>
-          <h3>Trabalhos</h3>
-          <p>Assignments, entregas, drafts e próximos passos.</p>
+          <h3>{$t('school.assignments.title')}</h3>
+          <p>{$t('school.assignments.body')}</p>
         </div>
       </a>
       <a class="tool-card" href="/biblioteca/" style="--accent: #8b5cf6;">
         <span>📚</span>
         <div>
-          <h3>Biblioteca</h3>
-          <p>Materiais, ficheiros, PDFs e recursos para estudar.</p>
+          <h3>{$t('school.library.title')}</h3>
+          <p>{$t('school.library.body')}</p>
         </div>
       </a>
       <a class="tool-card" href="/escola/caderno/" style="--accent: #10b981;">
         <span>📓</span>
         <div>
-          <h3>Caderno</h3>
-          <p>Notas, resumos e apontamentos da Fatma.</p>
+          <h3>{$t('school.notebook.title')}</h3>
+          <p>{$t('school.notebook.body')}</p>
         </div>
       </a>
     </div>
@@ -205,6 +218,58 @@
   .tool-card h3 { margin: 0 0 0.25rem; font-size: 1rem; }
   .subject-card small { display: inline-block; margin-top: 0.55rem; color: #94a3b8; }
   .tool-card { border-left: 4px solid var(--accent, #8b5cf6); }
+  .school-loop {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .55rem;
+    margin-top: 1rem;
+  }
+  .school-loop span {
+    padding: .65rem;
+    border-radius: .9rem;
+    background: rgba(0,0,0,.18);
+    border: 1px solid rgba(255,255,255,.1);
+  }
+  .school-loop strong,
+  .school-loop small { display: block; }
+  .school-loop small { color: #cbd5e1; font-size: .72rem; }
+  .lesson-path {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);
+    align-items: stretch;
+    gap: .5rem;
+    margin: 1.25rem 0;
+  }
+  .path-node {
+    min-height: 112px;
+    padding: .85rem;
+    border-radius: 1.1rem;
+    background: rgba(255,255,255,.055);
+    border: 1px solid rgba(255,255,255,.1);
+    display: grid;
+    gap: .2rem;
+    align-content: center;
+  }
+  .path-node span {
+    width: 2.2rem;
+    height: 2.2rem;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: rgba(59,130,246,.18);
+    color: #bfdbfe;
+    font-weight: 900;
+  }
+  .path-node.active { border-color: rgba(34,197,94,.5); box-shadow: 0 14px 34px rgba(34,197,94,.12); }
+  .path-node.reward { border-color: rgba(245,158,11,.42); }
+  .path-node strong { color: #fff; }
+  .path-node small { color: #94a3b8; line-height: 1.25; }
+  .path-line { width: 1.5rem; align-self: center; height: 3px; border-radius: 999px; background: linear-gradient(90deg, #60a5fa, #22c55e); opacity: .8; }
+  @media (max-width: 720px) {
+    .school-loop { grid-template-columns: 1fr; }
+    .lesson-path { grid-template-columns: 1fr; }
+    .path-line { width: 3px; height: 1.1rem; justify-self: center; background: linear-gradient(180deg, #60a5fa, #22c55e); }
+  }
   @media (min-width: 720px) {
     .course-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .subject-grid,

@@ -4,6 +4,13 @@
 export const CONFETTI_EVENT = 'presuntinho:confetti';
 export const TOAST_EVENT = 'presuntinho:toast';
 
+export interface ConfettiBurst {
+  count: number;
+  intensity?: number;
+  origin?: 'heart' | 'center' | 'top';
+  palette?: string[];
+}
+
 /** Returns true when the user has requested reduced motion (OS-level a11y). */
 export function prefersReducedMotion(): boolean {
   if (typeof window === 'undefined' || !window.matchMedia) return false;
@@ -20,7 +27,7 @@ export function prefersReducedMotion(): boolean {
  * no-op so no DOM is created (Confetti.svelte's CSS also hides pieces, but
  * the JS guard avoids the wasted work and any layout churn).
  */
-export function fireConfettiEvent(count: number = 60): void {
+export function fireConfettiEvent(count: number | ConfettiBurst = 60): void {
   if (typeof window === 'undefined') return;
   if (prefersReducedMotion()) return;
   window.dispatchEvent(new CustomEvent(CONFETTI_EVENT, { detail: count }));

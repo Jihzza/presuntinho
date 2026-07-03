@@ -342,6 +342,106 @@
   border-color: var(--border-strong) !important;
 }
 
+/* Premium theme expansion — semantic tokens only. Route components keep
+   their existing CSS but inherit a more coherent professional palette. */
+[data-theme='vanilla'], .theme-vanilla {
+  --bg: radial-gradient(circle at 18% 10%, rgba(249, 168, 212, 0.26), transparent 28%), linear-gradient(150deg, #fff7ed 0%, #fff1f2 48%, #eef2ff 100%);
+  --bg-elev: rgba(255, 255, 255, 0.84);
+  --txt: #34223a;
+  --txt2: #5b4a63;
+  --txt3: #8a718d;
+  --accent: #c02670;
+  --accent-hover: #9d174d;
+  --border: rgba(192, 38, 112, 0.18);
+  --border-strong: rgba(192, 38, 112, 0.32);
+  --card: rgba(255, 255, 255, 0.78);
+  --card-hover: rgba(255, 255, 255, 0.96);
+}
+[data-theme='garden'], .theme-garden {
+  --bg: radial-gradient(circle at 82% 10%, rgba(134, 239, 172, 0.26), transparent 30%), linear-gradient(145deg, #052e2b 0%, #064e3b 54%, #111827 100%);
+  --bg-elev: rgba(6, 78, 59, 0.82);
+  --txt: #f0fdf4;
+  --txt2: #bbf7d0;
+  --txt3: #86efac;
+  --accent: #34d399;
+  --accent-hover: #a7f3d0;
+  --border: rgba(134, 239, 172, 0.22);
+  --border-strong: rgba(134, 239, 172, 0.38);
+  --card: linear-gradient(145deg, rgba(6, 78, 59, 0.72), rgba(20, 184, 166, 0.12));
+  --card-hover: linear-gradient(145deg, rgba(6, 78, 59, 0.88), rgba(52, 211, 153, 0.16));
+}
+[data-theme='midnight'], .theme-midnight {
+  --bg: radial-gradient(circle at 22% 14%, rgba(236, 72, 153, 0.24), transparent 30%), radial-gradient(circle at 88% 74%, rgba(99, 102, 241, 0.18), transparent 32%), linear-gradient(145deg, #0b0714 0%, #1f1235 58%, #09090b 100%);
+  --bg-elev: rgba(31, 18, 53, 0.86);
+  --txt: #fff1f2;
+  --txt2: #fbcfe8;
+  --txt3: #c4b5fd;
+  --accent: #f472b6;
+  --accent-hover: #fb7185;
+  --border: rgba(244, 114, 182, 0.22);
+  --border-strong: rgba(244, 114, 182, 0.42);
+  --card: linear-gradient(145deg, rgba(31, 18, 53, 0.82), rgba(236, 72, 153, 0.12));
+  --card-hover: linear-gradient(145deg, rgba(31, 18, 53, 0.94), rgba(244, 114, 182, 0.18));
+}
+[data-theme='cozy'], .theme-cozy {
+  --bg: radial-gradient(circle at 80% 10%, rgba(96, 165, 250, 0.22), transparent 32%), linear-gradient(150deg, #eff6ff 0%, #fff7ed 48%, #fef2f2 100%);
+  --bg-elev: rgba(255, 255, 255, 0.84);
+  --txt: #172033;
+  --txt2: #475569;
+  --txt3: #64748b;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --border: rgba(59, 130, 246, 0.22);
+  --border-strong: rgba(59, 130, 246, 0.36);
+  --card: rgba(255, 255, 255, 0.78);
+  --card-hover: rgba(255, 255, 255, 0.96);
+}
+[data-theme='fresh'], .theme-fresh {
+  --bg: radial-gradient(circle at 16% 18%, rgba(88, 204, 2, 0.22), transparent 30%), radial-gradient(circle at 84% 14%, rgba(28, 176, 246, 0.2), transparent 28%), linear-gradient(145deg, #0f2f1a 0%, #073b4c 58%, #101827 100%);
+  --bg-elev: rgba(7, 59, 76, 0.84);
+  --txt: #f8fafc;
+  --txt2: #d9f99d;
+  --txt3: #93c5fd;
+  --accent: #58cc02;
+  --accent-hover: #1cb0f6;
+  --border: rgba(88, 204, 2, 0.22);
+  --border-strong: rgba(28, 176, 246, 0.42);
+  --card: linear-gradient(145deg, rgba(7, 59, 76, 0.78), rgba(88, 204, 2, 0.12));
+  --card-hover: linear-gradient(145deg, rgba(7, 59, 76, 0.92), rgba(28, 176, 246, 0.16));
+}
+[data-theme='vanilla'] body, [data-theme='garden'] body, [data-theme='midnight'] body, [data-theme='cozy'] body, [data-theme='fresh'] body,
+[data-theme='vanilla'] .app, [data-theme='garden'] .app, [data-theme='midnight'] .app, [data-theme='cozy'] .app, [data-theme='fresh'] .app {
+  background: var(--bg);
+  color: var(--txt);
+}
+[data-theme='garden'] .card, [data-theme='garden'] .hub-hero, [data-theme='garden'] .today-strip, [data-theme='garden'] .calendar-card, [data-theme='garden'] .notifications-card, [data-theme='garden'] .control-card,
+[data-theme='midnight'] .card, [data-theme='midnight'] .hub-hero, [data-theme='midnight'] .today-strip, [data-theme='midnight'] .calendar-card, [data-theme='midnight'] .notifications-card, [data-theme='midnight'] .control-card,
+[data-theme='fresh'] .card, [data-theme='fresh'] .hub-hero, [data-theme='fresh'] .today-strip, [data-theme='fresh'] .calendar-card, [data-theme='fresh'] .notifications-card, [data-theme='fresh'] .control-card {
+  background: var(--card) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+[data-theme='vanilla'] .nav, [data-theme='vanilla'] .bottom-nav, [data-theme='vanilla'] .card, [data-theme='vanilla'] .hub-hero, [data-theme='vanilla'] .today-strip, [data-theme='vanilla'] .calendar-card, [data-theme='vanilla'] .notifications-card, [data-theme='vanilla'] .control-card, [data-theme='vanilla'] .day-cell, [data-theme='vanilla'] .notification,
+[data-theme='cozy'] .nav, [data-theme='cozy'] .bottom-nav, [data-theme='cozy'] .card, [data-theme='cozy'] .hub-hero, [data-theme='cozy'] .today-strip, [data-theme='cozy'] .calendar-card, [data-theme='cozy'] .notifications-card, [data-theme='cozy'] .control-card, [data-theme='cozy'] .day-cell, [data-theme='cozy'] .notification {
+  background: var(--bg-elev) !important;
+  border-color: var(--border) !important;
+  color: var(--txt) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+[data-theme='garden'] .nav, [data-theme='garden'] .bottom-nav, [data-theme='midnight'] .nav, [data-theme='midnight'] .bottom-nav, [data-theme='fresh'] .nav, [data-theme='fresh'] .bottom-nav {
+  background: color-mix(in srgb, var(--bg-elev) 84%, transparent) !important;
+  border-color: var(--border) !important;
+}
+[data-theme='vanilla'] h1, [data-theme='vanilla'] h2, [data-theme='vanilla'] h3, [data-theme='vanilla'] strong, [data-theme='vanilla'] .nav-label, [data-theme='vanilla'] .logo, [data-theme='vanilla'] .logo-text,
+[data-theme='cozy'] h1, [data-theme='cozy'] h2, [data-theme='cozy'] h3, [data-theme='cozy'] strong, [data-theme='cozy'] .nav-label, [data-theme='cozy'] .logo, [data-theme='cozy'] .logo-text {
+  color: var(--txt) !important;
+}
+[data-theme='vanilla'] a:not(.btn), [data-theme='cozy'] a:not(.btn) { color: var(--accent); }
+[data-theme='vanilla'] p, [data-theme='vanilla'] small, [data-theme='vanilla'] span, [data-theme='vanilla'] label,
+[data-theme='cozy'] p, [data-theme='cozy'] small, [data-theme='cozy'] span, [data-theme='cozy'] label { color: inherit; }
+[data-theme='vanilla'] .section-head span, [data-theme='vanilla'] .section-head p, [data-theme='vanilla'] .sub, [data-theme='vanilla'] .empty, [data-theme='vanilla'] .theme-copy small,
+[data-theme='cozy'] .section-head span, [data-theme='cozy'] .section-head p, [data-theme='cozy'] .sub, [data-theme='cozy'] .empty, [data-theme='cozy'] .theme-copy small { color: var(--txt2) !important; }
+
 * { box-sizing: border-box; }
 
 html {

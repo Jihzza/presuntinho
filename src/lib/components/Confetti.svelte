@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { CONFETTI_EVENT, prefersReducedMotion } from './events';
+  import { CONFETTI_EVENT, prefersReducedMotion, type ConfettiBurst } from './events';
 
   interface Props {
     count?: number;
@@ -9,30 +9,42 @@
 
   let layer = $state<HTMLDivElement | null>(null);
 
-  // V3 palette (state.js line 148)
-  const COLORS = ['#d4af37','#b8945a','#9b7ede','#e8b4b8','#4ecdc4','#ff6b9d','#c47891'];
+  const COLORS = ['#d4af37', '#b8945a', '#9b7ede', '#e8b4b8', '#4ecdc4', '#ff6b9d', '#c47891'];
+  const HEART_SHAPES = ['♥', '✦', '●', '✧'];
 
-  function fire(n: number) {
+  function fire(detail: number | ConfettiBurst) {
     if (!layer) return;
-    // OS-level a11y: do not spawn particles if the user prefers reduced motion.
     if (prefersReducedMotion()) return;
-    const total = typeof n === 'number' && n > 0 ? n : count;
+
+    const burst = typeof detail === 'number' ? null : detail;
+    const total = Math.min(320, typeof detail === 'number' && detail > 0 ? detail : (burst?.count ?? count));
+    const origin = burst?.origin ?? 'top';
+    const intensity = Math.max(1, burst?.intensity ?? 1);
+    const palette = burst?.palette ?? COLORS;
+
     for (let i = 0; i < total; i++) {
       const piece = document.createElement('div');
-      piece.className = 'confetti-piece';
-      piece.style.left = Math.random() * 100 + 'vw';
-      piece.style.background = COLORS[Math.floor(Math.random() * COLORS.length)];
-      piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
-      piece.style.animationDelay = (Math.random() * 0.5) + 's';
-      piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+      piece.className = `confetti-piece confetti-${origin}`;
+      const color = palette[Math.floor(Math.random() * palette.length)];
+      piece.style.setProperty('--c', color);
+      piece.style.setProperty('--dx', `${(Math.random() - 0.5) * (origin === 'heart' ? 320 + intensity * 38 : 90)}px`);
+      piece.style.setProperty('--spin', `${(Math.random() * 900 + 360) * (Math.random() > 0.5 ? 1 : -1)}deg`);
+      piece.style.setProperty('--scale', String(0.75 + Math.random() * Math.min(1.2, 0.42 + intensity * 0.13)));
+      piece.style.left = origin === 'heart' ? `calc(100vw - ${40 + Math.random() * 52}px)` : Math.random() * 100 + 'vw';
+      piece.style.top = origin === 'heart' ? `calc(100vh - ${118 + Math.random() * 60}px)` : '-12px';
+      piece.style.animationDuration = origin === 'heart' ? (Math.random() * 0.9 + 1.15) + 's' : (Math.random() * 2 + 2) + 's';
+      piece.style.animationDelay = (Math.random() * 0.18) + 's';
+      if (origin === 'heart' && Math.random() > 0.48) {
+        piece.textContent = HEART_SHAPES[Math.floor(Math.random() * HEART_SHAPES.length)];
+      }
       layer.appendChild(piece);
-      setTimeout(() => { piece.remove(); }, 4500);
+      setTimeout(() => { piece.remove(); }, 4600);
     }
   }
 
   onMount(() => {
     const handler = (e: Event) => {
-      const ce = e as CustomEvent<number>;
+      const ce = e as CustomEvent<number | ConfettiBurst>;
       fire(ce.detail ?? count);
     };
     const shake = () => {
@@ -67,7 +79,26 @@
     width: 10px;
     height: 16px;
     border-radius: 4px;
+    background: var(--c, #ff6b9d);
     animation: fall 3.2s cubic-bezier(.17,.67,.2,1) forwards;
+  }
+  :global(.confetti-heart) {
+    width: 10px;
+    height: 10px;
+    display: grid;
+    place-items: center;
+    background: var(--c, #ff6b9d);
+    color: var(--c, #ff6b9d);
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 900;
+    box-shadow: 0 0 14px color-mix(in srgb, var(--c, #ff6b9d) 42%, transparent);
+    animation: heartBurst 1.45s cubic-bezier(.16,.84,.25,1) forwards;
+  }
+  :global(.confetti-heart:not(:empty)) {
+    width: auto;
+    height: auto;
+    background: transparent;
   }
   :global(body.presuntinho-shake) {
     animation: presuntinho-screen-shake 420ms cubic-bezier(.36,.07,.19,.97) both;
@@ -85,6 +116,11 @@
   @keyframes fall {
     0% { transform: translateY(0) rotate(0deg); opacity: 1; }
     100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+  @keyframes heartBurst {
+    0% { transform: translate3d(0,0,0) rotate(0deg) scale(var(--scale, 1)); opacity: 1; }
+    55% { opacity: .95; }
+    100% { transform: translate3d(var(--dx, -120px), -58vh, 0) rotate(var(--spin, 720deg)) scale(.3); opacity: 0; }
   }
   @media (prefers-reduced-motion: reduce) {
     :global(.confetti-piece) {
