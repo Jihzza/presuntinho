@@ -160,8 +160,8 @@
         {#each subApps as app (app.id)}
           <li class="app">
             <span class="app-icon" aria-hidden="true">{app.icon}</span>
-            <span class="app-name">{app.name}</span>
-            <span class="app-desc">{app.description}</span>
+            <span class="app-name">{$t(`hub.app.${app.id}.name`, { default: app.name })}</span>
+            <span class="app-desc">{$t(`hub.app.${app.id}.description`, { default: app.description })}</span>
           </li>
         {/each}
       </ul>

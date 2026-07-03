@@ -1,5 +1,5 @@
 import { listHabitos, isLoggedToday, type Habit } from '../habitos';
-import { ensureAssignmentDefaults, listAssignments, type Assignment } from '../trabalhos';
+import { ensureAssignmentDefaults, listAssignments, localizedAssignment, type Assignment } from '../trabalhos';
 import { get } from 'svelte/store';
 import { t } from 'svelte-i18n';
 
@@ -90,7 +90,10 @@ export async function loadAgendaItems(): Promise<AgendaItem[]> {
   const [assignments, habits] = await Promise.all([listAssignments(), listHabitos()]);
   const todayKey = localDateKey(new Date());
 
-  const assignmentItems: AgendaItem[] = assignments.map((a) => ({
+  const translate = get(t);
+  const assignmentItems: AgendaItem[] = assignments.map((assignment) => {
+    const a = localizedAssignment(translate, assignment);
+    return {
     id: `assignment:${a.id}`,
     title: a.title,
     subtitle: `${a.cadeira ? `${a.cadeira} · ` : ''}${assignmentStatusLabel(a.status)}`,
@@ -99,7 +102,8 @@ export async function loadAgendaItems(): Promise<AgendaItem[]> {
     kind: 'assignment',
     tone: assignmentTone(a),
     status: a.status
-  }));
+    };
+  });
 
   const habitStates = await Promise.all(
     habits.map(async (h: Habit) => ({ habit: h, done: await isLoggedToday(h.id) }))

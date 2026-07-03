@@ -35,6 +35,8 @@ export interface SchoolCourse {
   extras?: SchoolUnit[];
 }
 
+type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
+
 export interface SchoolCourseLessonDetail {
   slug: string;
   title: string;
@@ -315,5 +317,99 @@ export function schoolQuizContextForSlug(quizSlug: string): { courseSlug: string
     courseSlug: match.slug,
     courseTitle: match.title,
     courseHref: `/escola/curso/${match.slug}/`
+  };
+}
+
+function trCatalog(t: TranslateFn, key: string, fallback: string): string {
+  return t(`school.catalog.${key}`, { default: fallback });
+}
+
+function localizeLesson(t: TranslateFn, unitSlug: string, lesson: SchoolLessonRef): SchoolLessonRef {
+  return {
+    ...lesson,
+    title: trCatalog(t, `units.${unitSlug}.lessons.${lesson.slug}.title`, lesson.title),
+    summary: trCatalog(t, `units.${unitSlug}.lessons.${lesson.slug}.summary`, lesson.summary),
+    quizTitle: lesson.quizTitle
+      ? trCatalog(t, `units.${unitSlug}.lessons.${lesson.slug}.quizTitle`, lesson.quizTitle)
+      : lesson.quizTitle
+  };
+}
+
+function localizeUnit(t: TranslateFn, unit: SchoolUnit): SchoolUnit {
+  return {
+    ...unit,
+    title: trCatalog(t, `units.${unit.slug}.title`, unit.title),
+    summary: trCatalog(t, `units.${unit.slug}.summary`, unit.summary),
+    lessons: unit.lessons.map((lesson) => localizeLesson(t, unit.slug, lesson))
+  };
+}
+
+export function localizeSchoolCourse(t: TranslateFn, course: SchoolCourse): SchoolCourse {
+  return {
+    ...course,
+    title: trCatalog(t, `courses.${course.slug}.title`, course.title),
+    tagline: trCatalog(t, `courses.${course.slug}.tagline`, course.tagline),
+    summary: trCatalog(t, `courses.${course.slug}.summary`, course.summary),
+    units: course.units.map((unit) => localizeUnit(t, unit)),
+    extras: course.extras?.map((unit) => localizeUnit(t, unit))
+  };
+}
+
+export function localizedSchoolCourses(t: TranslateFn): SchoolCourse[] {
+  return schoolCourses.map((course) => localizeSchoolCourse(t, course));
+}
+
+export function localizedMainSchoolCourses(t: TranslateFn): SchoolCourse[] {
+  return localizedSchoolCourses(t).filter((course) => course.type === 'primary');
+}
+
+export function localizedBusinessAdministration(t: TranslateFn): SchoolCourse {
+  return localizedSchoolCourses(t).find((course) => course.slug === 'business-administration')!;
+}
+
+export function localizedPortugueseCourse(t: TranslateFn): SchoolCourse {
+  return localizedSchoolCourses(t).find((course) => course.slug === 'portugues')!;
+}
+
+export function localizedBusinessSubjects(t: TranslateFn): SchoolUnit[] {
+  return localizedBusinessAdministration(t).units;
+}
+
+export function localizedBusinessCustomLessons(t: TranslateFn): SchoolUnit[] {
+  return localizedBusinessAdministration(t).extras ?? [];
+}
+
+export function localizedSchoolMetaForSlug(t: TranslateFn, slug: string): Pick<SchoolUnit, 'slug' | 'title' | 'icon' | 'color'> | undefined {
+  const course = localizedSchoolCourses(t).find((item) => item.slug === slug);
+  if (course) return { slug: course.slug, title: course.title, icon: course.icon, color: course.color };
+  const unit = localizedSchoolCourses(t)
+    .flatMap((item) => [...item.units, ...(item.extras ?? [])])
+    .find((item) => item.slug === slug);
+  if (unit) return { slug: unit.slug, title: unit.title, icon: unit.icon, color: unit.color };
+  const legacy = localizedSchoolCourseDetailForSlug(t, slug);
+  if (legacy) return { slug: legacy.slug, title: legacy.title, icon: legacy.icon, color: legacy.color };
+  return undefined;
+}
+
+export function localizedSchoolCourseDetailForSlug(t: TranslateFn, slug: string): SchoolCourseDetail | undefined {
+  const unit = schoolCourses
+    .flatMap((course) => [...course.units, ...(course.extras ?? [])])
+    .find((item) => item.slug === slug);
+  if (unit) return detailFromSchoolUnit(localizeUnit(t, unit));
+  const legacy = legacyCourseDetails[slug];
+  if (!legacy) return undefined;
+  return {
+    ...legacy,
+    title: trCatalog(t, `legacy.${legacy.slug}.title`, legacy.title),
+    tagline: trCatalog(t, `legacy.${legacy.slug}.tagline`, legacy.tagline),
+    description: trCatalog(t, `legacy.${legacy.slug}.description`, legacy.description),
+    lessons: legacy.lessons.map((lesson) => ({
+      ...lesson,
+      title: trCatalog(t, `legacy.${legacy.slug}.lessons.${lesson.slug}.title`, lesson.title),
+      summary: trCatalog(t, `legacy.${legacy.slug}.lessons.${lesson.slug}.summary`, lesson.summary),
+      quizTitle: lesson.quizTitle
+        ? trCatalog(t, `legacy.${legacy.slug}.lessons.${lesson.slug}.quizTitle`, lesson.quizTitle)
+        : lesson.quizTitle
+    }))
   };
 }

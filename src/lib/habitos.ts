@@ -45,6 +45,22 @@ export type NewHabitInput = Omit<HabitoRow, 'id' | 'createdAt'>;
 /** Map<date, logged> for the heatmap and quick "any log today?" checks. */
 export type HeatmapData = Record<string, boolean>;
 
+type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
+
+const SEED_HABIT_NAME_KEYS: Record<string, string> = {
+  'Exercício 30min': 'exercicio-30min',
+  'Leitura 20min': 'leitura-20min',
+  'Estudar PT': 'estudar-pt',
+  'Hidratação 2L': 'hidratacao-2l',
+  'Dormir 8h': 'dormir-8h'
+};
+
+export function localizedHabit(t: TranslateFn, habit: Habit): Habit {
+  const key = SEED_HABIT_NAME_KEYS[habit.name];
+  if (!key) return habit;
+  return { ...habit, name: t(`seed.habits.${key}.name`, { default: habit.name }) };
+}
+
 // ---------------------------------------------------------------------------
 // Date helpers (kept private — exported only as utilities used below)
 // ---------------------------------------------------------------------------

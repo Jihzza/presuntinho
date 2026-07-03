@@ -31,6 +31,7 @@
   import { db } from '$lib/state/db';
   import {
     ensureAssignmentDefaults,
+    localizedAssignment,
     type Assignment,
     type AssignmentStatus
   } from '$lib/trabalhos';
@@ -38,6 +39,7 @@
   import EmptyState from '$lib/components/EmptyState.svelte';
   import Skeleton from '$lib/components/Skeleton.svelte';
   import { subApps } from '$lib/registry';
+  import { localizedSchoolMetaForSlug } from '$lib/escola/catalog';
 
   // ---------------- State ----------------
   let assignments = $state<Assignment[]>([]);
@@ -95,6 +97,8 @@
   // task-005 will wire $t() lookups properly.
   function cursoLabel(slug: string): string {
     if (slug === 'todos') return $t('trabalhos.filters.all', { default: 'Todos' });
+    const meta = localizedSchoolMetaForSlug($t, slug);
+    if (meta) return meta.title;
     return slug
       .split('-')
       .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
@@ -108,7 +112,7 @@
   }
 
   function applyRows(rows: Assignment[]): void {
-    assignments = rows;
+    assignments = rows.map((row) => localizedAssignment($t, row));
     const cs = buildCursos(rows);
     // Preserve the user's current cursoFiltro when possible; if it
     // no longer exists in the data, fall back to 'todos' so the

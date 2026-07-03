@@ -22,6 +22,7 @@
     getStreak,
     isLoggedToday,
     logHabit,
+    localizedHabit,
     setHabitLog,
     getMonthLogs,
     getDashboardStats,
@@ -64,7 +65,7 @@
     error = null;
     try {
       const fresh = await listHabitos();
-      habits = fresh;
+      habits = fresh.map((h) => localizedHabit($t, h));
       // Resolve streak + today status + dashboard stats in parallel.
       const rows = await Promise.all(
         fresh.map((h) => Promise.all([getStreak(h.id), isLoggedToday(h.id)]))

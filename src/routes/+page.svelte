@@ -15,7 +15,7 @@
   import { db } from '$lib/state/db';
   import { xp, initStores } from '$lib/state/stores';
   import { getSession } from '$lib/auth/session';
-  import { mainSchoolCourses, schoolTotals, businessAdministration, portugueseCourse } from '$lib/escola/catalog';
+  import { localizedBusinessAdministration, localizedMainSchoolCourses, localizedPortugueseCourse, schoolTotals } from '$lib/escola/catalog';
   import { isMoodIntroAcknowledged, moodAffirmation, moodMicrocopy, readActiveMood, MOOD_META, type ActiveMood } from '$lib/mood';
   import {
     buildNotifications,
@@ -65,6 +65,9 @@
   let moodMeta = $derived(activeMood ? MOOD_META[activeMood.kind] : null);
   let moodLine = $derived(activeMood ? moodMicrocopy(activeMood.kind, charmSeed) : $t('hub.default.mood_line'));
   let moodNote = $derived(activeMood ? moodAffirmation(activeMood.kind, charmSeed) : $t('hub.default.mood_note'));
+  let mainSchoolCourses = $derived(localizedMainSchoolCourses($t));
+  let businessAdministration = $derived(localizedBusinessAdministration($t));
+  let portugueseCourse = $derived(localizedPortugueseCourse($t));
 
   function itemsForDate(date: Date): AgendaItem[] {
     const key = localDateKey(date);
@@ -276,7 +279,7 @@
         <span class="icon">🎓</span>
         <div>
           <p class="label">{$t('hub.control.school.label')}</p>
-          <h3>{businessAdministration.title} e {portugueseCourse.title}</h3>
+          <h3>{$t('hub.control.school.heading', { values: { ba: businessAdministration.title, pt: portugueseCourse.title } })}</h3>
           <p>{$t('hub.control.school.summary', { values: { courses: mainSchoolCourses.length, subjects: businessAdministration.units.length } })}</p>
         </div>
         <strong>{schoolProgress}%</strong>

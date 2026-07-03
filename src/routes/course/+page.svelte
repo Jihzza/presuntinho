@@ -8,8 +8,10 @@
     id: string;
     icon: string;
     title: string;
-    tagline: string;
-    desc: string;
+    taglineKey: string;
+    taglineDefault: string;
+    descKey: string;
+    descDefault: string;
     accent: string;
     href: string;
   }
@@ -19,8 +21,10 @@
       id: 'swot',
       icon: '🔍',
       title: 'SWOT',
-      tagline: 'Diagnóstico 2×2',
-      desc: 'Forças, fraquezas, oportunidades, ameaças. O retrato estratégico da Equivalenza: 528 lojas, 2/3 de margem, NPS 17, segmento dupe em queda.',
+      taglineKey: 'course.frameworks.swot.tagline',
+      taglineDefault: 'Diagnóstico 2×2',
+      descKey: 'course.frameworks.swot.desc',
+      descDefault: 'Forças, fraquezas, oportunidades, ameaças. O retrato estratégico da Equivalenza: 528 lojas, 2/3 de margem, NPS 17, segmento dupe em queda.',
       accent: '#10b981',
       href: '/escola/curso/equivalenza/licao/swot/'
     },
@@ -28,8 +32,10 @@
       id: 'tows',
       icon: '🎯',
       title: 'TOWS',
-      tagline: 'SWOT × estratégia',
-      desc: 'SO, WO, ST, WT — quatro tipos de estratégia que cruzam os quadrantes. A escolha que a Marta vai defender no Q5 do trabalho.',
+      taglineKey: 'course.frameworks.tows.tagline',
+      taglineDefault: 'SWOT × estratégia',
+      descKey: 'course.frameworks.tows.desc',
+      descDefault: 'SO, WO, ST, WT — quatro tipos de estratégia que cruzam os quadrantes. A escolha que a Marta vai defender no Q5 do trabalho.',
       accent: '#f59e0b',
       href: '/escola/curso/equivalenza/licao/tows/'
     },
@@ -37,8 +43,10 @@
       id: 'scqa',
       icon: '❓',
       title: 'SCQA',
-      tagline: 'Enquadrar o problema',
-      desc: 'Situation → Complication → Question → Answer. Onde a análise vira um problema de marketing formulado em 1-2 frases.',
+      taglineKey: 'course.frameworks.scqa.tagline',
+      taglineDefault: 'Enquadrar o problema',
+      descKey: 'course.frameworks.scqa.desc',
+      descDefault: 'Situation → Complication → Question → Answer. Onde a análise vira um problema de marketing formulado em 1-2 frases.',
       accent: '#3b82f6',
       href: '/escola/curso/equivalenza/licao/problem/'
     },
@@ -46,8 +54,10 @@
       id: 'persona',
       icon: '👥',
       title: 'Buyer Persona',
-      tagline: '3 camadas',
-      desc: 'Demografia, psicografia, comportamento. Marta, 27 — The Discerning Explorer. A persona que ancora a recomendação estratégica.',
+      taglineKey: 'course.frameworks.persona.tagline',
+      taglineDefault: '3 camadas',
+      descKey: 'course.frameworks.persona.desc',
+      descDefault: 'Demografia, psicografia, comportamento. Marta, 27 — The Discerning Explorer. A persona que ancora a recomendação estratégica.',
       accent: '#ec4899',
       href: '/escola/curso/equivalenza/licao/persona/'
     }
@@ -80,8 +90,8 @@
         <div class="fw-icon" aria-hidden="true">{fw.icon}</div>
         <div class="fw-body">
           <h2>{fw.title}</h2>
-          <p class="fw-tagline">{fw.tagline}</p>
-          <p class="fw-desc">{fw.desc}</p>
+          <p class="fw-tagline">{$t(fw.taglineKey, { default: fw.taglineDefault })}</p>
+          <p class="fw-desc">{$t(fw.descKey, { default: fw.descDefault })}</p>
           <span class="fw-cta">{$t('routes.course.abrir_licao', { default: 'Abrir lição →' })}</span>
         </div>
       </a>

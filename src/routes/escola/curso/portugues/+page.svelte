@@ -18,7 +18,9 @@
    */
 
   import { onMount } from 'svelte';
-    import { t } from 'svelte-i18n';
+    import { locale, t } from 'svelte-i18n';
+
+  const dateLocale = $derived($locale || 'pt-PT');
 
     // ---------------------------------------------------------------------
     // Types — minimal mirror of curso.json
@@ -540,7 +542,7 @@
     <section class="completion" aria-label="{$t('a11y.aria.conclusao_do_curso', { default: 'Conclusão do curso' })}">
       <h2>{$t('escola.curso.portugues.conclusion.title', { default: '🏁 Conclusão' })}</h2>
       {#if isComplete}
-        <p class="completion-msg">{$t('escola.curso.pt.completedAt', { values: { date: new Date(progress.completedAt ?? 0).toLocaleString('pt-PT') }, default: '✅ Curso concluído a {date}.' })}</p>
+        <p class="completion-msg">{$t('escola.curso.pt.completedAt', { values: { date: new Date(progress.completedAt ?? 0).toLocaleString(dateLocale) }, default: '✅ Curso concluído a {date}.' })}</p>
         <button
           type="button"
           class="mark-btn"
@@ -552,9 +554,9 @@
       {:else}
         <p>
           {#if allStudied}
-            Todas as secções estudadas — bom trabalho! Marca como concluído quando estiveres pronta.
+            {$t('escola.curso.pt.all_studied_prompt', { default: 'Todas as secções estudadas — bom trabalho! Marca como concluído quando estiveres pronta.' })}
           {:else}
-            Faltam {totalSections - studiedCount} secção(ões) por estudar.
+            {$t('escola.curso.pt.remaining_sections', { values: { count: totalSections - studiedCount }, default: 'Faltam {count} secção(ões) por estudar.' })}
           {/if}
         </p>
         <button

@@ -2,14 +2,14 @@
   import { page } from '$app/state';
   import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
-  import { schoolCourseDetailForSlug, type SchoolCourseDetail, type SchoolCourseLessonDetail } from '$lib/escola/catalog';
+  import { localizedSchoolCourseDetailForSlug, type SchoolCourseDetail, type SchoolCourseLessonDetail } from '$lib/escola/catalog';
 
   // Course detail. Phase 4 ships with one course (Equivalenza) hardcoded
   // here. When a 2nd course ships, move this into static/courses.json
   // and fetch it; until then the inline catalogue keeps the route simple.
 
   let courseSlug = $derived(page.params.slug ?? '');
-  let course = $derived<SchoolCourseDetail | undefined>(schoolCourseDetailForSlug(courseSlug));
+  let course = $derived<SchoolCourseDetail | undefined>(localizedSchoolCourseDetailForSlug($t, courseSlug));
   let loadError = $state<string | null>(null);
 
   onMount(() => {

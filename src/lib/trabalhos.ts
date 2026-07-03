@@ -42,6 +42,18 @@ export type Assignment = AssignmentRow;
 /** Lifecycle states — mirrors `AssignmentRow['status']`. */
 export type AssignmentStatus = AssignmentRow['status'];
 
+type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
+
+export function localizedAssignment(t: TranslateFn, assignment: Assignment): Assignment {
+  if (!/^a\d+$/.test(assignment.id)) return assignment;
+  return {
+    ...assignment,
+    title: t(`seed.assignments.${assignment.id}.title`, { default: assignment.title }),
+    description: t(`seed.assignments.${assignment.id}.description`, { default: assignment.description }),
+    cadeira: t(`seed.assignments.${assignment.id}.cadeira`, { default: assignment.cadeira })
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Seeding
 // ---------------------------------------------------------------------------

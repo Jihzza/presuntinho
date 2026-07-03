@@ -1,8 +1,12 @@
 <script lang="ts">
   import { t } from 'svelte-i18n';
-  import { businessAdministration, businessCustomLessons, businessSubjects } from '$lib/escola/catalog';
+  import { localizedBusinessAdministration, localizedBusinessCustomLessons, localizedBusinessSubjects } from '$lib/escola/catalog';
 
   function quizCount(unit: { lessons: Array<{ quizSlug?: string }> }) { return unit.lessons.filter((lesson) => Boolean(lesson.quizSlug)).length; }
+
+  let businessAdministration = $derived(localizedBusinessAdministration($t));
+  let businessSubjects = $derived(localizedBusinessSubjects($t));
+  let businessCustomLessons = $derived(localizedBusinessCustomLessons($t));
 </script>
 
 <svelte:head>

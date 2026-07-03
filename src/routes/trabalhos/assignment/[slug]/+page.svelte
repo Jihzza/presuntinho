@@ -22,12 +22,14 @@
   import { liveQuery, type Subscription } from 'dexie';
   import { db } from '$lib/state/db';
   import {
+    localizedAssignment,
     setAssignmentStatus,
     type Assignment,
     type AssignmentStatus
   } from '$lib/trabalhos';
   import Countdown from '$lib/components/Countdown.svelte';
   import { showToast } from '$lib/components/events';
+  import { localizedSchoolMetaForSlug } from '$lib/escola/catalog';
 
   let assignment = $state<Assignment | null>(null);
   let loading = $state(true);
@@ -48,6 +50,8 @@
 
   // Pretty label for the curso slug.
   function cursoLabel(slug: string): string {
+    const meta = localizedSchoolMetaForSlug($t, slug);
+    if (meta) return meta.title;
     return slug
       .split('-')
       .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
@@ -81,7 +85,7 @@
           assignment = null;
           notFound = true;
         } else {
-          assignment = row;
+          assignment = localizedAssignment($t, row);
           notFound = false;
         }
         loading = false;

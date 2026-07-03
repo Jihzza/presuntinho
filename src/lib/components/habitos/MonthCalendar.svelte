@@ -87,7 +87,11 @@
     });
   });
 
-  const weekdayLabels: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  let weekdayLabels = $derived.by(() => {
+    const formatter = new Intl.DateTimeFormat(dateLocale, { weekday: 'short' });
+    // 2024-01-01 is a Monday; keep the app's existing Monday-first habit grid.
+    return Array.from({ length: 7 }, (_, i) => formatter.format(new Date(2024, 0, 1 + i)));
+  });
 
   function cellFill(logged: boolean, inMonth: boolean): string {
     if (!inMonth) return 'transparent';

@@ -1,14 +1,19 @@
 <script lang="ts">
   import { t } from 'svelte-i18n';
-  import { businessAdministration, businessCustomLessons, businessSubjects, mainSchoolCourses } from '$lib/escola/catalog';
+  import { localizedBusinessAdministration, localizedBusinessCustomLessons, localizedBusinessSubjects, localizedMainSchoolCourses } from '$lib/escola/catalog';
 
   function lessonCount(unit: { lessons: unknown[] }) { return unit.lessons.length; }
   function quizCount(unit: { lessons: Array<{ quizSlug?: string }> }) { return unit.lessons.filter((lesson) => Boolean(lesson.quizSlug)).length; }
+
+  let mainSchoolCourses = $derived(localizedMainSchoolCourses($t));
+  let businessAdministration = $derived(localizedBusinessAdministration($t));
+  let businessSubjects = $derived(localizedBusinessSubjects($t));
+  let businessCustomLessons = $derived(localizedBusinessCustomLessons($t));
 </script>
 
 <svelte:head>
   <title>{$t('routes.escola.title', { default: 'Escola · Cursos' })} · Presuntinho</title>
-  <meta name="description" content="Cursos, cadeiras, aulas, trabalhos e materiais da Fatma" />
+  <meta name="description" content={$t('school.seo.description', { default: 'Cursos, cadeiras, aulas, trabalhos e materiais da Fatma' })} />
 </svelte:head>
 
 <div class="escola">
