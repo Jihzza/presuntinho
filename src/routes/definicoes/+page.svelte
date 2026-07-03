@@ -620,8 +620,10 @@
   let hermesStatus = $state<'ok' | 'fail' | null>(null);
 
   onMount(() => {
+    // Only show a manual override in the fields — the zero-config default
+    // (same-origin proxy) is implicit and leaves them empty.
     const cfg = getHermesConfig();
-    if (cfg) {
+    if (cfg && cfg.key) {
       hermesUrl = cfg.url;
       hermesKey = cfg.key;
     }
@@ -640,7 +642,9 @@
     try {
       const url = hermesUrl.trim().replace(/\/+$/, '');
       const key = hermesKey.trim();
-      const ok = url && key ? await checkHermesHealth({ url, key }) : false;
+      // Empty fields test the built-in same-origin proxy (the default path).
+      const cfg = url && key ? { url, key } : getHermesConfig();
+      const ok = cfg ? await checkHermesHealth(cfg) : false;
       hermesStatus = ok ? 'ok' : 'fail';
     } finally {
       hermesTesting = false;

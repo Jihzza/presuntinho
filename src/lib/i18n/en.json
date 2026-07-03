@@ -3297,7 +3297,7 @@
   "settings.clear_data": "Clear local data",
   "settings.data": "Data",
   "settings.export": "Export data (JSON)",
-  "settings.hermes.hint": "Connect the Agent chat to Hermes. The tunnel URL and key are stored on this device only.",
+  "settings.hermes.hint": "The agent is connected by default — no setup needed. Fill these in only to use your own gateway (stored on this device only).",
   "settings.hermes.key_label": "API key",
   "settings.hermes.save": "Save",
   "settings.hermes.saved": "Hermes connection saved",

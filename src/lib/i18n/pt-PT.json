@@ -3297,7 +3297,7 @@
   "settings.clear_data": "Limpar dados locais",
   "settings.data": "Dados",
   "settings.export": "Exportar dados (JSON)",
-  "settings.hermes.hint": "Liga o chat do Agente ao Hermes. O URL do túnel e a chave ficam guardados só neste dispositivo.",
+  "settings.hermes.hint": "O agente já vem ligado por defeito — não precisas de configurar nada. Preenche só se quiseres usar um gateway próprio (guardado apenas neste dispositivo).",
   "settings.hermes.key_label": "Chave de API",
   "settings.hermes.save": "Guardar",
   "settings.hermes.saved": "Ligação ao Hermes guardada",

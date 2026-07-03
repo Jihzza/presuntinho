@@ -23,13 +23,19 @@ export interface HermesConfig {
 const URL_KEY = 'presuntinho-hermes-url';
 const KEY_KEY = 'presuntinho-hermes-key';
 
+// Default: same-origin Netlify edge proxy (netlify/edge-functions/
+// hermes-proxy.ts) which injects the API key server-side. Works on every
+// device with zero configuration; the /definicoes card remains as a
+// manual override for talking to a gateway directly.
+const DEFAULT_PROXY_URL = '/api/agent';
+
 export function getHermesConfig(): HermesConfig | null {
   if (typeof localStorage === 'undefined') return null;
   try {
     const url = (localStorage.getItem(URL_KEY) ?? '').trim().replace(/\/+$/, '');
     const key = (localStorage.getItem(KEY_KEY) ?? '').trim();
-    if (!url || !key) return null;
-    return { url, key };
+    if (url && key) return { url, key };
+    return { url: DEFAULT_PROXY_URL, key: '' };
   } catch {
     return null;
   }
@@ -52,10 +58,10 @@ export function hermesSessionId(profile: ProfileId): string {
 }
 
 function authHeaders(cfg: HermesConfig): Record<string, string> {
-  return {
-    Authorization: `Bearer ${cfg.key}`,
-    'Content-Type': 'application/json'
-  };
+  // No Authorization on the same-origin proxy — the edge function adds it.
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (cfg.key) headers.Authorization = `Bearer ${cfg.key}`;
+  return headers;
 }
 
 export class HermesError extends Error {
@@ -103,7 +109,9 @@ export async function deleteHermesSession(cfg: HermesConfig, sessionId: string):
 
 export async function checkHermesHealth(cfg: HermesConfig): Promise<boolean> {
   try {
-    const res = await fetch(`${cfg.url}/health`, { headers: { Authorization: `Bearer ${cfg.key}` } });
+    const headers: Record<string, string> = {};
+    if (cfg.key) headers.Authorization = `Bearer ${cfg.key}`;
+    const res = await fetch(`${cfg.url}/health`, { headers });
     return res.ok;
   } catch {
     return false;

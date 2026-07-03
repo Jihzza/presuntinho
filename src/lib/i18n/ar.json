@@ -3297,7 +3297,7 @@
   "settings.clear_data": "مسح البيانات المحلية",
   "settings.data": "البيانات",
   "settings.export": "تصدير البيانات (JSON)",
-  "settings.hermes.hint": "اربط دردشة الوكيل بـ Hermes. يُحفظ عنوان النفق والمفتاح على هذا الجهاز فقط.",
+  "settings.hermes.hint": "الوكيل متصل افتراضيًا — لا حاجة لأي إعداد. املأ الحقول فقط لاستخدام بوابة خاصة بك (تُحفظ على هذا الجهاز فقط).",
   "settings.hermes.key_label": "مفتاح API",
   "settings.hermes.save": "حفظ",
   "settings.hermes.saved": "تم حفظ اتصال Hermes",

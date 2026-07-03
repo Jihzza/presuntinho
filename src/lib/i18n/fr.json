@@ -3297,7 +3297,7 @@
   "settings.clear_data": "Effacer les données locales",
   "settings.data": "Données",
   "settings.export": "Exporter les données (JSON)",
-  "settings.hermes.hint": "Connecte le chat de l'Agent à Hermes. L'URL du tunnel et la clé restent sur cet appareil uniquement.",
+  "settings.hermes.hint": "L'agent est connecté par défaut — aucune configuration nécessaire. Remplis ces champs seulement pour utiliser ta propre passerelle (stockée sur cet appareil uniquement).",
   "settings.hermes.key_label": "Clé API",
   "settings.hermes.save": "Enregistrer",
   "settings.hermes.saved": "Connexion Hermes enregistrée",
