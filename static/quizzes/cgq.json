@@ -1,0 +1,57 @@
+{
+  "id": "cgq",
+  "title": "Quiz: Contabilidade de Gestão",
+  "description": "Testa os conceitos de sistemas de custeio, orçamentos, balanced scorecard e análise de desvios.",
+  "questions": [
+    {
+      "q": "No custeio variável, os custos fixos são tratados como:",
+      "opts": [
+        "Custo do produto",
+        "Despesa do período",
+        "Investimento",
+        "Capital próprio"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O orçamento Base Zero (ZBB) implica:",
+      "opts": [
+        "Partir do ano anterior e ajustar percentualmente",
+        "Justificar cada verba de raiz a cada período",
+        "Nunca alterar o orçamento inicial",
+        "Só despesas correntes"
+      ],
+      "a": 1
+    },
+    {
+      "q": "O Balanced Scorecard tem quantas perspetivas?",
+      "opts": [
+        "2",
+        "3",
+        "4",
+        "7"
+      ],
+      "a": 2
+    },
+    {
+      "q": "Desvio de eficiência da mão-de-obra = (Horas reais − Horas padrão) × ?:",
+      "opts": [
+        "Preço padrão de venda",
+        "Taxa padrão horária",
+        "Custo total da empresa",
+        "Preço da matéria-prima"
+      ],
+      "a": 1
+    },
+    {
+      "q": "Lag indicators medem:",
+      "opts": [
+        "O que vai produzir o resultado",
+        "Resultados passados",
+        "Apenas a satisfação do cliente",
+        "Sempre em tempo real"
+      ],
+      "a": 1
+    }
+  ]
+}

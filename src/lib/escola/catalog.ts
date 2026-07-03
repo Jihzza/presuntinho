@@ -134,6 +134,19 @@ const businessUnits: SchoolUnit[] = [
       { slug: '02-mix-global-4ps', title: 'Mix Global 4Ps', summary: 'Produto, preço, praça e promoção.', quizSlug: 'mkq', estMinutes: 10, activityType: 'quiz' },
       { slug: '03-estrategias-entrada-mercado', title: 'Estratégias de Entrada', summary: 'Exportação, JV, subsidiárias e FDI.', quizSlug: 'mkq', estMinutes: 10, activityType: 'test' }
     ]
+  },
+  {
+    slug: 'contabilidade-gestao',
+    title: 'Contabilidade de Gestão',
+    icon: '📐',
+    color: '#1d4ed8',
+    summary: 'Sistemas de custeio, orçamentos, Balanced Scorecard e análise de desvios.',
+    lessons: [
+      { slug: 'custos', title: 'Sistemas de Custeio', summary: 'Custos directos, indirectos, custeio integral, variável e ABC.', quizSlug: 'cgq', quizTitle: 'Quiz: Contabilidade de Gestão', estMinutes: 9, activityType: 'theory' },
+      { slug: 'orcamentos', title: 'Orçamentos e Controlo Orçamental', summary: 'Orçamento empresarial, controlo orçamental e orçamento base zero.', quizSlug: 'cgq', quizTitle: 'Quiz: Contabilidade de Gestão', estMinutes: 9, activityType: 'theory' },
+      { slug: 'balanced-scorecard', title: 'Balanced Scorecard', summary: 'Perspectivas financeira, cliente, processos internos e aprendizagem.', quizSlug: 'cgq', quizTitle: 'Quiz: Contabilidade de Gestão', estMinutes: 9, activityType: 'quiz' },
+      { slug: 'analise-desvios', title: 'Análise de Desvios', summary: 'Desvios de preço, quantidade, eficiência e interpretação de performance.', quizSlug: 'cgq', quizTitle: 'Quiz: Contabilidade de Gestão', estMinutes: 9, activityType: 'test' }
+    ]
   }
 ];
 

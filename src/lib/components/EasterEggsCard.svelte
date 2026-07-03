@@ -27,12 +27,12 @@
   </header>
   <h3>{secret.name}</h3>
   <p class="hint">💡 {secret.hint}</p>
-  <p class="reward">{unlocked ? secret.reward : 'Reward: ████████ (locked)'}</p>
+  <p class="reward">{unlocked ? secret.reward : $t('easterEggs.reward_locked', { default: 'Reward: ████████ (locked)' })}</p>
   {#if discoveredAt}
-    <p class="discovered">📅 Descoberto: {formatDate(discoveredAt)}</p>
+    <p class="discovered">{$t('easterEggs.discovered_at', { values: { date: formatDate(discoveredAt) }, default: `📅 Descoberto: ${formatDate(discoveredAt)}` })}</p>
   {/if}
   {#if secret.badge}
-    <p class="badge-line">🏷️ Badge: <code>{secret.badge}</code></p>
+    <p class="badge-line">{$t('easterEggs.badge_label', { default: '🏷️ Badge:' })} <code>{secret.badge}</code></p>
   {/if}
 </article>
 

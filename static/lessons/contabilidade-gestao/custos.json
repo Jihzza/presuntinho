@@ -1,0 +1,38 @@
+{
+  "id": "custos",
+  "courseSlug": "contabilidade-gestao",
+  "title": "Sistemas de Custeio",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "Sistemas de Custeio — quanto custa cada produto ou serviço" },
+    { "type": "p", "text": "A contabilidade de gestão precisa de respostas que a contabilidade financeira não dá: quanto custa produzir este produto? Quanto custa servir este cliente? Qual a margem real por linha? Os sistemas de custeio existem para atribuir custos indiretos (overheads) aos objetos de custo (produtos, serviços, clientes)." },
+    { "type": "h3", "text": "Custos diretos vs indiretos" },
+    { "type": "ul", "items": [
+      "Custos diretos: atribuídos sem ambiguidade ao objeto (matéria-prima, mão-de-obra direta).",
+      "Custos indiretos: precisam de um critério de imputação (energia, supervisão, limpeza, administrativo)."
+    ] },
+    { "type": "h3", "text": "Custeio integral (full costing)" },
+    { "type": "p", "text": "Atribui TODOS os custos (fixos + variáveis, diretos + indiretos) aos produtos. É o método exigido pelas IFRS para inventários. Útil para reporting externo, mas pode distorcer decisões internas." },
+    { "type": "h3", "text": "Custeio variável (variable / direct costing)" },
+    { "type": "p", "text": "Atribui apenas os custos variáveis aos produtos; os custos fixos são tratados como despesa do período. Útil para decisões de curto prazo (pricing, mix de produtos, aceitar ou recusar encomendas), porque mostra a contribuição marginal real." },
+    { "type": "h3", "text": "Custeio baseado em atividades (ABC)" },
+    { "type": "p", "text": "Activity-Based Costing imputa os custos indiretos através de atividades (setup, inspeção, transporte, atendimento) e respetivos cost drivers. É mais preciso quando há grande diversidade de produtos e os overheads são elevados, mas mais caro de implementar." },
+    { "type": "h3", "text": "Como aplicar" },
+    { "type": "ul", "items": [
+      "Define primeiro o objeto de custo (produto? cliente? canal?).",
+      "Para decisões de curto prazo usa variável; para inventários usa integral.",
+      "ABC faz sentido quando os overheads superam 20-25% do total.",
+      "Não confundas lucro com margem de contribuição: a margem não paga os fixos."
+    ] }
+  ],
+  "keyPoints": [
+    "Custos diretos atribuíveis sem ambiguidade; indiretos precisam de critério.",
+    "Custeio integral: todos os custos (incluindo fixos) vão para o produto.",
+    "Custeio variável: só custos variáveis no produto; fixos são despesa do período.",
+    "ABC atribui overheads via atividades e cost drivers — mais preciso em contextos complexos."
+  ],
+  "quizSlug": "cgq",
+  "nextLesson": "orcamentos",
+  "prevLesson": null
+}

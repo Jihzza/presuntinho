@@ -1,0 +1,50 @@
+{
+  "id": "orcamentos",
+  "courseSlug": "contabilidade-gestao",
+  "title": "Orçamentos e Controlo Orçamental",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "Orçamentos — traduzir estratégia em números" },
+    { "type": "p", "text": "Um orçamento é um plano financeiro, normalmente anual, que expressa em valores monetários as receitas, custos, investimentos e financiamentos esperados. Funciona como ponte entre o plano estratégico e a execução operacional." },
+    { "type": "h3", "text": "Tipos de orçamento" },
+    { "type": "ul", "items": [
+      "Orçamento de vendas: ponto de partida em muitas empresas.",
+      "Orçamento de produção: dependente das vendas e do stock desejado.",
+      "Orçamento de compras e mão-de-obra direta.",
+      "Orçamento de overheads (custos indiretos de produção e estrutura).",
+      "Orçamento de investimentos (CAPEX) e financiamentos.",
+      "Demonstração de resultados e balanço previsionais (orçamentos financeiros)."
+    ] },
+    { "type": "h3", "text": "Tipos de abordagem" },
+    { "type": "ul", "items": [
+      "Incremental: parte do ano anterior e ajusta percentualmente.",
+      "Base zero (ZBB): cada verba tem de ser justificada de raiz a cada período.",
+      "Por atividades (ABB): orçamento pelas atividades que geram valor.",
+      "Rolling forecast: revisões contínuas (12 meses rolantes) em vez de fixar 1 ano."
+    ] },
+    { "type": "h3", "text": "Cuidados e limites" },
+    { "type": "ul", "items": [
+      "Orçamento não é estratégia — é a tradução numérica da estratégia.",
+      "Pode gerar comportamento disfunciona l (gastar o orçamento para não o perder).",
+      "Cuidado com a 'lei de Goodhart': quando uma métrica vira objetivo, deixa de ser boa medida.",
+      "Comparar orçamento vs realizado é essencial, mas o realizado sozinho nunca conta a história toda."
+    ] },
+    { "type": "h3", "text": "Como aplicar" },
+    { "type": "ul", "items": [
+      "Começa pelo orçamento de vendas e testa 2-3 cenários (base, otimista, pessimista).",
+      "Envolve os responsáveis de cada área na construção — ownership.",
+      "Faz revisões trimestrais (ou mensais) e não te agarres ao número inicial.",
+      "Combina orçamento anual com rolling forecast para mais flexibilidade."
+    ] }
+  ],
+  "keyPoints": [
+    "Orçamento = plano financeiro anual (receitas, custos, investimentos, caixa).",
+    "Tipos: incremental, base zero, por atividades, rolling forecast.",
+    "Cuidado: orçamento mal desenhado gera comportamentos disfuncionais.",
+    "Cruzar orçamento + realizado permite análise de desvios."
+  ],
+  "quizSlug": "cgq",
+  "nextLesson": "balanced-scorecard",
+  "prevLesson": "custos"
+}

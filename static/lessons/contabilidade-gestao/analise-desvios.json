@@ -1,0 +1,53 @@
+{
+  "id": "analise-desvios",
+  "courseSlug": "contabilidade-gestao",
+  "title": "Análise de Desvios (Variance Analysis)",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "Análise de Desvios — comparar o real com o previsto" },
+    { "type": "p", "text": "A análise de desvios compara os resultados reais com o orçamento ou padrão e explica PORQUÊ das diferenças. Não basta dizer 'gastámos mais'; importa perceber se a causa é preço, volume, eficiência, mix ou estrutura." },
+    { "type": "h3", "text": "Desvios de matérias-primas" },
+    { "type": "ul", "items": [
+      "Desvio de preço: (Preço real − Preço padrão) × Quantidade real.",
+      "Desvio de quantidade (eficiência): (Quantidade real − Quantidade padrão) × Preço padrão.",
+      "Útil para distinguir culpa do fornecedor (preço) de culpa da produção (eficiência)."
+    ] },
+    { "type": "h3", "text": "Desvios de mão-de-obra" },
+    { "type": "ul", "items": [
+      "Desvio de taxa horária: (Taxa real − Taxa padrão) × Horas reais.",
+      "Desvio de eficiência: (Horas reais − Horas padrão) × Taxa padrão.",
+      "Mostra se pagámos mais caro ou se fomos mais/menos produtivos."
+    ] },
+    { "type": "h3", "text": "Desvios de vendas" },
+    { "type": "ul", "items": [
+      "Desvio de volume de vendas: (Volume real − Volume previsto) × Margem padrão.",
+      "Desvio de preço de venda: (Preço real − Preço padrão) × Volume real.",
+      "Desvio de mix: efeito de vender produtos diferentes do previsto.",
+      "Desvio de market share: quanto se explica por quota vs mercado global."
+    ] },
+    { "type": "h3", "text": "Cuidados com a análise de desvios" },
+    { "type": "ul", "items": [
+      "Desvios pequenos e estáveis podem indicar problema grande emergente — não olhes só para os grandes.",
+      "Investigar desvios com base na materialidade, não em todos.",
+      "Padrões devem ser realistas e atualizados com regularidade.",
+      "Desvios explicam o passado — para o futuro, age sobre as causas."
+    ] },
+    { "type": "h3", "text": "Como aplicar" },
+    { "type": "ul", "items": [
+      "Calcula sempre preço × quantidade separadamente.",
+      "Apresenta os desvios em formato cascata (waterfall) para mostrar contribuição.",
+      "Liga desvios a ações concretas (compras, produção, vendas).",
+      "Não castigue quem reporta desvios honestamente — recompensa a transparência."
+    ] }
+  ],
+  "keyPoints": [
+    "Desvio = Real − Padrão (ou Real − Orçamento).",
+    "Decompor sempre: preço vs quantidade; volume vs mix.",
+    "Investigar com base na materialidade e tendência, não só no valor absoluto.",
+    "Desvios explicam o passado; ações sobre as causas preparam o futuro."
+  ],
+  "quizSlug": "cgq",
+  "nextLesson": null,
+  "prevLesson": "balanced-scorecard"
+}

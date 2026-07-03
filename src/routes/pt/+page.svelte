@@ -195,7 +195,7 @@
 <div class="pt">
   <header class="pt-head">
     <p class="breadcrumb">
-      <a href="/">Hub</a>
+      <a href="/">{$t('pt.breadcrumb.hub', { default: 'Hub' })}</a>
       <span class="sep">›</span>
       <span>PT</span>
     </p>

@@ -1,0 +1,42 @@
+{
+  "id": "balanced-scorecard",
+  "courseSlug": "contabilidade-gestao",
+  "title": "Balanced Scorecard (Kaplan & Norton)",
+  "audio": "",
+  "audioLabel": "Leitura guiada (sem áudio ainda)",
+  "sections": [
+    { "type": "h2", "text": "Balanced Scorecard — estratégia em 4 perspetivas" },
+    { "type": "p", "text": "O Balanced Scorecard (BSC), criado por Robert Kaplan e David Norton nos anos 90, traduz a visão e estratégia da empresa num conjunto coerente de indicadores de desempenho em 4 perspetivas, equilibrando o curto com o longo prazo." },
+    { "type": "h3", "text": "As 4 perspetivas" },
+    { "type": "ul", "items": [
+      "Financeira: o que os acionistas veem (ROE, ROIC, cash flow, EBITDA).",
+      "Clientes: como nos veem os clientes (satisfação, retenção, quota de mercado, NPS).",
+      "Processos internos: em que processos temos de ser excelentes (qualidade, tempo de ciclo, defeitos).",
+      "Aprendizagem e crescimento: como sustentamos a capacidade de mudar (competências, cultura, inovação, sistemas)."
+    ] },
+    { "type": "h3", "text": "Relações de causa-efeito" },
+    { "type": "p", "text": "Indicadores de aprendizagem (ex.: formação, motivação) → melhoram processos internos (ex.: qualidade) → melhoram resultados com clientes (ex.: retenção) → melhoram indicadores financeiros (ex.: margem). O BSC deve contar esta cadeia de forma lógica." },
+    { "type": "h3", "text": "Indicadores de resultado vs de execução" },
+    { "type": "ul", "items": [
+      "Lag indicators (resultado): medem o passado (ex.: receita, quota, lucro).",
+      "Lead indicators (execução): medem o que vai produzir o resultado (ex.: horas de formação, tempo médio de resposta, taxa de defeitos).",
+      "Um BSC equilibrado combina os dois tipos."
+    ] },
+    { "type": "h3", "text": "Como aplicar" },
+    { "type": "ul", "items": [
+      "Não ter mais de 4-6 objetivos por perspetiva.",
+      "Cada objetivo: 1-2 KPIs mensuráveis e metas SMART.",
+      "Liga explicitamente cada iniciativa estratégica a um objetivo do BSC.",
+      "Revê e comunica trimestralmente — o BSC é ferramenta de gestão, não slide bonito."
+    ] }
+  ],
+  "keyPoints": [
+    "BSC tem 4 perspetivas: financeira, clientes, processos internos, aprendizagem.",
+    "Combina lag indicators (resultado) com lead indicators (execução).",
+    "Mostra relações de causa-efeito entre perspetivas.",
+    "Traduz visão e estratégia em objetivos e KPIs mensuráveis."
+  ],
+  "quizSlug": "cgq",
+  "nextLesson": "analise-desvios",
+  "prevLesson": "orcamentos"
+}
