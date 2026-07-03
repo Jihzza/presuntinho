@@ -18,6 +18,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
+  import { t } from 'svelte-i18n';
   import { liveQuery, type Subscription } from 'dexie';
   import { db } from '$lib/state/db';
   import {
@@ -37,10 +38,10 @@
   // Pretty label for the status enum (PT-only for the MVP).
   function statusLabel(s: AssignmentStatus): string {
     switch (s) {
-      case 'pending':     return 'Por começar';
-      case 'in_progress': return 'Em curso';
-      case 'submitted':   return 'Entregue';
-      case 'graded':      return 'Avaliado';
+      case 'pending':     return $t('trabalhos.status.pending', { default: 'Por começar' });
+      case 'in_progress': return $t('trabalhos.status.in_progress', { default: 'Em curso' });
+      case 'submitted':   return $t('trabalhos.status.submitted', { default: 'Entregue' });
+      case 'graded':      return $t('trabalhos.status.graded', { default: 'Avaliado' });
     }
   }
 
@@ -67,7 +68,7 @@
   onMount(() => {
     const id = $page.params.slug;
     if (!id) {
-      error = 'Trabalho não especificado.';
+      error = $t('trabalhos.assignment.not_specified', { default: 'Trabalho não especificado.' });
       loading = false;
       return;
     }
@@ -86,7 +87,7 @@
       },
       error: (e: unknown) => {
         console.error('[trabalhos/assignment] liveQuery failed', e);
-        error = e instanceof Error ? e.message : 'Erro a carregar trabalho';
+        error = e instanceof Error ? e.message : $t('trabalhos.assignment.load_error', { default: 'Erro a carregar trabalho' });
         loading = false;
       }
     });
@@ -104,11 +105,11 @@
       const updated = await setAssignmentStatus(assignment.id, 'in_progress');
       if (updated) {
         assignment = updated;
-        showToast('Marcado como em curso');
+        showToast($t('trabalhos.toast.in_progress', { default: 'Marcado como em curso' }));
       }
     } catch (e) {
       console.error('[trabalhos] setAssignmentStatus failed', e);
-      showToast('Erro a atualizar estado');
+      showToast($t('trabalhos.toast.update_error', { default: 'Erro a atualizar estado' }));
     } finally {
       busy = false;
     }
@@ -121,11 +122,11 @@
       const updated = await setAssignmentStatus(assignment.id, 'submitted');
       if (updated) {
         assignment = updated;
-        showToast('Trabalho entregue ✓');
+        showToast($t('trabalhos.toast.submitted', { default: 'Trabalho entregue ✓' }));
       }
     } catch (e) {
       console.error('[trabalhos] setAssignmentStatus failed', e);
-      showToast('Erro a entregar trabalho');
+      showToast($t('trabalhos.toast.submit_error', { default: 'Erro a entregar trabalho' }));
     } finally {
       busy = false;
     }
@@ -133,10 +134,10 @@
 
   // ---- SEO ----
   let pageTitle = $derived(
-    assignment ? `${assignment.title} · Trabalhos` : 'Trabalho · Trabalhos'
+    assignment ? `${assignment.title} · ${$t('trabalhos.crumbs.current', { default: 'Trabalhos' })}` : $t('trabalhos.assignment.title_fallback', { default: 'Trabalho · Trabalhos' })
   );
   let metaDescription = $derived(
-    assignment?.description?.slice(0, 160) || 'Detalhe do trabalho'
+    assignment?.description?.slice(0, 160) || $t('trabalhos.assignment.meta.description', { default: 'Detalhe do trabalho' })
   );
 </script>
 
@@ -151,37 +152,37 @@
 </svelte:head>
 
 <div class="detail">
-  <nav class="crumbs" aria-label="Caminho de navegação">
-    <a href="/">← Hub</a>
+  <nav class="crumbs" aria-label={$t('trabalhos.crumbs.aria', { default: 'Caminho de navegação' })}>
+    <a href="/">{$t('trabalhos.crumbs.home', { default: '← Hub' })}</a>
     <span aria-hidden="true">/</span>
-    <a href="/trabalhos/">← Trabalhos</a>
+    <a href="/trabalhos/">{$t('trabalhos.assignment.breadcrumb.home', { default: '← Trabalhos' })}</a>
     <span aria-hidden="true">/</span>
     <span aria-current="page">{$page.params.slug ?? '...'}</span>
   </nav>
 
   {#if loading}
-    <p class="state">A carregar trabalho…</p>
+    <p class="state">{$t('trabalhos.assignment.loading', { default: 'A carregar trabalho…' })}</p>
   {:else if notFound}
     <div class="state notfound" role="alert">
-      <h1>404 — Trabalho não encontrado</h1>
+      <h1>{$t('trabalhos.assignment.not_found.title', { default: '404 — Trabalho não encontrado' })}</h1>
       <p>
-        Não existe nenhum trabalho com o identificador
+        {$t('trabalhos.assignment.not_found.missing_id', { default: 'Não existe nenhum trabalho com o identificador' })}
         <code>{$page.params.slug}</code>.
       </p>
-      <p>Pode ter sido removido, ou o link está errado.</p>
-      <a class="back-link" href="/trabalhos/">← Voltar à lista de trabalhos</a>
+      <p>{$t('trabalhos.assignment.not_found.reason', { default: 'Pode ter sido removido, ou o link está errado.' })}</p>
+      <a class="back-link" href="/trabalhos/">{$t('trabalhos.assignment.back_to_list', { default: '← Voltar à lista de trabalhos' })}</a>
     </div>
   {:else if error || !assignment}
     <div class="state error" role="alert">
-      <p>⚠️ {error ?? 'Trabalho desconhecido.'}</p>
-      <a class="back-link" href="/trabalhos/">← Voltar à lista de trabalhos</a>
+      <p>⚠️ {error ?? $t('trabalhos.assignment.unknown', { default: 'Trabalho desconhecido.' })}</p>
+      <a class="back-link" href="/trabalhos/">{$t('trabalhos.assignment.back_to_list', { default: '← Voltar à lista de trabalhos' })}</a>
     </div>
   {:else}
     <article class="assignment" data-status={assignment.status}>
       <header class="header">
         <div class="title-row">
           <h1>{assignment.title}</h1>
-          <span class="xp-pill" title="Recompensa ao entregar">⚡ {assignment.xpReward} XP</span>
+          <span class="xp-pill" title={$t('trabalhos.assignment.reward', { default: 'Recompensa ao entregar' })}>⚡ {assignment.xpReward} XP</span>
         </div>
         <div class="meta-row">
           <span class="course-pill">{cursoLabel(assignment.curso)}</span>
@@ -192,21 +193,21 @@
         </div>
       </header>
 
-      <section class="description-block" aria-label="Descrição do trabalho">
-        <h2 class="block-title">Descrição</h2>
+      <section class="description-block" aria-label={$t('a11y.aria.descricao_do_trabalho', { default: 'Descrição do trabalho' })}>
+        <h2 class="block-title">{$t('trabalhos.assignment.description', { default: 'Descrição' })}</h2>
         <p class="description">{assignment.description}</p>
       </section>
 
-      <section class="meta-block" aria-label="Prazo">
-        <h2 class="block-title">Prazo</h2>
+      <section class="meta-block" aria-label={$t('trabalhos.assignment.prazo', { default: 'Prazo' })}>
+        <h2 class="block-title">{$t('trabalhos.assignment.prazo', { default: 'Prazo' })}</h2>
         <div class="deadline-row">
           <Countdown deadline={new Date(assignment.deadline).toISOString()} />
           <span class="deadline-abs">{formatDeadline(assignment.deadline)}</span>
         </div>
       </section>
 
-      <section class="actions-block" aria-label="Ações">
-        <h2 class="block-title">Ações</h2>
+      <section class="actions-block" aria-label={$t('a11y.aria.acoes', { default: 'Ações' })}>
+        <h2 class="block-title">{$t('a11y.aria.acoes', { default: 'Ações' })}</h2>
         <div class="actions">
           {#if assignment.status === 'pending'}
             <button
@@ -215,7 +216,7 @@
               onclick={markInProgress}
               disabled={busy}
             >
-              ▶ Marcar como em curso
+              {$t('trabalhos.assignment.mark_in_progress', { default: '▶ Marcar como em curso' })}
             </button>
             <button
               type="button"
@@ -223,7 +224,7 @@
               onclick={submitAssignment}
               disabled={busy}
             >
-              ✓ Entregar
+              {$t('trabalhos.assignment.submit', { default: '✓ Entregar' })}
             </button>
           {:else if assignment.status === 'in_progress'}
             <button
@@ -232,16 +233,16 @@
               onclick={submitAssignment}
               disabled={busy}
             >
-              ✓ Entregar
+              {$t('trabalhos.assignment.submit', { default: '✓ Entregar' })}
             </button>
           {:else if assignment.status === 'submitted' || assignment.status === 'graded'}
-            <p class="hint">Trabalho {assignment.status === 'graded' ? 'já avaliado' : 'entregue'}.</p>
+            <p class="hint">{$t(assignment.status === 'graded' ? 'trabalhos.assignment.already_graded' : 'trabalhos.assignment.already_submitted', { default: assignment.status === 'graded' ? 'Trabalho já avaliado.' : 'Trabalho entregue.' })}</p>
           {/if}
         </div>
       </section>
 
       <footer class="footer-row">
-        <a class="back-link" href="/trabalhos/">← Voltar à lista de trabalhos</a>
+        <a class="back-link" href="/trabalhos/">{$t('trabalhos.assignment.back_to_list', { default: '← Voltar à lista de trabalhos' })}</a>
       </footer>
     </article>
   {/if}

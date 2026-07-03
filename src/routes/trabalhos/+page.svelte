@@ -81,10 +81,10 @@
   // in task-005).
   function statusLabel(s: AssignmentStatus): string {
     switch (s) {
-      case 'pending':     return 'Por começar';
-      case 'in_progress': return 'Em curso';
-      case 'submitted':   return 'Entregue';
-      case 'graded':      return 'Avaliado';
+      case 'pending':     return $t('trabalhos.status.pending', { default: 'Por começar' });
+      case 'in_progress': return $t('trabalhos.status.in_progress', { default: 'Em curso' });
+      case 'submitted':   return $t('trabalhos.status.submitted', { default: 'Entregue' });
+      case 'graded':      return $t('trabalhos.status.graded', { default: 'Avaliado' });
     }
   }
 
@@ -93,7 +93,7 @@
   // here because the escola i18n keys live in pt-PT.json and
   // task-005 will wire $t() lookups properly.
   function cursoLabel(slug: string): string {
-    if (slug === 'todos') return 'Todos';
+    if (slug === 'todos') return $t('trabalhos.filters.all', { default: 'Todos' });
     return slug
       .split('-')
       .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
@@ -199,40 +199,40 @@
 
 <div class="trabalhos">
   <header class="hero">
-    <h1>📝 Trabalhos</h1>
-    <p class="sub">Trabalhos e entregas com prazos — começa pelo que tem deadline mais próximo.</p>
+    <h1>{$t('trabalhos.hero.title', { default: '📝 Trabalhos' })}</h1>
+    <p class="sub">{$t('trabalhos.hero.sub', { default: 'Trabalhos e entregas com prazos — começa pelo que tem deadline mais próximo.' })}</p>
   </header>
 
-  <nav class="crumbs" aria-label="Caminho de navegação">
-    <a href="/">← Hub</a>
+  <nav class="crumbs" aria-label={$t('trabalhos.crumbs.aria', { default: 'Caminho de navegação' })}>
+    <a href="/">{$t('trabalhos.crumbs.home', { default: '← Hub' })}</a>
     <span aria-hidden="true">/</span>
-    <span aria-current="page">Trabalhos</span>
+    <span aria-current="page">{$t('trabalhos.crumbs.current', { default: 'Trabalhos' })}</span>
   </nav>
 
   {#if !loading && assignments.length > 0}
-    <section class="filters" aria-label="Filtros">
+    <section class="filters" aria-label={$t('a11y.aria.filtros', { default: 'Filtros' })}>
       <div class="filters-row">
         <label class="field">
-          <span class="field-label">Curso</span>
-          <select bind:value={cursoFiltro} aria-label="Filtrar por curso">
+          <span class="field-label">{$t('trabalhos.course', { default: 'Curso' })}</span>
+          <select bind:value={cursoFiltro} aria-label={$t('trabalhos.filters.course.aria', { default: 'Filtrar por curso' })}>
             {#each cursos as c (c)}
               <option value={c}>{cursoLabel(c)}</option>
             {/each}
           </select>
         </label>
         <label class="field">
-          <span class="field-label">Estado</span>
-          <select bind:value={statusFiltro} aria-label="Filtrar por estado">
+          <span class="field-label">{$t('trabalhos.filters.status', { default: 'Estado' })}</span>
+          <select bind:value={statusFiltro} aria-label={$t('trabalhos.filters.status.aria', { default: 'Filtrar por estado' })}>
             {#each STATUS_OPTIONS as s (s)}
-              <option value={s}>{s === 'todos' ? 'Todos' : statusLabel(s as AssignmentStatus)}</option>
+              <option value={s}>{s === 'todos' ? $t('trabalhos.filters.all', { default: 'Todos' }) : statusLabel(s as AssignmentStatus)}</option>
             {/each}
           </select>
         </label>
         <label class="field">
-          <span class="field-label">Ordem</span>
-          <select bind:value={ordem} aria-label="Ordenar por prazo">
-            <option value="asc">Prazo ↑ (mais próximo)</option>
-            <option value="desc">Prazo ↓ (mais longe)</option>
+          <span class="field-label">{$t('trabalhos.filters.order', { default: 'Ordem' })}</span>
+          <select bind:value={ordem} aria-label={$t('trabalhos.filters.order.aria', { default: 'Ordenar por prazo' })}>
+            <option value="asc">{$t('trabalhos.filters.order.asc', { default: 'Prazo ↑ (mais próximo)' })}</option>
+            <option value="desc">{$t('trabalhos.filters.order.desc', { default: 'Prazo ↓ (mais longe)' })}</option>
           </select>
         </label>
         {#if temFiltroAtivo}
@@ -240,26 +240,26 @@
             type="button"
             class="clear-btn"
             onclick={clearFilters}
-            aria-label="Limpar filtros"
+            aria-label={$t('trabalhos.filters.clear.aria', { default: 'Limpar filtros' })}
           >
-            Limpar
+            {$t('trabalhos.filters.clear.short', { default: 'Limpar' })}
           </button>
         {/if}
       </div>
       <div class="summary">
         <span class="summary-pill">
-          <strong>{visible.length}</strong> de {assignments.length} {assignments.length === 1 ? 'trabalho' : 'trabalhos'}
+          <strong>{visible.length}</strong> {$t('trabalhos.summary.of', { default: 'de' })} {assignments.length} {assignments.length === 1 ? $t('trabalhos.summary.singular', { default: 'trabalho' }) : $t('trabalhos.summary.plural', { default: 'trabalhos' })}
         </span>
-        <span class="summary-pill xp" title="Soma de XP dos trabalhos visíveis">
+        <span class="summary-pill xp" title={$t('trabalhos.summary.xp_visible', { default: 'Soma de XP dos trabalhos visíveis' })}>
           ⚡ <strong>{xpTotalVisivel}</strong> XP
         </span>
       </div>
     </section>
   {/if}
 
-  <section class="list" aria-label="Lista de trabalhos">
+  <section class="list" aria-label={$t('trabalhos.list.aria', { default: 'Lista de trabalhos' })}>
     {#if loading}
-      <Skeleton variant="card" lines={4} label="A carregar…" />
+      <Skeleton variant="card" lines={4} label={$t('common.loading', { default: 'A carregar…' })} />
     {:else if error}
       <p class="empty error" role="alert">⚠️ {error}</p>
     {:else if assignments.length === 0}
@@ -271,9 +271,9 @@
     {:else if visible.length === 0}
       <EmptyState
         emoji="🔎"
-        title="Nenhum trabalho corresponde aos filtros"
-        description="Limpa os filtros para voltares a ver a lista completa."
-        ctaLabel="Limpar filtros"
+        title={$t('trabalhos.empty.filtered.title', { default: 'Nenhum trabalho corresponde aos filtros' })}
+        description={$t('trabalhos.empty.filtered.desc', { default: 'Limpa os filtros para voltares a ver a lista completa.' })}
+        ctaLabel={$t('trabalhos.filters.clear', { default: 'Limpar filtros' })}
         onCta={clearFilters}
       />
     {:else}
@@ -283,7 +283,7 @@
             <a class="card-link" href={`/trabalhos/assignment/${a.id}/`}>
               <div class="card-header">
                 <h2 class="title">{a.title}</h2>
-                <span class="course-pill" title={`Curso: ${cursoLabel(a.curso)}`}>
+                <span class="course-pill" title={`${$t('trabalhos.course', { default: 'Curso' })}: ${cursoLabel(a.curso)}`}>
                   {cursoLabel(a.curso)}
                 </span>
               </div>
@@ -297,7 +297,7 @@
               <div class="meta">
                 <Countdown deadline={new Date(a.deadline).toISOString()} />
                 <span class="status status-{a.status}">{statusLabel(a.status)}</span>
-                <span class="xp-pill" title="Recompensa ao entregar">
+                <span class="xp-pill" title={$t('trabalhos.assignment.reward', { default: 'Recompensa ao entregar' })}>
                   ⚡ {a.xpReward} XP
                 </span>
               </div>
@@ -311,7 +311,7 @@
   {#if trabalhosApp}
     <footer class="page-footer" aria-hidden="true">
       <span style="--swatch: {trabalhosApp.color}">{trabalhosApp.icon}</span>
-      <span>Hub · Trabalhos</span>
+      <span>{$t('trabalhos.footer.position', { default: 'Hub · Trabalhos' })}</span>
     </footer>
   {/if}
 </div>
