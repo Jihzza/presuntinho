@@ -44,7 +44,7 @@
       <span class="vida-card vida-card-soon" aria-disabled="true">
         <span class="vida-card-icon" aria-hidden="true">🚭</span>
         <span class="vida-card-title">Vícios</span>
-        <span class="vida-card-desc">Em breve — task-094 (IA-S4).</span>
+        <span class="vida-card-desc">Registo de ocorrências e metas — planeado na task-094 (roadmap Vida 2).</span>
       </span>
     </li>
   </ul>
