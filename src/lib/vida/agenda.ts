@@ -123,7 +123,8 @@ export async function loadAgendaItems(): Promise<AgendaItem[]> {
     if (a.date !== b.date) return a.date.localeCompare(b.date);
     if (a.tone === 'danger' && b.tone !== 'danger') return -1;
     if (b.tone === 'danger' && a.tone !== 'danger') return 1;
-    return a.title.localeCompare(b.title, 'pt-PT');
+    const loc = typeof localStorage === 'undefined' ? 'pt-PT' : localStorage.getItem('fat-pref-lang') || 'pt-PT';
+    return a.title.localeCompare(b.title, loc);
   });
 }
 

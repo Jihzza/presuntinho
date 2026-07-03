@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
   import type { Secret } from '$lib/easterEggsConfig';
 
   export let secret: Secret;
@@ -7,7 +7,7 @@
   export let discoveredAt: number | null = null;
 
   function formatDate(ts: number): string {
-    return new Date(ts).toLocaleString('pt-PT', { dateStyle: 'medium', timeStyle: 'short' });
+    return new Date(ts).toLocaleString($locale || 'pt-PT', { dateStyle: 'medium', timeStyle: 'short' });
   }
 </script>
 

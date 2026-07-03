@@ -18,7 +18,7 @@
 // PT fallback is returned — same pattern used in /biblioteca/+page.svelte.
 
 import { get } from 'svelte/store';
-import { t } from 'svelte-i18n';
+import { locale, t } from 'svelte-i18n';
 import {
   toolFinanceSummary,
   toolFinanceMonth,
@@ -64,7 +64,7 @@ function norm(s: string): string {
 }
 
 function formatEUR(n: number): string {
-  return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(n);
+  return new Intl.NumberFormat(get(locale) || 'pt-PT', { style: 'currency', currency: 'EUR' }).format(n);
 }
 
 function matches(haystack: string, needles: string[]): boolean {

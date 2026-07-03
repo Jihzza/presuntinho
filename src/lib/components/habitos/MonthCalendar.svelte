@@ -16,7 +16,7 @@
                         the parent re-reads Dexie and updates `data`.
 -->
 <script lang="ts">
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
   import type { HeatmapData } from '$lib/habitos';
 
   interface Props {
@@ -44,6 +44,7 @@
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   }
   let todayResolved = $derived(today ?? todayKey());
+  const dateLocale = $derived($locale || 'pt-PT');
 
   interface Cell {
     date: string;
@@ -80,7 +81,7 @@
   });
 
   let monthLabel = $derived.by(() => {
-    return new Date(year, month0, 1).toLocaleDateString(undefined, {
+    return new Date(year, month0, 1).toLocaleDateString(dateLocale, {
       month: 'long',
       year: 'numeric'
     });

@@ -19,8 +19,7 @@
 -->
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { get } from 'svelte/store';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
   import {
     listItems,
     listTags,
@@ -39,6 +38,7 @@
   let query = $state('');
   let activeTag = $state<string | null>(null);
   let confirmingDelete = $state<number | null>(null);
+  const dateLocale = $derived($locale || 'pt-PT');
 
   const bibliotecaApp = subApps.find((a) => a.id === 'biblioteca');
 
@@ -104,10 +104,10 @@
     try {
       await deleteItem(id);
       await refresh();
-      showToast(get(t)('biblioteca.toast.removed', { default: 'Marcador removido' }));
+      showToast($t('biblioteca.toast.removed', { default: 'Marcador removido' }));
     } catch (e) {
       console.error('[biblioteca] delete failed', e);
-      showToast(get(t)('biblioteca.toast.delete_failed', { default: 'Erro a remover marcador' }));
+      showToast($t('biblioteca.toast.delete_failed', { default: 'Erro a remover marcador' }));
     }
   }
 
@@ -121,7 +121,7 @@
 
   function formatCreatedAt(ts: number): string {
     if (!ts) return '';
-    return new Date(ts).toLocaleDateString('pt-PT', {
+    return new Date(ts).toLocaleDateString(dateLocale, {
       day: '2-digit',
       month: 'short',
       year: 'numeric'

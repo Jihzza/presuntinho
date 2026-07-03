@@ -62,6 +62,7 @@
   // hint inside the chart card.
   let totalTransacoesMes = $state(0);
   let exporting = $state(false);
+  const numberLocale = $derived($locale || 'pt-PT');
 
   let financasApp = subApps.find((a) => a.id === 'financas');
     const mesAtual = getMesAtual();
@@ -231,7 +232,7 @@
     chartInstance = new Chart(canvas, {
       type: 'bar',
       data: {
-        labels: pontos.map((p) => formatMesCurto(p.mes)),
+        labels: pontos.map((p) => formatMesCurto(p.mes, numberLocale)),
         datasets: [
           {
             label: $t('financas.chart.datasetLabel.receitas', { default: 'Receitas' }),
@@ -260,7 +261,7 @@
           legend: { display: true, position: 'top', labels: { color: '#cbd5e1' } },
           tooltip: {
             callbacks: {
-              label: (ctx) => ` ${formatValor(ctx.parsed.y ?? 0)}`
+              label: (ctx) => ` ${formatValor(ctx.parsed.y ?? 0, numberLocale)}`
             }
           }
         },
@@ -273,7 +274,7 @@
             beginAtZero: true,
             ticks: {
               color: '#cbd5e1',
-              callback: (val) => formatValor(Number(val))
+              callback: (val) => formatValor(Number(val), numberLocale)
             },
             grid: { color: 'rgba(255, 255, 255, 0.08)' }
           }
@@ -311,7 +312,7 @@
 <div class="financas-page">
   <header class="hero">
     <h1>{$t('financas.hero.title', { default: '💰 Finanças' })}</h1>
-    <p class="sub">{$t('financas.hero.sub', { default: 'Resumo de' })} <strong>{formatMes(mesAtual)}</strong></p>
+    <p class="sub">{$t('financas.hero.sub', { default: 'Resumo de' })} <strong>{formatMes(mesAtual, numberLocale)}</strong></p>
     {#if sickHint}
       <p class="mood-hint" role="note" aria-live="polite">
         <span aria-hidden="true">🤍</span>
@@ -370,7 +371,7 @@
     <section class="cards" aria-label={$t('financas.cards.aria', { default: 'Totais do mês' })}>
       <article class="card card-receitas">
         <span class="card-label">{$t('financas.card.receitas', { default: 'Receitas' })}</span>
-        <span class="card-value">{formatValor(totais.receitas)}</span>
+        <span class="card-value">{formatValor(totais.receitas, numberLocale)}</span>
         <span class="card-hint">
           {#if totais.receitas === 0}
             {$t('financas.card.receitas.empty', { default: 'ainda sem entradas — adiciona uma transação' })}
@@ -381,7 +382,7 @@
       </article>
       <article class="card card-despesas">
         <span class="card-label">{$t('financas.card.despesas', { default: 'Despesas' })}</span>
-        <span class="card-value">{formatValor(totais.despesas)}</span>
+        <span class="card-value">{formatValor(totais.despesas, numberLocale)}</span>
         <span class="card-hint">
           {#if totais.despesas === 0}
             {$t('financas.card.despesas.empty', { default: 'ainda sem saídas — bom sinal 👀' })}
@@ -392,7 +393,7 @@
       </article>
       <article class="card card-saldo" class:negativo={totais.saldo < 0}>
         <span class="card-label">{$t('financas.card.saldo', { default: 'Saldo' })}</span>
-        <span class="card-value">{formatValor(totais.saldo)}</span>
+        <span class="card-value">{formatValor(totais.saldo, numberLocale)}</span>
         <span class="card-hint">
           {#if totais.receitas === 0 && totais.despesas === 0}
             {$t('financas.card.saldo.neutral', { default: 'à espera de movimentos' })}

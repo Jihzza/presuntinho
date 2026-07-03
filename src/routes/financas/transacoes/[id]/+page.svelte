@@ -17,7 +17,7 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
   import {
     listCategorias,
     getTransacao,
@@ -41,6 +41,7 @@
   let submitting = $state(false);
   let error = $state<string | null>(null);
   let confirmarEliminar = $state(false);
+  const sortLocale = $derived($locale || 'pt-PT');
 
   // Resolved via $page.params.id (string) → parseInt
   let transacaoId = $derived(Number($page.params.id));
@@ -48,7 +49,7 @@
   let categoriasCompativeis = $derived(
     categorias
       .filter((c) => c.tipo === tipo || c.tipo === 'ambos')
-      .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-PT'))
+      .sort((a, b) => a.nome.localeCompare(b.nome, sortLocale))
   );
 
   onMount(() => {

@@ -10,7 +10,7 @@
   import { browser } from '$app/environment';
   import { get } from 'svelte/store';
   import { db } from '$lib/state/db';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
 
   interface Note {
     id?: number;
@@ -32,6 +32,7 @@
   let mediaRecorder: MediaRecorder | null = null;
   let audioChunks: Blob[] = [];
   let recordingStart = 0;
+  const dateLocale = $derived($locale || 'pt-PT');
 
   const CATEGORIES = $derived<{ key: Note['category']; label: string; icon: string }[]>([
     { key: 'escola', label: $t('caderno.filter.escola', { default: 'Escola' }), icon: '📚' },
@@ -145,7 +146,7 @@
   }
 
   function formatDate(ts: number): string {
-    return new Date(ts).toLocaleString('pt-PT', {
+    return new Date(ts).toLocaleString(dateLocale, {
       day: '2-digit',
       month: 'short',
       hour: '2-digit',

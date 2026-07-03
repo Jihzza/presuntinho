@@ -14,7 +14,7 @@
 -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
   import { goto } from '$app/navigation';
   import {
     listCategorias,
@@ -34,6 +34,7 @@
   let submitting = $state(false);
   let error = $state<string | null>(null);
   let loadingCategorias = $state(true);
+  const sortLocale = $derived($locale || 'pt-PT');
 
   // Categorias filtradas pelo tipo atual:
   //   'receita' → receita + ambos
@@ -41,7 +42,7 @@
   let categoriasCompativeis = $derived(
     categorias
       .filter((c) => c.tipo === tipo || c.tipo === 'ambos')
-      .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-PT'))
+      .sort((a, b) => a.nome.localeCompare(b.nome, sortLocale))
   );
 
   // Categoria escolhida atualmente (objeto para mostrar ícone/cor no

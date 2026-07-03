@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
 
   interface Props {
     deadline: string; // ISO 8601
@@ -20,6 +20,7 @@
   let days = $derived(Math.floor(diff / (1000 * 60 * 60 * 24)));
   let hours = $derived(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
   let minutes = $derived(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
+  const dateLocale = $derived($locale || 'pt-PT');
 </script>
 
 {#if expired}
@@ -29,7 +30,7 @@
     <span class="unit"><strong>{days}</strong>d</span>
     <span class="unit"><strong>{hours}</strong>h</span>
     <span class="unit"><strong>{minutes}</strong>m</span>
-    <span class="label">até {new Date(deadline).toLocaleString('pt-PT', { dateStyle: 'short', timeStyle: 'short' })}</span>
+    <span class="label">{$t('components.countdown.until', { default: 'até' })} {new Date(deadline).toLocaleString(dateLocale, { dateStyle: 'short', timeStyle: 'short' })}</span>
   </div>
 {/if}
 

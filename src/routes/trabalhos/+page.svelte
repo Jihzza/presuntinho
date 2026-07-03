@@ -26,7 +26,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
   import { liveQuery, type Subscription } from 'dexie';
   import { db } from '$lib/state/db';
   import {
@@ -52,6 +52,7 @@
   // 'asc' = deadline soonest first (default, matches user mental model).
   // 'desc' = deadline latest first.
   let ordem = $state<'asc' | 'desc'>('asc');
+  const sortLocale = $derived($locale || 'pt-PT');
 
   const trabalhosApp = subApps.find((a) => a.id === 'trabalhos');
 
@@ -103,7 +104,7 @@
   // ---------------- Data loading ----------------
   function buildCursos(rows: Assignment[]): string[] {
     const set = new Set(rows.map((a) => a.curso));
-    return ['todos', ...Array.from(set).sort((a, b) => a.localeCompare(b, 'pt-PT'))];
+    return ['todos', ...Array.from(set).sort((a, b) => a.localeCompare(b, sortLocale))];
   }
 
   function applyRows(rows: Assignment[]): void {

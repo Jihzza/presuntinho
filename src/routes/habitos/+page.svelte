@@ -14,8 +14,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { get } from 'svelte/store';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
   import {
     listHabitos,
     deleteHabito,
@@ -56,6 +55,7 @@
   let calYear = $state(new Date().getFullYear());
   let calMonth0 = $state(new Date().getMonth());
   let showEditForm = $state(false);
+  const dateLocale = $derived($locale || 'pt-PT');
 
   const habitosApp = subApps.find((a) => a.id === 'habitos');
 
@@ -103,10 +103,10 @@
         showEditForm = false;
       }
       await refresh();
-      showToast(get(t)('habitos.toast.removed', { default: 'Hábito removido' }));
+      showToast($t('habitos.toast.removed', { default: 'Hábito removido' }));
     } catch (e) {
       console.error('[habitos] delete failed', e);
-      showToast(get(t)('habitos.toast.delete_failed', { default: 'Erro a remover hábito' }));
+      showToast($t('habitos.toast.delete_failed', { default: 'Erro a remover hábito' }));
     }
   }
 
@@ -169,14 +169,14 @@
       }
     } catch (e) {
       console.error('[habitos] toggleCalendarDay failed', e);
-      showToast('⚠️ Erro a guardar');
+      showToast($t('habitos.toast.save_failed', { default: '⚠️ Erro a guardar' }));
     }
   }
 
   async function onEditSubmit(values: NewHabitInput): Promise<void> {
     if (!editingHabit || typeof editingHabit.id !== 'number') return;
     await editHabito(editingHabit.id, values);
-    showToast(get(t)('habitos.toast.updated', { default: 'Hábito atualizado' }));
+    showToast($t('habitos.toast.updated', { default: 'Hábito atualizado' }));
     showEditForm = false;
     // Update local cache for the editing habit so the title bar
     // reflects the new name/color without a full refetch.
@@ -198,7 +198,7 @@
 
   function formatCreatedAt(ts: number): string {
     if (!ts) return '';
-    return new Date(ts).toLocaleDateString('pt-PT', {
+    return new Date(ts).toLocaleDateString(dateLocale, {
       day: '2-digit',
       month: 'short',
       year: 'numeric'

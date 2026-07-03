@@ -15,7 +15,7 @@
 -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   import {
@@ -60,6 +60,7 @@
   let dataDe = $state<string>('');                                    // M1-S2: YYYY-MM-DD
   let dataAte = $state<string>('');                                   // M1-S2: YYYY-MM-DD
   let confirmingDelete = $state<number | null>(null);
+  const localeCode = $derived($locale || 'pt-PT');
 
   // Mapa id → CategoriaRow para lookup O(1) por linha.
   let categoriasPorId: Record<string, CategoriaRow> = $derived(
@@ -316,13 +317,13 @@
 
     <div class="totals">
       <span class="total-pill receitas">
-        + {formatValor(totalVisivel.receitas)}
+        + {formatValor(totalVisivel.receitas, localeCode)}
       </span>
       <span class="total-pill despesas">
-        − {formatValor(totalVisivel.despesas)}
+        − {formatValor(totalVisivel.despesas, localeCode)}
       </span>
       <span class="total-pill saldo" class:negativo={totalVisivel.receitas - totalVisivel.despesas < 0}>
-        {STRINGS.saldoLabel}: {formatValor(totalVisivel.receitas - totalVisivel.despesas)}
+        {STRINGS.saldoLabel}: {formatValor(totalVisivel.receitas - totalVisivel.despesas, localeCode)}
       </span>
     </div>
   </section>
@@ -353,7 +354,7 @@
     {:else}
       {#each grupos as grupo (grupo.data)}
         <div class="day-group">
-          <h3 class="day-header">{formatData(grupo.data)}</h3>
+          <h3 class="day-header">{formatData(grupo.data, localeCode)}</h3>
           <ul class="rows">
             {#each grupo.items as tx (tx.id)}
               {@const c = cat(tx.categoria)}
@@ -373,7 +374,7 @@
                   </span>
                 </span>
                 <span class="row-valor" aria-label={isReceita ? STRINGS.ariaReceita : STRINGS.ariaDespesa}>
-                  {isReceita ? '+' : '−'}{formatValor(tx.valor)}
+                  {isReceita ? '+' : '−'}{formatValor(tx.valor, localeCode)}
                 </span>
                 <button
                   type="button"

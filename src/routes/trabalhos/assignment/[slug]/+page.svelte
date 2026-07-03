@@ -18,7 +18,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
   import { liveQuery, type Subscription } from 'dexie';
   import { db } from '$lib/state/db';
   import {
@@ -34,6 +34,7 @@
   let error = $state<string | null>(null);
   let notFound = $state(false);
   let busy = $state(false);
+  const dateLocale = $derived($locale || 'pt-PT');
 
   // Pretty label for the status enum (PT-only for the MVP).
   function statusLabel(s: AssignmentStatus): string {
@@ -56,7 +57,7 @@
   // Format a deadline timestamp for the meta block ("27 jun 2026, 14:00").
   function formatDeadline(ts: number): string {
     if (!ts) return '—';
-    return new Date(ts).toLocaleString('pt-PT', {
+    return new Date(ts).toLocaleString(dateLocale, {
       day: '2-digit',
       month: 'short',
       year: 'numeric',

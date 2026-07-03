@@ -28,7 +28,7 @@
     type TotaisPorCategoria
   } from '$lib/financas';
   import { showToast } from '$lib/components/events';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
 
   let todasCategorias = $state<CategoriaRow[]>([]);
   let orcamentoStatus = $state<OrcamentoStatus[]>([]);
@@ -38,12 +38,13 @@
   let error = $state<string | null>(null);
   let saving = $state<string | null>(null);   // categoriaId currently saving
   let mesFiltro = $state(getMesAtual());
+  const sortLocale = $derived($locale || 'pt-PT');
 
   // Só despesas + "ambos" recebem orçamento. Receita fica fora.
   let categoriasDespesa = $derived(
     todasCategorias
       .filter((c) => c.tipo === 'despesa' || c.tipo === 'ambos')
-      .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-PT'))
+      .sort((a, b) => a.nome.localeCompare(b.nome, sortLocale))
   );
 
   onMount(() => {
@@ -136,7 +137,7 @@
 <div class="orcamento-page">
   <header class="hero">
     <h1>{$t('financas.orcamento.hero.title', { default: '📊 Orçamento' })}</h1>
-    <p class="sub">{$t('financas.orcamento.sub', { default: 'Limites por categoria — {mes}' }).replace('{mes}', formatMes(mesFiltro))}</p>
+    <p class="sub">{$t('financas.orcamento.sub', { default: 'Limites por categoria — {mes}' }).replace('{mes}', formatMes(mesFiltro, sortLocale))}</p>
   </header>
 
   <nav class="crumbs" aria-label="{$t('a11y.aria.caminho_de_navegacao', { default: 'Caminho de navegação' })}">
@@ -164,18 +165,18 @@
     <section class="summary" aria-label="{$t('a11y.aria.resumo_do_orcamento', { default: 'Resumo do orçamento' })}">
       <div class="summary-row">
         <span class="summary-label">{$t('financas.orcamento.summary.total_limit', { default: 'Total limite' })}</span>
-        <span class="summary-value">{formatValor(totalLimite)}</span>
+        <span class="summary-value">{formatValor(totalLimite, sortLocale)}</span>
       </div>
       <div class="summary-row">
         <span class="summary-label">{$t('financas.orcamento.summary.total_spent', { default: 'Total gasto' })}</span>
         <span class="summary-value" class:over={totalGasto > totalLimite && totalLimite > 0}>
-          {formatValor(totalGasto)}
+          {formatValor(totalGasto, sortLocale)}
         </span>
       </div>
       <div class="summary-row">
         <span class="summary-label">{$t('financas.orcamento.summary.remaining', { default: 'Saldo restante' })}</span>
         <span class="summary-value" class:over={totalRestante < 0}>
-          {formatValor(totalRestante)}
+          {formatValor(totalRestante, sortLocale)}
         </span>
       </div>
     </section>
@@ -247,9 +248,9 @@
 
           <div class="cat-foot">
             <span class="gasto">
-              <strong>{formatValor(gasto)}</strong>
+              <strong>{formatValor(gasto, sortLocale)}</strong>
               {#if limite > 0}
-                <span class="limite-info"> de {formatValor(limite)}</span>
+                <span class="limite-info"> {$t('financas.orcamento.of_limit', { default: 'de' })} {formatValor(limite, sortLocale)}</span>
               {/if}
             </span>
             {#if limite > 0}
@@ -263,7 +264,7 @@
 
           {#if row && row.status === 'over'}
             <p class="over-msg" role="status">
-              ⚠️ {$t('financas.orcamento.over_by', { values: { valor: formatValor(Math.abs(row.restante)) }, default: '{valor} acima do orçamento' })}
+              ⚠️ {$t('financas.orcamento.over_by', { values: { valor: formatValor(Math.abs(row.restante), sortLocale) }, default: '{valor} acima do orçamento' })}
             </p>
           {:else if row && row.status === 'danger'}
             <p class="danger-msg" role="status">

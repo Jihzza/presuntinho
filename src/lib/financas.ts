@@ -20,12 +20,20 @@
 //     splash route already does.
 //   * `addTransacao` / `setOrcamento` stamp `createdAt` for us so
 //     callers only pass user-facing fields.
-//   * `formatValor` uses pt-PT locale with EUR currency — this matches
-//     the "Língua: pt-PT" setting in Phase 9's i18n.
+//   * Formatters use the active UI locale when available, falling back
+//     to pt-PT.  Keep finance values locale-reactive across language
+//     switches instead of freezing Portuguese month/currency formats.
 
 import { db, DEFAULT_CATEGORIAS } from './state/db';
 import { awardXP } from './state/xp-actions';
 import type { TransacaoRow, OrcamentoRow, CategoriaRow } from './state/db';
+
+const LOCALE_STORAGE_KEY = 'fat-pref-lang';
+
+function activeLocale(fallback = 'pt-PT'): string {
+  if (typeof localStorage === 'undefined') return fallback;
+  return localStorage.getItem(LOCALE_STORAGE_KEY) || fallback;
+}
 
 // ---------------------------------------------------------------------------
 // Public types — re-exported so component code only imports from one place.
@@ -87,7 +95,7 @@ export interface OrcamentoStatus {
  */
 export async function listCategorias(): Promise<CategoriaRow[]> {
   const rows = await db().categorias.toArray();
-  return rows.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-PT'));
+  return rows.sort((a, b) => a.nome.localeCompare(b.nome, activeLocale()));
 }
 
 // ---------------------------------------------------------------------------
@@ -150,7 +158,7 @@ export async function addCategoria(input: {
   if (existingById) throw new Error('categoria.duplicada');
   const duplicateName = (await table.toArray()).find(
     (c) =>
-      c.nome.trim().localeCompare(nome, 'pt-PT', { sensitivity: 'accent' }) === 0 &&
+      c.nome.trim().localeCompare(nome, activeLocale(), { sensitivity: 'accent' }) === 0 &&
       (c.tipo === input.tipo || c.tipo === 'ambos' || input.tipo === 'ambos')
   );
   if (duplicateName) throw new Error('categoria.nome_duplicado');
@@ -476,7 +484,7 @@ export async function getOrcamentoStatus(mes: string): Promise<OrcamentoStatus[]
 }
 
 // ---------------------------------------------------------------------------
-// Date / value formatters (pt-PT locale)
+// Date / value formatters (active UI locale)
 // ---------------------------------------------------------------------------
 
 /** Today as a 'YYYY-MM' key, in the user's local timezone. */
@@ -491,30 +499,30 @@ export function getHojeISO(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-/** Format a 'YYYY-MM' key as a pt-PT long month + year, e.g. "junho de 2026". */
-export function formatMes(mes: string): string {
+/** Format a 'YYYY-MM' key as a long month + year, e.g. "junho de 2026". */
+export function formatMes(mes: string, loc = activeLocale()): string {
   const [y, m] = mes.split('-');
   const date = new Date(parseInt(y, 10), parseInt(m, 10) - 1, 1);
-  return date.toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' });
+  return date.toLocaleDateString(loc, { month: 'long', year: 'numeric' });
 }
 
 /** Short month label — used by the 6-month chart axis, e.g. "jun/26". */
-export function formatMesCurto(mes: string): string {
+export function formatMesCurto(mes: string, loc = activeLocale()): string {
   const [y, m] = mes.split('-');
   const date = new Date(parseInt(y, 10), parseInt(m, 10) - 1, 1);
-  return date.toLocaleDateString('pt-PT', { month: 'short', year: '2-digit' });
+  return date.toLocaleDateString(loc, { month: 'short', year: '2-digit' });
 }
 
-/** Format a 'YYYY-MM-DD' key as e.g. "27 jun 2026" in pt-PT. */
-export function formatData(data: string): string {
+/** Format a 'YYYY-MM-DD' key as e.g. "27 jun 2026". */
+export function formatData(data: string, loc = activeLocale()): string {
   const [y, m, d] = data.split('-');
   const date = new Date(parseInt(y, 10), parseInt(m, 10) - 1, parseInt(d, 10));
-  return date.toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' });
+  return date.toLocaleDateString(loc, { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-/** Format a number as a EUR currency string in pt-PT (e.g. "12,50 €"). */
-export function formatValor(v: number): string {
-  return new Intl.NumberFormat('pt-PT', {
+/** Format a number as a EUR currency string in the active UI locale. */
+export function formatValor(v: number, loc = activeLocale()): string {
+  return new Intl.NumberFormat(loc, {
     style: 'currency',
     currency: 'EUR'
   }).format(v);

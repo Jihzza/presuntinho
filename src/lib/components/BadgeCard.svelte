@@ -10,7 +10,7 @@
    * - unlockedAt: optional timestamp for tooltip / future stats
    */
 
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
 
   interface Props {
     id: string;
@@ -32,13 +32,16 @@
     })
       .replace('{name}', name)
       .replace('{description}', description)
+      .replace('{status}', stateLabel)
       .replace('{state}', stateLabel)
   );
 
-  // Format unlock date in pt-PT if we have one
+  const dateLocale = $derived($locale || 'pt-PT');
+
+  // Format unlock date in the active UI locale if we have one
   let unlockedDate = $derived<string | null>(
     unlocked && unlockedAt && unlockedAt > 0
-      ? new Date(unlockedAt).toLocaleDateString('pt-PT', {
+      ? new Date(unlockedAt).toLocaleDateString(dateLocale, {
           day: '2-digit',
           month: '2-digit',
           year: 'numeric'

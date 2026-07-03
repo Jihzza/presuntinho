@@ -100,7 +100,8 @@ export async function listAssignmentCursos(): Promise<string[]> {
   const rows = await db().assignments.toArray();
   const set = new Set<string>();
   for (const r of rows) set.add(r.curso);
-  return ['todos', ...Array.from(set).sort((a, b) => a.localeCompare(b, 'pt-PT'))];
+  const loc = typeof localStorage === 'undefined' ? 'pt-PT' : localStorage.getItem('fat-pref-lang') || 'pt-PT';
+  return ['todos', ...Array.from(set).sort((a, b) => a.localeCompare(b, loc))];
 }
 
 // ---------------------------------------------------------------------------

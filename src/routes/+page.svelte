@@ -55,7 +55,7 @@
   const todayKey = localDateKey(today);
   const dateLocale = $derived($locale || 'pt-PT');
 
-  let xpLabel = $derived(new Intl.NumberFormat('pt-PT').format(currentXp) + ' XP');
+  let xpLabel = $derived(new Intl.NumberFormat(dateLocale).format(currentXp) + ' XP');
   let unlockedBadges = $derived(Object.values(badgesMap).filter((b) => b.unlocked).length);
   let schoolProgress = $derived(Math.round(((lessonsVisited + quizzesAnswered + assignmentsDone) / (TOTAL_LESSONS + TOTAL_QUIZZES + totalAssignments)) * 100));
   let weekPreviewDays = $derived(weekDays(today));

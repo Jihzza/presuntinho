@@ -199,8 +199,8 @@
       <span class="sep">›</span>
       <span>PT</span>
     </p>
-    <span class="tag">🇵🇹 Lições em Português</span>
-    <h1>🇵🇹 Aulas de Marketing — em PT</h1>
+    <span class="tag">{$t('routes.pt.tag', { default: '🇵🇹 Lições em Português' })}</span>
+    <h1>{$t('routes.pt.hero.title', { default: '🇵🇹 Aulas de Marketing — em PT' })}</h1>
     <p class="sub">{$t('routes.pt.subtitle_para_estudares', { default: 'Para estudares na tua língua materna.' })}</p>
   </header>
 
@@ -226,7 +226,7 @@
 
   <!-- Dica final --------------------------------------------------------- -->
   <article class="card highlight">
-    <h2>💡 Dica final para escrever</h2>
+    <h2>{$t('routes.pt.dica_final.title', { default: '💡 Dica final para escrever' })}</h2>
     <p>{$t('routes.pt.dica_final.lembrar', { default: 'Quando reescreveres o assignment na tua voz, lembra-te:' })}</p>
     <ul>
       <li>{$t('routes.pt.dica_final.contracoes', { default: 'Usa contrações: não, é, estou, vamos' })}</li>
@@ -239,22 +239,20 @@
 
   <!-- Mini-curso -------------------------------------------------------- -->
   <article class="card">
-    <h2>🇵🇹 Mini-Curso de Português (side quest!)</h2>
+    <h2>{$t('routes.pt.mini.title', { default: '🇵🇹 Mini-Curso de Português (side quest!)' })}</h2>
     <p class="mini-intro">
-      Já que falas Tunisio + Inglês + Francês, e o Português está próximo do Francês, esta secção é um
-      bónus. Não é matéria do trabalho — é um extra para te ajudar a comunicar com colegas brasileiros
-      e portugueses na EU Business School.
+      {$t('routes.pt.mini.intro', { default: 'Já que falas Tunisino + Inglês + Francês, e o Português está próximo do Francês, esta secção é um bónus. Não é matéria do trabalho — é um extra para te ajudar a comunicar com colegas brasileiros e portugueses na EU Business School.' })}
     </p>
   </article>
 
   <article class="card">
-    <h2>🗣️ As 5 vogais + pronúncia essencial</h2>
-    <p class="mini-intro">O Português tem 5 vogais orais (mais nasais, mas vamos com o básico):</p>
+    <h2>{$t('routes.pt.vogais.title', { default: '🗣️ As 5 vogais + pronúncia essencial' })}</h2>
+    <p class="mini-intro">{$t('routes.pt.vogais.intro', { default: 'O Português tem 5 vogais orais (mais nasais, mas vamos com o básico):' })}</p>
     <table class="vogais">
       <thead>
         <tr>
           <th>{$t('routes.pt.th.vogal', { default: 'Vogal' })}</th>
-          <th>Som (IPA)</th>
+          <th>{$t('routes.pt.th.som_ipa', { default: 'Som (IPA)' })}</th>
           <th>{$t('routes.pt.th.truque_mnemonico', { default: 'Truque mnemónico' })}</th>
         </tr>
       </thead>
@@ -269,13 +267,19 @@
       </tbody>
     </table>
     <p class="tunisian-note">
-      <b>Para ti (Tunisian):</b> o Português é mais fonético que o Inglês. O <b>rr</b> é como um roncar
-      (tremido); o <b>lh</b> é como <em>million</em>; o <b>nh</b> é como <em>onion</em>. Tudo se lê.
+      <b>{$t('routes.pt.tunisian_note.label', { default: 'Para ti (Tunisian):' })}</b>
+      {$t('routes.pt.tunisian_note.text_before_rr', { default: 'o Português é mais fonético que o Inglês. O' })}
+      <b>rr</b>
+      {$t('routes.pt.tunisian_note.text_after_rr', { default: 'é como um roncar (tremido); o' })}
+      <b>lh</b>
+      {$t('routes.pt.tunisian_note.text_after_lh', { default: 'é como' })}
+      <em>million</em>; o <b>nh</b> {$t('routes.pt.tunisian_note.text_after_nh', { default: 'é como' })}
+      <em>onion</em>. {$t('routes.pt.tunisian_note.text_end', { default: 'Tudo se lê.' })}
     </p>
   </article>
 
   <article class="card">
-    <h2>📖 Primeiras 50 palavras — com tradução Tunisiana</h2>
+    <h2>{$t('routes.pt.words.title', { default: '📖 Primeiras 50 palavras — com tradução Tunisiana' })}</h2>
     <p class="mini-intro">{$t('routes.pt.mini_intro.em_7_categorias', { default: 'Em 7 categorias:' })}</p>
     {#each Object.entries(WORDS) as [cat, list] (cat)}
       <details class="cat" open={cat === 'Cumprimentos'}>
@@ -302,7 +306,7 @@
   </article>
 
   <article class="card">
-    <h2>💬 Mini-diálogos</h2>
+    <h2>{$t('routes.pt.dialogos.title', { default: '💬 Mini-diálogos' })}</h2>
     {#each DIALOGOS as d (d.title)}
       <details class="dialog" open={d === DIALOGOS[0]}>
         <summary>{d.title}</summary>
@@ -310,23 +314,23 @@
           <p class="dialog-line">{@html line}</p>
         {/each}
         {#if d.en}
-          <p class="dialog-en"><b>EN:</b> {d.en}</p>
+          <p class="dialog-en"><b>{$t('routes.pt.dialogos.en_label', { default: 'EN:' })}</b> {d.en}</p>
         {/if}
       </details>
     {/each}
   </article>
 
   <article class="card">
-    <h2>📝 5 verbos essenciais (presente)</h2>
+    <h2>{$t('routes.pt.verbos.title', { default: '📝 5 verbos essenciais (presente)' })}</h2>
     <table class="verbos">
       <thead>
         <tr>
           <th>{$t('routes.pt.th.verbo', { default: 'Verbo' })}</th>
           <th>eu</th>
           <th>tu</th>
-          <th>ele/ela</th>
-          <th>nós</th>
-          <th>eles/elas</th>
+          <th>{$t('routes.pt.pronoun.ele_ela', { default: 'ele/ela' })}</th>
+          <th>{$t('routes.pt.pronoun.nos', { default: 'nós' })}</th>
+          <th>{$t('routes.pt.pronoun.eles_elas', { default: 'eles/elas' })}</th>
         </tr>
       </thead>
       <tbody>
@@ -343,16 +347,16 @@
       </tbody>
     </table>
     <p class="verb-examples">
-      <b>Exemplos:</b> <i>Eu sou a Fatma</i> (I am Fatma). <i>Estou a estudar</i> (I am studying).
+      <b>{$t('routes.pt.examples.label', { default: 'Exemplos:' })}</b> <i>Eu sou a Fatma</i> (I am Fatma). <i>Estou a estudar</i> (I am studying).
       <i>Tenho 22 anos</i> (I am 22). <i>Vou à biblioteca</i> (I'm going to the library).
       <i>Faço o trabalho amanhã</i> (I'll do the assignment tomorrow).
     </p>
   </article>
 
   <article class="card highlight">
-    <h2>🎯 Quiz rápido — ganhas badge 🇵🇹!</h2>
+    <h2>{$t('routes.pt.quiz.title', { default: '🎯 Quiz rápido — ganhas badge 🇵🇹!' })}</h2>
     <p>{$t('routes.pt.quiz.subtitle', { default: 'Testa o que aprendeste com o mini-curso.' })}</p>
-    <a class="quiz-btn" href="/escola/quiz/ptq/">Fazer o quiz 🇵🇹</a>
+    <a class="quiz-btn" href="/escola/quiz/ptq/">{$t('routes.pt.quiz.cta', { default: 'Fazer o quiz 🇵🇹' })}</a>
   </article>
 </div>
 

@@ -24,7 +24,7 @@
   import { onMount } from 'svelte';
   import { get } from 'svelte/store';
   import { xp, initStores } from '$lib/state/stores';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
 
   type Visibility = 'always' | 'onChange';
 
@@ -41,7 +41,8 @@
   let hideTimer: ReturnType<typeof setTimeout> | null = null;
   let lastSeenXp = $state<number | null>(null);
 
-  let label = $derived(new Intl.NumberFormat('pt-PT').format(currentXp) + ' XP');
+  let numberLocale = $derived($locale || 'pt-PT');
+  let label = $derived(new Intl.NumberFormat(numberLocale).format(currentXp) + ' XP');
   let deltaLabel = $derived(delta === null ? '' : `${delta > 0 ? '+' : ''}${delta} XP`);
 
   function prefersReducedMotion(): boolean {

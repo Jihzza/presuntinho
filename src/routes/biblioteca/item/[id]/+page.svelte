@@ -25,7 +25,7 @@
 -->
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
   import {
@@ -58,6 +58,7 @@
   let assignmentsLoaded = $state(false);
   let attachBusy = $state(false);
   let attachDraft = $state<string>('');
+  const dateLocale = $derived($locale || 'pt-PT');
 
   // Load the assignment list ONCE on mount so the "Attach to assignment"
   // dropdown is populated even before the user opens it.
@@ -143,7 +144,7 @@
 
   function formatCreatedAt(ts: number): string {
     if (!ts) return '';
-    return new Date(ts).toLocaleDateString('pt-PT', {
+    return new Date(ts).toLocaleDateString(dateLocale, {
       day: '2-digit',
       month: 'short',
       year: 'numeric'
