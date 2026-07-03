@@ -2,6 +2,7 @@ import { listHabitos, isLoggedToday, type Habit } from '../habitos';
 import { ensureAssignmentDefaults, listAssignments, localizedAssignment, type Assignment } from '../trabalhos';
 import { get } from 'svelte/store';
 import { t } from 'svelte-i18n';
+import { locale } from '../i18n';
 
 export type AgendaItemKind = 'assignment' | 'habit' | 'life';
 export type AgendaItemTone = 'danger' | 'warning' | 'school' | 'habit' | 'life' | 'done';
@@ -127,7 +128,7 @@ export async function loadAgendaItems(): Promise<AgendaItem[]> {
     if (a.date !== b.date) return a.date.localeCompare(b.date);
     if (a.tone === 'danger' && b.tone !== 'danger') return -1;
     if (b.tone === 'danger' && a.tone !== 'danger') return 1;
-    const loc = typeof localStorage === 'undefined' ? 'pt-PT' : localStorage.getItem('fat-pref-lang') || 'pt-PT';
+    const loc = get(locale) || 'pt-PT';
     return a.title.localeCompare(b.title, loc);
   });
 }

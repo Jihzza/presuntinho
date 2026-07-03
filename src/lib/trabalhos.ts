@@ -26,8 +26,10 @@
 // the same pattern as the habitos/financas wrappers.
 
 import { browser } from '$app/environment';
+import { get } from 'svelte/store';
 import { db } from './state/db';
 import type { AssignmentRow } from './state/db';
+import { locale } from './i18n';
 import { buildDefaultAssignments } from './state/assignments-seed';
 import { awardXP } from './state/xp-actions';
 
@@ -112,7 +114,7 @@ export async function listAssignmentCursos(): Promise<string[]> {
   const rows = await db().assignments.toArray();
   const set = new Set<string>();
   for (const r of rows) set.add(r.curso);
-  const loc = typeof localStorage === 'undefined' ? 'pt-PT' : localStorage.getItem('fat-pref-lang') || 'pt-PT';
+  const loc = get(locale) || 'pt-PT';
   return ['todos', ...Array.from(set).sort((a, b) => a.localeCompare(b, loc))];
 }
 
