@@ -34,7 +34,13 @@
       emoji = ce.detail.emoji ?? '❤️';
       intensity = Math.max(0, Math.min(4, ce.detail.intensity ?? 0));
       burstLevel = Math.max(0, Math.min(5, ce.detail.burstLevel ?? 0));
-      burstText = burstLevel >= 5 ? 'modo meteoro' : burstLevel >= 3 ? 'explosão de amor' : burstLevel >= 1 ? 'combo fofinho' : '';
+      burstText = burstLevel >= 5
+        ? $t('components.heart.burst.max')
+        : burstLevel >= 3
+          ? $t('components.heart.burst.strong')
+          : burstLevel >= 1
+            ? $t('components.heart.burst.combo')
+            : '';
       if (burstTimer) clearTimeout(burstTimer);
       burstTimer = setTimeout(() => {
         burstLevel = 0;

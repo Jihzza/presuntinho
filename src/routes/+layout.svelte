@@ -33,7 +33,6 @@
   // Tag <link rel="manifest"> gerada pelo plugin (caso o PWA esteja ativo).
   // O fallback manual já vive em src/app.html, por isso esta tag é só aditiva.
   const webManifestLink = $derived(pwaInfo ? pwaInfo.webManifest.linkTag : '');
-  const isAgentRoute = $derived(page.url.pathname.startsWith('/agente'));
   const moodAccent = $derived(activeMood ? MOOD_META[activeMood.kind].accent : null);
 
   onMount(() => {
@@ -311,15 +310,13 @@
                   be an independent fixed button at bottom-right, which made it
                   sit behind the Vida footer tab on mobile.
                 -->
-                {#if !isAgentRoute}
-                  <div class="fab-stack" aria-live="polite">
-                    <XpPill />
-                    <HeartButton />
-                  </div>
-                  <div class="mascot-corner" aria-live="polite">
-                    <Mascot />
-                  </div>
-                {/if}
+                <div class="fab-stack" aria-live="polite">
+                  <XpPill />
+                  <HeartButton />
+                </div>
+                <div class="mascot-corner" aria-live="polite">
+                  <Mascot />
+                </div>
   </div>
 {/if}
 

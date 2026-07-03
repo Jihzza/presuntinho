@@ -31,7 +31,7 @@
     <div class="path-node reward"><span>🏆</span><strong>{$t('school.path.reward.title')}</strong><small>{$t('school.path.reward.body')}</small></div>
   </section>
 
-  <section class="main-courses" aria-label="Cursos principais">
+  <section class="main-courses" aria-label={$t('escola.section.courses.aria')}>
     <h2 class="section-title">{$t('school.main.title')}</h2>
     <div class="course-grid">
       {#each mainSchoolCourses as course (course.slug)}
@@ -48,7 +48,7 @@
     </div>
   </section>
 
-  <section id="business-administration" class="business-section" aria-label="Business Administration">
+  <section id="business-administration" class="business-section" aria-label={$t('escola.section.business.aria')}>
     <div class="section-head">
       <div>
         <h2>{businessAdministration.title}</h2>
@@ -70,7 +70,7 @@
     </div>
   </section>
 
-  <section class="extras-section" aria-label="Extras e trabalhos da escola">
+  <section class="extras-section" aria-label={$t('escola.section.tools.aria')}>
     <div class="section-head">
       <div>
         <h2>{$t('school.extras.title')}</h2>

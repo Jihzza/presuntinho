@@ -22,9 +22,14 @@ export interface ActiveMood extends LoveLockState {
 }
 
 const ACK_KEY = 'presuntinho:mood:intro-ack';
+const MANUAL_MOOD_KEY = 'presuntinho:mood:manual-fallback';
 export const MOOD_EVENT = 'presuntinho:mood-changed';
 
 type AckPayload = { kind: MoodKind; expiresAt: number; acknowledgedAt: number };
+
+function isMoodKind(value: unknown): value is MoodKind {
+  return value === 'sick' || value === 'sad' || value === 'love';
+}
 
 function readAck(): AckPayload | null {
   if (!browser) return null;
@@ -32,30 +37,67 @@ function readAck(): AckPayload | null {
     const raw = localStorage.getItem(ACK_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<AckPayload>;
-    if (!parsed.kind || typeof parsed.expiresAt !== 'number') return null;
+    if (!isMoodKind(parsed.kind) || typeof parsed.expiresAt !== 'number') return null;
     return parsed as AckPayload;
   } catch {
     return null;
   }
 }
 
+function readManualFallback(): ActiveMood | null {
+  if (!browser) return null;
+  try {
+    const raw = localStorage.getItem(MANUAL_MOOD_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<ActiveMood>;
+    if (!isMoodKind(parsed.kind) || typeof parsed.expiresAt !== 'number') return null;
+    if (parsed.expiresAt <= Date.now()) {
+      localStorage.removeItem(MANUAL_MOOD_KEY);
+      return null;
+    }
+    return {
+      kind: parsed.kind,
+      startedAt: typeof parsed.startedAt === 'number' ? parsed.startedAt : Date.now(),
+      expiresAt: parsed.expiresAt
+    };
+  } catch {
+    return null;
+  }
+}
+
+function writeManualFallback(mood: ActiveMood): void {
+  if (!browser) return;
+  localStorage.setItem(MANUAL_MOOD_KEY, JSON.stringify(mood));
+}
+
 export function detectMoodTrigger(rawPassword: string): MoodKind | null {
   return detectLoveLock(rawPassword);
 }
 
-export async function activateMood(kind: MoodKind, _source: MoodTriggerSource = 'password'): Promise<ActiveMood | null> {
-  if (browser) localStorage.removeItem(ACK_KEY);
-  const mood = await activateLoveLock(kind);
+export async function activateMood(kind: MoodKind, source: MoodTriggerSource = 'password'): Promise<ActiveMood | null> {
+  if (browser) {
+    localStorage.removeItem(ACK_KEY);
+    localStorage.removeItem(MANUAL_MOOD_KEY);
+  }
+  let mood = await activateLoveLock(kind);
+  if (!mood && source === 'manual') {
+    const now = Date.now();
+    mood = { kind, startedAt: now, expiresAt: now + 60 * 60 * 1000 };
+    writeManualFallback(mood);
+  }
   if (browser) window.dispatchEvent(new CustomEvent(MOOD_EVENT, { detail: mood }));
   return mood;
 }
 
 export async function readActiveMood(): Promise<ActiveMood | null> {
-  return readLoveLock();
+  return (await readLoveLock()) ?? readManualFallback();
 }
 
 export async function clearActiveMood(): Promise<void> {
-  if (browser) localStorage.removeItem(ACK_KEY);
+  if (browser) {
+    localStorage.removeItem(ACK_KEY);
+    localStorage.removeItem(MANUAL_MOOD_KEY);
+  }
   await clearLoveLock();
   if (browser) window.dispatchEvent(new CustomEvent(MOOD_EVENT, { detail: null }));
 }

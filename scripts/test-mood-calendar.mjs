@@ -34,7 +34,7 @@ const db = read('src/lib/state/db.ts');
 
 console.log('\nMood/Vibe architecture');
 assert('mood.ts defines ActiveMood', /export interface ActiveMood/.test(mood));
-assert('mood.ts exposes agent-ready activateMood', /export async function activateMood\(kind: MoodKind, _source: MoodTriggerSource = 'password'\)/.test(mood));
+assert('mood.ts exposes agent-ready activateMood', /export async function activateMood\(kind: MoodKind, source: MoodTriggerSource = 'password'\)/.test(mood) && mood.includes("source === 'manual'") && mood.includes('MANUAL_MOOD_KEY'));
 assert('mood metadata includes sick/sad/love', /sick:\s*{[\s\S]*sad:\s*{[\s\S]*love:\s*{/.test(mood));
 assert('mood change event exists', mood.includes("presuntinho:mood-changed"));
 assert('splash acknowledges intro instead of clearing mood', splash.includes('acknowledgeMoodIntro(loveLockState)') && !splash.includes('await clearLoveLock()'));
