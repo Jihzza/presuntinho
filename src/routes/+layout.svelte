@@ -40,6 +40,11 @@
 
   const moodAccent = $derived(activeMood ? MOOD_META[activeMood.kind].accent : null);
 
+  // Pages with a fixed bottom composer (chat input) need the floating
+  // elements (fab-stack, mascot, mood chip, PWA banner) lifted above it.
+  // Consumed via var(--page-bottom-inset) — see app.css for the token.
+  const pageBottomInset = $derived(isActive('/agente/') || isActive('/mensagens/') ? '5.5rem' : '0px');
+
   /** Normalised active-tab check for the bottom nav. */
   function isActive(href: string): boolean {
     const path = page.url.pathname.replace(/\/+$/, '') || '/';
@@ -266,17 +271,17 @@
   <Confetti />
   <Toast />
   <XpToast />
-  {#if activeMood}
-    <MoodLayer mood={activeMood} onCleared={() => (activeMood = null)} />
-  {/if}
   <SecretModal bind:open={secretRoomOpen} />
   <!-- Phase 15: offline status banner (listens to online/offline events). -->
   <OfflineIndicator />
   <a class="skip-link" href="#main-content">{$t('a11y.skipToContent')}</a>
   <div
     class={`app ${activeMood ? `app-mood app-mood-${activeMood.kind}` : ''}`}
-    style={moodAccent ? `--mood-accent: ${moodAccent};` : undefined}
+    style={`--page-bottom-inset: ${pageBottomInset};${moodAccent ? ` --mood-accent: ${moodAccent};` : ''}`}
   >
+    {#if activeMood}
+      <MoodLayer mood={activeMood} onCleared={() => (activeMood = null)} />
+    {/if}
     <header class="nav">
       <div class="nav-inner">
         <!--
@@ -354,9 +359,9 @@
                     <span class="nav-icon" aria-hidden="true">🌿</span>
                     <span class="nav-label">{$t('nav.vida', { default: 'Vida' })}</span>
                   </a>
-                  <a href="/escola/" class="nav-btn" class:nav-btn-active={isActive('/escola/')} aria-current={isActive('/escola/') ? 'page' : undefined} class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Escola')} aria-label={$t('nav.escola.aria', { default: 'Escola — cursos e lições' })} data-sveltekit-preload-data>
-                    <span class="nav-icon" aria-hidden="true">📚</span>
-                    <span class="nav-label">{$t('nav.escola', { default: 'Escola' })}</span>
+                  <a href="/mensagens/" class="nav-btn" class:nav-btn-active={isActive('/mensagens/')} aria-current={isActive('/mensagens/') ? 'page' : undefined} class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Mensagens')} aria-label={$t('nav.mensagens.aria', { default: 'Mensagens — conversas com o Daniel' })} data-sveltekit-preload-data>
+                    <span class="nav-icon" aria-hidden="true">💬</span>
+                    <span class="nav-label">{$t('nav.mensagens', { default: 'Mensagens' })}</span>
                   </a>
                 </nav>
 
@@ -630,24 +635,36 @@
     .fab-stack {
       position: fixed;
       right: max(1rem, env(safe-area-inset-right));
-      bottom: calc(env(safe-area-inset-bottom) + 5.75rem);
+      bottom: calc(env(safe-area-inset-bottom) + 5.75rem + var(--page-bottom-inset, 0px));
       display: flex;
       flex-direction: column;
       align-items: flex-end;
       justify-content: flex-end;
       gap: 0.65rem;
+      width: 9.25rem;
+      height: 6.9rem;
       z-index: 60;
       pointer-events: none; /* container ignores — children re-enable */
     }
     .fab-stack > :global(*) {
       pointer-events: auto;
     }
+    .fab-stack > :global(:last-child) {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+    }
+    .fab-stack > :global(:first-child) {
+      position: absolute;
+      right: 0;
+      bottom: 4.05rem;
+    }
     /* PWA update banner — actionable "toast" pinned above the bottom nav. */
     .pwa-update {
       position: fixed;
       left: 50%;
       transform: translateX(-50%);
-      bottom: calc(env(safe-area-inset-bottom) + 5.25rem);
+      bottom: calc(env(safe-area-inset-bottom) + 5.25rem + var(--page-bottom-inset, 0px));
       display: flex;
       align-items: center;
       gap: var(--space-2);
@@ -713,7 +730,7 @@
     .mascot-corner {
       position: fixed;
       left: max(0.85rem, env(safe-area-inset-left));
-      bottom: calc(env(safe-area-inset-bottom) + 5.55rem);
+      bottom: calc(env(safe-area-inset-bottom) + 5.55rem + var(--page-bottom-inset, 0px));
       z-index: 60;
       pointer-events: none;
     }

@@ -3618,7 +3618,7 @@
   "school.loop.aria": "Résumé gamification mta3 ecole",
   "school.loop.lives": "lel quizzes s3ab",
   "school.loop.lives_value": "💚 3 lives",
-  "school.loop.streak": "nharat streak target",
+  "school.loop.streak": "Streak mta3 el 9raya",
   "school.loop.streak_value": "🔥 7",
   "school.loop.xp": "per lesson kemla",
   "school.loop.xp_value": "⚡ +25 XP",
@@ -4380,5 +4380,7 @@
   "biblioteca.import_button": "Da5el JSON",
   "biblioteca.attach_to_assignment_label": "Rabet b khedma",
   "biblioteca.no_assignment": "— 7atta wa7da —",
-  "biblioteca.no_curso": "— 7atta wa7ed —"
+  "biblioteca.no_curso": "— 7atta wa7ed —",
+  "agente.galeria.tab.videos": "Videos",
+  "agente.galeria.empty.videos": "Mazelt ma fama hatta video fel chat. Zidi moment 7low! 🎬"
 }

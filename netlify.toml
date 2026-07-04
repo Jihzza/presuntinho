@@ -64,7 +64,9 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    # Allow same-origin microphone/camera for the agent + private Mensagens
+    # audio/media flows; keep geolocation disabled.
+    Permissions-Policy = "geolocation=(), microphone=(self), camera=(self)"
 
 # Pretty URL aliases (UNCHANGED from V3)
 [[redirects]]

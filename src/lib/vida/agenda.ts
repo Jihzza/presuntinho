@@ -17,7 +17,8 @@ import { listHabitos, getAllLogsInRange, localizedHabit, type Habit } from '../h
 import { ensureAssignmentDefaults, listAssignments, localizedAssignment, type Assignment } from '../trabalhos';
 import { db, type EventRow } from '../state/db';
 import { awardXP } from '../state/xp-actions';
-import { formatValor } from '../financas';
+import { formatValor, getMesAtual, getOrcamentoStatus, type OrcamentoStatus } from '../financas';
+import { getDailyQuests, type DailyQuestsResult } from '../gamification/quests';
 import { get } from 'svelte/store';
 import { t } from 'svelte-i18n';
 import { locale } from '../i18n';
@@ -60,6 +61,9 @@ export interface AgendaItem {
   icon?: string;
 }
 
+export type NotificationType = 'deadline' | 'habit' | 'special' | 'budget' | 'quest' | 'love';
+export type NotificationSection = 'today' | 'week';
+
 export interface NotificationItem {
   id: string;
   title: string;
@@ -67,6 +71,20 @@ export interface NotificationItem {
   href: string;
   tone: AgendaItemTone;
   priority: number;
+  /** What kind of alert this is — drives the row icon and filters. */
+  type: NotificationType;
+  /** Leading emoji for the inbox row. */
+  icon: string;
+  /** Local 'YYYY-MM-DD' the alert refers to (deadline, special date…). */
+  date?: string;
+  /** Inbox grouping: needs attention today vs. coming up this week. */
+  section: NotificationSection;
+}
+
+/** Optional non-agenda sources merged into the notification inbox. */
+export interface NotificationExtras {
+  orcamentos?: OrcamentoStatus[];
+  quests?: DailyQuestsResult;
 }
 
 /** Which sources to include when loading a range. All default to true. */
@@ -545,7 +563,30 @@ export async function loadAgendaItems(): Promise<AgendaItem[]> {
 // Notifications
 // ---------------------------------------------------------------------------
 
-export function buildNotifications(items: AgendaItem[]): NotificationItem[] {
+/**
+ * Load the non-agenda notification sources (budget status + daily
+ * quests) in ONE place, with catch-fallbacks so a broken source never
+ * blanks the inbox.
+ *
+ * NOTE: getDailyQuests() pays any due quest XP idempotently — share the
+ * result of a SINGLE call per refresh; never call it in a loop or on an
+ * interval.
+ */
+export async function loadNotificationExtras(): Promise<NotificationExtras> {
+  const [orcamentos, quests] = await Promise.all([
+    getOrcamentoStatus(getMesAtual()).catch((err) => {
+      console.warn('[agenda] budget status unavailable (non-fatal)', err);
+      return [] as OrcamentoStatus[];
+    }),
+    getDailyQuests().catch((err) => {
+      console.warn('[agenda] daily quests unavailable (non-fatal)', err);
+      return undefined;
+    })
+  ]);
+  return { orcamentos, quests };
+}
+
+export function buildNotifications(items: AgendaItem[], extras: NotificationExtras = {}): NotificationItem[] {
   const today = localDateKey(new Date());
   const todayDate = new Date(`${today}T00:00:00`).getTime();
   const pendingAssignments = items.filter((i) => i.kind === 'assignment' && i.status !== 'submitted' && i.status !== 'graded');
@@ -555,6 +596,8 @@ export function buildNotifications(items: AgendaItem[]): NotificationItem[] {
     return delta >= 0 && delta <= 7;
   });
   const todayHabits = items.filter((i) => i.kind === 'habit' && i.date === today && i.status !== 'done');
+  const earliestDate = (list: AgendaItem[]): string | undefined =>
+    list.length > 0 ? list.reduce((min, i) => (i.date < min ? i.date : min), list[0].date) : undefined;
 
   const notifications: NotificationItem[] = [];
   if (overdue.length > 0) {
@@ -568,7 +611,11 @@ export function buildNotifications(items: AgendaItem[]): NotificationItem[] {
       body: tr('agenda.notifications.overdue.body', 'Começa por limpar os trabalhos que já passaram do prazo.'),
       href: '/escola/trabalhos/',
       tone: 'danger',
-      priority: 1
+      priority: 1,
+      type: 'deadline',
+      icon: '⏳',
+      date: earliestDate(overdue),
+      section: 'today'
     });
   }
   if (urgent.length > 0) {
@@ -582,9 +629,41 @@ export function buildNotifications(items: AgendaItem[]): NotificationItem[] {
       body: tr('agenda.notifications.urgent.body', 'Toca para ver a lista de trabalhos por prioridade.'),
       href: '/escola/trabalhos/',
       tone: 'warning',
-      priority: 2
+      priority: 2,
+      type: 'deadline',
+      icon: '📝',
+      date: earliestDate(urgent),
+      section: 'week'
     });
   }
+
+  // Budget warnings — top 3 categories that crossed their thresholds
+  // this month (getOrcamentoStatus already sorts by percent desc).
+  const budgets = (extras.orcamentos ?? []).filter((b) => b.status !== 'ok').slice(0, 3);
+  for (const b of budgets) {
+    const over = b.status === 'over';
+    const percent = Math.round(b.percent);
+    notifications.push({
+      id: `budget:${b.categoria.id}`,
+      title: over
+        ? tr('agenda.notifications.budget.over.title', 'Orçamento de {categoria} ultrapassado', { categoria: b.categoria.nome })
+        : tr('agenda.notifications.budget.warn.title', 'Orçamento de {categoria} quase no limite', { categoria: b.categoria.nome }),
+      body: over
+        ? tr('agenda.notifications.budget.over.body', 'Já vai em {percent}% do limite deste mês — vê onde podes aliviar.', { percent })
+        : tr('agenda.notifications.budget.warn.body', 'Vai em {percent}% — ainda restam {restante}.', {
+            percent,
+            restante: formatValor(Math.max(0, b.restante))
+          }),
+      href: '/financas/orcamento/',
+      tone: over ? 'danger' : 'warning',
+      priority: over ? 1 : 2,
+      type: 'budget',
+      icon: b.categoria.icone || '📊',
+      date: today,
+      section: 'today'
+    });
+  }
+
   if (todayHabits.length > 0) {
     notifications.push({
       id: 'today-habits',
@@ -596,7 +675,32 @@ export function buildNotifications(items: AgendaItem[]): NotificationItem[] {
       body: tr('agenda.notifications.habits.body', 'Mantém a streak viva antes do fim do dia.'),
       href: '/habitos/',
       tone: 'habit',
-      priority: 3
+      priority: 3,
+      type: 'habit',
+      icon: '✅',
+      date: today,
+      section: 'today'
+    });
+  }
+
+  // Daily quests still pending — one gentle nudge back to the hub card.
+  const pendingQuests = extras.quests ? extras.quests.quests.filter((q) => !q.done).length : 0;
+  if (pendingQuests > 0) {
+    notifications.push({
+      id: 'daily-quests',
+      title: tr(
+        pendingQuests === 1 ? 'agenda.notifications.quests.one' : 'agenda.notifications.quests.other',
+        pendingQuests === 1 ? 'Falta {n} missão diária' : 'Faltam {n} missões diárias',
+        { n: pendingQuests }
+      ),
+      body: tr('agenda.notifications.quests.body', 'Pequenas vitórias, XP garantido.'),
+      href: '/',
+      tone: 'habit',
+      priority: 3,
+      type: 'quest',
+      icon: '🎯',
+      date: today,
+      section: 'today'
     });
   }
 
@@ -606,15 +710,20 @@ export function buildNotifications(items: AgendaItem[]): NotificationItem[] {
     if (!habit.reminder || typeof habit.habitId !== 'number') continue;
     notifications.push({
       id: `habit-reminder:${habit.habitId}`,
-      title: `⏰ ${habit.title}`,
+      title: habit.title,
       body: tr('agenda.notifications.reminder.body', 'Lembrete: {reminder}', { reminder: reminderLabel(habit.reminder) ?? '' }),
       href: '/habitos/',
       tone: 'habit',
-      priority: 4
+      priority: 4,
+      type: 'habit',
+      icon: '⏰',
+      date: today,
+      section: 'today'
     });
   }
 
   // Upcoming special dates (next 14 days) — a little romance in the inbox.
+  // A special that lands TODAY becomes a love note pointing to /memorias/.
   const specials = items
     .filter((i) => i.kind === 'life' && i.eventKind === 'special' && i.date >= today)
     .filter((i) => {
@@ -623,30 +732,32 @@ export function buildNotifications(items: AgendaItem[]): NotificationItem[] {
     });
   for (const special of specials) {
     const delta = Math.round((new Date(`${special.date}T00:00:00`).getTime() - todayDate) / DAY_MS);
-    const body = delta === 0
-      ? tr('agenda.notifications.special.today', 'É hoje! 💖')
+    const isToday = delta === 0;
+    // eventToItem prefixes the icon into the title; the inbox row shows
+    // the icon separately, so strip the duplicate prefix when present.
+    const cleanTitle = special.icon && special.title.startsWith(`${special.icon} `)
+      ? special.title.slice(special.icon.length + 1)
+      : special.title;
+    const body = isToday
+      ? tr('agenda.notifications.love.body', 'É hoje! Guarda este momento nas memórias. 💖')
       : delta === 1
         ? tr('agenda.notifications.special.tomorrow', 'É amanhã — prepara algo bonito.')
         : tr('agenda.notifications.special.days', 'Faltam {n} dias.', { n: delta });
     notifications.push({
       id: `special:${special.id}`,
-      title: special.title,
+      title: cleanTitle,
       body,
-      href: '/calendario/',
+      href: isToday ? '/memorias/' : '/calendario/',
       tone: 'life',
-      priority: delta === 0 ? 2 : 5
+      priority: isToday ? 2 : 5,
+      type: isToday ? 'love' : 'special',
+      icon: isToday ? '💌' : (special.icon || '💗'),
+      date: special.date,
+      section: isToday ? 'today' : 'week'
     });
   }
 
-  if (notifications.length === 0) {
-    notifications.push({
-      id: 'all-clear',
-      title: tr('agenda.notifications.clear.title', 'Nada urgente agora'),
-      body: tr('agenda.notifications.clear.body', 'A Home está limpa. Bom momento para planear a semana.'),
-      href: '/',
-      tone: 'done',
-      priority: 9
-    });
-  }
+  // No all-clear sentinel anymore — an empty inbox IS the good news
+  // (the /notificacoes page renders its own gentle empty state).
   return notifications.sort((a, b) => a.priority - b.priority);
 }

@@ -34,11 +34,13 @@
     buildNotifications,
     formatDayLabel,
     loadAgendaItems,
+    loadNotificationExtras,
     localDateKey,
     weekDays,
     type AgendaItem,
     type NotificationItem
   } from '$lib/vida/agenda';
+  import { NOTIF_CHANGED_EVENT, loadNotifState, unreadCount, type NotifState } from '$lib/vida/notificationState';
   import { locale, t } from 'svelte-i18n';
 
   interface BadgeStatus {
@@ -55,6 +57,7 @@
   let heroIn = $state(false);
   let agendaItems = $state<AgendaItem[]>([]);
   let notifications = $state<NotificationItem[]>([]);
+  let notifState = $state<NotifState>({ snoozed: new Set(), read: new Set() });
   let activeMood = $state<ActiveMood | null>(null);
   let charmSeed = $state(Date.now());
   let streak = $state<{ current: number; best: number; activeToday: boolean } | null>(null);
@@ -70,7 +73,7 @@
   const unlockedBadges = $derived(Object.values(badgesMap).filter((b) => b.unlocked).length);
   const todaysItems = $derived(agendaItems.filter((item) => item.date === todayKey));
   const todaysPending = $derived(todaysItems.filter((item) => item.status !== 'done'));
-  const urgentCount = $derived(notifications.filter((item) => item.tone === 'danger' || item.tone === 'warning').length);
+  const alertCount = $derived(unreadCount(notifications, notifState));
   const moodMeta = $derived(activeMood ? MOOD_META[activeMood.kind] : null);
   const moodLine = $derived(activeMood ? moodMicrocopy(activeMood.kind, charmSeed) : $t('hub.default.mood_line'));
   const moodNote = $derived(activeMood ? moodAffirmation(activeMood.kind, charmSeed) : '');
@@ -105,9 +108,11 @@
 
   async function refreshAgenda(): Promise<void> {
     try {
-      const items = await loadAgendaItems();
+      // loadNotificationExtras() shares ONE idempotent getDailyQuests()
+      // call per refresh — never fetch quests per-item or on a timer.
+      const [items, extras] = await Promise.all([loadAgendaItems(), loadNotificationExtras()]);
       agendaItems = items;
-      notifications = buildNotifications(items);
+      notifications = buildNotifications(items, extras);
     } catch (e) {
       console.error('[hub] refreshAgenda failed', e);
     }
@@ -171,6 +176,7 @@
   onMount(() => {
     activeProfile = getSession()?.profile ?? null;
     heroIn = true;
+    notifState = loadNotifState();
     const unsubXp = xp.subscribe((v) => (currentXp = v));
     const unsubLocale = locale.subscribe(() => {
       void refreshAgenda();
@@ -198,6 +204,10 @@
     };
     window.addEventListener(XP_CHANGED_EVENT, onXpEvent);
 
+    // Bell chip live-updates when /notificacoes marks read / snoozes.
+    const onNotifChanged = () => (notifState = loadNotifState());
+    window.addEventListener(NOTIF_CHANGED_EVENT, onNotifChanged);
+
     const onVis = () => {
       if (document.visibilityState === 'visible') {
         now = new Date();
@@ -209,6 +219,7 @@
 
     return () => {
       window.removeEventListener(XP_CHANGED_EVENT, onXpEvent);
+      window.removeEventListener(NOTIF_CHANGED_EVENT, onNotifChanged);
       document.removeEventListener('visibilitychange', onVis);
       unsubXp();
       unsubLocale();
@@ -252,15 +263,15 @@
         {$t('hub.hero.level', { values: { level }, default: 'Nível {level}' })}
         <small>{xpLabel}</small>
       </span>
-      <a class="chip chip-alerts" href="/notificacoes/" data-alert={urgentCount > 0}>
+      <a class="chip chip-alerts" href="/notificacoes/" data-alert={alertCount > 0}>
         <span aria-hidden="true">🔔</span>
-        {$t('hub.hero.alerts', { values: { count: urgentCount }, default: '{count} alertas' })}
+        {$t('hub.hero.alerts', { values: { count: alertCount }, default: '{count} alertas' })}
       </a>
     </div>
   </header>
 
   <!-- 2 · Missões diárias -->
-  <section class="quests-section" aria-label={$t('hub.quests.aria', { default: 'Missões diárias' })}>
+  <section class="quests-section presuntinho-quest" aria-label={$t('hub.quests.aria', { default: 'Missões diárias' })}>
     <DailyQuests />
   </section>
 

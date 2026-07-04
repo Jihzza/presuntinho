@@ -11,6 +11,16 @@
    *   - History is loaded from Dexie (`chat_messages`) but the focus
    *     stays in the input even when there is prior context.
    *
+   * V9 — multi-conversation support:
+   *   - Conversations live in `chat_conversations`; every message row
+   *     carries a `conversationId`. The 💬 header button opens a drawer
+   *     (ConversationsDrawer) to switch / create / rename / delete.
+   *   - Each conversation maps to its own Hermes session
+   *     (`sessionIdFor`); '' is the legacy sentinel kept by the v9
+   *     migration so the pre-V9 server transcript survives.
+   *   - "Clear history" now clears only the ACTIVE conversation.
+   *   - The 🖼️ header button opens /agente/galeria — all shared media.
+   *
    * Brain: when a Hermes gateway is configured in /definicoes, every
    * message streams through it (src/lib/agent/hermes.ts) with a compact
    * app-data snapshot as system_message. The keyword engine
@@ -22,7 +32,7 @@
   import { dispatch, type AgentReply } from '$lib/agent/engine';
   import {
     getHermesConfig,
-    hermesSessionId,
+    sessionIdFor,
     ensureHermesSession,
     deleteHermesSession,
     forgetHermesSession,
@@ -32,13 +42,24 @@
   import {
     listChatMessages,
     appendChatMessage,
-    clearChatHistory
+    listConversations,
+    createConversation,
+    renameConversation,
+    deleteConversation,
+    clearConversation,
+    getOrCreateActiveConversation,
+    setActiveConversationId
   } from '$lib/agent/db';
-  import type { ChatMessageRow } from '$lib/state/db';
+  import type { ChatMessageRow, ChatConversationRow } from '$lib/state/db';
   import { initStores } from '$lib/state/stores';
   import { getSession } from '$lib/auth/session';
+  import { showToast } from '$lib/components/events';
+  import ConversationsDrawer from '$lib/components/agente/ConversationsDrawer.svelte';
 
   let messages = $state<ChatMessageRow[]>([]);
+  let conversations = $state<ChatConversationRow[]>([]);
+  let activeConv = $state<ChatConversationRow | null>(null);
+  let drawerOpen = $state(false);
   let input = $state('');
   let busy = $state(false);
   // Non-null while a Hermes reply is streaming in ('' until first token).
@@ -63,9 +84,29 @@
     { key: 'agente.chips.semana',        prompt: 'Resumo da semana' }
   ];
 
+  // Object-URL cache: one URL per message attachment, created lazily on
+  // first render and revoked on unmount. Avoids the leak of calling
+  // URL.createObjectURL on every render pass (caderno had this bug).
+  const objectUrls = new Map<number, string>();
+
+  function attachmentUrl(m: ChatMessageRow): string | null {
+    const blob = m.attachment?.blob;
+    if (!blob || m.id === undefined) return null;
+    let url = objectUrls.get(m.id);
+    if (!url) {
+      url = URL.createObjectURL(blob);
+      objectUrls.set(m.id, url);
+    }
+    return url;
+  }
+
   async function scrollToBottom() {
     await tick();
     if (scrollEl) scrollEl.scrollTop = scrollEl.scrollHeight;
+  }
+
+  async function refreshConversations() {
+    conversations = await listConversations();
   }
 
   async function refreshHistory() {
@@ -73,11 +114,25 @@
       const session = getSession();
       if (!session) return;
       await initStores(session.profile);
-      messages = await listChatMessages(200);
+      activeConv = await getOrCreateActiveConversation(
+        session.profile,
+        $t('agente.conv.default_title', { default: 'Conversa' })
+      );
+      await refreshConversations();
+      if (activeConv?.id !== undefined) {
+        messages = await listChatMessages(activeConv.id, 200);
+      }
       await scrollToBottom();
     } catch (e) {
       console.error('[agente] failed to load history', e);
     }
+  }
+
+  /** Resolve the active conversation id, loading it if needed. */
+  async function activeConvId(): Promise<number | null> {
+    if (activeConv?.id !== undefined) return activeConv.id;
+    await refreshHistory();
+    return activeConv?.id ?? null;
   }
 
   function syncKeyboardInset(): void {
@@ -95,24 +150,25 @@
   }
 
   /** Legacy path — local keyword engine (also the Hermes fallback). */
-  async function replyWithEngine(text: string, offlinePrefix = false): Promise<void> {
+  async function replyWithEngine(convId: number, text: string, offlinePrefix = false): Promise<void> {
     const reply: AgentReply = await dispatch(text);
     const prefix = offlinePrefix ? `${$t('agente.hermes.offline_prefix')}\n` : '';
-    await appendChatMessage('assistant', prefix + reply.text);
+    await appendChatMessage(convId, 'assistant', prefix + reply.text);
   }
 
-  async function replyWithHermes(text: string): Promise<void> {
+  async function replyWithHermes(conv: ChatConversationRow, text: string): Promise<void> {
+    const convId = conv.id as number;
     const cfg = getHermesConfig();
     const session = getSession();
     if (!cfg || !session) {
-      await replyWithEngine(text);
+      await replyWithEngine(convId, text);
       return;
     }
     abortCtrl = new AbortController();
     streamingText = '';
     try {
-      const sid = hermesSessionId(session.profile);
-      await ensureHermesSession(cfg, sid, `Presuntinho ${session.profile}`);
+      const sid = sessionIdFor(session.profile, conv);
+      await ensureHermesSession(cfg, sid, `Presuntinho ${session.profile} — ${conv.title}`);
       const system = await buildContextSummary(session.profile);
       const final = await streamHermesChat({
         cfg,
@@ -125,15 +181,15 @@
           void scrollToBottom();
         }
       });
-      await appendChatMessage('assistant', final || streamingText || $t('agente.hermes.error_stream'));
+      await appendChatMessage(convId, 'assistant', final || streamingText || $t('agente.hermes.error_stream'));
     } catch (e) {
       if (isAbortError(e)) {
         // User pressed stop — keep whatever streamed in so far.
         const partial = streamingText?.trim();
-        if (partial) await appendChatMessage('assistant', `${partial}\n${$t('agente.hermes.stopped')}`);
+        if (partial) await appendChatMessage(convId, 'assistant', `${partial}\n${$t('agente.hermes.stopped')}`);
       } else {
         console.error('[agente] hermes stream failed, falling back to engine', e);
-        await replyWithEngine(text, true);
+        await replyWithEngine(convId, text, true);
       }
     } finally {
       streamingText = null;
@@ -148,21 +204,29 @@
   async function send() {
     const text = input.trim();
     if (!text || busy) return;
+    // Set busy BEFORE any await so a double-tap can't double-send.
     busy = true;
     input = '';
+    let cid: number | null = null;
     try {
-      await appendChatMessage('user', text);
-      messages = await listChatMessages(200);
+      cid = await activeConvId();
+      const conv = activeConv;
+      if (cid === null || !conv) return;
+      await appendChatMessage(cid, 'user', text);
+      messages = await listChatMessages(cid, 200);
       await scrollToBottom();
-      await replyWithHermes(text);
-      messages = await listChatMessages(200);
+      await replyWithHermes(conv, text);
+      messages = await listChatMessages(cid, 200);
     } catch (e) {
       console.error('[agente] send failed', e);
-      await appendChatMessage('assistant', $t('agente.error.send_failed', { default: 'Desculpa, tive um erro a processar a mensagem.' }));
-      messages = await listChatMessages(200);
+      if (cid !== null) {
+        await appendChatMessage(cid, 'assistant', $t('agente.error.send_failed', { default: 'Desculpa, tive um erro a processar a mensagem.' }));
+        messages = await listChatMessages(cid, 200);
+      }
     } finally {
       busy = false;
       await scrollToBottom();
+      await refreshConversations();
       // Do not force-focus the composer here. On mobile that opens the
       // soft keyboard even when the user only tapped a chip or navigated
       // into the page; the keyboard must open only after a direct tap in
@@ -197,23 +261,28 @@
     const target = e.target as HTMLInputElement;
     const file = target.files?.[0];
     if (!file) return;
+    const cid = await activeConvId();
+    if (cid === null) return;
     busy = true;
     try {
       const isImage = file.type.startsWith('image/');
+      const isVideo = file.type.startsWith('video/');
       const isAudio = file.type.startsWith('audio/');
-      const kind = isImage ? 'image' : isAudio ? 'audio' : 'file';
+      const kind = isImage ? 'image' : isVideo ? 'video' : isAudio ? 'audio' : 'file';
       const blob = file.slice(0, file.size, file.type);
-      await appendChatMessage('user', `📎 ${file.name}`, {
+      await appendChatMessage(cid, 'user', `📎 ${file.name}`, {
         kind,
         mimeType: file.type,
         name: file.name,
         blob
       });
       await appendChatMessage(
+              cid,
               'assistant',
               $t('agente.chat.file_received', { values: { filename: file.name } })
             );
-      messages = await listChatMessages(200);
+      messages = await listChatMessages(cid, 200);
+      await refreshConversations();
     } catch (err) {
       console.error('[agente] file upload failed', err);
     } finally {
@@ -233,9 +302,11 @@
       }
       return;
     }
+    const cid = await activeConvId();
+    if (cid === null) return;
     if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
-      await appendChatMessage('assistant', $t('agente.chat.no_audio_support', { default: 'O teu browser não suporta gravação de áudio.' }));
-      messages = await listChatMessages(200);
+      await appendChatMessage(cid, 'assistant', $t('agente.chat.no_audio_support', { default: 'O teu browser não suporta gravação de áudio.' }));
+      messages = await listChatMessages(cid, 200);
       return;
     }
     try {
@@ -246,19 +317,22 @@
         if (ev.data && ev.data.size > 0) recordingChunks.push(ev.data);
       };
       mr.onstop = async () => {
+        recording = false;
         const blob = new Blob(recordingChunks, { type: mr.mimeType || 'audio/webm' });
         try {
-          await appendChatMessage('user', $t('agente.chat.audio_label', { default: '🎤 Áudio gravado' }), {
+          await appendChatMessage(cid, 'user', $t('agente.chat.audio_label', { default: '🎤 Áudio gravado' }), {
                       kind: 'audio',
                       mimeType: mr.mimeType || 'audio/webm',
                       name: `recording-${Date.now()}.webm`,
                       blob
                     });
                     await appendChatMessage(
+                      cid,
                       'assistant',
                       $t('agente.chat.audio_received', { default: 'Recebi o áudio. Quando o agente tiver transcrição ativa, posso responder com base no que disseste. Por agora, escreve-me em texto.' })
                     );
-          messages = await listChatMessages(200);
+          messages = await listChatMessages(cid, 200);
+          await refreshConversations();
         } catch (e) {
           console.error('[agente] recording save failed', e);
         }
@@ -269,35 +343,109 @@
       recording = true;
     } catch (e) {
       console.error('[agente] getUserMedia failed', e);
-      await appendChatMessage('assistant', $t('agente.chat.mic_denied', { default: 'Não consegui aceder ao microfone. Verifica as permissões.' }));
-      messages = await listChatMessages(200);
+      await appendChatMessage(cid, 'assistant', $t('agente.chat.mic_denied', { default: 'Não consegui aceder ao microfone. Verifica as permissões.' }));
+      messages = await listChatMessages(cid, 200);
     }
   }
 
-  async function onClearHistory() {
-    if (!confirm($t('agente.chat.clear_confirm', { default: 'Limpar todo o histórico do chat?' }))) return;
-        try {
-          await clearChatHistory();
-          // Keep the Hermes transcript in sync — best-effort: a fresh
-          // session is recreated on the next message.
-          const cfg = getHermesConfig();
-          const session = getSession();
-          if (cfg && session) {
-            const sid = hermesSessionId(session.profile);
-            try {
-              await deleteHermesSession(cfg, sid);
-            } catch {
-              forgetHermesSession(sid);
-            }
-          }
-          messages = [];
-          await appendChatMessage(
-            'assistant',
-            $t('agente.chat.cleared', { default: 'Histórico limpo. Pergunta-me qualquer coisa sobre o que tens na app.' })
-          );
-      messages = await listChatMessages(200);
+  /** Best-effort server-side session cleanup — never blocks local ops. */
+  async function dropHermesSessionFor(conv: ChatConversationRow): Promise<void> {
+    const cfg = getHermesConfig();
+    const session = getSession();
+    if (!cfg || !session) return;
+    const sid = sessionIdFor(session.profile, conv);
+    try {
+      await deleteHermesSession(cfg, sid);
+    } catch {
+      forgetHermesSession(sid);
+    }
+  }
+
+  /** Clear THIS conversation's messages (row survives, fresh session). */
+  async function onClearConversation() {
+    const conv = activeConv;
+    if (!conv?.id) return;
+    if (!confirm($t('agente.chat.clear_conversation_confirm', { default: 'Limpar as mensagens desta conversa?' }))) return;
+    try {
+      await clearConversation(conv.id);
+      // Keep the Hermes transcript in sync — best-effort: a fresh
+      // session is recreated on the next message.
+      await dropHermesSessionFor(conv);
+      messages = [];
+      await appendChatMessage(
+        conv.id,
+        'assistant',
+        $t('agente.chat.cleared', { default: 'Histórico limpo. Pergunta-me qualquer coisa sobre o que tens na app.' })
+      );
+      messages = await listChatMessages(conv.id, 200);
+      await refreshConversations();
     } catch (e) {
       console.error('[agente] clear failed', e);
+    }
+  }
+
+  async function switchConversation(conv: ChatConversationRow) {
+    if (conv.id === undefined) return;
+    drawerOpen = false;
+    if (conv.id === activeConv?.id) return;
+    // Abort any in-flight stream before the context changes.
+    stopStreaming();
+    const session = getSession();
+    if (session) setActiveConversationId(session.profile, conv.id);
+    activeConv = conv;
+    try {
+      messages = await listChatMessages(conv.id, 200);
+      await scrollToBottom();
+    } catch (e) {
+      console.error('[agente] switch failed', e);
+    }
+  }
+
+  async function onCreateConversation() {
+    const session = getSession();
+    if (!session) return;
+    try {
+      const id = await createConversation(
+        session.profile,
+        $t('agente.conv.default_title', { default: 'Conversa' })
+      );
+      await refreshConversations();
+      const created = conversations.find((c) => c.id === id);
+      if (created) await switchConversation(created);
+      showToast($t('agente.conv.created', { default: 'Nova conversa criada 💬' }));
+    } catch (e) {
+      console.error('[agente] create conversation failed', e);
+    }
+  }
+
+  async function onRenameConversation(conv: ChatConversationRow, title: string) {
+    if (conv.id === undefined) return;
+    try {
+      await renameConversation(conv.id, title);
+      await refreshConversations();
+      if (activeConv && activeConv.id === conv.id) activeConv = { ...activeConv, title };
+    } catch (e) {
+      console.error('[agente] rename failed', e);
+    }
+  }
+
+  async function onDeleteConversation(conv: ChatConversationRow) {
+    if (conv.id === undefined) return;
+    if (!confirm($t('agente.conv.delete_confirm', { default: 'Apagar esta conversa e todas as mensagens?' }))) return;
+    try {
+      if (conv.id === activeConv?.id) stopStreaming();
+      // Best-effort server cleanup first (the local delete always wins).
+      await dropHermesSessionFor(conv);
+      await deleteConversation(conv.id);
+      await refreshConversations();
+      if (conv.id === activeConv?.id) {
+        activeConv = null;
+        messages = [];
+        await refreshHistory();
+      }
+      showToast($t('agente.conv.deleted', { default: 'Conversa apagada.' }));
+    } catch (e) {
+      console.error('[agente] delete conversation failed', e);
     }
   }
 
@@ -310,6 +458,9 @@
       window.visualViewport?.removeEventListener('resize', syncKeyboardInset);
       window.visualViewport?.removeEventListener('scroll', syncKeyboardInset);
       if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+      abortCtrl?.abort();
+      for (const url of objectUrls.values()) URL.revokeObjectURL(url);
+      objectUrls.clear();
     };
   });
 </script>
@@ -320,10 +471,40 @@
 
 <div class="chat-root">
   <div class="chat-header">
-    <h1>💬 {$t('agente.title', { default: 'Agente' })}</h1>
-    <button class="clear" type="button" onclick={onClearHistory} aria-label="{$t('a11y.aria.limpar_historico', { default: 'Limpar histórico' })}">
-      🗑️
-    </button>
+    <h1>
+      💬 {$t('agente.title', { default: 'Agente' })}
+      {#if activeConv}
+        <span class="conv-name" title={activeConv.title}>· {activeConv.title}</span>
+      {/if}
+    </h1>
+    <div class="head-actions">
+      <button
+        class="head-btn"
+        type="button"
+        onclick={() => (drawerOpen = true)}
+        aria-label={$t('agente.conv.open', { default: 'Conversas' })}
+        title={$t('agente.conv.open', { default: 'Conversas' })}
+      >
+        💬
+      </button>
+      <a
+        class="head-btn"
+        href="/agente/galeria"
+        aria-label={$t('agente.galeria.open', { default: 'Galeria de multimédia' })}
+        title={$t('agente.galeria.open', { default: 'Galeria de multimédia' })}
+      >
+        🖼️
+      </a>
+      <button
+        class="head-btn"
+        type="button"
+        onclick={onClearConversation}
+        aria-label={$t('agente.chat.clear_conversation', { default: 'Limpar esta conversa' })}
+        title={$t('agente.chat.clear_conversation', { default: 'Limpar esta conversa' })}
+      >
+        🗑️
+      </button>
+    </div>
   </div>
 
   <div class="chat-scroll" bind:this={scrollEl}>
@@ -336,11 +517,16 @@
       <div class="msg msg-{m.role}">
         <div class="bubble">
           {#if m.attachment}
+            {@const url = attachmentUrl(m)}
             <div class="attach">
-              {#if m.attachment.kind === 'image' && m.attachment.blob}
-                <img src={URL.createObjectURL(m.attachment.blob)} alt={m.attachment.name} />
-              {:else if m.attachment.kind === 'audio' && m.attachment.blob}
-                <audio controls src={URL.createObjectURL(m.attachment.blob)}></audio>
+              {#if m.attachment.kind === 'image' && url}
+                <img src={url} alt={m.attachment.name} />
+              {:else if m.attachment.kind === 'video' && url}
+                <!-- Uploaded personal clips usually have no captions; keep controls + label. -->
+                <!-- svelte-ignore a11y_media_has_caption -->
+                <video controls src={url} aria-label={m.attachment.name}></video>
+              {:else if m.attachment.kind === 'audio' && url}
+                <audio controls src={url}></audio>
               {:else}
                 <span class="file-icon">📄</span>
               {/if}
@@ -393,7 +579,7 @@
         bind:this={fileInput}
         onchange={onFileChosen}
         hidden
-        accept="image/*,audio/*,.pdf,.txt,.md,.doc,.docx"
+        accept="image/*,video/*,audio/*,.pdf,.txt,.md,.doc,.docx"
       />
       <div class="input-shell">
         <button
@@ -449,6 +635,17 @@
   </div>
 </div>
 
+<ConversationsDrawer
+  open={drawerOpen}
+  {conversations}
+  activeId={activeConv?.id ?? null}
+  onclose={() => (drawerOpen = false)}
+  onselect={switchConversation}
+  oncreate={onCreateConversation}
+  onrename={onRenameConversation}
+  ondelete={onDeleteConversation}
+/>
+
 <style>
   .chat-root {
       display: flex;
@@ -464,24 +661,50 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 0.5rem;
     padding: 0.75rem 1rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
   .chat-header h1 {
     margin: 0;
     font-size: 1.1rem;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  .clear {
+  .conv-name {
+    color: var(--txt2, rgba(255, 255, 255, 0.7));
+    font-weight: 400;
+    font-size: 0.92rem;
+  }
+  .head-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    flex: 0 0 auto;
+  }
+  .head-btn {
     background: transparent;
     border: 0;
     color: rgba(255, 255, 255, 0.6);
     cursor: pointer;
-    padding: 0.4rem;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 0.5rem;
+    font-size: 1.05rem;
+    text-decoration: none;
   }
-  .clear:hover {
+  .head-btn:hover {
     background: rgba(255, 255, 255, 0.08);
     color: #fff;
+  }
+  .head-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
   .chat-scroll {
     flex: 1;
@@ -542,8 +765,9 @@
     padding-bottom: 0.4rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   }
-  .attach img {
-    max-width: 200px;
+  .attach img,
+  .attach video {
+    max-width: 220px;
     border-radius: 8px;
   }
   .attach audio {
@@ -569,7 +793,7 @@
     );
     transform: translateX(-50%);
     width: min(800px, calc(100vw - 0.75rem));
-    z-index: 55;
+    z-index: 65;
     background: transparent;
     border: 0;
     border-radius: 0;

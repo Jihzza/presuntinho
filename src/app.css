@@ -70,6 +70,12 @@
 
   /* Safe content width on large displays */
   --content-max: 1200px;
+
+  /* Extra bottom clearance for floating elements (FAB stack, mascot,
+     mood chip, PWA banner). Pages with a fixed bottom composer (e.g.
+     /agente/, /mensagens/) raise this via the layout so floating UI
+     clears the composer instead of overlapping it. Default: none. */
+  --page-bottom-inset: 0px;
 }
 
 /* Light theme — opt-in via [data-theme="light"] on <html>/<body> OR the

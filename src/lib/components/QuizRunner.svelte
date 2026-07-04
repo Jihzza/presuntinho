@@ -2,8 +2,10 @@
   import { onMount } from 'svelte';
   import { awardXP, XP_TABLE } from '$lib/state/xp-actions';
   import { awardBadge } from '$lib/state/stores';
-  import { fireConfettiEvent, showToast } from '$lib/components/events';
+  import { showToast } from '$lib/components/events';
   import { getQuizHistory, recordQuizResult, type QuizHistory } from '$lib/escola/progress';
+  import { schoolQuizContextForSlug } from '$lib/escola/catalog';
+  import QuizVictory from '$lib/components/QuizVictory.svelte';
   import { t } from 'svelte-i18n';
 
   // Match the V3 quiz shape (static/legacy/assets/js/quizzes.js)
@@ -36,6 +38,12 @@
   // and updated after each submit.  Read via the escola progress module.
   let history = $state<QuizHistory | null>(null);
   let reviewOpen = $state(false);
+  // V9 — full-screen celebration overlay shown right after submit. The
+  // inline results card stays rendered beneath it for review.
+  let victoryOpen = $state(false);
+  // Course/unit context (if this quiz belongs to a catalog course) —
+  // powers the 'Próxima lição' CTA inside QuizVictory.
+  let quizContext = $derived(schoolQuizContextForSlug(quizId));
 
   onMount(() => {
     void (async () => {
@@ -99,10 +107,9 @@
       );
       if (pt) {
         void awardBadge('b11');
-        fireConfettiEvent(80);
-      } else {
-        fireConfettiEvent(60);
       }
+      // NOTE (V9): the perfect-score confetti now fires inside
+      // QuizVictory on mount (single fire point, no double burst).
     } else {
       showToast(
         $t('quiz.toast.score', {
@@ -110,8 +117,11 @@
           default: '🎯 {correct}/{total} ({score}%)'
         })
       );
-      if (score >= 70) fireConfettiEvent(30);
     }
+
+    // V9 — show the celebration overlay instead of scrolling to the
+    // inline results (they stay rendered beneath for review).
+    victoryOpen = true;
 
     if (typeof window !== 'undefined') {
       window.dispatchEvent(
@@ -127,6 +137,7 @@
     submitted = false;
     scoreInfo = null;
     reviewOpen = false;
+    victoryOpen = false;
   }
 
   // Questions the user got wrong on this attempt — powers the review view.
@@ -245,6 +256,24 @@
       </section>
     {/if}
   </article>
+
+  {#if victoryOpen && scoreInfo}
+    <QuizVictory
+      variant="quiz"
+      correct={scoreInfo.correct}
+      total={scoreInfo.total}
+      xp={scoreInfo.perfect ? XP_TABLE.quiz_perfect_score : 0}
+      confettiCount={scoreInfo.pt ? 80 : 60}
+      courseSlug={quizContext?.courseSlug}
+      wrongCount={wrongAnswers.length}
+      onclose={() => {
+        victoryOpen = false;
+        // 'Rever erros' — reveal the existing inline review beneath.
+        if (wrongAnswers.length > 0) reviewOpen = true;
+      }}
+      onretry={() => reset()}
+    />
+  {/if}
 {/if}
 
 <style>

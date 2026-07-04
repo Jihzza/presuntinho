@@ -15,12 +15,21 @@
   import { db } from '$lib/state/db';
   import { mascotClick } from '$lib/easterEggs';
   import { prefersReducedMotion } from './events';
+  import {
+    DEFAULT_MASCOT_ID,
+    MASCOT_CHANGED_EVENT,
+    getActiveMascot,
+    mascotById
+  } from '$lib/gamification/mascots';
   import { t } from 'svelte-i18n';
 
   const VISITED_THRESHOLD = 4;
 
   let visible = $state(false);
   let reduced = $state(false);
+  // V9 — the FAB renders the ACTIVE mascot (picked on /mascotes/)
+  // instead of the old hardcoded 🧴. Default preserves the V8 look.
+  let emoji = $state(mascotById(DEFAULT_MASCOT_ID)?.emoji ?? '🧴');
 
   async function refresh(): Promise<void> {
     if (typeof indexedDB === 'undefined') return;
@@ -38,15 +47,37 @@
     void mascotClick();
   }
 
+  async function refreshMascot(): Promise<void> {
+    try {
+      emoji = (await getActiveMascot()).emoji;
+    } catch (e) {
+      console.error('[mascot] active-mascot read failed', e);
+    }
+  }
+
+  function onMascotChanged(e: Event): void {
+    const detail = (e as CustomEvent<{ emoji?: string }>).detail;
+    if (detail?.emoji) {
+      emoji = detail.emoji;
+    } else {
+      void refreshMascot();
+    }
+  }
+
   onMount(() => {
     reduced = prefersReducedMotion();
     void refresh();
+    void refreshMascot();
     // Re-check on focus so navigating around unlocks the FAB.
     const onVis = () => {
       if (document.visibilityState === 'visible') void refresh();
     };
     document.addEventListener('visibilitychange', onVis);
-    return () => document.removeEventListener('visibilitychange', onVis);
+    window.addEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
+    return () => {
+      document.removeEventListener('visibilitychange', onVis);
+      window.removeEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
+    };
   });
 </script>
 
@@ -59,7 +90,7 @@
     aria-label={$t('components.mascot.aria', { default: 'Mascote — easter egg' })}
     title={$t('components.mascot.title', { default: 'Clica — pro tip' })}
   >
-    <span class="emoji" aria-hidden="true">🧴</span>
+    <span class="emoji" aria-hidden="true">{emoji}</span>
   </button>
 {/if}
 

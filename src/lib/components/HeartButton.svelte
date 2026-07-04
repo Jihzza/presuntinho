@@ -120,7 +120,6 @@
       border-color var(--motion-base, 220ms) ease,
       box-shadow var(--motion-base, 220ms) ease,
       filter var(--motion-base, 220ms) ease;
-    align-self: center;
   }
   .heart-btn:hover,
   .heart-btn:focus-visible {

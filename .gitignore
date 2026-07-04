@@ -32,3 +32,13 @@ SLASH_GOAL_*.md
 # Skander 1/2 bot outputs and ephemeral artifacts
 bot-outputs/
 *.bot-out.txt
+
+# Scratch / experiment artifacts — never Presuntinho source
+__pycache__/
+*.pyc
+_make_client_acquisition_prompt_html.py
+client-acquisition-pipeline*/
+client-acquisition-pipeline-*
+saikan-investor-proposal-*/
+scripts/serve-cap.mjs
+scripts/gateway-monitor.mjs

@@ -3616,7 +3616,7 @@
   "school.loop.aria": "School gamification summary",
   "school.loop.lives": "for difficult quizzes",
   "school.loop.lives_value": "💚 3 lives",
-  "school.loop.streak": "target streak days",
+  "school.loop.streak": "Study streak",
   "school.loop.streak_value": "🔥 7",
   "school.loop.xp": "per completed lesson",
   "school.loop.xp_value": "⚡ +25 XP",
@@ -4367,5 +4367,7 @@
   "course.frameworks.scqa.tagline": "Frame the problem",
   "course.frameworks.scqa.desc": "Situation → Complication → Question → Answer. Where analysis becomes a marketing problem stated in 1–2 sentences.",
   "course.frameworks.persona.tagline": "3 layers",
-  "course.frameworks.persona.desc": "Demographics, psychographics and behaviour. Marta, 27 — The Discerning Explorer. The persona anchoring the strategic recommendation."
+  "course.frameworks.persona.desc": "Demographics, psychographics and behaviour. Marta, 27 — The Discerning Explorer. The persona anchoring the strategic recommendation.",
+  "agente.galeria.tab.videos": "Videos",
+  "agente.galeria.empty.videos": "No videos in chat yet. Attach a beautiful moment! 🎬"
 }

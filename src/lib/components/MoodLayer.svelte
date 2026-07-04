@@ -208,7 +208,7 @@
     position: absolute;
     left: max(.75rem, env(safe-area-inset-left));
     right: auto;
-    bottom: calc(5.85rem + env(safe-area-inset-bottom));
+    bottom: calc(5.85rem + env(safe-area-inset-bottom) + var(--page-bottom-inset, 0px));
     width: min(440px, calc(100vw - 1.5rem));
     max-width: 440px;
     pointer-events: auto;
@@ -417,7 +417,7 @@
   }
 
   @media (min-width: 768px) {
-    .mood-chip { left: max(1.25rem, env(safe-area-inset-left)); right: auto; bottom: calc(1.2rem + env(safe-area-inset-bottom)); }
+    .mood-chip { left: max(1.25rem, env(safe-area-inset-left)); right: auto; bottom: calc(1.2rem + env(safe-area-inset-bottom) + var(--page-bottom-inset, 0px)); }
     .mood-chip.compact { width: 360px; }
     .mood-ribbon { top: calc(1rem + env(safe-area-inset-top)); }
   }

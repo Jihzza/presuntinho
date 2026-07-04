@@ -103,7 +103,7 @@
       </span>
       <span>
         <strong>🏆 {statValue(summary?.quizzesPerfect)}</strong>
-        <small>{$t('school.stats.perfect', { default: 'Quizzes perfeitos' })}</small>
+        <small>{$t('school.loop.streak')}</small>
       </span>
     </div>
   </header>
@@ -136,15 +136,20 @@
     <h2 class="section-title">{$t('school.main.title')}</h2>
     <div class="course-grid">
       {#each mainSchoolCourses as course (course.slug)}
-      <a class="course-card" class:business={course.slug === 'business-administration'} class:portuguese={course.slug === 'portugues'} href={course.href}>
-        <span class="course-icon">{course.icon}</span>
-        <div>
-          <p class="kicker">{course.tagline}</p>
-          <h3>{course.title}</h3>
-          <p>{course.summary}</p>
-          <strong>{course.units.length} {course.slug === 'business-administration' ? $t('school.course.subjects') : $t('school.course.module')} →</strong>
-        </div>
-      </a>
+      <div class="course-wrap">
+        <a class="course-card" class:business={course.slug === 'business-administration'} class:portuguese={course.slug === 'portugues'} href={course.href}>
+          <span class="course-icon">{course.icon}</span>
+          <div>
+            <p class="kicker">{course.tagline}</p>
+            <h3>{course.title}</h3>
+            <p>{course.summary}</p>
+            <strong>{course.units.length} {course.slug === 'business-administration' ? $t('school.course.subjects') : $t('school.course.module')} →</strong>
+          </div>
+        </a>
+        <a class="caminho-link" href={`/escola/caminho/${course.slug}/`}>
+          {$t('school.course.caminho', { default: '🗺️ Ver caminho' })}
+        </a>
+      </div>
       {/each}
     </div>
   </section>
@@ -251,6 +256,13 @@
         <div>
           <h3>{$t('school.notebook.title')}</h3>
           <p>{$t('school.notebook.body')}</p>
+        </div>
+      </a>
+      <a class="tool-card" href="/mascotes/" style="--accent: #ec4899;">
+        <span>🎭</span>
+        <div>
+          <h3>{$t('school.mascots.title', { default: 'Mascotes' })}</h3>
+          <p>{$t('school.mascots.body', { default: 'Escolhe a tua companheira de estudos e desbloqueia novas com XP.' })}</p>
         </div>
       </a>
     </div>
@@ -376,6 +388,11 @@
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
+  .course-wrap {
+    display: grid;
+    gap: 0.45rem;
+    align-content: start;
+  }
   .course-card {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -383,6 +400,29 @@
     padding: 1.2rem;
     min-height: 172px;
   }
+  .caminho-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    min-height: 44px;
+    padding: 0.5rem 0.9rem;
+    color: var(--txt2);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+    background: var(--bg-elev, rgba(255, 255, 255, 0.04));
+    border: 1px dashed var(--border, rgba(255, 255, 255, 0.16));
+    border-radius: var(--radius-md, 0.7rem);
+    transition: color var(--motion-fast, 120ms) ease, border-color var(--motion-fast, 120ms) ease;
+  }
+  .caminho-link:hover,
+  .caminho-link:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent);
+    outline: none;
+  }
+  .caminho-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .course-card.business { background: linear-gradient(135deg, rgba(59,130,246,0.18), rgba(236,72,153,0.11)); }
   .course-card.portuguese { background: linear-gradient(135deg, rgba(16,185,129,0.17), rgba(59,130,246,0.09)); }
   .course-icon { font-size: 2.1rem; }

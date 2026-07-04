@@ -3616,7 +3616,7 @@
   "school.loop.aria": "Résumé de gamification de l’école",
   "school.loop.lives": "pour les quiz difficiles",
   "school.loop.lives_value": "💚 3 vies",
-  "school.loop.streak": "jours de streak cible",
+  "school.loop.streak": "Série d’étude",
   "school.loop.streak_value": "🔥 7",
   "school.loop.xp": "par leçon complète",
   "school.loop.xp_value": "⚡ +25 XP",
@@ -4367,5 +4367,7 @@
   "course.frameworks.scqa.tagline": "Cadrer le problème",
   "course.frameworks.scqa.desc": "Situation → Complication → Question → Answer. Le moment où l’analyse devient un problème marketing formulé en 1–2 phrases.",
   "course.frameworks.persona.tagline": "3 couches",
-  "course.frameworks.persona.desc": "Démographie, psychographie et comportement. Marta, 27 ans — The Discerning Explorer. La persona qui ancre la recommandation stratégique."
+  "course.frameworks.persona.desc": "Démographie, psychographie et comportement. Marta, 27 ans — The Discerning Explorer. La persona qui ancre la recommandation stratégique.",
+  "agente.galeria.tab.videos": "Vidéos",
+  "agente.galeria.empty.videos": "Pas encore de vidéos dans le chat. Ajoute un joli moment ! 🎬"
 }

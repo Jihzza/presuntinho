@@ -298,7 +298,7 @@ export interface NoteRow {
  *
  * One row per message exchanged with the in-app agent. `role` distinguishes
  * user / assistant / system turns. `attachment` holds optional blob for
- * files the user attached (image / audio / file). `createdAt` index powers
+ * files the user attached (image / video / audio / file). `createdAt` index powers
  * newest-first ordering.
  */
 export interface ChatMessageRow {
@@ -306,7 +306,7 @@ export interface ChatMessageRow {
   role: 'user' | 'assistant' | 'system';
   content: string;
   attachment?: {
-    kind: 'image' | 'audio' | 'file';
+    kind: 'image' | 'video' | 'audio' | 'file';
     mimeType: string;
     name: string;
     blob?: Blob;

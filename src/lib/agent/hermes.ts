@@ -57,6 +57,17 @@ export function hermesSessionId(profile: ProfileId): string {
   return `presuntinho-${profile}`;
 }
 
+/**
+ * V9 — resolve the server-side session id for a conversation.
+ * New conversations carry their own unique `hermesSessionId`; the empty
+ * string is the sentinel left by the v9 migration meaning "legacy
+ * per-profile session" (`presuntinho-<profile>`), so the pre-V9
+ * transcript on the gateway keeps working.
+ */
+export function sessionIdFor(profile: ProfileId, conv: { hermesSessionId: string }): string {
+  return conv.hermesSessionId || hermesSessionId(profile);
+}
+
 function authHeaders(cfg: HermesConfig): Record<string, string> {
   // No Authorization on the same-origin proxy — the edge function adds it.
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };

@@ -1,0 +1,144 @@
+// Gamification — mascots (V9, Duolingo-inspired collection).
+//
+// A small roster of collectible mascots the user unlocks by earning XP
+// or badges. The ACTIVE mascot is rendered by Mascot.svelte (the FAB)
+// and cheers the user on in QuizVictory / CaminhoPath.
+//
+// Persistence: the active mascot id lives on the singleton Dexie
+// `settings` row ('main') as a NEW NON-INDEXED field (`activeMascot`) —
+// same additive pattern as streak.ts uses on the `state` row, so db.ts
+// (owned by the foundation) needs no schema bump.
+//
+// Names / descriptions / personality lines are i18n keys
+// (`mascots.<id>.name|desc|line`) resolved by the UI via $t — this
+// module only carries the stable ids, emoji art and unlock rules.
+//
+// SSR safety: same contract as streak.ts — callers MUST invoke the
+// async helpers from onMount / behind a browser check.
+
+import type { UpdateSpec } from 'dexie';
+import { db } from '$lib/state/db';
+import type { SettingsRow } from '$lib/state/db';
+
+// ---------------------------------------------------------------------------
+// Roster
+// ---------------------------------------------------------------------------
+
+export interface MascotDef {
+  id: string;
+  emoji: string;
+  /** XP needed to unlock (undefined + no minBadges = free). */
+  minXp?: number;
+  /** Unlocked badge count needed to unlock. */
+  minBadges?: number;
+}
+
+export const MASCOTS: readonly MascotDef[] = Object.freeze([
+  { id: 'porquinho', emoji: '🐷' },
+  { id: 'perfume', emoji: '🧴' },
+  { id: 'bola-barca', emoji: '⚽', minXp: 100 },
+  { id: 'gata-anime', emoji: '🐱', minXp: 250 },
+  { id: 'moto', emoji: '🏍️', minXp: 500 },
+  { id: 'falcao-tunisia', emoji: '🦅', minXp: 750 },
+  { id: 'coracao', emoji: '💖', minBadges: 10 }
+]);
+
+/** Default active mascot — 🧴 preserves the pre-V9 FAB appearance. */
+export const DEFAULT_MASCOT_ID = 'perfume';
+
+/** Window event dispatched whenever the active mascot changes. */
+export const MASCOT_CHANGED_EVENT = 'presuntinho:mascot-changed';
+
+export function mascotById(id: string | undefined): MascotDef | undefined {
+  return MASCOTS.find((m) => m.id === id);
+}
+
+// ---------------------------------------------------------------------------
+// Active mascot persistence (settings row 'main', non-indexed field)
+// ---------------------------------------------------------------------------
+
+/** V9 additive, NON-indexed field on the singleton settings row. */
+type SettingsRowV9 = SettingsRow & { activeMascot?: string };
+
+function hasIndexedDb(): boolean {
+  return typeof indexedDB !== 'undefined';
+}
+
+/** The currently active mascot (falls back to the default 🧴). */
+export async function getActiveMascot(): Promise<MascotDef> {
+  const fallback = mascotById(DEFAULT_MASCOT_ID) ?? MASCOTS[0];
+  if (!hasIndexedDb()) return fallback;
+  try {
+    const row = (await db().settings.get('main')) as SettingsRowV9 | undefined;
+    return mascotById(row?.activeMascot) ?? fallback;
+  } catch (err) {
+    console.warn('[mascots] active-mascot read failed (non-fatal):', err);
+    return fallback;
+  }
+}
+
+/**
+ * Persist the active mascot and notify listeners (Mascot.svelte FAB).
+ * The cast is deliberate: `activeMascot` is additive + non-indexed and
+ * db.ts must not be edited for it (streak.ts pattern).
+ */
+export async function setActiveMascot(id: string): Promise<void> {
+  const def = mascotById(id);
+  if (!def || !hasIndexedDb()) return;
+  await db().settings.update('main', { activeMascot: id } as unknown as UpdateSpec<SettingsRow>);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(
+      new CustomEvent(MASCOT_CHANGED_EVENT, { detail: { id, emoji: def.emoji } })
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Unlock checks (XP from the state row + unlocked badge count)
+// ---------------------------------------------------------------------------
+
+export interface MascotUnlockContext {
+  xp: number;
+  badges: number;
+}
+
+export interface MascotStatus extends MascotDef {
+  unlocked: boolean;
+  active: boolean;
+}
+
+/** Pure rule check — exported so views can re-derive without re-reading. */
+export function isMascotUnlocked(def: MascotDef, ctx: MascotUnlockContext): boolean {
+  if (typeof def.minXp === 'number' && ctx.xp < def.minXp) return false;
+  if (typeof def.minBadges === 'number' && ctx.badges < def.minBadges) return false;
+  return true;
+}
+
+/** Current XP + unlocked-badge count (one read each). */
+export async function mascotUnlockContext(): Promise<MascotUnlockContext> {
+  if (!hasIndexedDb()) return { xp: 0, badges: 0 };
+  const d = db();
+  const [stateRow, badgeRows] = await Promise.all([d.state.get('main'), d.badges.toArray()]);
+  return {
+    xp: typeof stateRow?.xp === 'number' ? stateRow.xp : 0,
+    badges: badgeRows.filter((b) => b.unlocked).length
+  };
+}
+
+/** Full roster with unlock/active flags, plus the context used. */
+export async function mascotStatuses(): Promise<{
+  statuses: MascotStatus[];
+  ctx: MascotUnlockContext;
+  activeId: string;
+}> {
+  const [ctx, active] = await Promise.all([mascotUnlockContext(), getActiveMascot()]);
+  return {
+    statuses: MASCOTS.map((def) => ({
+      ...def,
+      unlocked: isMascotUnlocked(def, ctx),
+      active: def.id === active.id
+    })),
+    ctx,
+    activeId: active.id
+  };
+}

@@ -3616,7 +3616,7 @@
   "school.loop.aria": "ملخص تجربة المدرسة التفاعلية",
   "school.loop.lives": "للاختبارات الصعبة",
   "school.loop.lives_value": "💚 3 حيوات",
-  "school.loop.streak": "أيام سلسلة مستهدفة",
+  "school.loop.streak": "سلسلة الدراسة",
   "school.loop.streak_value": "🔥 7",
   "school.loop.xp": "لكل درس مكتمل",
   "school.loop.xp_value": "⚡ +25 XP",
@@ -4367,5 +4367,7 @@
   "course.frameworks.scqa.tagline": "تأطير المشكلة",
   "course.frameworks.scqa.desc": "Situation → Complication → Question → Answer. حيث تتحول التحليلات إلى مشكلة تسويقية مصاغة في جملة أو جملتين.",
   "course.frameworks.persona.tagline": "3 طبقات",
-  "course.frameworks.persona.desc": "الديموغرافيا والخصائص النفسية والسلوك. Marta، 27 — The Discerning Explorer. الشخصية التي ترتكز عليها التوصية الاستراتيجية."
+  "course.frameworks.persona.desc": "الديموغرافيا والخصائص النفسية والسلوك. Marta، 27 — The Discerning Explorer. الشخصية التي ترتكز عليها التوصية الاستراتيجية.",
+  "agente.galeria.tab.videos": "فيديوهات",
+  "agente.galeria.empty.videos": "لا توجد فيديوهات في الدردشة بعد. أضيفي لحظة جميلة! 🎬"
 }

@@ -4,6 +4,8 @@
   import { markVisited } from '$lib/state/stores';
   import { t } from 'svelte-i18n';
   import { completeLessonOnce } from '$lib/escola/progress';
+  import { XP_TABLE } from '$lib/state/xp-actions';
+  import QuizVictory from '$lib/components/QuizVictory.svelte';
 
   // ----- Types --------------------------------------------------------------
 
@@ -83,12 +85,30 @@
 
   // ----- Nav ----------------------------------------------------------------
 
-  function goNext() {
-    if (!lesson?.nextLesson) return;
+  // V9 — on the FIRST completion of a lesson we hold the navigation and
+  // show the QuizVictory 'lesson' celebration; 'Continuar' then executes
+  // the pending goto. Repeat completions navigate straight through.
+  let pendingHref = $state<string | null>(null);
+
+  async function completeAndGo(href: string) {
     // V8 XP integrity: completeLessonOnce checks the 'lesson-done:' row in
     // Dexie BEFORE awarding, so lesson_complete pays exactly once per lesson.
-    void completeLessonOnce(courseSlug, lessonSlug);
-    goto(`/escola/licao/${courseSlug}/${lesson.nextLesson}/`);
+    let first = false;
+    try {
+      first = await completeLessonOnce(courseSlug, lessonSlug);
+    } catch (e) {
+      console.error('[lesson] completion mark failed', e);
+    }
+    if (first) {
+      pendingHref = href;
+    } else {
+      goto(href);
+    }
+  }
+
+  function goNext() {
+    if (!lesson?.nextLesson) return;
+    void completeAndGo(`/escola/licao/${courseSlug}/${lesson.nextLesson}/`);
   }
   function goPrev() {
     if (!lesson?.prevLesson) return;
@@ -97,8 +117,12 @@
   function goQuiz() {
     if (!lesson?.quizSlug) return;
     // Same idempotent path when finishing via the quiz.
-    void completeLessonOnce(courseSlug, lessonSlug);
-    goto(`/escola/quiz/${lesson.quizSlug}/`);
+    void completeAndGo(`/escola/quiz/${lesson.quizSlug}/`);
+  }
+  function continuePending() {
+    const href = pendingHref;
+    pendingHref = null;
+    if (href) goto(href);
   }
 </script>
 
@@ -233,6 +257,16 @@
       >{$t('lesson.nav.next', { default: 'Próxima →' })}</button>
     </nav>
   </article>
+
+  {#if pendingHref}
+    <QuizVictory
+      variant="lesson"
+      xp={XP_TABLE.lesson_complete}
+      courseSlug={courseSlug}
+      oncontinue={continuePending}
+      onclose={continuePending}
+    />
+  {/if}
 {/if}
 
 <style>

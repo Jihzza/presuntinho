@@ -47,18 +47,37 @@
       const ce = e as CustomEvent<number | ConfettiBurst>;
       fire(ce.detail ?? count);
     };
+    let shakeTimer: ReturnType<typeof setTimeout> | null = null;
     const shake = () => {
       if (prefersReducedMotion()) return;
-      document.body.classList.remove('presuntinho-shake');
-      void document.body.offsetWidth;
-      document.body.classList.add('presuntinho-shake');
-      setTimeout(() => document.body.classList.remove('presuntinho-shake'), 420);
+      // Shake the main content area (and the sticky nav bars), NEVER
+      // document.body or .app: animating transform on an ancestor of
+      // position:fixed elements re-anchors them to the animated box,
+      // making the heart button / fab stack "jump" for the whole 420ms.
+      const targets = [
+        document.getElementById('main-content'),
+        document.querySelector('header.nav'),
+        document.querySelector('nav.bottom-nav')
+      ].filter((el): el is HTMLElement => el instanceof HTMLElement);
+      if (shakeTimer) clearTimeout(shakeTimer);
+      for (const el of targets) {
+        // Cancel any in-flight shake so a rapid re-trigger restarts cleanly
+        // (no forced-reflow layout thrash needed).
+        el.getAnimations().forEach((a) => a.cancel());
+        el.classList.remove('presuntinho-shake');
+        el.classList.add('presuntinho-shake');
+      }
+      shakeTimer = setTimeout(() => {
+        shakeTimer = null;
+        for (const el of targets) el.classList.remove('presuntinho-shake');
+      }, 420);
     };
     window.addEventListener(CONFETTI_EVENT, handler);
     window.addEventListener('presuntinho:screen-shake', shake);
     return () => {
       window.removeEventListener(CONFETTI_EVENT, handler);
       window.removeEventListener('presuntinho:screen-shake', shake);
+      if (shakeTimer) clearTimeout(shakeTimer);
     };
   });
 </script>
@@ -100,7 +119,9 @@
     height: auto;
     background: transparent;
   }
-  :global(body.presuntinho-shake) {
+  /* Applied to #main-content + the sticky nav bars (never body/.app —
+     a transform there re-anchors every position:fixed element). */
+  :global(.presuntinho-shake) {
     animation: presuntinho-screen-shake 420ms cubic-bezier(.36,.07,.19,.97) both;
   }
   @keyframes presuntinho-screen-shake {
@@ -127,7 +148,7 @@
       animation: none;
       display: none;
     }
-    :global(body.presuntinho-shake) {
+    :global(.presuntinho-shake) {
       animation: none;
     }
   }
