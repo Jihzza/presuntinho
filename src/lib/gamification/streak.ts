@@ -78,6 +78,8 @@ export interface GamificationStateFields {
   habitsFlowDay?: string;
   /** V10 — LOCAL 'YYYY-MM-DD' of the last streak-risk notification. */
   streakNotifDay?: string;
+  /** V10 — LOCAL 'YYYY-MM-DD' with an unclaimed daily chest ('' = none). */
+  chestPendingDay?: string;
 }
 
 export type StateRowV8 = StateRow & GamificationStateFields;

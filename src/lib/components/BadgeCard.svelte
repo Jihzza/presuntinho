@@ -67,7 +67,8 @@
   data-badge-id={id}
   title={unlockedDate ? `${name} — ${stateLabel} em ${unlockedDate}` : `${name} — ${stateLabel}`}
 >
-  {#if tier && tierLabel}
+  {#if tier && tierLabel && unlocked}
+    <!-- Hidden while locked so it never collides with the 🔒 overlay. -->
     <span class="tier tier--{tier}">{tierLabel}</span>
   {/if}
   <div class="icon" aria-hidden="true">{icon}</div>

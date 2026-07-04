@@ -24,6 +24,7 @@
   } from '$lib/gamification/quests';
   import { fireConfettiEvent, showToast } from '$lib/components/events';
   import { playSfx, vibrate } from '$lib/gamification/sound';
+  import { localDateKey, readStateV8, updateStateV8 } from '$lib/gamification/streak';
   import { XP_CHANGED_EVENT } from '$lib/state/xp-actions';
   import ChestModal from '$lib/components/ChestModal.svelte';
 
@@ -75,7 +76,15 @@
           }),
           3500
         );
-        chestOpen = true;
+      }
+      // The chest opens off the PERSISTED redeemable flag (armed by the
+      // quest engine) so it survives reloads/navigation until claimed —
+      // even when the 3/3 bonus was paid while this card wasn't mounted.
+      try {
+        const row = await readStateV8();
+        if (row?.chestPendingDay === localDateKey(new Date())) chestOpen = true;
+      } catch {
+        // non-fatal — the chest re-arms on the next refresh
       }
     } catch (e) {
       console.error('[quests] refresh failed', e);
@@ -202,7 +211,13 @@
 </section>
 
 {#if chestOpen}
-  <ChestModal onclose={() => (chestOpen = false)} />
+  <ChestModal
+    onclose={() => {
+      chestOpen = false;
+      // Claimed — clear the redeemable flag so it doesn't re-open.
+      void updateStateV8({ chestPendingDay: '' });
+    }}
+  />
 {/if}
 
 <style>

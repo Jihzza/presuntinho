@@ -15,7 +15,7 @@
 		type ActivityStreak,
 		type WeekDayActivity
 	} from '$lib/gamification/streak';
-	import { getDailyQuests } from '$lib/gamification/quests';
+	import { peekDailyQuests } from '$lib/gamification/quests';
 	import { getActiveMascot, DEFAULT_MASCOT_ID, mascotById } from '$lib/gamification/mascots';
 	import { nextLesson, type NextLessonTarget } from '$lib/escola/progress';
 	import { schoolCourses, courseForUnit } from '$lib/escola/catalog';
@@ -89,8 +89,17 @@
 	const xpTotal = $derived(xpEntries.reduce((s, e) => s + e.amount, 0));
 	let visibleEntries = $state(0);
 	let displayTotal = $state(0);
+	let rewardTimers: ReturnType<typeof setTimeout>[] = [];
+	let countRaf = 0;
+
+	function clearRewardsAnimation(): void {
+		rewardTimers.forEach(clearTimeout);
+		rewardTimers = [];
+		cancelAnimationFrame(countRaf);
+	}
 
 	function runRewardsAnimation(): void {
+		clearRewardsAnimation();
 		if (prefersReducedMotion()) {
 			visibleEntries = xpEntries.length;
 			displayTotal = xpTotal;
@@ -100,10 +109,12 @@
 		displayTotal = 0;
 		const stagger = 220;
 		xpEntries.forEach((_, i) => {
-			setTimeout(() => {
-				visibleEntries = i + 1;
-				playSfx('correct');
-			}, 200 + i * stagger);
+			rewardTimers.push(
+				setTimeout(() => {
+					visibleEntries = i + 1;
+					playSfx('correct');
+				}, 200 + i * stagger)
+			);
 		});
 		const start = performance.now() + 200 + xpEntries.length * stagger;
 		const DUR = 800;
@@ -111,9 +122,9 @@
 			const p = Math.max(0, Math.min(1, (now - start) / DUR));
 			const eased = 1 - Math.pow(1 - p, 3);
 			displayTotal = Math.round(xpTotal * eased);
-			if (p < 1) requestAnimationFrame(tick);
+			if (p < 1) countRaf = requestAnimationFrame(tick);
 		};
-		requestAnimationFrame(tick);
+		countRaf = requestAnimationFrame(tick);
 	}
 
 	function advanceCard(): void {
@@ -154,7 +165,9 @@
 				console.warn('[victoryflow] streak read failed', e);
 			}
 			try {
-				const q = await getDailyQuests();
+				// READ-ONLY peek — getDailyQuests() here would consume the
+				// once-per-day 3/3 chest flag on pages without the quests card.
+				const q = await peekDailyQuests();
 				questsDone = q.quests.filter((x) => x.done).length;
 				questsTotal = q.quests.length || 3;
 			} catch {
@@ -174,7 +187,10 @@
 			mounted = true;
 			primaryEl?.focus();
 		});
-		return () => cancelAnimationFrame(raf);
+		return () => {
+			cancelAnimationFrame(raf);
+			clearRewardsAnimation();
+		};
 	});
 
 	function onKeydown(e: KeyboardEvent): void {
@@ -236,7 +252,10 @@
 				{#each xpEntries as entry, i (entry.label)}
 					<li class="xp-line" class:shown={i < visibleEntries}>
 						<span>{entry.label}</span>
-						<strong>+{entry.amount} XP</strong>
+						<strong>{$t('victoryflow.rewards.line', {
+							values: { n: entry.amount },
+							default: '+{n} XP'
+						})}</strong>
 					</li>
 				{/each}
 			</ul>

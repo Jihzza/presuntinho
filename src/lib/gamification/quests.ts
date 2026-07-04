@@ -232,6 +232,29 @@ export function getDailyQuests(): Promise<DailyQuestsResult> {
   return inflight;
 }
 
+/**
+ * V10 — READ-ONLY view of today's quests: no payout, no `questsPaid`
+ * bookkeeping, no XP. Display-only surfaces (VictoryFlow's quest-progress
+ * card, notification extras) MUST use this instead of getDailyQuests(),
+ * otherwise they silently consume the once-per-day 3/3 chest flag.
+ */
+export async function peekDailyQuests(): Promise<{ quests: DailyQuest[]; allDone: boolean }> {
+  const todayKey = localDateKey(new Date());
+  const todaysIds = pickQuestIdsForDay(todayKey);
+  const ctx = await loadTodayContext(todayKey);
+  const quests: DailyQuest[] = todaysIds
+    .map((id) => QUEST_POOL.find((q) => q.id === id))
+    .filter((q): q is QuestDef => Boolean(q))
+    .map((q) => ({
+      id: q.id,
+      icon: q.icon,
+      titleKey: q.titleKey,
+      href: q.href,
+      done: q.check(ctx)
+    }));
+  return { quests, allDone: quests.length > 0 && quests.every((q) => q.done) };
+}
+
 async function resolveDailyQuests(): Promise<DailyQuestsResult> {
   const todayKey = localDateKey(new Date());
   const todaysIds = pickQuestIdsForDay(todayKey);
@@ -272,8 +295,13 @@ async function resolveDailyQuests(): Promise<DailyQuestsResult> {
 
     if (newlyCompleted.length > 0 || allJustCompleted) {
       // Persist FIRST so a re-entrant call (xp-changed listeners firing
-      // getDailyQuests again) sees the ids as already paid.
-      await updateStateV8({ questsPaid: { date: todayKey, ids: paid } });
+      // getDailyQuests again) sees the ids as already paid. The 3/3 bonus
+      // also arms the chest as a REDEEMABLE flag (chestPendingDay) so the
+      // reward survives reloads/navigation until it is actually claimed.
+      await updateStateV8({
+        questsPaid: { date: todayKey, ids: paid },
+        ...(allJustCompleted ? { chestPendingDay: todayKey } : {})
+      });
 
       if (newlyCompleted.length > 0) {
         // awardXP debounces the SAME reason within 50ms, so paying two

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { awardXP, XP_TABLE } from '$lib/state/xp-actions';
+  import { awardXP, boostedXp, XP_TABLE } from '$lib/state/xp-actions';
   import { awardBadge } from '$lib/state/stores';
   import { db } from '$lib/state/db';
   import { showToast } from '$lib/components/events';
@@ -114,7 +114,7 @@
       void awardBadge('b3');
       showToast(
         $t('quiz.toast.perfect', {
-          values: { correct, total, xp: XP_TABLE.quiz_perfect_score },
+          values: { correct, total, xp: boostedXp(XP_TABLE.quiz_perfect_score) },
           default: '🏆 {correct}/{total} — Perfeito! +{xp} XP'
         }),
         3500
@@ -296,7 +296,7 @@
         ? [
             {
               label: $t('victoryflow.entry.quiz_perfect', { default: 'Quiz perfeito' }),
-              amount: XP_TABLE.quiz_perfect_score
+              amount: boostedXp(XP_TABLE.quiz_perfect_score)
             }
           ]
         : []}

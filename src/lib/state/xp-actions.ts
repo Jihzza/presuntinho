@@ -197,6 +197,15 @@ export function xpBoostMultiplier(): number {
 }
 
 /**
+ * The amount a positive base award actually pays right now (boost applied).
+ * Shared by awardXP and every UI that DISPLAYS an amount, so the number on
+ * screen always matches the number paid.
+ */
+export function boostedXp(base: number): number {
+  return base > 0 ? Math.round(base * xpBoostMultiplier()) : base;
+}
+
+/**
  * Award XP for an action.
  *
  * @param reason  Key into XP_TABLE (e.g. 'transacao_add_despesa').
@@ -227,10 +236,7 @@ export async function awardXP(reason: string, amount?: number): Promise<void> {
   if (!finalAmount) return; // 0 XP is a no-op
 
   // V10 — active chest boost multiplies GAINS only (never deepens losses).
-  if (finalAmount > 0) {
-    const mult = xpBoostMultiplier();
-    if (mult > 1) finalAmount = Math.round(finalAmount * mult);
-  }
+  finalAmount = boostedXp(finalAmount);
 
   await addXP(finalAmount);
 

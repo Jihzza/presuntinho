@@ -8,7 +8,7 @@
 	import { t } from 'svelte-i18n';
 	import { fireConfettiEvent } from '$lib/components/events';
 	import { playSfx, vibrate } from '$lib/gamification/sound';
-	import { awardXP, setXpBoost } from '$lib/state/xp-actions';
+	import { awardXP, boostedXp, setXpBoost } from '$lib/state/xp-actions';
 	import { readStateV8, updateStateV8, MAX_FREEZES } from '$lib/gamification/streak';
 	import { dispatchGamificationEvent, STREAK_CHANGED_EVENT } from '$lib/gamification/gamification-events';
 
@@ -111,7 +111,7 @@
 				{#if reward.kind === 'xp'}
 					<span class="reward-icon" aria-hidden="true">⚡</span>
 					<p class="reward-label">
-						{$t('chest.reward.xp', { values: { n: reward.amount }, default: '+{n} XP' })}
+						{$t('chest.reward.xp', { values: { n: boostedXp(reward.amount) }, default: '+{n} XP' })}
 					</p>
 				{:else if reward.kind === 'freeze'}
 					<span class="reward-icon" aria-hidden="true">❄️</span>

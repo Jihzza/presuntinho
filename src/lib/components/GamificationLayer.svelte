@@ -53,7 +53,7 @@
 		| { kind: 'levelup'; level: number; xpTotal: number }
 		| { kind: 'milestone'; milestone: number; earnedFreeze: boolean }
 		| { kind: 'badge'; badgeId: string }
-		| { kind: 'flow'; context: 'habits' | 'trabalho' };
+		| { kind: 'flow'; context: 'habits' | 'trabalho'; amount: number };
 
 	let queue = $state<Celebration[]>([]);
 	let active = $state<Celebration | null>(null);
@@ -78,9 +78,12 @@
 	}
 
 	function advance(): void {
-		// Never fight a QuizVictory overlay for the screen/focus — defer the
-		// celebration until it closes so the parade order stays sensible.
-		if (typeof document !== 'undefined' && document.querySelector('.victory-overlay')) {
+		// Never fight a QuizVictory/chest overlay for the screen/focus — defer
+		// the celebration until it closes so the parade order stays sensible.
+		if (
+			typeof document !== 'undefined' &&
+			document.querySelector('.victory-overlay, .chest-overlay')
+		) {
 			active = null;
 			if (advanceTimer) clearTimeout(advanceTimer);
 			advanceTimer = setTimeout(() => {
@@ -141,25 +144,33 @@
 			if (milestone !== null) {
 				enqueue({ kind: 'milestone', milestone, earnedFreeze: streak.earnedFreeze });
 			}
-			// b6 "Exploradora": 8+ distinct pages visited (cheap indexed count).
+			// b6 "Exploradora": 8+ distinct PAGES visited — lesson markers
+			// ('lesson:'/'lesson-done:') are progress rows, not exploration.
 			try {
-				if ((await db().visited.count()) >= 8) void awardBadge('b6');
+				const pages = await db()
+					.visited.filter(
+						(v) => typeof v.id === 'string' && !/^lesson[:-]/.test(v.id) && v.visitedAt > 0
+					)
+					.count();
+				if (pages >= 8) void awardBadge('b6');
 			} catch {
 				// non-fatal
 			}
 			// Victory parades: "all habits done" (once per day) and
 			// "trabalho entregue" (every submission deserves the parade).
+			// `delta` is the amount ACTUALLY paid (assignment xpReward varies
+			// 15–150, and any active boost is already applied).
 			if (reason === 'habito_mark_done' || reason === 'habito_log_today') {
 				try {
 					if ((await allDueHabitsDoneToday()) && (await claimHabitsFlowDay())) {
-						enqueue({ kind: 'flow', context: 'habits' });
+						enqueue({ kind: 'flow', context: 'habits', amount: delta });
 					}
 				} catch {
 					// non-fatal
 				}
 			}
 			if (reason === 'assignment_status_done') {
-				enqueue({ kind: 'flow', context: 'trabalho' });
+				enqueue({ kind: 'flow', context: 'trabalho', amount: delta });
 			}
 		} catch (err) {
 			console.warn('[gamification-layer] streak refresh failed', err);
@@ -264,19 +275,15 @@
 		mascotLine={active.context === 'habits'
 			? $t('victoryflow.habits.line', { default: 'Dia impecável — cuidaste de ti do princípio ao fim.' })
 			: $t('victoryflow.trabalho.line', { default: 'Mais um da lista — que orgulho!' })}
-		xpEntries={active.context === 'habits'
-			? [
-					{
-						label: $t('victoryflow.entry.habit_done', { default: 'Hábito concluído' }),
-						amount: 2
-					}
-				]
-			: [
-					{
-						label: $t('victoryflow.entry.assignment_done', { default: 'Trabalho entregue' }),
-						amount: 15
-					}
-				]}
+		xpEntries={[
+			{
+				label:
+					active.context === 'habits'
+						? $t('victoryflow.entry.habit_done', { default: 'Hábito concluído' })
+						: $t('victoryflow.entry.assignment_done', { default: 'Trabalho entregue' }),
+				amount: active.amount
+			}
+		]}
 		onclose={advance}
 	/>
 {/if}

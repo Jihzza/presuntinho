@@ -16,14 +16,19 @@
   import { db } from '$lib/state/db';
   import {
     getSecrets,
-    getBadges,
     getHeartTiers,
     type Secret,
-    type Badge,
     type HeartTier
   } from '$lib/easterEggsConfig';
   import EasterEggsCard from '$lib/components/EasterEggsCard.svelte';
   import BadgeCard from '$lib/components/BadgeCard.svelte';
+  // V10 — the badge wall renders from the corrected shared catalog (17
+  // badges, localized names) instead of the legacy V3 JSON labels.
+  import {
+    BADGE_CATALOG,
+    BADGE_PT_DESCRIPTIONS,
+    BADGE_PT_NAMES
+  } from '$lib/gamification/badge-catalog';
 
   /** Sparse badge record: id → { unlocked, unlockedAt }. */
   interface BadgeStatus {
@@ -37,7 +42,19 @@
   let discoveredAt = $state<Record<string, number>>({});
   let badges = $state<Record<string, BadgeStatus>>({});
   let heartTiers = $state<HeartTier[]>([]);
-  let badgeCatalog = $state<Badge[]>([]);
+  const badgeCatalog = $derived(
+    BADGE_CATALOG.map((def) => ({
+      id: def.id,
+      icon: def.icon,
+      label:
+        $t(`components.badge.catalog.${def.id}.name`, { default: BADGE_PT_NAMES[def.id] }) ??
+        BADGE_PT_NAMES[def.id],
+      description:
+        $t(`components.badge.catalog.${def.id}.description`, {
+          default: BADGE_PT_DESCRIPTIONS[def.id]
+        }) ?? BADGE_PT_DESCRIPTIONS[def.id]
+    }))
+  );
   let heartClicks = $state(0);
   let visitedCount = $state(0);
   let loadError = $state<string | null>(null);
@@ -134,19 +151,18 @@
   let clicksToNextTier = $derived(nextTier ? nextTier.at - heartClicks : 0);
 
   onMount(() => {
-    // Load all three lists from /config/easterEggs.json in parallel — they
-    // share the same underlying cache so this is one network round trip.
-    Promise.all([getSecrets(), getBadges(), getHeartTiers()])
-      .then(([s, b, ht]) => {
+    // Load the two config lists from /config/easterEggs.json in parallel —
+    // they share the same underlying cache so this is one network round
+    // trip. (Badges render from the shared badge-catalog module now.)
+    Promise.all([getSecrets(), getHeartTiers()])
+      .then(([s, ht]) => {
         secrets = s;
-        badgeCatalog = b;
         heartTiers = ht;
       })
       .catch((e) => {
         console.error('[secrets] config load failed', e);
         loadError = e instanceof Error ? e.message : String(e);
         secrets = [];
-        badgeCatalog = [];
         heartTiers = [];
       });
 
@@ -299,7 +315,7 @@
           <BadgeCard
                       id={b.id}
                       name={b.label}
-                      description={$t('secrets.badge.aria', { values: { name: b.label } })}
+                      description={b.description}
                       icon={b.icon}
                       unlocked={true}
                       unlockedAt={status?.unlockedAt}
