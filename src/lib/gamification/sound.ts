@@ -29,7 +29,8 @@ export type SfxName =
 	| 'ding'
 	| 'chest'
 	| 'milestone'
-	| 'send';
+	| 'send'
+	| 'pop';
 
 export type HapticKind = 'tap' | 'success' | 'warning';
 
@@ -295,6 +296,11 @@ export function playSfx(name: SfxName): void {
 		case 'send':
 			// Quick upward swish for an outgoing chat message.
 			playNotes([{ freq: 520, at: 0, dur: 0.13, type: 'sine', glideTo: 880, gain: 0.7 }]);
+			break;
+		case 'pop':
+			// Blip curtíssimo para cliques em rajada (coração) — o pitch sobe
+			// com o combo, por isso martelar soa a subir uma escada. 🎹
+			playNotes([{ freq: 480 * p, at: 0, dur: 0.07, type: 'triangle', gain: 0.55 }]);
 			break;
 		case 'milestone':
 			// Warm rising fifth + octave shimmer for streak milestones.

@@ -4643,5 +4643,7 @@
   "caminho.chest.open": "Abrir baú +{xp} XP",
   "caminho.chest.claimed": "🎁 Baú aberto! +{xp} XP",
   "caminho.chest.done": "Já recolheste este baú. ✨",
-  "caminho.unit.open_aria": "Abrir a unidade {title}"
+  "caminho.unit.open_aria": "Abrir a unidade {title}",
+  "school.course.caminho_cta": "🗺️ Continuar no caminho →",
+  "school.course.details": "Ver detalhes do curso"
 }

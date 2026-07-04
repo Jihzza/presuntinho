@@ -137,18 +137,20 @@
     <h2 class="section-title">{$t('school.main.title')}</h2>
     <div class="course-grid">
       {#each mainSchoolCourses as course (course.slug)}
+      <!-- V10.3: o CAMINHO é a porta principal do curso (o Daniel não o
+           encontrava); a página de detalhes passa a link secundário. -->
       <div class="course-wrap">
-        <a class="course-card" class:business={course.slug === 'business-administration'} class:portuguese={course.slug === 'portugues'} href={course.href}>
+        <a class="course-card" class:business={course.slug === 'business-administration'} class:portuguese={course.slug === 'portugues'} href={`/escola/caminho/${course.slug}/`} data-sveltekit-preload-data>
           <span class="course-icon">{course.icon}</span>
           <div>
             <p class="kicker">{course.tagline}</p>
             <h3>{course.title}</h3>
             <p>{course.summary}</p>
-            <strong>{course.units.length} {course.slug === 'business-administration' ? $t('school.course.subjects') : $t('school.course.module')} →</strong>
+            <strong>{$t('school.course.caminho_cta', { default: '🗺️ Continuar no caminho →' })}</strong>
           </div>
         </a>
-        <a class="caminho-link" href={`/escola/caminho/${course.slug}/`}>
-          {$t('school.course.caminho', { default: '🗺️ Ver caminho' })}
+        <a class="caminho-link" href={course.href}>
+          {$t('school.course.details', { default: 'Ver detalhes do curso' })}
         </a>
       </div>
       {/each}

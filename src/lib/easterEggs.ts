@@ -45,6 +45,7 @@ import {
 import { awardXP } from './state/xp-actions';
 import { db } from './state/db';
 import { fireConfettiEvent, showToast } from './components/events';
+import { playSfx, registerComboHit } from './gamification/sound';
 import { getHeartTiers, getMascotTips, type HeartTier } from './easterEggsConfig';
 
 // ---------------------------------------------------------------------------
@@ -98,6 +99,10 @@ export async function heartClick(): Promise<void> {
   setLastHeartClickTime(now);
   const recentClicks = recordHeartBurst(now);
   const burstLevel = Math.min(5, Math.max(0, recentClicks - 1));
+  // V10.3 — cada clique dá um "pop" cujo pitch sobe com o combo: martelar
+  // o coração soa a subir uma escada musical. 🎹
+  registerComboHit();
+  playSfx('pop');
   const burstConfetti = Math.min(260, 8 + recentClicks * recentClicks * 3 + (speedBonus ? 12 : 0));
 
   // Single source of truth: tiers come from the config loader (cached in

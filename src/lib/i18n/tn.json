@@ -4656,5 +4656,7 @@
   "caminho.chest.open": "7ell el sandou9 +{xp} XP",
   "caminho.chest.claimed": "🎁 El sandou9 t7all! +{xp} XP",
   "caminho.chest.done": "Khdhit el sandou9 hedha 9bal. ✨",
-  "caminho.unit.open_aria": "7ell el wa7da {title}"
+  "caminho.unit.open_aria": "7ell el wa7da {title}",
+  "school.course.caminho_cta": "🗺️ Kammel fel thnaya →",
+  "school.course.details": "Chouf details el cours"
 }

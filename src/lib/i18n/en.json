@@ -4643,5 +4643,7 @@
   "caminho.chest.open": "Open chest +{xp} XP",
   "caminho.chest.claimed": "🎁 Chest opened! +{xp} XP",
   "caminho.chest.done": "You already collected this chest. ✨",
-  "caminho.unit.open_aria": "Open unit {title}"
+  "caminho.unit.open_aria": "Open unit {title}",
+  "school.course.caminho_cta": "🗺️ Continue on the path →",
+  "school.course.details": "View course details"
 }

@@ -4643,5 +4643,7 @@
   "caminho.chest.open": "افتحي الصندوق +{xp} نقطة",
   "caminho.chest.claimed": "🎁 فُتح الصندوق! +{xp} نقطة",
   "caminho.chest.done": "جمعتِ هذا الصندوق بالفعل. ✨",
-  "caminho.unit.open_aria": "فتح الوحدة {title}"
+  "caminho.unit.open_aria": "فتح الوحدة {title}",
+  "school.course.caminho_cta": "🗺️ تابعي في الطريق ←",
+  "school.course.details": "عرض تفاصيل الدورة"
 }

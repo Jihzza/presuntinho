@@ -31,25 +31,45 @@
 	aria-hidden="true"
 >
 	<svg viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg" role="presentation">
+		<defs>
+			<!-- id fixo partilhado entre instâncias — gradientes idênticos, o
+			     primeiro do documento resolve para todos -->
+			<radialGradient id="pig-body-grad" cx="38%" cy="26%" r="92%">
+				<stop offset="0%" stop-color="#fbbade" />
+				<stop offset="55%" stop-color="#f9a8d4" />
+				<stop offset="100%" stop-color="#ef8dc0" />
+			</radialGradient>
+		</defs>
+
 		<!-- sombra no chão -->
 		<ellipse class="pig-shadow" cx="60" cy="123" rx="26" ry="4.5" fill="rgba(0,0,0,0.16)" />
 
 		<g class="pig-all">
 			<!-- patinhas-pílula destacadas (sem pernas) -->
 			<g class="pig-feet">
-				<ellipse cx="46" cy="116" rx="9.5" ry="5.4" fill="#ec6ba9" />
-				<ellipse cx="74" cy="116" rx="9.5" ry="5.4" fill="#ec6ba9" />
+				<ellipse cx="46" cy="116" rx="9.5" ry="5.4" fill="#ec6ba9" stroke="#d1478c" stroke-width="2" />
+				<ellipse cx="74" cy="116" rx="9.5" ry="5.4" fill="#ec6ba9" stroke="#d1478c" stroke-width="2" />
 			</g>
 
 			<!-- orelhas-folha caídas para fora -->
 			<g class="pig-ear pig-ear-left">
-				<path d="M35 26 Q20 6 14 19 Q12 31 32 39 Q35 31 35 26 Z" fill="#ec6ba9" />
+				<path d="M35 26 Q20 6 14 19 Q12 31 32 39 Q35 31 35 26 Z" fill="#ec6ba9" stroke="#d1478c" stroke-width="2" stroke-linejoin="round" />
 				<path d="M32 28 Q23 15 20 22 Q19 29 30 34 Q31 30 32 28 Z" fill="#f9a8d4" />
 			</g>
 			<g class="pig-ear pig-ear-right">
-				<path d="M85 26 Q100 6 106 19 Q108 31 88 39 Q85 31 85 26 Z" fill="#ec6ba9" />
+				<path d="M85 26 Q100 6 106 19 Q108 31 88 39 Q85 31 85 26 Z" fill="#ec6ba9" stroke="#d1478c" stroke-width="2" stroke-linejoin="round" />
 				<path d="M88 28 Q97 15 100 22 Q101 29 90 34 Q89 30 88 28 Z" fill="#f9a8d4" />
 			</g>
+
+			<!-- rabinho em espiral (fora da silhueta, lado direito) -->
+			<path
+				class="pig-tail"
+				d="M96 90 C 106 93, 113 86, 108 80 C 104 75, 97 78, 100 83 C 102 86, 106 85, 105 82"
+				stroke="#ec6ba9"
+				stroke-width="3.2"
+				fill="none"
+				stroke-linecap="round"
+			/>
 
 			<!-- corpo-ovo único (cabeça + corpo numa só forma) -->
 			<path
@@ -58,16 +78,21 @@
 				   C 22 98, 38 113, 60 113
 				   C 82 113, 98 98, 98 70
 				   C 98 38, 84 14, 60 14 Z"
-				fill="#f9a8d4"
+				fill="url(#pig-body-grad)"
+				stroke="#ec6ba9"
+				stroke-width="2.5"
+				stroke-linejoin="round"
 			/>
 			<!-- barriga um tom mais claro -->
 			<ellipse cx="60" cy="92" rx="21" ry="17" fill="#fcd0e6" />
 			<!-- brilho suave -->
 			<ellipse cx="42" cy="30" rx="12" ry="7" fill="rgba(255,255,255,0.34)" transform="rotate(-24 42 30)" />
 
-			<!-- bracinhos: meias-luas coladas ao corpo -->
+			<!-- bracinhos: meias-luas coladas ao corpo (o direito acena) -->
 			<ellipse class="pig-arm" cx="27" cy="84" rx="6" ry="11" fill="#f48fc5" transform="rotate(12 27 84)" />
-			<ellipse class="pig-arm" cx="93" cy="84" rx="6" ry="11" fill="#f48fc5" transform="rotate(-12 93 84)" />
+			<g class="pig-arm-right">
+				<ellipse class="pig-arm" cx="93" cy="84" rx="6" ry="11" fill="#f48fc5" transform="rotate(-12 93 84)" />
+			</g>
 
 			<!-- bochechas sob os olhos -->
 			<ellipse class="pig-cheek" cx="31" cy="60" rx="6.5" ry="4.2" fill="#f472b6" opacity="0.55" />
@@ -94,23 +119,23 @@
 				</g>
 			{:else}
 				<g class="pig-eyes">
-					<ellipse cx="45" cy="51" rx="9" ry="10" fill="#fff" />
-					<ellipse cx="75" cy="51" rx="9" ry="10" fill="#fff" />
+					<ellipse cx="45" cy="51" rx="9.6" ry="10.6" fill="#fff" />
+					<ellipse cx="75" cy="51" rx="9.6" ry="10.6" fill="#fff" />
 					{#if emotion === 'worried'}
-						<ellipse cx="45" cy="52" rx="5.6" ry="6.4" fill="#4b4b4b" />
-						<ellipse cx="75" cy="52" rx="5.6" ry="6.4" fill="#4b4b4b" />
-						<circle cx="43" cy="49" r="2.1" fill="#fff" />
-						<circle cx="73" cy="49" r="2.1" fill="#fff" />
+						<ellipse cx="45" cy="52" rx="5.9" ry="6.8" fill="#4b4b4b" />
+						<ellipse cx="75" cy="52" rx="5.9" ry="6.8" fill="#4b4b4b" />
+						<circle cx="43" cy="49" r="2.2" fill="#fff" />
+						<circle cx="73" cy="49" r="2.2" fill="#fff" />
 					{:else if emotion === 'sad'}
-						<ellipse cx="45" cy="53" rx="4.6" ry="5.4" fill="#4b4b4b" />
-						<ellipse cx="75" cy="53" rx="4.6" ry="5.4" fill="#4b4b4b" />
-						<circle cx="43.4" cy="50.8" r="1.7" fill="#fff" />
-						<circle cx="73.4" cy="50.8" r="1.7" fill="#fff" />
+						<ellipse cx="45" cy="53" rx="4.9" ry="5.8" fill="#4b4b4b" />
+						<ellipse cx="75" cy="53" rx="4.9" ry="5.8" fill="#4b4b4b" />
+						<circle cx="43.4" cy="50.8" r="1.8" fill="#fff" />
+						<circle cx="73.4" cy="50.8" r="1.8" fill="#fff" />
 					{:else}
-						<ellipse cx="45" cy="51" rx="4.8" ry="5.6" fill="#4b4b4b" />
-						<ellipse cx="75" cy="51" rx="4.8" ry="5.6" fill="#4b4b4b" />
-						<circle cx="43.3" cy="48.6" r="1.8" fill="#fff" />
-						<circle cx="73.3" cy="48.6" r="1.8" fill="#fff" />
+						<ellipse cx="45" cy="51" rx="5.2" ry="6.1" fill="#4b4b4b" />
+						<ellipse cx="75" cy="51" rx="5.2" ry="6.1" fill="#4b4b4b" />
+						<circle cx="43.3" cy="48.4" r="2" fill="#fff" />
+						<circle cx="73.3" cy="48.4" r="2" fill="#fff" />
 					{/if}
 				</g>
 			{/if}
@@ -124,7 +149,7 @@
 
 			<!-- focinho-herói -->
 			<g class="pig-snout">
-				<ellipse cx="60" cy="66" rx="16.5" ry="11.5" fill="#ec6ba9" />
+				<ellipse cx="60" cy="66" rx="16.5" ry="11.5" fill="#ec6ba9" stroke="#d1478c" stroke-width="2" />
 				<ellipse cx="60" cy="64.6" rx="14.5" ry="9.2" fill="#f78fc5" />
 				<ellipse cx="54" cy="66" rx="2.5" ry="4.4" fill="#9d2f63" />
 				<ellipse cx="66" cy="66" rx="2.5" ry="4.4" fill="#9d2f63" />
@@ -179,6 +204,18 @@
 	.pig:not(.still) .pig-eyes {
 		animation: pig-blink 4.4s infinite;
 		transform-origin: 60px 51px;
+	}
+
+	/* rabinho em espiral: abanão raro */
+	.pig:not(.still) .pig-tail {
+		animation: pig-tail 6s ease-in-out infinite;
+		transform-origin: 96px 90px;
+	}
+
+	/* bracinho direito: aceno ocasional (uma vez por ciclo de 7.5s) */
+	.pig:not(.still) .pig-arm-right {
+		animation: pig-wave 7.5s ease-in-out infinite;
+		transform-origin: 93px 75px;
 	}
 
 	/* emoções (sobrepõem a respiração no mesmo elemento — intencional) */
@@ -237,5 +274,36 @@
 	@keyframes pig-sparkle {
 		0%, 100% { opacity: 0.35; transform: scale(0.9); }
 		50% { opacity: 1; transform: scale(1.12); }
+	}
+	@keyframes pig-tail {
+		0%, 78%, 100% { transform: rotate(0deg); }
+		84% { transform: rotate(12deg); }
+		90% { transform: rotate(-8deg); }
+		95% { transform: rotate(5deg); }
+	}
+	@keyframes pig-wave {
+		0%, 76%, 96%, 100% { transform: rotate(0deg); }
+		81% { transform: rotate(-34deg); }
+		86% { transform: rotate(-12deg); }
+		91% { transform: rotate(-34deg); }
+	}
+
+	/* Seletores IGUAIS aos das regras de animação (mesma especificidade) —
+	   este bloco vem depois no ficheiro, por isso ganha por ordem de fonte.
+	   Um genérico `.pig .x` perdia (0,3,0 vs 0,4,0) e ficava letra morta. */
+	@media (prefers-reduced-motion: reduce) {
+		.pig:not(.still) .pig-all,
+		.pig:not(.still) .pig-ear-left,
+		.pig:not(.still) .pig-ear-right,
+		.pig:not(.still) .pig-eyes,
+		.pig:not(.still) .pig-tail,
+		.pig:not(.still) .pig-arm-right,
+		.pig-euphoric:not(.still) .pig-all,
+		.pig-euphoric .pig-sparkles,
+		.pig-worried:not(.still) .pig-all,
+		.pig-worried .pig-sweat,
+		.pig-sad:not(.still) .pig-tear {
+			animation: none;
+		}
 	}
 </style>

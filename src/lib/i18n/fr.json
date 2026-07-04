@@ -4643,5 +4643,7 @@
   "caminho.chest.open": "Ouvrir le coffre +{xp} XP",
   "caminho.chest.claimed": "🎁 Coffre ouvert ! +{xp} XP",
   "caminho.chest.done": "Tu as déjà récupéré ce coffre. ✨",
-  "caminho.unit.open_aria": "Ouvrir l’unité {title}"
+  "caminho.unit.open_aria": "Ouvrir l’unité {title}",
+  "school.course.caminho_cta": "🗺️ Continuer sur le chemin →",
+  "school.course.details": "Voir les détails du cours"
 }
