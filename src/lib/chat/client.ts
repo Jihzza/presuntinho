@@ -19,6 +19,7 @@ export interface ChatMessage {
   mediaKey?: string;
   mediaType?: string;
   name?: string;
+  conversationId?: string;
   ts: number;
 }
 
@@ -39,6 +40,7 @@ export interface OutboxItem {
   media?: string; // dataURL (already downscaled)
   name?: string;
   mediaType?: string;
+  conversationId?: string;
   queuedAt: number;
 }
 
@@ -129,8 +131,9 @@ export function isNetworkError(e: unknown): boolean {
 
 // ── endpoints ─────────────────────────────────────────────────────────────
 
-export async function fetchSince(profile: ChatProfile, since: number): Promise<ChatSince> {
-  const data = await api<Partial<ChatSince>>(profile, `?since=${Math.max(0, Math.floor(since))}`);
+export async function fetchSince(profile: ChatProfile, since: number, conversationId = 'main'): Promise<ChatSince> {
+  const query = `?since=${Math.max(0, Math.floor(since))}&conversationId=${encodeURIComponent(conversationId)}`;
+  const data = await api<Partial<ChatSince>>(profile, query);
   return {
     messages: Array.isArray(data.messages) ? data.messages : [],
     meta: normalizeMeta(data.meta)
@@ -143,10 +146,10 @@ export async function fetchMedia(profile: ChatProfile, id: string): Promise<stri
   return data.dataUrl;
 }
 
-export async function sendText(profile: ChatProfile, text: string): Promise<{ message: ChatMessage; meta: ChatMeta }> {
+export async function sendText(profile: ChatProfile, text: string, conversationId = 'main'): Promise<{ message: ChatMessage; meta: ChatMeta }> {
   const data = await api<{ message: ChatMessage; meta?: ChatMeta }>(profile, '', {
     method: 'POST',
-    body: JSON.stringify({ text })
+    body: JSON.stringify({ text, conversationId })
   });
   return { message: data.message, meta: normalizeMeta(data.meta) };
 }
@@ -154,11 +157,12 @@ export async function sendText(profile: ChatProfile, text: string): Promise<{ me
 export async function sendMediaDataUrl(
   profile: ChatProfile,
   dataUrl: string,
-  name?: string
+  name?: string,
+  conversationId = 'main'
 ): Promise<{ message: ChatMessage; meta: ChatMeta }> {
   const data = await api<{ message: ChatMessage; meta?: ChatMeta }>(profile, '', {
     method: 'POST',
-    body: JSON.stringify({ media: dataUrl, name })
+    body: JSON.stringify({ media: dataUrl, name, conversationId })
   });
   return { message: data.message, meta: normalizeMeta(data.meta) };
 }
@@ -321,9 +325,9 @@ export async function flushOutbox(profile: ChatProfile): Promise<ChatMessage[]> 
     try {
       let result: { message: ChatMessage };
       if (item.kind === 'text' && item.text) {
-        result = await sendText(profile, item.text);
+        result = await sendText(profile, item.text, item.conversationId);
       } else if (item.kind === 'media' && item.media) {
-        result = await sendMediaDataUrl(profile, item.media, item.name);
+        result = await sendMediaDataUrl(profile, item.media, item.name, item.conversationId);
       } else {
         removeFromOutbox(profile, item.localId);
         continue;

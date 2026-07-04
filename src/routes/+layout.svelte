@@ -39,11 +39,12 @@
   let updateSW: ((reloadPage?: boolean) => Promise<void>) | null = null;
 
   const moodAccent = $derived(activeMood ? MOOD_META[activeMood.kind].accent : null);
+  const isMessagesRoute = $derived(isActive('/mensagens/'));
 
   // Pages with a fixed bottom composer (chat input) need the floating
   // elements (fab-stack, mascot, mood chip, PWA banner) lifted above it.
   // Consumed via var(--page-bottom-inset) — see app.css for the token.
-  const pageBottomInset = $derived(isActive('/agente/') || isActive('/mensagens/') ? '5.5rem' : '0px');
+  const pageBottomInset = $derived(isActive('/agente/') ? '5.5rem' : isActive('/mensagens/') ? '3rem' : '0px');
 
   /** Normalised active-tab check for the bottom nav. */
   function isActive(href: string): boolean {
@@ -276,7 +277,7 @@
   <OfflineIndicator />
   <a class="skip-link" href="#main-content">{$t('a11y.skipToContent')}</a>
   <div
-    class={`app ${activeMood ? `app-mood app-mood-${activeMood.kind}` : ''}`}
+    class={`app ${isMessagesRoute ? 'app-messages' : ''} ${activeMood ? `app-mood app-mood-${activeMood.kind}` : ''}`}
     style={`--page-bottom-inset: ${pageBottomInset};${moodAccent ? ` --mood-accent: ${moodAccent};` : ''}`}
   >
     {#if activeMood}
@@ -303,7 +304,6 @@
                 </div>
                 <div class="nav-actions">
                   <LanguageSwitcher />
-                  <a href="/perfil/" class="icon-btn" aria-label={$t('profile.page.title', { default: 'Perfil' })} title={$t('profile.page.title', { default: 'Perfil' })}>👤</a>
                   <a href="/definicoes" class="icon-btn" aria-label={$t('a11y.settings', { default: 'Definições' })} title={$t('a11y.settings', { default: 'Definições' })}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <circle cx="12" cy="12" r="3"/>
@@ -745,6 +745,14 @@
       }
       .mascot-corner {
         left: max(1.25rem, env(safe-area-inset-left));
+      }
+    }
+    /* /mensagens/ has its own fixed composer. On small screens the mascot
+       competes with the chat input; keep it visible on desktop but remove the
+       mobile overlap entirely. */
+    @media (max-width: 767px) {
+      .app-messages .mascot-corner {
+        display: none;
       }
     }
 </style>

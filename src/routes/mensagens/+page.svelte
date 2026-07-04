@@ -27,12 +27,33 @@
   import { ChatStore, type LocalChatMessage } from '$lib/chat/store.svelte';
   import { profileFor } from '$lib/profile/people';
 
+  type ConversationPreset = {
+    id: string;
+    titleKey: string;
+    icon: string;
+    descKey: string;
+  };
+
+  type PanelMode = 'none' | 'conversations' | 'files';
+
+  const CONVERSATIONS: ConversationPreset[] = [
+    { id: 'main', titleKey: 'mensagens.conversations.main', icon: '💬', descKey: 'mensagens.conversations.main_desc' },
+    { id: 'memories', titleKey: 'mensagens.conversations.memories', icon: '🗂️', descKey: 'mensagens.conversations.memories_desc' },
+    { id: 'photos', titleKey: 'mensagens.conversations.photos', icon: '📷', descKey: 'mensagens.conversations.photos_desc' },
+    { id: 'plans', titleKey: 'mensagens.conversations.plans', icon: '📝', descKey: 'mensagens.conversations.plans_desc' },
+    { id: 'voice', titleKey: 'mensagens.conversations.voice', icon: '🎙️', descKey: 'mensagens.conversations.voice_desc' }
+  ];
+
+  const SELECTED_CONVERSATION_KEY = 'presuntinho-mensagens-selected-conversation';
+
   let profile = $state<ChatProfile | null>(null);
   let noSession = $state(false);
   let secureSetupNeeded = $state(false);
   let setupKeyInput = $state('');
   let setupOpen = $state(false);
   let store = $state<ChatStore | null>(null);
+  let selectedConversationId = $state('main');
+  let panelMode = $state<PanelMode>('none');
 
   let input = $state('');
   let recording = $state(false);
@@ -87,6 +108,17 @@
   const meProfile = $derived(profileFor(profile));
   const otherPerson = $derived(profileFor(other));
   const syncBlocked = $derived(Boolean(secureSetupNeeded || store?.authError));
+  const selectedConversation = $derived(CONVERSATIONS.find((c) => c.id === selectedConversationId) ?? CONVERSATIONS[0]);
+  const fileMessages = $derived((store?.messages ?? []).filter((m) => Boolean(m.mediaType || m.mediaKey || m.localDataUrl)));
+
+  function conversationPreview(id: string): string {
+    const last = [...(store?.messages ?? [])].reverse().find((m) => (m.conversationId || 'main') === id);
+    if (!last) return $t(CONVERSATIONS.find((c) => c.id === id)?.descKey ?? 'mensagens.conversations.empty_preview');
+    if (last.text) return last.text.slice(0, 64);
+    if (last.mediaType?.startsWith('audio/')) return $t('mensagens.files.audio', { default: 'Áudio' });
+    if (last.mediaType?.startsWith('image/')) return $t('mensagens.files.image', { default: 'Imagem' });
+    return $t('mensagens.files.file', { default: 'Ficheiro' });
+  }
 
   function fmtDate(d: Date): string {
     try {
@@ -126,9 +158,17 @@
   function startChat() {
     if (!profile) return;
     store?.stop();
-    store = new ChatStore(profile);
+    store = new ChatStore(profile, selectedConversationId);
     secureSetupNeeded = !getChatToken(profile);
     store.start();
+  }
+
+  function selectConversation(id: string): void {
+    selectedConversationId = id;
+    if (typeof localStorage !== 'undefined') localStorage.setItem(SELECTED_CONVERSATION_KEY, id);
+    panelMode = 'none';
+    startChat();
+    void scrollToBottom();
   }
 
   function saveSecureKey() {
@@ -166,6 +206,10 @@
       return;
     }
     profile = session.profile as ChatProfile;
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem(SELECTED_CONVERSATION_KEY);
+      if (saved && CONVERSATIONS.some((c) => c.id === saved)) selectedConversationId = saved;
+    }
     startChat();
 
     syncKeyboardInset();
@@ -324,7 +368,11 @@
   <header class="chat-header">
     <div class="header-text">
       <span class="chat-kicker">{$t('mensagens.header.kicker', { default: 'Chat privado' })}</span>
-      <h1>{meProfile.emoji} {$t(meProfile.nameKey)} ↔ {$t(otherPerson.nameKey)} {otherPerson.emoji}</h1>
+      <h1>
+        <a class="person-link" href={`/perfil/${other}/`} aria-label={$t('mensagens.aria.open_partner_profile', { default: 'Abrir perfil de {name}', values: { name: $t(otherPerson.nameKey) } })}>
+          {otherPerson.emoji} {$t(otherPerson.nameKey)}
+        </a>
+      </h1>
       <p class="subtitle">
         {#if syncBlocked}
           {$t('mensagens.status.local', { default: 'Modo local — a sincronização segura ainda não está activa neste dispositivo.' })}
@@ -334,11 +382,65 @@
           {$t('mensagens.status.secure', { default: 'Ligação segura activa.' })}
         {/if}
       </p>
+      <p class="conversation-label">{selectedConversation.icon} {$t(selectedConversation.titleKey)}</p>
     </div>
-    <a class="profile-link" href="/perfil/" aria-label={$t('profile.page.title', { default: 'Perfil' })} title={$t('profile.page.title', { default: 'Perfil' })}>
+    <a class="profile-link" href="/perfil/" aria-label={$t('mensagens.aria.open_own_profile', { default: 'Abrir o meu perfil' })} title={$t('mensagens.aria.open_own_profile', { default: 'Abrir o meu perfil' })}>
       {meProfile.emoji}
     </a>
   </header>
+
+  {#if !noSession}
+    <nav class="chat-tools" aria-label={$t('mensagens.tools.aria', { default: 'Ferramentas da conversa' })}>
+      <button type="button" class:active={panelMode === 'conversations'} onclick={() => (panelMode = panelMode === 'conversations' ? 'none' : 'conversations')}>
+        💬 {$t('mensagens.tools.conversations', { default: 'Conversas' })}
+      </button>
+      <button type="button" class:active={panelMode === 'files'} onclick={() => (panelMode = panelMode === 'files' ? 'none' : 'files')}>
+        📎 {$t('mensagens.tools.files', { default: 'Ficheiros' })}
+      </button>
+      <a href={`/perfil/${other}/`}>{$t('mensagens.tools.partner_profile', { default: 'Perfil de {name}', values: { name: $t(otherPerson.nameKey) } })}</a>
+    </nav>
+
+    {#if panelMode === 'conversations'}
+      <aside class="chat-panel" aria-label={$t('mensagens.conversations.title', { default: 'Conversas' })}>
+        <div class="panel-head">
+          <strong>{$t('mensagens.conversations.title', { default: 'Conversas' })}</strong>
+          <button type="button" onclick={() => (panelMode = 'none')} aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}>×</button>
+        </div>
+        <div class="conversation-list">
+          {#each CONVERSATIONS as c}
+            <button type="button" class:active={selectedConversationId === c.id} onclick={() => selectConversation(c.id)}>
+              <span class="conv-icon" aria-hidden="true">{c.icon}</span>
+              <span>
+                <strong>{$t(c.titleKey)}</strong>
+                <small>{conversationPreview(c.id)}</small>
+              </span>
+            </button>
+          {/each}
+        </div>
+      </aside>
+    {:else if panelMode === 'files'}
+      <aside class="chat-panel" aria-label={$t('mensagens.files.title', { default: 'Ficheiros' })}>
+        <div class="panel-head">
+          <strong>{$t('mensagens.files.title', { default: 'Ficheiros' })}</strong>
+          <button type="button" onclick={() => (panelMode = 'none')} aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}>×</button>
+        </div>
+        {#if fileMessages.length === 0}
+          <p class="panel-empty">{$t('mensagens.files.empty', { default: 'Ainda não há ficheiros nesta conversa.' })}</p>
+        {:else}
+          <div class="file-grid">
+            {#each fileMessages as m (m.id)}
+              {@const src = store?.mediaSrc(m)}
+              <button type="button" class="file-card" onclick={() => (src ? (viewerSrc = src) : undefined)}>
+                <span aria-hidden="true">{m.mediaType?.startsWith('audio/') ? '🎧' : '🖼️'}</span>
+                <strong>{m.name || (m.mediaType?.startsWith('audio/') ? $t('mensagens.files.audio') : $t('mensagens.files.image'))}</strong>
+                <small>{fmtTime(m.ts)}</small>
+              </button>
+            {/each}
+          </div>
+        {/if}
+      </aside>
+    {/if}
+  {/if}
 
   {#if store?.offline && !syncBlocked}
     <div class="offline-banner" role="status">
@@ -458,7 +560,7 @@
         </div>
       {/if}
       <div class="composer">
-        <input type="file" bind:this={fileInput} onchange={onFileChosen} hidden accept="image/*" />
+        <input type="file" bind:this={fileInput} onchange={onFileChosen} hidden accept="image/*,audio/*" />
         <div class="input-shell">
           <button
             type="button"
@@ -542,10 +644,27 @@
     margin: 0;
     font-size: var(--fs-lg);
   }
+  .person-link {
+    color: inherit;
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+  }
+  .person-link:hover,
+  .person-link:focus-visible {
+    color: var(--accent);
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
   .subtitle {
     margin: 0.15rem 0 0;
     font-size: var(--fs-xs);
     color: var(--txt3);
+  }
+  .conversation-label {
+    margin: 0.25rem 0 0;
+    color: var(--txt2);
+    font-size: var(--fs-sm);
+    font-weight: 700;
   }
   .chat-kicker {
     display: block;
@@ -572,6 +691,119 @@
   .profile-link:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
+  }
+  .chat-tools {
+    display: flex;
+    gap: var(--space-2);
+    overflow-x: auto;
+    padding: var(--space-2) var(--space-4) 0;
+  }
+  .chat-tools button,
+  .chat-tools a {
+    min-height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--txt2);
+    padding: 0.45rem 0.8rem;
+    text-decoration: none;
+    font: inherit;
+    font-size: var(--fs-sm);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .chat-tools .active,
+  .chat-tools button:hover,
+  .chat-tools a:hover,
+  .chat-tools button:focus-visible,
+  .chat-tools a:focus-visible {
+    color: var(--txt);
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+    background: color-mix(in srgb, var(--accent) 12%, var(--card));
+    outline: none;
+  }
+  .chat-panel {
+    margin: var(--space-2) var(--space-4) 0;
+    padding: var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--card) 94%, transparent);
+    box-shadow: var(--shadow-md);
+  }
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-2);
+  }
+  .panel-head button {
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--bg-elev);
+    color: var(--txt);
+    cursor: pointer;
+  }
+  .conversation-list {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .conversation-list button {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-2);
+    align-items: center;
+    text-align: left;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-elev);
+    color: inherit;
+    padding: var(--space-2);
+    cursor: pointer;
+  }
+  .conversation-list button.active {
+    border-color: color-mix(in srgb, var(--accent) 62%, var(--border));
+    background: color-mix(in srgb, var(--accent) 14%, var(--bg-elev));
+  }
+  .conv-icon {
+    width: 2.4rem;
+    height: 2.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    background: var(--card);
+  }
+  .conversation-list small,
+  .file-card small,
+  .panel-empty {
+    display: block;
+    color: var(--txt3);
+    line-height: 1.35;
+  }
+  .file-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--space-2);
+  }
+  .file-card {
+    min-height: 7rem;
+    display: grid;
+    justify-items: start;
+    align-content: space-between;
+    gap: var(--space-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-elev);
+    color: inherit;
+    padding: var(--space-3);
+    text-align: left;
+    cursor: pointer;
+  }
+  .file-card span {
+    font-size: 1.5rem;
   }
   .sync-banner,
   .offline-banner {
@@ -834,7 +1066,7 @@
     left: 50%;
     right: auto;
     bottom: max(
-      calc(4.25rem + env(safe-area-inset-bottom)),
+      calc(5.25rem + env(safe-area-inset-bottom)),
       calc(var(--keyboard-inset, 0px) + 0.55rem)
     );
     transform: translateX(-50%);

@@ -3,6 +3,7 @@ import type { ChatProfile } from '$lib/chat/client';
 export interface PersonProfile {
   id: ChatProfile;
   nameKey: string;
+  handleKey: string;
   roleKey: string;
   subtitleKey: string;
   bioKey: string;
@@ -18,6 +19,7 @@ export const PEOPLE: Record<ChatProfile, PersonProfile> = {
   fatma: {
     id: 'fatma',
     nameKey: 'profile.fatma.name',
+    handleKey: 'profile.fatma.handle',
     roleKey: 'profile.fatma.role',
     subtitleKey: 'profile.fatma.subtitle',
     bioKey: 'profile.fatma.bio',
@@ -37,6 +39,7 @@ export const PEOPLE: Record<ChatProfile, PersonProfile> = {
   daniel: {
     id: 'daniel',
     nameKey: 'profile.daniel.name',
+    handleKey: 'profile.daniel.handle',
     roleKey: 'profile.daniel.role',
     subtitleKey: 'profile.daniel.subtitle',
     bioKey: 'profile.daniel.bio',

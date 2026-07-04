@@ -14,7 +14,8 @@
 //
 // DATA MODEL (store 'chat'):
 //   'log:<YYYY-MM-DD>'  → JSON array of {id, from, text?, mediaKey?,
-//                          mediaType?, name?, ts}   (UTC day chunks)
+//                          mediaType?, name?, conversationId?, ts}
+//                          (UTC day chunks)
 //   'meta'              → { latestTs, lastRead: { fatma, daniel } }
 //   'media:<id>'        → dataURL string for the message with that id
 //
@@ -37,6 +38,7 @@ const MAX_BODY_BYTES = 4.2 * 1024 * 1024; // ~4MB JSON envelope
 const MAX_MEDIA_BYTES = 3 * 1024 * 1024; // 3MB decoded media
 const MAX_TEXT_LEN = 4000;
 const MAX_NAME_LEN = 180;
+const MAX_CONVERSATION_ID_LEN = 64;
 const MAX_DAY_CHUNKS = 7; // never scan more than a week of chunks
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -184,6 +186,12 @@ function isValidMessageShape(m) {
   return m && typeof m === 'object' && typeof m.id === 'string' && typeof m.ts === 'number';
 }
 
+function normalizeConversationId(value) {
+  if (typeof value !== 'string') return 'main';
+  const id = value.trim().slice(0, MAX_CONVERSATION_ID_LEN);
+  return /^[a-zA-Z0-9_-]{1,64}$/.test(id) ? id : 'main';
+}
+
 // data:image/...;base64,xxxx  or  data:audio/...;base64,xxxx
 const MEDIA_DATA_URL_RE = /^data:((?:image|audio)\/[\w.+-]+);base64,([A-Za-z0-9+/]+={0,2})$/;
 
@@ -217,10 +225,15 @@ async function handleGet(event, profile) {
 
   const sinceRaw = Number(query.since || 0);
   const since = Number.isFinite(sinceRaw) && sinceRaw > 0 ? sinceRaw : 0;
+  const conversationId = normalizeConversationId(query.conversationId);
 
   const meta = await readMeta(store);
   // Fast path — nothing newer than the caller's cursor: one blob read total.
-  if (meta.latestTs <= since) {
+  // Do not use it for since=0: if a previous meta write failed after the log
+  // append, a cold reload would otherwise skip the chunk scan and hide stored
+  // messages. Scanning recent chunks on initial load is cheap and self-heals
+  // the user-visible timeline.
+  if (since > 0 && meta.latestTs <= since) {
     return buildResponse(200, { messages: [], meta, profile });
   }
 
@@ -238,7 +251,7 @@ async function handleGet(event, profile) {
   const messages = [];
   for (const chunk of chunks) {
     for (const m of chunk) {
-      if (isValidMessageShape(m) && m.ts > since) messages.push(m);
+      if (isValidMessageShape(m) && m.ts > since && ((m.conversationId || 'main') === conversationId)) messages.push(m);
     }
   }
   messages.sort((a, b) => a.ts - b.ts || (a.id < b.id ? -1 : 1));
@@ -285,6 +298,7 @@ async function handlePost(event, profile) {
 
   const ts = Date.now();
   const id = mintId(ts, profile);
+  const conversationId = normalizeConversationId(payload.conversationId);
   let message = null;
 
   // ── text message ──
@@ -292,7 +306,7 @@ async function handlePost(event, profile) {
     const text = payload.text.trim();
     if (!text) return buildResponse(400, { error: 'empty_text' });
     if (text.length > MAX_TEXT_LEN) return buildResponse(400, { error: 'text_too_long' });
-    message = { id, from: profile, text, ts };
+    message = { id, from: profile, text, conversationId, ts };
   }
 
   // ── media message ──
@@ -317,7 +331,7 @@ async function handlePost(event, profile) {
       console.error('[chat] media write failed', e);
       return buildResponse(500, { error: 'media_write_failed' });
     }
-    message = { id, from: profile, mediaKey: `media:${id}`, mediaType, ts };
+    message = { id, from: profile, mediaKey: `media:${id}`, mediaType, conversationId, ts };
     if (name) message.name = name;
   }
 

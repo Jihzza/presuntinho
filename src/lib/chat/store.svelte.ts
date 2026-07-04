@@ -46,10 +46,35 @@ export interface LocalChatMessage extends ChatMessage {
 const POLL_MS = 4000;
 const POLL_SLOW_MS = 15000;
 const EMPTY_POLLS_BEFORE_BACKOFF = 5;
+const LOCAL_MESSAGES_KEY_PREFIX = 'presuntinho-chat-local-messages';
+
+function localMessagesKey(profile: ChatProfile, conversationId: string): string {
+  return `${LOCAL_MESSAGES_KEY_PREFIX}-${profile}-${conversationId}`;
+}
+
+function readLocalMessages(profile: ChatProfile, conversationId: string): LocalChatMessage[] {
+  if (typeof localStorage === 'undefined') return [];
+  try {
+    const parsed = JSON.parse(localStorage.getItem(localMessagesKey(profile, conversationId)) || '[]') as unknown;
+    return Array.isArray(parsed) ? (parsed as LocalChatMessage[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeLocalMessages(profile: ChatProfile, conversationId: string, messages: LocalChatMessage[]): void {
+  if (typeof localStorage === 'undefined') return;
+  try {
+    localStorage.setItem(localMessagesKey(profile, conversationId), JSON.stringify(messages.slice(-250)));
+  } catch (e) {
+    console.error('[chat] local message persistence failed', e);
+  }
+}
 
 export class ChatStore {
   readonly profile: ChatProfile;
   readonly other: ChatProfile;
+  readonly conversationId: string;
 
   messages = $state<LocalChatMessage[]>([]);
   meta = $state<ChatMeta>({ latestTs: 0, lastRead: { fatma: 0, daniel: 0 } });
@@ -78,9 +103,10 @@ export class ChatStore {
     this.pokePoll();
   };
 
-  constructor(profile: ChatProfile) {
+  constructor(profile: ChatProfile, conversationId = 'main') {
     this.profile = profile;
     this.other = otherProfile(profile);
+    this.conversationId = conversationId;
   }
 
   /** Unread messages FOR ME (badge): incoming ts beyond my own lastRead. */
@@ -107,6 +133,7 @@ export class ChatStore {
   start(): void {
     if (this.#running || typeof window === 'undefined') return;
     this.#running = true;
+    this.#hydrateLocal();
     document.addEventListener('visibilitychange', this.#onVisibility);
     window.addEventListener('online', this.#onOnline);
     void this.#flushQueued();
@@ -154,7 +181,7 @@ export class ChatStore {
     if (this.#inFlight) return;
     this.#inFlight = true;
     try {
-      const { messages, meta } = await fetchSince(this.profile, this.#since);
+      const { messages, meta } = await fetchSince(this.profile, this.#since, this.conversationId);
       this.meta = meta;
       this.offline = false;
       this.authError = false;
@@ -194,6 +221,7 @@ export class ChatStore {
       if (m.ts > this.#since) this.#since = m.ts;
     }
     this.messages = [...byId.values()].sort((a, b) => a.ts - b.ts || (a.id < b.id ? -1 : 1));
+    this.#persistLocal();
   }
 
   #replaceLocal(localId: string, server: ChatMessage): void {
@@ -203,10 +231,37 @@ export class ChatStore {
       .concat([{ ...server, localDataUrl: local?.localDataUrl }])
       .sort((a, b) => a.ts - b.ts || (a.id < b.id ? -1 : 1));
     if (server.ts > this.#since) this.#since = server.ts;
+    this.#persistLocal();
   }
 
   #patchLocal(localId: string, patch: Partial<LocalChatMessage>): void {
     this.messages = this.messages.map((m) => (m.id === localId ? { ...m, ...patch } : m));
+    this.#persistLocal();
+  }
+
+  #hydrateLocal(): void {
+    const persisted = readLocalMessages(this.profile, this.conversationId);
+    const queued = readOutbox(this.profile)
+      .filter((i) => (i.conversationId || 'main') === this.conversationId)
+      .map<LocalChatMessage>((i) => ({
+        id: i.localId,
+        from: this.profile,
+        text: i.kind === 'text' ? i.text : undefined,
+        mediaType: i.mediaType,
+        name: i.name,
+        conversationId: this.conversationId,
+        ts: i.queuedAt,
+        queued: true,
+        localDataUrl: i.media
+      }));
+    this.messages = [...persisted, ...queued]
+      .filter((m, index, arr) => arr.findIndex((x) => x.id === m.id) === index)
+      .sort((a, b) => a.ts - b.ts || (a.id < b.id ? -1 : 1));
+    this.#since = this.messages.reduce((max, m) => Math.max(max, m.id.startsWith('local-') ? 0 : m.ts), 0);
+  }
+
+  #persistLocal(): void {
+    writeLocalMessages(this.profile, this.conversationId, this.messages);
   }
 
   // ── sending ────────────────────────────────────────────────────────────
@@ -220,13 +275,16 @@ export class ChatStore {
       from: this.profile,
       text: trimmed,
       ts: Date.now(),
+      conversationId: this.conversationId,
       pending: true
     };
     this.messages = [...this.messages, local];
-    return this.#deliver(local, () => sendText(this.profile, trimmed), {
+    this.#persistLocal();
+    return this.#deliver(local, () => sendText(this.profile, trimmed, this.conversationId), {
       localId: local.id,
       kind: 'text',
       text: trimmed,
+      conversationId: this.conversationId,
       queuedAt: local.ts
     });
   }
@@ -249,16 +307,19 @@ export class ChatStore {
       mediaType,
       name: finalName,
       ts: Date.now(),
+      conversationId: this.conversationId,
       pending: true,
       localDataUrl: dataUrl
     };
     this.messages = [...this.messages, local];
-    return this.#deliver(local, () => sendMediaDataUrl(this.profile, dataUrl, finalName), {
+    this.#persistLocal();
+    return this.#deliver(local, () => sendMediaDataUrl(this.profile, dataUrl, finalName, this.conversationId), {
       localId: local.id,
       kind: 'media',
       media: dataUrl,
       name: finalName,
       mediaType,
+      conversationId: this.conversationId,
       queuedAt: local.ts
     });
   }
@@ -302,8 +363,8 @@ export class ChatStore {
     if (!msg || (!msg.failed && !msg.queued)) return 'failed';
     this.#patchLocal(localId, { pending: true, failed: false, queued: false });
     const send = msg.localDataUrl
-      ? () => sendMediaDataUrl(this.profile, msg.localDataUrl as string, msg.name)
-      : () => sendText(this.profile, msg.text ?? '');
+      ? () => sendMediaDataUrl(this.profile, msg.localDataUrl as string, msg.name, this.conversationId)
+      : () => sendText(this.profile, msg.text ?? '', this.conversationId);
     const outboxItem = msg.localDataUrl
       ? {
           localId,
@@ -311,9 +372,10 @@ export class ChatStore {
           media: msg.localDataUrl,
           name: msg.name,
           mediaType: msg.mediaType,
+          conversationId: this.conversationId,
           queuedAt: Date.now()
         }
-      : { localId, kind: 'text' as const, text: msg.text ?? '', queuedAt: Date.now() };
+      : { localId, kind: 'text' as const, text: msg.text ?? '', conversationId: this.conversationId, queuedAt: Date.now() };
     return this.#deliver({ ...msg }, send, outboxItem);
   }
 
@@ -330,6 +392,7 @@ export class ChatStore {
       // or permanently rejected) — the server copies are merged above.
       const remaining = new Set(readOutbox(this.profile).map((i) => i.localId));
       this.messages = this.messages.filter((m) => !m.queued || remaining.has(m.id));
+      this.#persistLocal();
     } catch {
       /* still offline — keep the queue */
     }
