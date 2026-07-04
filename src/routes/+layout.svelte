@@ -303,6 +303,7 @@
                 </div>
                 <div class="nav-actions">
                   <LanguageSwitcher />
+                  <a href="/perfil/" class="icon-btn" aria-label={$t('profile.page.title', { default: 'Perfil' })} title={$t('profile.page.title', { default: 'Perfil' })}>👤</a>
                   <a href="/definicoes" class="icon-btn" aria-label={$t('a11y.settings', { default: 'Definições' })} title={$t('a11y.settings', { default: 'Definições' })}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <circle cx="12" cy="12" r="3"/>

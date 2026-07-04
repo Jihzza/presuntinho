@@ -4,8 +4,8 @@
    *
    * - Transport: netlify/functions/chat.js (Netlify Blobs), polled by
    *   ChatStore (src/lib/chat/store.svelte.ts) every 4s while visible.
-   * - Auth: personal access token pasted once (given out-of-band) and kept
-   *   in localStorage; wrong/missing token shows the cute gate card.
+   * - Auth: backend stays protected by a per-profile chat credential. The UI
+   *   opens from the app session and only shows technical sync setup as a fallback.
    * - Composer: fixed dock with the same geometry as /agente (bottom above
    *   the bottom-nav, width min(800px, 100vw - .75rem), z-index 65) so the
    *   layout's --page-bottom-inset clearance applies identically.
@@ -17,13 +17,15 @@
   import { t, locale } from 'svelte-i18n';
   import { getSession } from '$lib/auth/session';
   import { showToast } from '$lib/components/events';
-  import { ChatApiError, getChatToken, setChatToken, type ChatProfile } from '$lib/chat/client';
+  import { ChatApiError, getChatToken, setChatToken, otherProfile, type ChatProfile } from '$lib/chat/client';
   import { ChatStore, type LocalChatMessage } from '$lib/chat/store.svelte';
+  import { profileFor } from '$lib/profile/people';
 
   let profile = $state<ChatProfile | null>(null);
   let noSession = $state(false);
-  let needsToken = $state(false);
-  let tokenInput = $state('');
+  let secureSetupNeeded = $state(false);
+  let setupKeyInput = $state('');
+  let setupOpen = $state(false);
   let store = $state<ChatStore | null>(null);
 
   let input = $state('');
@@ -75,7 +77,10 @@
     return out;
   });
 
-  const showGate = $derived(needsToken || Boolean(store?.authError));
+  const other = $derived(profile ? otherProfile(profile) : 'daniel');
+  const meProfile = $derived(profileFor(profile));
+  const otherPerson = $derived(profileFor(other));
+  const syncBlocked = $derived(Boolean(secureSetupNeeded || store?.authError));
 
   function fmtDate(d: Date): string {
     try {
@@ -116,19 +121,20 @@
     if (!profile) return;
     store?.stop();
     store = new ChatStore(profile);
+    secureSetupNeeded = !getChatToken(profile);
     store.start();
-    needsToken = false;
   }
 
-  function saveToken() {
+  function saveSecureKey() {
     if (!profile) return;
-    const value = tokenInput.trim();
+    const value = setupKeyInput.trim();
     if (!value) {
-      showToast($t('mensagens.token.missing', { default: 'Falta o código — cola-o primeiro 🙈' }));
+      showToast($t('mensagens.secure_setup.missing', { default: 'Falta a chave de ligação para activar a sincronização neste dispositivo.' }));
       return;
     }
     setChatToken(profile, value);
-    tokenInput = '';
+    setupKeyInput = '';
+    setupOpen = false;
     startChat();
   }
 
@@ -154,8 +160,7 @@
       return;
     }
     profile = session.profile as ChatProfile;
-    if (getChatToken(profile)) startChat();
-    else needsToken = true;
+    startChat();
 
     syncKeyboardInset();
     syncActive();
@@ -201,7 +206,7 @@
 
   function afterSendFeedback(result: 'sent' | 'queued' | 'failed'): void {
     if (result === 'queued') {
-      showToast($t('mensagens.queued', { default: 'Guardada no bolsinho — envio assim que houver rede 💌' }));
+      showToast($t('mensagens.queued', { default: 'Guardada neste dispositivo — sincroniza quando a ligação segura estiver activa.' }));
     } else if (result === 'failed') {
       showToast($t('mensagens.send_failed', { default: 'A mensagem não seguiu. Toca em «tentar de novo».' }));
     }
@@ -312,62 +317,70 @@
 <div class="chat-root">
   <header class="chat-header">
     <div class="header-text">
-      <h1>💞 {$t('mensagens.title', { default: 'Mensagens' })}</h1>
-      <p class="subtitle">{$t('mensagens.subtitle', { default: 'só nós os dois 💕' })}</p>
+      <span class="chat-kicker">{$t('mensagens.header.kicker', { default: 'Chat privado' })}</span>
+      <h1>{meProfile.emoji} {$t(meProfile.nameKey)} ↔ {$t(otherPerson.nameKey)} {otherPerson.emoji}</h1>
+      <p class="subtitle">
+        {#if syncBlocked}
+          {$t('mensagens.status.local', { default: 'Modo local — a sincronização segura ainda não está activa neste dispositivo.' })}
+        {:else if store?.offline}
+          {$t('mensagens.status.offline', { default: 'Offline — guardado no dispositivo.' })}
+        {:else}
+          {$t('mensagens.status.secure', { default: 'Ligação segura activa.' })}
+        {/if}
+      </p>
     </div>
+    <a class="profile-link" href="/perfil/" aria-label={$t('profile.page.title', { default: 'Perfil' })} title={$t('profile.page.title', { default: 'Perfil' })}>
+      {meProfile.emoji}
+    </a>
   </header>
 
-  {#if store?.offline}
+  {#if store?.offline && !syncBlocked}
     <div class="offline-banner" role="status">
       {$t('mensagens.offline', {
-        default: 'Sem ligação — as mensagens ficam guardadas e seguem quando houver rede 💤'
+        default: 'Sem ligação — as mensagens ficam guardadas e seguem quando houver rede.'
       })}
+    </div>
+  {/if}
+
+  {#if syncBlocked && !noSession}
+    <div class="sync-banner" role="status">
+      <div>
+        <strong>{$t('mensagens.secure_setup.title', { default: 'Chat privado ainda não está sincronizado neste dispositivo' })}</strong>
+        <p>{$t('mensagens.secure_setup.body', { default: 'Podes escrever já; fica guardado localmente. Para sincronizar entre telemóveis, é preciso activar a ligação segura uma vez.' })}</p>
+      </div>
+      <details bind:open={setupOpen}>
+        <summary>{$t('mensagens.secure_setup.action', { default: 'Activar ligação segura' })}</summary>
+        <div class="setup-form">
+          <input
+            type="text"
+            bind:value={setupKeyInput}
+            placeholder={$t('mensagens.secure_setup.placeholder', { default: 'Chave de ligação' })}
+            autocomplete="off"
+            onkeydown={(e) => {
+              if (e.key === 'Enter') saveSecureKey();
+            }}
+          />
+          <button type="button" class="gate-save" onclick={saveSecureKey}>
+            {$t('mensagens.secure_setup.save', { default: 'Activar' })}
+          </button>
+        </div>
+        <p class="setup-note">{$t('mensagens.secure_setup.note', { default: 'Esta chave é técnica. Não é uma barreira entre vocês; é só a protecção do endpoint privado.' })}</p>
+      </details>
     </div>
   {/if}
 
   {#if noSession}
     <div class="gate card">
-      <span class="gate-emoji" aria-hidden="true">🔒</span>
-      <p>{$t('mensagens.no_session', { default: 'Abre primeiro a tua sessão no ecrã inicial para entrares no nosso cantinho.' })}</p>
-    </div>
-  {:else if showGate}
-    <div class="gate card">
-      <span class="gate-emoji" aria-hidden="true">💌</span>
-      <h2>{$t('mensagens.token.title', { default: 'O nosso código secreto' })}</h2>
-      <p>
-        {$t('mensagens.token.body', {
-          default: 'Cola aqui o teu código de acesso pessoal para abrir o nosso chat privado. É dado em mãos, como uma cartinha 💌'
-        })}
-      </p>
-      {#if store?.authError}
-        <p class="gate-error">
-          {$t('mensagens.token.invalid', {
-            default: 'Esse código não abriu o nosso cadeado. Confirma e tenta outra vez 💔'
-          })}
-        </p>
-      {/if}
-      <div class="gate-form">
-        <input
-          type="password"
-          bind:value={tokenInput}
-          placeholder={$t('mensagens.token.placeholder', { default: 'Código de acesso' })}
-          autocomplete="off"
-          onkeydown={(e) => {
-            if (e.key === 'Enter') saveToken();
-          }}
-        />
-        <button type="button" class="gate-save" onclick={saveToken}>
-          {$t('mensagens.token.save', { default: 'Guardar e entrar' })}
-        </button>
-      </div>
+      <span class="gate-emoji" aria-hidden="true">🔐</span>
+      <p>{$t('mensagens.no_session', { default: 'Abre primeiro a tua sessão no ecrã inicial para entrares no chat privado.' })}</p>
     </div>
   {:else if store}
     <div class="chat-scroll" bind:this={scrollEl}>
       {#if store.ready && store.messages.length === 0}
         <div class="empty">
           <span class="empty-heart" aria-hidden="true">💌</span>
-          <p class="empty-title">{$t('mensagens.empty', { default: 'O nosso cantinho secreto 💌' })}</p>
-          <p class="empty-hint">{$t('mensagens.empty_hint', { default: 'Manda a primeira mensagem — fica só entre nós.' })}</p>
+          <p class="empty-title">{$t('mensagens.empty', { default: 'Ainda não há mensagens aqui.' })}</p>
+          <p class="empty-hint">{$t('mensagens.empty_hint', { default: 'Deixa uma nota, envia uma foto ou grava um áudio quando quiseres.' })}</p>
         </div>
       {/if}
 
@@ -528,6 +541,33 @@
     font-size: var(--fs-xs);
     color: var(--txt3);
   }
+  .chat-kicker {
+    display: block;
+    margin-bottom: 0.15rem;
+    color: var(--txt3);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .profile-link {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-elev);
+    color: inherit;
+    text-decoration: none;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+  }
+  .profile-link:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+  .sync-banner,
   .offline-banner {
     margin: var(--space-2) var(--space-4) 0;
     padding: var(--space-2) var(--space-3);
@@ -539,7 +579,7 @@
     text-align: center;
   }
 
-  /* ── token gate ── */
+  /* ── session / secure setup states ── */
   .gate {
     margin: var(--space-6) var(--space-4);
     padding: var(--space-5);
@@ -556,10 +596,6 @@
   .gate-emoji {
     font-size: 2.4rem;
   }
-  .gate h2 {
-    margin: 0;
-    font-size: var(--fs-md);
-  }
   .gate p {
     margin: 0;
     color: var(--txt2);
@@ -567,17 +603,14 @@
     line-height: 1.5;
     max-width: 34ch;
   }
-  .gate-error {
-    color: var(--error);
-  }
-  .gate-form {
+  .setup-form {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
     width: 100%;
     max-width: 320px;
   }
-  .gate-form input {
+  .setup-form input {
     min-height: var(--touch-target);
     padding: var(--space-2) var(--space-3);
     border-radius: var(--radius-md);
@@ -586,7 +619,7 @@
     color: var(--txt);
     font: inherit;
   }
-  .gate-form input:focus-visible {
+  .setup-form input:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
   }
@@ -610,6 +643,30 @@
   .gate-save:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
+  }
+  .sync-banner {
+    display: grid;
+    gap: var(--space-3);
+    text-align: left;
+  }
+  .sync-banner p,
+  .setup-note {
+    margin: 0.25rem 0 0;
+    line-height: 1.45;
+  }
+  .sync-banner details {
+    width: 100%;
+  }
+  .sync-banner summary {
+    cursor: pointer;
+    color: var(--accent);
+    font-weight: 700;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .setup-form {
+    margin-top: var(--space-2);
   }
 
   /* ── messages ── */

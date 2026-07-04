@@ -282,7 +282,15 @@ export class ChatStore {
         this.#patchLocal(local.id, { pending: false, queued, failed: !queued });
         return queued ? 'queued' : 'failed';
       }
-      if (e instanceof ChatApiError && e.status === 401) this.authError = true;
+      if (e instanceof ChatApiError && e.status === 401) {
+        // Secure sync is not configured on this device yet. Keep the chat usable:
+        // park the message in the local outbox and surface the connection state
+        // in the UI instead of treating it as a wrong password.
+        this.authError = true;
+        const queued = queueOutbox(this.profile, outboxItem);
+        this.#patchLocal(local.id, { pending: false, queued, failed: !queued });
+        return queued ? 'queued' : 'failed';
+      }
       this.#patchLocal(local.id, { pending: false, failed: true });
       return 'failed';
     }
