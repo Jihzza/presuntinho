@@ -2,6 +2,80 @@
 
 All notable changes to Presuntinho are documented in this file.
 
+## [10.0.0] - 2026-07-04 — "Juice Update"
+
+Atualização Duolingo-inspired em 3 tiers: som, níveis, streak de primeira
+classe, mascote emocional, parade de vitória, baús e notificações com
+personalidade. 4 commits de feature (`4dcd195`, `1a3271c`, `4fd1b77` + release)
+e 2 de fixes guiados por reviews adversariais multi-agente (`5bc334b`, `cbc2470`).
+
+### Added
+- **Som + haptics** — 8 efeitos sintetizados em Web Audio (zero mp3s): chime de
+  acerto (pitch sobe com combos até +10 semitons), thud suave no erro, fanfarra,
+  whoosh da chama, ding de missão, baú, marco e level-up. `navigator.vibrate`
+  em vitórias. Toggles "Sons"/"Vibração" em /definicoes (Dexie, aditivo); som
+  desligado por default com `prefers-reduced-motion`. (`src/lib/gamification/sound.ts`)
+- **Níveis** — curva exponencial `50·N^1.6` (Nv2=152 XP, Nv5=656, Nv10=1990) com
+  funções puras testadas; modal de level-up full-screen (confetti + fanfarra +
+  vibração); barra de progresso no hub; nível no XpPill e no perfil.
+  (`levels.ts`, `LevelUpModal.svelte`)
+- **Streak de primeira classe** — chama 🔥 no header (cinzenta até à 1.ª
+  atividade do dia, ignição animada com whoosh 1×/dia) com popover (círculos da
+  semana, congelamentos, recorde); **streak freeze**: 1 token ganho a cada 7
+  dias (máx. 2), consumido automaticamente num dia falhado — o dia congelado
+  mantém a cadeia sem contar; marcos 7/14/30/50/100/365 em cartão full-screen;
+  baseline pós-upgrade evita celebrações retroativas. (`streak-core.ts` +
+  `StreakFlame/WeekCircles/StreakMilestoneModal`)
+- **Mascote emocional** — 5 estados (feliz/neutro/preocupado/triste/eufórico)
+  derivados de streak + hora + última ação; overlay e animações no FAB; fala
+  localizada no hub; favicon e título do separador mudam com a emoção (o truque
+  do ícone do Duolingo). (`emotion.ts`, `presence.ts`)
+- **Parade de vitória** — `VictoryFlow.svelte`: fila de 2-4 cartões (splash com
+  anel de precisão → recompensas com stagger e count-up de 800ms → streak +
+  semana + missões com CTAs). Usada nos quizzes, ao completar todos os hábitos
+  do dia (1×/dia) e ao entregar trabalhos (mostra o XP real pago, 15-150).
+- **Badges a sério** — catálogo corrigido para o contrato V3 (os labels V4-V9
+  estavam trocados: b8 é Konami, b10 é coração, b14 é Sala Secreta…); 17 badges
+  todos atribuíveis (novos: b1 primeira ação, b2 primeira lição, b4 dez
+  respostas, b5 primeira nota, b6 oito páginas); famílias com tiers
+  bronze/prata/ouro; modal de desbloqueio com confetti + fanfarra; /secrets
+  renderiza do mesmo catálogo. (`badge-catalog.ts`, `BadgeUnlockModal.svelte`)
+- **Baús de recompensa variável** — 3/3 missões diárias → baú shake-then-burst
+  (55% XP 10-50, 25% freeze, 20% **boost 2x/15min** que multiplica de facto o
+  `awardXP`); flag persistida sobrevive a reloads até ser recolhido; indicador
+  ⚡2x no XpPill. (`ChestModal.svelte`)
+- **Notificações com personalidade** — Notification API local para "streak em
+  risco" (≥20h, 1×/dia, opt-in em /definicoes, permissão só por gesto) com 5
+  variantes passivo-agressivas do porquinho, localizadas nos 5 idiomas.
+- **Polish** — transição fade/slide entre rotas; entrada staggered nas listas
+  principais; dip `scale(0.97)` nos botões; número de XP com tween; preview de
+  paleta real nos 13 temas; marcos 25/50/75% nas metas com celebração; barra de
+  progresso de desbloqueio na galeria de mascotes; insight "dia mais feliz" em
+  /humor; skeletons consistentes em 7 páginas.
+
+### Changed
+- i18n: +117 chaves novas e ~20 valores corrigidos em **todos os 5 locales**
+  (pt-PT/en/tn/fr/ar) — paridade 3229 chaves.
+- `awardBadge` dispara `presuntinho:badge-unlocked`; `awardXP` aplica o boost
+  ativo a ganhos (nunca a perdas) via `boostedXp()` partilhado com o display.
+- Campos aditivos não-indexados (sem bump de schema Dexie): state row
+  (`streakFreezes`, `streakFreezeLastEarn`, `streakFrozenDays`,
+  `streakMilestoneCelebrated`, `streakFlameDay`, `xpBoostUntil`, `xpBoostMult`,
+  `habitsFlowDay`, `streakNotifDay`, `chestPendingDay`) e settings row
+  (`soundEnabled`, `hapticsEnabled`, `notifStreakEnabled`).
+
+### Fixed
+- 21 findings da review adversarial do Tier 1 (falso level-up pós-reload,
+  ratchet de freezes após quebra, escrita destrutiva em leitura falhada, RTL,
+  overflow do nav ≤520px, sons duplicados…) e 16 do Tier 2 (o VictoryFlow
+  consumia a flag do baú, parade do trabalho com XP errado, b6 contava
+  marcadores de lição, timers por limpar, 20 chaves i18n em falta…).
+- Gate 1 pré-existente do check:depth ("Em breve" em CaminhoPath) — 5/5 gates.
+
+### Testing
+- 47 testes vitest novos (curva de níveis, walk do streak com freezes,
+  earn/reset de tokens, marcos, estados emocionais do mascote).
+
 ## [6.0.3] - 2026-06-27
 
 ### Added
