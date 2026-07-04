@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Skeleton from '$lib/components/Skeleton.svelte';
   import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
   import { localizedBusinessAdministration, localizedBusinessCustomLessons, localizedBusinessSubjects, localizedMainSchoolCourses } from '$lib/escola/catalog';
@@ -199,7 +200,7 @@
       <a class="see-all" href="/trabalhos/">{$t('school.deadlines.all', { default: 'Ver todos →' })}</a>
     </div>
     {#if !statsLoaded}
-      <p class="deadlines-empty">{$t('common.loading', { default: 'A carregar…' })}</p>
+      <Skeleton variant="list" lines={3} label={$t('common.loading', { default: 'A carregar…' })} />
     {:else if deadlines.length === 0}
       <p class="deadlines-empty">{$t('school.deadlines.empty', { default: 'Sem entregas pendentes. Respira fundo. 🌿' })}</p>
     {:else}

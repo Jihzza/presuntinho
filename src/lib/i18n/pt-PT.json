@@ -4557,5 +4557,10 @@
   "notif.streak.v2": "🐷 Não é por nada, mas a tua streak apaga-se à meia-noite. Só a avisar. Casualmente.",
   "notif.streak.v3": "🐷 Lembras-te de mim? Da app? Dos teus hábitos? Pois. Nós lembramo-nos de ti.",
   "notif.streak.v4": "🐷 Dois minutinhos. Uma atividade. É literalmente tudo o que a chama pede.",
-  "notif.streak.v5": "🐷 O Presuntinho prometeu não dramatizar. O Presuntinho mentiu: A STREAK ESTÁ EM RISCO!"
+  "notif.streak.v5": "🐷 O Presuntinho prometeu não dramatizar. O Presuntinho mentiu: A STREAK ESTÁ EM RISCO!",
+  "financas.metas.toast.marco": "🚩 {pct}% da meta — está quase!",
+  "humor.insights.happy_weekday": "O teu dia mais feliz tem sido {weekday} ({count} registos bons).",
+  "mascots.unlock.progress.xp": "{have}/{need} XP",
+  "mascots.unlock.progress.badges": "{have}/{need} medalhas",
+  "caminho.node.locked_hint": "Ainda a caminho — mas podes espreitar 👀"
 }

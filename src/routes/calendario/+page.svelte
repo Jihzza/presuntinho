@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Skeleton from '$lib/components/Skeleton.svelte';
   import { onMount } from 'svelte';
   import { locale, t } from 'svelte-i18n';
   import {
@@ -427,7 +428,7 @@
       </button>
     </div>
     {#if loading}
-      <p class="empty">{$t('calendar.loading', { default: 'A carregar calendário…' })}</p>
+      <Skeleton variant="card" lines={3} label={$t('calendar.loading', { default: 'A carregar calendário…' })} />
     {:else if upcoming.length === 0}
       <p class="empty">{$t('calendar.empty', { default: 'Nada urgente. Planeia uma tarefa nova ou revê os hábitos.' })}</p>
     {:else}

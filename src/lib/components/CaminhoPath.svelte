@@ -126,7 +126,7 @@
             <small class="node-count">{$t('caminho.unit_count', { values: { done: stat.done, total: stat.total }, default: '{done}/{total} lições' })}</small>
           {/if}
           {#if state === 'upcoming'}
-            <small class="node-hint">{$t('caminho.node.locked_hint', { default: 'Em breve — mas podes espreitar 👀' })}</small>
+            <small class="node-hint">{$t('caminho.node.locked_hint', { default: 'Ainda a caminho — mas podes espreitar 👀' })}</small>
           {/if}
           {#if state === 'current' && next}
             <a class="continue-cta" href={next.href}>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Skeleton from '$lib/components/Skeleton.svelte';
   // Memórias — romantic timeline of everything lived inside the app.
   //
   // Derived 100% from EXISTING data (no new schema):
@@ -307,7 +308,7 @@
   {/if}
 
   {#if loading}
-    <p class="loading">{$t('memorias.loading', { default: 'A carregar memórias…' })}</p>
+    <Skeleton variant="list" lines={4} label={$t('memorias.loading', { default: 'A carregar memórias…' })} />
   {:else if items.length === 0}
     <div class="empty card">
       <div class="empty-icon" aria-hidden="true">🐷💞</div>

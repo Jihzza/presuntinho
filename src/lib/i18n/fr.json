@@ -4557,5 +4557,10 @@
   "notif.streak.v2": "🐷 Sans pression, mais ta série meurt à minuit. Je dis ça. Tranquillement.",
   "notif.streak.v3": "🐷 Tu te souviens de moi ? De l’app ? De tes habitudes ? Voilà. Nous, on se souvient de toi.",
   "notif.streak.v4": "🐷 Deux petites minutes. Une activité. C’est littéralement tout ce que la flamme demande.",
-  "notif.streak.v5": "🐷 Presuntinho avait promis de ne pas dramatiser. Presuntinho a menti : LA SÉRIE EST EN DANGER !"
+  "notif.streak.v5": "🐷 Presuntinho avait promis de ne pas dramatiser. Presuntinho a menti : LA SÉRIE EST EN DANGER !",
+  "financas.metas.toast.marco": "🚩 {pct}% de l’objectif — tu y es presque !",
+  "humor.insights.happy_weekday": "Ton jour le plus heureux a été {weekday} ({count} bonnes entrées).",
+  "mascots.unlock.progress.xp": "{have}/{need} XP",
+  "mascots.unlock.progress.badges": "{have}/{need} médailles",
+  "caminho.node.locked_hint": "Encore en chemin — mais tu peux jeter un œil 👀"
 }

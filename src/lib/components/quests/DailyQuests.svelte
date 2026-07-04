@@ -173,7 +173,7 @@
         </div>
       </div>
     {/if}
-    <div class="rows">
+    <div class="rows v10-stagger">
       {#each quests as q (q.id)}
         <a class="quest" class:done={q.done} href={q.href}>
           <span class="tick" class:checked={q.done} aria-hidden="true">

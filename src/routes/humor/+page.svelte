@@ -180,6 +180,29 @@
       });
     }
 
+    // 1b) V10 — happiest weekday: the weekday with the most positive
+    // registos (happy/loved/ok) this month.
+    const POSITIVE = new Set(['happy', 'loved', 'ok', 'love']);
+    const happyByWeekday = [0, 0, 0, 0, 0, 0, 0];
+    for (const row of monthLogs) {
+      if (!POSITIVE.has(row.kind)) continue;
+      const [y, m, d] = row.date.split('-').map(Number);
+      happyByWeekday[new Date(y, m - 1, d).getDay()] += 1;
+    }
+    const happyMax = Math.max(...happyByWeekday);
+    if (happyMax >= 2) {
+      const happyDay = happyByWeekday.indexOf(happyMax);
+      const ref = new Date(2024, 0, 7 + happyDay); // 2024-01-07 was a Sunday
+      const weekdayName = new Intl.DateTimeFormat(loc, { weekday: 'long' }).format(ref);
+      out.push({
+        emoji: '🌞',
+        text: $t('humor.insights.happy_weekday', {
+          values: { weekday: weekdayName, count: happyMax },
+          default: 'O teu dia mais feliz tem sido {weekday} ({count} registos bons).'
+        })
+      });
+    }
+
     // 2) Check-in count.
     const checkins = monthLogs.filter((row) => row.source === 'checkin').length;
     if (checkins > 0) {

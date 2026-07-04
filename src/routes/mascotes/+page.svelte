@@ -77,6 +77,33 @@
     }
     return '';
   }
+
+  // V10 — visible unlock progress on locked mascots ("120/500 XP" + bar).
+  function unlockPct(m: MascotStatus): number {
+    if (typeof m.minXp === 'number' && m.minXp > 0) {
+      return Math.min(100, Math.round((ctx.xp / m.minXp) * 100));
+    }
+    if (typeof m.minBadges === 'number' && m.minBadges > 0) {
+      return Math.min(100, Math.round((ctx.badges / m.minBadges) * 100));
+    }
+    return 0;
+  }
+
+  function unlockProgressLabel(m: MascotStatus): string {
+    if (typeof m.minXp === 'number') {
+      return $t('mascots.unlock.progress.xp', {
+        values: { have: ctx.xp, need: m.minXp },
+        default: '{have}/{need} XP'
+      });
+    }
+    if (typeof m.minBadges === 'number') {
+      return $t('mascots.unlock.progress.badges', {
+        values: { have: ctx.badges, need: m.minBadges },
+        default: '{have}/{need} medalhas'
+      });
+    }
+    return '';
+  }
 </script>
 
 <svelte:head>
@@ -127,6 +154,12 @@
             <span class="badge pick-badge">{$t('mascots.page.pick', { default: 'Escolher' })}</span>
           {:else}
             <span class="badge lock-badge">🔒 {unlockHint(m)}</span>
+            <span class="unlock-progress">
+              <span class="unlock-bar-wrap" aria-hidden="true">
+                <span class="unlock-bar" style="width: {unlockPct(m)}%"></span>
+              </span>
+              <small class="unlock-label">{unlockProgressLabel(m)}</small>
+            </span>
           {/if}
         </button>
       </li>
@@ -139,6 +172,34 @@
     max-width: 860px;
     margin: 0 auto;
     padding: 1.25rem 1rem 8rem;
+  }
+  /* V10 — unlock progress on locked mascots */
+  .unlock-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    width: 100%;
+    margin-top: 0.35rem;
+  }
+  .unlock-bar-wrap {
+    display: block;
+    width: 100%;
+    height: 6px;
+    background: var(--bg-elev, rgba(255, 255, 255, 0.08));
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .unlock-bar {
+    display: block;
+    height: 100%;
+    background: var(--accent, #ec4899);
+    border-radius: 999px;
+    transition: width var(--motion-base, 220ms) ease;
+  }
+  .unlock-label {
+    font-size: 0.68rem;
+    color: var(--txt3, #94a3b8);
+    font-variant-numeric: tabular-nums;
   }
   .breadcrumb { margin: 0 0 0.75rem; font-size: var(--fs-sm, 0.85rem); }
   .breadcrumb a {

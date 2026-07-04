@@ -46,7 +46,7 @@
     <span class="grid-head-label">{$t('components.badge.grid.heading', { default: 'Conquistas' })}</span>
     <span class="grid-head-count">{unlockedCount}/{totalCount}</span>
   </header>
-  <div class="grid">
+  <div class="grid v10-stagger">
     {#each BADGE_CATALOG as def (def.id)}
       {@const name = $t(`components.badge.catalog.${def.id}.name`, {
         default: BADGE_PT_NAMES[def.id]

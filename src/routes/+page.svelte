@@ -16,6 +16,9 @@
    */
   import { onMount } from 'svelte';
   import { get } from 'svelte/store';
+  import { tweened } from 'svelte/motion';
+  import { cubicOut } from 'svelte/easing';
+  import { prefersReducedMotion } from '$lib/components/events';
 
   import BadgeGrid from '$lib/components/BadgeGrid.svelte';
   import OnboardingModal from '$lib/components/OnboardingModal.svelte';
@@ -72,7 +75,15 @@
   const todayKey = $derived(localDateKey(now));
   const weekPreviewDays = $derived(weekDays(now));
 
-  const xpLabel = $derived(new Intl.NumberFormat(dateLocale).format(currentXp) + ' XP');
+  // V10 — the XP number rolls smoothly instead of jumping (tweened store;
+  // duration collapses to 0 under prefers-reduced-motion).
+  const xpTween = tweened(0, { duration: 400, easing: cubicOut });
+  $effect(() => {
+    void xpTween.set(currentXp, { duration: prefersReducedMotion() ? 0 : 400 });
+  });
+  const xpLabel = $derived(
+    new Intl.NumberFormat(dateLocale).format(Math.round($xpTween)) + ' XP'
+  );
   const levelInfo = $derived(progressToNext(currentXp));
   const level = $derived(levelInfo.level);
   const emotion = $derived.by<MascotEmotion>(() => {
@@ -367,7 +378,7 @@
     {#if todaysItems.length === 0}
       <p class="empty-line">{$t('hub.today.empty')}</p>
     {:else}
-      <ul class="today-list">
+      <ul class="today-list v10-stagger">
         {#each todaysItems.slice(0, 4) as item (item.id)}
           <li class="today-item" data-tone={item.tone}>
             <a class="today-main" href={item.href}>
@@ -440,7 +451,7 @@
       <h2>{$t('hub.map.title')}</h2>
       <span class="head-note">{$t('hub.map.subtitle')}</span>
     </div>
-    <div class="map-grid">
+    <div class="map-grid v10-stagger">
       <a class="card" href="/humor/">💗 {$t('hub.map.mood', { default: 'Humor' })} <small>{$t('hub.map.mood.desc', { default: 'como te tens sentido' })}</small></a>
       <a class="card" href="/memorias/">📸 {$t('hub.map.memories', { default: 'Memórias' })} <small>{$t('hub.map.memories.desc', { default: 'momentos guardados com carinho' })}</small></a>
       <a class="card" href="/calendario/">🗓️ {$t('hub.map.calendar')} <small>{$t('hub.map.calendar.desc')}</small></a>

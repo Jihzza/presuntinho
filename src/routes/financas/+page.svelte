@@ -27,6 +27,7 @@
   `onMount` (não no SSR — IndexedDB não existe em Node).
 -->
 <script lang="ts">
+  import Skeleton from '$lib/components/Skeleton.svelte';
   import { onMount, onDestroy } from 'svelte';
   import { t, locale } from 'svelte-i18n';
   import { get } from 'svelte/store';
@@ -350,7 +351,7 @@
   </nav>
 
   {#if loading}
-    <p class="empty">{$t('financas.loading', { default: 'A carregar…' })}</p>
+    <Skeleton variant="card" lines={3} label={$t('financas.loading', { default: 'A carregar…' })} />
   {:else if error}
     <p class="empty error" role="alert">⚠️ {error}</p>
   {:else if totalTransacoesMes === 0 && !temHistorico}

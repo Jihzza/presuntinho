@@ -379,7 +379,7 @@
       {#each grupos as grupo (grupo.data)}
         <div class="day-group">
           <h3 class="day-header">{formatData(grupo.data, localeCode)}</h3>
-          <ul class="rows">
+          <ul class="rows v10-stagger">
             {#each grupo.items as tx (tx.id)}
               {@const c = cat(tx.categoria)}
               {@const isReceita = tx.tipo === 'receita'}

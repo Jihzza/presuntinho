@@ -4557,5 +4557,10 @@
   "notif.streak.v2": "🐷 No pressure, but your streak dies at midnight. Just saying. Casually.",
   "notif.streak.v3": "🐷 Remember me? The app? Your habits? Right. We remember you.",
   "notif.streak.v4": "🐷 Two tiny minutes. One activity. That is literally all the flame asks.",
-  "notif.streak.v5": "🐷 Presuntinho promised not to be dramatic. Presuntinho lied: THE STREAK IS AT RISK!"
+  "notif.streak.v5": "🐷 Presuntinho promised not to be dramatic. Presuntinho lied: THE STREAK IS AT RISK!",
+  "financas.metas.toast.marco": "🚩 {pct}% of the goal — almost there!",
+  "humor.insights.happy_weekday": "Your happiest day has been {weekday} ({count} good entries).",
+  "mascots.unlock.progress.xp": "{have}/{need} XP",
+  "mascots.unlock.progress.badges": "{have}/{need} badges",
+  "caminho.node.locked_hint": "Still on its way — but you can peek 👀"
 }

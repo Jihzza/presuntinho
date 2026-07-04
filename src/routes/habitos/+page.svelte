@@ -433,7 +433,7 @@
         ctaHref="/habitos/novo/"
       />
     {:else}
-      <ul class="cards">
+      <ul class="cards v10-stagger">
         {#each habits as h (h.id)}
           <li class="card-wrap">
             <article

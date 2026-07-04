@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Skeleton from '$lib/components/Skeleton.svelte';
   import { onMount } from 'svelte';
   import { locale, t } from 'svelte-i18n';
   import {
@@ -125,7 +126,7 @@
 
   <section class="list" aria-label={$t('notifications.list.aria', { default: 'Lista de notificações' })}>
     {#if loading}
-      <p class="empty">{$t('notifications.loading', { default: 'A carregar notificações…' })}</p>
+      <Skeleton variant="list" lines={4} label={$t('notifications.loading', { default: 'A carregar notificações…' })} />
     {:else if visible.length === 0}
       <div class="empty-state">
         <span class="mascot" aria-hidden="true">🐷</span>

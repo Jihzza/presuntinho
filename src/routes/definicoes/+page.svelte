@@ -143,20 +143,28 @@
   }
 
   // ----- Theme -----
-  const THEME_OPTIONS: Array<{ id: ThemeChoice; icon: string; minXp: number }> = [
-    { id: 'auto', icon: '🪄', minXp: 0 },
-    { id: 'dark', icon: '🌙', minXp: 0 },
-    { id: 'light', icon: '☀️', minXp: 0 },
-    { id: 'vanilla', icon: '🍦', minXp: 0 },
-    { id: 'garden', icon: '🌿', minXp: 0 },
-    { id: 'midnight', icon: '💗', minXp: 0 },
-    { id: 'cozy', icon: '🧸', minXp: 0 },
-    { id: 'fresh', icon: '🟢', minXp: 0 },
-    { id: 'barca', icon: '🔵🔴', minXp: 100 },
-    { id: 'gamer', icon: '🎮', minXp: 250 },
-    { id: 'anime', icon: '🌸', minXp: 500 },
-    { id: 'moto', icon: '🏍️', minXp: 750 },
-    { id: 'tunisia', icon: '🇹🇳', minXp: 1000 }
+  // V10: `preview` = real [background, accent, card-ish] colours lifted from
+  // the theme definitions in app.css, so the picker shows each palette
+  // before the user commits to it.
+  const THEME_OPTIONS: Array<{
+    id: ThemeChoice;
+    icon: string;
+    minXp: number;
+    preview: [string, string, string];
+  }> = [
+    { id: 'auto', icon: '🪄', minXp: 0, preview: ['#1f2e4a', '#ec4899', '#f8fbff'] },
+    { id: 'dark', icon: '🌙', minXp: 0, preview: ['#1f2e4a', '#ec4899', '#33415e'] },
+    { id: 'light', icon: '☀️', minXp: 0, preview: ['#f8fbff', '#b91c66', '#fff7ed'] },
+    { id: 'vanilla', icon: '🍦', minXp: 0, preview: ['#fff7ed', '#c02670', '#fff1f2'] },
+    { id: 'garden', icon: '🌿', minXp: 0, preview: ['#064e3b', '#34d399', '#052e2b'] },
+    { id: 'midnight', icon: '💗', minXp: 0, preview: ['#1f1235', '#f472b6', '#0b0714'] },
+    { id: 'cozy', icon: '🧸', minXp: 0, preview: ['#eff6ff', '#3b82f6', '#fef2f2'] },
+    { id: 'fresh', icon: '🟢', minXp: 0, preview: ['#073b4c', '#58cc02', '#0f2f1a'] },
+    { id: 'barca', icon: '🔵🔴', minXp: 100, preview: ['#13245f', '#a50044', '#edbb00'] },
+    { id: 'gamer', icon: '🎮', minXp: 250, preview: ['#050816', '#22c55e', '#06b6d4'] },
+    { id: 'anime', icon: '🌸', minXp: 500, preview: ['#43205a', '#f472b6', '#c084fc'] },
+    { id: 'moto', icon: '🏍️', minXp: 750, preview: ['#2a1014', '#ef4444', '#f97316'] },
+    { id: 'tunisia', icon: '🇹🇳', minXp: 1000, preview: ['#fffafa', '#c1121f', '#ffe4e6'] }
   ];
 
   const THEME_CLASSES = THEME_OPTIONS.map((option) => `theme-${option.id}`);
@@ -756,6 +764,11 @@
                 {$t('settings.theme.locked', { values: { xp: option.minXp }, default: 'Bloqueado até {xp} XP' })}
               {/if}
             </small>
+            <span class="theme-preview" aria-hidden="true">
+              {#each option.preview as color (color)}
+                <span class="preview-dot" style="background: {color}"></span>
+              {/each}
+            </span>
           </span>
         </button>
       {/each}
@@ -1312,6 +1325,18 @@
       margin: 0 0 0.75rem;
       color: var(--txt2);
       font-size: 0.9rem;
+    }
+    /* V10 — theme palette preview dots */
+    .theme-preview {
+      display: inline-flex;
+      gap: 0.3rem;
+      margin-top: 0.3rem;
+    }
+    .preview-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.25);
     }
     /* V10 — Sons & Vibração switches */
     .switch-list {

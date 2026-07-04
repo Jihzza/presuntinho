@@ -27,7 +27,12 @@
     type Meta
   } from '$lib/financas';
   import { showToast, fireConfettiEvent } from '$lib/components/events';
+  import { playSfx, vibrate } from '$lib/gamification/sound';
+  import Skeleton from '$lib/components/Skeleton.svelte';
   import { useMoodState } from '$lib/mood/useMoodState.svelte';
+
+  // V10 — 25/50/75% milestones on the progress bar, celebrated on crossing.
+  const META_MILESTONES = [25, 50, 75] as const;
 
   let metas = $state<Meta[]>([]);
   let loading = $state(true);
@@ -198,15 +203,31 @@
       return;
     }
     busyId = m.id;
+    // V10 — remember the % BEFORE the deposit to detect milestone crossings.
+    const pctBefore = percentOf(m);
     try {
       const result = await addDinheiroMeta(m.id, valor);
       depositStr = { ...depositStr, [m.id]: '' };
       await refresh();
       if (result?.reached) {
         fireConfettiEvent(120);
+        playSfx('fanfare');
+        vibrate('success');
         showToast($t('financas.metas.toast.atingida', { default: '🎉 Meta atingida! Estamos tão orgulhosos de ti!' }));
       } else if (valor > 0) {
-        showToast($t('financas.metas.toast.deposito', { default: 'Poupança registada — continua assim 💪' }));
+        const pctAfter = result ? percentOf(result.meta) : pctBefore;
+        const crossed = META_MILESTONES.filter((ms) => pctBefore < ms && pctAfter >= ms).pop();
+        if (crossed !== undefined) {
+          playSfx('ding');
+          showToast(
+            $t('financas.metas.toast.marco', {
+              values: { pct: crossed },
+              default: '🚩 {pct}% da meta — está quase!'
+            })
+          );
+        } else {
+          showToast($t('financas.metas.toast.deposito', { default: 'Poupança registada — continua assim 💪' }));
+        }
       } else {
         showToast($t('financas.metas.toast.ajuste', { default: 'Valor ajustado.' }));
       }
@@ -246,7 +267,7 @@
   {/if}
 
   {#if loading}
-    <p class="empty" aria-live="polite">{$t('common.loading', { default: 'A carregar…' })}</p>
+    <Skeleton variant="card" lines={3} />
   {:else if error}
     <p class="empty error" role="alert">⚠️ {error}</p>
   {:else}
@@ -379,6 +400,14 @@
                 aria-label={m.nome}
               >
                 <div class="bar" class:done={Boolean(m.doneAt)} style="width: {percentOf(m)}%"></div>
+                {#each META_MILESTONES as ms (ms)}
+                  <span
+                    class="bar-tick"
+                    class:passed={percentOf(m) >= ms}
+                    style="inset-inline-start: {ms}%"
+                    aria-hidden="true"
+                  ></span>
+                {/each}
               </div>
 
               {#if m.doneAt}
@@ -733,11 +762,24 @@
     color: var(--success);
   }
   .bar-wrap {
+    position: relative;
     width: 100%;
     height: 10px;
     background: var(--bg-elev, rgba(0, 0, 0, 0.3));
     border-radius: 999px;
     overflow: hidden;
+  }
+  /* V10 — 25/50/75% milestone ticks; light up once passed. */
+  .bar-tick {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: color-mix(in srgb, var(--txt, #fff) 25%, transparent);
+    transform: translateX(-1px);
+  }
+  .bar-tick.passed {
+    background: color-mix(in srgb, var(--on-accent, #fff) 75%, transparent);
   }
   .bar {
     height: 100%;

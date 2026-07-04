@@ -86,6 +86,10 @@
       border-color var(--motion-fast, 120ms) ease,
       transform var(--motion-fast, 120ms) ease;
   }
+  /* V10 micro-interaction: subtle dip while pressed. */
+  .ui-btn:active:not(:disabled) {
+    transform: scale(0.97);
+  }
   .ui-btn:focus-visible {
     outline: 2px solid transparent;
     outline-offset: 2px;

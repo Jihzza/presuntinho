@@ -4570,5 +4570,10 @@
   "notif.streak.v2": "🐷 Mafamech pression, ama el streak mte3ek tmout fi nos ellil. Ghir n9oul. Tranquille.",
   "notif.streak.v3": "🐷 Tfakkart fiya? Fel app? Fel 3adet mte3ek? Ey. A7na tfakkarna fik.",
   "notif.streak.v4": "🐷 Zouz d9ay9 sghar. Activité wa7da. Hedheka eli ttalbou echo3la.",
-  "notif.streak.v5": "🐷 Presuntinho wa3ad ma ydramatiserch. Presuntinho kdheb: EL STREAK FI KHATAR!"
+  "notif.streak.v5": "🐷 Presuntinho wa3ad ma ydramatiserch. Presuntinho kdheb: EL STREAK FI KHATAR!",
+  "financas.metas.toast.marco": "🚩 {pct}% mel objectif — 9rib toussel!",
+  "humor.insights.happy_weekday": "A7sen nhar mte3ek kan {weekday} ({count} tasjilet behia).",
+  "mascots.unlock.progress.xp": "{have}/{need} XP",
+  "mascots.unlock.progress.badges": "{have}/{need} médailles",
+  "caminho.node.locked_hint": "Mazel fi thnaya — ama tnajem tetfarrej 👀"
 }

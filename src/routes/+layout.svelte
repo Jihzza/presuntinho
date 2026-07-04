@@ -328,7 +328,13 @@
             </header>
 
             <main id="main-content" class="content" tabindex="-1">
-              {@render children?.()}
+              <!-- V10: keyed wrapper re-mounts per route → fade/slide-in
+                   transition (killed globally by prefers-reduced-motion). -->
+              {#key page.url.pathname}
+                <div class="route-transition">
+                  {@render children?.()}
+                </div>
+              {/key}
             </main>
 
             {#if pwaUpdateReady}
@@ -505,6 +511,21 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+  }
+  /* V10: route transition (subtle fade + rise; global reduced-motion
+     kill-switch in app.css zeroes it). */
+  .route-transition {
+    animation: route-in var(--motion-base, 220ms) ease both;
+  }
+  @keyframes route-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   /* V10: the StreakFlame chip tightened the header — below 520px the pig
      emoji stays as the brand mark (Home lives in the bottom nav anyway). */

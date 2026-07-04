@@ -4557,5 +4557,10 @@
   "notif.streak.v2": "🐷 بدون ضغط، لكن سلسلتك تموت عند منتصف الليل. مجرد ملاحظة. عابرة.",
   "notif.streak.v3": "🐷 تتذكرينني؟ التطبيق؟ عاداتك؟ حسنًا. نحن نتذكرك.",
   "notif.streak.v4": "🐷 دقيقتان صغيرتان. نشاط واحد. هذا حرفيًا كل ما تطلبه الشعلة.",
-  "notif.streak.v5": "🐷 وعد بريزونتينيو بألا يبالغ. بريزونتينيو كذب: السلسلة في خطر!"
+  "notif.streak.v5": "🐷 وعد بريزونتينيو بألا يبالغ. بريزونتينيو كذب: السلسلة في خطر!",
+  "financas.metas.toast.marco": "🚩 {pct}% من الهدف — اقتربتِ!",
+  "humor.insights.happy_weekday": "أسعد أيامك كان {weekday} ({count} تسجيلات جيدة).",
+  "mascots.unlock.progress.xp": "{have}/{need} نقطة",
+  "mascots.unlock.progress.badges": "{have}/{need} أوسمة",
+  "caminho.node.locked_hint": "ما زال في الطريق — لكن يمكنك إلقاء نظرة 👀"
 }
