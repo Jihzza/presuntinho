@@ -6,6 +6,7 @@
   import { t, waitLocale } from 'svelte-i18n';
   import { locale as localeStore } from '$lib/i18n';
   import LoveLock from '$lib/components/LoveLock.svelte';
+  import PigMascot from '$lib/components/PigMascot.svelte';
   import {
     detectMoodTrigger,
     activateMood,
@@ -251,7 +252,7 @@
     />
   {:else}
   <div class="card" class:shake>
-    <div class="mascot">🐷</div>
+    <div class="mascot"><PigMascot emotion="happy" size={92} /></div>
         <h1>{$t('splash.title')}</h1>
         <p class="sub">{$t('splash.subtitle')}</p>
 

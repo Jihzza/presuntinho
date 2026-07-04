@@ -30,6 +30,7 @@
   import { getActiveMascot, DEFAULT_MASCOT_ID, mascotById } from '$lib/gamification/mascots';
   import WeekCircles from '$lib/components/WeekCircles.svelte';
   import Skeleton from '$lib/components/Skeleton.svelte';
+  import PigMascot from '$lib/components/PigMascot.svelte';
 
   let loading = $state(true);
   let streak = $state<ActivityStreak | null>(null);
@@ -161,7 +162,7 @@
             })}
       </p>
       <p class="hero-mascot">
-        <span aria-hidden="true">{mascotEmoji}</span>
+        <PigMascot emotion={streak?.activeToday ? 'happy' : 'neutral'} size={38} />
         {#if nextMilestone}
           {$t('streaks.hero.next_milestone', {
             values: { days: nextMilestone - (streak?.current ?? 0), milestone: nextMilestone },

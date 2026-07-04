@@ -5,6 +5,7 @@
 	import { fireConfettiEvent } from '$lib/components/events';
 	import { playSfx, vibrate } from '$lib/gamification/sound';
 	import WeekCircles from './WeekCircles.svelte';
+	import PigMascot from './PigMascot.svelte';
 	import { getWeekActivity, type WeekDayActivity } from '$lib/gamification/streak';
 
 	interface Props {
@@ -46,7 +47,7 @@
 			})}
 		</h2>
 		<p class="subtitle">
-			<span aria-hidden="true">{mascotEmoji}</span>
+			<PigMascot emotion="euphoric" size={34} />
 			{$t('streak.milestone.subtitle', {
 				default: 'Incrível! A tua dedicação está a dar frutos.'
 			})}

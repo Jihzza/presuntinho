@@ -117,12 +117,16 @@
   let showJumpToEnd = $state(false);
 
   function isNearBottom(): boolean {
+    // V10.2 — a lista é o scroller interno; a janela já não rola no chat.
+    if (scrollEl) {
+      return scrollEl.scrollHeight - (scrollEl.scrollTop + scrollEl.clientHeight) < 180;
+    }
     if (typeof window === 'undefined') return true;
     const doc = document.documentElement;
     return doc.scrollHeight - (window.scrollY + window.innerHeight) < 180;
   }
 
-  function onWindowScroll(): void {
+  function onListScroll(): void {
     showJumpToEnd = !isNearBottom() && messages.length > 0;
   }
 
@@ -478,10 +482,8 @@
     syncKeyboardInset();
     window.visualViewport?.addEventListener('resize', syncKeyboardInset);
     window.visualViewport?.addEventListener('scroll', syncKeyboardInset);
-    window.addEventListener('scroll', onWindowScroll, { passive: true });
     void refreshHistory();
     return () => {
-      window.removeEventListener('scroll', onWindowScroll);
       window.visualViewport?.removeEventListener('resize', syncKeyboardInset);
       window.visualViewport?.removeEventListener('scroll', syncKeyboardInset);
       if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
@@ -534,7 +536,7 @@
     </div>
   </div>
 
-  <div class="chat-scroll" bind:this={scrollEl}>
+  <div class="chat-scroll" bind:this={scrollEl} onscroll={onListScroll}>
     {#if messages.length === 0}
       <div class="empty">
         <p class="empty-prompt">{$t('agente.empty_prompt', { default: 'Pergunta qualquer coisa — eu leio da app.' })}</p>
@@ -690,12 +692,17 @@
 
 <style>
   .chat-root {
+      /* V10.2 — layout WhatsApp: altura FIXA ao viewport e overflow
+         escondido, para a página nunca rolar. A lista (.chat-scroll) é o
+         único scroller; o composer e o footer ficam sempre no sítio e a
+         última mensagem está SEMPRE visível ao entrar, sem scroll manual. */
       display: flex;
       flex-direction: column;
-      min-height: calc(100dvh - 64px);
+      /* 64px header sticky + ~4.35rem bottom-nav em fluxo. */
+      height: calc(100dvh - 64px - 4.75rem - env(safe-area-inset-bottom));
+      overflow: hidden;
       max-width: 800px;
       margin: 0 auto;
-      padding-bottom: calc(9.25rem + env(safe-area-inset-bottom));
       background: var(--bg, #1f2e4a);
       color: var(--txt, #fff);
     }
@@ -750,8 +757,12 @@
   }
   .chat-scroll {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 1rem;
+    /* Espaço para as bolhas nunca ficarem atrás do composer fixo + footer. */
+    padding-bottom: calc(10rem + env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
     gap: 0.6rem;

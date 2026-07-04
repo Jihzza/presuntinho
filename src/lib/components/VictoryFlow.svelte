@@ -20,6 +20,7 @@
 	import { nextLesson, type NextLessonTarget } from '$lib/escola/progress';
 	import { schoolCourses, courseForUnit } from '$lib/escola/catalog';
 	import WeekCircles from './WeekCircles.svelte';
+	import PigMascot from './PigMascot.svelte';
 
 	export interface XpEntry {
 		label: string;
@@ -217,7 +218,12 @@
 		</div>
 
 		{#if card === 'splash'}
-			<div class="mascot" aria-hidden="true">{mascotEmoji}</div>
+			<div class="mascot" aria-hidden="true">
+				<PigMascot emotion={celebrate ? 'euphoric' : 'happy'} size={76} />
+				{#if mascotEmoji !== '🐷'}
+					<span class="mascot-companion">{mascotEmoji}</span>
+				{/if}
+			</div>
 			<h2 class="v-title">{title}</h2>
 			{#if mascotLine}
 				<p class="v-line">{mascotLine}</p>
@@ -377,9 +383,16 @@
 	}
 
 	.mascot {
-		font-size: 3.2rem;
+		position: relative;
 		line-height: 1;
 		animation: mascot-cheer 900ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.mascot-companion {
+		position: absolute;
+		right: -10px;
+		bottom: 0;
+		font-size: 1.4rem;
 	}
 
 	.v-title {

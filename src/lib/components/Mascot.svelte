@@ -22,11 +22,11 @@
     mascotById
   } from '$lib/gamification/mascots';
   import {
-    emotionOverlay,
     hoursUntilMidnight,
     mascotEmotion,
     type MascotEmotion
   } from '$lib/gamification/emotion';
+  import PigMascot from './PigMascot.svelte';
   import { getActivityStreak } from '$lib/gamification/streak';
   import {
     minutesSinceLastAction,
@@ -45,7 +45,6 @@
   // V10 — Duolingo-style emotional state (happy/neutral/worried/sad/euphoric).
   let emotion = $state<MascotEmotion>('neutral');
 
-  const overlay = $derived(emotionOverlay(emotion));
   const EMOTION_FALLBACKS: Record<MascotEmotion, string> = {
     happy: 'Hoje já contou — orgulho em ti! 🎀',
     neutral: 'Pronta para a primeira vitória do dia?',
@@ -147,9 +146,11 @@
     aria-label={$t('components.mascot.aria', { default: 'Mascote — easter egg' })}
     title={emotionLine}
   >
-    <span class="emoji" aria-hidden="true">{emoji}</span>
-    {#if overlay}
-      <span class="emotion-overlay" aria-hidden="true">{overlay}</span>
+    <!-- V10.2 — a mascote oficial é o porquinho SVG com a emoção do dia;
+         a mascote colecionável escolhida aparece como companheiro pequeno. -->
+    <PigMascot {emotion} size={34} />
+    {#if emoji !== '🐷'}
+      <span class="companion" aria-hidden="true">{emoji}</span>
     {/if}
   </button>
 {/if}
@@ -195,17 +196,11 @@
   .mascot-fab:active {
     transform: scale(0.95);
   }
-  .emoji {
-    font-size: 1.65rem;
-    line-height: 1;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-  .emotion-overlay {
+  .companion {
     position: absolute;
-    right: -2px;
-    bottom: -2px;
-    font-size: 0.95rem;
+    right: -3px;
+    bottom: -3px;
+    font-size: 0.9rem;
     line-height: 1;
     filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.5));
     user-select: none;
@@ -213,25 +208,6 @@
   }
   .mascot-fab {
     position: relative;
-  }
-  .mascot-fab.sad .emoji {
-    filter: grayscale(0.55) opacity(0.9);
-  }
-  .mascot-fab.worried:not(.reduced) .emoji {
-    animation: mascot-worried 1.6s ease-in-out infinite;
-  }
-  .mascot-fab.euphoric:not(.reduced) .emoji {
-    animation: mascot-euphoric 900ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  @keyframes mascot-worried {
-    0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-1.5px) rotate(-3deg); }
-    60% { transform: translateX(1.5px) rotate(3deg); }
-  }
-  @keyframes mascot-euphoric {
-    0% { transform: scale(1); }
-    45% { transform: scale(1.35) rotate(-8deg); }
-    100% { transform: scale(1); }
   }
   @media (prefers-reduced-motion: reduce) {
     .mascot-fab,

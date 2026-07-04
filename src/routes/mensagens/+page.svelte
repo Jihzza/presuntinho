@@ -219,12 +219,10 @@
     window.visualViewport?.addEventListener('scroll', syncKeyboardInset);
     window.addEventListener('focus', syncActive);
     window.addEventListener('blur', syncActive);
-    window.addEventListener('scroll', onWindowScroll, { passive: true });
     document.addEventListener('visibilitychange', syncActive);
     return () => {
       window.visualViewport?.removeEventListener('resize', syncKeyboardInset);
       window.visualViewport?.removeEventListener('scroll', syncKeyboardInset);
-      window.removeEventListener('scroll', onWindowScroll);
       window.removeEventListener('focus', syncActive);
       window.removeEventListener('blur', syncActive);
       document.removeEventListener('visibilitychange', syncActive);
@@ -241,12 +239,16 @@
   let showJumpToEnd = $state(false);
 
   function isNearBottom(): boolean {
+    // V10.2 — a lista é o scroller interno; a janela já não rola no chat.
+    if (scrollEl) {
+      return scrollEl.scrollHeight - (scrollEl.scrollTop + scrollEl.clientHeight) < 180;
+    }
     if (typeof window === 'undefined') return true;
     const doc = document.documentElement;
     return doc.scrollHeight - (window.scrollY + window.innerHeight) < 180;
   }
 
-  function onWindowScroll(): void {
+  function onListScroll(): void {
     showJumpToEnd = !isNearBottom() && (store?.messages.length ?? 0) > 0;
   }
 
@@ -508,7 +510,7 @@
       <p>{$t('mensagens.no_session', { default: 'Abre primeiro a tua sessão no ecrã inicial para entrares no chat privado.' })}</p>
     </div>
   {:else if store}
-    <div class="chat-scroll" bind:this={scrollEl}>
+    <div class="chat-scroll" bind:this={scrollEl} onscroll={onListScroll}>
       {#if store.ready && store.messages.length === 0}
         <div class="empty">
           <span class="empty-heart" aria-hidden="true">💌</span>
@@ -665,12 +667,17 @@
 
 <style>
   .chat-root {
+    /* V10.2 — layout WhatsApp: altura FIXA ao viewport e overflow escondido,
+       para a página nunca rolar. A lista (.chat-scroll) é o único scroller;
+       o composer e o footer ficam sempre no sítio e a última mensagem está
+       SEMPRE visível ao entrar, sem scroll manual. */
     display: flex;
     flex-direction: column;
-    min-height: calc(100dvh - 64px);
+    /* 64px header sticky + ~4.35rem bottom-nav em fluxo. */
+    height: calc(100dvh - 64px - 4.75rem - env(safe-area-inset-bottom));
+    overflow: hidden;
     max-width: 800px;
     margin: 0 auto;
-    padding-bottom: calc(7.5rem + env(safe-area-inset-bottom));
     color: var(--txt);
   }
   .chat-header {
@@ -950,8 +957,12 @@
   /* ── messages ── */
   .chat-scroll {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding: var(--space-4);
+    /* Espaço para as bolhas nunca ficarem atrás do composer fixo + footer. */
+    padding-bottom: calc(9rem + env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
     gap: var(--space-2);

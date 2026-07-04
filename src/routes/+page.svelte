@@ -25,6 +25,7 @@
   import DailyQuests from '$lib/components/quests/DailyQuests.svelte';
   import MoodCheckin from '$lib/mood/MoodCheckin.svelte';
   import AppCard from '$lib/components/AppCard.svelte';
+  import PigMascot from '$lib/components/PigMascot.svelte';
   import { profileFor } from '$lib/profile/people';
   import { resumeTarget, type NextLessonTarget } from '$lib/escola/progress';
 
@@ -380,7 +381,7 @@
       </small>
     </div>
     <p class="mascot-line" aria-live="polite">
-      <span class="mascot-line-emoji" class:pulse={emotion === 'euphoric'} aria-hidden="true">{mascotEmoji}</span>
+      <PigMascot {emotion} size={40} />
       {mascotLine}
     </p>
   </header>
@@ -750,18 +751,6 @@
     color: var(--txt2);
     font-size: var(--fs-sm);
     line-height: 1.45;
-  }
-  .mascot-line-emoji {
-    font-size: 1.3rem;
-    line-height: 1;
-  }
-  .mascot-line-emoji.pulse {
-    animation: mascot-line-pulse 900ms ease;
-  }
-  @keyframes mascot-line-pulse {
-    0% { transform: scale(1); }
-    45% { transform: scale(1.35) rotate(-6deg); }
-    100% { transform: scale(1); }
   }
   .chip-level {
     border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
