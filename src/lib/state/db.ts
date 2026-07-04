@@ -312,6 +312,26 @@ export interface ChatMessageRow {
     blob?: Blob;
   };
   createdAt: number;
+  /** V9 — which conversation this message belongs to. Optional so
+   *  pre-V9 rows keep working; the v9 upgrade backfills them into a
+   *  default conversation. */
+  conversationId?: number;
+}
+
+/**
+ * V9 — one row per agent conversation (multi-chat support).
+ * `hermesSessionId` maps the conversation to its server-side Hermes
+ * session; the empty string is a sentinel meaning "legacy session"
+ * (`presuntinho-<profile>`), preserving the pre-V9 transcript.
+ */
+export interface ChatConversationRow {
+  id?: number;
+  title: string;
+  createdAt: number;
+  updatedAt: number;
+  /** Last message snippet for the conversation list (<=80 chars). */
+  lastPreview: string;
+  hermesSessionId: string;
 }
 
 /**
@@ -455,6 +475,8 @@ class PresuntinhoDB extends Dexie {
         //   chat_messages: one row per message. `createdAt` is the
         //                  secondary index powering newest-first ordering.
         chat_messages!: Table<ChatMessageRow, number>;
+        // V9 — agent multi-conversation support.
+        chat_conversations!: Table<ChatConversationRow, number>;
         // Phase 11 / Trabalhos — added in v7.
         //   assignments: PK is the stable id slug ('a1', 'a2', …).
         //                Secondary indexes on `curso` (group by curso
@@ -620,6 +642,50 @@ class PresuntinhoDB extends Dexie {
               mood_logs:     '++id, date, kind, startedAt',
               events:        '++id, date, kind',
               metas:         '++id, createdAt'
+            });
+            // v9: agent multi-conversation support. chat_messages gains a
+            // conversationId (+ compound index for per-conversation
+            // chronological reads); chat_conversations is brand new. The
+            // upgrade backfills existing messages into one default
+            // conversation whose hermesSessionId is '' — the sentinel for
+            // the legacy per-profile Hermes session, so the server-side
+            // transcript is preserved.
+            this.version(9).stores({
+              state:         'id',
+              badges:        'id',
+              visited:       'id',
+              quizScores:    'id',
+              secrets:       'id',
+              settings:      'id',
+              transacoes:    '++id, tipo, data, [tipo+data], categoria',
+              orcamentos:    'id, mes',
+              categorias:    'id, tipo',
+              habitos:       '++id, createdAt',
+              habit_logs:    '++id, [habitId+date], habitId, date, createdAt',
+              biblioteca:    '++id, *tags, createdAt',
+              notes:         '++id, category, createdAt',
+              chat_messages: '++id, createdAt, conversationId, [conversationId+createdAt]',
+              chat_conversations: '++id, updatedAt',
+              assignments:   'id, curso, status, deadline, updatedAt',
+              mood_logs:     '++id, date, kind, startedAt',
+              events:        '++id, date, kind',
+              metas:         '++id, createdAt'
+            }).upgrade(async (tx) => {
+              const msgs = tx.table('chat_messages');
+              const count = await msgs.count();
+              if (count === 0) return;
+              const first = await msgs.orderBy('createdAt').first();
+              const last = await msgs.orderBy('createdAt').last();
+              const convId = (await tx.table('chat_conversations').add({
+                title: 'Conversa',
+                createdAt: first?.createdAt ?? Date.now(),
+                updatedAt: last?.createdAt ?? Date.now(),
+                lastPreview: (last?.content ?? '').slice(0, 80),
+                hermesSessionId: ''
+              })) as number;
+              await msgs.toCollection().modify((m) => {
+                m.conversationId = convId;
+              });
             });
           }
         }
