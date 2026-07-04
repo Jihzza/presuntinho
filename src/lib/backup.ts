@@ -69,7 +69,11 @@ export const BACKUP_TABLES = [
   // here closes the round-trip gap so chat history and Trabalhos
   // assignments survive backup/export.
   'chat_messages',
-  'assignments'
+  'assignments',
+  // v7 (app V8): mood history, calendar events and savings goals.
+  'mood_logs',
+  'events',
+  'metas'
 ] as const;
 
 export type BackupTable = (typeof BACKUP_TABLES)[number];
@@ -82,8 +86,9 @@ export type BackupSessionKey = (typeof BACKUP_SESSION_KEYS)[number];
 
 /** Current backup payload version.  Increment when the schema changes.
  *  v6 adds: chat_messages + assignments in BACKUP_TABLES, optional `meta`
- *  block, and i18n-keyed typed errors. */
-export const BACKUP_VERSION = 6 as const;
+ *  block, and i18n-keyed typed errors.
+ *  v7 (app V8) adds: mood_logs, events and metas tables. */
+export const BACKUP_VERSION = 7 as const;
 
 /** Minimum version that `validateSchema` will still accept. */
 export const BACKUP_MIN_VERSION = 3 as const;

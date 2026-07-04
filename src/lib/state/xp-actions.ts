@@ -108,7 +108,22 @@ export const XP_TABLE: Readonly<Record<string, number>> = Object.freeze({
   easteregg_secret_room: 100,
   easteregg_konami: 100,
   easteregg_keyword: 50,
-  easteregg_mascot: 5
+  easteregg_mascot: 5,
+
+  // V8 — Humor (mood check-ins)
+  mood_checkin: 2,
+
+  // V8 — Calendário (personal events / special dates)
+  event_add: 2,
+
+  // V8 — Finanças metas (savings goals)
+  meta_add: 3,
+  meta_progress: 1,
+  meta_reached: 25,
+
+  // V8 — Daily quests (gamification loop)
+  quest_daily_complete: 10,
+  quest_all_daily: 20
 });
 
 export type XpReason = keyof typeof XP_TABLE;

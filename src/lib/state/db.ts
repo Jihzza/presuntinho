@@ -351,6 +351,56 @@ export interface AssignmentRow {
   updatedAt: number;
 }
 
+/**
+ * V8 — one row per mood/feeling episode or daily check-in.
+ * `kind` covers both the app moods ('sick' | 'sad' | 'love') and free
+ * check-in feelings ('happy', 'tired', 'stressed', ...). `date` is the
+ * LOCAL 'YYYY-MM-DD' key so calendar/insight views can group by day.
+ */
+export interface MoodLogRow {
+  id?: number;
+  kind: string;
+  source: 'password' | 'manual' | 'agent' | 'checkin';
+  /** Optional causes/tags: 'study', 'sleep', 'money', 'relationship', ... */
+  tags?: string[];
+  note?: string;
+  date: string;              // 'YYYY-MM-DD' local
+  startedAt: number;         // timestamp ms
+  clearedAt?: number;        // timestamp ms — undefined while active
+}
+
+/**
+ * V8 — calendar events: personal events, reminders and special/romantic
+ * dates. Produces AgendaItem kind 'life' entries.
+ */
+export interface EventRow {
+  id?: number;
+  date: string;              // 'YYYY-MM-DD' local
+  title: string;
+  icon?: string;             // emoji
+  kind: 'event' | 'special' | 'reminder';
+  notes?: string;
+  /** Repeat every year on the same day (birthdays, anniversaries). */
+  yearly?: boolean;
+  createdAt: number;
+}
+
+/**
+ * V8 — savings goals (metas de poupança) for Finanças.
+ * `poupado` is the amount saved so far, updated manually by the user.
+ */
+export interface MetaRow {
+  id?: number;
+  nome: string;
+  alvo: number;              // target amount (EUR)
+  poupado: number;           // saved so far (EUR)
+  icone?: string;            // emoji
+  cor?: string;              // accent hex
+  prazo?: string;            // optional 'YYYY-MM' deadline
+  createdAt: number;
+  doneAt?: number;           // set when poupado >= alvo
+}
+
 // ---------------------------------------------------------------------------
 // Database class
 // ---------------------------------------------------------------------------
@@ -409,6 +459,13 @@ class PresuntinhoDB extends Dexie {
         //                No `.upgrade()` body — brand-new table, Dexie
         //                creates it empty on the first open after deploy.
         assignments!: Table<AssignmentRow, string>;
+        // V8 — mood history: one row per episode/check-in. Indexed by
+        //      `date` (calendar layers) and `kind` (insights grouping).
+        mood_logs!: Table<MoodLogRow, number>;
+        // V8 — calendar events / special dates. Indexed by `date` and `kind`.
+        events!: Table<EventRow, number>;
+        // V8 — savings goals (Finanças metas).
+        metas!: Table<MetaRow, number>;
 
     constructor(name = 'presuntinho') {
       super(name);
@@ -535,6 +592,29 @@ class PresuntinhoDB extends Dexie {
               notes:         '++id, category, createdAt',
               chat_messages: '++id, createdAt',
               assignments:   'id, curso, status, deadline, updatedAt'
+            });
+            // v8: V8 upgrade — mood history (mood_logs), calendar events
+            // (events) and savings goals (metas). All three are brand-new
+            // tables, so no `.upgrade()` body is needed.
+            this.version(8).stores({
+              state:         'id',
+              badges:        'id',
+              visited:       'id',
+              quizScores:    'id',
+              secrets:       'id',
+              settings:      'id',
+              transacoes:    '++id, tipo, data, [tipo+data], categoria',
+              orcamentos:    'id, mes',
+              categorias:    'id, tipo',
+              habitos:       '++id, createdAt',
+              habit_logs:    '++id, [habitId+date], habitId, date, createdAt',
+              biblioteca:    '++id, *tags, createdAt',
+              notes:         '++id, category, createdAt',
+              chat_messages: '++id, createdAt',
+              assignments:   'id, curso, status, deadline, updatedAt',
+              mood_logs:     '++id, date, kind, startedAt',
+              events:        '++id, date, kind',
+              metas:         '++id, createdAt'
             });
           }
         }

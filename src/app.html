@@ -9,6 +9,29 @@
     <meta name="theme-color" content="#1f2e4a" />
     <meta name="description" content="Presuntinho — Equivalenza Study Hub. Estudo, trabalhos, finanças, hábitos e biblioteca numa só PWA." />
     <meta name="color-scheme" content="dark light" />
+    <!-- iOS/standalone PWA polish -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Presuntinho" />
+    <!-- Apply the saved theme BEFORE first paint so a reload never flashes
+         back to the default dark theme (theme choice mirrors to
+         localStorage 'fat-theme'; Dexie hydration catches up later). -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('fat-theme') || 'auto';
+          var root = document.documentElement;
+          if (t === 'auto') {
+            t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          root.classList.add('theme-' + t);
+          root.setAttribute('data-theme', t);
+        } catch (e) {
+          /* localStorage unavailable — keep default theme */
+        }
+      })();
+    </script>
     <link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="%sveltekit.assets%/apple-touch-icon.png" />
     <link rel="manifest" href="%sveltekit.assets%/manifest.webmanifest" />
