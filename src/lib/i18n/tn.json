@@ -4648,5 +4648,13 @@
   "caminho.unit.open": "Chouf el wa7da",
   "vida.trabalhos.desc": "Devoirs, delais w ta9addom.",
   "vida.biblioteca.desc": "Liens w matériaux ma7foudhin.",
-  "vida.caderno.desc": "Notes, audios w fichiers mta3 el 9raya."
+  "vida.caderno.desc": "Notes, audios w fichiers mta3 el 9raya.",
+  "caminho.jump": "NO9EZ LENA?",
+  "caminho.popup.start": "Ebda",
+  "caminho.popup.review": "Raje3",
+  "caminho.chest.title": "Sandou9 el thnaya",
+  "caminho.chest.open": "7ell el sandou9 +{xp} XP",
+  "caminho.chest.claimed": "🎁 El sandou9 t7all! +{xp} XP",
+  "caminho.chest.done": "Khdhit el sandou9 hedha 9bal. ✨",
+  "caminho.unit.open_aria": "7ell el wa7da {title}"
 }

@@ -4635,5 +4635,13 @@
   "caminho.unit.open": "Voir l’unité",
   "vida.trabalhos.desc": "Devoirs, délais et progrès.",
   "vida.biblioteca.desc": "Liens et supports enregistrés.",
-  "vida.caderno.desc": "Notes, audios et fichiers d’étude."
+  "vida.caderno.desc": "Notes, audios et fichiers d’étude.",
+  "caminho.jump": "SAUTER ICI ?",
+  "caminho.popup.start": "Commencer",
+  "caminho.popup.review": "Revoir",
+  "caminho.chest.title": "Coffre du chemin",
+  "caminho.chest.open": "Ouvrir le coffre +{xp} XP",
+  "caminho.chest.claimed": "🎁 Coffre ouvert ! +{xp} XP",
+  "caminho.chest.done": "Tu as déjà récupéré ce coffre. ✨",
+  "caminho.unit.open_aria": "Ouvrir l’unité {title}"
 }

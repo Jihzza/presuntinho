@@ -117,6 +117,19 @@ export async function loadVisitedLessons(): Promise<Map<string, number>> {
   return map;
 }
 
+/** Ids 'path-chest:<unit>' já recolhidos no mapa do curso (V10.3). */
+export async function loadPathChests(): Promise<Set<string>> {
+  const set = new Set<string>();
+  if (!hasIndexedDb()) return set;
+  const rows = await db().visited.toArray();
+  for (const row of rows) {
+    if (typeof row.id === 'string' && row.id.startsWith('path-chest:') && row.visited) {
+      set.add(row.id);
+    }
+  }
+  return set;
+}
+
 /** Set of lesson slugs of a single unit that have been opened. */
 export async function visitedLessonsForUnit(unitSlug: string): Promise<Set<string>> {
   const visited = await loadVisitedLessons();

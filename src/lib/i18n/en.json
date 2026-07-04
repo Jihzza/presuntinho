@@ -4635,5 +4635,13 @@
   "caminho.unit.open": "View unit",
   "vida.trabalhos.desc": "Deliveries, deadlines and progress.",
   "vida.biblioteca.desc": "Saved links and materials.",
-  "vida.caderno.desc": "Notes, audio and study files."
+  "vida.caderno.desc": "Notes, audio and study files.",
+  "caminho.jump": "JUMP HERE?",
+  "caminho.popup.start": "Start",
+  "caminho.popup.review": "Review",
+  "caminho.chest.title": "Path chest",
+  "caminho.chest.open": "Open chest +{xp} XP",
+  "caminho.chest.claimed": "🎁 Chest opened! +{xp} XP",
+  "caminho.chest.done": "You already collected this chest. ✨",
+  "caminho.unit.open_aria": "Open unit {title}"
 }

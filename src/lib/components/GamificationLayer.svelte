@@ -145,11 +145,15 @@
 				enqueue({ kind: 'milestone', milestone, earnedFreeze: streak.earnedFreeze });
 			}
 			// b6 "Exploradora": 8+ distinct PAGES visited — lesson markers
-			// ('lesson:'/'lesson-done:') are progress rows, not exploration.
+			// ('lesson:'/'lesson-done:') and path chests are progress rows,
+			// not exploration.
 			try {
 				const pages = await db()
 					.visited.filter(
-						(v) => typeof v.id === 'string' && !/^lesson[:-]/.test(v.id) && v.visitedAt > 0
+						(v) =>
+							typeof v.id === 'string' &&
+							!/^(lesson[:-]|path-chest:)/.test(v.id) &&
+							v.visitedAt > 0
 					)
 					.count();
 				if (pages >= 8) void awardBadge('b6');

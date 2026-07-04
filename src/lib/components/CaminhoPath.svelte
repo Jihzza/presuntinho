@@ -1,21 +1,27 @@
 <script lang="ts">
   /**
-   * CaminhoPath — mapa de curso estilo Duolingo (V10.2).
+   * CaminhoPath — mapa de curso estilo Duolingo (V10.3, fiel ao screenshot).
    *
-   * Cada UNIDADE é um segmento do caminho: banner colorido + sequência de
-   * nós — uma lição por nó (📖 teoria) e o teste no fim (🏆 quiz). Um único
-   * caminho serpenteante (amplitude 70px, ciclo de 8 passos, direção
-   * alternada por unidade — a geometria real do Duolingo), com:
-   *   * nó ATUAL: cor da unidade, anel a pulsar, bolha CONTINUAR a saltar
-   *   * nós FEITOS: dourados com ✓
-   *   * nós FUTUROS: esbatidos (soft-lock — nada na app tranca a sério)
-   *   * botões "3D" com border-bottom mais escuro que afunda ao carregar
-   *   * o Presuntinho a torcer nas margens
+   * Mecânica dos cursos:
+   *   * Sequência por unidade: lições (⭐) por ordem → baú a meio (🎁,
+   *     recompensa única de XP) → teste no fim (🏆 = quiz da unidade).
+   *   * Nós SEM texto por baixo — tocar num nó abre um popup com o título
+   *     e o CTA (Começar / Rever / Abrir baú), como no Duolingo.
+   *   * Nó ATUAL: cor da unidade + anel de progresso da unidade + bolha
+   *     CONTINUAR a saltar. FEITOS: moedas douradas com ✓. FUTUROS:
+   *     círculos esbatidos com 🔒 (soft-lock — tudo continua acessível).
+   *   * Primeiro nó da unidade a seguir à atual: bolha "SALTAR PARA AQUI?".
+   *   * Banner colorido de cada unidade fica STICKY enquanto percorres o
+   *     segmento dela; o Presuntinho aparece em grande nas margens.
    */
   import { t } from 'svelte-i18n';
   import type { SchoolCourse, SchoolUnit } from '$lib/escola/catalog';
   import type { CourseProgress, NextLessonTarget } from '$lib/escola/progress';
   import type { ActivityStreak } from '$lib/gamification/streak';
+  import { awardXP } from '$lib/state/xp-actions';
+  import { markVisited } from '$lib/state/stores';
+  import { fireConfettiEvent, showToast } from '$lib/components/events';
+  import { playSfx, vibrate } from '$lib/gamification/sound';
   import PigMascot from './PigMascot.svelte';
 
   interface Props {
@@ -28,6 +34,8 @@
     visitedLessons?: Set<string>;
     /** quizSlugs com pelo menos uma tentativa. */
     quizDone?: Set<string>;
+    /** Ids 'path-chest:<unit>' já recolhidos. */
+    claimedChests?: Set<string>;
   }
 
   let {
@@ -37,24 +45,28 @@
     streak,
     mascotEmoji,
     visitedLessons = new Set(),
-    quizDone = new Set()
+    quizDone = new Set(),
+    claimedChests = new Set()
   }: Props = $props();
 
   let units = $derived<SchoolUnit[]>([...course.units, ...(course.extras ?? [])]);
+  let openKey = $state<string | null>(null);
+  let localChests = $state<Set<string>>(new Set());
 
   type PathNode = {
     key: string;
-    kind: 'lesson' | 'quiz';
+    kind: 'lesson' | 'quiz' | 'chest';
     unit: SchoolUnit;
     title: string;
-    href: string;
+    href: string | null;
     done: boolean;
   };
 
-  type Segment = { unit: SchoolUnit; unitIndex: number; nodes: PathNode[] };
+  type Segment = { unit: SchoolUnit; unitIndex: number; nodes: PathNode[]; done: number };
 
-  // A geometria do Duolingo: amplitude 70px em ciclo de 8 passos.
+  // Geometria do Duolingo: amplitude 70px em ciclo de 8 passos.
   const CYCLE = [0, -45, -70, -45, 0, 45, 70, 45];
+  const CHEST_XP = 20;
 
   const segments = $derived.by<Segment[]>(() => {
     return units.map((unit, unitIndex) => {
@@ -66,8 +78,21 @@
         href: `/escola/licao/${unit.slug}/${lesson.slug}/`,
         done: visitedLessons.has(`lesson:${unit.slug}:${lesson.slug}`)
       }));
-      // Teste(s) da unidade: os quizSlugs distintos das lições, no fim da
-      // sequência — teoria primeiro, teste no final (pedido do Daniel).
+
+      // Baú a meio da unidade (recompensa única) quando há espaço para ele.
+      if (nodes.length >= 3) {
+        const chestKey = `path-chest:${unit.slug}`;
+        nodes.splice(Math.ceil(nodes.length / 2), 0, {
+          key: chestKey,
+          kind: 'chest',
+          unit,
+          title: $t('caminho.chest.title', { default: 'Baú do caminho' }),
+          href: null,
+          done: claimedChests.has(chestKey) || localChests.has(chestKey)
+        });
+      }
+
+      // Teste(s) da unidade no fim: quizSlugs distintos das lições.
       const unitQuizzes: { slug: string; title: string }[] = [];
       for (const lesson of unit.lessons) {
         if (lesson.quizSlug && !unitQuizzes.some((q) => q.slug === lesson.quizSlug)) {
@@ -87,47 +112,89 @@
           done: quizDone.has(q.slug)
         });
       }
-      return { unit, unitIndex, nodes };
+      return { unit, unitIndex, nodes, done: nodes.filter((n) => n.done).length };
     });
   });
 
-  // O nó ATUAL é o primeiro por fazer em todo o caminho.
+  // O nó ATUAL é o primeiro por fazer em todo o caminho (baús não contam
+  // como bloqueio — são recompensa, não obrigação).
   const currentKey = $derived.by<string | null>(() => {
     for (const seg of segments) {
       for (const node of seg.nodes) {
-        if (!node.done) return node.key;
+        if (!node.done && node.kind !== 'chest') return node.key;
       }
     }
     return null;
   });
 
-  const passedCurrent = (key: string): boolean => {
-    // true quando o nó vem DEPOIS do atual (fica esbatido).
-    let seenCurrent = false;
+  const currentUnitIndex = $derived.by<number>(() => {
+    for (const seg of segments) {
+      if (seg.nodes.some((n) => n.key === currentKey)) return seg.unitIndex;
+    }
+    return segments.length - 1;
+  });
+
+  /** true quando o nó vem DEPOIS do atual (esbatido + cadeado). */
+  const lockedKeys = $derived.by<Set<string>>(() => {
+    const out = new Set<string>();
+    let seenCurrent = currentKey === null;
     for (const seg of segments) {
       for (const node of seg.nodes) {
-        if (node.key === key) return seenCurrent;
-        if (node.key === currentKey) seenCurrent = true;
+        if (node.key === currentKey) {
+          seenCurrent = true;
+          continue;
+        }
+        if (seenCurrent && !node.done) out.add(node.key);
       }
     }
-    return false;
-  };
+    return out;
+  });
 
   function offsetFor(unitIndex: number, i: number): number {
     const raw = CYCLE[i % CYCLE.length];
-    // Direção alternada por unidade — o zig-zag continua natural.
     return unitIndex % 2 === 1 ? -raw : raw;
   }
+
+  function toggle(key: string): void {
+    openKey = openKey === key ? null : key;
+  }
+
+  async function claimChest(node: PathNode): Promise<void> {
+    if (node.done) return;
+    openKey = null;
+    localChests = new Set([...localChests, node.key]);
+    playSfx('chest');
+    vibrate('success');
+    fireConfettiEvent({ count: 90, origin: 'center' });
+    try {
+      await markVisited(node.key);
+      await awardXP('path_chest', CHEST_XP);
+      showToast(
+        $t('caminho.chest.claimed', { values: { xp: CHEST_XP }, default: '🎁 Baú aberto! +{xp} XP' }),
+        3000
+      );
+    } catch (e) {
+      console.warn('[caminho] chest claim failed', e);
+    }
+  }
+
+  // Anel de progresso do nó atual (progresso da unidade em curso).
+  const RING_R = 44;
+  const RING_C = 2 * Math.PI * RING_R;
+  const ringPct = $derived.by<number>(() => {
+    const seg = segments[currentUnitIndex];
+    if (!seg || seg.nodes.length === 0) return 0;
+    return seg.done / seg.nodes.length;
+  });
 </script>
 
 <section class="caminho" aria-label={$t('caminho.aria', { default: 'Caminho do curso' })}>
   <!-- Cabeçalho de progresso -->
   <header class="summary card">
-    <span class="mascot"><PigMascot emotion="happy" size={64} /></span>
+    <span class="mascot"><PigMascot emotion="happy" size={70} /></span>
     <div class="summary-meta">
       <p class="kicker">{$t('caminho.tag', { default: '🗺️ O teu caminho' })}</p>
       <h1>{course.icon} {course.title}</h1>
-      <p class="cheer">{$t('caminho.mascot.cheer', { default: 'Estou contigo em cada passo — vamos lá! 💕' })}</p>
       <div class="summary-stats">
         <span class="stat">
           <strong>{progress ? `${progress.percent}%` : '…'}</strong>
@@ -142,83 +209,115 @@
           <small>{$t('caminho.lessons_label', { default: 'lições' })}</small>
         </span>
       </div>
-      {#if progress}
-        <div
-          class="bar"
-          role="progressbar"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          aria-valuenow={progress.percent}
-          aria-label={$t('caminho.progress_aria', { values: { percent: progress.percent }, default: 'Progresso do curso: {percent}%' })}
-        >
-          <div class="bar-fill" style="width: {progress.percent}%"></div>
-        </div>
-      {/if}
     </div>
   </header>
 
-  {#if progress && !next && currentKey === null}
+  {#if progress && currentKey === null}
     <p class="all-done">{$t('caminho.done', { default: 'Curso completo — és absolutamente incrível! 🎉' })}</p>
   {/if}
 
-  <!-- O caminho -->
   {#each segments as seg (seg.unit.slug)}
-    <!-- Banner da unidade -->
-    <div class="unit-banner" style="--unit-color: {seg.unit.color};">
-      <div class="banner-copy">
-        <strong>{seg.unit.icon} {seg.unit.title}</strong>
-        <small>
-          {$t('caminho.unit_count', {
-            values: { done: seg.nodes.filter((n) => n.done).length, total: seg.nodes.length },
-            default: '{done}/{total} lições'
-          })}
-        </small>
+    <section class="unit-seg">
+      <!-- Banner sticky da unidade (como o "Unit 3" do Duolingo) -->
+      <div class="unit-banner" style="--unit-color: {seg.unit.color};">
+        <div class="banner-copy">
+          <strong>{seg.unit.icon} {seg.unit.title}</strong>
+          <small>{seg.unit.summary}</small>
+        </div>
+        <a
+          class="banner-open"
+          href={`/escola/curso/${seg.unit.slug}/`}
+          aria-label={$t('caminho.unit.open_aria', { values: { title: seg.unit.title }, default: 'Abrir a unidade {title}' })}
+        >
+          <span aria-hidden="true">📘</span>
+        </a>
       </div>
-      <a class="banner-open" href={`/escola/curso/${seg.unit.slug}/`}>
-        {$t('caminho.unit.open', { default: 'Ver unidade' })}
-      </a>
-    </div>
 
-    <ol class="path">
-      {#each seg.nodes as node, i (node.key)}
-        {@const isCurrent = node.key === currentKey}
-        {@const isLocked = !node.done && !isCurrent && passedCurrent(node.key)}
-        {@const offset = offsetFor(seg.unitIndex, i)}
-        <li class="step" style="--offset: {offset}px;">
-          {#if isCurrent}
-            <span class="start-bubble" style="--unit-color: {seg.unit.color};" aria-hidden="true">
-              {$t('caminho.node.start', { default: 'CONTINUAR' })}
-            </span>
-          {/if}
-          <a
-            class="node"
-            class:done={node.done}
-            class:current={isCurrent}
-            class:locked={isLocked}
-            class:quiz={node.kind === 'quiz'}
-            href={node.href}
-            style="--unit-color: {seg.unit.color};"
-            data-sveltekit-preload-data
-            aria-label={node.done
-              ? $t('caminho.node.completed_aria', { values: { title: node.title }, default: '{title} — concluída' })
-              : isLocked
-                ? $t('caminho.node.upcoming_aria', { values: { title: node.title }, default: '{title} — ainda por começar' })
-                : node.title}
-          >
-            <span class="node-face" aria-hidden="true">
-              {#if node.done}✓{:else if node.kind === 'quiz'}🏆{:else}📖{/if}
-            </span>
-          </a>
-          <span class="node-label" class:muted={isLocked}>{node.title}</span>
-          <!-- O Presuntinho torce nas margens, do lado oposto à curva -->
-          {#if i % 6 === 3}
-            <span class="cheer-pig" class:flip={offset > 0} aria-hidden="true">
-              <PigMascot emotion="happy" size={46} still />
-            </span>
-          {/if}
-        </li>
-      {/each}
-    </ol>
+      <ol class="path">
+        {#each seg.nodes as node, i (node.key)}
+          {@const isCurrent = node.key === currentKey}
+          {@const isLocked = lockedKeys.has(node.key)}
+          {@const isJumpHere = !isCurrent && seg.unitIndex === currentUnitIndex + 1 && i === 0}
+          {@const offset = offsetFor(seg.unitIndex, i)}
+          <li class="step" style="--offset: {offset}px;">
+            {#if isCurrent}
+              <span class="start-bubble" style="--unit-color: {seg.unit.color};" aria-hidden="true">
+                {$t('caminho.node.start', { default: 'CONTINUAR' })}
+              </span>
+            {:else if isJumpHere}
+              <span class="start-bubble jump" style="--unit-color: {seg.unit.color};" aria-hidden="true">
+                {$t('caminho.jump', { default: 'SALTAR PARA AQUI?' })}
+              </span>
+            {/if}
+
+            <button
+              type="button"
+              class="node"
+              class:done={node.done}
+              class:current={isCurrent}
+              class:locked={isLocked}
+              class:quiz={node.kind === 'quiz'}
+              class:chest={node.kind === 'chest'}
+              style="--unit-color: {seg.unit.color};"
+              aria-expanded={openKey === node.key}
+              aria-label={node.title}
+              onclick={() => toggle(node.key)}
+            >
+              {#if isCurrent}
+                <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+                  <circle class="ring-track" cx="50" cy="50" r={RING_R} />
+                  <circle
+                    class="ring-arc"
+                    cx="50"
+                    cy="50"
+                    r={RING_R}
+                    style="stroke-dasharray: {ringPct * RING_C} {RING_C};"
+                  />
+                </svg>
+              {/if}
+              <span class="node-face" aria-hidden="true">
+                {#if node.done && node.kind === 'chest'}🎁
+                {:else if node.done}✓
+                {:else if isLocked && node.kind === 'lesson'}🔒
+                {:else if node.kind === 'chest'}🎁
+                {:else if node.kind === 'quiz'}🏆
+                {:else}⭐{/if}
+              </span>
+            </button>
+
+            {#if openKey === node.key}
+              <!-- Popup do nó (Duolingo abre um cartão ao tocar) -->
+              <div class="node-popup" style="--unit-color: {seg.unit.color};" role="dialog" aria-label={node.title}>
+                <strong class="popup-title">{node.title}</strong>
+                <small class="popup-sub">{seg.unit.title}</small>
+                {#if node.kind === 'chest'}
+                  {#if node.done}
+                    <span class="popup-done-note">{$t('caminho.chest.done', { default: 'Já recolheste este baú. ✨' })}</span>
+                  {:else}
+                    <button type="button" class="popup-cta" onclick={() => void claimChest(node)}>
+                      {$t('caminho.chest.open', { values: { xp: CHEST_XP }, default: 'Abrir baú +{xp} XP' })}
+                    </button>
+                  {/if}
+                {:else}
+                  <a class="popup-cta" href={node.href} data-sveltekit-preload-data>
+                    {node.done
+                      ? $t('caminho.popup.review', { default: 'Rever' })
+                      : $t('caminho.popup.start', { default: 'Começar' })}
+                  </a>
+                {/if}
+              </div>
+            {/if}
+
+            <!-- Presuntinho em grande nas margens (decorativo) -->
+            {#if i % 7 === 3}
+              <span class="cheer-pig" class:flip={offset > 0} aria-hidden="true">
+                <PigMascot emotion={isLocked ? 'neutral' : 'happy'} size={84} still={isLocked} />
+              </span>
+            {/if}
+          </li>
+        {/each}
+      </ol>
+    </section>
   {/each}
 </section>
 
@@ -233,12 +332,11 @@
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 0.9rem;
-    align-items: start;
-    padding: 1.1rem 1.2rem;
+    align-items: center;
+    padding: 1rem 1.2rem;
     background: var(--card, rgba(255, 255, 255, 0.055));
     border: 1px solid var(--border, rgba(255, 255, 255, 0.11));
     border-radius: var(--radius-xl, 1.25rem);
-    box-shadow: var(--shadow-sm, 0 1px 2px rgba(2, 6, 23, 0.18));
   }
   .mascot { line-height: 1; }
   .kicker {
@@ -250,31 +348,13 @@
     font-weight: 800;
   }
   .summary-meta h1 {
-    margin: 0.15rem 0 0.2rem;
+    margin: 0.15rem 0 0.35rem;
     color: var(--txt, #fff);
     font-size: var(--fs-lg, 1.3rem);
-  }
-  .cheer {
-    margin: 0 0 0.6rem;
-    color: var(--txt2);
-    font-size: var(--fs-sm, 0.88rem);
   }
   .summary-stats { display: flex; gap: 0.9rem; flex-wrap: wrap; }
   .stat strong { display: block; color: var(--txt, #fff); font-variant-numeric: tabular-nums; }
   .stat small { color: var(--txt3); font-size: var(--fs-xs, 0.72rem); }
-  .bar {
-    height: 8px;
-    margin-top: 0.65rem;
-    background: var(--bg-elev, rgba(0, 0, 0, 0.28));
-    border-radius: 999px;
-    overflow: hidden;
-  }
-  .bar-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 999px;
-    transition: width var(--motion-base, 220ms) ease;
-  }
   .all-done {
     margin: 1rem 0 0;
     padding: 0.85rem 1rem;
@@ -285,51 +365,62 @@
     border-radius: var(--radius-lg, 1rem);
   }
 
-  /* ---- Banner da unidade ---- */
+  /* ---- Segmento + banner sticky ---- */
+  .unit-seg {
+    position: relative;
+  }
   .unit-banner {
+    position: sticky;
+    top: calc(64px + 0.4rem);
+    z-index: 6;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 0.8rem;
-    margin-top: 1.4rem;
+    margin-top: 1.3rem;
     padding: 0.85rem 1rem;
     border-radius: var(--radius-lg, 1rem);
     background: linear-gradient(
       135deg,
-      color-mix(in srgb, var(--unit-color, var(--accent)) 75%, #000 6%),
-      color-mix(in srgb, var(--unit-color, var(--accent)) 55%, #000 14%)
+      color-mix(in srgb, var(--unit-color, var(--accent)) 80%, #000 4%),
+      color-mix(in srgb, var(--unit-color, var(--accent)) 58%, #000 14%)
     );
     color: #fff;
+    box-shadow: 0 8px 22px rgba(2, 6, 23, 0.35);
   }
   .banner-copy { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
   .banner-copy strong { font-size: var(--fs-md, 1rem); }
-  .banner-copy small { opacity: 0.85; font-size: var(--fs-xs, 0.74rem); }
+  .banner-copy small {
+    opacity: 0.9;
+    font-size: var(--fs-xs, 0.74rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .banner-open {
     flex: none;
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    padding: 0 0.85rem;
-    border: 2px solid rgba(255, 255, 255, 0.45);
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
     border-bottom-width: 4px;
-    border-radius: 0.8rem;
+    border-radius: 0.85rem;
     color: #fff;
-    font-size: var(--fs-xs, 0.76rem);
-    font-weight: 800;
-    text-transform: uppercase;
+    font-size: 1.25rem;
     text-decoration: none;
   }
   .banner-open:active { transform: translateY(2px); border-bottom-width: 2px; }
   .banner-open:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
-  /* ---- Caminho serpenteante ---- */
+  /* ---- Caminho ---- */
   .path {
     list-style: none;
-    margin: 0.9rem 0 0;
-    padding: 0.4rem 0 1rem;
+    margin: 1rem 0 0;
+    padding: 0.4rem 0 1.2rem;
     display: flex;
     flex-direction: column;
-    gap: 1.35rem;
+    gap: 1.6rem;
     align-items: center;
   }
   .step {
@@ -337,24 +428,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.35rem;
     transform: translateX(var(--offset, 0px));
   }
 
   .start-bubble {
     position: absolute;
-    top: -2.15rem;
-    padding: 0.35rem 0.8rem;
+    top: -2.3rem;
+    padding: 0.38rem 0.85rem;
     border: 2px solid var(--border, rgba(255, 255, 255, 0.2));
     border-radius: 0.7rem;
     background: var(--card, #22314f);
     color: var(--unit-color, var(--accent));
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 900;
     letter-spacing: 0.06em;
     white-space: nowrap;
     animation: bubble-bounce 1s ease-in-out infinite;
-    z-index: 2;
+    z-index: 3;
   }
   .start-bubble::after {
     content: '';
@@ -371,18 +461,19 @@
     50% { transform: translateY(-24%); }
   }
 
-  /* Botão "3D" à Duolingo: border-bottom escura que afunda ao carregar. */
+  /* Nó: botão redondo "3D" (border-bottom mais escura que afunda). */
   .node {
     position: relative;
     display: grid;
     place-items: center;
-    width: 68px;
-    height: 68px;
+    width: 66px;
+    height: 66px;
+    padding: 0;
+    border: none;
     border-radius: 50%;
-    text-decoration: none;
-    background: var(--bg-elev, rgba(255, 255, 255, 0.08));
-    border-bottom: 7px solid color-mix(in srgb, var(--bg-elev, #1a2540) 60%, #000 25%);
-    box-shadow: var(--shadow-sm, 0 2px 8px rgba(2, 6, 23, 0.2));
+    cursor: pointer;
+    background: var(--bg-elev, rgba(255, 255, 255, 0.09));
+    border-bottom: 7px solid color-mix(in srgb, var(--bg-elev, #1a2540) 55%, #000 30%);
     transition: transform var(--motion-fast, 120ms) ease, border-bottom-width var(--motion-fast, 120ms) ease;
   }
   .node:active {
@@ -394,13 +485,13 @@
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--unit-color, var(--accent)) 60%, transparent);
   }
   .node-face {
-    font-size: 1.7rem;
+    font-size: 1.6rem;
     line-height: 1;
-    color: var(--txt, #fff);
+    color: rgba(255, 255, 255, 0.85);
   }
   .node.done {
     background: #ffc800;
-    border-bottom-color: #d4a500;
+    border-bottom-color: #cf9e00;
   }
   .node.done .node-face {
     color: #7a5c00;
@@ -409,46 +500,115 @@
   }
   .node.current {
     background: var(--unit-color, var(--accent));
-    border-bottom-color: color-mix(in srgb, var(--unit-color, var(--accent)) 70%, #000 25%);
-    animation: node-pulse 1.8s ease-in-out infinite;
+    border-bottom-color: color-mix(in srgb, var(--unit-color, var(--accent)) 68%, #000 26%);
   }
-  @keyframes node-pulse {
-    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--unit-color, var(--accent)) 50%, transparent); }
-    50% { box-shadow: 0 0 0 13px color-mix(in srgb, var(--unit-color, var(--accent)) 0%, transparent); }
-  }
+  .node.current .node-face { color: #fff; }
   .node.locked {
-    opacity: 0.45;
-    filter: grayscale(0.6);
+    opacity: 0.42;
+    filter: grayscale(0.75);
   }
-  .node.quiz {
-    width: 76px;
-    height: 76px;
+  .node.locked .node-face { font-size: 1.25rem; }
+  .node.quiz { width: 76px; height: 76px; }
+  .node.chest {
+    background: transparent;
+    border-bottom-color: transparent;
+  }
+  .node.chest .node-face { font-size: 2.4rem; }
+  .node.chest.locked { opacity: 0.42; }
+
+  /* Anel de progresso da unidade à volta do nó atual. */
+  .ring {
+    position: absolute;
+    inset: -9px;
+    width: calc(100% + 18px);
+    height: calc(100% + 18px);
+    transform: rotate(-90deg);
+    pointer-events: none;
+  }
+  .ring-track {
+    fill: none;
+    stroke: color-mix(in srgb, var(--txt, #fff) 14%, transparent);
+    stroke-width: 7;
+  }
+  .ring-arc {
+    fill: none;
+    stroke: var(--unit-color, var(--accent));
+    stroke-width: 7;
+    stroke-linecap: round;
+    transition: stroke-dasharray 400ms ease;
   }
 
-  .node-label {
-    max-width: 170px;
+  /* Popup do nó */
+  .node-popup {
+    position: absolute;
+    top: calc(100% + 10px);
+    z-index: 7;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    width: min(250px, 74vw);
+    padding: 0.85rem 0.95rem;
+    border-radius: 0.9rem;
+    background: color-mix(in srgb, var(--unit-color, var(--accent)) 82%, #000 8%);
+    color: #fff;
+    box-shadow: 0 14px 34px rgba(2, 6, 23, 0.45);
+    animation: popup-in var(--motion-fast, 140ms) ease;
     text-align: center;
-    color: var(--txt2);
-    font-size: var(--fs-xs, 0.74rem);
-    font-weight: 600;
-    line-height: 1.25;
   }
-  .node-label.muted { color: var(--txt3); opacity: 0.8; }
+  .node-popup::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-bottom-color: color-mix(in srgb, var(--unit-color, var(--accent)) 82%, #000 8%);
+    border-top: 0;
+  }
+  @keyframes popup-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .popup-title { font-size: var(--fs-sm, 0.92rem); line-height: 1.25; }
+  .popup-sub { opacity: 0.85; font-size: var(--fs-xs, 0.72rem); }
+  .popup-done-note { font-size: var(--fs-xs, 0.76rem); opacity: 0.9; padding: 0.3rem 0; }
+  .popup-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    margin-top: 0.35rem;
+    padding: 0 1rem;
+    border: none;
+    border-radius: 0.7rem;
+    background: #fff;
+    color: color-mix(in srgb, var(--unit-color, var(--accent)) 80%, #000 12%);
+    font-weight: 900;
+    font-size: var(--fs-sm, 0.85rem);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    cursor: pointer;
+    border-bottom: 4px solid rgba(0, 0, 0, 0.18);
+  }
+  .popup-cta:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .popup-cta:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
   .cheer-pig {
     position: absolute;
-    top: 4px;
-    inset-inline-start: calc(50% + 74px);
-    opacity: 0.9;
+    top: -6px;
+    inset-inline-start: calc(50% + 78px);
+    opacity: 0.95;
+    pointer-events: none;
   }
   .cheer-pig.flip {
     inset-inline-start: auto;
-    inset-inline-end: calc(50% + 74px);
+    inset-inline-end: calc(50% + 78px);
   }
 
   @media (max-width: 420px) {
     .step { transform: translateX(calc(var(--offset, 0px) * 0.6)); }
-    .cheer-pig { inset-inline-start: calc(50% + 62px); }
-    .cheer-pig.flip { inset-inline-start: auto; inset-inline-end: calc(50% + 62px); }
+    .cheer-pig { inset-inline-start: calc(50% + 58px); }
+    .cheer-pig.flip { inset-inline-start: auto; inset-inline-end: calc(50% + 58px); }
   }
 </style>

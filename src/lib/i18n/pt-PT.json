@@ -4635,5 +4635,13 @@
   "caminho.unit.open": "Ver unidade",
   "vida.trabalhos.desc": "Entregas, prazos e progresso.",
   "vida.biblioteca.desc": "Links e materiais guardados.",
-  "vida.caderno.desc": "Notas, áudios e ficheiros de estudo."
+  "vida.caderno.desc": "Notas, áudios e ficheiros de estudo.",
+  "caminho.jump": "SALTAR PARA AQUI?",
+  "caminho.popup.start": "Começar",
+  "caminho.popup.review": "Rever",
+  "caminho.chest.title": "Baú do caminho",
+  "caminho.chest.open": "Abrir baú +{xp} XP",
+  "caminho.chest.claimed": "🎁 Baú aberto! +{xp} XP",
+  "caminho.chest.done": "Já recolheste este baú. ✨",
+  "caminho.unit.open_aria": "Abrir a unidade {title}"
 }

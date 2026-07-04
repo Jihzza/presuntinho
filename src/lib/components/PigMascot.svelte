@@ -1,17 +1,17 @@
 <script lang="ts">
-	// V10.2 — Presuntinho, a mascote oficial 🐷 (SVG desenhado, não emoji).
+	// V10.3 — Presuntinho, a mascote oficial 🐷 (SVG desenhado, não emoji).
 	//
-	// Construído segundo as regras que fazem o Duo funcionar:
-	//   * cabeça:corpo ≈ 55:45, pés em "pílulas" destacadas (animáveis sem rig)
-	//   * olhos ≈ 26% da largura da cabeça, na METADE INFERIOR, afastados
-	//     exatamente um olho de distância, pupila ~50% com brilho no canto
-	//   * focinho-herói: ~47% da largura da cara, terço inferior, narinas
-	//     verticais; bochechas rosadas sob os olhos
-	//   * paleta: 2 tons de rosa + rosa-escuro de acento + cinza Eel #4b4b4b
-	//     (nunca preto puro), tudo redondo, sem contornos duros
-	//   * vida: respiração scaleY ~1.5% a cada 3.5s (origem em baixo),
-	//     pestanejar ~4s com double-blink ocasional, orelhas com twitch raro
-	//   * emoções por camadas (sobrancelhas + boca + adereços), corpo intacto
+	// Silhueta ÚNICA como o Duo ("um cilindro com asas"): o Presuntinho é um
+	// ovo rosa com patinhas-pílula destacadas — lê-se como forma preta a 32px.
+	// Regras aplicadas do estudo de design:
+	//   * olhos ≈ 26% da largura da cara, metade inferior, um olho de
+	//     distância entre eles, pupila ~50% com brilho no canto superior
+	//   * focinho-herói ~46% da cara, terço inferior, narinas verticais
+	//   * orelhas-folha caídas para fora (amigável); bochechas sob os olhos
+	//   * paleta: 2 tons de rosa + acento escuro + cinza Eel #4b4b4b
+	//   * vida: respiração 3.5s (origem no chão), pestanejar ~4.4s com
+	//     double-blink, twitch de orelhas raro, squash & stretch nos saltos
+	//   * emoções por camadas: sobrancelhas + boca + adereços, corpo intacto
 	import type { MascotEmotion } from '$lib/gamification/emotion';
 
 	interface Props {
@@ -32,119 +32,117 @@
 >
 	<svg viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg" role="presentation">
 		<!-- sombra no chão -->
-		<ellipse class="pig-shadow" cx="60" cy="124" rx="27" ry="4.5" fill="rgba(0,0,0,0.16)" />
+		<ellipse class="pig-shadow" cx="60" cy="123" rx="26" ry="4.5" fill="rgba(0,0,0,0.16)" />
 
 		<g class="pig-all">
-			<!-- pés: pílulas destacadas (sem pernas — estilo Duo) -->
+			<!-- patinhas-pílula destacadas (sem pernas) -->
 			<g class="pig-feet">
-				<ellipse cx="47" cy="118" rx="9" ry="5.2" fill="#f472b6" />
-				<ellipse cx="73" cy="118" rx="9" ry="5.2" fill="#f472b6" />
+				<ellipse cx="46" cy="116" rx="9.5" ry="5.4" fill="#ec6ba9" />
+				<ellipse cx="74" cy="116" rx="9.5" ry="5.4" fill="#ec6ba9" />
 			</g>
 
-			<!-- corpo -->
-			<g class="pig-body">
-				<ellipse cx="60" cy="93" rx="27" ry="23" fill="#f9a8d4" />
-				<!-- barriga um tom mais claro -->
-				<ellipse cx="60" cy="97" rx="18" ry="15" fill="#fbc9e2" />
-				<!-- bracinhos: meias-luas coladas ao corpo -->
-				<ellipse class="pig-arm pig-arm-left" cx="35" cy="90" rx="6.5" ry="10" fill="#f6a0ce" transform="rotate(14 35 90)" />
-				<ellipse class="pig-arm pig-arm-right" cx="85" cy="90" rx="6.5" ry="10" fill="#f6a0ce" transform="rotate(-14 85 90)" />
+			<!-- orelhas-folha caídas para fora -->
+			<g class="pig-ear pig-ear-left">
+				<path d="M35 26 Q20 6 14 19 Q12 31 32 39 Q35 31 35 26 Z" fill="#ec6ba9" />
+				<path d="M32 28 Q23 15 20 22 Q19 29 30 34 Q31 30 32 28 Z" fill="#f9a8d4" />
+			</g>
+			<g class="pig-ear pig-ear-right">
+				<path d="M85 26 Q100 6 106 19 Q108 31 88 39 Q85 31 85 26 Z" fill="#ec6ba9" />
+				<path d="M88 28 Q97 15 100 22 Q101 29 90 34 Q89 30 88 28 Z" fill="#f9a8d4" />
 			</g>
 
-			<!-- cabeça (maior que o corpo — baby schema) -->
-			<g class="pig-head">
-				<!-- orelhas: folhas caídas para fora (amigável, não feral) -->
-				<g class="pig-ear pig-ear-left">
-					<path d="M31 24 Q18 8 14 20 Q13 30 30 36 Q33 28 31 24 Z" fill="#ec8fb8" />
-					<path d="M28 26 Q20 15 18 22 Q18 28 28 32 Q29 28 28 26 Z" fill="#f472b6" />
+			<!-- corpo-ovo único (cabeça + corpo numa só forma) -->
+			<path
+				d="M60 14
+				   C 36 14, 22 38, 22 70
+				   C 22 98, 38 113, 60 113
+				   C 82 113, 98 98, 98 70
+				   C 98 38, 84 14, 60 14 Z"
+				fill="#f9a8d4"
+			/>
+			<!-- barriga um tom mais claro -->
+			<ellipse cx="60" cy="92" rx="21" ry="17" fill="#fcd0e6" />
+			<!-- brilho suave -->
+			<ellipse cx="42" cy="30" rx="12" ry="7" fill="rgba(255,255,255,0.34)" transform="rotate(-24 42 30)" />
+
+			<!-- bracinhos: meias-luas coladas ao corpo -->
+			<ellipse class="pig-arm" cx="27" cy="84" rx="6" ry="11" fill="#f48fc5" transform="rotate(12 27 84)" />
+			<ellipse class="pig-arm" cx="93" cy="84" rx="6" ry="11" fill="#f48fc5" transform="rotate(-12 93 84)" />
+
+			<!-- bochechas sob os olhos -->
+			<ellipse class="pig-cheek" cx="31" cy="60" rx="6.5" ry="4.2" fill="#f472b6" opacity="0.55" />
+			<ellipse class="pig-cheek" cx="89" cy="60" rx="6.5" ry="4.2" fill="#f472b6" opacity="0.55" />
+
+			<!-- sobrancelhas (pontas interiores para CIMA = tristeza/preocupação) -->
+			{#if emotion === 'sad'}
+				<path d="M36 40 Q42 36 49 41" stroke="#4b4b4b" stroke-width="2.6" fill="none" stroke-linecap="round" />
+				<path d="M84 40 Q78 36 71 41" stroke="#4b4b4b" stroke-width="2.6" fill="none" stroke-linecap="round" />
+			{:else if emotion === 'worried'}
+				<path d="M37 38 Q43 35 49 39" stroke="#4b4b4b" stroke-width="2.4" fill="none" stroke-linecap="round" />
+				<path d="M83 38 Q77 35 71 39" stroke="#4b4b4b" stroke-width="2.4" fill="none" stroke-linecap="round" />
+			{/if}
+
+			<!-- olhos -->
+			{#if emotion === 'euphoric'}
+				<path d="M38 51 Q45 43 52 51" stroke="#4b4b4b" stroke-width="4" fill="none" stroke-linecap="round" />
+				<path d="M68 51 Q75 43 82 51" stroke="#4b4b4b" stroke-width="4" fill="none" stroke-linecap="round" />
+				<g class="pig-sparkles">
+					<path d="M14 20 l2.4 5 5.2 .8 -3.8 3.7 .9 5.2 -4.7 -2.5 -4.6 2.5 .9 -5.2 -3.8 -3.7 5.2 -.8 Z" fill="#fcd34d" />
+					<path d="M102 14 l1.9 4 4.2 .6 -3 3 .7 4.2 -3.8 -2 -3.8 2 .7 -4.2 -3 -3 4.2 -.6 Z" fill="#fcd34d" />
+					<circle cx="22" cy="46" r="2" fill="#fcd34d" />
+					<circle cx="100" cy="42" r="2" fill="#fcd34d" />
 				</g>
-				<g class="pig-ear pig-ear-right">
-					<path d="M89 24 Q102 8 106 20 Q107 30 90 36 Q87 28 89 24 Z" fill="#ec8fb8" />
-					<path d="M92 26 Q100 15 102 22 Q102 28 92 32 Q91 28 92 26 Z" fill="#f472b6" />
+			{:else}
+				<g class="pig-eyes">
+					<ellipse cx="45" cy="51" rx="9" ry="10" fill="#fff" />
+					<ellipse cx="75" cy="51" rx="9" ry="10" fill="#fff" />
+					{#if emotion === 'worried'}
+						<ellipse cx="45" cy="52" rx="5.6" ry="6.4" fill="#4b4b4b" />
+						<ellipse cx="75" cy="52" rx="5.6" ry="6.4" fill="#4b4b4b" />
+						<circle cx="43" cy="49" r="2.1" fill="#fff" />
+						<circle cx="73" cy="49" r="2.1" fill="#fff" />
+					{:else if emotion === 'sad'}
+						<ellipse cx="45" cy="53" rx="4.6" ry="5.4" fill="#4b4b4b" />
+						<ellipse cx="75" cy="53" rx="4.6" ry="5.4" fill="#4b4b4b" />
+						<circle cx="43.4" cy="50.8" r="1.7" fill="#fff" />
+						<circle cx="73.4" cy="50.8" r="1.7" fill="#fff" />
+					{:else}
+						<ellipse cx="45" cy="51" rx="4.8" ry="5.6" fill="#4b4b4b" />
+						<ellipse cx="75" cy="51" rx="4.8" ry="5.6" fill="#4b4b4b" />
+						<circle cx="43.3" cy="48.6" r="1.8" fill="#fff" />
+						<circle cx="73.3" cy="48.6" r="1.8" fill="#fff" />
+					{/if}
 				</g>
+			{/if}
 
-				<!-- cara larga nos lados -->
-				<ellipse cx="60" cy="48" rx="37" ry="33" fill="#f9a8d4" />
-				<!-- brilho suave -->
-				<ellipse cx="43" cy="32" rx="13" ry="8" fill="rgba(255,255,255,0.32)" transform="rotate(-22 43 32)" />
+			<!-- adereços emocionais -->
+			{#if emotion === 'sad'}
+				<path class="pig-tear" d="M34 57 q-4.5 7.5 0 10.5 q4.5 -3 0 -10.5 Z" fill="#7dd3fc" />
+			{:else if emotion === 'worried'}
+				<path class="pig-sweat" d="M98 32 q-5 8.5 0 12 q5 -3.5 0 -12 Z" fill="#93c5fd" />
+			{/if}
 
-				<!-- bochechas: por baixo e por fora dos olhos -->
-				<ellipse class="pig-cheek" cx="30" cy="60" rx="6.5" ry="4.2" fill="#f472b6" opacity="0.5" />
-				<ellipse class="pig-cheek" cx="90" cy="60" rx="6.5" ry="4.2" fill="#f472b6" opacity="0.5" />
-
-				<!-- sobrancelhas por emoção (pontas interiores para CIMA = tristeza/preocupação) -->
-				{#if emotion === 'sad'}
-					<path d="M36 39 Q42 35 49 40" stroke="#4b4b4b" stroke-width="2.6" fill="none" stroke-linecap="round" />
-					<path d="M84 39 Q78 35 71 40" stroke="#4b4b4b" stroke-width="2.6" fill="none" stroke-linecap="round" />
-				{:else if emotion === 'worried'}
-					<path d="M37 37 Q43 34 49 38" stroke="#4b4b4b" stroke-width="2.4" fill="none" stroke-linecap="round" />
-					<path d="M83 37 Q77 34 71 38" stroke="#4b4b4b" stroke-width="2.4" fill="none" stroke-linecap="round" />
-				{/if}
-
-				<!-- olhos: metade inferior da cabeça, um olho de distância entre eles -->
-				{#if emotion === 'euphoric'}
-					<!-- fechados de alegria (^ ^) -->
-					<path d="M38 50 Q45 42 52 50" stroke="#4b4b4b" stroke-width="4" fill="none" stroke-linecap="round" />
-					<path d="M68 50 Q75 42 82 50" stroke="#4b4b4b" stroke-width="4" fill="none" stroke-linecap="round" />
-					<g class="pig-sparkles">
-						<path d="M16 18 l2.4 5 5.2 .8 -3.8 3.7 .9 5.2 -4.7 -2.5 -4.6 2.5 .9 -5.2 -3.8 -3.7 5.2 -.8 Z" fill="#fcd34d" />
-						<path d="M100 12 l1.9 4 4.2 .6 -3 3 .7 4.2 -3.8 -2 -3.8 2 .7 -4.2 -3 -3 4.2 -.6 Z" fill="#fcd34d" />
-						<circle cx="24" cy="44" r="2" fill="#fcd34d" />
-						<circle cx="98" cy="40" r="2" fill="#fcd34d" />
-					</g>
-				{:else}
-					<g class="pig-eyes">
-						<!-- branco → pupila ~50% → brilho canto superior -->
-						<ellipse cx="45" cy="50" rx="9" ry="10" fill="#fff" />
-						<ellipse cx="75" cy="50" rx="9" ry="10" fill="#fff" />
-						{#if emotion === 'worried'}
-							<ellipse cx="45" cy="51" rx="5.6" ry="6.4" fill="#4b4b4b" />
-							<ellipse cx="75" cy="51" rx="5.6" ry="6.4" fill="#4b4b4b" />
-							<circle cx="43" cy="48" r="2.1" fill="#fff" />
-							<circle cx="73" cy="48" r="2.1" fill="#fff" />
-						{:else if emotion === 'sad'}
-							<ellipse cx="45" cy="52" rx="4.6" ry="5.4" fill="#4b4b4b" />
-							<ellipse cx="75" cy="52" rx="4.6" ry="5.4" fill="#4b4b4b" />
-							<circle cx="43.4" cy="49.8" r="1.7" fill="#fff" />
-							<circle cx="73.4" cy="49.8" r="1.7" fill="#fff" />
-						{:else}
-							<ellipse cx="45" cy="50" rx="4.8" ry="5.6" fill="#4b4b4b" />
-							<ellipse cx="75" cy="50" rx="4.8" ry="5.6" fill="#4b4b4b" />
-							<circle cx="43.3" cy="47.6" r="1.8" fill="#fff" />
-							<circle cx="73.3" cy="47.6" r="1.8" fill="#fff" />
-						{/if}
-					</g>
-				{/if}
-
-				<!-- adereços emocionais -->
-				{#if emotion === 'sad'}
-					<path class="pig-tear" d="M34 56 q-4.5 7.5 0 10.5 q4.5 -3 0 -10.5 Z" fill="#7dd3fc" />
-				{:else if emotion === 'worried'}
-					<path class="pig-sweat" d="M97 30 q-5 8.5 0 12 q5 -3.5 0 -12 Z" fill="#93c5fd" />
-				{/if}
-
-				<!-- focinho-herói: ~47% da cara, terço inferior, narinas VERTICAIS -->
-				<g class="pig-snout">
-					<ellipse cx="60" cy="64" rx="17.5" ry="12" fill="#f472b6" />
-					<ellipse cx="60" cy="62.4" rx="15.5" ry="9.6" fill="#f78fc5" />
-					<ellipse cx="53.5" cy="64" rx="2.6" ry="4.6" fill="#9d2f63" />
-					<ellipse cx="66.5" cy="64" rx="2.6" ry="4.6" fill="#9d2f63" />
-				</g>
-
-				<!-- boca por emoção (assimétrica de propósito — lê-se viva) -->
-				{#if emotion === 'euphoric'}
-					<path d="M48 79 Q59 91 72 79 Q66 84 48 79 Z" fill="#9d2f63" />
-					<path d="M54 82 Q60 87 66 82 Q60 89 54 82 Z" fill="#f78fc5" />
-				{:else if emotion === 'happy'}
-					<path d="M51 79 Q61 86 71 78" stroke="#4b4b4b" stroke-width="3" fill="none" stroke-linecap="round" />
-				{:else if emotion === 'sad'}
-					<path d="M52 83 Q61 77 69 82" stroke="#4b4b4b" stroke-width="3" fill="none" stroke-linecap="round" />
-				{:else if emotion === 'worried'}
-					<path d="M53 81 Q60 79 68 82" stroke="#4b4b4b" stroke-width="2.8" fill="none" stroke-linecap="round" />
-				{:else}
-					<path d="M53 80 Q61 82 68 80" stroke="#4b4b4b" stroke-width="2.8" fill="none" stroke-linecap="round" />
-				{/if}
+			<!-- focinho-herói -->
+			<g class="pig-snout">
+				<ellipse cx="60" cy="66" rx="16.5" ry="11.5" fill="#ec6ba9" />
+				<ellipse cx="60" cy="64.6" rx="14.5" ry="9.2" fill="#f78fc5" />
+				<ellipse cx="54" cy="66" rx="2.5" ry="4.4" fill="#9d2f63" />
+				<ellipse cx="66" cy="66" rx="2.5" ry="4.4" fill="#9d2f63" />
 			</g>
+
+			<!-- boca (assimétrica de propósito) -->
+			{#if emotion === 'euphoric'}
+				<path d="M48 80 Q59 92 72 80 Q66 85 48 80 Z" fill="#9d2f63" />
+				<path d="M54 83 Q60 88 66 83 Q60 90 54 83 Z" fill="#f78fc5" />
+			{:else if emotion === 'happy'}
+				<path d="M51 80 Q61 87 71 79" stroke="#4b4b4b" stroke-width="3" fill="none" stroke-linecap="round" />
+			{:else if emotion === 'sad'}
+				<path d="M52 84 Q61 78 69 83" stroke="#4b4b4b" stroke-width="3" fill="none" stroke-linecap="round" />
+			{:else if emotion === 'worried'}
+				<path d="M53 82 Q60 80 68 83" stroke="#4b4b4b" stroke-width="2.8" fill="none" stroke-linecap="round" />
+			{:else}
+				<path d="M53 81 Q61 83 68 81" stroke="#4b4b4b" stroke-width="2.8" fill="none" stroke-linecap="round" />
+			{/if}
 		</g>
 	</svg>
 </span>
@@ -161,44 +159,37 @@
 		overflow: visible;
 	}
 
-	/* respiração: 1.5% a cada 3.5s, comprimindo contra o chão */
-	.pig:not(.still) .pig-body,
-	.pig:not(.still) .pig-head {
+	/* respiração: ~1.5% a cada 3.5s, comprimindo contra o chão */
+	.pig:not(.still) .pig-all {
 		animation: pig-breathe 3.5s ease-in-out infinite;
 		transform-origin: 60px 116px;
 	}
-	/* movimento secundário: a cabeça segue com um pequeno atraso */
-	.pig:not(.still) .pig-head {
-		animation-delay: 0.15s;
-	}
 
-	/* orelhas: twitch raro (~1 vez por ciclo de 7s) */
+	/* orelhas: twitch raro */
 	.pig:not(.still) .pig-ear-left {
 		animation: pig-ear 7s ease-in-out infinite;
-		transform-origin: 30px 30px;
+		transform-origin: 32px 32px;
 	}
 	.pig:not(.still) .pig-ear-right {
 		animation: pig-ear 7s ease-in-out infinite reverse;
-		transform-origin: 90px 30px;
+		transform-origin: 88px 32px;
 	}
 
-	/* pestanejar: ciclo ~4.4s com double-blink ocasional */
+	/* pestanejar: ~4.4s com double-blink ocasional */
 	.pig:not(.still) .pig-eyes {
 		animation: pig-blink 4.4s infinite;
-		transform-origin: 60px 50px;
+		transform-origin: 60px 51px;
 	}
 
-	/* emoções */
+	/* emoções (sobrepõem a respiração no mesmo elemento — intencional) */
 	.pig-euphoric:not(.still) .pig-all {
 		animation: pig-hop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
-		transform-origin: 60px 122px;
 	}
 	.pig-euphoric .pig-sparkles {
 		animation: pig-sparkle 1.2s ease-in-out infinite;
 	}
 	.pig-worried:not(.still) .pig-all {
 		animation: pig-tremble 1.5s ease-in-out infinite;
-		transform-origin: 60px 122px;
 	}
 	.pig-worried .pig-sweat {
 		animation: pig-drip 1.9s ease-in infinite;
@@ -223,12 +214,10 @@
 	@keyframes pig-blink {
 		0%, 88%, 92.5%, 100% { transform: scaleY(1); }
 		90% { transform: scaleY(0.06); }
-		/* double-blink ocasional dentro do mesmo ciclo */
 		94.5% { transform: scaleY(0.06); }
 		96.5% { transform: scaleY(1); }
 	}
 	@keyframes pig-hop {
-		/* squash → stretch a subir → squash a aterrar (volume preservado) */
 		0%, 100% { transform: translateY(0) scale(1, 1); }
 		12% { transform: translateY(0) scale(1.08, 0.92); }
 		42% { transform: translateY(-9px) scale(0.95, 1.06); }

@@ -4635,5 +4635,13 @@
   "caminho.unit.open": "عرض الوحدة",
   "vida.trabalhos.desc": "تسليمات ومواعيد وتقدم.",
   "vida.biblioteca.desc": "روابط ومواد محفوظة.",
-  "vida.caderno.desc": "ملاحظات وتسجيلات وملفات دراسة."
+  "vida.caderno.desc": "ملاحظات وتسجيلات وملفات دراسة.",
+  "caminho.jump": "القفز إلى هنا؟",
+  "caminho.popup.start": "ابدئي",
+  "caminho.popup.review": "مراجعة",
+  "caminho.chest.title": "صندوق الطريق",
+  "caminho.chest.open": "افتحي الصندوق +{xp} نقطة",
+  "caminho.chest.claimed": "🎁 فُتح الصندوق! +{xp} نقطة",
+  "caminho.chest.done": "جمعتِ هذا الصندوق بالفعل. ✨",
+  "caminho.unit.open_aria": "فتح الوحدة {title}"
 }

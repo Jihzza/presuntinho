@@ -15,6 +15,7 @@
     courseProgress,
     nextLesson,
     loadVisitedLessons,
+    loadPathChests,
     getQuizHistory,
     type CourseProgress,
     type NextLessonTarget
@@ -31,23 +32,26 @@
   let mascotEmoji = $state(mascotById(DEFAULT_MASCOT_ID)?.emoji ?? '🧴');
   let visitedLessons = $state<Set<string>>(new Set());
   let quizDone = $state<Set<string>>(new Set());
+  let claimedChests = $state<Set<string>>(new Set());
   let loaded = $state(false);
 
   onMount(() => {
     void (async () => {
       try {
-        const [p, n, s, m, visited] = await Promise.all([
+        const [p, n, s, m, visited, chests] = await Promise.all([
           courseProgress(courseSlug),
           nextLesson(courseSlug),
           getActivityStreak(),
           getActiveMascot(),
-          loadVisitedLessons()
+          loadVisitedLessons(),
+          loadPathChests()
         ]);
         progress = p;
         next = n;
         streak = s;
         mascotEmoji = m.emoji;
         visitedLessons = new Set(visited.keys());
+        claimedChests = chests;
 
         // Quizzes com pelo menos uma tentativa → nó de teste "feito".
         const quizSlugs = [
@@ -96,7 +100,7 @@
   </p>
 
   {#if course}
-    <CaminhoPath {course} {progress} {next} {streak} {mascotEmoji} {visitedLessons} {quizDone} />
+    <CaminhoPath {course} {progress} {next} {streak} {mascotEmoji} {visitedLessons} {quizDone} {claimedChests} />
     {#if !loaded}
       <p class="loading">{$t('common.loading', { default: 'A carregar…' })}</p>
     {/if}
