@@ -2,10 +2,16 @@
   /**
    * /mensagens — private WhatsApp-style chat between fatma and daniel.
    *
+   * Session-native (push 6f5a4bb, 2026-07-04): identity comes from the app
+   * session (httpOnly cookie via src/lib/auth/session.ts); no password UI.
+   * The backend still validates a per-profile chat credential on every
+   * request (CHAT_TOKEN_FATMA / CHAT_TOKEN_DANIEL), but the user never sees
+   * a code prompt — that flow was removed.
+   *
    * - Transport: netlify/functions/chat.js (Netlify Blobs), polled by
    *   ChatStore (src/lib/chat/store.svelte.ts) every 4s while visible.
-   * - Auth: backend stays protected by a per-profile chat credential. The UI
-   *   opens from the app session and only shows technical sync setup as a fallback.
+   * - Auth: session first; secure_setup collapsed into a small <details>
+   *   for ops only (line ~351) — never a user-facing barrier.
    * - Composer: fixed dock with the same geometry as /agente (bottom above
    *   the bottom-nav, width min(800px, 100vw - .75rem), z-index 65) so the
    *   layout's --page-bottom-inset clearance applies identically.
