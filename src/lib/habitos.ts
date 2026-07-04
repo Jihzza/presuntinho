@@ -828,6 +828,27 @@ export async function getMonthLogs(habitId: number, year: number, month0: number
  * and then logHabit, which saw the row already present and never
  * awarded XP).
  */
+/**
+ * V10 — true when EVERY habit scheduled for today already has a done log.
+ * Powers the "all habits done" victory flow (GamificationLayer). Returns
+ * false when nothing is scheduled today (an empty day is not a victory).
+ */
+export async function allDueHabitsDoneToday(): Promise<boolean> {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  const todayKey = `${y}-${m}-${d}`;
+
+  const habits = await listHabitos();
+  const due = habits.filter((h) => isScheduledOnKey(h.cadence, todayKey));
+  if (due.length === 0) return false;
+
+  const logs = await db().habit_logs.where('date').equals(todayKey).toArray();
+  const doneIds = new Set(logs.filter((l) => l.done).map((l) => l.habitId));
+  return due.every((h) => doneIds.has(h.id));
+}
+
 export async function setHabitLog(
   habitId: number,
   date: string,

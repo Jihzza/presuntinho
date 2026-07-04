@@ -2,10 +2,11 @@
   import { onMount } from 'svelte';
   import { awardXP, XP_TABLE } from '$lib/state/xp-actions';
   import { awardBadge } from '$lib/state/stores';
+  import { db } from '$lib/state/db';
   import { showToast } from '$lib/components/events';
   import { getQuizHistory, recordQuizResult, type QuizHistory } from '$lib/escola/progress';
   import { schoolQuizContextForSlug } from '$lib/escola/catalog';
-  import QuizVictory from '$lib/components/QuizVictory.svelte';
+  import VictoryFlow from '$lib/components/VictoryFlow.svelte';
   import { t } from 'svelte-i18n';
 
   // Match the V3 quiz shape (static/legacy/assets/js/quizzes.js)
@@ -90,6 +91,19 @@
       history = await recordQuizResult(quizId, correct, total, answeredIndices);
     } catch (e) {
       console.error('[quiz] save failed', e);
+    }
+
+    // V10 — b4 "Quizzmaster": 10+ questões respondidas no total, em
+    // qualquer combinação de quizzes (contrato V3: quizzes.js linha 137).
+    try {
+      const rows = await db().quizScores.toArray();
+      const answeredTotal = rows.reduce(
+        (sum, r) => sum + (Array.isArray(r.answered) ? r.answered.length : 0),
+        0
+      );
+      if (answeredTotal >= 10) void awardBadge('b4');
+    } catch (e) {
+      console.warn('[quiz] b4 check failed', e);
     }
 
     // XP integrity (V8): quiz perfeito pays exactly XP_TABLE.quiz_perfect_score
@@ -258,12 +272,34 @@
   </article>
 
   {#if victoryOpen && scoreInfo}
-    <QuizVictory
-      variant="quiz"
+    <!-- V10 — the single-card QuizVictory became the VictoryFlow parade
+         (splash+ring → recompensas → streak+missões). QuizVictory itself
+         still serves the LessonRunner 'lesson' variant. -->
+    {@const vTier = scoreInfo.perfect ? 'perfect' : scoreInfo.score >= 70 ? 'good' : 'low'}
+    <VictoryFlow
+      context="quiz"
+      title={vTier === 'perfect'
+        ? $t('quizvictory.title.perfect', { default: 'Perfeito! 🏆' })
+        : vTier === 'good'
+          ? $t('quizvictory.title.good', { default: 'Muito bem! 🌟' })
+          : $t('quizvictory.title.low', { default: 'Boa tentativa! 💪' })}
+      mascotLine={vTier === 'perfect'
+        ? $t('quizvictory.mascot.perfect', { default: 'UAU! Nota máxima — mereces uma festa! 🎊' })
+        : vTier === 'good'
+          ? $t('quizvictory.mascot.good', { default: 'Estás quase lá — que orgulho ver-te a crescer!' })
+          : $t('quizvictory.mascot.low', { default: 'Cada tentativa ensina algo novo. Vamos rever juntas? 💕' })}
       correct={scoreInfo.correct}
       total={scoreInfo.total}
-      xp={scoreInfo.perfect ? XP_TABLE.quiz_perfect_score : 0}
+      celebrate={scoreInfo.perfect}
       confettiCount={scoreInfo.pt ? 80 : 60}
+      xpEntries={scoreInfo.perfect
+        ? [
+            {
+              label: $t('victoryflow.entry.quiz_perfect', { default: 'Quiz perfeito' }),
+              amount: XP_TABLE.quiz_perfect_score
+            }
+          ]
+        : []}
       courseSlug={quizContext?.courseSlug}
       wrongCount={wrongAnswers.length}
       onclose={() => {

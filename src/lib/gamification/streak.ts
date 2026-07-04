@@ -70,6 +70,14 @@ export interface GamificationStateFields {
   streakMilestoneCelebrated?: number;
   /** V10 — LOCAL 'YYYY-MM-DD' of the last flame-ignition celebration. */
   streakFlameDay?: string;
+  /** V10 — chest XP boost: active until this timestamp (ms). */
+  xpBoostUntil?: number;
+  /** V10 — chest XP boost multiplier (2 = double XP). */
+  xpBoostMult?: number;
+  /** V10 — LOCAL 'YYYY-MM-DD' of the last "all habits done" victory flow. */
+  habitsFlowDay?: string;
+  /** V10 — LOCAL 'YYYY-MM-DD' of the last streak-risk notification. */
+  streakNotifDay?: string;
 }
 
 export type StateRowV8 = StateRow & GamificationStateFields;
@@ -357,6 +365,37 @@ export async function claimStreakMilestone(streak: ActivityStreak): Promise<numb
     return due;
   } catch {
     return null;
+  }
+}
+
+/**
+ * Claim today's "all habits done" celebration — true exactly once per
+ * local day (same pattern as claimFlameIgnition).
+ */
+export async function claimHabitsFlowDay(): Promise<boolean> {
+  try {
+    await initStores();
+    const todayKey = localDateKey(new Date());
+    const row = await readStateV8();
+    if (row?.habitsFlowDay === todayKey) return false;
+    await updateStateV8({ habitsFlowDay: todayKey });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Claim today's streak-risk notification slot — true exactly once per day. */
+export async function claimStreakNotifDay(): Promise<boolean> {
+  try {
+    await initStores();
+    const todayKey = localDateKey(new Date());
+    const row = await readStateV8();
+    if (row?.streakNotifDay === todayKey) return false;
+    await updateStateV8({ streakNotifDay: todayKey });
+    return true;
+  } catch {
+    return false;
   }
 }
 

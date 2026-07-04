@@ -10,6 +10,7 @@
   import { browser } from '$app/environment';
   import { get } from 'svelte/store';
   import { db } from '$lib/state/db';
+  import { awardBadge } from '$lib/state/stores';
   import { locale, t } from 'svelte-i18n';
 
   interface Note {
@@ -60,6 +61,7 @@
     });
     newTitle = '';
     newBody = '';
+    void awardBadge('b5'); // Wordsmith — first note ever (idempotent)
     await refresh();
   }
 
@@ -76,6 +78,7 @@
       blob: file
     });
     input.value = '';
+    void awardBadge('b5');
     await refresh();
   }
 
@@ -92,6 +95,7 @@
       blob: file
     });
     input.value = '';
+    void awardBadge('b5');
     await refresh();
   }
 
@@ -116,6 +120,7 @@
           blob
         });
         stream.getTracks().forEach((t) => t.stop());
+        void awardBadge('b5');
         await refresh();
       };
       mediaRecorder.start();

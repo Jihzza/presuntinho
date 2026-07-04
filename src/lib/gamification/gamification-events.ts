@@ -15,6 +15,10 @@ export const LEVEL_UP_EVENT = 'presuntinho:level-up';
 /** An XP-earning action just happened (used for the euphoric mascot state). */
 export const ACTION_PULSE_EVENT = 'presuntinho:action-pulse';
 
+/** A badge was freshly unlocked — detail: { id: string }. (Dispatched from
+ * stores.ts awardBadge as a string literal to avoid an import cycle.) */
+export const BADGE_UNLOCKED_EVENT = 'presuntinho:badge-unlocked';
+
 export function dispatchGamificationEvent(name: string, detail?: unknown): void {
 	if (typeof window === 'undefined') return;
 	window.dispatchEvent(new CustomEvent(name, { detail }));

@@ -25,6 +25,7 @@
   import { get } from 'svelte/store';
   import { xp, initStores } from '$lib/state/stores';
   import { level as levelOf } from '$lib/gamification/levels';
+  import { xpBoostRemainingMs, XP_BOOST_EVENT } from '$lib/state/xp-actions';
   import { locale, t } from 'svelte-i18n';
 
   type Visibility = 'always' | 'onChange';
@@ -54,6 +55,11 @@
   let levelLabel = $derived(
     $t('xp.pill.level', { values: { level: levelOf(currentXp) }, default: 'Nv {level}' })
   );
+  // V10 — chest boost indicator (⚡2x while the 15-min window is active).
+  let boostActive = $state(false);
+  function refreshBoost(): void {
+    boostActive = xpBoostRemainingMs() > 0;
+  }
 
   function prefersReducedMotion(): boolean {
     if (typeof window === 'undefined') return false;
@@ -139,12 +145,19 @@
       }
     })();
 
+    refreshBoost();
+    window.addEventListener(XP_BOOST_EVENT, refreshBoost);
+    // The boost expires on its own clock — re-check every 30s while mounted.
+    const boostTimer = setInterval(refreshBoost, 30_000);
+
     return () => {
       destroyed = true;
       if (unsubXp) {
         unsubXp();
         unsubXp = null;
       }
+      window.removeEventListener(XP_BOOST_EVENT, refreshBoost);
+      clearInterval(boostTimer);
       if (pulseTimer) clearTimeout(pulseTimer);
       if (deltaTimer) clearTimeout(deltaTimer);
       if (hideTimer) clearTimeout(hideTimer);
@@ -169,6 +182,11 @@
 >
   <span class="dot" aria-hidden="true"></span>
   <span class="level-tag">{levelLabel}</span>
+  {#if boostActive}
+    <span class="boost-tag" title={$t('xp.pill.boost.title', { default: 'XP a dobrar!' })}>
+      {$t('xp.pill.boost', { default: '⚡2x' })}
+    </span>
+  {/if}
   <span class="label">{label}</span>
   {#if delta !== null}
     <span class="delta" class:delta--positive={delta > 0} class:delta--negative={delta < 0}>
@@ -207,6 +225,14 @@
     font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 0.02em;
+  }
+  .boost-tag {
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.35);
+    color: #f4dd8b;
+    font-size: 0.72rem;
+    font-weight: 800;
   }
   /* Hidden base — translateY lifts it slightly so the IN animation has motion */
   .xp-pill--hidden {

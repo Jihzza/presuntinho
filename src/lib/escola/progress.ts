@@ -278,6 +278,9 @@ export async function completeLessonOnce(unitSlug: string, lessonSlug: string): 
   if (existing?.visited) return false;
   await d.visited.put({ id, visited: true, visitedAt: Date.now() });
   await awardXP('lesson_complete');
+  // V10 — b2 "Leitora": first lesson ever completed (idempotent).
+  const { awardBadge } = await import('$lib/state/stores');
+  await awardBadge('b2');
   return true;
 }
 

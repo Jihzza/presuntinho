@@ -189,6 +189,11 @@ export async function awardBadge(id: string, xpAmount: number = 0): Promise<void
   const now = Date.now();
   await db().badges.put({ id, unlocked: true, unlockedAt: now });
   if (xpAmount) await addXP(xpAmount);
+  // V10 — a FRESH unlock gets a celebration. String literal (not the
+  // gamification-events constant) to keep this module dependency-free.
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('presuntinho:badge-unlocked', { detail: { id } }));
+  }
 }
 
 /** Discover a secret. Idempotent. Mirrors V3 setting `state.secretDiscovered[id]`. */

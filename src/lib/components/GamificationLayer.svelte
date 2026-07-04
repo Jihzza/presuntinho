@@ -10,7 +10,7 @@
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { xp, initStores } from '$lib/state/stores';
-	import { XP_CHANGED_EVENT } from '$lib/state/xp-actions';
+	import { XP_CHANGED_EVENT, initXpBoost } from '$lib/state/xp-actions';
 	import { level } from '$lib/gamification/levels';
 	import {
 		claimFlameIgnition,
@@ -21,17 +21,39 @@
 	import {
 		dispatchGamificationEvent,
 		recordActionPulse,
+		BADGE_UNLOCKED_EVENT,
 		FLAME_IGNITED_EVENT,
 		LEVEL_UP_EVENT,
 		STREAK_CHANGED_EVENT
 	} from '$lib/gamification/gamification-events';
 	import { getActiveMascot } from '$lib/gamification/mascots';
+	import { awardBadge } from '$lib/state/stores';
+	import { db } from '$lib/state/db';
+	import { claimHabitsFlowDay, claimStreakNotifDay } from '$lib/gamification/streak';
+	import { allDueHabitsDoneToday } from '$lib/habitos';
+	import { hoursUntilMidnight, mascotEmotion } from '$lib/gamification/emotion';
+	import { minutesSinceLastAction } from '$lib/gamification/gamification-events';
+	import {
+		applyMascotFavicon,
+		applyTitlePrefix,
+		notifPermission,
+		readNotifStreakEnabled,
+		showStreakRiskNotification,
+		STREAK_NOTIF_FALLBACKS,
+		STREAK_NOTIF_VARIANTS
+	} from '$lib/gamification/presence';
+	import { get as getStore } from 'svelte/store';
+	import { t } from 'svelte-i18n';
 	import LevelUpModal from './LevelUpModal.svelte';
 	import StreakMilestoneModal from './StreakMilestoneModal.svelte';
+	import BadgeUnlockModal from './BadgeUnlockModal.svelte';
+	import VictoryFlow from './VictoryFlow.svelte';
 
 	type Celebration =
 		| { kind: 'levelup'; level: number; xpTotal: number }
-		| { kind: 'milestone'; milestone: number; earnedFreeze: boolean };
+		| { kind: 'milestone'; milestone: number; earnedFreeze: boolean }
+		| { kind: 'badge'; badgeId: string }
+		| { kind: 'flow'; context: 'habits' | 'trabalho' };
 
 	let queue = $state<Celebration[]>([]);
 	let active = $state<Celebration | null>(null);
@@ -107,6 +129,8 @@
 		if (processing || delta <= 0) return;
 		processing = true;
 		try {
+			// b1 "Primeiros Passos": first XP-earning action ever (idempotent).
+			void awardBadge('b1');
 			const streak = await getActivityStreak();
 			dispatchGamificationEvent(STREAK_CHANGED_EVENT);
 			if (await claimFlameIgnition()) {
@@ -117,10 +141,74 @@
 			if (milestone !== null) {
 				enqueue({ kind: 'milestone', milestone, earnedFreeze: streak.earnedFreeze });
 			}
+			// b6 "Exploradora": 8+ distinct pages visited (cheap indexed count).
+			try {
+				if ((await db().visited.count()) >= 8) void awardBadge('b6');
+			} catch {
+				// non-fatal
+			}
+			// Victory parades: "all habits done" (once per day) and
+			// "trabalho entregue" (every submission deserves the parade).
+			if (reason === 'habito_mark_done' || reason === 'habito_log_today') {
+				try {
+					if ((await allDueHabitsDoneToday()) && (await claimHabitsFlowDay())) {
+						enqueue({ kind: 'flow', context: 'habits' });
+					}
+				} catch {
+					// non-fatal
+				}
+			}
+			if (reason === 'assignment_status_done') {
+				enqueue({ kind: 'flow', context: 'trabalho' });
+			}
 		} catch (err) {
 			console.warn('[gamification-layer] streak refresh failed', err);
 		} finally {
 			processing = false;
+		}
+	}
+
+	function onBadgeUnlocked(e: Event): void {
+		const id = (e as CustomEvent<{ id?: string }>).detail?.id;
+		if (typeof id === 'string' && id) {
+			enqueue({ kind: 'badge', badgeId: id });
+		}
+	}
+
+	// ── presence: favicon/título emocional + notificação de streak em risco ──
+	async function presenceTick(): Promise<void> {
+		if (!hydrated) return;
+		try {
+			const streak = await getActivityStreak();
+			const emotion = mascotEmotion({
+				streakCurrent: streak.current,
+				streakBest: streak.best,
+				activeToday: streak.activeToday,
+				hoursUntilMidnight: hoursUntilMidnight(),
+				minutesSinceLastAction: minutesSinceLastAction()
+			});
+			applyMascotFavicon(emotion);
+			applyTitlePrefix(emotion);
+
+			// Local notification (page open): evening, streak alive, day idle,
+			// user opted in via /definicoes, permission granted — once per day.
+			const evening = new Date().getHours() >= 20;
+			if (
+				evening &&
+				!streak.activeToday &&
+				streak.current > 0 &&
+				notifPermission() === 'granted' &&
+				(await readNotifStreakEnabled()) &&
+				(await claimStreakNotifDay())
+			) {
+				const v = 1 + Math.floor(Math.random() * STREAK_NOTIF_VARIANTS);
+				const body = getStore(t)(`notif.streak.v${v}`, {
+					default: STREAK_NOTIF_FALLBACKS[v - 1]
+				});
+				showStreakRiskNotification(body);
+			}
+		} catch (e) {
+			console.warn('[gamification-layer] presence tick failed', e);
 		}
 	}
 
@@ -131,14 +219,21 @@
 		void initStores().then(() => {
 			hydrated = true;
 			void initSoundPrefs();
+			void initXpBoost();
+			void presenceTick();
 		});
+		// Emotion depends on the clock (worried evenings) — refresh per minute.
+		const presenceTimer = setInterval(() => void presenceTick(), 60_000);
 		void getActiveMascot()
 			.then((m) => (mascotEmoji = m.emoji))
 			.catch(() => undefined);
 		const handler = (e: Event) => void onXpChanged(e);
 		window.addEventListener(XP_CHANGED_EVENT, handler);
+		window.addEventListener(BADGE_UNLOCKED_EVENT, onBadgeUnlocked);
 		return () => {
 			window.removeEventListener(XP_CHANGED_EVENT, handler);
+			window.removeEventListener(BADGE_UNLOCKED_EVENT, onBadgeUnlocked);
+			clearInterval(presenceTimer);
 			if (advanceTimer) clearTimeout(advanceTimer);
 		};
 	});
@@ -156,6 +251,32 @@
 		milestone={active.milestone}
 		earnedFreeze={active.earnedFreeze}
 		{mascotEmoji}
+		onclose={advance}
+	/>
+{:else if active?.kind === 'badge'}
+	<BadgeUnlockModal badgeId={active.badgeId} onclose={advance} />
+{:else if active?.kind === 'flow'}
+	<VictoryFlow
+		context={active.context}
+		title={active.context === 'habits'
+			? $t('victoryflow.habits.title', { default: 'Todos os hábitos feitos! 🌱' })
+			: $t('victoryflow.trabalho.title', { default: 'Trabalho entregue! 📬' })}
+		mascotLine={active.context === 'habits'
+			? $t('victoryflow.habits.line', { default: 'Dia impecável — cuidaste de ti do princípio ao fim.' })
+			: $t('victoryflow.trabalho.line', { default: 'Mais um da lista — que orgulho!' })}
+		xpEntries={active.context === 'habits'
+			? [
+					{
+						label: $t('victoryflow.entry.habit_done', { default: 'Hábito concluído' }),
+						amount: 2
+					}
+				]
+			: [
+					{
+						label: $t('victoryflow.entry.assignment_done', { default: 'Trabalho entregue' }),
+						amount: 15
+					}
+				]}
 		onclose={advance}
 	/>
 {/if}

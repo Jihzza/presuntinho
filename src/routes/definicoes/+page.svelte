@@ -44,6 +44,7 @@
   import { VERSION, REPO_URL } from '$lib/version';
   import Palette from 'lucide-svelte/icons/palette';
   import Volume2 from 'lucide-svelte/icons/volume-2';
+  import Bell from 'lucide-svelte/icons/bell';
   import Globe from 'lucide-svelte/icons/globe';
   import Database from 'lucide-svelte/icons/database';
   import Heart from 'lucide-svelte/icons/heart';
@@ -67,6 +68,12 @@
     setHapticsEnabled,
     setSoundEnabled
   } from '$lib/gamification/sound';
+  import {
+    isNotifSupported,
+    notifPermission,
+    readNotifStreakEnabled,
+    setNotifStreakEnabled
+  } from '$lib/gamification/presence';
   import {
     activateMood,
     acknowledgeMoodIntro,
@@ -105,6 +112,34 @@
   function toggleHaptics(): void {
     hapticsOn = !hapticsOn;
     void setHapticsEnabled(hapticsOn);
+  }
+
+  // ----- V10: Notificações de streak (Notification API local) -----
+  let notifSupported = $state(false);
+  let notifPerm = $state<'default' | 'granted' | 'denied' | 'unsupported'>('unsupported');
+  let notifStreakOn = $state(false);
+  onMount(() => {
+    notifSupported = isNotifSupported();
+    notifPerm = notifPermission();
+    void readNotifStreakEnabled().then((v) => (notifStreakOn = v));
+  });
+  async function toggleStreakNotifs(): Promise<void> {
+    if (!notifSupported) return;
+    if (!notifStreakOn) {
+      // Permission is requested HERE, from an explicit user gesture — never
+      // automatically at boot.
+      if (Notification.permission === 'default') {
+        notifPerm = await Notification.requestPermission();
+      } else {
+        notifPerm = Notification.permission;
+      }
+      if (notifPerm !== 'granted') return;
+      notifStreakOn = true;
+      await setNotifStreakEnabled(true);
+    } else {
+      notifStreakOn = false;
+      await setNotifStreakEnabled(false);
+    }
   }
 
   // ----- Theme -----
@@ -802,6 +837,44 @@
         </span>
       </button>
     </div>
+  </section>
+
+  <!-- ============ V10: Notificações ============ -->
+  <section class="card" aria-labelledby="notif-h">
+    <div class="card-head">
+      <span class="icon-wrap"><Bell size={18} /></span>
+      <h2 id="notif-h">{$t('settings.notif', { default: 'Notificações' })}</h2>
+    </div>
+    <p class="theme-intro">
+      {$t('settings.notif.intro', {
+        default: 'O Presuntinho avisa-te à noite quando a streak está em risco (só com a app aberta).'
+      })}
+    </p>
+    {#if !notifSupported}
+      <p class="theme-intro">{$t('settings.notif.unsupported', { default: 'O teu navegador não suporta notificações.' })}</p>
+    {:else if notifPerm === 'denied'}
+      <p class="theme-intro">{$t('settings.notif.denied', { default: 'As notificações foram bloqueadas no navegador — ativa-as nas definições do site.' })}</p>
+    {:else}
+      <div class="switch-list">
+        <button
+          type="button"
+          class="switch-row"
+          role="switch"
+          aria-checked={notifStreakOn}
+          onclick={() => void toggleStreakNotifs()}
+        >
+          <span class="switch-copy">
+            <strong>{$t('settings.notif.streak', { default: 'Streak em risco' })}</strong>
+            <small>{$t('settings.notif.streak.desc', {
+              default: 'Um lembrete passivo-agressivo do porquinho depois das 20h, uma vez por dia.'
+            })}</small>
+          </span>
+          <span class="switch-track" class:on={notifStreakOn} aria-hidden="true">
+            <span class="switch-thumb"></span>
+          </span>
+        </button>
+      </div>
+    {/if}
   </section>
 
   <!-- ============ Language ============ -->

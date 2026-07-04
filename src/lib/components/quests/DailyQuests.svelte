@@ -25,12 +25,16 @@
   import { fireConfettiEvent, showToast } from '$lib/components/events';
   import { playSfx, vibrate } from '$lib/gamification/sound';
   import { XP_CHANGED_EVENT } from '$lib/state/xp-actions';
+  import ChestModal from '$lib/components/ChestModal.svelte';
 
   const MOOD_CHANGED_EVENT = 'presuntinho:mood-changed';
 
   let quests = $state<DailyQuest[]>([]);
   let allDone = $state(false);
   let loading = $state(true);
+  // V10 — the 3/3 bonus opens a variable-reward chest (once per day, tied
+  // to the engine's idempotent allJustCompleted flag).
+  let chestOpen = $state(false);
 
   let doneCount = $derived(quests.filter((q) => q.done).length);
   let totalCount = $derived(quests.length || 3);
@@ -71,6 +75,7 @@
           }),
           3500
         );
+        chestOpen = true;
       }
     } catch (e) {
       console.error('[quests] refresh failed', e);
@@ -195,6 +200,10 @@
     </div>
   {/if}
 </section>
+
+{#if chestOpen}
+  <ChestModal onclose={() => (chestOpen = false)} />
+{/if}
 
 <style>
   .quests-card {

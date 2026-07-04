@@ -11,6 +11,7 @@
    */
 
   import { locale, t } from 'svelte-i18n';
+  import { TIER_PT_LABELS, type BadgeTier } from '$lib/gamification/badge-catalog';
 
   interface Props {
     id: string;
@@ -19,9 +20,15 @@
     icon: string;
     unlocked: boolean;
     unlockedAt?: number;
+    /** V10 — bronze/prata/ouro chip for tiered badge families. */
+    tier?: BadgeTier;
   }
 
-  let { id, name, description, icon, unlocked, unlockedAt }: Props = $props();
+  let { id, name, description, icon, unlocked, unlockedAt, tier }: Props = $props();
+
+  let tierLabel = $derived(
+    tier ? $t(`components.badge.tier.${tier}`, { default: TIER_PT_LABELS[tier] }) : null
+  );
 
   let stateLabel = $derived(unlocked
     ? $t('components.badge.unlocked', { default: 'Desbloqueado' })
@@ -60,6 +67,9 @@
   data-badge-id={id}
   title={unlockedDate ? `${name} — ${stateLabel} em ${unlockedDate}` : `${name} — ${stateLabel}`}
 >
+  {#if tier && tierLabel}
+    <span class="tier tier--{tier}">{tierLabel}</span>
+  {/if}
   <div class="icon" aria-hidden="true">{icon}</div>
   <div class="body">
     <h3 class="name">{name}</h3>
@@ -101,6 +111,29 @@
   .card.locked {
     opacity: 0.55;
     background: rgba(255, 255, 255, 0.025);
+  }
+  .tier {
+    position: absolute;
+    top: 0.45rem;
+    inset-inline-end: 0.45rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    font-size: 0.6rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .tier--bronze {
+    background: rgba(205, 127, 50, 0.28);
+    color: #f0c9a0;
+  }
+  .tier--prata {
+    background: rgba(192, 192, 200, 0.25);
+    color: #e4e4ec;
+  }
+  .tier--ouro {
+    background: rgba(212, 175, 55, 0.3);
+    color: #f4dd8b;
   }
   .card:not(.locked):hover {
     background: rgba(255, 255, 255, 0.08);

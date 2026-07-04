@@ -132,6 +132,70 @@ export type XpReason = keyof typeof XP_TABLE;
 const _recentAwards = new Map<string, number>();
 const DEBOUNCE_MS = 50;
 
+// ---------------------------------------------------------------------------
+// V10 — temporary XP boost (chest reward: 2x for 15 minutes)
+// ---------------------------------------------------------------------------
+// Cached in module scope so awardXP stays synchronous-cheap; persisted on the
+// state row (xpBoostUntil/xpBoostMult, additive non-indexed fields) so the
+// boost survives reloads. GamificationLayer hydrates it at boot.
+
+export const XP_BOOST_EVENT = 'presuntinho:boost-changed';
+
+let _boostUntil = 0;
+let _boostMult = 1;
+
+/** Activate (or clear, with mult=1) the XP multiplier and persist it. */
+export function setXpBoost(until: number, mult: number): void {
+  _boostUntil = until;
+  _boostMult = mult;
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(
+      new CustomEvent(XP_BOOST_EVENT, { detail: { until, mult } })
+    );
+  }
+  // Persist via a dynamic import to keep this module dependency-light.
+  void (async () => {
+    try {
+      const { updateStateV8 } = await import('$lib/gamification/streak');
+      await updateStateV8({ xpBoostUntil: until, xpBoostMult: mult });
+    } catch (e) {
+      console.warn('[xp-boost] persist failed (non-fatal):', e);
+    }
+  })();
+}
+
+/** Hydrate the boost cache from the persisted state row (call at boot). */
+export async function initXpBoost(): Promise<void> {
+  if (typeof indexedDB === 'undefined') return;
+  try {
+    const { readStateV8 } = await import('$lib/gamification/streak');
+    const row = await readStateV8();
+    const until = typeof row?.xpBoostUntil === 'number' ? row.xpBoostUntil : 0;
+    const mult = typeof row?.xpBoostMult === 'number' ? row.xpBoostMult : 1;
+    if (until > Date.now() && mult > 1) {
+      _boostUntil = until;
+      _boostMult = mult;
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(
+          new CustomEvent(XP_BOOST_EVENT, { detail: { until, mult } })
+        );
+      }
+    }
+  } catch (e) {
+    console.warn('[xp-boost] hydration failed (non-fatal):', e);
+  }
+}
+
+/** Milliseconds of boost remaining (0 when inactive). */
+export function xpBoostRemainingMs(): number {
+  return _boostMult > 1 ? Math.max(0, _boostUntil - Date.now()) : 0;
+}
+
+/** Current multiplier (1 when no boost is active). */
+export function xpBoostMultiplier(): number {
+  return xpBoostRemainingMs() > 0 ? _boostMult : 1;
+}
+
 /**
  * Award XP for an action.
  *
@@ -161,6 +225,12 @@ export async function awardXP(reason: string, amount?: number): Promise<void> {
   }
 
   if (!finalAmount) return; // 0 XP is a no-op
+
+  // V10 — active chest boost multiplies GAINS only (never deepens losses).
+  if (finalAmount > 0) {
+    const mult = xpBoostMultiplier();
+    if (mult > 1) finalAmount = Math.round(finalAmount * mult);
+  }
 
   await addXP(finalAmount);
 
