@@ -28,7 +28,8 @@ export type SfxName =
 	| 'whoosh'
 	| 'ding'
 	| 'chest'
-	| 'milestone';
+	| 'milestone'
+	| 'send';
 
 export type HapticKind = 'tap' | 'success' | 'warning';
 
@@ -290,6 +291,10 @@ export function playSfx(name: SfxName): void {
 				{ freq: 1318.5, at: 0.26, dur: 0.2, type: 'triangle' },
 				{ freq: 1760, at: 0.38, dur: 0.28, type: 'triangle', gain: 1.1 }
 			]);
+			break;
+		case 'send':
+			// Quick upward swish for an outgoing chat message.
+			playNotes([{ freq: 520, at: 0, dur: 0.13, type: 'sine', glideTo: 880, gain: 0.7 }]);
 			break;
 		case 'milestone':
 			// Warm rising fifth + octave shimmer for streak milestones.

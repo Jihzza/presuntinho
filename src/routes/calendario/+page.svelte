@@ -329,7 +329,22 @@
 </svelte:head>
 
 <div class="calendar-page">
-  <section class="calendar-card" aria-label={$t('calendar.aria.calendar', { default: 'Calendário' })}>
+  <!-- V10.1 (task G): the week⇄month swipe now works on the WHOLE calendar
+       card (header, chips, grid), not just the grid/handle. The handlers
+       only commit past a ±42px vertical threshold, so taps on buttons and
+       day cells are untouched. -->
+  <section
+    class="calendar-card"
+    data-drag={dragHint}
+    aria-label={$t('calendar.aria.calendar', { default: 'Calendário' })}
+    onpointerdown={beginDrag}
+    onpointermove={moveDrag}
+    onpointerup={endDrag}
+    onpointercancel={cancelDrag}
+    ontouchstart={beginTouch}
+    ontouchmove={moveTouch}
+    ontouchend={endTouch}
+  >
     <div class="section-head">
       <div class="month-nav">
         <button
@@ -372,13 +387,6 @@
       data-drag={dragHint}
       role="group"
       aria-label={expanded ? $t('calendar.aria.monthGesture', { default: 'Gesto do calendário mensal' }) : $t('calendar.aria.weekGesture', { default: 'Gesto do calendário semanal' })}
-      onpointerdown={beginDrag}
-      onpointermove={moveDrag}
-      onpointerup={endDrag}
-      onpointercancel={cancelDrag}
-      ontouchstart={beginTouch}
-      ontouchmove={moveTouch}
-      ontouchend={endTouch}
     >
       <button type="button" class="drag-handle" onclick={toggleCalendar} aria-label={expanded ? $t('calendar.action.collapse', { default: 'Recolher calendário para semana' }) : $t('calendar.action.expand', { default: 'Expandir calendário para mês' })}>
         <span></span>
@@ -593,6 +601,11 @@
   .calendar-shell { border-radius: var(--radius-lg, 1rem); padding: .25rem; touch-action: auto; user-select: none; -webkit-user-select: none; transition: background var(--motion-fast, 120ms) ease, transform var(--motion-fast, 120ms) ease; }
   .calendar-shell[data-drag='expand'] { background: color-mix(in srgb, var(--accent) 10%, transparent); transform: translateY(1px); }
   .calendar-shell[data-drag='collapse'] { background: color-mix(in srgb, var(--accent) 8%, transparent); transform: translateY(-1px); }
+  /* V10.1 — the whole card is now the gesture surface: same visual feedback
+     at the card level while dragging, and no accidental text selection. */
+  .calendar-card { user-select: none; -webkit-user-select: none; transition: border-color var(--motion-fast, 120ms) ease; }
+  .calendar-card[data-drag='expand'],
+  .calendar-card[data-drag='collapse'] { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
   .drag-handle { display: grid; place-items: center; width: 100%; height: 24px; border: 0; background: transparent; cursor: grab; }
   .drag-handle:active { cursor: grabbing; }
   .drag-handle span { width: 44px; height: 5px; border-radius: 999px; background: color-mix(in srgb, var(--txt) 28%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--txt) 12%, transparent); }

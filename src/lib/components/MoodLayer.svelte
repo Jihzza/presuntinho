@@ -96,22 +96,16 @@
     {/each}
   </div>
 
-  <div class="mood-ribbon" aria-hidden="true">
-    <span>{meta.emoji}</span>
-    <strong>{meta.label}</strong>
-    <small>{$t('mood.layer.adapted')}</small>
-  </div>
-
+<!-- V10.1 (task I): the old decorative top ribbon + the bottom-left popup
+     merged into ONE interactive header chip — just emoji + mood name.
+     Tapping it drops down the full care panel (the popup's features). -->
   <aside class="mood-chip" class:expanded class:compact={!expanded} class:sparkle aria-label={`${meta.label}: ${line}`}>
     <button type="button" class="mood-main" onclick={() => (expanded = !expanded)} aria-expanded={expanded}>
       <span class="mood-emoji" aria-hidden="true">{meta.emoji}</span>
       <span class="mood-copy">
         <strong>{meta.label}</strong>
-        <small>{line}</small>
       </span>
-      <span class="mood-progress" aria-label={$t('mood.layer.progress_aria', { values: { done: doneCount, total: meta.careActions.length }, default: '{done} de {total} miminhos marcados' })}>
-        {doneCount}/{meta.careActions.length}
-      </span>
+      <span class="mood-caret" class:open={expanded} aria-hidden="true">▾</span>
     </button>
 
     {#if expanded}
@@ -121,7 +115,11 @@
           <div>
             <h2>{meta.detailTitle}</h2>
             <p>{meta.detailLead}</p>
+            <p class="panel-line">{line}</p>
           </div>
+          <span class="mood-progress" aria-label={$t('mood.layer.progress_aria', { values: { done: doneCount, total: meta.careActions.length }, default: '{done} de {total} miminhos marcados' })}>
+            {doneCount}/{meta.careActions.length}
+          </span>
         </div>
 
         <div class="care-grid" aria-label={$t('mood.layer.care_aria')}>
@@ -182,33 +180,15 @@
     animation: comfortFloat 13s ease-in-out infinite;
     animation-delay: calc(var(--i) * -2.2s);
   }
-  .mood-ribbon {
+  .mood-chip {
+    /* Header chip: top-center, floating over the sticky nav (which keeps
+       logo/actions at its edges — the middle is free real estate). The
+       ambience keyframe below still needs `pointer-events: none` on the
+       decorative layers only; the chip itself is interactive. */
     position: absolute;
-    top: calc(.75rem + env(safe-area-inset-top));
+    top: calc(0.55rem + env(safe-area-inset-top));
     left: 50%;
     transform: translateX(-50%);
-    display: inline-flex;
-    align-items: center;
-    gap: .42rem;
-    max-width: min(92vw, 390px);
-    padding: .42rem .68rem;
-    border: 1px solid color-mix(in srgb, var(--mood-accent) 34%, rgba(255,255,255,.22));
-    border-radius: 999px;
-    background: linear-gradient(135deg, color-mix(in srgb, var(--mood-accent) 23%, rgba(15,23,42,.82)), rgba(15,23,42,.58));
-    color: white;
-    box-shadow: 0 12px 30px rgba(15, 23, 42, .22);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    pointer-events: none;
-  }
-  .mood-ribbon strong { font-size: .76rem; letter-spacing: .01em; }
-  .mood-ribbon small { color: rgba(255,255,255,.72); font-size: .68rem; }
-
-  .mood-chip {
-    position: absolute;
-    left: max(.75rem, env(safe-area-inset-left));
-    right: auto;
-    bottom: calc(5.85rem + env(safe-area-inset-bottom) + var(--page-bottom-inset, 0px));
     width: min(440px, calc(100vw - 1.5rem));
     max-width: 440px;
     pointer-events: auto;
@@ -232,21 +212,22 @@
     opacity: .75;
     pointer-events: none;
   }
-  .mood-chip.expanded { transform: translateY(-.18rem); box-shadow: 0 22px 56px rgba(15, 23, 42, 0.27); }
+  .mood-chip.expanded { box-shadow: 0 22px 56px rgba(15, 23, 42, 0.27); }
+  /* Collapsed = tiny pill (emoji + name only) hugging its content. */
   .mood-chip.compact {
-    width: min(360px, calc(100vw - 6.8rem));
-    min-width: 236px;
+    width: fit-content;
+    min-width: 0;
   }
   .mood-chip.sparkle::before { animation: shimmer .52s ease; }
   .mood-main {
     position: relative;
     width: 100%;
-    min-height: 66px;
+    min-height: 44px;
     display: grid;
-    grid-template-columns: 44px minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
-    gap: .72rem;
-    padding: .78rem .82rem;
+    gap: .45rem;
+    padding: .3rem .7rem .3rem .4rem;
     border: 0;
     background: transparent;
     color: inherit;
@@ -254,19 +235,19 @@
     cursor: pointer;
     font: inherit;
   }
-  .mood-chip.compact .mood-main {
-    min-height: 54px;
-    grid-template-columns: 36px minmax(0, 1fr) auto;
-    gap: .55rem;
-    padding: .52rem .62rem;
+  .mood-caret {
+    font-size: .7rem;
+    opacity: .6;
+    transition: transform .18s ease;
   }
+  .mood-caret.open { transform: rotate(180deg); }
   .mood-main:focus-visible, .recover:focus-visible, .care-action:focus-visible, .comfort-note:focus-visible {
     outline: 3px solid color-mix(in srgb, var(--mood-accent) 55%, white);
     outline-offset: 2px;
   }
   .mood-emoji {
-    width: 44px;
-    height: 44px;
+    width: 34px;
+    height: 34px;
     display: grid;
     place-items: center;
     border-radius: 999px;
@@ -274,22 +255,9 @@
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.82), 0 8px 18px color-mix(in srgb, var(--mood-accent) 24%, transparent);
     flex: 0 0 auto;
   }
-  .mood-chip.compact .mood-emoji {
-    width: 36px;
-    height: 36px;
-  }
   strong, small { display: block; }
   .mood-copy { min-width: 0; }
-  .mood-copy strong { font-size: .9rem; letter-spacing: .01em; }
-  .mood-copy small { margin-top: .14rem; color: rgba(23,32,51,.72); line-height: 1.28; }
-  .mood-chip.compact .mood-copy strong { font-size: .82rem; }
-  .mood-chip.compact .mood-copy small {
-    display: -webkit-box;
-    line-clamp: 1;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+  .mood-copy strong { font-size: .84rem; letter-spacing: .01em; white-space: nowrap; }
   .mood-progress {
     min-width: 2.4rem;
     padding: .28rem .42rem;
@@ -311,10 +279,13 @@
   }
   .panel-head {
     display: grid;
-    grid-template-columns: 2rem minmax(0, 1fr);
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
     gap: .55rem;
     align-items: start;
     padding: .2rem .1rem 0;
+  }
+  .panel-line {
+    font-style: italic;
   }
   .panel-head > span { font-size: 1.35rem; }
   .panel-head h2 { margin: 0; font-size: .95rem; color: #111827; }
@@ -417,12 +388,9 @@
   }
 
   @media (min-width: 768px) {
-    .mood-chip { left: max(1.25rem, env(safe-area-inset-left)); right: auto; bottom: calc(1.2rem + env(safe-area-inset-bottom) + var(--page-bottom-inset, 0px)); }
-    .mood-chip.compact { width: 360px; }
-    .mood-ribbon { top: calc(1rem + env(safe-area-inset-top)); }
+    .mood-chip { top: calc(0.85rem + env(safe-area-inset-top)); }
   }
   @media (max-width: 380px) {
-    .mood-chip.compact { width: min(310px, calc(100vw - 5.6rem)); min-width: 218px; }
     .recover-zone { grid-template-columns: 1fr; }
     .recover { width: 100%; }
   }

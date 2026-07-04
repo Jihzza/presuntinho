@@ -157,6 +157,9 @@
 					default: 'Um congelamento protege a streak num dia falhado. Ganhas 1 a cada 7 dias.'
 				})}
 			</p>
+			<a class="panel-link" href="/streaks/" onclick={() => (open = false)}>
+				{$t('streak.popover.full_page', { default: 'Ver página completa →' })}
+			</a>
 		</div>
 	{/if}
 </div>
@@ -264,6 +267,22 @@
 		font-size: var(--fs-xs, 0.78rem);
 		color: var(--txt3, #94a3b8);
 		line-height: 1.4;
+	}
+
+	.panel-link {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		color: var(--accent, #ec4899);
+		font-size: var(--fs-sm, 0.85rem);
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.panel-link:hover,
+	.panel-link:focus-visible {
+		text-decoration: underline;
+		outline: none;
 	}
 
 	@keyframes flame-ignite {

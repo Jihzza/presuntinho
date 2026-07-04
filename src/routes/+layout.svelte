@@ -527,17 +527,24 @@
       transform: translateY(0);
     }
   }
-  /* V10: the StreakFlame chip tightened the header — below 520px the pig
-     emoji stays as the brand mark (Home lives in the bottom nav anyway). */
+  /* V10.1: the "Presuntinho" wordmark stays next to the pig on every
+     viewport (Daniel's ask) — narrow phones get a smaller wordmark and a
+     compact LanguageSwitcher (flag-only) instead of hiding the brand. */
   @media (max-width: 520px) {
     .logo-text {
-      display: none;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
     }
     .nav-inner {
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
     .nav-actions {
-      gap: 0.375rem;
+      gap: 0.3rem;
+    }
+  }
+  @media (max-width: 380px) {
+    .logo-text {
+      font-size: 0.85rem;
     }
   }
   .icon-btn {

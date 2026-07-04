@@ -240,6 +240,27 @@ export async function awardXP(reason: string, amount?: number): Promise<void> {
 
   await addXP(finalAmount);
 
+  // V10.1 — per-day XP log for the /streaks charts. Fire-and-forget and
+  // capped to ~30 days; a failure here must never break the award path.
+  if (finalAmount > 0) {
+    void (async () => {
+      try {
+        const { readStateV8, updateStateV8, localDateKey } = await import(
+          '$lib/gamification/streak'
+        );
+        const key = localDateKey(new Date());
+        const row = await readStateV8();
+        const log: Record<string, number> = { ...(row?.xpDailyLog ?? {}) };
+        log[key] = (log[key] ?? 0) + finalAmount;
+        const keys = Object.keys(log).sort();
+        while (keys.length > 30) delete log[keys.shift() as string];
+        await updateStateV8({ xpDailyLog: log });
+      } catch {
+        // non-fatal
+      }
+    })();
+  }
+
   // Notify subscribers (XpToast, XpPill, dashboard counters, etc.).
   // Do not also call the generic Toast channel here: that produced two
   // simultaneous “+XP” notifications for one click/action.

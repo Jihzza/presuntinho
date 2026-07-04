@@ -54,6 +54,7 @@
   import { initStores } from '$lib/state/stores';
   import { getSession } from '$lib/auth/session';
   import { showToast } from '$lib/components/events';
+  import { playSfx } from '$lib/gamification/sound';
   import ConversationsDrawer from '$lib/components/agente/ConversationsDrawer.svelte';
 
   let messages = $state<ChatMessageRow[]>([]);
@@ -103,6 +104,26 @@
   async function scrollToBottom() {
     await tick();
     if (scrollEl) scrollEl.scrollTop = scrollEl.scrollHeight;
+    // The page body is the actual scroller on mobile (the list grows the
+    // document) — keep the newest bubble above the fixed composer.
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: document.documentElement.scrollHeight });
+    }
+  }
+
+  // V10.1 — "ir para o fim": the FAB shows while the user reads history
+  // (scrolled away from the bottom); new-message auto-scroll only kicks in
+  // when they were already near the bottom, so we never steal their scroll.
+  let showJumpToEnd = $state(false);
+
+  function isNearBottom(): boolean {
+    if (typeof window === 'undefined') return true;
+    const doc = document.documentElement;
+    return doc.scrollHeight - (window.scrollY + window.innerHeight) < 180;
+  }
+
+  function onWindowScroll(): void {
+    showJumpToEnd = !isNearBottom() && messages.length > 0;
   }
 
   async function refreshConversations() {
@@ -177,8 +198,11 @@
         systemMessage: system,
         signal: abortCtrl.signal,
         onDelta: (d) => {
+          const follow = isNearBottom();
           streamingText = (streamingText ?? '') + d;
-          void scrollToBottom();
+          // Only follow the stream when the user was already at the bottom —
+          // reading history must never have the scroll stolen.
+          if (follow) void scrollToBottom();
         }
       });
       await appendChatMessage(convId, 'assistant', final || streamingText || $t('agente.hermes.error_stream'));
@@ -207,6 +231,7 @@
     // Set busy BEFORE any await so a double-tap can't double-send.
     busy = true;
     input = '';
+    playSfx('send');
     let cid: number | null = null;
     try {
       cid = await activeConvId();
@@ -453,8 +478,10 @@
     syncKeyboardInset();
     window.visualViewport?.addEventListener('resize', syncKeyboardInset);
     window.visualViewport?.addEventListener('scroll', syncKeyboardInset);
+    window.addEventListener('scroll', onWindowScroll, { passive: true });
     void refreshHistory();
     return () => {
+      window.removeEventListener('scroll', onWindowScroll);
       window.visualViewport?.removeEventListener('resize', syncKeyboardInset);
       window.visualViewport?.removeEventListener('scroll', syncKeyboardInset);
       if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
@@ -559,6 +586,21 @@
     tap. Tap targets are ≥44px (mobile a11y baseline) and the strip
     honours `safe-area-inset-bottom` via the composer container.
   -->
+  {#if showJumpToEnd}
+    <button
+      type="button"
+      class="jump-to-end"
+      onclick={() => {
+        showJumpToEnd = false;
+        void scrollToBottom();
+      }}
+      aria-label={$t('chat.jump_to_end', { default: 'Ir para a última mensagem' })}
+      title={$t('chat.jump_to_end', { default: 'Ir para a última mensagem' })}
+    >
+      <span aria-hidden="true">↓</span>
+    </button>
+  {/if}
+
   <div class="composer-dock" style={`--keyboard-inset: ${keyboardInset}px`}>
     <div class="chips-bar" role="group" aria-label={$t('agente.chips.label', { default: 'Sugestões rápidas' })}>
       {#each CHIPS as chip (chip.key)}
@@ -787,8 +829,10 @@
     position: fixed;
     left: 50%;
     right: auto;
+    /* V10.1: 5.25rem clears the bottom-nav (~4rem) with real breathing room —
+       the old 4.25rem left the composer visually glued to the footer. */
     bottom: max(
-      calc(4.25rem + env(safe-area-inset-bottom)),
+      calc(5.25rem + env(safe-area-inset-bottom)),
       calc(var(--keyboard-inset, 0px) + 0.55rem)
     );
     transform: translateX(-50%);
@@ -800,6 +844,40 @@
     box-shadow: none;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+  }
+
+  /* V10.1 — "ir para o fim" FAB, floats above the composer while reading
+     history. Same fixed geometry as the dock so they never overlap. */
+  .jump-to-end {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: max(
+      calc(12.5rem + env(safe-area-inset-bottom)),
+      calc(var(--keyboard-inset, 0px) + 8rem)
+    );
+    z-index: 66;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
+    background: var(--card, #22314f);
+    color: var(--txt, #fff);
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg, 0 8px 24px rgba(0, 0, 0, 0.4));
+    animation: jump-in var(--motion-base, 220ms) ease;
+  }
+
+  @keyframes jump-in {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   }
   .chips-bar {
     display: flex;

@@ -7,6 +7,7 @@
 -->
 <script lang="ts">
   import { t } from 'svelte-i18n';
+  import AppCard from '$lib/components/AppCard.svelte';
 </script>
 
 <svelte:head>
@@ -44,41 +45,56 @@
     </a>
   </nav>
 
+  <!-- V10.1 (tarefa C): cartões unificados AppCard — o mesmo sistema visual
+       da Home e da Escola. -->
   <ul class="vida-grid">
     <li>
-      <a href="/financas/" class="vida-card" data-sveltekit-preload-data>
-        <span class="vida-card-icon" aria-hidden="true">💰</span>
-        <span class="vida-card-title">{$t('nav.financas', { default: 'Finanças' })}</span>
-        <span class="vida-card-desc">{$t('vida.financas.desc', { default: 'Despesas, contas e orçamento mensal.' })}</span>
-      </a>
+      <AppCard
+        href="/financas/"
+        icon="💰"
+        title={$t('nav.financas', { default: 'Finanças' })}
+        desc={$t('vida.financas.desc', { default: 'Despesas, contas e orçamento mensal.' })}
+      />
     </li>
     <li>
-      <a href="/habitos/" class="vida-card" data-sveltekit-preload-data>
-        <span class="vida-card-icon" aria-hidden="true">🌱</span>
-        <span class="vida-card-title">{$t('nav.habitos', { default: 'Hábitos' })}</span>
-        <span class="vida-card-desc">{$t('vida.habitos.desc', { default: 'Tracking diário e streaks.' })}</span>
-      </a>
+      <AppCard
+        href="/habitos/"
+        icon="🌱"
+        title={$t('nav.habitos', { default: 'Hábitos' })}
+        desc={$t('vida.habitos.desc', { default: 'Tracking diário e streaks.' })}
+      />
     </li>
     <li>
-      <a href="/humor/" class="vida-card" data-sveltekit-preload-data>
-        <span class="vida-card-icon" aria-hidden="true">💗</span>
-        <span class="vida-card-title">{$t('vida.humor.title', { default: 'Humor' })}</span>
-        <span class="vida-card-desc">{$t('vida.humor.desc', { default: 'Como te sentes, dia a dia — sem julgamentos.' })}</span>
-      </a>
+      <AppCard
+        href="/humor/"
+        icon="💗"
+        title={$t('vida.humor.title', { default: 'Humor' })}
+        desc={$t('vida.humor.desc', { default: 'Como te sentes, dia a dia — sem julgamentos.' })}
+      />
     </li>
     <li>
-      <a href="/memorias/" class="vida-card" data-sveltekit-preload-data>
-        <span class="vida-card-icon" aria-hidden="true">📸</span>
-        <span class="vida-card-title">{$t('vida.memorias.title', { default: 'Memórias' })}</span>
-        <span class="vida-card-desc">{$t('vida.memorias.desc', { default: 'Momentos especiais guardados com carinho.' })}</span>
-      </a>
+      <AppCard
+        href="/memorias/"
+        icon="📸"
+        title={$t('vida.memorias.title', { default: 'Memórias' })}
+        desc={$t('vida.memorias.desc', { default: 'Momentos especiais guardados com carinho.' })}
+      />
     </li>
     <li>
-      <span class="vida-card vida-card-soon" aria-disabled="true">
-        <span class="vida-card-icon" aria-hidden="true">🚭</span>
-        <span class="vida-card-title">{$t('vida.vicios.title', { default: 'Vícios' })}</span>
-        <span class="vida-card-desc">{$t('vida.vicios.desc', { default: 'Registo de ocorrências, metas e pequenos passos para ficares no controlo.' })}</span>
-      </span>
+      <AppCard
+        href="/streaks/"
+        icon="🔥"
+        title={$t('streaks.page.short', { default: 'Streaks' })}
+        desc={$t('vida.streaks.desc', { default: 'A tua chama, XP diário e marcos.' })}
+      />
+    </li>
+    <li>
+      <AppCard
+        icon="🚭"
+        locked
+        title={$t('vida.vicios.title', { default: 'Vícios' })}
+        desc={$t('vida.vicios.desc', { default: 'Registo de ocorrências, metas e pequenos passos para ficares no controlo.' })}
+      />
     </li>
   </ul>
 </section>
@@ -226,45 +242,5 @@
       grid-template-columns: repeat(3, 1fr);
     }
   }
-  .vida-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    height: 100%;
-    padding: var(--space-4, 1rem);
-    border-radius: var(--radius-md, 0.75rem);
-    background: var(--card);
-    border: 1px solid var(--border);
-    color: inherit;
-    text-decoration: none;
-    min-height: 44px;
-    transition: background var(--motion-fast, 120ms) ease, border-color var(--motion-fast, 120ms) ease, transform var(--motion-fast, 120ms) ease;
-  }
-  .vida-card:hover,
-  .vida-card:focus-visible {
-    background: var(--card-hover, var(--card));
-    border-color: color-mix(in srgb, var(--txt) 24%, transparent);
-    outline: none;
-  }
-  .vida-card:focus-visible {
-    box-shadow: 0 0 0 2px var(--accent);
-  }
-  .vida-card:active {
-    transform: scale(0.98);
-  }
-  .vida-card-icon {
-    font-size: 1.75rem;
-  }
-  .vida-card-title {
-    font-weight: 600;
-    font-size: var(--fs-md, 1rem);
-  }
-  .vida-card-desc {
-    font-size: 0.85rem;
-    color: var(--txt2);
-  }
-  .vida-card-soon {
-    opacity: 0.55;
-    cursor: not-allowed;
-  }
+  /* V10.1 — os cartões da grelha vivem agora no AppCard partilhado. */
 </style>

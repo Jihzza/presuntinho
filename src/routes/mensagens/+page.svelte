@@ -23,6 +23,7 @@
   import { t, locale } from 'svelte-i18n';
   import { getSession } from '$lib/auth/session';
   import { showToast } from '$lib/components/events';
+  import { playSfx } from '$lib/gamification/sound';
   import { ChatApiError, getChatToken, setChatToken, otherProfile, type ChatProfile } from '$lib/chat/client';
   import { ChatStore, type LocalChatMessage } from '$lib/chat/store.svelte';
   import { profileFor } from '$lib/profile/people';
@@ -218,10 +219,12 @@
     window.visualViewport?.addEventListener('scroll', syncKeyboardInset);
     window.addEventListener('focus', syncActive);
     window.addEventListener('blur', syncActive);
+    window.addEventListener('scroll', onWindowScroll, { passive: true });
     document.addEventListener('visibilitychange', syncActive);
     return () => {
       window.visualViewport?.removeEventListener('resize', syncKeyboardInset);
       window.visualViewport?.removeEventListener('scroll', syncKeyboardInset);
+      window.removeEventListener('scroll', onWindowScroll);
       window.removeEventListener('focus', syncActive);
       window.removeEventListener('blur', syncActive);
       document.removeEventListener('visibilitychange', syncActive);
@@ -230,13 +233,34 @@
     };
   });
 
-  // Auto-scroll when the conversation grows.
+  // Auto-scroll when the conversation grows — but ONLY when the user was
+  // already near the bottom (or on the initial load). Reading old messages
+  // must never have the scroll stolen; the "ir para o fim" FAB appears
+  // instead (V10.1).
   let lastCount = 0;
+  let showJumpToEnd = $state(false);
+
+  function isNearBottom(): boolean {
+    if (typeof window === 'undefined') return true;
+    const doc = document.documentElement;
+    return doc.scrollHeight - (window.scrollY + window.innerHeight) < 180;
+  }
+
+  function onWindowScroll(): void {
+    showJumpToEnd = !isNearBottom() && (store?.messages.length ?? 0) > 0;
+  }
+
   $effect(() => {
     const count = store?.messages.length ?? 0;
     if (count !== lastCount) {
+      const initialLoad = lastCount === 0;
+      const follow = initialLoad || isNearBottom();
       lastCount = count;
-      void scrollToBottom();
+      if (follow) {
+        void scrollToBottom();
+      } else {
+        showJumpToEnd = true;
+      }
     }
   });
 
@@ -267,6 +291,7 @@
     if (!text || !store) return;
     input = '';
     if (inputEl) inputEl.style.height = 'auto';
+    playSfx('send');
     const result = await store.sendTextMessage(text);
     afterSendFeedback(result);
     void scrollToBottom();
@@ -552,6 +577,21 @@
         {/each}
       {/each}
     </div>
+
+    {#if showJumpToEnd}
+      <button
+        type="button"
+        class="jump-to-end"
+        onclick={() => {
+          showJumpToEnd = false;
+          void scrollToBottom();
+        }}
+        aria-label={$t('chat.jump_to_end', { default: 'Ir para a última mensagem' })}
+        title={$t('chat.jump_to_end', { default: 'Ir para a última mensagem' })}
+      >
+        <span aria-hidden="true">↓</span>
+      </button>
+    {/if}
 
     <div class="composer-dock" style={`--keyboard-inset: ${keyboardInset}px`}>
       {#if recording}
@@ -1073,6 +1113,38 @@
     width: min(800px, calc(100vw - 0.75rem));
     z-index: 65;
     background: transparent;
+  }
+  /* V10.1 — "ir para o fim" FAB, floats above the composer while reading
+     history. Same fixed geometry as the dock so they never overlap. */
+  .jump-to-end {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: max(
+      calc(11.5rem + env(safe-area-inset-bottom)),
+      calc(var(--keyboard-inset, 0px) + 8rem)
+    );
+    z-index: 66;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
+    background: var(--card, #22314f);
+    color: var(--txt, #fff);
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg, 0 8px 24px rgba(0, 0, 0, 0.4));
+    animation: jump-in var(--motion-base, 220ms) ease;
+  }
+  @keyframes jump-in {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   }
   .recording-hint {
     text-align: center;

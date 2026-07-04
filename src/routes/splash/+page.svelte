@@ -21,6 +21,10 @@
   // src/routes/definicoes/+page.svelte.
 
   let password = $state('');
+  // V10.1 (login sério): explicit username field. The pass-order inference
+  // stays the auth source of truth; the username personalizes the lockout
+  // bucket and must MATCH the inferred profile when filled in.
+  let username = $state('');
   let error = $state('');
   let shake = $state(false);
   let locked = $state({ locked: false, remainingMs: 0 });
@@ -144,6 +148,26 @@
     }
     selectedProfile = inferredProfile;
 
+    // V10.1 — a filled-in username that contradicts the inferred profile is
+    // rejected with a distinct copy (no hint about which profile the
+    // password belongs to). Empty username keeps the legacy flow.
+    const typedUser = username.trim().toLowerCase();
+    if (typedUser && typedUser !== 'fatma' && typedUser !== 'daniel') {
+      error = $t('splash.wrong_user', { default: 'Utilizador desconhecido — tenta "fatma" ou "daniel".' });
+      shake = true;
+      setTimeout(() => (shake = false), 500);
+      loading = false;
+      return;
+    }
+    if (typedUser && typedUser !== inferredProfile) {
+      error = $t('splash.user_mismatch', { default: 'Esse utilizador e essa palavra-passe não combinam.' });
+      password = '';
+      shake = true;
+      setTimeout(() => (shake = false), 500);
+      loading = false;
+      return;
+    }
+
         try {
           // ── PBKDF2 check FIRST ──
           // Critical ordering: if Fatma's real password happens to contain the
@@ -236,12 +260,23 @@
         {:else}
           <form onsubmit={handleSubmit}>
             <input
+              type="text"
+              bind:value={username}
+              placeholder={$t('splash.username.placeholder', { default: 'Nome de utilizador' })}
+              aria-label={$t('splash.username.label', { default: 'Nome de utilizador' })}
+              disabled={loading}
+              autocomplete="username"
+              autocapitalize="off"
+              autocorrect="off"
+              spellcheck="false"
+            />
+            <input
               type="password"
               bind:value={password}
-              placeholder={$t('splash.placeholder')}
+              placeholder={$t('splash.password.placeholder', { default: 'Palavra-passe' })}
               aria-label={$t('splash.password.label')}
               disabled={loading}
-              autocomplete="off"
+              autocomplete="current-password"
               autocapitalize="off"
               autocorrect="off"
               spellcheck="false"
@@ -253,6 +288,17 @@
           <p class="error">{error}</p>
         {/if}
       </form>
+
+      <div class="providers">
+        <span class="providers-divider" aria-hidden="true">{$t('splash.providers.or', { default: 'ou' })}</span>
+        <button type="button" class="google-btn" disabled aria-describedby="google-hint">
+          <span class="google-g" aria-hidden="true">G</span>
+          {$t('splash.google.cta', { default: 'Continuar com Google' })}
+        </button>
+        <p id="google-hint" class="google-hint">
+          {$t('splash.google.hint', { default: 'A ligação com a conta Google está a caminho — para já entra com a tua palavra-passe.' })}
+        </p>
+      </div>
     {/if}
 
     <p class="credit">{$t('splash.credit')}</p>
@@ -347,6 +393,62 @@
   .lockout {
     color: #fcd34d;
     font-size: 0.95rem;
+  }
+  /* V10.1 — provedores externos (Google preparado, ainda sem backend). */
+  .providers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-top: 1rem;
+  }
+  .providers-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .providers-divider::before,
+  .providers-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.14);
+  }
+  .google-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 44px;
+    padding: 0.6rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: not-allowed;
+    opacity: 0.62;
+  }
+  .google-g {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    color: #4285f4;
+    font-weight: 900;
+    font-size: 0.85rem;
+  }
+  .google-hint {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 0.72rem;
+    line-height: 1.4;
   }
   .credit {
     color: #94a3b8;

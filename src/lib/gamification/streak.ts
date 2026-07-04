@@ -80,6 +80,8 @@ export interface GamificationStateFields {
   streakNotifDay?: string;
   /** V10 — LOCAL 'YYYY-MM-DD' with an unclaimed daily chest ('' = none). */
   chestPendingDay?: string;
+  /** V10.1 — XP gained per LOCAL day (rolling ~30 entries, /streaks charts). */
+  xpDailyLog?: Record<string, number>;
 }
 
 export type StateRowV8 = StateRow & GamificationStateFields;

@@ -24,6 +24,9 @@
   import OnboardingModal from '$lib/components/OnboardingModal.svelte';
   import DailyQuests from '$lib/components/quests/DailyQuests.svelte';
   import MoodCheckin from '$lib/mood/MoodCheckin.svelte';
+  import AppCard from '$lib/components/AppCard.svelte';
+  import { profileFor } from '$lib/profile/people';
+  import { resumeTarget, type NextLessonTarget } from '$lib/escola/progress';
 
   import { db } from '$lib/state/db';
   import { xp, initStores } from '$lib/state/stores';
@@ -70,6 +73,9 @@
   let markingHabitId = $state<string | null>(null);
   let mascotEmoji = $state('🐷');
   let emotionTick = $state(0);
+  // V10.1 (tarefa A) — a Home é o perfil vivo da Fatma + cockpit.
+  let resume = $state<NextLessonTarget | null>(null);
+  const person = $derived(profileFor(activeProfile ?? 'fatma'));
 
   const dateLocale = $derived($locale || 'pt-PT');
   const todayKey = $derived(localDateKey(now));
@@ -229,6 +235,9 @@
     void getActiveMascot()
       .then((m) => (mascotEmoji = m.emoji))
       .catch(() => undefined);
+    void resumeTarget()
+      .then((r) => (resume = r))
+      .catch(() => (resume = null));
     const onMascotChanged = (event: Event) => {
       const detail = event instanceof CustomEvent ? (event.detail as { emoji?: string } | null) : null;
       if (detail?.emoji) mascotEmoji = detail.emoji;
@@ -294,6 +303,24 @@
 <div class="hub">
   <!-- 1 · Hero compacto mood-aware -->
   <header class="card hub-hero" class:hero-in={heroIn} class:mooded={Boolean(activeMood)}>
+    <!-- V10.1 (tarefa A): perfil vivo — avatar clicável + nome + handle. -->
+    <div class="profile-row">
+      <a
+        class="profile-avatar"
+        href="/perfil/"
+        aria-label={$t('hub.profile.open_aria', { default: 'Abrir o teu perfil' })}
+        data-sveltekit-preload-data
+      >
+        <span aria-hidden="true">{person.emoji}</span>
+      </a>
+      <div class="profile-id">
+        <strong>{$t(person.nameKey)}</strong>
+        <small>{$t(person.handleKey)}</small>
+      </div>
+      <a class="profile-link" href="/perfil/" data-sveltekit-preload-data>
+        {$t('hub.profile.view', { default: 'Ver perfil →' })}
+      </a>
+    </div>
     <span class="eyebrow">
       {activeMood ? `${moodMeta?.emoji} ${moodMeta?.label}` : $t('hub.hero.eyebrow')}
     </span>
@@ -303,7 +330,8 @@
       <p class="mood-note">{moodNote}</p>
     {/if}
     <div class="hero-chips" aria-label={$t('hub.hero.metrics.aria')}>
-      <span
+      <a
+        href="/streaks/"
         class="chip chip-streak"
         class:chip-streak-active={streak?.activeToday}
         title={streak?.activeToday
@@ -322,7 +350,7 @@
         {#if streak && streak.best > streak.current}
           <small>{$t('hub.hero.streak.best', { values: { count: streak.best }, default: 'melhor: {count}' })}</small>
         {/if}
-      </span>
+      </a>
       <span class="chip chip-level">
         <span aria-hidden="true">⭐</span>
         {$t('hub.hero.level', { values: { level }, default: 'Nível {level}' })}
@@ -361,6 +389,23 @@
   <section class="quests-section presuntinho-quest" aria-label={$t('hub.quests.aria', { default: 'Missões diárias' })}>
     <DailyQuests />
   </section>
+
+  <!-- 2a · Continua de onde paraste (V10.1, tarefa A) -->
+  {#if resume}
+    <section class="card resume-section" aria-label={$t('hub.resume.aria', { default: 'Continua de onde paraste' })}>
+      <div class="resume-copy">
+        <span class="eyebrow">{$t('hub.resume.eyebrow', { default: 'Continua de onde paraste' })}</span>
+        <strong class="resume-title">
+          <span aria-hidden="true">{resume.unitIcon}</span>
+          {resume.lessonTitle}
+        </strong>
+        <small class="resume-sub">{resume.unitTitle}</small>
+      </div>
+      <a class="resume-cta" href={resume.href} data-sveltekit-preload-data>
+        {$t('hub.resume.cta', { default: 'Continuar →' })}
+      </a>
+    </section>
+  {/if}
 
   <!-- 2b · Check-in de humor (dispensável; colapsa depois de registado) -->
   <MoodCheckin />
@@ -451,18 +496,21 @@
       <h2>{$t('hub.map.title')}</h2>
       <span class="head-note">{$t('hub.map.subtitle')}</span>
     </div>
+    <!-- V10.1 (tarefa C): a grelha de apps usa o AppCard unificado — o mesmo
+         cartão quadrado da Vida e da Escola. -->
     <div class="map-grid v10-stagger">
-      <a class="card" href="/humor/">💗 {$t('hub.map.mood', { default: 'Humor' })} <small>{$t('hub.map.mood.desc', { default: 'como te tens sentido' })}</small></a>
-      <a class="card" href="/memorias/">📸 {$t('hub.map.memories', { default: 'Memórias' })} <small>{$t('hub.map.memories.desc', { default: 'momentos guardados com carinho' })}</small></a>
-      <a class="card" href="/calendario/">🗓️ {$t('hub.map.calendar')} <small>{$t('hub.map.calendar.desc')}</small></a>
-      <a class="card" href="/notificacoes/">🔔 {$t('hub.map.notifications')} <small>{$t('hub.map.notifications.desc')}</small></a>
-      <a class="card" href="/escola/">🎓 {$t('hub.map.school')} <small>{$t('hub.map.school.desc')}</small></a>
-      <a class="card" href="/escola/trabalhos/">📝 {$t('hub.map.assignments')} <small>{$t('hub.map.assignments.desc')}</small></a>
-      <a class="card" href="/vida/">🌿 {$t('hub.map.vida', { default: 'Vida' })} <small>{$t('hub.map.vida.desc', { default: 'rotinas, energia e equilíbrio' })}</small></a>
-      <a class="card" href="/habitos/">✅ {$t('hub.map.habits', { default: 'Hábitos' })} <small>{$t('hub.map.habits.desc', { default: 'streaks e progresso diário' })}</small></a>
-      <a class="card" href="/financas/">💸 {$t('hub.map.finances', { default: 'Finanças' })} <small>{$t('hub.map.finances.desc', { default: 'transações e metas' })}</small></a>
-      <a class="card" href="/financas/orcamento/">📊 {$t('hub.map.budget')} <small>{$t('hub.map.budget.desc')}</small></a>
-      <a class="card" href="/agente/">🤖 {$t('hub.map.agent')} <small>{$t('hub.map.agent.desc')}</small></a>
+      <AppCard href="/escola/" icon="🎓" title={$t('hub.map.school')} desc={$t('hub.map.school.desc')} />
+      <AppCard href="/vida/" icon="🌿" title={$t('hub.map.vida', { default: 'Vida' })} desc={$t('hub.map.vida.desc', { default: 'rotinas, energia e equilíbrio' })} />
+      <AppCard href="/streaks/" icon="🔥" title={$t('streaks.page.short', { default: 'Streaks' })} desc={$t('vida.streaks.desc', { default: 'A tua chama, XP diário e marcos.' })} />
+      <AppCard href="/habitos/" icon="✅" title={$t('hub.map.habits', { default: 'Hábitos' })} desc={$t('hub.map.habits.desc', { default: 'streaks e progresso diário' })} />
+      <AppCard href="/financas/" icon="💸" title={$t('hub.map.finances', { default: 'Finanças' })} desc={$t('hub.map.finances.desc', { default: 'transações e metas' })} />
+      <AppCard href="/calendario/" icon="🗓️" title={$t('hub.map.calendar')} desc={$t('hub.map.calendar.desc')} />
+      <AppCard href="/agente/" icon="🤖" title={$t('hub.map.agent')} desc={$t('hub.map.agent.desc')} />
+      <AppCard href="/mensagens/" icon="💬" title={$t('nav.mensagens', { default: 'Mensagens' })} desc={$t('hub.map.messages.desc', { default: 'conversas com o Daniel' })} />
+      <AppCard href="/humor/" icon="💗" title={$t('hub.map.mood', { default: 'Humor' })} desc={$t('hub.map.mood.desc', { default: 'como te tens sentido' })} />
+      <AppCard href="/memorias/" icon="📸" title={$t('hub.map.memories', { default: 'Memórias' })} desc={$t('hub.map.memories.desc', { default: 'momentos guardados com carinho' })} />
+      <AppCard href="/mascotes/" icon="🎭" title={$t('hub.map.mascots', { default: 'Mascotes' })} desc={$t('hub.map.mascots.desc', { default: 'a tua coleção fofa' })} />
+      <AppCard href="/definicoes/" icon="⚙️" title={$t('a11y.settings', { default: 'Definições' })} desc={$t('hub.map.settings.desc', { default: 'temas, sons e conta' })} />
     </div>
   </section>
 
@@ -490,6 +538,108 @@
   }
   section {
     margin-top: var(--space-4);
+  }
+
+  /* ---- V10.1 · perfil vivo + resume ---------------------------------- */
+  .profile-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: var(--space-3);
+  }
+  .profile-avatar {
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 1.2rem;
+    font-size: 1.9rem;
+    background: color-mix(in srgb, var(--accent) 18%, var(--bg-elev));
+    border: 2px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+    text-decoration: none;
+    transition: transform var(--motion-fast, 120ms) ease;
+  }
+  .profile-avatar:hover,
+  .profile-avatar:focus-visible {
+    transform: translateY(-1px) scale(1.04);
+    outline: none;
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .profile-id {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+  .profile-id strong {
+    font-size: var(--fs-lg);
+    color: var(--txt);
+  }
+  .profile-id small {
+    color: var(--txt3);
+    font-size: var(--fs-xs);
+  }
+  .profile-link {
+    margin-inline-start: auto;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 0.5rem;
+    color: var(--accent);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .profile-link:hover,
+  .profile-link:focus-visible {
+    text-decoration: underline;
+    outline: none;
+  }
+  .resume-section {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: var(--space-4);
+    border-inline-start: 4px solid var(--accent);
+  }
+  .resume-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+    flex: 1;
+  }
+  .resume-title {
+    font-size: var(--fs-md);
+    color: var(--txt);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .resume-sub {
+    color: var(--txt3);
+    font-size: var(--fs-xs);
+  }
+  .resume-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 1rem;
+    border-radius: var(--radius-lg);
+    background: var(--accent);
+    color: var(--on-accent, #fff);
+    font-weight: 700;
+    font-size: var(--fs-sm);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: transform var(--motion-fast, 120ms) ease;
+  }
+  .resume-cta:hover,
+  .resume-cta:focus-visible {
+    transform: translateY(-1px);
+    outline: none;
   }
 
   /* ---- Hero -------------------------------------------------------- */
@@ -839,38 +989,11 @@
   .day-cell[data-tone='warning'] { border-color: color-mix(in srgb, var(--warning) 55%, var(--border)); }
   .day-cell[data-tone='busy'] { border-color: var(--border-strong, var(--border)); }
 
-  /* ---- Mapa rápido --------------------------------------------------- */
+  /* ---- Mapa rápido (cartões AppCard partilhados) --------------------- */
   .map-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-3);
-  }
-  .map-grid a {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    padding: 0.9rem;
-    min-height: 44px;
-    font-weight: 800;
-    color: var(--txt);
-    text-decoration: none;
-    border-radius: var(--radius-lg);
-    transition: transform var(--motion-fast, 120ms) ease, background var(--motion-fast, 120ms) ease, border-color var(--motion-fast, 120ms) ease;
-  }
-  .map-grid a:hover,
-  .map-grid a:focus-visible {
-    transform: translateY(-1px);
-    background: var(--card-hover);
-    border-color: var(--border-strong, var(--border));
-    outline: none;
-  }
-  .map-grid a:focus-visible {
-    box-shadow: 0 0 0 2px var(--accent);
-  }
-  .map-grid small {
-    color: var(--txt3);
-    font-weight: 500;
-    font-size: var(--fs-xs);
   }
 
   @media (min-width: 680px) {

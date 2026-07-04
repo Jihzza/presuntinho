@@ -190,6 +190,14 @@
     text-transform: uppercase;
     opacity: 0.85;
   }
+  /* Compact mode on narrow phones: flag + caret only. The 44px touch
+     target and the aria-label keep it fully usable — this frees the room
+     the "Presuntinho" logo text needs in the header. */
+  @media (max-width: 520px) {
+    .ls-code {
+      display: none;
+    }
+  }
   .ls-label {
     font-size: 0.9rem;
   }

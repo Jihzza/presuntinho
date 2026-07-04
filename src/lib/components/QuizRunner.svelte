@@ -3,6 +3,7 @@
   import { awardXP, boostedXp, XP_TABLE } from '$lib/state/xp-actions';
   import { awardBadge } from '$lib/state/stores';
   import { db } from '$lib/state/db';
+  import { playSfx, vibrate } from '$lib/gamification/sound';
   import { showToast } from '$lib/components/events';
   import { getQuizHistory, recordQuizResult, type QuizHistory } from '$lib/escola/progress';
   import { schoolQuizContextForSlug } from '$lib/escola/catalog';
@@ -66,9 +67,42 @@
     })();
   });
 
+  // ── V10.1 (tarefa H): fluxo Duolingo — UMA pergunta por ecrã ──────────
+  // Escolher uma opção é um compromisso: feedback imediato (cor + som +
+  // resposta certa quando erras) e só depois "Continuar" avança. A última
+  // pergunta encadeia no submit() existente (VictoryFlow + XP + histórico).
+  let current = $state(0);
+  let feedback = $state<'correct' | 'wrong' | null>(null);
+
+  const progressPct = $derived(
+    quiz && quiz.questions.length > 0
+      ? Math.round(((current + (feedback ? 1 : 0)) / quiz.questions.length) * 100)
+      : 0
+  );
+
   function pick(qIdx: number, optIdx: number) {
-    if (submitted) return;
+    if (submitted || feedback !== null) return;
     answers = { ...answers, [qIdx]: optIdx };
+    const item = quiz?.questions[qIdx];
+    if (!item) return;
+    if (optIdx === item.a) {
+      feedback = 'correct';
+      playSfx('correct');
+      vibrate('tap');
+    } else {
+      feedback = 'wrong';
+      playSfx('wrong');
+    }
+  }
+
+  function continueQuiz() {
+    if (!quiz || feedback === null) return;
+    feedback = null;
+    if (current < quiz.questions.length - 1) {
+      current += 1;
+    } else {
+      void submit();
+    }
   }
 
   async function submit() {
@@ -146,7 +180,13 @@
     }
   }
 
+  function resetFlow() {
+    current = 0;
+    feedback = null;
+  }
+
   function reset() {
+    resetFlow();
     answers = {};
     submitted = false;
     scoreInfo = null;
@@ -197,38 +237,97 @@
       <p class="note">{$t('quiz.pt.progress', { default: '🇵🇹 Progresso PT' })}: {Math.round((scoreInfo.correct / scoreInfo.total) * 100)}%</p>
     {/if}
 
-    {#each quiz.questions as item, qIdx (qIdx)}
-      {@const chosen = answers[qIdx]}
-      <section class="question">
-        <h3>{qIdx + 1}. {item.q}</h3>
-        <div class="opts">
-          {#each item.opts as opt, oIdx (oIdx)}
-            {@const isChosen = chosen === oIdx}
-            {@const isCorrect = submitted && oIdx === item.a}
-            {@const isWrong = submitted && isChosen && oIdx !== item.a}
-            <button
-              type="button"
-              class="opt"
-              class:chosen={isChosen}
-              class:correct={isCorrect}
-              class:wrong={isWrong}
-              disabled={submitted}
-              onclick={() => pick(qIdx, oIdx)}
-            >{opt}</button>
-          {/each}
-        </div>
-      </section>
-    {/each}
-
     {#if !submitted}
-      <button
-        class="submit"
-        disabled={Object.keys(answers).length !== quiz.questions.length}
-        onclick={submit}
-      >
-        {$t('quiz.submit', { default: 'Submeter' })}
-      </button>
-    {:else if scoreInfo}
+      <!-- V10.1 (tarefa H): fluxo Duolingo — UMA pergunta por ecrã, barra de
+           progresso e feedback imediato com som. O review de todas as
+           perguntas continua a existir depois do submit. -->
+      {@const item = quiz.questions[current]}
+      {@const chosen = answers[current]}
+      <div class="lesson-progress">
+        <span class="lesson-count" aria-live="polite">
+          {$t('quiz.progress.count', {
+            values: { current: current + 1, total: quiz.questions.length },
+            default: 'Pergunta {current} de {total}'
+          })}
+        </span>
+        <div
+          class="lesson-bar-wrap"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow={progressPct}
+          aria-label={$t('quiz.progress.aria', { default: 'Progresso do quiz' })}
+        >
+          <div class="lesson-bar" style="width: {progressPct}%"></div>
+        </div>
+      </div>
+
+      {#key current}
+        <section class="question question-single">
+          <h3>{current + 1}. {item.q}</h3>
+          <div class="opts">
+            {#each item.opts as opt, oIdx (oIdx)}
+              {@const isChosen = chosen === oIdx}
+              {@const showCorrect = feedback !== null && oIdx === item.a}
+              {@const showWrong = feedback === 'wrong' && isChosen}
+              <button
+                type="button"
+                class="opt"
+                class:chosen={isChosen && feedback === null}
+                class:correct={showCorrect}
+                class:wrong={showWrong}
+                disabled={feedback !== null}
+                onclick={() => pick(current, oIdx)}
+              >{opt}</button>
+            {/each}
+          </div>
+          {#if feedback === 'correct'}
+            <p class="feedback feedback-correct" role="status">
+              {$t('quiz.feedback.correct', { default: 'Certo! 🎉' })}
+            </p>
+          {:else if feedback === 'wrong'}
+            <p class="feedback feedback-wrong" role="status">
+              {$t('quiz.feedback.wrong', {
+                values: { answer: item.opts[item.a] },
+                default: 'Quase! A resposta certa era: {answer}'
+              })}
+            </p>
+          {/if}
+        </section>
+      {/key}
+
+      {#if feedback !== null}
+        <button class="submit continue-btn" onclick={continueQuiz}>
+          {current < quiz.questions.length - 1
+            ? $t('quiz.cta.continue', { default: 'Continuar →' })
+            : $t('quiz.cta.finish', { default: 'Ver resultado 🏁' })}
+        </button>
+      {/if}
+    {:else}
+      <!-- Revisão pós-submissão: todas as perguntas com a correção visível. -->
+      {#each quiz.questions as item, qIdx (qIdx)}
+        {@const chosen = answers[qIdx]}
+        <section class="question">
+          <h3>{qIdx + 1}. {item.q}</h3>
+          <div class="opts">
+            {#each item.opts as opt, oIdx (oIdx)}
+              {@const isChosen = chosen === oIdx}
+              {@const isCorrect = oIdx === item.a}
+              {@const isWrong = isChosen && oIdx !== item.a}
+              <button
+                type="button"
+                class="opt"
+                class:correct={isCorrect}
+                class:wrong={isWrong}
+                disabled
+              >{opt}</button>
+            {/each}
+          </div>
+        </section>
+      {/each}
+    {/if}
+
+    {#if submitted && scoreInfo}
       <section class="results card" aria-live="polite">
         <p class="result-line">
           <strong class="result-score">{scoreInfo.perfect ? '🏆' : '🎯'} {scoreInfo.correct}/{scoreInfo.total} ({scoreInfo.score}%)</strong>
@@ -355,6 +454,68 @@
   .opt.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--success, #10b981); }
   .opt.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--error, #ef4444); }
   .opt:disabled { cursor: default; }
+
+  /* V10.1 — fluxo one-question-at-a-time */
+  .lesson-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin: 0.75rem 0 0;
+  }
+  .lesson-count {
+    font-size: var(--fs-xs, 0.78rem);
+    color: var(--txt3, #94a3b8);
+    font-variant-numeric: tabular-nums;
+  }
+  .lesson-bar-wrap {
+    width: 100%;
+    height: 10px;
+    background: var(--bg-elev, rgba(255, 255, 255, 0.08));
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .lesson-bar {
+    height: 100%;
+    background: var(--success, #10b981);
+    border-radius: 999px;
+    transition: width var(--motion-base, 220ms) ease;
+  }
+  .question-single {
+    animation: question-in var(--motion-base, 220ms) ease;
+  }
+  .question-single .opt {
+    min-height: 54px;
+    font-size: var(--fs-md, 1rem);
+  }
+  .feedback {
+    margin: 0.75rem 0 0;
+    padding: 0.6rem 0.8rem;
+    border-radius: var(--radius-md, 0.5rem);
+    font-size: var(--fs-sm, 0.9rem);
+    font-weight: 600;
+  }
+  .feedback-correct {
+    background: rgba(16, 185, 129, 0.18);
+    color: var(--success, #10b981);
+  }
+  .feedback-wrong {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--error, #ef4444);
+  }
+  .continue-btn {
+    width: 100%;
+    font-size: var(--fs-md, 1rem);
+  }
+  @keyframes question-in {
+    from {
+      opacity: 0;
+      transform: translateX(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
   .submit {
     margin-top: 1rem;
     padding: 0.75rem 1.5rem;
