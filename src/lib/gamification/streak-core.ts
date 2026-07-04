@@ -122,11 +122,20 @@ export interface FreezeEarnResult {
 	lastEarnMilestone: number;
 }
 
-/** Earn one token when the streak crosses a new multiple of 7 (max 2 held). */
+/**
+ * Earn one token when the streak crosses a new multiple of 7 (max 2 held).
+ *
+ * A stored marker HIGHER than the current streak can only mean the marker
+ * belongs to a previous (broken) streak — within an unbroken chain `current`
+ * never drops below a milestone it already crossed. In that case the marker
+ * resets so a rebuilt streak earns again at day 7 instead of stalling until
+ * it surpasses its all-time record.
+ */
 export function earnFreezeIfDue(input: FreezeEarnInput): FreezeEarnResult {
 	const milestone =
 		Math.floor(Math.max(0, input.current) / FREEZE_EARN_INTERVAL) * FREEZE_EARN_INTERVAL;
-	const last = Math.max(0, input.lastEarnMilestone);
+	const stored = Math.max(0, input.lastEarnMilestone);
+	const last = stored > Math.max(0, input.current) ? 0 : stored;
 	const have = Math.max(0, Math.min(MAX_FREEZES, input.freezesAvailable));
 	if (milestone >= FREEZE_EARN_INTERVAL && milestone > last) {
 		if (have < MAX_FREEZES) {

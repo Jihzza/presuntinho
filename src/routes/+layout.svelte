@@ -19,6 +19,7 @@
   import MoodLayer from '$lib/components/MoodLayer.svelte';
   import GamificationLayer from '$lib/components/GamificationLayer.svelte';
   import StreakFlame from '$lib/components/StreakFlame.svelte';
+  import { resetSoundPrefsCache } from '$lib/gamification/sound';
   import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, MOOD_META, type ActiveMood } from '$lib/mood';
 
   import { showToast } from '$lib/components/events';
@@ -261,6 +262,7 @@
 
   function logout() {
     clearSession();
+    resetSoundPrefsCache();
     session = null;
     goto('/splash/');
   }
@@ -503,6 +505,19 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+  }
+  /* V10: the StreakFlame chip tightened the header — below 520px the pig
+     emoji stays as the brand mark (Home lives in the bottom nav anyway). */
+  @media (max-width: 520px) {
+    .logo-text {
+      display: none;
+    }
+    .nav-inner {
+      gap: 0.5rem;
+    }
+    .nav-actions {
+      gap: 0.375rem;
+    }
   }
   .icon-btn {
     display: inline-flex;

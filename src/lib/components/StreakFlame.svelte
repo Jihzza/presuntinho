@@ -137,9 +137,7 @@
 			</p>
 			<WeekCircles {week} />
 			<div class="panel-meta">
-				<span class="meta-chip" title={$t('streak.popover.freezes.hint', {
-						default: 'Um congelamento protege a streak num dia falhado. Ganhas 1 a cada 7 dias.'
-					})}>
+				<span class="meta-chip">
 					<span aria-hidden="true">❄️</span>
 					{$t('streak.popover.freezes', {
 						values: { count: streak?.freezes ?? 0 },
@@ -154,6 +152,11 @@
 					})}
 				</span>
 			</div>
+			<p class="panel-hint">
+				{$t('streak.popover.freezes.hint', {
+					default: 'Um congelamento protege a streak num dia falhado. Ganhas 1 a cada 7 dias.'
+				})}
+			</p>
 		</div>
 	{/if}
 </div>
@@ -207,7 +210,8 @@
 	.flame-panel {
 		position: absolute;
 		top: calc(100% + 8px);
-		right: 0;
+		/* Logical property so the panel anchors correctly under RTL (ar). */
+		inset-inline-end: 0;
 		z-index: 80;
 		width: min(290px, calc(100vw - 2rem));
 		padding: var(--space-3, 0.75rem);
@@ -255,6 +259,13 @@
 		border-radius: 999px;
 	}
 
+	.panel-hint {
+		margin: 0;
+		font-size: var(--fs-xs, 0.78rem);
+		color: var(--txt3, #94a3b8);
+		line-height: 1.4;
+	}
+
 	@keyframes flame-ignite {
 		0% {
 			transform: scale(1);
@@ -288,6 +299,17 @@
 
 		.flame-btn {
 			padding: 0 0.4rem;
+		}
+	}
+
+	/* Narrow screens (both LTR and RTL): pin the panel to the viewport so it
+	   can never clip off-screen when the header row is tight. */
+	@media (max-width: 520px) {
+		.flame-panel {
+			position: fixed;
+			top: 4.2rem;
+			inset-inline: 1rem;
+			width: auto;
 		}
 	}
 </style>

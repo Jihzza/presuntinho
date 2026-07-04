@@ -1302,6 +1302,10 @@
       transform: translateX(20px);
       background: var(--on-accent, #fff);
     }
+    /* RTL: mirror the thumb travel so it stays inside the track. */
+    :global([dir='rtl']) .switch-track.on .switch-thumb {
+      transform: translateX(-20px);
+    }
     .theme-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));

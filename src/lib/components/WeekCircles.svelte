@@ -19,6 +19,13 @@
 			new Date(y, m - 1, d)
 		);
 	}
+
+	function dayTitle(dateKey: string): string {
+		const [y, m, d] = dateKey.split('-').map(Number);
+		return new Intl.DateTimeFormat(dayLocale, { dateStyle: 'medium' }).format(
+			new Date(y, m - 1, d)
+		);
+	}
 </script>
 
 <div
@@ -33,7 +40,7 @@
 			class:active={day.active}
 			class:frozen={day.frozen && !day.active}
 			class:today={day.isToday}
-			title={day.date}
+			title={dayTitle(day.date)}
 		>
 			{#if day.active}
 				<span class="mark" aria-hidden="true">✓</span>

@@ -9,7 +9,7 @@
 	// Modals queue so a level-up and a milestone never overlap.
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
-	import { xp } from '$lib/state/stores';
+	import { xp, initStores } from '$lib/state/stores';
 	import { XP_CHANGED_EVENT } from '$lib/state/xp-actions';
 	import { level } from '$lib/gamification/levels';
 	import {
@@ -37,8 +37,18 @@
 	let active = $state<Celebration | null>(null);
 	let mascotEmoji = $state('🐷');
 
-	let knownLevel = 0;
+	let hydrated = false;
 	let processing = false;
+	let advanceTimer: ReturnType<typeof setTimeout> | null = null;
+
+	// Sources that play their own celebration SFX — the generic chime/haptic
+	// would stack on top of them (level-up/streak detection still runs).
+	const SELF_CELEBRATED = new Set([
+		'quest_daily_complete',
+		'quest_all_daily',
+		'quiz_perfect_score',
+		'lesson_complete'
+	]);
 
 	function enqueue(c: Celebration): void {
 		queue = [...queue, c];
@@ -46,31 +56,52 @@
 	}
 
 	function advance(): void {
+		// Never fight a QuizVictory overlay for the screen/focus — defer the
+		// celebration until it closes so the parade order stays sensible.
+		if (typeof document !== 'undefined' && document.querySelector('.victory-overlay')) {
+			active = null;
+			if (advanceTimer) clearTimeout(advanceTimer);
+			advanceTimer = setTimeout(() => {
+				advanceTimer = null;
+				if (!active && queue.length > 0) advance();
+			}, 700);
+			return;
+		}
 		active = queue[0] ?? null;
 		queue = queue.slice(1);
 	}
 
 	async function onXpChanged(e: Event): Promise<void> {
-		const detail = (e as CustomEvent<{ delta?: number; amount?: number; total?: number }>).detail;
+		const detail = (
+			e as CustomEvent<{ delta?: number; amount?: number; total?: number; reason?: string; source?: string }>
+		).detail;
 		const delta = detail?.delta ?? detail?.amount ?? 0;
 		const total = typeof detail?.total === 'number' ? detail.total : get(xp);
+		const reason = detail?.reason ?? detail?.source ?? '';
 
 		if (delta > 0) {
 			registerComboHit();
-			playSfx('correct');
-			vibrate('tap');
 			recordActionPulse();
+			if (!SELF_CELEBRATED.has(reason)) {
+				playSfx('correct');
+				vibrate('tap');
+			}
 		} else if (delta < 0) {
 			playSfx('wrong');
 		}
 
-		// Level-up detection (curve lives in levels.ts).
-		const newLevel = level(total);
-		if (knownLevel > 0 && newLevel > knownLevel) {
-			enqueue({ kind: 'levelup', level: newLevel, xpTotal: total });
-			dispatchGamificationEvent(LEVEL_UP_EVENT, { level: newLevel });
+		// Level-up detection — the baseline comes from the EVENT itself
+		// (total is captured after the award, so total - delta is the
+		// pre-award XP). No mount-time store race, no hydration guard needed;
+		// `hydrated` only blocks the window between mount and initStores().
+		if (hydrated && delta > 0) {
+			const prevLevel = level(total - delta);
+			const newLevel = level(total);
+			if (newLevel > prevLevel) {
+				enqueue({ kind: 'levelup', level: newLevel, xpTotal: total });
+				dispatchGamificationEvent(LEVEL_UP_EVENT, { level: newLevel });
+			}
 		}
-		knownLevel = Math.max(knownLevel, newLevel);
 
 		// Streak side-effects — guarded so a Dexie hiccup never breaks UX.
 		if (processing || delta <= 0) return;
@@ -94,11 +125,12 @@
 	}
 
 	onMount(() => {
-		void initSoundPrefs();
-		knownLevel = level(get(xp));
-		const unsubXp = xp.subscribe((v) => {
-			// Keeps the baseline honest after initStores() hydration.
-			if (knownLevel === 0) knownLevel = level(v);
+		// Sound prefs + celebrations only after the session profile's stores
+		// are hydrated (initStores is idempotent) — avoids reading the wrong
+		// profile's DB and false level-ups from pre-hydration XP values.
+		void initStores().then(() => {
+			hydrated = true;
+			void initSoundPrefs();
 		});
 		void getActiveMascot()
 			.then((m) => (mascotEmoji = m.emoji))
@@ -107,7 +139,7 @@
 		window.addEventListener(XP_CHANGED_EVENT, handler);
 		return () => {
 			window.removeEventListener(XP_CHANGED_EVENT, handler);
-			unsubXp();
+			if (advanceTimer) clearTimeout(advanceTimer);
 		};
 	});
 </script>

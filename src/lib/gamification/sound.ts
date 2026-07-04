@@ -52,6 +52,15 @@ function defaultPrefs(): SoundPrefs {
 	return { sound: !prefersReducedMotion(), haptics: true };
 }
 
+/**
+ * Drop the cached prefs so the next read re-hydrates from Dexie. Called on
+ * logout — the next login may be a different profile with its own DB.
+ */
+export function resetSoundPrefsCache(): void {
+	prefs = null;
+	hydrating = null;
+}
+
 /** Load persisted prefs into the module cache (idempotent, SSR-safe). */
 export async function initSoundPrefs(): Promise<SoundPrefs> {
 	if (prefs) return prefs;

@@ -65,7 +65,9 @@
 	.levelup-overlay {
 		position: fixed;
 		inset: 0;
-		z-index: 9000;
+		/* Below QuizVictory (9000) — GamificationLayer also defers while a
+		   victory overlay is open, this is belt-and-braces. */
+		z-index: 8900;
 		display: flex;
 		align-items: center;
 		justify-content: center;

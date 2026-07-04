@@ -127,6 +127,25 @@ describe('earnFreezeIfDue', () => {
 			earnFreezeIfDue({ current: 6, lastEarnMilestone: 0, freezesAvailable: 0 }).earned
 		).toBe(false);
 	});
+
+	it('resets the marker after a break: rebuilt streak earns again at day 7', () => {
+		// Old streak reached 14 (marker 14), broke, rebuilt to 7.
+		const r = earnFreezeIfDue({ current: 7, lastEarnMilestone: 14, freezesAvailable: 0 });
+		expect(r).toEqual({ earned: true, freezes: 1, lastEarnMilestone: 7 });
+	});
+
+	it('reset does not fire early on a rebuilt streak below 7', () => {
+		const r = earnFreezeIfDue({ current: 3, lastEarnMilestone: 14, freezesAvailable: 1 });
+		expect(r.earned).toBe(false);
+		expect(r.freezes).toBe(1);
+	});
+
+	it('still blocks retro-pay within a live streak', () => {
+		// Marker 7 with current 8 — same streak, nothing new due.
+		expect(
+			earnFreezeIfDue({ current: 8, lastEarnMilestone: 7, freezesAvailable: 1 }).earned
+		).toBe(false);
+	});
 });
 
 describe('nextMilestoneToCelebrate', () => {

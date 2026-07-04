@@ -26,10 +26,12 @@
 import type { UpdateSpec } from 'dexie';
 import { db } from '$lib/state/db';
 import type { StateRow } from '$lib/state/db';
+import { initStores } from '$lib/state/stores';
 import {
   earnFreezeIfDue,
   nextMilestoneToCelebrate,
   walkStreak,
+  FREEZE_EARN_INTERVAL,
   MAX_FREEZES,
   STREAK_MILESTONES
 } from './streak-core';
@@ -179,6 +181,12 @@ export interface ActivityStreak {
   earnedFreeze: boolean;
 }
 
+// Single-flight: concurrent callers in one wave (GamificationLayer,
+// StreakFlame, hub, QuizVictory all react to the same xp-changed event)
+// share one computation, so token consumption/earning happens exactly once
+// per wave and every caller sees the same usedFreeze/earnedFreeze flags.
+let _inflightStreak: Promise<ActivityStreak> | null = null;
+
 /**
  * Compute the global activity streak and persist the best-ever value.
  *
@@ -189,15 +197,30 @@ export interface ActivityStreak {
  *     day keeps the chain but doesn't increment the count).
  *   * One token is earned per 7 consecutive days, capped at 2 held.
  */
-export async function getActivityStreak(): Promise<ActivityStreak> {
+export function getActivityStreak(): Promise<ActivityStreak> {
+  if (!_inflightStreak) {
+    _inflightStreak = computeActivityStreak().finally(() => {
+      _inflightStreak = null;
+    });
+  }
+  return _inflightStreak;
+}
+
+async function computeActivityStreak(): Promise<ActivityStreak> {
+  // Idempotent — resolves only after the session profile is set and stores
+  // are hydrated, so every read/write below hits the RIGHT profile's DB.
+  await initStores();
+
   const today = new Date();
   const todayKey = localDateKey(today);
   const days = await getActiveDaySet();
 
+  let rowReadOk = true;
   let row: StateRowV8 | undefined;
   try {
     row = await readStateV8();
   } catch {
+    rowReadOk = false;
     row = undefined;
   }
 
@@ -212,6 +235,30 @@ export async function getActivityStreak(): Promise<ActivityStreak> {
     lookbackDays: LOOKBACK_DAYS
   });
 
+  // First V10 computation over pre-existing history: baseline the markers
+  // from the CURRENT walk so seeded/legacy activity can't retro-fire a
+  // "365 dias!" celebration or a burst of freeze grants right after upgrade.
+  const firstV10Run =
+    rowReadOk &&
+    row !== undefined &&
+    row.streakFreezeLastEarn === undefined &&
+    row.streakMilestoneCelebrated === undefined;
+  if (firstV10Run && row) {
+    const baselineEarn =
+      Math.floor(walk.current / FREEZE_EARN_INTERVAL) * FREEZE_EARN_INTERVAL;
+    const baselineMilestone =
+      STREAK_MILESTONES.filter((m) => m <= walk.current).at(-1) ?? 0;
+    try {
+      await updateStateV8({
+        streakFreezeLastEarn: baselineEarn,
+        streakMilestoneCelebrated: baselineMilestone
+      });
+      row = { ...row, streakFreezeLastEarn: baselineEarn, streakMilestoneCelebrated: baselineMilestone };
+    } catch (err) {
+      console.warn('[gamification] V10 baseline write failed (non-fatal):', err);
+    }
+  }
+
   const earn = earnFreezeIfDue({
     current: walk.current,
     lastEarnMilestone: typeof row?.streakFreezeLastEarn === 'number' ? row.streakFreezeLastEarn : 0,
@@ -219,7 +266,9 @@ export async function getActivityStreak(): Promise<ActivityStreak> {
   });
 
   // Persist best-ever + token bookkeeping. Non-fatal on failure — a stats
-  // write must never break the read path.
+  // write must never break the read path. When the state-row READ failed we
+  // also skip the write entirely: persisting values derived from defaults
+  // would wipe streakBest and the freeze bookkeeping.
   let best = walk.current;
   try {
     const storedBest = typeof row?.streakBest === 'number' ? row.streakBest : 0;
@@ -235,7 +284,7 @@ export async function getActivityStreak(): Promise<ActivityStreak> {
       earn.freezes !== freezesAvailable ||
       earn.lastEarnMilestone !== (row?.streakFreezeLastEarn ?? 0);
 
-    if (dirty) {
+    if (dirty && rowReadOk) {
       await updateStateV8({
         streakBest: best,
         streakLastDay: todayKey,
@@ -269,6 +318,7 @@ export async function getActivityStreak(): Promise<ActivityStreak> {
  */
 export async function claimFlameIgnition(): Promise<boolean> {
   try {
+    await initStores();
     const todayKey = localDateKey(new Date());
     const row = await readStateV8();
     if (row?.streakFlameDay === todayKey) return false;
@@ -290,11 +340,19 @@ export async function claimFlameIgnition(): Promise<boolean> {
 export async function claimStreakMilestone(streak: ActivityStreak): Promise<number | null> {
   if (!streak.activeToday) return null;
   try {
+    await initStores();
     const row = await readStateV8();
-    const celebrated =
+    const stored =
       typeof row?.streakMilestoneCelebrated === 'number' ? row.streakMilestoneCelebrated : 0;
+    // A marker above the current streak belongs to a PREVIOUS streak (within
+    // a live chain the marker never exceeds `current`) — reset it so a
+    // rebuilt streak celebrates its milestones again.
+    const celebrated = stored > streak.current ? 0 : stored;
     const due = nextMilestoneToCelebrate(streak.current, celebrated);
-    if (due === null) return null;
+    if (due === null) {
+      if (celebrated !== stored) await updateStateV8({ streakMilestoneCelebrated: celebrated });
+      return null;
+    }
     await updateStateV8({ streakMilestoneCelebrated: due });
     return due;
   } catch {
@@ -317,6 +375,7 @@ export interface WeekDayActivity {
  * mini-calendar in victory flows and the flame popover.
  */
 export async function getWeekActivity(): Promise<WeekDayActivity[]> {
+  await initStores();
   const today = new Date();
   const todayKey = localDateKey(today);
   const [days, row] = await Promise.all([getActiveDaySet(), readStateV8().catch(() => undefined)]);
