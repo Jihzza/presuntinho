@@ -1,8 +1,11 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { page } from '$app/state';
   import { t } from 'svelte-i18n';
   import { getSession } from '$lib/auth/session';
   import { otherPerson, profileFor, type PersonProfile } from '$lib/profile/people';
+  import { xp, initStores } from '$lib/state/stores';
+  import { progressToNext } from '$lib/gamification/levels';
   import type { ChatProfile } from '$lib/chat/client';
 
   const id = $derived((page.params.id === 'daniel' ? 'daniel' : 'fatma') as ChatProfile);
@@ -10,6 +13,16 @@
   const person = $derived<PersonProfile>(profileFor(id));
   const partner = $derived<PersonProfile>(otherPerson(id));
   const isOwn = $derived(session?.profile === id);
+
+  // V10 — level stat (own profile only; XP is per-profile local data).
+  let currentXp = $state(0);
+  const levelInfo = $derived(progressToNext(currentXp));
+
+  onMount(() => {
+    const unsub = xp.subscribe((v) => (currentXp = v));
+    void initStores();
+    return unsub;
+  });
 </script>
 
 <svelte:head>
@@ -40,6 +53,12 @@
       </div>
     </div>
     <div class="stats" aria-label={$t('profile.stats.label')}>
+      {#if isOwn}
+        <div>
+          <strong>{levelInfo.level}</strong>
+          <span>{$t('profile.stats.level', { default: 'Nível' })}</span>
+        </div>
+      {/if}
       <div><strong>{$t('profile.stats.private.value')}</strong><span>{$t('profile.stats.messages')}</span></div>
       <div><strong>{$t('profile.stats.memories.value')}</strong><span>{$t('profile.stats.memories')}</span></div>
       <div><strong>{person.shortcuts.length}</strong><span>{$t('profile.stats.shortcuts')}</span></div>

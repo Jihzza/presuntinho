@@ -24,6 +24,7 @@
   import { onMount } from 'svelte';
   import { get } from 'svelte/store';
   import { xp, initStores } from '$lib/state/stores';
+  import { level as levelOf } from '$lib/gamification/levels';
   import { locale, t } from 'svelte-i18n';
 
   type Visibility = 'always' | 'onChange';
@@ -49,6 +50,10 @@
   let numberLocale = $derived($locale || 'pt-PT');
   let label = $derived(new Intl.NumberFormat(numberLocale).format(currentXp) + ' XP');
   let deltaLabel = $derived(delta === null ? '' : `${delta > 0 ? '+' : ''}${delta} XP`);
+  // V10 — current level (exponential curve from levels.ts).
+  let levelLabel = $derived(
+    $t('xp.pill.level', { values: { level: levelOf(currentXp) }, default: 'Nv {level}' })
+  );
 
   function prefersReducedMotion(): boolean {
     if (typeof window === 'undefined') return false;
@@ -163,6 +168,7 @@
   )}
 >
   <span class="dot" aria-hidden="true"></span>
+  <span class="level-tag">{levelLabel}</span>
   <span class="label">{label}</span>
   {#if delta !== null}
     <span class="delta" class:delta--positive={delta > 0} class:delta--negative={delta < 0}>
@@ -193,6 +199,14 @@
       box-shadow 0.2s ease,
       background 0.2s ease;
     user-select: none;
+  }
+  .level-tag {
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent, #ec4899) 35%, transparent);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
   }
   /* Hidden base — translateY lifts it slightly so the IN animation has motion */
   .xp-pill--hidden {

@@ -23,6 +23,7 @@
     type DailyQuest
   } from '$lib/gamification/quests';
   import { fireConfettiEvent, showToast } from '$lib/components/events';
+  import { playSfx, vibrate } from '$lib/gamification/sound';
   import { XP_CHANGED_EVENT } from '$lib/state/xp-actions';
 
   const MOOD_CHANGED_EVENT = 'presuntinho:mood-changed';
@@ -55,8 +56,15 @@
       const res = await getDailyQuests();
       quests = res.quests;
       allDone = res.allDone;
+      // V10 — a freshly completed quest earns its "ding" (the 3/3 bonus
+      // below has its own bigger celebration, so skip the small one then).
+      if (res.newlyCompleted.length > 0 && !res.allJustCompleted) {
+        playSfx('ding');
+      }
       if (res.allJustCompleted) {
         fireConfettiEvent({ count: 80, origin: 'center' });
+        playSfx('fanfare');
+        vibrate('success');
         showToast(
           $t('components.quests.toast_all', {
             default: '🏆 Missões diárias completas! +20 XP'

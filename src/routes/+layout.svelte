@@ -17,6 +17,8 @@
   import XpToast from '$lib/components/XpToast.svelte';
   import InstallButton from '$lib/components/InstallButton.svelte';
   import MoodLayer from '$lib/components/MoodLayer.svelte';
+  import GamificationLayer from '$lib/components/GamificationLayer.svelte';
+  import StreakFlame from '$lib/components/StreakFlame.svelte';
   import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, MOOD_META, type ActiveMood } from '$lib/mood';
 
   import { showToast } from '$lib/components/events';
@@ -272,6 +274,7 @@
   <Confetti />
   <Toast />
   <XpToast />
+  <GamificationLayer />
   <SecretModal bind:open={secretRoomOpen} />
   <!-- Phase 15: offline status banner (listens to online/offline events). -->
   <OfflineIndicator />
@@ -303,6 +306,7 @@
                   <a href="/" class="logo-text" aria-label={$t('a11y.logo.brand', { default: 'Presuntinho — voltar ao hub' })}>Presuntinho</a>
                 </div>
                 <div class="nav-actions">
+                  <StreakFlame />
                   <LanguageSwitcher />
                   <a href="/definicoes" class="icon-btn" aria-label={$t('a11y.settings', { default: 'Definições' })} title={$t('a11y.settings', { default: 'Definições' })}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

@@ -26,7 +26,11 @@
   import { xp, initStores } from '$lib/state/stores';
   import { XP_CHANGED_EVENT, awardXP } from '$lib/state/xp-actions';
   import { getSession } from '$lib/auth/session';
-  import { getActivityStreak } from '$lib/gamification/streak';
+  import { getActivityStreak, type ActivityStreak } from '$lib/gamification/streak';
+  import { progressToNext } from '$lib/gamification/levels';
+  import { hoursUntilMidnight, mascotEmotion, type MascotEmotion } from '$lib/gamification/emotion';
+  import { minutesSinceLastAction, ACTION_PULSE_EVENT } from '$lib/gamification/gamification-events';
+  import { getActiveMascot, MASCOT_CHANGED_EVENT } from '$lib/gamification/mascots';
   import { setHabitLog } from '$lib/habitos';
   import { showToast } from '$lib/components/events';
   import { isMoodIntroAcknowledged, moodAffirmation, moodMicrocopy, readActiveMood, MOOD_META, type ActiveMood } from '$lib/mood';
@@ -48,8 +52,6 @@
     unlockedAt?: number;
   }
 
-  const XP_PER_LEVEL = 100;
-
   let currentXp = $state(0);
   let activeProfile = $state<'fatma' | 'daniel' | null>(null);
   let badgesMap = $state<Record<string, BadgeStatus>>({});
@@ -60,16 +62,40 @@
   let notifState = $state<NotifState>({ snoozed: new Set(), read: new Set() });
   let activeMood = $state<ActiveMood | null>(null);
   let charmSeed = $state(Date.now());
-  let streak = $state<{ current: number; best: number; activeToday: boolean } | null>(null);
+  let streak = $state<ActivityStreak | null>(null);
   let now = $state(new Date());
   let markingHabitId = $state<string | null>(null);
+  let mascotEmoji = $state('🐷');
+  let emotionTick = $state(0);
 
   const dateLocale = $derived($locale || 'pt-PT');
   const todayKey = $derived(localDateKey(now));
   const weekPreviewDays = $derived(weekDays(now));
 
   const xpLabel = $derived(new Intl.NumberFormat(dateLocale).format(currentXp) + ' XP');
-  const level = $derived(Math.max(1, Math.floor(currentXp / XP_PER_LEVEL) + 1));
+  const levelInfo = $derived(progressToNext(currentXp));
+  const level = $derived(levelInfo.level);
+  const emotion = $derived.by<MascotEmotion>(() => {
+    void emotionTick; // re-evaluates on action pulses + the minute timer
+    if (!streak) return 'neutral';
+    return mascotEmotion({
+      streakCurrent: streak.current,
+      streakBest: streak.best,
+      activeToday: streak.activeToday,
+      hoursUntilMidnight: hoursUntilMidnight(now),
+      minutesSinceLastAction: minutesSinceLastAction()
+    });
+  });
+  const EMOTION_FALLBACKS: Record<MascotEmotion, string> = {
+    happy: 'Hoje já contou — orgulho em ti! 🎀',
+    neutral: 'Pronta para a primeira vitória do dia?',
+    worried: 'A chama apaga-se à meia-noite… uma coisinha rápida chega!',
+    sad: 'A streak partiu-se, mas hoje é um ótimo dia para recomeçar.',
+    euphoric: 'UAU! Estás imparável!'
+  };
+  const mascotLine = $derived(
+    $t(`mascots.emotion.${emotion}`, { default: EMOTION_FALLBACKS[emotion] })
+  );
   const unlockedBadges = $derived(Object.values(badgesMap).filter((b) => b.unlocked).length);
   const todaysItems = $derived(agendaItems.filter((item) => item.date === todayKey));
   const todaysPending = $derived(todaysItems.filter((item) => item.status !== 'done'));
@@ -189,6 +215,24 @@
       activeMood = mood && isMoodIntroAcknowledged(mood) ? mood : null;
     })();
 
+    void getActiveMascot()
+      .then((m) => (mascotEmoji = m.emoji))
+      .catch(() => undefined);
+    const onMascotChanged = (event: Event) => {
+      const detail = event instanceof CustomEvent ? (event.detail as { emoji?: string } | null) : null;
+      if (detail?.emoji) mascotEmoji = detail.emoji;
+    };
+    window.addEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
+
+    // Mascot emotion: re-evaluate on action pulses and once a minute
+    // (the "worried evening" window depends on the clock).
+    const onActionPulse = () => (emotionTick += 1);
+    window.addEventListener(ACTION_PULSE_EVENT, onActionPulse);
+    const emotionTimer = setInterval(() => {
+      now = new Date();
+      emotionTick += 1;
+    }, 60_000);
+
     try {
       showOnboarding = localStorage.getItem('fat-onboarded') === null;
     } catch {
@@ -220,6 +264,9 @@
     return () => {
       window.removeEventListener(XP_CHANGED_EVENT, onXpEvent);
       window.removeEventListener(NOTIF_CHANGED_EVENT, onNotifChanged);
+      window.removeEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
+      window.removeEventListener(ACTION_PULSE_EVENT, onActionPulse);
+      clearInterval(emotionTimer);
       document.removeEventListener('visibilitychange', onVis);
       unsubXp();
       unsubLocale();
@@ -254,6 +301,13 @@
       >
         <span aria-hidden="true">🔥</span>
         {$t('hub.hero.streak.days', { values: { count: streak?.current ?? 0 }, default: '{count} dias' })}
+        {#if streak && streak.freezes > 0}
+          <small
+            class="freeze-mini"
+            title={$t('streak.popover.freezes.hint', {
+              default: 'Um congelamento protege a streak num dia falhado. Ganhas 1 a cada 7 dias.'
+            })}>❄️×{streak.freezes}</small>
+        {/if}
         {#if streak && streak.best > streak.current}
           <small>{$t('hub.hero.streak.best', { values: { count: streak.best }, default: 'melhor: {count}' })}</small>
         {/if}
@@ -268,6 +322,28 @@
         {$t('hub.hero.alerts', { values: { count: alertCount }, default: '{count} alertas' })}
       </a>
     </div>
+    <div class="level-progress">
+      <div
+        class="level-bar-wrap"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow={levelInfo.pct}
+        aria-label={$t('hub.hero.level.progress.aria', { default: 'Progresso para o próximo nível' })}
+      >
+        <div class="level-bar" style="width: {levelInfo.pct}%"></div>
+      </div>
+      <small class="level-progress-label">
+        {$t('hub.hero.level.progress', {
+          values: { current: levelInfo.current, needed: levelInfo.needed, next: level + 1 },
+          default: '{current}/{needed} XP até ao nível {next}'
+        })}
+      </small>
+    </div>
+    <p class="mascot-line" aria-live="polite">
+      <span class="mascot-line-emoji" class:pulse={emotion === 'euphoric'} aria-hidden="true">{mascotEmoji}</span>
+      {mascotLine}
+    </p>
   </header>
 
   <!-- 2 · Missões diárias -->
@@ -477,6 +553,54 @@
   .chip-streak-active {
     border-color: color-mix(in srgb, var(--warning) 55%, var(--border));
     background: color-mix(in srgb, var(--warning) 12%, var(--bg-elev));
+  }
+  .freeze-mini {
+    color: #93c5fd;
+  }
+  .level-progress {
+    margin-top: var(--space-2);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .level-bar-wrap {
+    width: 100%;
+    height: 8px;
+    background: var(--bg-elev);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .level-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #f9a8d4));
+    border-radius: 999px;
+    transition: width var(--motion-base, 220ms) ease;
+  }
+  .level-progress-label {
+    color: var(--txt3);
+    font-size: var(--fs-xs);
+    font-variant-numeric: tabular-nums;
+  }
+  .mascot-line {
+    margin: var(--space-2) 0 0;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--txt2);
+    font-size: var(--fs-sm);
+    line-height: 1.45;
+  }
+  .mascot-line-emoji {
+    font-size: 1.3rem;
+    line-height: 1;
+  }
+  .mascot-line-emoji.pulse {
+    animation: mascot-line-pulse 900ms ease;
+  }
+  @keyframes mascot-line-pulse {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.35) rotate(-6deg); }
+    100% { transform: scale(1); }
   }
   .chip-level {
     border-color: color-mix(in srgb, var(--accent) 40%, var(--border));

@@ -43,6 +43,7 @@
   import Info from 'lucide-svelte/icons/info';
   import { VERSION, REPO_URL } from '$lib/version';
   import Palette from 'lucide-svelte/icons/palette';
+  import Volume2 from 'lucide-svelte/icons/volume-2';
   import Globe from 'lucide-svelte/icons/globe';
   import Database from 'lucide-svelte/icons/database';
   import Heart from 'lucide-svelte/icons/heart';
@@ -59,6 +60,13 @@
   } from '$lib/auth/hash';
   import { showToast } from '$lib/components/events';
   import { Button } from '$lib/components/ui';
+  import {
+    initSoundPrefs,
+    isHapticsEnabled,
+    isSoundEnabled,
+    setHapticsEnabled,
+    setSoundEnabled
+  } from '$lib/gamification/sound';
   import {
     activateMood,
     acknowledgeMoodIntro,
@@ -80,6 +88,24 @@
   onMount(() => {
     void waitLocale();
   });
+
+  // ----- V10: Sons & Vibração -----
+  let soundOn = $state(true);
+  let hapticsOn = $state(true);
+  onMount(() => {
+    void initSoundPrefs().then(() => {
+      soundOn = isSoundEnabled();
+      hapticsOn = isHapticsEnabled();
+    });
+  });
+  function toggleSound(): void {
+    soundOn = !soundOn;
+    void setSoundEnabled(soundOn);
+  }
+  function toggleHaptics(): void {
+    hapticsOn = !hapticsOn;
+    void setHapticsEnabled(hapticsOn);
+  }
 
   // ----- Theme -----
   const THEME_OPTIONS: Array<{ id: ThemeChoice; icon: string; minXp: number }> = [
@@ -729,6 +755,55 @@
     </div>
   </section>
 
+  <!-- ============ V10: Sons & Vibração ============ -->
+  <section class="card" aria-labelledby="sound-h">
+    <div class="card-head">
+      <span class="icon-wrap"><Volume2 size={18} /></span>
+      <h2 id="sound-h">{$t('settings.sound', { default: 'Sons e vibração' })}</h2>
+    </div>
+    <p class="theme-intro">
+      {$t('settings.sound.intro', {
+        default: 'Feedback sonoro e háptico nas vitórias, streaks e missões.'
+      })}
+    </p>
+    <div class="switch-list">
+      <button
+        type="button"
+        class="switch-row"
+        role="switch"
+        aria-checked={soundOn}
+        onclick={toggleSound}
+      >
+        <span class="switch-copy">
+          <strong>{$t('settings.sound.sounds', { default: 'Sons' })}</strong>
+          <small>{$t('settings.sound.sounds.desc', {
+            default: 'Tons suaves ao ganhar XP, completar quizzes e acender a chama.'
+          })}</small>
+        </span>
+        <span class="switch-track" class:on={soundOn} aria-hidden="true">
+          <span class="switch-thumb"></span>
+        </span>
+      </button>
+      <button
+        type="button"
+        class="switch-row"
+        role="switch"
+        aria-checked={hapticsOn}
+        onclick={toggleHaptics}
+      >
+        <span class="switch-copy">
+          <strong>{$t('settings.sound.haptics', { default: 'Vibração' })}</strong>
+          <small>{$t('settings.sound.haptics.desc', {
+            default: 'Pequenas vibrações nos momentos de vitória (se o dispositivo suportar).'
+          })}</small>
+        </span>
+        <span class="switch-track" class:on={hapticsOn} aria-hidden="true">
+          <span class="switch-thumb"></span>
+        </span>
+      </button>
+    </div>
+  </section>
+
   <!-- ============ Language ============ -->
     <section class="card" aria-labelledby="lang-h">
       <div class="card-head">
@@ -1164,6 +1239,68 @@
       margin: 0 0 0.75rem;
       color: var(--txt2);
       font-size: 0.9rem;
+    }
+    /* V10 — Sons & Vibração switches */
+    .switch-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      width: 100%;
+      min-height: 44px;
+      padding: 0.7rem 0.8rem;
+      text-align: left;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.8rem;
+      color: var(--txt);
+      cursor: pointer;
+      transition: background var(--motion-fast, 120ms) ease, border-color var(--motion-fast, 120ms) ease;
+    }
+    .switch-row:hover,
+    .switch-row:focus-visible {
+      background: var(--card-hover);
+    }
+    .switch-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .switch-copy small {
+      color: var(--txt3);
+      font-size: 0.8rem;
+      line-height: 1.35;
+    }
+    .switch-track {
+      flex: none;
+      width: 46px;
+      height: 26px;
+      padding: 3px;
+      border-radius: 999px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      transition: background var(--motion-fast, 120ms) ease;
+    }
+    .switch-track.on {
+      background: color-mix(in srgb, var(--accent) 70%, transparent);
+      border-color: var(--accent);
+    }
+    .switch-thumb {
+      display: block;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--txt);
+      transition: transform var(--motion-base, 220ms) ease;
+    }
+    .switch-track.on .switch-thumb {
+      transform: translateX(20px);
+      background: var(--on-accent, #fff);
     }
     .theme-grid {
       display: grid;

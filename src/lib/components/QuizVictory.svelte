@@ -17,8 +17,10 @@
   import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
   import { fireConfettiEvent } from '$lib/components/events';
-  import { getActivityStreak } from '$lib/gamification/streak';
+  import { getActivityStreak, getWeekActivity, type WeekDayActivity } from '$lib/gamification/streak';
   import { getActiveMascot, DEFAULT_MASCOT_ID, mascotById } from '$lib/gamification/mascots';
+  import { playSfx, vibrate } from '$lib/gamification/sound';
+  import WeekCircles from './WeekCircles.svelte';
   import { nextLesson, type NextLessonTarget } from '$lib/escola/progress';
   import { schoolCourses, courseForUnit } from '$lib/escola/catalog';
 
@@ -62,6 +64,8 @@
   );
 
   let streakDays = $state(0);
+  let week = $state<WeekDayActivity[]>([]);
+  let perfectWeek = $derived(week.length === 7 && week.every((d) => d.active || d.frozen));
   let mascotEmoji = $state(mascotById(DEFAULT_MASCOT_ID)?.emoji ?? '🧴');
   let next = $state<NextLessonTarget | null>(null);
   let mounted = $state(false);
@@ -84,12 +88,29 @@
     // QuizRunner.submit() call was removed to avoid double bursts).
     if (perfect) fireConfettiEvent(confettiCount);
 
+    // V10 — tiered sound + haptics: triumphant on perfect/lesson, bright on
+    // good, deliberately soft on low (mistakes must never feel punished).
+    if (perfect || variant === 'lesson') {
+      playSfx('fanfare');
+      vibrate('success');
+    } else if (tier === 'good') {
+      playSfx('correct');
+      vibrate('tap');
+    } else {
+      playSfx('wrong');
+    }
+
     void (async () => {
       try {
         const s = await getActivityStreak();
         streakDays = s.current;
       } catch (e) {
         console.warn('[quizvictory] streak read failed', e);
+      }
+      try {
+        week = await getWeekActivity();
+      } catch (e) {
+        console.warn('[quizvictory] week read failed', e);
       }
       try {
         mascotEmoji = (await getActiveMascot()).emoji;
@@ -184,6 +205,17 @@
       {/if}
     </div>
 
+    {#if week.length > 0}
+      <div class="week-row">
+        <WeekCircles {week} compact />
+        {#if perfectWeek}
+          <small class="perfect-week">
+            ✨ {$t('quizvictory.perfect_week', { default: 'Semana perfeita!' })}
+          </small>
+        {/if}
+      </div>
+    {/if}
+
     <div class="ctas">
       {#if variant === 'lesson'}
         <button
@@ -235,6 +267,18 @@
   @keyframes victory-fade {
     from { opacity: 0; }
     to { opacity: 1; }
+  }
+  .week-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.7rem;
+  }
+  .perfect-week {
+    color: var(--accent, #ec4899);
+    font-weight: 700;
+    font-size: var(--fs-xs, 0.78rem);
   }
   .victory-card {
     width: min(430px, 100%);

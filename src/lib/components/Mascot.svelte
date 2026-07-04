@@ -21,6 +21,18 @@
     getActiveMascot,
     mascotById
   } from '$lib/gamification/mascots';
+  import {
+    emotionOverlay,
+    hoursUntilMidnight,
+    mascotEmotion,
+    type MascotEmotion
+  } from '$lib/gamification/emotion';
+  import { getActivityStreak } from '$lib/gamification/streak';
+  import {
+    minutesSinceLastAction,
+    ACTION_PULSE_EVENT,
+    STREAK_CHANGED_EVENT
+  } from '$lib/gamification/gamification-events';
   import { t } from 'svelte-i18n';
 
   const VISITED_THRESHOLD = 4;
@@ -30,6 +42,36 @@
   // V9 — the FAB renders the ACTIVE mascot (picked on /mascotes/)
   // instead of the old hardcoded 🧴. Default preserves the V8 look.
   let emoji = $state(mascotById(DEFAULT_MASCOT_ID)?.emoji ?? '🧴');
+  // V10 — Duolingo-style emotional state (happy/neutral/worried/sad/euphoric).
+  let emotion = $state<MascotEmotion>('neutral');
+
+  const overlay = $derived(emotionOverlay(emotion));
+  const EMOTION_FALLBACKS: Record<MascotEmotion, string> = {
+    happy: 'Hoje já contou — orgulho em ti! 🎀',
+    neutral: 'Pronta para a primeira vitória do dia?',
+    worried: 'A chama apaga-se à meia-noite… uma coisinha rápida chega!',
+    sad: 'A streak partiu-se, mas hoje é um ótimo dia para recomeçar.',
+    euphoric: 'UAU! Estás imparável!'
+  };
+  const emotionLine = $derived(
+    $t(`mascots.emotion.${emotion}`, { default: EMOTION_FALLBACKS[emotion] })
+  );
+
+  async function refreshEmotion(): Promise<void> {
+    if (typeof indexedDB === 'undefined') return;
+    try {
+      const streak = await getActivityStreak();
+      emotion = mascotEmotion({
+        streakCurrent: streak.current,
+        streakBest: streak.best,
+        activeToday: streak.activeToday,
+        hoursUntilMidnight: hoursUntilMidnight(),
+        minutesSinceLastAction: minutesSinceLastAction()
+      });
+    } catch (e) {
+      console.warn('[mascot] emotion refresh failed', e);
+    }
+  }
 
   async function refresh(): Promise<void> {
     if (typeof indexedDB === 'undefined') return;
@@ -68,15 +110,27 @@
     reduced = prefersReducedMotion();
     void refresh();
     void refreshMascot();
+    void refreshEmotion();
     // Re-check on focus so navigating around unlocks the FAB.
     const onVis = () => {
-      if (document.visibilityState === 'visible') void refresh();
+      if (document.visibilityState === 'visible') {
+        void refresh();
+        void refreshEmotion();
+      }
     };
     document.addEventListener('visibilitychange', onVis);
     window.addEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
+    const onPulse = () => void refreshEmotion();
+    window.addEventListener(ACTION_PULSE_EVENT, onPulse);
+    window.addEventListener(STREAK_CHANGED_EVENT, onPulse);
+    // The worried-evening window depends on the clock — refresh each minute.
+    const emotionTimer = setInterval(() => void refreshEmotion(), 60_000);
     return () => {
       document.removeEventListener('visibilitychange', onVis);
       window.removeEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
+      window.removeEventListener(ACTION_PULSE_EVENT, onPulse);
+      window.removeEventListener(STREAK_CHANGED_EVENT, onPulse);
+      clearInterval(emotionTimer);
     };
   });
 </script>
@@ -86,11 +140,17 @@
     type="button"
     class="mascot-fab"
     class:reduced
+    class:sad={emotion === 'sad'}
+    class:worried={emotion === 'worried'}
+    class:euphoric={emotion === 'euphoric'}
     onclick={onClick}
     aria-label={$t('components.mascot.aria', { default: 'Mascote — easter egg' })}
-    title={$t('components.mascot.title', { default: 'Clica — pro tip' })}
+    title={emotionLine}
   >
     <span class="emoji" aria-hidden="true">{emoji}</span>
+    {#if overlay}
+      <span class="emotion-overlay" aria-hidden="true">{overlay}</span>
+    {/if}
   </button>
 {/if}
 
@@ -140,6 +200,38 @@
     line-height: 1;
     user-select: none;
     -webkit-user-select: none;
+  }
+  .emotion-overlay {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    font-size: 0.95rem;
+    line-height: 1;
+    filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.5));
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .mascot-fab {
+    position: relative;
+  }
+  .mascot-fab.sad .emoji {
+    filter: grayscale(0.55) opacity(0.9);
+  }
+  .mascot-fab.worried:not(.reduced) .emoji {
+    animation: mascot-worried 1.6s ease-in-out infinite;
+  }
+  .mascot-fab.euphoric:not(.reduced) .emoji {
+    animation: mascot-euphoric 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes mascot-worried {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-1.5px) rotate(-3deg); }
+    60% { transform: translateX(1.5px) rotate(3deg); }
+  }
+  @keyframes mascot-euphoric {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.35) rotate(-8deg); }
+    100% { transform: scale(1); }
   }
   @media (prefers-reduced-motion: reduce) {
     .mascot-fab,

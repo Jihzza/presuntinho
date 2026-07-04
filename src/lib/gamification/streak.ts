@@ -26,9 +26,18 @@
 import type { UpdateSpec } from 'dexie';
 import { db } from '$lib/state/db';
 import type { StateRow } from '$lib/state/db';
+import {
+  earnFreezeIfDue,
+  nextMilestoneToCelebrate,
+  walkStreak,
+  MAX_FREEZES,
+  STREAK_MILESTONES
+} from './streak-core';
+
+export { MAX_FREEZES, STREAK_MILESTONES };
 
 // ---------------------------------------------------------------------------
-// V8 non-indexed state-row fields (shared with quests.ts)
+// V8/V10 non-indexed state-row fields (shared with quests.ts)
 // ---------------------------------------------------------------------------
 
 /** Per-day record of which daily-quest rewards have already been paid. */
@@ -38,7 +47,7 @@ export interface QuestsPaid {
 }
 
 /**
- * V8 additions to the singleton `state` row. These are plain,
+ * V8/V10 additions to the singleton `state` row. These are plain,
  * NON-indexed columns — Dexie stores whatever extra fields we put on
  * the object, so no schema/version bump is required.
  */
@@ -49,6 +58,16 @@ export interface GamificationStateFields {
   streakLastDay?: string;
   /** Daily-quest payout bookkeeping (see quests.ts). */
   questsPaid?: QuestsPaid;
+  /** V10 — freeze tokens currently held (0–2). */
+  streakFreezes?: number;
+  /** V10 — streak length at which the last freeze token was earned. */
+  streakFreezeLastEarn?: number;
+  /** V10 — LOCAL date keys bridged by consumed freezes. */
+  streakFrozenDays?: string[];
+  /** V10 — highest streak milestone already celebrated (7/14/30/…). */
+  streakMilestoneCelebrated?: number;
+  /** V10 — LOCAL 'YYYY-MM-DD' of the last flame-ignition celebration. */
+  streakFlameDay?: string;
 }
 
 export type StateRowV8 = StateRow & GamificationStateFields;
@@ -152,47 +171,172 @@ export interface ActivityStreak {
   best: number;
   /** True when there is already activity logged today. */
   activeToday: boolean;
+  /** V10 — freeze tokens currently held (0–2). */
+  freezes: number;
+  /** V10 — true when this computation consumed at least one token. */
+  usedFreeze: boolean;
+  /** V10 — true when this computation earned a new token. */
+  earnedFreeze: boolean;
 }
 
 /**
  * Compute the global activity streak and persist the best-ever value.
  *
- * Grace rule (same as habits): when today has no activity yet, the walk
- * anchors on yesterday, so yesterday's streak stays visible all morning
- * instead of resetting to 0 at midnight.
+ * V10 rules on top of the V8 walk:
+ *   * Grace (same as habits): when today has no activity yet, the walk
+ *     anchors on yesterday, so the streak doesn't read 0 every morning.
+ *   * Freeze tokens auto-consume to bridge fully missed days (the bridged
+ *     day keeps the chain but doesn't increment the count).
+ *   * One token is earned per 7 consecutive days, capped at 2 held.
  */
 export async function getActivityStreak(): Promise<ActivityStreak> {
   const today = new Date();
   const todayKey = localDateKey(today);
   const days = await getActiveDaySet();
 
-  const activeToday = days.has(todayKey);
-
-  // Anchor: today if already active, else yesterday (1-day grace).
-  let cursor = activeToday ? today : daysBefore(today, 1);
-  let current = 0;
-  for (let i = 0; i < LOOKBACK_DAYS; i++) {
-    if (days.has(localDateKey(cursor))) {
-      current += 1;
-      cursor = daysBefore(cursor, 1);
-    } else {
-      break;
-    }
+  let row: StateRowV8 | undefined;
+  try {
+    row = await readStateV8();
+  } catch {
+    row = undefined;
   }
 
-  // Persist best-ever + lastComputed. Non-fatal on failure — a stats
+  const frozenDays = new Set(Array.isArray(row?.streakFrozenDays) ? row.streakFrozenDays : []);
+  const freezesAvailable = typeof row?.streakFreezes === 'number' ? row.streakFreezes : 0;
+
+  const walk = walkStreak({
+    activeDays: days,
+    frozenDays,
+    freezesAvailable,
+    today,
+    lookbackDays: LOOKBACK_DAYS
+  });
+
+  const earn = earnFreezeIfDue({
+    current: walk.current,
+    lastEarnMilestone: typeof row?.streakFreezeLastEarn === 'number' ? row.streakFreezeLastEarn : 0,
+    freezesAvailable: walk.freezesLeft
+  });
+
+  // Persist best-ever + token bookkeeping. Non-fatal on failure — a stats
   // write must never break the read path.
-  let best = current;
+  let best = walk.current;
   try {
-    const row = await readStateV8();
     const storedBest = typeof row?.streakBest === 'number' ? row.streakBest : 0;
-    best = Math.max(storedBest, current);
-    if (best !== storedBest || row?.streakLastDay !== todayKey) {
-      await updateStateV8({ streakBest: best, streakLastDay: todayKey });
+    best = Math.max(storedBest, walk.current);
+
+    const sinceKey = localDateKey(daysBefore(today, LOOKBACK_DAYS));
+    const nextFrozen = [...frozenDays, ...walk.newlyFrozen].filter((k) => k >= sinceKey);
+
+    const dirty =
+      best !== storedBest ||
+      row?.streakLastDay !== todayKey ||
+      walk.newlyFrozen.length > 0 ||
+      earn.freezes !== freezesAvailable ||
+      earn.lastEarnMilestone !== (row?.streakFreezeLastEarn ?? 0);
+
+    if (dirty) {
+      await updateStateV8({
+        streakBest: best,
+        streakLastDay: todayKey,
+        streakFreezes: earn.freezes,
+        streakFreezeLastEarn: earn.lastEarnMilestone,
+        streakFrozenDays: nextFrozen
+      });
     }
   } catch (err) {
     console.warn('[gamification] streak persistence failed (non-fatal):', err);
   }
 
-  return { current, best, activeToday };
+  return {
+    current: walk.current,
+    best,
+    activeToday: walk.activeToday,
+    freezes: earn.freezes,
+    usedFreeze: walk.newlyFrozen.length > 0,
+    earnedFreeze: earn.earned
+  };
+}
+
+// ---------------------------------------------------------------------------
+// V10 — one-shot celebrations (flame ignition + milestones) & week view
+// ---------------------------------------------------------------------------
+
+/**
+ * Claim today's flame-ignition celebration. Returns true exactly once per
+ * local day, and only when today already has activity — the caller then
+ * plays the whoosh/flame animation.
+ */
+export async function claimFlameIgnition(): Promise<boolean> {
+  try {
+    const todayKey = localDateKey(new Date());
+    const row = await readStateV8();
+    if (row?.streakFlameDay === todayKey) return false;
+    const days = await getActiveDaySet();
+    if (!days.has(todayKey)) return false;
+    await updateStateV8({ streakFlameDay: todayKey });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Claim the next uncelebrated streak milestone (7/14/30/50/100/365).
+ * Returns the milestone number exactly once, or null when nothing is due.
+ * Only fires on a day with real activity so the full-screen card lands
+ * right after the action that earned it.
+ */
+export async function claimStreakMilestone(streak: ActivityStreak): Promise<number | null> {
+  if (!streak.activeToday) return null;
+  try {
+    const row = await readStateV8();
+    const celebrated =
+      typeof row?.streakMilestoneCelebrated === 'number' ? row.streakMilestoneCelebrated : 0;
+    const due = nextMilestoneToCelebrate(streak.current, celebrated);
+    if (due === null) return null;
+    await updateStateV8({ streakMilestoneCelebrated: due });
+    return due;
+  } catch {
+    return null;
+  }
+}
+
+export interface WeekDayActivity {
+  /** LOCAL 'YYYY-MM-DD'. */
+  date: string;
+  /** Mon=1 … Sun=7 (ISO weekday). */
+  weekday: number;
+  active: boolean;
+  frozen: boolean;
+  isToday: boolean;
+}
+
+/**
+ * Activity for the current ISO week (Monday → Sunday), for the 7-circle
+ * mini-calendar in victory flows and the flame popover.
+ */
+export async function getWeekActivity(): Promise<WeekDayActivity[]> {
+  const today = new Date();
+  const todayKey = localDateKey(today);
+  const [days, row] = await Promise.all([getActiveDaySet(), readStateV8().catch(() => undefined)]);
+  const frozen = new Set(Array.isArray(row?.streakFrozenDays) ? row.streakFrozenDays : []);
+
+  // Monday of the current week (getDay(): Sun=0 … Sat=6).
+  const dow = today.getDay();
+  const monday = daysBefore(today, (dow + 6) % 7);
+
+  const out: WeekDayActivity[] = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
+    const key = localDateKey(d);
+    out.push({
+      date: key,
+      weekday: i + 1,
+      active: days.has(key),
+      frozen: frozen.has(key),
+      isToday: key === todayKey
+    });
+  }
+  return out;
 }
