@@ -3,18 +3,20 @@
    * OfflineIndicator — fixed top connectivity banner.
    *
    * Shows a persistent offline state and a short success state when the
-   * browser comes back online. The retry action is intentionally simple:
-   * when offline it asks the browser to re-check by reloading the current
-   * route; when online it dismisses the transient banner.
+   * browser comes back online. The retry action never reloads while the
+   * browser is still offline (a reload would just land on an error page or
+   * a stale shell) — it shows a short "still offline" feedback instead.
    */
   import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
 
   type BannerState = 'hidden' | 'offline' | 'online';
 
-  let state: BannerState = $state('hidden');
+  let banner: BannerState = $state('hidden');
+  let stillOffline = $state(false);
   let wasOffline = false;
   let dismissTimer: ReturnType<typeof setTimeout> | null = null;
+  let stillOfflineTimer: ReturnType<typeof setTimeout> | null = null;
 
   function clearDismissTimer(): void {
     if (dismissTimer) {
@@ -23,11 +25,19 @@
     }
   }
 
+  function clearStillOfflineTimer(): void {
+    if (stillOfflineTimer) {
+      clearTimeout(stillOfflineTimer);
+      stillOfflineTimer = null;
+    }
+    stillOffline = false;
+  }
+
   function showOnlineThenDismiss(): void {
     clearDismissTimer();
-    state = 'online';
+    banner = 'online';
     dismissTimer = setTimeout(() => {
-      state = 'hidden';
+      banner = 'hidden';
       dismissTimer = null;
     }, 3000);
   }
@@ -37,9 +47,11 @@
     if (!online) {
       clearDismissTimer();
       wasOffline = true;
-      state = 'offline';
+      banner = 'offline';
       return;
     }
+
+    clearStillOfflineTimer();
 
     if (!initial && wasOffline) {
       wasOffline = false;
@@ -47,7 +59,7 @@
       return;
     }
 
-    state = 'hidden';
+    banner = 'hidden';
   }
 
   onMount(() => {
@@ -61,6 +73,7 @@
 
     return () => {
       clearDismissTimer();
+      clearStillOfflineTimer();
       window.removeEventListener('online', onOnline);
       window.removeEventListener('offline', onOffline);
     };
@@ -68,23 +81,40 @@
 
   function retry(): void {
     if (typeof navigator !== 'undefined' && navigator.onLine) {
+      wasOffline = false;
+      clearStillOfflineTimer();
       showOnlineThenDismiss();
       return;
     }
 
-    location.reload();
+    // Still offline: never location.reload() here — a reload with no network
+    // would drop the current page state for nothing. Give gentle feedback.
+    if (stillOfflineTimer) clearTimeout(stillOfflineTimer);
+    stillOffline = true;
+    stillOfflineTimer = setTimeout(() => {
+      stillOffline = false;
+      stillOfflineTimer = null;
+    }, 2500);
   }
 </script>
 
-{#if state !== 'hidden'}
+{#if banner !== 'hidden'}
   <div
-    class="connectivity-banner connectivity-banner--{state}"
+    class="connectivity-banner connectivity-banner--{banner}"
     role="status"
     aria-live="polite"
   >
-    <span class="icon" aria-hidden="true">{state === 'offline' ? '📡' : '✓'}</span>
-    <span class="text">{state === 'offline' ? $t('offline.banner.offline', { default: 'Estás offline 🐷' }) : $t('offline.banner.online', { default: 'Volta a estar online! ✓' })}</span>
-    {#if state === 'offline'}
+    <span class="icon" aria-hidden="true">{banner === 'offline' ? '📡' : '✓'}</span>
+    <span class="text">
+      {#if banner === 'offline'}
+        {stillOffline
+          ? $t('offline.banner.still', { default: 'Ainda sem ligação… eu aviso quando voltar 🐷' })
+          : $t('offline.banner.offline', { default: 'Estás offline 🐷' })}
+      {:else}
+        {$t('offline.banner.online', { default: 'Volta a estar online! ✓' })}
+      {/if}
+    </span>
+    {#if banner === 'offline'}
       <button
         type="button"
         class="retry-btn"

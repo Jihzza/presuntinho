@@ -33,12 +33,20 @@
   import {
     totalMes,
     totaisPorMesUltimos6,
+    listTransacoesMes,
+    getOrcamentoStatus,
+    ensureCategoriasDefaults,
+    ensureRecorrentes,
+    getChartTheme,
+    onThemeChange,
     formatMes,
     formatMesCurto,
     formatValor,
+    formatValorCompacto,
     getMesAtual,
     type TotaisMes,
-    type PontoMensal
+    type PontoMensal,
+    type OrcamentoStatus
   } from '$lib/financas';
   import { subApps } from '$lib/registry';
   import { awardXP } from '$lib/state/xp-actions';
@@ -53,6 +61,7 @@
 
   let totais = $state<TotaisMes>({ receitas: 0, despesas: 0, saldo: 0 });
   let pontos = $state<PontoMensal[]>([]);
+  let orcamentoStatus = $state<OrcamentoStatus[]>([]);
   let loading = $state(true);
   let error = $state<string | null>(null);
   let canvas: HTMLCanvasElement | undefined = $state();
@@ -65,43 +74,55 @@
   const numberLocale = $derived($locale || 'pt-PT');
 
   let financasApp = subApps.find((a) => a.id === 'financas');
-    const mesAtual = getMesAtual();
-    const moodState = useMoodState();
-    const sickHint = $derived(moodMicrocopyHint(moodState.mood?.kind ?? null));
-    // Quando o mood é 'sick' ou 'sad' escondemos o atalho "Nova transação"
-    // (fricção reduzida) e mostramos uma faixa calma. Para 'love' mantemos
-    // tudo normal mas com cor mais quente.
-    const shortcuts = $derived(() => {
-      const all = [
-        { href: '/financas/nova', title: 'Nova transação', icon: '➕', prio: 'normal' },
-        { href: '/financas/lista', title: 'Ver todas', icon: '📋', prio: 'normal' },
-        { href: '/financas/orcamento', title: 'Orçamento', icon: '🎯', prio: 'normal' },
-        { href: '/financas/categorias', title: 'Categorias', icon: '🏷️', prio: 'normal' },
-        { href: '/financas/relatorios', title: 'Relatórios', icon: '📊', prio: 'normal' },
-        { href: '/financas/exportar', title: 'Exportar JSON', icon: '💾', prio: 'normal' }
-      ];
-      if (!moodState.isSick && !moodState.isSoft) return all;
-      // Em modo cuidado, escondemos criação nova (só ver) e empurramos
-      // "Ver todas" para o topo — facilita olhar sem mexer.
-      const filtered = all.filter((s) => s.href !== '/financas/nova');
-      return [{ href: '/financas/lista', title: 'Ver todas (só leitura)', icon: '📋', prio: 'top' }, ...filtered];
-    });
+  const mesAtual = getMesAtual();
+  const moodState = useMoodState();
+  const sickHint = $derived(moodMicrocopyHint(moodState.mood?.kind ?? null));
+
+  // V8: houve movimentos nos últimos 6 meses?  Se sim, o dashboard mostra
+  // gráfico + totais mesmo com o mês corrente vazio (histórico continua útil).
+  const temHistorico = $derived(pontos.some((p) => p.receitas > 0 || p.despesas > 0));
+
+  // V8: chips de orçamento — só estados que merecem atenção.
+  const budgetAlerts = $derived(
+    orcamentoStatus.filter((row) => row.status !== 'ok').slice(0, 6)
+  );
+
+  // V8: "seguro gastar" = receitas do mês − despesas já feitas − o que
+  // ainda está reservado nos orçamentos (restante > 0). Nunca alarmista:
+  // é uma estimativa, e mostramos isso no copy.
+  const reservadoOrcamento = $derived(
+    orcamentoStatus.reduce((s, row) => s + Math.max(row.restante, 0), 0)
+  );
+  const safeToSpend = $derived(totais.receitas - totais.despesas - reservadoOrcamento);
+  const temOrcamentos = $derived(orcamentoStatus.length > 0);
 
   onMount(() => {
+    let unsubTheme: (() => void) | null = null;
     void (async () => {
       try {
         // Carrega chart.js só no browser (módulo pesado, depende de DOM).
         const mod = await import('chart.js/auto');
         Chart = mod.Chart;
 
-        const [t, p, countMes] = await Promise.all([
+        // V8: garantir categorias extra + materializar recorrentes deste
+        // mês ANTES de calcular totais, para os números já as incluírem.
+        try {
+          await ensureCategoriasDefaults();
+          await ensureRecorrentes(mesAtual);
+        } catch (e) {
+          console.warn('[financas] ensure defaults/recorrentes failed', e);
+        }
+
+        const [t, p, txMes, status] = await Promise.all([
           totalMes(mesAtual),
           totaisPorMesUltimos6(),
-          contarTransacoesMes(mesAtual)
+          listTransacoesMes(mesAtual),
+          getOrcamentoStatus(mesAtual)
         ]);
         totais = t;
         pontos = p;
-        totalTransacoesMes = countMes;
+        totalTransacoesMes = txMes.length;
+        orcamentoStatus = status;
         loading = false;
 
         // Render do gráfico acontece depois do `loading = false` para
@@ -109,6 +130,10 @@
         // garantir.
         await Promise.resolve();
         renderChart();
+
+        // V8: re-render com a nova paleta quando o tema muda (data-theme
+        // no <html> ou prefers-color-scheme no modo auto).
+        unsubTheme = onThemeChange(() => renderChart());
 
         // XP wire — task-038.  Awarded once per calendar day per profile.
         // localStorage key is namespaced per profile so multiple dev
@@ -120,6 +145,9 @@
         loading = false;
       }
     })();
+    return () => {
+      unsubTheme?.();
+    };
   });
 
   onDestroy(() => {
@@ -128,22 +156,6 @@
       chartInstance = null;
     }
   });
-
-  /** Count transactions whose `data` falls inside the given YYYY-MM. */
-  async function contarTransacoesMes(mes: string): Promise<number> {
-    try {
-      const d = db();
-      // Prefix range scan on the [tipo+data] index would be ideal but
-      // a plain filter on `data` is fine here — the seed is 20 rows
-      // and user transactions are bounded by usage.  Avoids requiring a
-      // second compound index on a hot schema.
-      const all = await d.transacoes.toArray();
-      return all.filter((row) => typeof row.data === 'string' && row.data.startsWith(mes)).length;
-    } catch (e) {
-      console.warn('[financas] contarTransacoesMes failed', e);
-      return 0;
-    }
-  }
 
   /**
    * Award +2 XP for the first dashboard view of the day.
@@ -229,6 +241,10 @@
       chartInstance.destroy();
       chartInstance = null;
     }
+    // V8: cores lidas das CSS custom properties do tema activo (nunca hex
+    // fixo) + ticks compactos em ecrãs estreitos.
+    const theme = getChartTheme();
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
     chartInstance = new Chart(canvas, {
       type: 'bar',
       data: {
@@ -237,8 +253,8 @@
           {
             label: $t('financas.chart.datasetLabel.receitas', { default: 'Receitas' }),
             data: pontos.map((p) => p.receitas),
-            backgroundColor: 'rgba(34, 197, 94, 0.7)',
-            borderColor: 'rgba(34, 197, 94, 1)',
+            backgroundColor: theme.successBg,
+            borderColor: theme.success,
             borderWidth: 1,
             borderRadius: 6,
             maxBarThickness: 48
@@ -246,8 +262,8 @@
           {
             label: $t('financas.chart.datasetLabel', { default: 'Despesas' }),
             data: pontos.map((p) => p.despesas),
-            backgroundColor: 'rgba(239, 68, 68, 0.7)',
-            borderColor: 'rgba(239, 68, 68, 1)',
+            backgroundColor: theme.errorBg,
+            borderColor: theme.error,
             borderWidth: 1,
             borderRadius: 6,
             maxBarThickness: 48
@@ -258,7 +274,7 @@
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { display: true, position: 'top', labels: { color: '#cbd5e1' } },
+          legend: { display: true, position: 'top', labels: { color: theme.txt2 } },
           tooltip: {
             callbacks: {
               label: (ctx) => ` ${formatValor(ctx.parsed.y ?? 0, numberLocale)}`
@@ -267,16 +283,20 @@
         },
         scales: {
           x: {
-            ticks: { color: '#cbd5e1' },
-            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+            ticks: { color: theme.txt2 },
+            grid: { color: theme.grid }
           },
           y: {
             beginAtZero: true,
             ticks: {
-              color: '#cbd5e1',
-              callback: (val) => formatValor(Number(val), numberLocale)
+              color: theme.txt2,
+              maxTicksLimit: isMobile ? 5 : 7,
+              callback: (val) =>
+                isMobile
+                  ? formatValorCompacto(Number(val), numberLocale)
+                  : formatValor(Number(val), numberLocale)
             },
-            grid: { color: 'rgba(255, 255, 255, 0.08)' }
+            grid: { color: theme.grid }
           }
         }
       }
@@ -285,14 +305,16 @@
 
   // Reactive: se os pontos chegarem antes do chart.js (raro mas possível
     // num refresh), re-renderiza.  Cobre o caso `loading = true` →
-    // `loading = false` em que o chart.js já estava registado.
+    // `loading = false` em que o chart.js já estava registado, e re-renderiza
+    // também quando a língua muda (labels/formatters de eixo).
     $effect(() => {
-      // Re-render quando os pontos mudarem (mas só depois de o chart estar
-      // pronto e de já termos saído de loading).
+      // Re-render quando os pontos OU a locale mudarem (mas só depois de o
+      // chart estar pronto e de já termos saído de loading).
       const _ = pontos;
       const __ = Chart;
       const ___ = canvas;
       const ____ = loading;
+      const _____ = numberLocale;
       if (!____ && __ && ___ && _.length > 0) {
         renderChart();
       }
@@ -312,7 +334,7 @@
 <div class="financas-page">
   <header class="hero">
     <h1>{$t('financas.hero.title', { default: '💰 Finanças' })}</h1>
-    <p class="sub">{$t('financas.hero.sub', { default: 'Resumo de' })} <strong>{formatMes(mesAtual, numberLocale)}</strong></p>
+    <p class="sub"><strong>{$t('financas.hero.sub', { values: { month: formatMes(mesAtual, numberLocale) }, default: 'Resumo de {month}' })}</strong></p>
     {#if sickHint}
       <p class="mood-hint" role="note" aria-live="polite">
         <span aria-hidden="true">🤍</span>
@@ -331,10 +353,11 @@
     <p class="empty">{$t('financas.loading', { default: 'A carregar…' })}</p>
   {:else if error}
     <p class="empty error" role="alert">⚠️ {error}</p>
-  {:else if totalTransacoesMes === 0}
-    <!-- Task-038: first-time empty state.  Shown only when the user
-         truly has zero transactions in the current month (different
-         from the in-chart "no expenses yet" hint below). -->
+  {:else if totalTransacoesMes === 0 && !temHistorico}
+    <!-- Task-038 + V8: first-time empty state.  Shown only when the user
+         has zero transactions in the current month AND no history in the
+         last 6 months — with prior-month history we keep showing the
+         chart/totals below instead of hiding everything. -->
     <section class="empty-hero" aria-label={$t('financas.empty.illustration_alt', { default: 'Ilustração' })}>
       <svg class="empty-illustration" viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={$t('financas.empty.illustration_alt', { default: 'Ilustração de um cofre de moedas' })}>
         <defs>
@@ -404,9 +427,42 @@
       </article>
     </section>
 
-    <section class="chart-section" aria-label={$t('financas.chart.aria', { default: 'Despesas dos últimos 6 meses' })}>
-      <h2 class="section-title">{$t('financas.chart.title', { default: 'Despesas — últimos 6 meses' })}</h2>
-      {#if pontos.length === 0 || pontos.every((p) => p.despesas === 0)}
+    <!-- V8: estado do orçamento + estimativa "seguro gastar" -->
+    <section class="budget-status" aria-label={$t('financas.dashboard.budget.aria', { default: 'Estado do orçamento' })}>
+      <div class="safe-card" class:negativo={temOrcamentos && safeToSpend < 0}>
+        <span class="safe-label">{$t('financas.dashboard.safe.label', { default: 'Seguro gastar (estimativa)' })}</span>
+        <span class="safe-value">{formatValor(Math.max(safeToSpend, 0), numberLocale)}</span>
+        <span class="safe-hint">
+          {#if !temOrcamentos}
+            {$t('financas.dashboard.safe.no_budget', { default: 'Define limites no orçamento para uma estimativa mais fininha.' })}
+          {:else if safeToSpend < 0}
+            {$t('financas.dashboard.safe.tight', { default: 'Este mês está justinho — o orçamento já reservou o resto. Sem stress, é só para saberes.' })}
+          {:else}
+            {$t('financas.dashboard.safe.hint', { default: 'depois de despesas e do que o orçamento reservou' })}
+          {/if}
+        </span>
+        {#if temOrcamentos}
+          <a class="safe-link" href="/financas/orcamento/">{$t('financas.dashboard.safe.link', { default: 'Ver orçamento →' })}</a>
+        {/if}
+      </div>
+      {#if budgetAlerts.length > 0}
+        <ul class="budget-chips" aria-label={$t('financas.dashboard.budget.chips_aria', { default: 'Categorias perto do limite' })}>
+          {#each budgetAlerts as row (row.categoria.id)}
+            <li>
+              <a class="budget-chip" data-status={row.status} href="/financas/orcamento/">
+                <span aria-hidden="true">{row.categoria.icone}</span>
+                <span class="chip-name">{row.categoria.nome}</span>
+                <span class="chip-percent">{Math.round(row.percent)}%</span>
+              </a>
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    </section>
+
+    <section class="chart-section" aria-label={$t('financas.chart.fluxo.aria', { default: 'Receitas e despesas dos últimos 6 meses' })}>
+      <h2 class="section-title">{$t('financas.chart.fluxo.title', { default: 'Receitas e despesas — últimos 6 meses' })}</h2>
+      {#if pontos.length === 0 || pontos.every((p) => p.despesas === 0 && p.receitas === 0)}
         <div class="empty-state" role="status">
           <span class="empty-icon" aria-hidden="true">💸</span>
           <p class="empty-title">{$t('financas.empty.title', { default: 'Ainda não há despesas registadas' })}</p>
@@ -440,6 +496,13 @@
         <span class="quick-text">
           <span class="quick-title">{$t('financas.shortcuts.all.title', { default: 'Ver todas' })}</span>
           <span class="quick-sub">{$t('financas.shortcuts.all.sub', { default: 'Histórico completo' })}</span>
+        </span>
+      </a>
+      <a class="quick" href="/financas/metas/">
+        <span class="quick-icon" aria-hidden="true">🎯</span>
+        <span class="quick-text">
+          <span class="quick-title">{$t('financas.metas.title', { default: 'Metas de poupança' })}</span>
+          <span class="quick-sub">{$t('financas.metas.shortcut.sub', { default: 'Sonhos com barra de progresso' })}</span>
         </span>
       </a>
       <a class="quick" href="/financas/orcamento/">
@@ -588,14 +651,14 @@
     display: inline-block;
     padding: 0.6rem 1.2rem;
     background: var(--success, #10b981);
-    color: #052e1c;
+    color: var(--on-accent, #fff);
     border-radius: 0.5rem;
     font-weight: 600;
     text-decoration: none;
-    transition: transform 0.15s ease, background 0.2s ease;
+    transition: transform var(--motion-fast, 120ms) ease, filter var(--motion-base, 220ms) ease;
   }
   .empty-cta:hover, .empty-cta:focus-visible {
-    background: #34d399;
+    filter: brightness(1.08);
     transform: translateY(-1px);
     outline: none;
   }
@@ -694,6 +757,111 @@
     color: var(--txt3, #94a3b8);
     margin: 0 0 0.75rem 0.25rem;
     font-weight: 600;
+  }
+  /* ---- V8: estado do orçamento + seguro gastar ---- */
+  .budget-status {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3, 0.75rem);
+    margin-bottom: 1.5rem;
+  }
+  .safe-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--success);
+    border-radius: var(--radius-lg, 0.75rem);
+    padding: 1.125rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .safe-card.negativo {
+    border-left-color: var(--warning);
+  }
+  .safe-label {
+    font-size: var(--fs-xs, 0.8125rem);
+    color: var(--txt3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+  .safe-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--txt);
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+  .safe-hint {
+    font-size: var(--fs-xs, 0.8125rem);
+    color: var(--txt3);
+  }
+  .safe-link {
+    margin-top: 0.25rem;
+    font-size: var(--fs-sm, 0.875rem);
+    color: var(--success);
+    text-decoration: none;
+    font-weight: 600;
+    width: fit-content;
+  }
+  .safe-link:hover,
+  .safe-link:focus-visible {
+    text-decoration: underline;
+    outline: none;
+  }
+  .budget-chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .budget-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.25rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--warning) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--warning) 40%, transparent);
+    color: var(--txt);
+    font-size: var(--fs-sm, 0.875rem);
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform var(--motion-fast, 120ms) ease;
+  }
+  .budget-chip:hover,
+  .budget-chip:focus-visible {
+    transform: translateY(-1px);
+    outline: none;
+  }
+  .budget-chip:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--warning) 35%, transparent);
+  }
+  .budget-chip[data-status='danger'],
+  .budget-chip[data-status='over'] {
+    background: color-mix(in srgb, var(--error) 14%, transparent);
+    border-color: color-mix(in srgb, var(--error) 40%, transparent);
+  }
+  .budget-chip[data-status='danger']:focus-visible,
+  .budget-chip[data-status='over']:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--error) 35%, transparent);
+  }
+  .chip-name {
+    max-width: 12ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .chip-percent {
+    color: var(--warning);
+    font-variant-numeric: tabular-nums;
+  }
+  .budget-chip[data-status='danger'] .chip-percent,
+  .budget-chip[data-status='over'] .chip-percent {
+    color: var(--error);
   }
   .chart-section {
     background: var(--card, rgba(255, 255, 255, 0.05));

@@ -1,29 +1,43 @@
 <!--
-  MonthCalendar.svelte — task-040 monthly grid for one habit.
+  MonthCalendar.svelte — monthly grid for one habit (task-040, V8).
 
   Renders a single month as a 7-column grid (Mon..Sun).  The user can
   tap a day cell to toggle its logged state — the parent supplies a
-  callback so the actual Dexie write happens in the page (which can
-  fire the XP / toast side-effects).
+  callback so the actual Dexie write happens in the page (which owns
+  the XP / confetti / toast side-effects).
+
+  V8:
+    * cadence-aware — non-scheduled days (custom-weekday habits) are
+      rendered muted with a dashed border.  They're still tappable
+      (logging on a rest day is allowed; it just doesn't feed the
+      streak), and the aria-label says so.
+    * date keys come from `localDateKey` (LOCAL timezone, no UTC drift).
+    * hex fallbacks replaced with design tokens.
 
   Props:
     - year / month0   : which month to render (month0 = 0..11)
     - data            : HeatmapData (YYYY-MM-DD → true) for the month
     - color           : accent colour for the "logged" cell
+    - cadence         : habit cadence (defaults to 'daily')
     - today           : today's 'YYYY-MM-DD' (defaults to local now)
-    - onToggle(date)  : async (date: string) => void — fired when the
-                        user taps a cell.  We don't await it here;
-                        the parent re-reads Dexie and updates `data`.
+    - onToggle(date)  : fired when the user taps a cell.
 -->
 <script lang="ts">
   import { locale, t } from 'svelte-i18n';
-  import type { HeatmapData } from '$lib/habitos';
+  import {
+    isScheduledOn,
+    localDateKey,
+    normalizeCadence,
+    type HabitCadence,
+    type HeatmapData
+  } from '$lib/habitos';
 
   interface Props {
     year: number;
     month0: number;
     data: HeatmapData;
     color?: string;
+    cadence?: HabitCadence;
     today?: string;
     onToggle?: (date: string) => void | Promise<void>;
   }
@@ -32,19 +46,15 @@
     year,
     month0,
     data,
-    color = '#ec4899',
+    color = 'var(--accent)',
+    cadence = 'daily',
     today,
     onToggle
   }: Props = $props();
 
-  // Resolve "today" once per render so SSR / hydration doesn't drift.
-  // In Svelte 5, `$derived` keeps it fresh across reactive updates.
-  function todayKey(): string {
-    const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  }
-  let todayResolved = $derived(today ?? todayKey());
+  let todayResolved = $derived(today ?? localDateKey());
   const dateLocale = $derived($locale || 'pt-PT');
+  const normalizedCadence = $derived(normalizeCadence(cadence));
 
   interface Cell {
     date: string;
@@ -52,12 +62,13 @@
     inMonth: boolean;
     logged: boolean;
     isToday: boolean;
+    scheduled: boolean;
   }
 
   let cells = $derived.by<Cell[]>(() => {
-    // Build a 6-row × 7-col grid (max days a month can occupy with
-    // alignment).  Leading cells from the previous month are
-    // rendered as `inMonth: false` so the CSS can mute them.
+    // Build a grid aligned Monday-first.  Leading cells from the
+    // previous month are rendered as `inMonth: false` so the CSS can
+    // mute them.
     const first = new Date(year, month0, 1);
     const last = new Date(year, month0 + 1, 0);
     const daysInMonth = last.getDate();
@@ -68,13 +79,14 @@
     for (let i = 0; i < totalCells; i++) {
       const offset = i - leading;
       const d = new Date(year, month0, 1 + offset);
-      const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      const iso = localDateKey(d);
       out.push({
         date: iso,
         day: d.getDate(),
         inMonth: d.getMonth() === month0,
         logged: Boolean(data[iso]),
-        isToday: iso === todayResolved
+        isToday: iso === todayResolved,
+        scheduled: isScheduledOn(normalizedCadence, d)
       });
     }
     return out;
@@ -93,14 +105,24 @@
     return Array.from({ length: 7 }, (_, i) => formatter.format(new Date(2024, 0, 1 + i)));
   });
 
-  function cellFill(logged: boolean, inMonth: boolean): string {
-    if (!inMonth) return 'transparent';
-    if (!logged) return 'rgba(255, 255, 255, 0.06)';
-    return color;
+  function cellFill(cell: Cell): string {
+    if (!cell.inMonth) return 'transparent';
+    if (cell.logged) return color;
+    return 'var(--bg-elev, transparent)';
+  }
+
+  function cellAria(cell: Cell): string {
+    const state = cell.logged
+      ? $t('habitos.calendar.marked', { default: 'marcado' })
+      : $t('habitos.calendar.unmarked', { default: 'por marcar' });
+    if (!cell.scheduled) {
+      return `${cell.date}: ${state} · ${$t('habitos.calendar.rest_day', { default: 'dia de descanso' })}`;
+    }
+    return `${cell.date}: ${state}`;
   }
 </script>
 
-<div class="month-calendar" role="group" aria-label={`Calendar for ${monthLabel}`}>
+<div class="month-calendar" role="group" aria-label={$t('habitos.calendar.aria', { values: { month: monthLabel }, default: `Calendário de ${monthLabel}` })}>
   <h3 class="month-label">{monthLabel}</h3>
   <div class="weekdays" aria-hidden="true">
     {#each weekdayLabels as label, i (i)}
@@ -115,12 +137,11 @@
         class:logged={cell.logged}
         class:other={!cell.inMonth}
         class:today={cell.isToday}
+        class:rest={cell.inMonth && !cell.scheduled}
         disabled={!cell.inMonth || !onToggle}
         aria-pressed={cell.logged}
-        aria-label={cell.logged
-          ? `${cell.date}: ${$t('habitos.calendar.marked', { default: 'marcado' })}`
-          : `${cell.date}: ${$t('habitos.calendar.unmarked', { default: 'por marcar' })}`}
-        style="--cell-fill: {cellFill(cell.logged, cell.inMonth)}"
+        aria-label={cellAria(cell)}
+        style="--cell-fill: {cellFill(cell)}"
         onclick={() => {
           if (cell.inMonth && onToggle) void onToggle(cell.date);
         }}
@@ -129,19 +150,24 @@
       </button>
     {/each}
   </div>
+  {#if typeof normalizedCadence === 'object'}
+    <p class="legend">
+      {$t('habitos.calendar.rest_legend', { default: 'Dias a tracejado são dias de descanso — não contam para o streak.' })}
+    </p>
+  {/if}
 </div>
 
 <style>
   .month-calendar {
-    background: var(--card, rgba(255, 255, 255, 0.05));
-    border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
-    border-radius: 0.75rem;
-    padding: 1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg, 0.75rem);
+    padding: var(--space-3, 1rem);
   }
   .month-label {
     margin: 0 0 0.5rem 0;
-    font-size: 1rem;
-    color: var(--txt, #fff);
+    font-size: var(--fs-md, 1rem);
+    color: var(--txt);
     text-transform: capitalize;
     font-weight: 600;
   }
@@ -153,8 +179,8 @@
   }
   .weekday {
     text-align: center;
-    font-size: 0.75rem;
-    color: var(--txt3, #94a3b8);
+    font-size: var(--fs-xs, 0.75rem);
+    color: var(--txt3);
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
@@ -165,42 +191,53 @@
   }
   .cell {
     aspect-ratio: 1;
-    background: var(--cell-fill, rgba(255, 255, 255, 0.06));
-    color: var(--txt, #fff);
+    min-height: 2.25rem;
+    background: var(--cell-fill, var(--bg-elev));
+    color: var(--txt);
     border: 1px solid transparent;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
+    border-radius: var(--radius-sm, 0.375rem);
+    font-size: var(--fs-sm, 0.875rem);
     cursor: pointer;
     font-family: inherit;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.1s, border-color 0.15s;
+    transition: transform var(--motion-fast, 120ms), border-color var(--motion-fast, 120ms);
     padding: 0;
   }
-  .cell:hover:not(:disabled),
+  .cell:hover:not(:disabled) {
+    border-color: var(--accent);
+  }
   .cell:focus-visible:not(:disabled) {
-    border-color: var(--accent, #ec4899);
-    outline: none;
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
   }
   .cell.logged {
     font-weight: 700;
+    color: var(--on-accent, #fff);
   }
   .cell.today {
-    box-shadow: 0 0 0 2px var(--accent, #ec4899);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .cell.rest:not(.logged) {
+    border: 1px dashed var(--border);
+    color: var(--txt3);
+    opacity: 0.75;
   }
   .cell.other {
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     opacity: 0.4;
     cursor: not-allowed;
   }
   .cell:disabled {
     cursor: not-allowed;
   }
+  .legend {
+    margin: 0.5rem 0 0 0;
+    font-size: var(--fs-xs, 0.75rem);
+    color: var(--txt3);
+  }
   @media (min-width: 640px) {
     .cell { font-size: 0.9375rem; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .cell { transition: none; }
   }
 </style>

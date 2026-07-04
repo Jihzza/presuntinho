@@ -68,7 +68,7 @@ export interface StateRow {
 }
 
 /**
- * One row per V3 badge id (b1..b15).  `unlockedAt` is 0 when the badge
+ * One row per V3 badge id (b1..b17).  `unlockedAt` is 0 when the badge
  * has not yet been earned.
  */
 export interface BadgeRow {
@@ -190,29 +190,34 @@ export interface CategoriaRow {
 /**
  * Phase 7 — Hábitos sub-app.
  *
- * One row per habit definition.  `cadence` is intentionally restricted
- * to 'daily' until weekly tracking/stats are implemented end-to-end.
+ * One row per habit definition.
  *
  * task-040 (Hábitos Pro) adds:
  *   - `meta`     — optional target value (e.g. "2L", "30 min", "8h").
  *                  Display only; not used for completion math.
- *   - `reminder` — optional reminder label, free-form (e.g. "20:00",
- *                  "ao pequeno-almoço").  Reminders are NOT triggered
- *                  by the system in the MVP — the field is shown in
- *                  the form and on the detail page as a hint.
+ *   - `reminder` — optional reminder label.  V8 upgrades it to a
+ *                  structured { time, days? } shape; legacy free-form
+ *                  strings still display as-is.  Reminders are NOT
+ *                  triggered by the system — PWA background
+ *                  notifications need a push backend (documented
+ *                  limitation).
  *
- * Both new fields are OPTIONAL so existing rows and the seed
- * `DEFAULT_HABITOS` list keep working without a backfill.
+ * V8 widens `cadence` beyond 'daily': weekly (once per week) and
+ * custom weekday schedules ({ days: [0..6] }).  The column is not
+ * indexed, so no schema version bump was needed.
  */
+export type HabitCadence = 'daily' | 'weekly' | { days: number[] };
+export type HabitReminder = string | { time: string; days?: number[] };
+
 export interface HabitoRow {
   id?: number;            // auto-incremented by Dexie (++)
   name: string;           // user-entered, pt-PT friendly
   icon: string;           // emoji or short text, e.g. '💧'
   color: string;          // hex (#xxxxxx) — used by the heatmap tint
-  cadence: 'daily';
+  cadence: HabitCadence;
   createdAt: number;      // Date.now()
   meta?: string;          // task-040: target / unit string ("2L", "30 min")
-  reminder?: string;      // task-040: free-form reminder ("20:00", "manhã")
+  reminder?: HabitReminder; // structured { time, days? } or legacy string
 }
 
 /**

@@ -264,12 +264,12 @@
     gap: 0.5rem;
     align-items: center;
     font-size: 0.875rem;
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     margin-bottom: 1rem;
     flex-wrap: wrap;
   }
   .crumbs a {
-    color: var(--accent, #ec4899);
+    color: var(--accent);
     text-decoration: none;
   }
   .crumbs a:hover,
@@ -281,7 +281,7 @@
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
     border-radius: 0.75rem;
     padding: 1.5rem;
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
   }
   .state.error {
     border-left: 4px solid var(--error, #ef4444);
@@ -312,7 +312,7 @@
     gap: 1.25rem;
   }
   .assignment[data-status='in_progress'] {
-    border-left-color: var(--accent, #ec4899);
+    border-left-color: var(--accent);
   }
   .assignment[data-status='submitted'] {
     border-left-color: var(--success, #10b981);
@@ -344,7 +344,7 @@
     padding: 0.25rem 0.7rem;
     border-radius: 999px;
     background: rgba(236, 72, 153, 0.15);
-    color: var(--accent, #ec4899);
+    color: var(--accent);
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
     font-weight: 700;
     white-space: nowrap;
@@ -361,7 +361,7 @@
     padding: 0.2rem 0.6rem;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.08);
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
     font-weight: 600;
     text-transform: capitalize;
@@ -390,7 +390,7 @@
   }
   .status-in_progress {
     background: rgba(236, 72, 153, 0.15);
-    color: var(--accent, #ec4899);
+    color: var(--accent);
   }
   .status-submitted {
     background: rgba(16, 185, 129, 0.15);
@@ -404,12 +404,12 @@
     font-size: 0.8125rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     margin: 0 0 0.5rem 0;
     font-weight: 600;
   }
   .description {
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     margin: 0;
     font-size: 1rem;
     line-height: 1.55;
@@ -426,7 +426,7 @@
     flex-wrap: wrap;
   }
   .deadline-abs {
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     font-size: 0.875rem;
   }
   .actions {
@@ -454,7 +454,7 @@
     cursor: not-allowed;
   }
   .btn-primary {
-    background: var(--accent, #ec4899);
+    background: var(--accent);
     color: #fff;
   }
   .btn-primary:hover:not(:disabled),
@@ -479,7 +479,7 @@
     box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.4);
   }
   .hint {
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     font-size: 0.875rem;
     margin: 0;
     flex-basis: 100%;
@@ -491,7 +491,7 @@
     border-top: 1px solid var(--border, rgba(255, 255, 255, 0.1));
   }
   .back-link {
-    color: var(--accent, #ec4899);
+    color: var(--accent);
     text-decoration: none;
     font-weight: 600;
     font-size: 0.9375rem;

@@ -4,10 +4,16 @@
    *
    * It never animates layout/position; only inner transform/opacity/glow.
    * Spam taps receive exponentially stronger feedback via easterEggs.ts.
+   *
+   * V8: because this component lives in the global layout, it is also the
+   * boot hook for the date-aware easter eggs (checkSeasonalEggs) and warms
+   * the easterEggs.json config cache so the first heart click resolves its
+   * tier instantly.
    */
 
   import { onMount } from 'svelte';
-  import { heartClick } from '$lib/easterEggs';
+  import { heartClick, checkSeasonalEggs } from '$lib/easterEggs';
+  import { loadEasterEggs } from '$lib/easterEggsConfig';
   import { prefersReducedMotion } from './events';
   import { t } from 'svelte-i18n';
 
@@ -23,6 +29,14 @@
   }
 
   onMount(() => {
+    // Warm the config cache (single fetch, shared by all consumers) and run
+    // the once-per-day seasonal easter-egg check shortly after boot so the
+    // celebration toast doesn't collide with the splash/boot toasts.
+    void loadEasterEggs();
+    const seasonalTimer = setTimeout(() => {
+      void checkSeasonalEggs();
+    }, 2200);
+
     function onVisual(e: Event): void {
       const ce = e as CustomEvent<{
         clicks: number;
@@ -58,6 +72,7 @@
       window.removeEventListener('presuntinho:heart-visual', onVisual as EventListener);
       window.removeEventListener('presuntinho:heart-pulse', onPulse as EventListener);
       if (burstTimer) clearTimeout(burstTimer);
+      clearTimeout(seasonalTimer);
     };
   });
 </script>
@@ -86,9 +101,9 @@
     min-height: 56px;
     box-sizing: border-box;
     border-radius: 50%;
-    border: 1px solid rgba(236, 72, 153, 0.42);
-    background: rgba(236, 72, 153, 0.16);
-    color: #fff;
+    border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+    color: var(--on-accent, #fff);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -100,28 +115,28 @@
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     transition:
-      transform 0.15s ease,
-      background 0.2s ease,
-      border-color 0.2s ease,
-      box-shadow 0.2s ease,
-      filter 0.2s ease;
+      transform var(--motion-fast, 120ms) ease,
+      background var(--motion-base, 220ms) ease,
+      border-color var(--motion-base, 220ms) ease,
+      box-shadow var(--motion-base, 220ms) ease,
+      filter var(--motion-base, 220ms) ease;
     align-self: center;
   }
   .heart-btn:hover,
   .heart-btn:focus-visible {
-    background: rgba(236, 72, 153, 0.18);
-    border-color: rgba(236, 72, 153, 0.6);
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 60%, transparent);
     outline: none;
   }
   .heart-btn:focus-visible {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #ec4899) 62%, white), 0 0 0 7px color-mix(in srgb, var(--accent, #ec4899) 18%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 62%, white), 0 0 0 7px color-mix(in srgb, var(--accent) 18%, transparent);
   }
   .heart-btn:active .emoji { transform: scale(0.92); }
   .emoji {
     font-size: 1.75rem;
     line-height: 1;
     display: inline-block;
-    transition: transform 0.2s ease;
+    transition: transform var(--motion-base, 220ms) ease;
     user-select: none;
     -webkit-user-select: none;
     position: relative;
@@ -132,13 +147,13 @@
     position: absolute;
     inset: -0.45rem;
     border-radius: 999px;
-    background: radial-gradient(circle, rgba(236,72,153,.28), transparent 58%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 28%, transparent), transparent 58%);
     opacity: 0;
     transform: scale(.7);
     z-index: 0;
     pointer-events: none;
   }
-  .halo-b { inset: -0.8rem; background: radial-gradient(circle, rgba(245,158,11,.18), transparent 62%); }
+  .halo-b { inset: -0.8rem; background: radial-gradient(circle, color-mix(in srgb, var(--warning) 18%, transparent), transparent 62%); }
   .burst-label {
     position: absolute;
     right: 0;
@@ -147,19 +162,19 @@
     max-width: 10rem;
     padding: .25rem .48rem;
     border-radius: 999px;
-    background: rgba(15,23,42,.82);
-    color: white;
+    background: var(--bg-elev, rgba(15,23,42,.82));
+    color: var(--txt, #fff);
     font-size: .64rem;
     font-weight: 900;
     letter-spacing: .02em;
-    box-shadow: 0 10px 24px rgba(15,23,42,.24);
+    box-shadow: var(--shadow-md, 0 10px 24px rgba(15,23,42,.24));
     animation: label-pop .42s ease both;
     pointer-events: none;
   }
-  .heart-btn.intensity-1 { background: rgba(236, 72, 153, 0.14); box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.18); }
-  .heart-btn.intensity-2 { background: rgba(236, 72, 153, 0.22); box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.28); }
-  .heart-btn.intensity-3 { background: rgba(236, 72, 153, 0.32); box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.4); }
-  .heart-btn.intensity-4 { background: linear-gradient(135deg, #ec4899 0%, #f59e0b 100%); box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.6), 0 6px 18px rgba(236, 72, 153, 0.45); }
+  .heart-btn.intensity-1 { background: color-mix(in srgb, var(--accent) 14%, transparent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent); }
+  .heart-btn.intensity-2 { background: color-mix(in srgb, var(--accent) 22%, transparent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent); }
+  .heart-btn.intensity-3 { background: color-mix(in srgb, var(--accent) 32%, transparent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 40%, transparent); }
+  .heart-btn.intensity-4 { background: linear-gradient(135deg, var(--accent) 0%, var(--warning) 100%); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 60%, transparent), 0 6px 18px color-mix(in srgb, var(--accent) 45%, transparent); }
   .heart-btn.pulse .emoji { animation: heart-pulse 0.3s ease; }
   .heart-btn[class*='burst-']:not(.burst-0) .halo-a { animation: halo-pop .72s ease both; }
   .heart-btn.burst-3 .halo-b,

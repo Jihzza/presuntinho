@@ -1,7 +1,7 @@
 <script lang="ts">
   import '../app.css';
   import { page } from '$app/state';
-  import { goto } from '$app/navigation';
+  import { goto, afterNavigate } from '$app/navigation';
   import { getSession, setSession, clearSession } from '$lib/auth/session';
   import { initStores, markVisited } from '$lib/state/stores';
   import Confetti from '$lib/components/Confetti.svelte';
@@ -15,14 +15,15 @@
   import HeartButton from '$lib/components/HeartButton.svelte';
   import XpPill from '$lib/components/XpPill.svelte';
   import XpToast from '$lib/components/XpToast.svelte';
+  import InstallButton from '$lib/components/InstallButton.svelte';
   import MoodLayer from '$lib/components/MoodLayer.svelte';
   import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, MOOD_META, type ActiveMood } from '$lib/mood';
 
   import { showToast } from '$lib/components/events';
   import { t } from 'svelte-i18n';
+  import { get } from 'svelte/store';
   import { applyInitialDocumentLocale } from '$lib/i18n';
   import { onMount } from 'svelte';
-  import { pwaInfo } from 'virtual:pwa-info';
 
   let { children } = $props();
   let session = $state(getSession());
@@ -31,10 +32,49 @@
   let activeMood = $state<ActiveMood | null>(null);
   let authRedirectTimer: ReturnType<typeof setTimeout> | null = null;
 
-  // Tag <link rel="manifest"> gerada pelo plugin (caso o PWA esteja ativo).
-  // O fallback manual já vive em src/app.html, por isso esta tag é só aditiva.
-  const webManifestLink = $derived(pwaInfo ? pwaInfo.webManifest.linkTag : '');
+  // PWA prompt-mode update flow: the SW registration below hands us an
+  // `updateSW` callback; when 'presuntinho:pwa-update' fires with
+  // type 'needRefresh' we surface a small banner with a reload action.
+  let pwaUpdateReady = $state(false);
+  let updateSW: ((reloadPage?: boolean) => Promise<void>) | null = null;
+
   const moodAccent = $derived(activeMood ? MOOD_META[activeMood.kind].accent : null);
+
+  /** Normalised active-tab check for the bottom nav. */
+  function isActive(href: string): boolean {
+    const path = page.url.pathname.replace(/\/+$/, '') || '/';
+    const target = href.replace(/\/+$/, '') || '/';
+    if (target === '/') return path === '/';
+    return path === target || path.startsWith(`${target}/`);
+  }
+
+  /** Visit tracking (Phase 13) — normalise "/foo/" and "/foo" to "foo". */
+  async function trackVisit(pathname: string): Promise<void> {
+    if (typeof indexedDB === 'undefined') return;
+    try {
+      const path = pathname.replace(/\/+$/, '') || '/';
+      const pageId = path === '/' ? 'home' : path.replace(/^\//, '');
+      await markVisited(pageId);
+    } catch (e) {
+      console.error('[presuntinho] markVisited failed:', e);
+    }
+  }
+
+  // Runs after EVERY client-side navigation (including the initial one),
+  // so deep navigation is tracked — not only the first mounted page.
+  afterNavigate((nav) => {
+    const pathname = nav.to?.url.pathname ?? page.url.pathname;
+    void trackVisit(pathname);
+  });
+
+  function applyPwaUpdate(): void {
+    pwaUpdateReady = false;
+    if (updateSW) {
+      void updateSW(true);
+    } else if (typeof location !== 'undefined') {
+      location.reload();
+    }
+  }
 
   onMount(() => {
     applyInitialDocumentLocale();
@@ -42,6 +82,7 @@
     let unbindKey: (() => void) | null = null;
     let unbindExtra: (() => void) | null = null;
     let moodPoll: ReturnType<typeof setInterval> | null = null;
+    let swPoll: ReturnType<typeof setInterval> | null = null;
 
     async function refreshMood(): Promise<void> {
       const mood = await readActiveMood();
@@ -72,13 +113,22 @@
     // PWA: regista o service worker gerado pelo @vite-pwa/sveltekit.
     // Em dev (devOptions.enabled = false) o módulo virtual:pwa-register não
     // existe, por isso o .catch() mantém a app silenciosamente funcional.
+    // Prompt-mode: guardamos o callback devolvido por registerSW para que
+    // o banner "nova versão" possa aplicar o update + reload num toque.
     if ('serviceWorker' in navigator) {
       import('virtual:pwa-register')
         .then(({ registerSW }) => {
-          registerSW({
+          updateSW = registerSW({
             immediate: true,
-            onRegisteredSW(swUrl: string) {
+            onRegisteredSW(swUrl: string, r?: ServiceWorkerRegistration) {
               if (import.meta.env.DEV) console.debug('[presuntinho] SW registado:', swUrl);
+              // Prompt-mode only detects updates on navigation; poll hourly
+              // so long-lived tabs still learn about new deploys.
+              if (r && !swPoll) {
+                swPoll = setInterval(() => {
+                  if (navigator.onLine) r.update().catch(() => {});
+                }, 60 * 60 * 1000);
+              }
             },
             onNeedRefresh() {
               // Dispara evento para o sistema de toasts mostrar
@@ -102,6 +152,18 @@
           // Plugin inativo (modo dev ou build sem PWA) — silencioso.
         });
     }
+
+    // PWA update notifications (fired by the SW registration above OR by the
+    // PWA module directly once registration moves fully to prompt-mode).
+    const onPwaUpdate = (event: Event) => {
+      const detail = event instanceof CustomEvent ? (event.detail as { type?: string } | null) : null;
+      if (detail?.type === 'needRefresh') {
+        pwaUpdateReady = true;
+      } else if (detail?.type === 'offlineReady') {
+        showToast(get(t)('pwa.offline_ready', { default: 'Presuntinho pronto para funcionar offline. 🐷' }), 3200);
+      }
+    };
+    window.addEventListener('presuntinho:pwa-update', onPwaUpdate);
 
     // Secret Room listeners + Konami key handler must be bound BEFORE any
     // async work. Previously these were registered after `await markVisited`,
@@ -137,15 +199,8 @@
         // Continue rendering; stores will fall back to defaults
       }
 
-      // Visit tracking (Phase 13). Normalise the pathname so "/foo/"
-      // and "/foo" both map to "foo" — matches V3's visited keys.
-      try {
-        const path = page.url.pathname.replace(/\/+$/, '') || '/';
-        const pageId = path === '/' ? 'home' : path.replace(/^\//, '');
-        await markVisited(pageId);
-      } catch (e) {
-        console.error('[presuntinho] markVisited failed:', e);
-      }
+      // Visit tracking now runs in afterNavigate (covers EVERY navigation,
+      // including the initial one) — see trackVisit() above.
 
       // Auth gate: each route owns its own empty-state ("iniciar sessão").
             // The layout must NOT redirect-away on user clicks — that turned
@@ -166,47 +221,34 @@
       if (unbindExtra) unbindExtra();
       if (authRedirectTimer) clearTimeout(authRedirectTimer);
       window.removeEventListener(MOOD_EVENT, onMoodChanged);
+      window.removeEventListener('presuntinho:pwa-update', onPwaUpdate);
       if (moodPoll) clearInterval(moodPoll);
+      if (swPoll) clearInterval(swPoll);
     };
   });
 
-  function startAuthRedirect(targetLabel: string): void {
-      showToast($t('auth.redirect_toast', { values: { target: targetLabel }, default: `Precisas iniciar sessão para abrir ${targetLabel}.` }), 2400);
-    if (authRedirectTimer) clearTimeout(authRedirectTimer);
-    authRedirectTimer = setTimeout(() => {
-      authRedirectTimer = null;
-      void goto('/splash/');
-    }, 550);
-  }
-
-  // Bottom-nav clicks: validate storesReady, session, and authRedirectTimer guard
-  // before allowing navigation. (CEO reported: clicking Escola scrolled to top
-  // of /escola instead of navigating; Agente hub card didn't open route. Root
-  // cause: missing guard checks.)
+  // Bottom-nav clicks: validate storesReady, session, and authRedirectTimer
+  // guard before allowing navigation. Blocked taps get toast feedback so a
+  // tap is never a silent no-op.
   function handleNavClick(event?: MouseEvent, targetLabel?: string): void {
-    console.log('[nav] handleNavClick called', { targetLabel, storesReady, session: !!session, authRedirectTimer: !!authRedirectTimer });
-
-    // Guard: block navigation if stores aren't ready, no session, or auth redirect timer is active
+    const translate = get(t);
     if (!storesReady) {
-      console.log('[nav] blocked: stores not ready');
       if (event) event.preventDefault();
+      showToast(translate('nav.blocked.loading', { default: 'Um segundinho — ainda estou a preparar tudo… 🐷' }), 2200);
       return;
     }
-
-    if (!session) {
-      console.log('[nav] blocked: no session');
+    if (!session || authRedirectTimer) {
       if (event) event.preventDefault();
+      showToast(
+        translate('nav.blocked.session', {
+          values: { target: targetLabel ?? '' },
+          default: 'Inicia sessão primeiro para abrir esta área.'
+        }),
+        2400
+      );
       return;
     }
-
-    if (authRedirectTimer) {
-      console.log('[nav] blocked: auth redirect timer active');
-      if (event) event.preventDefault();
-      return;
-    }
-
-    console.log('[nav] navigation allowed', { targetLabel });
-    // Let the native <a> navigation proceed (no preventDefault)
+    // Let the native <a> navigation proceed (no preventDefault).
   }
 
   function logout() {
@@ -215,12 +257,6 @@
     goto('/splash/');
   }
 </script>
-
-<svelte:head>
-  {#if webManifestLink}
-    {@html webManifestLink}
-  {/if}
-</svelte:head>
 
 <PageLoader />
 
@@ -283,38 +319,55 @@
               {@render children?.()}
             </main>
 
+            {#if pwaUpdateReady}
+              <!-- Prompt-mode PWA update: actionable toast-style banner. -->
+              <div class="pwa-update" role="status" aria-live="polite">
+                <span class="pwa-update-msg">{$t('pwa.update_available', { default: 'Nova versão do Presuntinho disponível! ✨' })}</span>
+                <button type="button" class="pwa-update-reload" onclick={applyPwaUpdate}>
+                  {$t('pwa.update_reload', { default: 'Atualizar' })}
+                </button>
+                <button
+                  type="button"
+                  class="pwa-update-dismiss"
+                  onclick={() => (pwaUpdateReady = false)}
+                  aria-label={$t('pwa.update_later', { default: 'Mais tarde' })}
+                  title={$t('pwa.update_later', { default: 'Mais tarde' })}
+                >×</button>
+              </div>
+            {/if}
+
             <!-- Footer principal: Home / Calendário / Agente / Vida / Escola. -->
             <nav class="bottom-nav" aria-label={$t('nav.bottom.aria', { default: 'Navegação principal' })}>
-                  <a href="/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Home')} aria-label={$t('nav.home.aria', { default: 'Home — dashboard principal' })} data-sveltekit-preload-data>
+                  <a href="/" class="nav-btn" class:nav-btn-active={isActive('/')} aria-current={isActive('/') ? 'page' : undefined} class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Home')} aria-label={$t('nav.home.aria', { default: 'Home — dashboard principal' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">🏠</span>
                     <span class="nav-label">{$t('nav.home', { default: 'Home' })}</span>
                   </a>
-                  <a href="/calendario/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Calendário')} aria-label={$t('nav.calendario.aria', { default: 'Calendário — agenda, mês e tasks' })} data-sveltekit-preload-data>
+                  <a href="/calendario/" class="nav-btn" class:nav-btn-active={isActive('/calendario/')} aria-current={isActive('/calendario/') ? 'page' : undefined} class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Calendário')} aria-label={$t('nav.calendario.aria', { default: 'Calendário — agenda, mês e tasks' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">🗓️</span>
                     <span class="nav-label">{$t('nav.calendario', { default: 'Calendário' })}</span>
                   </a>
-                  <a href="/agente/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Agente')} aria-label={$t('nav.agente.aria', { default: 'Agente — chat com IA' })} data-sveltekit-preload-data>
+                  <a href="/agente/" class="nav-btn" class:nav-btn-active={isActive('/agente/')} aria-current={isActive('/agente/') ? 'page' : undefined} class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Agente')} aria-label={$t('nav.agente.aria', { default: 'Agente — chat com IA' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">🤖</span>
                     <span class="nav-label">{$t('nav.agente', { default: 'Agente' })}</span>
                   </a>
-                  <a href="/vida/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Vida')} aria-label={$t('nav.vida.aria', { default: 'Vida — finanças, hábitos e vícios' })} data-sveltekit-preload-data>
+                  <a href="/vida/" class="nav-btn" class:nav-btn-active={isActive('/vida/')} aria-current={isActive('/vida/') ? 'page' : undefined} class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Vida')} aria-label={$t('nav.vida.aria', { default: 'Vida — finanças, hábitos e vícios' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">🌿</span>
                     <span class="nav-label">{$t('nav.vida', { default: 'Vida' })}</span>
                   </a>
-                  <a href="/escola/" class="nav-btn" class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Escola')} aria-label={$t('nav.escola.aria', { default: 'Escola — cursos e lições' })} data-sveltekit-preload-data>
+                  <a href="/escola/" class="nav-btn" class:nav-btn-active={isActive('/escola/')} aria-current={isActive('/escola/') ? 'page' : undefined} class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Escola')} aria-label={$t('nav.escola.aria', { default: 'Escola — cursos e lições' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">📚</span>
                     <span class="nav-label">{$t('nav.escola', { default: 'Escola' })}</span>
                   </a>
                 </nav>
 
                 <!--
-                  Floating XP + easter eggs.
-                  Keep these in one stack above the bottom nav. Mascot used to
-                  be an independent fixed button at bottom-right, which made it
-                  sit behind the Vida footer tab on mobile.
+                  Floating XP + install + easter eggs.
+                  One stack above the bottom nav, anchored at the bottom so the
+                  heart never moves when the pill/install button toggle.
                 -->
                 <div class="fab-stack" aria-live="polite">
                   <XpPill />
+                  <InstallButton />
                   <HeartButton />
                 </div>
                 <div class="mascot-corner" aria-live="polite">
@@ -359,8 +412,8 @@
     position: absolute;
     top: -100px;
     left: 0.5rem;
-    background: var(--accent, #ec4899);
-    color: #fff;
+    background: var(--accent);
+    color: var(--on-accent, #fff);
     padding: 0.5rem 0.875rem;
     border-radius: 0.5rem;
     font-weight: 600;
@@ -372,7 +425,7 @@
   .skip-link:focus-visible {
     top: 0.5rem;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.5);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 50%, transparent);
   }
   .nav {
     background: rgba(0, 0, 0, 0.2);
@@ -411,7 +464,7 @@
       outline: none;
     }
     .logo-text:focus-visible {
-      box-shadow: 0 0 0 2px var(--accent, #ec4899);
+      box-shadow: 0 0 0 2px var(--accent);
     }
     .logo-pig {
       font-size: 1.5rem;
@@ -434,7 +487,7 @@
       outline: none;
     }
     .logo-pig:focus-visible {
-      box-shadow: 0 0 0 2px var(--accent, #ec4899);
+      box-shadow: 0 0 0 2px var(--accent);
     }
   .nav-actions {
     display: flex;
@@ -462,7 +515,7 @@
     outline: none;
   }
   .icon-btn:focus-visible {
-    box-shadow: 0 0 0 2px var(--accent, #ec4899);
+    box-shadow: 0 0 0 2px var(--accent);
   }
   .content {
     flex: 1;
@@ -514,7 +567,33 @@
       transform: scale(0.96);
     }
     .nav-btn:focus-visible {
-      box-shadow: 0 0 0 2px var(--accent, #ec4899);
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+    /* Active tab: accent tint + a small indicator bar so the current
+       section is obvious at a glance (paired with aria-current="page"). */
+    .nav-btn-active {
+      position: relative;
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+    }
+    .nav-btn-active::before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1.6rem;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+    .nav-btn-active .nav-label {
+      font-weight: 700;
+    }
+    .nav-btn-active:hover,
+    .nav-btn-active:focus-visible {
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 16%, transparent);
     }
     .nav-btn-disabled {
       color: rgba(255, 255, 255, 0.42);
@@ -544,30 +623,92 @@
       }
     }
 
-    /* Floating action button stack (XP pill + easter eggs). */
+    /* Floating action button stack (XP pill + install + easter eggs).
+       Generalised for N children: a bottom-anchored column packed towards
+       the end, so the bottom-most target (heart) never moves when the
+       XP pill or install button appear/disappear above it. */
     .fab-stack {
       position: fixed;
       right: max(1rem, env(safe-area-inset-right));
       bottom: calc(env(safe-area-inset-bottom) + 5.75rem);
-      width: 9.25rem;
-      height: 6.9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: flex-end;
+      gap: 0.65rem;
       z-index: 60;
       pointer-events: none; /* container ignores — children re-enable */
     }
     .fab-stack > :global(*) {
       pointer-events: auto;
     }
-    /* Stable anchoring: XP can appear/disappear above the heart without moving
-       the bottom-right click target. */
-    .fab-stack > :global(:first-child) {
-      position: absolute;
-      right: 0;
-      bottom: 4.05rem;
+    /* PWA update banner — actionable "toast" pinned above the bottom nav. */
+    .pwa-update {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(env(safe-area-inset-bottom) + 5.25rem);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      max-width: min(92vw, 30rem);
+      padding: var(--space-2) var(--space-3);
+      background: var(--bg-elev);
+      color: var(--txt);
+      border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg, 0 12px 36px rgba(0, 0, 0, 0.42));
+      z-index: 9800;
     }
-    .fab-stack > :global(:last-child) {
-      position: absolute;
-      right: 0;
-      bottom: 0;
+    .pwa-update-msg {
+      font-size: var(--fs-sm);
+      line-height: 1.35;
+    }
+    .pwa-update-reload {
+      flex-shrink: 0;
+      min-height: 44px;
+      padding: 0.45rem 0.9rem;
+      border: 0;
+      border-radius: 999px;
+      background: var(--accent);
+      color: var(--on-accent, #fff);
+      font: inherit;
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      cursor: pointer;
+      transition: background var(--motion-fast, 120ms) ease;
+    }
+    .pwa-update-reload:hover,
+    .pwa-update-reload:focus-visible {
+      background: var(--accent-hover);
+      outline: none;
+    }
+    .pwa-update-reload:focus-visible {
+      box-shadow: 0 0 0 2px var(--txt);
+    }
+    .pwa-update-dismiss {
+      flex-shrink: 0;
+      min-width: 44px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 0;
+      border-radius: var(--radius-sm);
+      color: var(--txt3);
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .pwa-update-dismiss:hover,
+    .pwa-update-dismiss:focus-visible {
+      color: var(--txt);
+      background: var(--card-hover);
+      outline: none;
+    }
+    .pwa-update-dismiss:focus-visible {
+      box-shadow: 0 0 0 2px var(--accent);
     }
     .mascot-corner {
       position: fixed;

@@ -2,8 +2,10 @@
   import { onMount } from 'svelte';
   import {
     clearActiveMood,
+    ensureMoodEpisodeLogged,
     moodAffirmation,
     moodMicrocopy,
+    recordMoodCare,
     MOOD_META,
     type ActiveMood
   } from '$lib/mood';
@@ -31,11 +33,23 @@
   }
 
   onMount(() => {
+    // Legacy fallback read — care ticks recorded before V8 lived only in
+    // localStorage. We keep reading (and writing) it so nothing is lost,
+    // but the source of truth for insights is now the mood_logs row.
     try {
       careDone = JSON.parse(localStorage.getItem(storageKey) || '{}') as Record<string, boolean>;
     } catch {
       careDone = {};
     }
+
+    // V8 mood history: make sure this episode has an open mood_logs row
+    // (covers server-triggered moods hydrated from the love-lock cookie),
+    // then migrate any legacy localStorage ticks onto it.
+    void ensureMoodEpisodeLogged(mood).then(() => {
+      if (Object.values(careDone).some(Boolean)) {
+        void recordMoodCare(careDone);
+      }
+    });
 
     const id = setInterval(() => (seed = Date.now()), 60_000);
     return () => clearInterval(id);
@@ -48,6 +62,8 @@
     } catch {
       // localStorage can fail in private browsing — the mood still works.
     }
+    // Mirror the ticks onto the episode's mood_logs row (best-effort).
+    void recordMoodCare(next);
   }
 
   function toggleCare(id: string): void {
@@ -93,7 +109,7 @@
         <strong>{meta.label}</strong>
         <small>{line}</small>
       </span>
-      <span class="mood-progress" aria-label={`${doneCount} de ${meta.careActions.length} miminhos marcados`}>
+      <span class="mood-progress" aria-label={$t('mood.layer.progress_aria', { values: { done: doneCount, total: meta.careActions.length }, default: '{done} de {total} miminhos marcados' })}>
         {doneCount}/{meta.careActions.length}
       </span>
     </button>
@@ -129,10 +145,14 @@
           <small>{$t('mood.layer.next_hint')}</small>
         </button>
 
+        <a class="history-link" href="/humor/">
+          {$t('mood.layer.history_link', { default: 'Ver o teu histórico de humor →' })}
+        </a>
+
         <div class="recover-zone">
           <p>{meta.body}</p>
           <button type="button" class="recover" onclick={clearMood} disabled={clearing}>
-            {clearing ? 'A guardar…' : meta.action}
+            {clearing ? $t('mood.layer.saving', { default: 'A guardar…' }) : meta.action}
           </button>
         </div>
       </div>
@@ -341,6 +361,23 @@
   .comfort-note span { color: color-mix(in srgb, var(--mood-accent) 68%, #172033); font-size: .66rem; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; }
   .comfort-note strong { font-size: .86rem; line-height: 1.28; }
   .comfort-note small { color: rgba(23,32,51,.62); font-size: .7rem; }
+  .history-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: .2rem .4rem;
+    border-radius: .6rem;
+    color: color-mix(in srgb, var(--mood-accent) 72%, #172033);
+    font-size: .78rem;
+    font-weight: 700;
+    text-decoration: none;
+    justify-self: start;
+  }
+  .history-link:hover { text-decoration: underline; }
+  .history-link:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--mood-accent) 55%, white);
+    outline-offset: 2px;
+  }
   .recover-zone {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;

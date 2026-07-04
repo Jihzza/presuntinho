@@ -65,7 +65,7 @@
   }
   .hero h1 { margin: 0.35rem 0; font-size: clamp(2rem, 7vw, 3rem); line-height: 1; }
   .hero p,
-  .cards p { color: #cbd5e1; line-height: 1.5; margin: 0; }
+  .cards p { color: var(--txt2); line-height: 1.5; margin: 0; }
   button {
     margin-top: 1rem;
     min-height: 44px;

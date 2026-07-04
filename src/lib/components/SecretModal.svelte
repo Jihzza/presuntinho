@@ -107,15 +107,15 @@
     animation: overlay-in 0.18s ease;
   }
   .modal {
-    background: linear-gradient(135deg, var(--bg, #1f2e4a) 0%, #2d4373 100%);
-    border: 1px solid rgba(236, 72, 153, 0.4);
-    border-radius: 1rem;
+    background: linear-gradient(135deg, var(--bg, #1f2e4a) 0%, var(--bg-elev, #2d4373) 100%);
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    border-radius: var(--radius-xl, 1rem);
     padding: 2rem;
     max-width: 480px;
     width: 100%;
     position: relative;
     color: var(--txt, #fff);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-lg, 0 20px 60px rgba(0, 0, 0, 0.5));
     max-height: 90vh;
     overflow-y: auto;
   }
@@ -125,23 +125,23 @@
     right: 0.75rem;
     background: transparent;
     border: 0;
-    color: #fff;
+    color: var(--txt, #fff);
     font-size: 1.5rem;
     cursor: pointer;
     line-height: 1;
     padding: 0.5rem 0.65rem;
     min-width: 44px;
     min-height: 44px;
-    border-radius: 0.375rem;
+    border-radius: var(--radius-sm, 0.375rem);
   }
   .close:hover,
   .close:focus-visible {
-    color: var(--accent, #ec4899);
+    color: var(--accent);
     background: rgba(255, 255, 255, 0.06);
     outline: none;
   }
   .close:focus-visible {
-    box-shadow: 0 0 0 2px var(--accent, #ec4899);
+    box-shadow: 0 0 0 2px var(--accent);
   }
   h2 { margin: 0 0 1rem 0; color: var(--txt, #fff); }
   .lead {
@@ -168,23 +168,23 @@
   }
   .cta {
     padding: 0.65rem 1.1rem;
-    background: var(--accent, #ec4899);
-    color: #fff;
+    background: var(--accent);
+    color: var(--on-accent, #fff);
     border: 0;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-md, 0.5rem);
     cursor: pointer;
     font-weight: 600;
     min-height: 44px;
     min-width: 44px;
-    transition: background 0.2s ease;
+    transition: background var(--motion-base, 220ms) ease;
   }
   .cta:hover,
   .cta:focus-visible {
-    background: var(--accent-hover, #db2777);
+    background: var(--accent-hover);
     outline: none;
   }
   .cta:focus-visible {
-    box-shadow: 0 0 0 2px #fff;
+    box-shadow: 0 0 0 2px var(--on-accent, #fff);
   }
   @keyframes overlay-in {
     from { opacity: 0; }

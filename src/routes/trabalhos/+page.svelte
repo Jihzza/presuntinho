@@ -337,7 +337,7 @@
     color: var(--txt, #fff);
   }
   .sub {
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     margin: 0;
     font-size: 1rem;
   }
@@ -346,12 +346,12 @@
     gap: 0.5rem;
     align-items: center;
     font-size: 0.875rem;
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     margin-bottom: 1rem;
     flex-wrap: wrap;
   }
   .crumbs a {
-    color: var(--accent, #ec4899);
+    color: var(--accent);
     text-decoration: none;
   }
   .crumbs a:hover,
@@ -385,7 +385,7 @@
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     font-weight: 600;
   }
   .field select {
@@ -406,7 +406,7 @@
     align-self: flex-end;
     background: transparent;
     border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     border-radius: 0.4rem;
     padding: 0.5rem 0.8rem;
     font-family: inherit;
@@ -418,7 +418,7 @@
   .clear-btn:hover,
   .clear-btn:focus-visible {
     background: rgba(236, 72, 153, 0.15);
-    color: var(--accent, #ec4899);
+    color: var(--accent);
     outline: none;
   }
   .summary {
@@ -429,7 +429,7 @@
   }
   .summary-pill {
     background: rgba(0, 0, 0, 0.2);
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     padding: 0.3rem 0.6rem;
     border-radius: 999px;
     border: 1px solid var(--border, rgba(255, 255, 255, 0.08));
@@ -439,7 +439,7 @@
     font-weight: 700;
   }
   .summary-pill.xp strong {
-    color: var(--accent, #ec4899);
+    color: var(--accent);
   }
   .empty {
     background: var(--card, rgba(255, 255, 255, 0.05));
@@ -447,7 +447,7 @@
     border-radius: 0.75rem;
     padding: 1.5rem;
     text-align: center;
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
   }
   .empty.error {
     border-color: var(--error, #ef4444);
@@ -474,7 +474,7 @@
     transform: translateY(-1px);
   }
   .card[data-status='in_progress'] {
-    border-left-color: var(--accent, #ec4899);
+    border-left-color: var(--accent);
   }
   .card[data-status='submitted'] {
     border-left-color: var(--success, #10b981);
@@ -511,7 +511,7 @@
     padding: 0.15rem 0.55rem;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.08);
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -522,10 +522,10 @@
   .cadeira {
     margin: 0;
     font-size: 0.8125rem;
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
   }
   .description {
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     margin: 0;
     font-size: 0.9375rem;
     line-height: 1.5;
@@ -560,7 +560,7 @@
   }
   .status-in_progress {
     background: rgba(236, 72, 153, 0.15);
-    color: var(--accent, #ec4899);
+    color: var(--accent);
   }
   .status-submitted {
     background: rgba(16, 185, 129, 0.15);
@@ -576,7 +576,7 @@
     padding: 0.2rem 0.6rem;
     border-radius: 999px;
     background: rgba(236, 72, 153, 0.12);
-    color: var(--accent, #ec4899);
+    color: var(--accent);
     font-weight: 600;
     white-space: nowrap;
   }
@@ -586,7 +586,7 @@
     gap: 0.5rem;
     justify-content: center;
     margin-top: 2rem;
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     font-size: 0.8125rem;
   }
   .page-footer span:first-child {

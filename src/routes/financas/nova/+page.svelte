@@ -23,12 +23,20 @@
     type CategoriaRow
   } from '$lib/financas';
   import { showToast } from '$lib/components/events';
+  import { useMoodState } from '$lib/mood/useMoodState.svelte';
 
   let tipo = $state<'receita' | 'despesa'>('despesa');
   let valorStr = $state('');
   let categoria = $state<string>('');
   let descricao = $state('');
   let data = $state(getHojeISO());
+  // V8: transação recorrente mensal (renda, salário, passe…)
+  let recorrente = $state(false);
+
+  // V8 (mood): em modo Sick/Soft o formulário fica só de leitura, com um
+  // aviso carinhoso em vez de inputs misteriosamente desativados.
+  const moodState = useMoodState();
+  const readOnly = $derived(moodState.isSick || moodState.isSoft);
 
   let categorias = $state<CategoriaRow[]>([]);
   let submitting = $state(false);
@@ -84,6 +92,7 @@
 
   async function handleSubmit(e: Event): Promise<void> {
     e.preventDefault();
+    if (readOnly) return;
     error = null;
 
     const valorNum = Number(valorStr.trim().replace(',', '.'));
@@ -111,9 +120,14 @@
         valor: valorNum,
         categoria,
         descricao: descricao.trim(),
-        data
+        data,
+        ...(recorrente ? { recorrente: 'mensal' as const } : {})
       });
-      showToast(tipo === 'receita' ? 'Receita adicionada' : 'Despesa adicionada');
+      showToast(
+        tipo === 'receita'
+          ? $t('financas.nova.toast.receita', { default: 'Receita adicionada' })
+          : $t('financas.nova.toast.despesa', { default: 'Despesa adicionada' })
+      );
       await goto('/financas/transacoes/');
     } catch (e) {
       console.error('[financas/nova] addTransacao failed', e);
@@ -164,6 +178,7 @@
           aria-checked={tipo === 'despesa'}
           aria-label={$t('financas.nova.tipo.despesa', { default: 'Despesa' })}
           onclick={() => (tipo = 'despesa')}
+          disabled={readOnly}
         >
           <span class="tipo-icon" aria-hidden="true">💸</span>
           <span>{$t('financas.nova.tipo.despesa', { default: 'Despesa' })}</span>
@@ -176,6 +191,7 @@
           aria-checked={tipo === 'receita'}
           aria-label={$t('financas.nova.tipo.receita', { default: 'Receita' })}
           onclick={() => (tipo = 'receita')}
+          disabled={readOnly}
         >
           <span class="tipo-icon" aria-hidden="true">💰</span>
           <span>{$t('financas.nova.tipo.receita', { default: 'Receita' })}</span>
@@ -197,6 +213,7 @@
           required
           placeholder={$t('placeholder.zero_zero', { default: '0,00' })}
           autocomplete="off"
+          disabled={readOnly}
         />
         <span class="euro" aria-hidden="true">{$t('currency.symbol')}</span>
       </div>
@@ -211,7 +228,7 @@
         <p class="hint">{$t('financas.nova.semCategorias', { default: 'Sem categorias compatíveis com este tipo.' })}</p>
       {:else}
         <div class="cat-select">
-          <select id="categoria" bind:value={categoria} required>
+          <select id="categoria" bind:value={categoria} required disabled={readOnly}>
             {#each categoriasCompativeis as c (c.id)}
               <option value={c.id}>{c.icone} {c.nome}</option>
             {/each}
@@ -239,6 +256,7 @@
         maxlength="120"
         placeholder={$t('placeholder.ex_almoco_com_a_equipa', { default: 'Ex.: Almoço com a equipa' })}
         autocomplete="off"
+        disabled={readOnly}
       />
       <span class="hint">{$t('financas.nova.opcional', { default: 'Opcional' })}. {$t('financas.nova.maxCaracteres', { default: 'Máx. 120 caracteres.' })}</span>
     </div>
@@ -246,8 +264,31 @@
     <!-- Data -->
     <div class="field">
       <label for="data">{$t('financas.nova.data', { default: 'Data' })} <span aria-hidden="true">*</span></label>
-      <input id="data" type="date" bind:value={data} required />
+      <input id="data" type="date" bind:value={data} required disabled={readOnly} />
     </div>
+
+    <!-- V8: recorrência mensal -->
+    <div class="field">
+      <label class="toggle-row" for="recorrente">
+        <input
+          id="recorrente"
+          type="checkbox"
+          bind:checked={recorrente}
+          disabled={readOnly}
+        />
+        <span class="toggle-text">
+          <span class="toggle-title">{$t('financas.nova.recorrente.label', { default: '🔁 Repetir todos os meses' })}</span>
+          <span class="hint">{$t('financas.nova.recorrente.hint', { default: 'Ideal para renda, salário ou subscrições — criamos a cópia de cada mês por ti.' })}</span>
+        </span>
+      </label>
+    </div>
+
+    {#if readOnly}
+      <p class="mood-readonly" role="note">
+        <span aria-hidden="true">🌿</span>
+        {$t('financas.mood.readonly', { default: 'Modo cuidado ativo — hoje é só para ver. As alterações ficam para quando estiveres melhor 🤍' })}
+      </p>
+    {/if}
 
     {#if error}
       <p class="error" role="alert">⚠️ {error}</p>
@@ -259,7 +300,7 @@
         type="submit"
         class="btn-primary"
         class:receita={tipo === 'receita'}
-        disabled={submitting || loadingCategorias || categoriasCompativeis.length === 0}
+        disabled={submitting || loadingCategorias || categoriasCompativeis.length === 0 || readOnly}
       >
         {submitting ? $t('common.loading') : (tipo === 'receita' ? $t('financas.nova.submit.add_receita', { default: 'Adicionar receita' }) : $t('financas.nova.submit.add_despesa', { default: 'Adicionar despesa' }))}
       </button>
@@ -424,6 +465,53 @@
   .tipo-icon {
     font-size: 1.5rem;
     line-height: 1;
+  }
+  /* V8: toggle "repetir todos os meses" */
+  .toggle-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+    cursor: pointer;
+    padding: 0.25rem 0;
+    min-height: 44px;
+  }
+  .toggle-row input[type='checkbox'] {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.125rem;
+    accent-color: var(--success, #10b981);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .toggle-row input[type='checkbox']:focus-visible {
+    outline: 2px solid var(--success, #10b981);
+    outline-offset: 2px;
+  }
+  .toggle-row input[type='checkbox']:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  .toggle-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+  .toggle-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--txt, #fff);
+  }
+  .mood-readonly {
+    margin: 0;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius-md, 0.75rem);
+    background: var(--card, rgba(255, 255, 255, 0.05));
+    border: 1px dashed var(--border, rgba(255, 255, 255, 0.2));
+    color: var(--txt2, #cbd5e1);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--fs-sm, 0.875rem);
   }
   .error {
     color: var(--error, #ef4444);

@@ -15,11 +15,11 @@
 //   * ensureAssignmentDefaults() — seed the table on first boot
 //                                 (delegates to assignments-seed.ts).
 //
-// XP rewards for lifecycle transitions reuse the existing XP_TABLE
-// entries from `xp-actions.ts`: `assignment_status_in_progress` (+3)
-// and `assignment_status_done` (+15) when a trabalho is submitted.
-// This keeps the Dexie `submitted` lifecycle aligned with the older
-// localStorage "done" reward reason without changing the XP schema.
+// XP rewards for lifecycle transitions use the XP_TABLE reasons from
+// `xp-actions.ts`: `assignment_status_in_progress` (+3) and
+// `assignment_status_done` on submit.  V8: the submit reward pays the
+// row's own `xpReward` (the number shown on the card); rows without a
+// positive xpReward fall back to the XP_TABLE default (+15).
 //
 // SSR safety: `db()` is lazy and the helpers throw if called on the
 // server.  Callers MUST guard with an `onMount` / `browser` check —
@@ -152,11 +152,14 @@ export async function setAssignmentStatus(
   };
   await d.assignments.put(updated);
 
-  // Award XP for the two explicit MVP lifecycle milestones.
+  // Award XP for the two explicit lifecycle milestones.
   if (status === 'in_progress') {
     await awardXP('assignment_status_in_progress');
   } else if (status === 'submitted') {
-    await awardXP('assignment_status_done');
+    // V8: pay the reward advertised on the card (row.xpReward).  Rows
+    // without a positive reward fall back to the XP_TABLE default (+15).
+    const reward = typeof existing.xpReward === 'number' && existing.xpReward > 0 ? existing.xpReward : undefined;
+    await awardXP('assignment_status_done', reward);
   }
 
   return updated;

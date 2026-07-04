@@ -30,6 +30,7 @@
   import EmptyState from '$lib/components/EmptyState.svelte';
   import Skeleton from '$lib/components/Skeleton.svelte';
   import { showToast } from '$lib/components/events';
+  import { PageHeader, Button } from '$lib/components/ui';
 
   let items = $state<Item[]>([]);
   let allTags = $state<string[]>([]);
@@ -146,19 +147,20 @@
 </svelte:head>
 
 <div class="biblioteca-page">
-  <header class="hero">
-    <h1>{$t('biblioteca.hero.title', { default: '📚 Biblioteca' })}</h1>
-    <p class="sub">{$t('biblioteca.hero.sub', { default: 'Bookmarks, links e referências com tags.' })}</p>
-  </header>
-
-  <nav class="crumbs" aria-label={$t('biblioteca.crumbs.aria', { default: 'Caminho de navegação' })}>
-    <a href="/">{$t('biblioteca.crumbs.home', { default: '← Hub' })}</a>
-    <span aria-hidden="true">/</span>
-    <span aria-current="page">{$t('biblioteca.crumbs.current', { default: 'Biblioteca' })}</span>
-  </nav>
+  <PageHeader
+    title={$t('biblioteca.hero.title', { default: '📚 Biblioteca' })}
+    subtitle={$t('biblioteca.hero.sub', { default: 'Bookmarks, links e referências com tags.' })}
+    align="center"
+  >
+    {#snippet breadcrumbs()}
+      <a href="/">{$t('biblioteca.crumbs.home', { default: '← Hub' })}</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{$t('biblioteca.crumbs.current', { default: 'Biblioteca' })}</span>
+    {/snippet}
+  </PageHeader>
 
   <section class="actions" aria-label={$t('biblioteca.actions.aria', { default: 'Ações' })}>
-    <a class="btn-primary" href="/biblioteca/novo/">{$t('biblioteca.new', { default: '+ Novo marcador' })}</a>
+    <Button href="/biblioteca/novo/">{$t('biblioteca.new', { default: '+ Novo marcador' })}</Button>
   </section>
 
   <section class="filters" aria-label={$t('biblioteca.filters.aria', { default: 'Filtros' })}>
@@ -276,61 +278,12 @@
     margin: 0 auto;
     padding: 1.5rem 1rem 2rem;
   }
-  .hero {
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-  .hero h1 {
-    font-size: 2rem;
-    margin: 0 0 0.5rem 0;
-    color: var(--txt, #fff);
-  }
-  .sub {
-    color: var(--txt2, #cbd5e1);
-    margin: 0;
-    font-size: 1rem;
-  }
-  .crumbs {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    font-size: 0.875rem;
-    color: var(--txt3, #94a3b8);
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-  }
-  .crumbs a {
-    color: var(--accent, #ec4899);
-    text-decoration: none;
-  }
-  .crumbs a:hover,
-  .crumbs a:focus-visible {
-    text-decoration: underline;
-  }
+  /* Hero + breadcrumbs now come from the shared PageHeader primitive;
+     the primary action uses the shared Button primitive. */
   .actions {
     margin-bottom: 1rem;
     display: flex;
     justify-content: flex-end;
-  }
-  .btn-primary {
-    display: inline-block;
-    background: var(--accent, #ec4899);
-    color: #fff;
-    text-decoration: none;
-    padding: 0.625rem 1.25rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    border: 0;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .btn-primary:hover,
-  .btn-primary:focus-visible {
-    background: #d63384;
-    outline: none;
-  }
-  .btn-primary:focus-visible {
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.4);
   }
   .filters {
     background: var(--card, rgba(255, 255, 255, 0.05));
@@ -372,7 +325,7 @@
   .search input:focus-visible {
     outline: none;
     border-color: var(--accent, #ec4899);
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.25);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #ec4899) 25%, transparent);
   }
   .clear-btn {
     background: transparent;
@@ -386,9 +339,12 @@
   }
   .clear-btn:hover,
   .clear-btn:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--card-hover, rgba(255, 255, 255, 0.08));
     color: var(--txt, #fff);
     outline: none;
+  }
+  .clear-btn:focus-visible {
+    box-shadow: var(--focus-ring);
   }
   .tag-chips {
     display: flex;
@@ -396,25 +352,28 @@
     gap: 0.375rem;
   }
   .chip {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--card, rgba(255, 255, 255, 0.05));
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
     color: var(--txt2, #cbd5e1);
     font-size: 0.8125rem;
     padding: 0.25rem 0.625rem;
     border-radius: 999px;
     cursor: pointer;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    transition: background var(--motion-fast, 120ms), color var(--motion-fast, 120ms), border-color var(--motion-fast, 120ms);
   }
   .chip:hover,
   .chip:focus-visible {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--card-hover, rgba(255, 255, 255, 0.1));
     color: var(--txt, #fff);
     outline: none;
+  }
+  .chip:focus-visible {
+    box-shadow: var(--focus-ring);
   }
   .chip.active {
     background: var(--accent, #ec4899);
     border-color: var(--accent, #ec4899);
-    color: #fff;
+    color: var(--on-accent, #fff);
     font-weight: 600;
   }
   .empty {
@@ -448,7 +407,7 @@
     transition: transform 0.15s, background 0.2s;
   }
   .card:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--card-hover, rgba(255, 255, 255, 0.08));
     transform: translateY(-1px);
   }
   .card-main {
@@ -500,11 +459,11 @@
   }
   .tag-pill {
     font-size: 0.75rem;
-    background: rgba(236, 72, 153, 0.12);
+    background: color-mix(in srgb, var(--accent, #ec4899) 12%, transparent);
     color: var(--accent, #ec4899);
     padding: 0.125rem 0.5rem;
     border-radius: 999px;
-    border: 1px solid rgba(236, 72, 153, 0.25);
+    border: 1px solid color-mix(in srgb, var(--accent, #ec4899) 25%, transparent);
   }
   .meta {
     font-size: 0.75rem;
@@ -529,13 +488,16 @@
   }
   .delete-btn:hover,
   .delete-btn:focus-visible {
-    background: rgba(239, 68, 68, 0.1);
+    background: color-mix(in srgb, var(--error, #ef4444) 10%, transparent);
     color: var(--error, #ef4444);
     outline: none;
   }
+  .delete-btn:focus-visible {
+    box-shadow: var(--focus-ring);
+  }
   .delete-btn[data-confirming='true'] {
     background: var(--error, #ef4444);
-    color: #fff;
+    color: var(--on-accent, #fff);
     font-weight: 600;
     font-size: 0.875rem;
   }
@@ -549,21 +511,13 @@
     font-size: 0.8125rem;
   }
   .page-footer span:first-child {
-    color: var(--swatch, #ec4899);
+    color: var(--swatch, var(--accent));
     font-size: 1.125rem;
   }
   @media (min-width: 640px) {
     .biblioteca-page {
       padding: 2rem 1.5rem 3rem;
     }
-    .hero h1 {
-      font-size: 2.5rem;
-    }
   }
-  @media (prefers-reduced-motion: reduce) {
-    .card { transition: none; transform: none; }
-    .delete-btn { transition: none; }
-    .chip { transition: none; }
-    .clear-btn { transition: none; }
-  }
+  /* Reduced motion: handled by the global kill-switch in app.css. */
 </style>

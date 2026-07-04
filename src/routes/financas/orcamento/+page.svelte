@@ -20,6 +20,8 @@
     setOrcamento,
     totaisPorCategoria,
     getOrcamentoStatus,
+    copiarOrcamentosMesAnterior,
+    mesAnterior,
     getMesAtual,
     formatMes,
     formatValor,
@@ -28,6 +30,7 @@
     type TotaisPorCategoria
   } from '$lib/financas';
   import { showToast } from '$lib/components/events';
+  import { useMoodState } from '$lib/mood/useMoodState.svelte';
   import { locale, t } from 'svelte-i18n';
 
   let todasCategorias = $state<CategoriaRow[]>([]);
@@ -37,8 +40,13 @@
   let loading = $state(true);
   let error = $state<string | null>(null);
   let saving = $state<string | null>(null);   // categoriaId currently saving
+  let copying = $state(false);                // V8: "copiar mês anterior" em curso
   let mesFiltro = $state(getMesAtual());
   const sortLocale = $derived($locale || 'pt-PT');
+
+  // V8 (mood): Sick/Soft ⇒ limites só de leitura, com aviso carinhoso.
+  const moodState = useMoodState();
+  const readOnly = $derived(moodState.isSick || moodState.isSoft);
 
   // Só despesas + "ambos" recebem orçamento. Receita fica fora.
   let categoriasDespesa = $derived(
@@ -78,7 +86,31 @@
     }
   }
 
+  /**
+   * V8: copia todos os limites do mês anterior para o mês seleccionado.
+   * Nunca substitui limites já definidos neste mês.
+   */
+  async function copiarMesAnterior(): Promise<void> {
+    if (copying || readOnly) return;
+    copying = true;
+    try {
+      const n = await copiarOrcamentosMesAnterior(mesFiltro);
+      if (n > 0) {
+        showToast($t('financas.orcamento.copy.done', { values: { n }, default: '{n} limite(s) copiado(s) do mês anterior 🎉' }));
+        await refresh();
+      } else {
+        showToast($t('financas.orcamento.copy.nothing', { default: 'Nada novo para copiar — está tudo em dia.' }));
+      }
+    } catch (e) {
+      console.error('[financas/orcamento] copiar mes anterior failed', e);
+      showToast($t('financas.orcamento.copy.error', { default: 'Erro a copiar o mês anterior.' }));
+    } finally {
+      copying = false;
+    }
+  }
+
   async function saveLimite(categoriaId: string, raw: string): Promise<void> {
+    if (readOnly) return;
     const trimmed = raw.trim();
     const num = trimmed === '' ? 0 : Number(trimmed.replace(',', '.'));
     if (!Number.isFinite(num) || num < 0) {
@@ -153,7 +185,28 @@
       <span class="field-label">{$t('financas.orcamento.mes_label', { default: 'Mês' })}</span>
       <input type="month" bind:value={mesFiltro} aria-label="{$t('a11y.aria.mes_do_orcamento', { default: 'Mês do orçamento' })}" />
     </label>
+    {#if !readOnly}
+      <button
+        type="button"
+        class="copy-btn"
+        onclick={copiarMesAnterior}
+        disabled={copying}
+        aria-label={$t('financas.orcamento.copy.aria', { values: { mes: formatMes(mesAnterior(mesFiltro), sortLocale) }, default: 'Copiar limites de {mes}' })}
+      >
+        <span aria-hidden="true">📋</span>
+        {copying
+          ? $t('financas.orcamento.gravando', { default: 'A gravar…' })
+          : $t('financas.orcamento.copy.button', { default: 'Copiar mês anterior' })}
+      </button>
+    {/if}
   </section>
+
+  {#if readOnly}
+    <p class="mood-readonly" role="note">
+      <span aria-hidden="true">🌿</span>
+      {$t('financas.mood.readonly', { default: 'Modo cuidado ativo — hoje é só para ver. As alterações ficam para quando estiveres melhor 🤍' })}
+    </p>
+  {/if}
 
   {#if loading}
     <p class="empty">{$t('financas.orcamento.carregando', { default: 'A carregar…' })}</p>
@@ -222,7 +275,7 @@
                 inputmode="decimal"
                 value={limite || ''}
                 placeholder={$t('placeholder.em_dash', { default: '—' })}
-                disabled={saving === c.id}
+                disabled={saving === c.id || readOnly}
                 aria-label={`Limite (${$t('currency.symbol')}) para ${c.nome}`}
                 onblur={(e) => saveLimite(c.id, (e.currentTarget as HTMLInputElement).value)}
                 onkeydown={(e) => {
@@ -354,6 +407,47 @@
     border-color: var(--success, #10b981);
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
   }
+  /* V8: copiar limites do mês anterior */
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    background: var(--card-hover, rgba(255, 255, 255, 0.06));
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
+    border-radius: var(--radius-sm, 0.5rem);
+    color: var(--txt, #fff);
+    font-family: inherit;
+    font-size: var(--fs-sm, 0.875rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--motion-fast, 120ms);
+  }
+  .copy-btn:hover:not(:disabled),
+  .copy-btn:focus-visible:not(:disabled) {
+    background: var(--bg-elev, rgba(255, 255, 255, 0.12));
+    outline: none;
+  }
+  .copy-btn:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 30%, transparent);
+  }
+  .copy-btn:disabled {
+    opacity: 0.6;
+    cursor: progress;
+  }
+  .mood-readonly {
+    margin: 0 0 1rem 0;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius-md, 0.75rem);
+    background: var(--card, rgba(255, 255, 255, 0.05));
+    border: 1px dashed var(--border, rgba(255, 255, 255, 0.2));
+    color: var(--txt2, #cbd5e1);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--fs-sm, 0.875rem);
+  }
   .empty {
     background: var(--card, rgba(255, 255, 255, 0.05));
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
@@ -373,15 +467,15 @@
     margin: 0 0 1rem;
     padding: 0.75rem 1rem;
     border-radius: 0.75rem;
-    background: rgba(249, 115, 22, 0.12);
-    border: 1px solid rgba(249, 115, 22, 0.35);
-    color: #fed7aa;
+    background: color-mix(in srgb, var(--warning, #f59e0b) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--warning, #f59e0b) 35%, transparent);
+    color: var(--warning, #f59e0b);
     font-weight: 700;
   }
   .budget-alert.over {
-    background: rgba(239, 68, 68, 0.12);
-    border-color: rgba(239, 68, 68, 0.35);
-    color: #fecaca;
+    background: color-mix(in srgb, var(--error, #ef4444) 12%, transparent);
+    border-color: color-mix(in srgb, var(--error, #ef4444) 35%, transparent);
+    color: var(--error, #ef4444);
   }
   .summary {
     background: var(--card, rgba(255, 255, 255, 0.05));
@@ -477,8 +571,8 @@
     color: var(--warning, #f59e0b);
   }
   .status-badge.danger {
-    background: rgba(249, 115, 22, 0.16);
-    color: #fb923c;
+    background: color-mix(in srgb, var(--warning, #f59e0b) 20%, transparent);
+    color: color-mix(in srgb, var(--warning, #f59e0b) 60%, var(--error, #ef4444));
   }
   .status-badge.over {
     background: rgba(239, 68, 68, 0.16);
@@ -533,7 +627,7 @@
     background: var(--warning, #f59e0b);
   }
   .bar.danger {
-    background: #fb923c;
+    background: color-mix(in srgb, var(--warning, #f59e0b) 60%, var(--error, #ef4444));
   }
   .bar.over {
     background: var(--error, #ef4444);
@@ -561,7 +655,7 @@
     color: var(--warning, #f59e0b);
   }
   .percent-label.danger {
-    color: #fb923c;
+    color: color-mix(in srgb, var(--warning, #f59e0b) 60%, var(--error, #ef4444));
   }
   .percent-label.over {
     color: var(--error, #ef4444);
@@ -580,7 +674,7 @@
     color: var(--error, #ef4444);
   }
   .danger-msg {
-    color: #fb923c;
+    color: color-mix(in srgb, var(--warning, #f59e0b) 60%, var(--error, #ef4444));
   }
   .saving {
     font-size: 0.75rem;

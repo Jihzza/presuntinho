@@ -58,6 +58,7 @@
       type ProfileId
   } from '$lib/auth/hash';
   import { showToast } from '$lib/components/events';
+  import { Button } from '$lib/components/ui';
   import {
     activateMood,
     acknowledgeMoodIntro,
@@ -178,7 +179,7 @@
 
   // ----- Mood / Vibe -----
   const MOOD_OPTIONS: Array<{ id: 'normal' | MoodKind; emoji: string; accent: string }> = [
-    { id: 'normal', emoji: '✨', accent: '#ec4899' },
+    { id: 'normal', emoji: '✨', accent: 'var(--accent)' },
     { id: 'love', emoji: MOOD_META.love.emoji, accent: MOOD_META.love.accent },
     { id: 'sad', emoji: MOOD_META.sad.emoji, accent: MOOD_META.sad.accent },
     { id: 'sick', emoji: MOOD_META.sick.emoji, accent: MOOD_META.sick.accent }
@@ -757,16 +758,14 @@
       <span class="icon-wrap"><Key size={18} /></span>
       <h2 id="acct-h">{$t('settings.reset_password')}</h2>
     </div>
-    <button
-      type="button"
-      class="btn"
+    <Button
       onclick={openResetModal}
       aria-haspopup="dialog"
       aria-controls="reset-pw-modal"
     >
       <Key size={16} aria-hidden="true" />
       {$t('settings.reset_password.button')}
-    </button>
+    </Button>
   </section>
 
   <!-- ============ Hermes agent ============ -->
@@ -798,12 +797,12 @@
         />
       </label>
       <div class="data-actions">
-        <button type="submit" class="btn">
+        <Button type="submit">
           {$t('settings.hermes.save')}
-        </button>
-        <button type="button" class="btn btn-secondary" onclick={testHermes} disabled={hermesTesting}>
+        </Button>
+        <Button variant="secondary" onclick={testHermes} disabled={hermesTesting}>
           {hermesTesting ? '…' : $t('settings.hermes.test')}
-        </button>
+        </Button>
       </div>
     </form>
     {#if hermesStatus === 'ok'}
@@ -821,15 +820,15 @@
     </div>
 
     <div class="data-actions">
-      <button type="button" class="btn btn-secondary" onclick={doExport} disabled={exporting}>
+      <Button variant="secondary" onclick={doExport} disabled={exporting}>
         <Download size={16} aria-hidden="true" />
         {exporting ? '…' : $t('settings.export')}
-      </button>
+      </Button>
 
-      <button type="button" class="btn btn-secondary" onclick={triggerImport} disabled={importing}>
+      <Button variant="secondary" onclick={triggerImport} disabled={importing}>
         <Upload size={16} aria-hidden="true" />
         {importing ? '…' : $t('settings.import')}
-      </button>
+      </Button>
       <input
         bind:this={fileInput}
         type="file"
@@ -838,10 +837,10 @@
         hidden
       />
 
-      <button type="button" class="btn btn-danger" onclick={() => (confirmOpen = true)} disabled={clearing}>
+      <Button variant="danger" onclick={() => (confirmOpen = true)} disabled={clearing}>
         <Trash size={16} aria-hidden="true" />
         {$t('settings.clear_data')}
-      </button>
+      </Button>
     </div>
 
     {#if countsLoaded}
@@ -953,13 +952,13 @@
       </fieldset>
 
       <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" onclick={cancelImport} disabled={importing}>
+        <Button variant="secondary" onclick={cancelImport} disabled={importing}>
           {$t('settings.cancel')}
-        </button>
-        <button type="button" class="btn btn-danger" onclick={confirmImport} disabled={importing}>
+        </Button>
+        <Button variant="danger" onclick={confirmImport} disabled={importing}>
           <Upload size={14} aria-hidden="true" />
           {importing ? '…' : $t(`settings.backup.import_mode.${importMode}_button`)}
-        </button>
+        </Button>
       </div>
     </div>
   </div>
@@ -984,13 +983,13 @@
       <h2 id="confirm-h">{$t('settings.clear_data')}</h2>
       <p class="muted">{$t('settings.clear.confirm')}</p>
       <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" onclick={() => (confirmOpen = false)} disabled={clearing}>
+        <Button variant="secondary" onclick={() => (confirmOpen = false)} disabled={clearing}>
           {$t('settings.cancel')}
-        </button>
-        <button type="button" class="btn btn-danger" onclick={clearAllData} disabled={clearing}>
+        </Button>
+        <Button variant="danger" onclick={clearAllData} disabled={clearing}>
           <Trash size={14} aria-hidden="true" />
           {clearing ? '…' : $t('settings.clear.confirm_button')}
-        </button>
+        </Button>
       </div>
     </div>
   </div>
@@ -1065,17 +1064,15 @@
         </label>
 
         <div class="modal-actions">
-          <button
-            type="button"
-            class="btn btn-secondary"
+          <Button
+            variant="secondary"
             onclick={closeResetModal}
             disabled={resetBusy}
-          >{$t('settings.reset_password.cancel')}</button>
-          <button
+          >{$t('settings.reset_password.cancel')}</Button>
+          <Button
             type="submit"
-            class="btn"
             disabled={resetBusy}
-          >{resetBusy ? '…' : $t('settings.reset_password.submit')}</button>
+          >{resetBusy ? '…' : $t('settings.reset_password.submit')}</Button>
         </div>
       </form>
     </div>
@@ -1103,12 +1100,12 @@
   .header h1 {
     margin: 0 0 0.5rem 0;
     font-size: 1.75rem;
-    color: #fff;
+    color: var(--txt);
   }
   .card {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
     padding: 1.25rem;
     backdrop-filter: blur(10px);
   }
@@ -1121,7 +1118,7 @@
   .card-head h2 {
     margin: 0;
     font-size: 1.05rem;
-    color: #fff;
+    color: var(--txt);
   }
   .icon-wrap {
     display: inline-flex;
@@ -1129,9 +1126,9 @@
     justify-content: center;
     width: 28px;
     height: 28px;
-    border-radius: 0.5rem;
-    background: rgba(236, 72, 153, 0.18);
-    color: #ec4899;
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
+    color: var(--accent);
   }
   .seg {
     display: flex;
@@ -1145,24 +1142,23 @@
     justify-content: center;
     gap: 0.4rem;
     padding: 0.6rem 0.8rem;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 0.6rem;
-    color: #cbd5e1;
+    color: var(--txt2);
     font-size: 0.9rem;
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    transition: background var(--motion-fast, 120ms), border-color var(--motion-fast, 120ms), color var(--motion-fast, 120ms);
   }
   .seg button:hover,
   .seg button:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    outline: none;
+    background: var(--card-hover);
+    color: var(--txt);
   }
   .seg button.active {
-      background: rgba(236, 72, 153, 0.18);
-      border-color: #ec4899;
-      color: #fff;
+      background: color-mix(in srgb, var(--accent) 18%, transparent);
+      border-color: var(--accent);
+      color: var(--txt);
     }
     .theme-intro {
       margin: 0 0 0.75rem;
@@ -1182,18 +1178,17 @@
       min-height: 74px;
       padding: 0.7rem;
       text-align: left;
-      background: rgba(255, 255, 255, 0.045);
-      border: 1px solid rgba(255, 255, 255, 0.13);
+      background: var(--card);
+      border: 1px solid var(--border);
       border-radius: 0.8rem;
-      color: #fff;
+      color: var(--txt);
       cursor: pointer;
-      transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
+      transition: transform var(--motion-fast, 120ms) ease, background var(--motion-fast, 120ms) ease, border-color var(--motion-fast, 120ms) ease, opacity var(--motion-fast, 120ms) ease;
     }
     .theme-grid button:hover,
     .theme-grid button:focus-visible {
       transform: translateY(-1px);
-      background: rgba(255, 255, 255, 0.08);
-      outline: none;
+      background: var(--card-hover);
     }
     .theme-grid button.active {
       border-color: var(--accent);
@@ -1215,8 +1210,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-strong);
+      background: var(--card-hover);
       font-size: 1.1rem;
     }
     .theme-swatch-light { background: linear-gradient(135deg, #fff, #dbeafe); color: #0f172a; }
@@ -1234,7 +1229,7 @@
     .theme-swatch-fresh { background: linear-gradient(135deg, #58cc02, #1cb0f6); color: #052e16; }
     .theme-copy { min-width: 0; display: grid; gap: 0.15rem; }
     .theme-copy strong { color: inherit; font-size: 0.92rem; }
-    .theme-copy small { color: #cbd5e1; font-size: 0.74rem; line-height: 1.25; }
+    .theme-copy small { color: var(--txt2); font-size: 0.74rem; line-height: 1.25; }
     .mood-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
@@ -1251,15 +1246,14 @@
       background: linear-gradient(135deg, color-mix(in srgb, var(--mood-option-accent) 12%, rgba(255,255,255,.045)), rgba(255,255,255,.035));
       border: 1px solid color-mix(in srgb, var(--mood-option-accent) 24%, rgba(255,255,255,.12));
       border-radius: 0.9rem;
-      color: #fff;
+      color: var(--txt);
       cursor: pointer;
-      transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease, opacity 0.12s ease;
+      transition: transform var(--motion-fast, 120ms) ease, border-color var(--motion-fast, 120ms) ease, background var(--motion-fast, 120ms) ease, opacity var(--motion-fast, 120ms) ease;
     }
     .mood-grid button:hover:not(:disabled),
     .mood-grid button:focus-visible {
       transform: translateY(-1px);
       border-color: color-mix(in srgb, var(--mood-option-accent) 60%, white);
-      outline: none;
     }
     .mood-grid button.active {
       background: linear-gradient(135deg, color-mix(in srgb, var(--mood-option-accent) 28%, rgba(255,255,255,.08)), rgba(255,255,255,.06));
@@ -1300,49 +1294,15 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    padding: 0.65rem 1rem;
-    background: #ec4899;
-    color: #fff;
-    border: 0;
-    border-radius: 0.6rem;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-  }
-  .btn:hover:not(:disabled) {
-    background: #db2777;
-    transform: translateY(-1px);
-  }
-  .btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  .btn-secondary {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-  }
-  .btn-secondary:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.14);
-  }
-  .btn-danger {
-    background: #ef4444;
-  }
-  .btn-danger:hover:not(:disabled) {
-    background: #dc2626;
-  }
+  /* Action buttons now come from the shared $lib/components/ui Button
+     primitive (token-driven, theme-aware). */
   .data-actions {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
   }
   .muted {
-    color: #cbd5e1;
+    color: var(--txt2);
     font-size: 0.9rem;
     margin: 0 0 0.75rem 0;
     display: inline-flex;
@@ -1350,12 +1310,12 @@
     gap: 0.35rem;
   }
   .hint {
-    color: #cbd5e1;
+    color: var(--txt2);
     font-size: 0.85rem;
     margin: 0.75rem 0 0 0;
   }
-  .hint.ok { color: #6ee7b7; }
-  .hint.err { color: #fca5a5; }
+  .hint.ok { color: var(--success); }
+  .hint.err { color: var(--error); }
   .about-list {
     list-style: none;
     padding: 0;
@@ -1363,7 +1323,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
-    color: #cbd5e1;
+    color: var(--txt2);
     font-size: 0.9rem;
   }
   .about-list li,
@@ -1371,11 +1331,11 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    color: #cbd5e1;
+    color: var(--txt2);
     text-decoration: none;
   }
   .about-list a:hover {
-    color: #ec4899;
+    color: var(--accent);
   }
   .modal-backdrop {
     position: fixed;
@@ -1385,21 +1345,22 @@
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    z-index: 50;
+    z-index: var(--z-modal, 50);
     backdrop-filter: blur(4px);
   }
   .modal {
-    background: #1f2e4a;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 1rem;
+    background: var(--bg-elev);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
     padding: 1.5rem;
     max-width: 420px;
     width: 100%;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    color: var(--txt);
+    box-shadow: var(--shadow-lg, 0 12px 40px rgba(0, 0, 0, 0.5));
   }
   .modal h2 {
     margin: 0 0 0.5rem 0;
-    color: #fff;
+    color: var(--txt);
     font-size: 1.15rem;
   }
   .modal-actions {
@@ -1434,26 +1395,26 @@
   .modal-close {
     position: absolute;
     top: 0.5rem;
-    right: 0.75rem;
+    inset-inline-end: 0.75rem;
     background: transparent;
     border: 0;
-    color: #cbd5e1;
+    color: var(--txt2);
     font-size: 1.5rem;
     line-height: 1;
     cursor: pointer;
     padding: 0.4rem 0.65rem;
-    min-width: 44px;
-    min-height: 44px;
-    border-radius: 0.375rem;
+    min-width: var(--touch-target, 44px);
+    min-height: var(--touch-target, 44px);
+    border-radius: var(--radius-sm);
   }
   .modal-close:hover:not(:disabled),
   .modal-close:focus-visible {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.06);
+    color: var(--txt);
+    background: var(--card-hover);
     outline: none;
   }
   .modal-close:focus-visible {
-    box-shadow: 0 0 0 2px #ec4899;
+    box-shadow: var(--focus-ring);
   }
   .modal-close:disabled {
     opacity: 0.4;
@@ -1477,26 +1438,26 @@
     gap: 0.35rem;
   }
   .field-label {
-    color: #cbd5e1;
+    color: var(--txt2);
     font-size: 0.85rem;
     font-weight: 500;
   }
   .field input {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    color: #fff;
-    border-radius: 0.5rem;
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    color: var(--txt);
+    border-radius: var(--radius-md);
     padding: 0.6rem 0.75rem;
     font-size: 1rem;
-    min-height: 44px;
+    min-height: var(--touch-target, 44px);
     width: 100%;
-    transition: border-color 0.15s, background 0.15s;
+    transition: border-color var(--motion-fast, 120ms), background var(--motion-fast, 120ms);
   }
   .field input:focus-visible {
     outline: none;
-    border-color: #ec4899;
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.35);
+    border-color: var(--accent);
+    background: var(--card-hover);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent);
   }
   .field input:disabled {
     opacity: 0.6;
@@ -1515,14 +1476,14 @@
   /* task-051: per-table preview list of what the export will include */
   .backup-preview {
     margin-top: 0.75rem;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 0.6rem;
     padding: 0.5rem 0.75rem;
   }
   .backup-preview summary {
     cursor: pointer;
-    color: #cbd5e1;
+    color: var(--txt2);
     font-size: 0.9rem;
     list-style: none;
   }
@@ -1532,9 +1493,9 @@
   .backup-preview summary::before {
     content: '▶';
     display: inline-block;
-    margin-right: 0.5rem;
-    color: #94a3b8;
-    transition: transform 0.15s;
+    margin-inline-end: 0.5rem;
+    color: var(--txt3);
+    transition: transform var(--motion-fast, 120ms);
   }
   .backup-preview[open] summary::before {
     transform: rotate(90deg);
@@ -1550,23 +1511,23 @@
   .backup-table-list li {
     display: flex;
     justify-content: space-between;
-    color: #cbd5e1;
+    color: var(--txt2);
     font-size: 0.85rem;
     padding: 0.15rem 0;
   }
   .backup-table-list .t-name {
-    color: #e2e8f0;
+    color: var(--txt);
   }
   .backup-table-list .t-count {
     font-variant-numeric: tabular-nums;
-    color: #94a3b8;
+    color: var(--txt3);
   }
   .backup-table-list .t-count.zero {
-    color: #475569;
+    color: color-mix(in srgb, var(--txt3) 55%, transparent);
   }
   /* task-051: merge/replace selector in the import modal */
   .mode-select {
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--border);
     border-radius: 0.6rem;
     padding: 0.6rem 0.8rem 0.75rem;
     margin: 0.75rem 0 0 0;
@@ -1575,7 +1536,7 @@
     gap: 0.45rem;
   }
   .mode-select legend {
-    color: #cbd5e1;
+    color: var(--txt2);
     font-size: 0.85rem;
     padding: 0 0.25rem;
   }
@@ -1590,16 +1551,16 @@
   .mode-opt input[type='radio'] {
     grid-column: 1;
     grid-row: 1 / span 2;
-    accent-color: #ec4899;
+    accent-color: var(--accent);
   }
   .mode-opt span {
-    color: #fff;
+    color: var(--txt);
     font-size: 0.92rem;
   }
   .mode-opt small {
     grid-column: 2;
     grid-row: 2;
-    color: #94a3b8;
+    color: var(--txt3);
     font-size: 0.78rem;
     line-height: 1.3;
   }

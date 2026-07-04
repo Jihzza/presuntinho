@@ -1,13 +1,27 @@
-// src/lib/mood/useMoodState.ts
+// src/lib/mood/useMoodState.svelte.ts
 //
 // Reativo de mood partilhado entre rotas — usado pelas sub-apps para
 // reagirem a Sick / Soft / Love sem reinventar listeners. Lê o `MOOD_EVENT`
 // que o `+layout` já dispara quando o mood muda, e expõe o `kind` actual
 // como uma `$state` rune que pode ser derivada por qualquer componente.
+//
+// V8 fix: além do fallback síncrono em localStorage (moods manuais), agora
+// hidrata também moods activados no servidor (cookie/blob do love-lock — ex.
+// disparados noutro browser ou por um agente) chamando readActiveMood() no
+// mount. Antes, uma rota montada num browser "novo" nunca via o Sick Mode.
 
 import { browser } from '$app/environment';
-import { onMount, onDestroy } from 'svelte';
-import { MOOD_EVENT, type ActiveMood, type MoodKind } from '$lib/mood';
+import { onMount } from 'svelte';
+import { get } from 'svelte/store';
+import { t } from 'svelte-i18n';
+import {
+  MOOD_EVENT,
+  moodPressure,
+  readActiveMood,
+  type ActiveMood,
+  type MoodKind,
+  type MoodPressure
+} from '$lib/mood';
 
 interface MoodStateRunes {
   mood: { readonly kind: MoodKind } | null;
@@ -15,18 +29,19 @@ interface MoodStateRunes {
   isSoft: boolean;
   isLove: boolean;
   hasMood: boolean;
+  /** 'gentle' quando Sick/Soft — as sub-apps devem baixar a pressão. */
+  pressure: MoodPressure;
 }
 
 export function useMoodState(): MoodStateRunes {
   let mood = $state<ActiveMood | null>(null);
-  let initialised = false;
+  let initialised = $state(false);
 
   onMount(() => {
     if (!browser) return;
 
-    // Lê qualquer valor já gravado (caso a rota seja montada após o
-    // mood estar activo). Mantém um fallback para manualFallback porque
-    // o `readActiveMood()` é async e nós queremos reagir já na 1ª frame.
+    // 1) Leitura síncrona imediata (fallback manual em localStorage) para a
+    //    1ª frame não piscar. Cobre apenas moods activados via /definicoes.
     try {
       const fallback = localStorage.getItem('presuntinho:mood:manual-fallback');
       if (fallback) {
@@ -44,12 +59,22 @@ export function useMoodState(): MoodStateRunes {
     }
     initialised = true;
 
+    // 2) Hidratação autoritativa (async): moods server-side (love-lock
+    //    cookie/blob) que este browser ainda não conhece.
+    void readActiveMood()
+      .then((active) => {
+        if (active) mood = active;
+      })
+      .catch(() => {
+        /* offline / função indisponível — o fallback síncrono já correu */
+      });
+
     const handler = (event: Event) => {
       const detail = event instanceof CustomEvent ? (event.detail as ActiveMood | null) : null;
       mood = detail;
     };
     window.addEventListener(MOOD_EVENT, handler);
-    onDestroy(() => window.removeEventListener(MOOD_EVENT, handler));
+    return () => window.removeEventListener(MOOD_EVENT, handler);
   });
 
   return {
@@ -67,6 +92,9 @@ export function useMoodState(): MoodStateRunes {
     },
     get hasMood() {
       return Boolean(mood) && initialised;
+    },
+    get pressure() {
+      return moodPressure(mood?.kind ?? null);
     }
   };
 }
@@ -74,12 +102,15 @@ export function useMoodState(): MoodStateRunes {
 /** Frase calma por omissão para usar no placeholder de inputs/read-only blocks. */
 export function moodMicrocopyHint(kind: MoodKind | null): string | null {
   if (!kind) return null;
-  switch (kind) {
-    case 'sick':
-      return 'Modo cuidado activo — só uma coisinha de cada vez 🤍';
-    case 'sad':
-      return 'Modo calma — faz só o que for possível hoje 🫶';
-    case 'love':
-      return 'Vibe carinho ligada — a app está quentinha 💕';
+  const defaults: Record<MoodKind, string> = {
+    sick: 'Modo cuidado activo — só uma coisinha de cada vez 🤍',
+    sad: 'Modo calma — faz só o que for possível hoje 🫶',
+    love: 'Vibe carinho ligada — a app está quentinha 💕'
+  };
+  try {
+    const format = get(t);
+    return format ? format(`mood.hint.${kind}`, { default: defaults[kind] }) : defaults[kind];
+  } catch {
+    return defaults[kind];
   }
 }

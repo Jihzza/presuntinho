@@ -14,6 +14,7 @@
     import { addItem, parseTagsInput } from '$lib/biblioteca';
     import { listAssignments, type Assignment } from '$lib/trabalhos';
     import { showToast } from '$lib/components/events';
+    import { PageHeader, Button } from '$lib/components/ui';
     import { t } from 'svelte-i18n';
 
   /**
@@ -167,18 +168,19 @@
 </svelte:head>
 
 <div class="novo">
-  <header class="hero">
-    <h1>{$t('biblioteca.novo.hero.title')}</h1>
-    <p class="sub">{$t('biblioteca.novo.hero.sub', { default: 'Guarda um link com título, descrição e tags.' })}</p>
-  </header>
-
-  <nav class="crumbs" aria-label={$t('biblioteca.crumbs.aria', { default: 'Caminho de navegação' })}>
-    <a href="/">{$t('biblioteca.crumbs.home', { default: '← Hub' })}</a>
-    <span aria-hidden="true">/</span>
-    <a href="/biblioteca/">{$t('biblioteca.novo.breadcrumb.home', { default: '← Biblioteca' })}</a>
-    <span aria-hidden="true">/</span>
-    <span aria-current="page">{$t('biblioteca.novo.breadcrumb.current', { default: 'Novo' })}</span>
-  </nav>
+  <PageHeader
+    title={$t('biblioteca.novo.hero.title')}
+    subtitle={$t('biblioteca.novo.hero.sub', { default: 'Guarda um link com título, descrição e tags.' })}
+    align="center"
+  >
+    {#snippet breadcrumbs()}
+      <a href="/">{$t('biblioteca.crumbs.home', { default: '← Hub' })}</a>
+      <span aria-hidden="true">/</span>
+      <a href="/biblioteca/">{$t('biblioteca.novo.breadcrumb.home', { default: '← Biblioteca' })}</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{$t('biblioteca.novo.breadcrumb.current', { default: 'Novo' })}</span>
+    {/snippet}
+  </PageHeader>
 
   <form class="form" onsubmit={handleSubmit} novalidate>
     <div class="field">
@@ -264,10 +266,10 @@
     {/if}
 
     <div class="actions">
-      <a class="btn-secondary" href="/biblioteca/">{$t('biblioteca.novo.action.cancel', { default: 'Cancelar' })}</a>
-      <button type="submit" class="btn-primary" disabled={submitting}>
+      <Button variant="secondary" href="/biblioteca/">{$t('biblioteca.novo.action.cancel', { default: 'Cancelar' })}</Button>
+      <Button type="submit" disabled={submitting}>
         {submitting ? $t('biblioteca.novo.criando', { default: 'A criar…' }) : $t('biblioteca.novo.submit.criar', { default: 'Criar marcador' })}
-      </button>
+      </Button>
     </div>
   </form>
 </div>
@@ -278,37 +280,7 @@
     margin: 0 auto;
     padding: 1.5rem 1rem 2rem;
   }
-  .hero {
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-  .hero h1 {
-    font-size: 2rem;
-    margin: 0 0 0.5rem 0;
-    color: var(--txt, #fff);
-  }
-  .sub {
-    color: var(--txt2, #cbd5e1);
-    margin: 0;
-    font-size: 1rem;
-  }
-  .crumbs {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    font-size: 0.875rem;
-    color: var(--txt3, #94a3b8);
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-  }
-  .crumbs a {
-    color: var(--accent, #ec4899);
-    text-decoration: none;
-  }
-  .crumbs a:hover,
-  .crumbs a:focus-visible {
-    text-decoration: underline;
-  }
+  /* Hero + breadcrumbs now come from the shared PageHeader primitive. */
   .form {
     background: var(--card, rgba(255, 255, 255, 0.05));
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
@@ -355,7 +327,7 @@
   .field select:focus-visible {
     outline: none;
     border-color: var(--accent, #ec4899);
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.25);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #ec4899) 25%, transparent);
   }
   .hint {
     font-size: 0.75rem;
@@ -364,7 +336,7 @@
   .error {
     margin: 0;
     padding: 0.625rem 0.75rem;
-    background: rgba(239, 68, 68, 0.1);
+    background: color-mix(in srgb, var(--error, #ef4444) 10%, transparent);
     border: 1px solid var(--error, #ef4444);
     border-radius: 0.5rem;
     color: var(--error, #ef4444);
@@ -376,56 +348,11 @@
     justify-content: flex-end;
     flex-wrap: wrap;
   }
-  .btn-primary,
-  .btn-secondary {
-    display: inline-block;
-    padding: 0.625rem 1.25rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    text-decoration: none;
-    border: 0;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.15s, color 0.15s;
-    font-family: inherit;
-  }
-  .btn-primary {
-    background: var(--accent, #ec4899);
-    color: #fff;
-  }
-  .btn-primary:hover:not(:disabled),
-  .btn-primary:focus-visible:not(:disabled) {
-    background: #d63384;
-    outline: none;
-  }
-  .btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-  .btn-primary:focus-visible {
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.4);
-  }
-  .btn-secondary {
-    background: transparent;
-    color: var(--txt2, #cbd5e1);
-    border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
-  }
-  .btn-secondary:hover,
-  .btn-secondary:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--txt, #fff);
-    outline: none;
-  }
+  /* Form action buttons now come from the shared Button primitive. */
   @media (min-width: 640px) {
     .novo {
       padding: 2rem 1.5rem 3rem;
     }
-    .hero h1 {
-      font-size: 2.25rem;
-    }
   }
-  @media (prefers-reduced-motion: reduce) {
-    .btn-primary,
-    .btn-secondary { transition: none; }
-  }
+  /* Reduced motion: handled by the global kill-switch in app.css. */
 </style>

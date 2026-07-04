@@ -40,6 +40,11 @@
   let deltaTimer: ReturnType<typeof setTimeout> | null = null;
   let hideTimer: ReturnType<typeof setTimeout> | null = null;
   let lastSeenXp = $state<number | null>(null);
+  // Leak fix: capture the store unsubscribe so onDestroy can release it.
+  // The subscription is created inside an async IIFE, so we also guard
+  // against the component being destroyed before the subscribe happens.
+  let destroyed = false;
+  let unsubXp: (() => void) | null = null;
 
   let numberLocale = $derived($locale || 'pt-PT');
   let label = $derived(new Intl.NumberFormat(numberLocale).format(currentXp) + ' XP');
@@ -121,10 +126,20 @@
         show();
       }
 
-      xp.subscribe((v) => onXpChanged(v));
+      if (destroyed) return;
+      unsubXp = xp.subscribe((v) => onXpChanged(v));
+      if (destroyed) {
+        unsubXp();
+        unsubXp = null;
+      }
     })();
 
     return () => {
+      destroyed = true;
+      if (unsubXp) {
+        unsubXp();
+        unsubXp = null;
+      }
       if (pulseTimer) clearTimeout(pulseTimer);
       if (deltaTimer) clearTimeout(deltaTimer);
       if (hideTimer) clearTimeout(hideTimer);
@@ -202,8 +217,8 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--accent, #ec4899);
-    box-shadow: 0 0 6px rgba(236, 72, 153, 0.7);
+    background: var(--accent);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--accent) 70%, transparent);
   }
   .label {
     letter-spacing: 0.02em;
@@ -248,7 +263,7 @@
     }
     50% {
       transform: scale(1.08);
-      box-shadow: 0 4px 22px rgba(236, 72, 153, 0.5);
+      box-shadow: 0 4px 22px color-mix(in srgb, var(--accent) 50%, transparent);
     }
     100% {
       transform: scale(1);

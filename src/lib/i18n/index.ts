@@ -49,7 +49,7 @@ export const LOCALE_META: Record<Locale, LocaleMeta> = {
   'en':    { code: 'en',    native: 'English',        flag: '🇬🇧', dir: 'ltr' },
   'tn':    { code: 'tn',    native: 'Tounsi',         flag: '🇹🇳', dir: 'ltr' },
   'fr':    { code: 'fr',    native: 'Français',       flag: '🇫🇷', dir: 'ltr' },
-  'ar':    { code: 'ar',    native: 'Arabic',         flag: '🇹🇳', dir: 'rtl' }
+  'ar':    { code: 'ar',    native: 'العربية',        flag: '🇹🇳', dir: 'rtl' }
 };
 
 addMessages('pt-PT', pt);

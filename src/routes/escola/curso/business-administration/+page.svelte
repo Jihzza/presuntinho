@@ -89,7 +89,7 @@
   .hero h1 { margin: 0.35rem 0; color: #fff; font-size: clamp(2rem, 7vw, 3.2rem); line-height: 1; }
   .hero p,
   .section-head p,
-  .card p { color: #cbd5e1; margin: 0; line-height: 1.5; }
+  .card p { color: var(--txt2); margin: 0; line-height: 1.5; }
   .section-head {
     display: flex;
     align-items: baseline;
@@ -124,8 +124,8 @@
   }
   .icon { font-size: 1.6rem; }
   .card h3 { margin: 0 0 0.25rem; color: #fff; font-size: 1rem; }
-  .card small { display: inline-block; margin-top: 0.55rem; color: #94a3b8; }
-  .equivalenza { border-left: 4px solid #ec4899; }
+  .card small { display: inline-block; margin-top: 0.55rem; color: var(--txt3); }
+  .equivalenza { border-left: 4px solid var(--accent); }
   @media (min-width: 760px) {
     .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }

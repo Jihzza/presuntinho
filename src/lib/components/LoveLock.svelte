@@ -179,7 +179,7 @@
       {#if lockState.kind === 'sad'}
         ✨ {$t('lovelock.hint.sad', { default: 'Fofinho perdoa tudo.' })}
       {:else if lockState.kind === 'sick'}
-        ✨ Descansa. Hoje produtividade é cuidar de ti.
+        ✨ {$t('lovelock.hint.sick', { default: 'Descansa. Hoje produtividade é cuidar de ti.' })}
       {:else}
         ✨ {$t('lovelock.hint.love', { default: 'Fofinho acredita em ti.' })}
       {/if}

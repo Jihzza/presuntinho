@@ -440,12 +440,12 @@
   .attach-row select:focus-visible {
     outline: none;
     border-color: var(--accent, #ec4899);
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.25);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #ec4899) 25%, transparent);
   }
   .apply-btn {
     display: inline-block;
     background: var(--accent, #ec4899);
-    color: #fff;
+    color: var(--on-accent, #fff);
     border: 0;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
@@ -453,13 +453,13 @@
     cursor: pointer;
     font-family: inherit;
     font-size: 0.875rem;
-    min-height: 44px;
+    min-height: var(--touch-target, 44px);
     min-width: 88px;
-    transition: background 0.15s;
+    transition: background var(--motion-fast, 120ms);
   }
   .apply-btn:hover:not(:disabled),
   .apply-btn:focus-visible:not(:disabled) {
-    background: #d63384;
+    background: var(--accent-hover, #d63384);
     outline: none;
   }
   .apply-btn:disabled {
@@ -506,24 +506,26 @@
     outline: none;
   }
   .open-btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--touch-target, 44px);
     background: var(--accent, #ec4899);
-    color: #fff;
+    color: var(--on-accent, #fff);
     text-decoration: none;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     font-weight: 600;
     font-size: 0.875rem;
-    transition: background 0.15s;
+    transition: background var(--motion-fast, 120ms);
     white-space: nowrap;
   }
   .open-btn:hover,
   .open-btn:focus-visible {
-    background: #d63384;
+    background: var(--accent-hover, #d63384);
     outline: none;
   }
   .open-btn:focus-visible {
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.4);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #ec4899) 40%, transparent);
   }
   .tag-list {
     display: flex;
@@ -531,22 +533,25 @@
     gap: 0.375rem;
   }
   .tag-chip {
-    background: rgba(236, 72, 153, 0.12);
+    background: color-mix(in srgb, var(--accent, #ec4899) 12%, transparent);
     color: var(--accent, #ec4899);
-    border: 1px solid rgba(236, 72, 153, 0.25);
+    border: 1px solid color-mix(in srgb, var(--accent, #ec4899) 25%, transparent);
     font-size: 0.8125rem;
     padding: 0.25rem 0.625rem;
     border-radius: 999px;
     cursor: pointer;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    transition: background var(--motion-fast, 120ms), color var(--motion-fast, 120ms), border-color var(--motion-fast, 120ms);
     font-family: inherit;
   }
   .tag-chip:hover,
   .tag-chip:focus-visible {
     background: var(--accent, #ec4899);
-    color: #fff;
+    color: var(--on-accent, #fff);
     border-color: var(--accent, #ec4899);
     outline: none;
+  }
+  .tag-chip:focus-visible {
+    box-shadow: var(--focus-ring);
   }
   .notes {
     margin: 0;
@@ -566,7 +571,9 @@
     border-top: 1px solid var(--border, rgba(255, 255, 255, 0.1));
   }
   .btn-secondary {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--touch-target, 44px);
     background: transparent;
     color: var(--txt2, #cbd5e1);
     border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
@@ -575,13 +582,16 @@
     font-weight: 600;
     text-decoration: none;
     font-size: 0.875rem;
-    transition: background 0.15s, color 0.15s;
+    transition: background var(--motion-fast, 120ms), color var(--motion-fast, 120ms);
   }
   .btn-secondary:hover,
   .btn-secondary:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--card-hover, rgba(255, 255, 255, 0.08));
     color: var(--txt, #fff);
     outline: none;
+  }
+  .btn-secondary:focus-visible {
+    box-shadow: var(--focus-ring);
   }
   .delete-btn {
     background: transparent;
@@ -591,20 +601,24 @@
     border-radius: 0.5rem;
     font-weight: 600;
     font-size: 0.875rem;
+    min-height: var(--touch-target, 44px);
     cursor: pointer;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    transition: background var(--motion-fast, 120ms), color var(--motion-fast, 120ms), border-color var(--motion-fast, 120ms);
     font-family: inherit;
   }
   .delete-btn:hover:not(:disabled),
   .delete-btn:focus-visible:not(:disabled) {
-    background: rgba(239, 68, 68, 0.1);
+    background: color-mix(in srgb, var(--error, #ef4444) 10%, transparent);
     color: var(--error, #ef4444);
     border-color: var(--error, #ef4444);
     outline: none;
   }
+  .delete-btn:focus-visible {
+    box-shadow: var(--focus-ring);
+  }
   .delete-btn[data-confirming='true'] {
     background: var(--error, #ef4444);
-    color: #fff;
+    color: var(--on-accent, #fff);
     border-color: var(--error, #ef4444);
   }
   .delete-btn:disabled {
@@ -619,10 +633,5 @@
       font-size: 2rem;
     }
   }
-  @media (prefers-reduced-motion: reduce) {
-    .open-btn,
-    .btn-secondary,
-    .delete-btn,
-    .tag-chip { transition: none; }
-  }
+  /* Reduced motion: handled by the global kill-switch in app.css. */
 </style>

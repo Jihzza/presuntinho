@@ -56,11 +56,11 @@
   }
   .quiz-head { margin-bottom: 0.5rem; }
   .breadcrumb {
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     font-size: 0.85rem;
     margin: 0;
   }
-  .breadcrumb a { color: var(--accent, #ec4899); text-decoration: none; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; }
   .breadcrumb a:hover { text-decoration: underline; }
   .breadcrumb .sep { margin: 0 0.4rem; opacity: 0.6; }
   .back-link {
@@ -68,7 +68,7 @@
     margin-top: 2rem;
   }
   .back-link a {
-    color: var(--accent, #ec4899);
+    color: var(--accent);
     text-decoration: none;
   }
   .back-link a:hover { text-decoration: underline; }

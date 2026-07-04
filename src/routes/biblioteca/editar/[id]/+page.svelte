@@ -33,6 +33,7 @@
   import { getItem, updateItem, parseTagsInput } from '$lib/biblioteca';
   import { listAssignments, type Assignment } from '$lib/trabalhos';
   import { showToast } from '$lib/components/events';
+  import { PageHeader, Button } from '$lib/components/ui';
 
   /**
    * Hard-coded list of known escola curso slugs.  Mirrors the slugs
@@ -246,18 +247,19 @@
 </svelte:head>
 
 <div class="editar">
-  <header class="hero">
-    <h1>{$t('biblioteca.edit.hero.title', { default: '✏️ Editar marcador' })}</h1>
-    <p class="sub">{$t('biblioteca.edit.hero.sub', { default: 'Atualiza título, URL, descrição, tags ou o curso / trabalho a que está anexado.' })}</p>
-  </header>
-
-  <nav class="crumbs">
-    <a href="/">{$t('biblioteca.crumbs.home', { default: '← Hub' })}</a>
-    <span aria-hidden="true">/</span>
-    <a href="/biblioteca/">{$t('biblioteca.novo.breadcrumb.home', { default: '← Biblioteca' })}</a>
-    <span aria-hidden="true">/</span>
-    <span aria-current="page">{$t('biblioteca.edit.breadcrumb.current', { default: 'Editar' })}</span>
-  </nav>
+  <PageHeader
+    title={$t('biblioteca.edit.hero.title', { default: '✏️ Editar marcador' })}
+    subtitle={$t('biblioteca.edit.hero.sub', { default: 'Atualiza título, URL, descrição, tags ou o curso / trabalho a que está anexado.' })}
+    align="center"
+  >
+    {#snippet breadcrumbs()}
+      <a href="/">{$t('biblioteca.crumbs.home', { default: '← Hub' })}</a>
+      <span aria-hidden="true">/</span>
+      <a href="/biblioteca/">{$t('biblioteca.novo.breadcrumb.home', { default: '← Biblioteca' })}</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{$t('biblioteca.edit.breadcrumb.current', { default: 'Editar' })}</span>
+    {/snippet}
+  </PageHeader>
 
   {#if loading}
     <p class="empty">{$t('biblioteca.edit.loading', { default: 'A carregar…' })}</p>
@@ -339,13 +341,13 @@
       {/if}
 
       <div class="actions">
-        <button type="button" class="btn-danger" onclick={handleDelete} disabled={removing || saving}>
+        <Button variant="ghost" class="danger-start" onclick={handleDelete} disabled={removing || saving}>
           {removing ? $t('biblioteca.edit.deleting', { default: 'A apagar…' }) : $t('biblioteca.edit.delete', { default: '🗑️ Apagar' })}
-        </button>
-        <a class="btn-secondary" href={itemId !== null ? `/biblioteca/item/${itemId}/` : '/biblioteca/'}>{$t('biblioteca.edit.cancel', { default: 'Cancelar' })}</a>
-        <button type="submit" class="btn-primary" disabled={saving}>
+        </Button>
+        <Button variant="secondary" href={itemId !== null ? `/biblioteca/item/${itemId}/` : '/biblioteca/'}>{$t('biblioteca.edit.cancel', { default: 'Cancelar' })}</Button>
+        <Button type="submit" disabled={saving}>
           {saving ? $t('biblioteca.edit.saving', { default: 'A guardar…' }) : $t('biblioteca.edit.save', { default: 'Guardar alterações' })}
-        </button>
+        </Button>
       </div>
     </form>
   {/if}
@@ -357,37 +359,7 @@
     margin: 0 auto;
     padding: 1.5rem 1rem 2rem;
   }
-  .hero {
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-  .hero h1 {
-    font-size: 2rem;
-    margin: 0 0 0.5rem 0;
-    color: var(--txt, #fff);
-  }
-  .sub {
-    color: var(--txt2, #cbd5e1);
-    margin: 0;
-    font-size: 1rem;
-  }
-  .crumbs {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    font-size: 0.875rem;
-    color: var(--txt3, #94a3b8);
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-  }
-  .crumbs a {
-    color: var(--accent, #ec4899);
-    text-decoration: none;
-  }
-  .crumbs a:hover,
-  .crumbs a:focus-visible {
-    text-decoration: underline;
-  }
+  /* Hero + breadcrumbs now come from the shared PageHeader primitive. */
   .empty {
     background: var(--card, rgba(255, 255, 255, 0.05));
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
@@ -454,7 +426,7 @@
   .field select:focus-visible {
     outline: none;
     border-color: var(--accent, #ec4899);
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.25);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #ec4899) 25%, transparent);
   }
   .hint {
     font-size: 0.75rem;
@@ -463,7 +435,7 @@
   .error {
     margin: 0;
     padding: 0.625rem 0.75rem;
-    background: rgba(239, 68, 68, 0.1);
+    background: color-mix(in srgb, var(--error, #ef4444) 10%, transparent);
     border: 1px solid var(--error, #ef4444);
     border-radius: 0.5rem;
     color: var(--error, #ef4444);
@@ -475,76 +447,24 @@
     justify-content: flex-end;
     flex-wrap: wrap;
   }
-  .btn-primary,
-  .btn-secondary,
-  .btn-danger {
-    display: inline-block;
-    padding: 0.625rem 1.25rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    text-decoration: none;
-    border: 0;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.15s, color 0.15s;
-    font-family: inherit;
-    min-height: 44px;
-  }
-  .btn-primary {
-    background: var(--accent, #ec4899);
-    color: #fff;
-  }
-  .btn-primary:hover:not(:disabled),
-  .btn-primary:focus-visible:not(:disabled) {
-    background: #d63384;
-    outline: none;
-  }
-  .btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-  .btn-primary:focus-visible {
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.4);
-  }
-  .btn-secondary {
-    background: transparent;
-    color: var(--txt2, #cbd5e1);
+  /* Action buttons come from the shared Button primitive. The delete
+     action stays quiet (ghost), sits at the inline start, and turns
+     red on hover — same affordance as before. */
+  .actions :global(.danger-start) {
+    margin-inline-end: auto;
     border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
-  }
-  .btn-secondary:hover,
-  .btn-secondary:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--txt, #fff);
-    outline: none;
-  }
-  .btn-danger {
-    background: transparent;
     color: var(--txt3, #94a3b8);
-    border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
-    margin-right: auto;
   }
-  .btn-danger:hover:not(:disabled),
-  .btn-danger:focus-visible:not(:disabled) {
-    background: rgba(239, 68, 68, 0.1);
+  .actions :global(.danger-start:hover:not(:disabled)),
+  .actions :global(.danger-start:focus-visible:not(:disabled)) {
+    background: color-mix(in srgb, var(--error, #ef4444) 10%, transparent);
     color: var(--error, #ef4444);
     border-color: var(--error, #ef4444);
-    outline: none;
-  }
-  .btn-danger:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
   }
   @media (min-width: 640px) {
     .editar {
       padding: 2rem 1.5rem 3rem;
     }
-    .hero h1 {
-      font-size: 2.25rem;
-    }
   }
-  @media (prefers-reduced-motion: reduce) {
-    .btn-primary,
-    .btn-secondary,
-    .btn-danger { transition: none; }
-  }
+  /* Reduced motion: handled by the global kill-switch in app.css. */
 </style>

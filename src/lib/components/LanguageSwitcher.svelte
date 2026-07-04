@@ -160,25 +160,25 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    min-height: 44px;          /* WCAG touch target */
+    min-height: var(--touch-target, 44px); /* WCAG touch target */
     padding: 0 0.7rem;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-strong, rgba(255, 255, 255, 0.15));
     border-radius: var(--radius-md, 8px);
     background: transparent;
-    color: #fff;
+    color: var(--txt, #fff);
     font: inherit;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
+    transition: background var(--motion-fast, 120ms), border-color var(--motion-fast, 120ms);
   }
   .ls-trigger:hover,
   .ls-trigger:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: var(--card-hover, rgba(255, 255, 255, 0.08));
+    border-color: var(--border-strong, rgba(255, 255, 255, 0.3));
     outline: none;
   }
   .ls-trigger:focus-visible {
-    box-shadow: 0 0 0 2px var(--accent, #ec4899);
+    box-shadow: var(--focus-ring, 0 0 0 2px var(--accent, #ec4899));
   }
   .ls-flag {
     font-size: 1.05rem;
@@ -204,17 +204,19 @@
   .ls-menu {
     position: absolute;
     top: calc(100% + 6px);
-    right: 0;
+    /* Logical property so the panel hugs the trigger's end edge in BOTH
+       directions — `right: 0` used to overflow off-screen in RTL (ar). */
+    inset-inline-end: 0;
     z-index: 100;
     list-style: none;
     margin: 0;
     padding: 0.35rem;
     min-width: 200px;
-    background: rgba(20, 28, 48, 0.97);
+    background: var(--bg-elev, rgba(20, 28, 48, 0.97));
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
     border-radius: var(--radius-md, 8px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    box-shadow: var(--shadow-lg, 0 10px 30px rgba(0, 0, 0, 0.35));
   }
   .ls-menu li {
     margin: 0;
@@ -230,22 +232,25 @@
     border: 0;
     border-radius: 6px;
     background: transparent;
-    color: rgba(255, 255, 255, 0.88);
+    color: var(--txt2, rgba(255, 255, 255, 0.88));
     font: inherit;
     font-size: 0.9rem;
     text-align: start;
     cursor: pointer;
-    transition: background 0.12s, color 0.12s;
+    transition: background var(--motion-fast, 120ms), color var(--motion-fast, 120ms);
   }
   .ls-menu button:hover,
   .ls-menu button:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
+    background: var(--card-hover, rgba(255, 255, 255, 0.08));
+    color: var(--txt, #fff);
     outline: none;
   }
+  .ls-menu button:focus-visible {
+    box-shadow: var(--focus-ring, 0 0 0 2px var(--accent, #ec4899));
+  }
   .ls-menu button.active {
-    background: rgba(236, 72, 153, 0.22);
-    color: #fff;
+    background: color-mix(in srgb, var(--accent, #ec4899) 22%, transparent);
+    color: var(--txt, #fff);
   }
   .ls-native {
     flex: 1;

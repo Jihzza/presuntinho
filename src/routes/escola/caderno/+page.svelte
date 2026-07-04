@@ -6,7 +6,7 @@
    * Persistência local via IndexedDB (Dexie) — não precisa de servidor.
    */
 
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { browser } from '$app/environment';
   import { get } from 'svelte/store';
   import { db } from '$lib/state/db';
@@ -137,13 +137,38 @@
   async function deleteNote(id: number) {
     if (!confirm(get(t)('caderno.confirm.delete', { default: 'Apagar esta nota?' }))) return;
     await db().notes.delete(id);
+    releaseObjectUrl(id);
     await refresh();
   }
 
-  function objectUrlFor(blob: Blob | undefined): string | null {
-    if (!blob) return null;
-    return URL.createObjectURL(blob);
+  // Object-URL cache: one URL per note, created lazily on first render
+  // and revoked on delete/unmount.  The old code called
+  // URL.createObjectURL on EVERY render pass, leaking a new blob URL
+  // each time the list re-rendered.
+  const objectUrls = new Map<number, string>();
+
+  function objectUrlFor(note: Note): string | null {
+    if (!note.blob || note.id === undefined) return null;
+    let url = objectUrls.get(note.id);
+    if (!url) {
+      url = URL.createObjectURL(note.blob);
+      objectUrls.set(note.id, url);
+    }
+    return url;
   }
+
+  function releaseObjectUrl(id: number): void {
+    const url = objectUrls.get(id);
+    if (url) {
+      URL.revokeObjectURL(url);
+      objectUrls.delete(id);
+    }
+  }
+
+  onDestroy(() => {
+    for (const url of objectUrls.values()) URL.revokeObjectURL(url);
+    objectUrls.clear();
+  });
 
   function formatDate(ts: number): string {
     return new Date(ts).toLocaleString(dateLocale, {
@@ -293,11 +318,11 @@
           {#if note.kind === 'text' && note.body}
             <p class="note-body">{note.body}</p>
           {:else if note.kind === 'audio' && note.blob}
-            <audio controls preload="metadata" src={objectUrlFor(note.blob) ?? ''}></audio>
+            <audio controls preload="metadata" src={objectUrlFor(note) ?? ''}></audio>
           {:else if note.kind === 'image' && note.blob}
-            <img class="note-image" src={objectUrlFor(note.blob) ?? ''} alt={note.title} />
+            <img class="note-image" src={objectUrlFor(note) ?? ''} alt={note.title} />
           {:else if note.kind === 'file' && note.blob}
-            <a class="note-file" href={objectUrlFor(note.blob) ?? ''} download={note.title}>
+            <a class="note-file" href={objectUrlFor(note) ?? ''} download={note.title}>
               {$t('caderno.note.download', { default: '📥 Descarregar' })} {note.title}
             </a>
           {/if}
@@ -327,7 +352,7 @@
     margin-bottom: 0.75rem;
   }
   .hero h1 { font-size: 1.75rem; margin: 0 0 0.4rem; color: #fff; }
-  .sub { color: var(--txt2, #cbd5e1); margin: 0; }
+  .sub { color: var(--txt2); margin: 0; }
 
   .composer {
     background: rgba(255, 255, 255, 0.04);
@@ -356,7 +381,7 @@
     align-items: center;
     justify-content: space-between;
   }
-  .cat-label { color: var(--txt2, #cbd5e1); font-size: 0.9rem; }
+  .cat-label { color: var(--txt2); font-size: 0.9rem; }
   .cat-label select { width: auto; min-width: 140px; }
   .composer-actions {
     display: flex;
@@ -376,8 +401,8 @@
     min-height: 40px;
   }
   .btn:hover, .btn:focus-visible { background: rgba(255, 255, 255, 0.15); outline: none; }
-  .btn-primary { background: #ec4899; border-color: #ec4899; }
-  .btn-primary:hover { background: #db2777; }
+  .btn-primary { background: var(--accent); border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent-hover, var(--accent)); }
   .btn-audio { background: #8b5cf6; border-color: #8b5cf6; }
   .btn-recording {
     background: #ef4444;
@@ -409,14 +434,14 @@
     font-size: 0.8rem;
   }
   .chip-active {
-    background: #ec4899;
-    border-color: #ec4899;
-    color: #fff;
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent, #fff);
   }
 
   .empty {
     text-align: center;
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     padding: 2rem 1rem;
     background: rgba(255, 255, 255, 0.03);
     border: 1px dashed rgba(255, 255, 255, 0.1);
@@ -441,7 +466,7 @@
   .note-title { margin: 0; font-size: 1rem; color: #fff; flex: 1; }
   .note-cat { font-size: 1rem; }
   .note-date {
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     font-size: 0.75rem;
     margin-left: auto;
   }
@@ -458,7 +483,7 @@
   }
   .note-delete:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
   .note-body {
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     margin: 0.4rem 0 0;
     line-height: 1.5;
     white-space: pre-wrap;

@@ -389,8 +389,12 @@ function gate9() {
       cwd: ROOT, encoding: 'utf-8', stdio: ['ignore', 'pipe', 'pipe'],
       maxBuffer: 32 * 1024 * 1024, shell: true,
     });
-    // svelte-check reports "0 errors and 0 warnings" on success.
-    const clean = /0 errors? and 0 warnings?/i.test(out);
+    // svelte-check reports "0 errors and 0 warnings" on success when
+    // attached to a TTY, but switches to machine output ("COMPLETED
+    // <n> FILES 0 ERRORS 0 WARNINGS ...") when piped — accept both.
+    const clean =
+      /0 errors? and 0 warnings?/i.test(out) ||
+      /COMPLETED\s+\d+\s+FILES\s+0\s+ERRORS\s+0\s+WARNINGS/i.test(out);
     if (clean) {
       lines.push(`  ${c('green', '✓')} npm run check: 0 errors / 0 warnings`);
     } else {

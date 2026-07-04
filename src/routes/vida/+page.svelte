@@ -1,14 +1,9 @@
 <!--
-  /vida — Landing tab for the IA-S1 footer "Vida" entry (task-086).
+  /vida — Landing tab for the footer "Vida" entry.
 
-  Vida is the umbrella for the personal-life sub-apps that previously lived as
-  top-level routes: Finanças (/financas), Hábitos (/habitos) and Vícios
+  Vida is the umbrella for the personal-life sub-apps: Finanças (/financas),
+  Hábitos (/habitos), Humor (/humor), Memórias (/memorias) and Vícios
   (planned under IA-S4 / task-094).
-
-  This page is intentionally a thin hub for now — task-088 (Escola reorg) and
-  IA-S4 (Vida real dashboard) will fill it in. For tick 32 the priority is
-  shipping the footer rewrite with a working landing page; deep Vida UX is
-  the next sprint.
 -->
 <script lang="ts">
   import { t } from 'svelte-i18n';
@@ -22,7 +17,7 @@
   <header class="vida-hero">
     <span class="vida-icon" aria-hidden="true">🌿</span>
     <h1>{$t('nav.vida', { default: 'Vida' })}</h1>
-    <p class="vida-sub">{$t('vida.subtitle', { default: 'Finanças, hábitos e vícios num só lugar.' })}</p>
+    <p class="vida-sub">{$t('vida.subtitle_v8', { default: 'O teu cantinho pessoal: finanças, hábitos, humor e memórias.' })}</p>
   </header>
 
   <ul class="vida-grid">
@@ -38,6 +33,20 @@
         <span class="vida-card-icon" aria-hidden="true">🌱</span>
         <span class="vida-card-title">{$t('nav.habitos', { default: 'Hábitos' })}</span>
         <span class="vida-card-desc">{$t('vida.habitos.desc', { default: 'Tracking diário e streaks.' })}</span>
+      </a>
+    </li>
+    <li>
+      <a href="/humor/" class="vida-card" data-sveltekit-preload-data>
+        <span class="vida-card-icon" aria-hidden="true">💗</span>
+        <span class="vida-card-title">{$t('vida.humor.title', { default: 'Humor' })}</span>
+        <span class="vida-card-desc">{$t('vida.humor.desc', { default: 'Como te sentes, dia a dia — sem julgamentos.' })}</span>
+      </a>
+    </li>
+    <li>
+      <a href="/memorias/" class="vida-card" data-sveltekit-preload-data>
+        <span class="vida-card-icon" aria-hidden="true">📸</span>
+        <span class="vida-card-title">{$t('vida.memorias.title', { default: 'Memórias' })}</span>
+        <span class="vida-card-desc">{$t('vida.memorias.desc', { default: 'Momentos especiais guardados com carinho.' })}</span>
       </a>
     </li>
     <li>
@@ -58,7 +67,7 @@
   }
   .vida-hero {
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-5, 1.5rem);
   }
   .vida-icon {
     font-size: 3rem;
@@ -67,11 +76,11 @@
   }
   .vida-hero h1 {
     margin: 0.5rem 0 0.25rem;
-    font-size: 1.75rem;
+    font-size: var(--fs-2xl, 1.75rem);
   }
   .vida-sub {
     margin: 0;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--txt2);
     font-size: 0.95rem;
   }
   .vida-grid {
@@ -80,7 +89,12 @@
     padding: 0;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: var(--space-3, 0.75rem);
+  }
+  @media (min-width: 480px) {
+    .vida-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
   @media (min-width: 640px) {
     .vida-grid {
@@ -91,23 +105,24 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    padding: 1rem;
-    border-radius: 0.75rem;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    height: 100%;
+    padding: var(--space-4, 1rem);
+    border-radius: var(--radius-md, 0.75rem);
+    background: var(--card);
+    border: 1px solid var(--border);
     color: inherit;
     text-decoration: none;
     min-height: 44px;
-    transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
+    transition: background var(--motion-fast, 120ms) ease, border-color var(--motion-fast, 120ms) ease, transform var(--motion-fast, 120ms) ease;
   }
   .vida-card:hover,
   .vida-card:focus-visible {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.24);
+    background: var(--card-hover, var(--card));
+    border-color: color-mix(in srgb, var(--txt) 24%, transparent);
     outline: none;
   }
   .vida-card:focus-visible {
-    box-shadow: 0 0 0 2px var(--accent, #ec4899);
+    box-shadow: 0 0 0 2px var(--accent);
   }
   .vida-card:active {
     transform: scale(0.98);
@@ -117,22 +132,14 @@
   }
   .vida-card-title {
     font-weight: 600;
-    font-size: 1rem;
+    font-size: var(--fs-md, 1rem);
   }
   .vida-card-desc {
     font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.65);
+    color: var(--txt2);
   }
   .vida-card-soon {
     opacity: 0.55;
     cursor: not-allowed;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .vida-card {
-      transition: none;
-    }
-    .vida-card:active {
-      transform: none;
-    }
   }
 </style>

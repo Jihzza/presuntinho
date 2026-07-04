@@ -54,6 +54,8 @@ export interface SchoolCourseDetail {
   icon: string;
   color: string;
   lessons: SchoolCourseLessonDetail[];
+  /** Assignment ids from assignments-seed.ts (a1..a10) linked to this unit. */
+  assignments?: string[];
 }
 
 
@@ -185,7 +187,9 @@ const businessExtras: SchoolUnit[] = [
     icon: '🌸',
     color: '#ec4899',
     summary: 'Case/trabalho aplicado dentro de Business Administration: SWOT, buyer persona, SCQA, TOWS e recomendação.',
-    assignments: ['equivalenza-midterm'],
+    // NOTE: assignment refs must exist in assignments-seed.ts (a1..a10).
+    // The old 'equivalenza-midterm' id never existed in the seed, so the
+    // ref was removed (V8 reconciliation).
     lessons: [
       { slug: 'swot', title: 'Análise SWOT', summary: 'Diagnóstico estratégico da Equivalenza.', quizSlug: 'q1', activityType: 'case' },
       { slug: 'persona', title: 'Buyer Persona', summary: 'Marta, 27 — The Discerning Explorer.', quizSlug: 'q4', activityType: 'case' },
@@ -297,7 +301,8 @@ function detailFromSchoolUnit(unit: SchoolUnit): SchoolCourseDetail {
       quizSlug: lesson.quizSlug,
       quizTitle: lesson.quizTitle,
       estMinutes: lesson.estMinutes ?? 8
-    }))
+    })),
+    assignments: unit.assignments
   };
 }
 

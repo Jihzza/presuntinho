@@ -38,6 +38,27 @@
   /* Focus ring (visible only via :focus-visible) */
   --focus-ring: 0 0 0 2px var(--accent);
 
+  /* Elevation shadows (V8 design tokens). Tuned for the default dark
+     surface; light themes read them as soft ambient shadows. */
+  --shadow-sm: 0 1px 2px rgba(2, 6, 23, 0.18);
+  --shadow-md: 0 10px 30px rgba(2, 6, 23, 0.18);
+  --shadow-lg: 0 18px 48px rgba(2, 6, 23, 0.28);
+
+  /* Motion durations. The prefers-reduced-motion kill-switch at the
+     bottom of this file zeroes every transition/animation globally,
+     so components can use these without per-file media queries. */
+  --motion-fast: 120ms;
+  --motion-base: 220ms;
+
+  /* Text/icon colour on accent-filled surfaces (buttons, chips). */
+  --on-accent: #fff;
+
+  /* Z-index scale — keep layered UI predictable app-wide. */
+  --z-nav: 40;
+  --z-fab: 45;
+  --z-modal: 50;
+  --z-toast: 60;
+
   /* Fluid type ramp (mobile → desktop) */
   --fs-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.8125rem);
   --fs-sm: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
@@ -51,26 +72,10 @@
   --content-max: 1200px;
 }
 
-/* Light theme override — opt-in via [data-theme="light"] on <html> or <body>.
-   Currently the app is dark by default; this gives us a hook for Phase 11+
-   without breaking Phase 0-9 visuals. */
-[data-theme='light'] {
-  --bg: radial-gradient(circle at 18% 8%, rgba(255, 240, 246, 0.95), transparent 34%), linear-gradient(155deg, #f8fbff 0%, #eef4ff 48%, #fff7ed 100%);
-  --bg-elev: rgba(255, 255, 255, 0.88);
-  --txt: #172033;
-  --txt2: #334155;
-  --txt3: #64748b;
-  --accent: #b91c66;
-  --accent-hover: #9d174d;
-  --border: rgba(148, 163, 184, 0.32);
-  --border-strong: rgba(71, 85, 105, 0.34);
-  --card: rgba(255, 255, 255, 0.76);
-  --card-hover: rgba(255, 255, 255, 0.96);
-}
-
-/* Legacy `.theme-light` / `.theme-dark` class hook (Phase 9 Definições).
-   Kept for compatibility with the settings page, which toggles these
-   classes alongside the data-theme attribute. */
+/* Light theme — opt-in via [data-theme="light"] on <html>/<body> OR the
+   legacy `.theme-light` class (Phase 9 Definições toggles both). Each
+   theme's tokens are defined exactly ONCE, on a shared selector list. */
+[data-theme='light'],
 .theme-light {
   --bg: radial-gradient(circle at 18% 8%, rgba(255, 240, 246, 0.95), transparent 34%), linear-gradient(155deg, #f8fbff 0%, #eef4ff 48%, #fff7ed 100%);
   --bg-elev: rgba(255, 255, 255, 0.88);
@@ -83,7 +88,11 @@
   --border-strong: rgba(71, 85, 105, 0.34);
   --card: rgba(255, 255, 255, 0.76);
   --card-hover: rgba(255, 255, 255, 0.96);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 18px 48px rgba(15, 23, 42, 0.14);
 }
+[data-theme='dark'],
 .theme-dark {
   /* Explicit dark tokens (same as :root). Kept for symmetry. */
   --bg: #1f2e4a;
@@ -167,6 +176,9 @@
   --border-strong: rgba(127, 29, 29, 0.38);
   --card: rgba(255, 255, 255, 0.78);
   --card-hover: rgba(255, 255, 255, 0.98);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 18px 48px rgba(15, 23, 42, 0.14);
 }
 
 [data-theme='barca'] body,
@@ -213,7 +225,7 @@
 [data-theme='anime'] .control-card {
   background: var(--card) !important;
   border-color: var(--border) !important;
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-lg, 0 18px 48px rgba(0, 0, 0, 0.24)), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 [data-theme='barca'] .nav,
@@ -282,7 +294,7 @@
   background: var(--bg-elev) !important;
   border-color: var(--border) !important;
   color: var(--txt) !important;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-md, 0 10px 30px rgba(15, 23, 42, 0.08));
 }
 
 [data-theme='light'] h1,
@@ -356,6 +368,9 @@
   --border-strong: rgba(192, 38, 112, 0.32);
   --card: rgba(255, 255, 255, 0.78);
   --card-hover: rgba(255, 255, 255, 0.96);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 18px 48px rgba(15, 23, 42, 0.14);
 }
 [data-theme='garden'], .theme-garden {
   --bg: radial-gradient(circle at 82% 10%, rgba(134, 239, 172, 0.26), transparent 30%), linear-gradient(145deg, #052e2b 0%, #064e3b 54%, #111827 100%);
@@ -395,6 +410,9 @@
   --border-strong: rgba(59, 130, 246, 0.36);
   --card: rgba(255, 255, 255, 0.78);
   --card-hover: rgba(255, 255, 255, 0.96);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 18px 48px rgba(15, 23, 42, 0.14);
 }
 [data-theme='fresh'], .theme-fresh {
   --bg: radial-gradient(circle at 16% 18%, rgba(88, 204, 2, 0.22), transparent 30%), radial-gradient(circle at 84% 14%, rgba(28, 176, 246, 0.2), transparent 28%), linear-gradient(145deg, #0f2f1a 0%, #073b4c 58%, #101827 100%);
@@ -419,14 +437,14 @@
 [data-theme='fresh'] .card, [data-theme='fresh'] .hub-hero, [data-theme='fresh'] .today-strip, [data-theme='fresh'] .calendar-card, [data-theme='fresh'] .notifications-card, [data-theme='fresh'] .control-card {
   background: var(--card) !important;
   border-color: var(--border) !important;
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-lg, 0 18px 48px rgba(0, 0, 0, 0.22)), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 [data-theme='vanilla'] .nav, [data-theme='vanilla'] .bottom-nav, [data-theme='vanilla'] .card, [data-theme='vanilla'] .hub-hero, [data-theme='vanilla'] .today-strip, [data-theme='vanilla'] .calendar-card, [data-theme='vanilla'] .notifications-card, [data-theme='vanilla'] .control-card, [data-theme='vanilla'] .day-cell, [data-theme='vanilla'] .notification,
 [data-theme='cozy'] .nav, [data-theme='cozy'] .bottom-nav, [data-theme='cozy'] .card, [data-theme='cozy'] .hub-hero, [data-theme='cozy'] .today-strip, [data-theme='cozy'] .calendar-card, [data-theme='cozy'] .notifications-card, [data-theme='cozy'] .control-card, [data-theme='cozy'] .day-cell, [data-theme='cozy'] .notification {
   background: var(--bg-elev) !important;
   border-color: var(--border) !important;
   color: var(--txt) !important;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-md, 0 10px 30px rgba(15, 23, 42, 0.08));
 }
 [data-theme='garden'] .nav, [data-theme='garden'] .bottom-nav, [data-theme='midnight'] .nav, [data-theme='midnight'] .bottom-nav, [data-theme='fresh'] .nav, [data-theme='fresh'] .bottom-nav {
   background: color-mix(in srgb, var(--bg-elev) 84%, transparent) !important;
@@ -486,11 +504,15 @@ p {
   color: var(--txt2);
 }
 
-/* ---------- A11Y: visible focus ring on keyboard navigation only ---------- */
+/* ---------- A11Y: visible focus ring on keyboard navigation only ----------
+   One consistent ring app-wide, driven by the --focus-ring token.
+   The transparent outline is kept so Windows High Contrast / forced-colors
+   mode still paints a system outline where box-shadows are stripped. */
 :focus { outline: none; } /* reset */
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid transparent;
   outline-offset: 2px;
+  box-shadow: var(--focus-ring);
   border-radius: 4px;
 }
 
@@ -498,8 +520,9 @@ p {
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid transparent;
   outline-offset: 2px;
+  box-shadow: var(--focus-ring);
 }
 
 /* ---------- Skip-to-content link ---------- */
@@ -510,16 +533,16 @@ select:focus-visible {
   z-index: 100000;
   padding: var(--space-3) var(--space-4);
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent, #fff);
   text-decoration: none;
   font-weight: 600;
   border-radius: var(--radius-md);
-  transition: top 0.15s ease;
+  transition: top var(--motion-fast, 120ms) ease;
 }
 .skip-link:focus,
 .skip-link:focus-visible {
   top: var(--space-3);
-  outline: 2px solid #fff;
+  outline: 2px solid var(--on-accent, #fff);
   outline-offset: 2px;
 }
 

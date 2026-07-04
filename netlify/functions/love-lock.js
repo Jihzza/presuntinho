@@ -26,7 +26,22 @@ const COOKIE_NAME = 'lovelock_id';
 const BLOB_KEY = 'love-lock:current';
 const ONE_HOUR_MS = 60 * 60 * 1000;
 const ONE_MONTH_SECONDS = 30 * 24 * 60 * 60; // 2592000
-const ALLOWED_ORIGIN = 'https://presuntinho.netlify.app';
+// Origins allowed to POST. Production, local dev (`vite dev` on :5173 and
+// `vite preview` on :4173, both localhost and 127.0.0.1 spellings), plus
+// Netlify deploy-preview / branch-deploy origins of THIS site
+// (https://deploy-preview-42--presuntinho.netlify.app,
+//  https://feature-x--presuntinho.netlify.app).
+const ALLOWED_ORIGINS = new Set([
+  'https://presuntinho.netlify.app',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:4173',
+  'http://127.0.0.1:4173',
+  // `netlify dev` proxy (functions only exist locally behind this port).
+  'http://localhost:8888',
+  'http://127.0.0.1:8888',
+]);
+const NETLIFY_PREVIEW_ORIGIN_RE = /^https:\/\/[a-z0-9][a-z0-9-]*--presuntinho\.netlify\.app$/;
 
 function getHeader(headers, name) {
   if (!headers) return undefined;
@@ -136,7 +151,9 @@ function requestOrigin(event) {
 }
 
 function isAllowedPostOrigin(event) {
-  return requestOrigin(event) === ALLOWED_ORIGIN;
+  const origin = requestOrigin(event);
+  if (!origin) return false;
+  return ALLOWED_ORIGINS.has(origin) || NETLIFY_PREVIEW_ORIGIN_RE.test(origin);
 }
 
 function buildResponse(statusCode, body, headers = {}) {

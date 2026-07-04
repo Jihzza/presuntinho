@@ -349,12 +349,12 @@
     gap: 0.4rem;
     align-items: center;
     font-size: 0.85rem;
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     margin-bottom: 1rem;
     flex-wrap: wrap;
   }
   .crumbs a {
-    color: var(--accent, #ec4899);
+    color: var(--accent);
     text-decoration: none;
   }
   .crumbs a:hover, .crumbs a:focus-visible { text-decoration: underline; }
@@ -378,7 +378,7 @@
     font-size: 1.75rem;
   }
   .sub {
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     margin: 0.25rem 0 0;
   }
 
@@ -387,7 +387,7 @@
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
     border-radius: 0.75rem;
     padding: 1.25rem;
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
   }
   .state.error { border-left: 4px solid var(--error, #ef4444); }
   .state code {
@@ -423,13 +423,13 @@
     min-height: 44px;
   }
   .audio-fallback {
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     font-size: 0.8rem;
     margin: 0.4rem 0 0;
   }
-  .audio-fallback a { color: var(--accent, #ec4899); }
+  .audio-fallback a { color: var(--accent); }
   .audio-missing {
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     margin: 0;
     font-style: italic;
   }
@@ -443,7 +443,7 @@
     margin-bottom: 1.25rem;
   }
   .mini-nav h2 {
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     margin: 0 0 0.5rem;
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -461,7 +461,7 @@
     display: block;
     min-height: 44px;
     padding: 0.5rem 0.6rem;
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     text-decoration: none;
     border-radius: 0.4rem;
     font-size: 0.9rem;
@@ -517,7 +517,7 @@
   }
 
   .prose {
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     line-height: 1.65;
     margin: 0;
   }
@@ -528,19 +528,19 @@
     border-left: 4px solid #3b82f6;
     border-radius: 0.5rem;
     padding: 0.85rem 1rem;
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     line-height: 1.55;
   }
   .callout p { margin: 0; }
   .callout.warning { border-left-color: #f59e0b; background: rgba(245, 158, 11, 0.08); }
   .callout.success { border-left-color: #10b981; background: rgba(16, 185, 129, 0.08); }
-  .callout.highlight { border-left-color: #ec4899; background: rgba(236, 72, 153, 0.08); }
+  .callout.highlight { border-left-color: var(--accent); background: rgba(236, 72, 153, 0.08); }
   .callout.info { border-left-color: #3b82f6; }
 
   .list {
     margin: 0;
     padding-left: 1.4rem;
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     line-height: 1.6;
   }
   .list li { margin-bottom: 0.4rem; }
@@ -549,7 +549,7 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     font-size: 0.9rem;
     /* task-034: prevent wide columns in long study-guide tables from
        pushing the viewport sideways on 375px phones. */
@@ -563,7 +563,7 @@
     word-break: break-word;
   }
   th {
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     text-transform: uppercase;
     font-size: 0.7rem;
     letter-spacing: 0.04em;
@@ -604,12 +604,12 @@
   .transcript summary::before {
     content: '▸';
     margin-right: 0.5rem;
-    color: var(--accent, #ec4899);
+    color: var(--accent);
   }
   .transcript details[open] summary::before { content: '▾'; }
   .transcript .prose {
     margin-top: 0.75rem;
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
   }
 
   /* CTA */
@@ -627,7 +627,7 @@
     display: inline-block;
     min-height: 44px;
     padding: 0.75rem 1.4rem;
-    background: var(--accent, #ec4899);
+    background: var(--accent);
     color: #fff;
     text-decoration: none;
     font-weight: 600;

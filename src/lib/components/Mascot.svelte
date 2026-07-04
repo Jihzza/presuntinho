@@ -73,7 +73,7 @@
     border-radius: 999px;
     border: 1px solid transparent;
     background: transparent;
-    color: #fff;
+    color: var(--txt);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -94,12 +94,12 @@
   .mascot-fab:focus-visible {
     opacity: 1;
     transform: translateY(-1px) scale(1.03);
-    background: color-mix(in srgb, var(--accent, #ec4899) 10%, transparent);
-    border-color: color-mix(in srgb, var(--accent, #ec4899) 26%, transparent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 26%, transparent);
     outline: none;
   }
   .mascot-fab:focus-visible {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #ec4899) 30%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
   }
   .mascot-fab:active {
     transform: scale(0.95);

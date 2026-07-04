@@ -2,23 +2,19 @@
   /**
    * Hub card — Escola (school).
    *
-   * Shows the current course and the user's progress through its
-   * lessons.  Progress is read directly from Dexie: we count rows in
-   * the `visited` table whose id starts with `lesson:<curso>/` and
-   * divide by the course's total lesson count (sourced from the same
-   * in-component catalogue the escola hub uses — single source of
-   * truth).
+   * V8: progress is computed by the escola progress module
+   * ($lib/escola/progress), which joins the course catalog with the
+   * Dexie `visited` rows ('lesson:<unit>:<lesson>').  This fixes the
+   * old bugs where the card counted a 'lesson:equivalenza/' prefix
+   * (wrong separator — always 0) against a hardcoded denominator of 5.
    *
-   * The "current course" is hard-coded to `equivalenza` for the MVP
-   * (it carries the "Atual" badge on /escola) — when a second
-   * "current" course ships we'll move the choice into a Dexie
-   * settings row.  The data layer already keeps the table reads
-   * scoped to a single curso slug, so swapping the source is a
-   * one-line change.
+   * The "current course" line now shows where Fatma left off (resume
+   * target unit), derived from the catalog instead of a hardcoded
+   * 'Equivalenza'.
    */
   import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
-  import { db } from '$lib/state/db';
+  import { resumeTarget, schoolSummary } from '$lib/escola/progress';
 
   interface Props {
     /** Optional href override (defaults to /escola). */
@@ -26,19 +22,10 @@
   }
   let { href = '/escola/' }: Props = $props();
 
-  // The "current" course slug — matches the badge 'Atual' on /escola.
-  const CURRENT_CURSO = 'equivalenza';
-
-  // Hardcoded mini-catalogue for the equivalenza course so the card can
-  // render the total-lesson denominator without re-fetching the full
-  // /escola +page.  The count is the only field consumed by this card.
-  // Kept in sync with src/routes/escola/curso/[slug]/+page.svelte
-  // CATALOGUE['equivalenza'].lessons.length — single source of truth
-  // lives there; the card just hard-codes the same number (5) so it
-  // can render a non-zero denominator even if Dexie is empty.
-  const CURRENT_CURSO_LESSONS = 5;
-
   let completed = $state(0);
+  let total = $state(0);
+  let currentTitle = $state<string | null>(null);
+  let currentUnitSlug = $state<string | null>(null);
   let loading = $state(true);
 
   onMount(() => {
@@ -48,11 +35,11 @@
         return;
       }
       try {
-        const prefix = `lesson:${CURRENT_CURSO}/`;
-        const rows = await db().visited.toArray();
-        completed = rows.filter(
-          (r) => typeof r.id === 'string' && r.id.startsWith(prefix)
-        ).length;
+        const [summary, resume] = await Promise.all([schoolSummary(), resumeTarget()]);
+        completed = summary.lessonsDone;
+        total = summary.lessonsTotal;
+        currentTitle = resume?.unitTitle ?? null;
+        currentUnitSlug = resume?.unitSlug ?? null;
       } catch (e) {
         console.error('[hub][escola] read failed', e);
       } finally {
@@ -61,8 +48,6 @@
     })();
   });
 
-  // Computed values
-  let total = $derived(CURRENT_CURSO_LESSONS);
   let progressLabel = $derived(
     loading
       ? $t('routes.hub.card.escola.loading', { default: 'A carregar…' })
@@ -72,20 +57,26 @@
         })
   );
   let percent = $derived(total > 0 ? Math.min(100, Math.round((completed / total) * 100)) : 0);
+  let cursoLine = $derived(
+    currentTitle && currentUnitSlug
+      ? $t(`school.catalog.units.${currentUnitSlug}.title`, { default: currentTitle })
+      : $t('routes.hub.card.escola.all_done', { default: 'Catálogo completo 🎉' })
+  );
 </script>
 
 <a
   class="card"
   {href}
-  style="--accent: #ec4899"
   aria-label={$t('routes.hub.card.escola.aria', { default: 'Escola — curso atual e progresso' })}
 >
   <div class="icon" aria-hidden="true">🌸</div>
   <div class="content">
     <h2>{$t('routes.hub.card.escola.title', { default: 'Escola' })}</h2>
     <p class="curso">
-      {$t('routes.hub.card.escola.current_curso', { default: 'Equivalenza' })}
-      <span class="badge">{$t('routes.hub.card.escola.current_badge', { default: 'Atual' })}</span>
+      {cursoLine}
+      {#if currentTitle}
+        <span class="badge">{$t('routes.hub.card.escola.current_badge', { default: 'Atual' })}</span>
+      {/if}
     </p>
     <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow={percent} aria-label={progressLabel}>
       <div class="bar" style="width: {percent}%"></div>
@@ -101,18 +92,18 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
     border-left: 4px solid var(--accent);
-    border-radius: 0.75rem;
-    color: #fff;
+    border-radius: var(--radius-md, 0.75rem);
+    color: var(--txt, #fff);
     text-decoration: none;
-    transition: background 0.2s, transform 0.15s;
+    transition: background var(--motion-base, 220ms), transform var(--motion-fast, 120ms);
     min-height: 88px;
   }
   .card:hover,
   .card:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--card-hover, rgba(255, 255, 255, 0.08));
     transform: translateY(-2px);
   }
   .card:focus-visible {
@@ -133,12 +124,12 @@
   .content h2 {
     font-size: 1.0625rem;
     margin: 0 0 0.125rem 0;
-    color: #fff;
+    color: var(--txt, #fff);
     font-weight: 600;
   }
   .curso {
     font-size: 0.8125rem;
-    color: #cbd5e1;
+    color: var(--txt2);
     margin: 0 0 0.5rem 0;
     display: flex;
     align-items: center;
@@ -152,7 +143,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     background: var(--accent);
-    color: #fff;
+    color: var(--on-accent, #fff);
     padding: 0.125rem 0.5rem;
     border-radius: 999px;
     line-height: 1.2;
@@ -168,11 +159,11 @@
     height: 100%;
     background: var(--accent);
     border-radius: 999px;
-    transition: width 0.3s ease;
+    transition: width var(--motion-base, 300ms) ease;
   }
   .meta {
     font-size: 0.75rem;
-    color: #94a3b8;
+    color: var(--txt3);
     margin: 0;
     font-variant-numeric: tabular-nums;
   }

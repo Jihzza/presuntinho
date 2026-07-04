@@ -93,34 +93,35 @@
     line-height: 1.45;
   }
   .cta {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-target, 44px);
     background: var(--accent, #ec4899);
-    color: #fff;
+    color: var(--on-accent, #fff);
     text-decoration: none;
     padding: 0.55rem 1.1rem;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-md, 0.5rem);
     font-weight: 600;
     font-size: 0.9375rem;
     border: 0;
     cursor: pointer;
     font-family: inherit;
     margin-top: 0.25rem;
-    transition: background 0.15s ease;
+    transition: background var(--motion-fast, 120ms) ease;
   }
   .cta:hover,
   .cta:focus-visible {
-    background: #d63384;
+    background: var(--accent-hover, #d63384);
     outline: none;
   }
   .cta:focus-visible {
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.45);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #ec4899) 45%, transparent);
   }
   @keyframes float {
     0%, 100% { transform: translateY(0); }
     50%      { transform: translateY(-4px); }
   }
-  @media (prefers-reduced-motion: reduce) {
-    .emoji { animation: none; }
-    .cta { transition: none; }
-  }
+  /* Reduced motion: handled by the global kill-switch in app.css
+     (animation/transition durations zeroed app-wide). */
 </style>

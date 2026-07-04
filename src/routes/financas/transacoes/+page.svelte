@@ -17,13 +17,12 @@
   import { onMount } from 'svelte';
   import { locale, t } from 'svelte-i18n';
   import { page } from '$app/stores';
-  import { goto } from '$app/navigation';
   import {
     listCategorias,
     listTransacoesMes,
+    listTransacoesRange,
     deleteTransacao,
     getMesAtual,
-    formatMes,
     formatData,
     formatValor,
     getHojeISO,
@@ -33,6 +32,7 @@
   import EmptyState from '$lib/components/EmptyState.svelte';
   import Skeleton from '$lib/components/Skeleton.svelte';
   import { showToast } from '$lib/components/events';
+  import { useMoodState } from '$lib/mood/useMoodState.svelte';
 
   // Localised strings used inside loops/actions. Keep them reactive so a
   // language switch while this page is open updates labels/toasts too.
@@ -61,6 +61,11 @@
   let dataAte = $state<string>('');                                   // M1-S2: YYYY-MM-DD
   let confirmingDelete = $state<number | null>(null);
   const localeCode = $derived($locale || 'pt-PT');
+
+  // V8 (mood): em modo Sick/Soft a lista fica só de leitura — sem apagar
+  // nem criar. A razão é mostrada num aviso carinhoso, nunca um mistério.
+  const moodState = useMoodState();
+  const readOnly = $derived(moodState.isSick || moodState.isSoft);
 
   // Mapa id → CategoriaRow para lookup O(1) por linha.
   let categoriasPorId: Record<string, CategoriaRow> = $derived(
@@ -116,9 +121,13 @@
     })();
   });
 
-  // Re-fetch sempre que o filtro de mês muda.
+  // Re-fetch sempre que o filtro de mês OU o intervalo de datas muda —
+  // com intervalo activo a fonte passa a ser o índice `data` (cross-month),
+  // não a lista do mês.
   $effect(() => {
     const _ = mesFiltro;
+    const __ = dataDe;
+    const ___ = dataAte;
     void refresh();
   });
 
@@ -143,7 +152,12 @@
     loading = true;
     error = null;
     try {
-      transacoes = await listTransacoesMes(mesFiltro);
+      // V8: intervalo de datas activo → range query no índice `data`
+      // (funciona entre meses); sem intervalo → lista do mês como antes.
+      transacoes =
+        dataDe || dataAte
+          ? await listTransacoesRange(dataDe, dataAte)
+          : await listTransacoesMes(mesFiltro);
     } catch (e) {
       console.error('[financas] listTransacoesMes failed', e);
       error = e instanceof Error ? e.message : 'Erro a carregar transações';
@@ -153,6 +167,7 @@
   }
 
   async function confirmDelete(id: number): Promise<void> {
+    if (readOnly) return;
     if (confirmingDelete !== id) {
       confirmingDelete = id;
       setTimeout(() => {
@@ -249,8 +264,17 @@
     <span aria-current="page">{$t('financas.transacoes.breadcrumb.current', { default: 'Transações' })}</span>
   </nav>
 
+  {#if readOnly}
+    <p class="mood-readonly" role="note">
+      <span aria-hidden="true">🌿</span>
+      {$t('financas.mood.readonly', { default: 'Modo cuidado ativo — hoje é só para ver. As alterações ficam para quando estiveres melhor 🤍' })}
+    </p>
+  {/if}
+
   <section class="actions" aria-label="{$t('a11y.aria.acoes', { default: 'Ações' })}">
-    <a class="btn-primary" href="/financas/nova/">{$t('financas.transacoes.cta.new', { default: '+ Nova transação' })}</a>
+    {#if !readOnly}
+      <a class="btn-primary" href="/financas/nova/">{$t('financas.transacoes.cta.new', { default: '+ Nova transação' })}</a>
+    {/if}
     <a class="btn-secondary" href="/financas/relatorios/">
       <span aria-hidden="true">⬇</span>
       <span>{$t('financas.relatorios.export.csv', { default: 'Exportar CSV' })}</span>
@@ -360,31 +384,40 @@
               {@const c = cat(tx.categoria)}
               {@const isReceita = tx.tipo === 'receita'}
               <li class="row" class:receita={isReceita} class:despesa={!isReceita}>
-                <span
-                  class="cat-icon"
-                  style={c ? `--cat-cor: ${c.cor}` : '--cat-cor: #94a3b8'}
-                  aria-hidden="true"
+                <!-- V8: a linha liga à página de edição (antes era órfã). -->
+                <a
+                  class="row-link"
+                  href={`/financas/transacoes/${tx.id}/`}
+                  aria-label={`${$t('financas.transacoes.edit_aria', { default: 'Editar transação' })}: ${tx.descricao || (c?.nome ?? tx.categoria)}`}
                 >
-                  {c?.icone ?? '📦'}
-                </span>
-                <span class="row-main">
-                  <span class="row-desc">{tx.descricao || (c?.nome ?? $t('financas.transacoes.sem_descricao', { default: 'Sem descrição' }))}</span>
-                  <span class="row-meta">
-                    {c?.nome ?? tx.categoria} · {isReceita ? STRINGS.ariaReceita : STRINGS.ariaDespesa}
+                  <span
+                    class="cat-icon"
+                    style={c ? `--cat-cor: ${c.cor}` : '--cat-cor: var(--txt3)'}
+                    aria-hidden="true"
+                  >
+                    {c?.icone ?? '📦'}
                   </span>
-                </span>
-                <span class="row-valor" aria-label={isReceita ? STRINGS.ariaReceita : STRINGS.ariaDespesa}>
-                  {isReceita ? '+' : '−'}{formatValor(tx.valor, localeCode)}
-                </span>
-                <button
-                  type="button"
-                  class="delete-btn"
-                  onclick={() => confirmDelete(tx.id)}
-                  aria-label={confirmingDelete === tx.id ? STRINGS.ariaConfirm : STRINGS.ariaDelete}
-                  data-confirming={confirmingDelete === tx.id}
-                >
-                  {confirmingDelete === tx.id ? STRINGS.confirmShort : '🗑️'}
-                </button>
+                  <span class="row-main">
+                    <span class="row-desc">{tx.descricao || (c?.nome ?? $t('financas.transacoes.sem_descricao', { default: 'Sem descrição' }))}</span>
+                    <span class="row-meta">
+                      {c?.nome ?? tx.categoria} · {isReceita ? STRINGS.ariaReceita : STRINGS.ariaDespesa}
+                    </span>
+                  </span>
+                  <span class="row-valor" aria-label={isReceita ? STRINGS.ariaReceita : STRINGS.ariaDespesa}>
+                    {isReceita ? '+' : '−'}{formatValor(tx.valor, localeCode)}
+                  </span>
+                </a>
+                {#if !readOnly}
+                  <button
+                    type="button"
+                    class="delete-btn"
+                    onclick={() => confirmDelete(tx.id)}
+                    aria-label={confirmingDelete === tx.id ? STRINGS.ariaConfirm : STRINGS.ariaDelete}
+                    data-confirming={confirmingDelete === tx.id}
+                  >
+                    {confirmingDelete === tx.id ? STRINGS.confirmShort : '🗑️'}
+                  </button>
+                {/if}
               </li>
             {/each}
           </ul>
@@ -454,7 +487,7 @@
   }
   .btn-primary:hover,
   .btn-primary:focus-visible {
-    background: #0e9b6e;
+    filter: brightness(0.92);
     outline: none;
   }
   .btn-primary:focus-visible {
@@ -611,16 +644,45 @@
   .row {
     display: flex;
     align-items: center;
-    gap: 0.875rem;
-    padding: 0.75rem 0.875rem;
+    gap: 0.25rem;
+    padding: 0 0.5rem 0 0;
     background: var(--card, rgba(255, 255, 255, 0.05));
     border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
-    border-left: 4px solid var(--cat-cor, #94a3b8);
+    border-left: 4px solid var(--cat-cor, var(--txt3));
     border-radius: 0.625rem;
-    transition: background 0.15s;
+    transition: background var(--motion-fast, 120ms);
   }
   .row:hover {
-    background: rgba(255, 255, 255, 0.07);
+    background: var(--card-hover, rgba(255, 255, 255, 0.07));
+  }
+  /* V8: área clicável da linha → página de edição */
+  .row-link {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.75rem 0.5rem 0.75rem 0.875rem;
+    min-height: 44px;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 0.625rem 0 0 0.625rem;
+  }
+  .row-link:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--accent);
+  }
+  .mood-readonly {
+    margin: 0 0 1rem 0;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius-md, 0.75rem);
+    background: var(--card, rgba(255, 255, 255, 0.05));
+    border: 1px dashed var(--border, rgba(255, 255, 255, 0.2));
+    color: var(--txt2);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--fs-sm, 0.875rem);
   }
   .row.receita {
     border-left-color: var(--success, #10b981);
@@ -676,6 +738,8 @@
     background: transparent;
     color: var(--txt3, #94a3b8);
     font-size: 1rem;
+    min-width: 44px;
+    min-height: 44px;
     padding: 0.375rem 0.625rem;
     cursor: pointer;
     border-radius: 0.375rem;

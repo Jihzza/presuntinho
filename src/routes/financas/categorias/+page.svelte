@@ -267,7 +267,7 @@
   .cat-form input[type="text"] { width: 100%; padding: 0.5rem; border: 1px solid var(--border, #ccc); border-radius: 4px; box-sizing: border-box; font-family: 'JetBrains Mono', 'Consolas', monospace; }
   .cat-form fieldset { border: 1px solid var(--border, #e5e5e5); padding: 0.5rem 0.75rem; border-radius: 4px; margin: 0.5rem 0; }
   .cat-form .radio { display: inline-flex; align-items: center; gap: 0.25rem; margin-right: 1rem; }
-  .form-error { color: #c0392b; font-size: 0.875rem; margin: 0.5rem 0; }
+  .form-error { color: var(--error, #ef4444); font-size: 0.875rem; margin: 0.5rem 0; }
   .form-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
   .group { margin: 1.5rem 0; }
   .group h2 { font-size: 1.125rem; margin: 0 0 0.5rem; color: var(--text-dim, #555); text-transform: uppercase; letter-spacing: 0.05em; }

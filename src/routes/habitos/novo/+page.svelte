@@ -1,26 +1,54 @@
 <!--
-  /habitos/novo — create habit form.
+  /habitos/novo — create habit form (V8).
 
-  As of task-040 (Hábitos Pro) this route delegates the entire form to
-  `HabitForm.svelte` so the create + edit experiences share a single
-  source of truth for the five fields (nome, ícone, frequência,
-  meta, lembrete).  Validation lives in the form component.
+  The route delegates the form to `HabitForm.svelte` and adds the V8
+  template picker: a grid of curated habit templates (hydration, sleep,
+  study, exercise, skincare, reading, finance check, rest).  Picking a
+  template pre-fills the form (the user can still tweak everything);
+  "Começar do zero" resets it.
 -->
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { get } from 'svelte/store';
   import { addHabito, type NewHabitInput } from '$lib/habitos';
+  import { HABIT_TEMPLATES, type HabitTemplate } from '$lib/state/habitos-seed';
   import { showToast } from '$lib/components/events';
   import { t } from 'svelte-i18n';
   import HabitForm from '$lib/components/habitos/HabitForm.svelte';
 
+  let selectedTemplateId = $state<string | null>(null);
+  // Bump to force a form remount when a template is (re)picked, so the
+  // snapshot-initialised fields re-read `initial`.
+  let formKey = $state(0);
+
+  let initial = $derived.by<Partial<NewHabitInput> | null>(() => {
+    if (!selectedTemplateId) return null;
+    const tpl = HABIT_TEMPLATES.find((x) => x.id === selectedTemplateId);
+    if (!tpl) return null;
+    return {
+      name: $t(tpl.nameKey, { default: tpl.defaultName }) as string,
+      icon: tpl.icon,
+      color: tpl.color,
+      cadence: tpl.cadence,
+      meta: tpl.meta,
+      reminder: tpl.reminder
+    };
+  });
+
+  function pickTemplate(tpl: HabitTemplate): void {
+    selectedTemplateId = tpl.id;
+    formKey += 1;
+  }
+
+  function startBlank(): void {
+    selectedTemplateId = null;
+    formKey += 1;
+  }
+
   async function handleSubmit(values: NewHabitInput): Promise<void> {
-    const id = await addHabito(values);
+    await addHabito(values);
     showToast(get(t)('toast.habito_criado', { default: 'Hábito criado' }));
     await goto(`/habitos/`);
-    // Briefly highlight the new habit — but since we're on the list
-    // page now, just rely on the page refresh to pick it up.
-    void id;
   }
 
   let pageTitle = $derived($t('habitos.novo.seo.title', { default: 'Novo Hábito · Hábitos' }) as string);
@@ -51,7 +79,42 @@
     <span aria-current="page">{$t('habitos.novo.novo', { default: 'Novo' })}</span>
   </nav>
 
-  <HabitForm onSubmit={handleSubmit} onCancel={() => goto('/habitos/')} />
+  <section class="templates" aria-label={$t('habitos.templates.aria', { default: 'Modelos de hábitos' })}>
+    <h2 class="templates-title">{$t('habitos.templates.title', { default: 'Começa com um modelo' })}</h2>
+    <p class="templates-sub">{$t('habitos.templates.sub', { default: 'Toca num modelo para preencher o formulário — podes ajustar tudo depois.' })}</p>
+    <div class="template-grid">
+      {#each HABIT_TEMPLATES as tpl (tpl.id)}
+        <button
+          type="button"
+          class="template"
+          class:selected={selectedTemplateId === tpl.id}
+          style="--tpl-color: {tpl.color}"
+          aria-pressed={selectedTemplateId === tpl.id}
+          onclick={() => pickTemplate(tpl)}
+        >
+          <span class="tpl-icon" aria-hidden="true">{tpl.icon}</span>
+          <span class="tpl-name">{$t(tpl.nameKey, { default: tpl.defaultName })}</span>
+          {#if tpl.meta}
+            <span class="tpl-meta">{tpl.meta}</span>
+          {/if}
+        </button>
+      {/each}
+      <button
+        type="button"
+        class="template blank"
+        class:selected={selectedTemplateId === null}
+        aria-pressed={selectedTemplateId === null}
+        onclick={startBlank}
+      >
+        <span class="tpl-icon" aria-hidden="true">✨</span>
+        <span class="tpl-name">{$t('habitos.templates.blank', { default: 'Do zero' })}</span>
+      </button>
+    </div>
+  </section>
+
+  {#key formKey}
+    <HabitForm {initial} onSubmit={handleSubmit} onCancel={() => goto('/habitos/')} />
+  {/key}
 </div>
 
 <style>
@@ -65,31 +128,94 @@
     margin-bottom: 1.5rem;
   }
   .hero h1 {
-    font-size: 2rem;
+    font-size: var(--fs-2xl, 2rem);
     margin: 0 0 0.5rem 0;
-    color: var(--txt, #fff);
+    color: var(--txt);
   }
   .sub {
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     margin: 0;
-    font-size: 1rem;
+    font-size: var(--fs-md, 1rem);
   }
   .crumbs {
     display: flex;
     gap: 0.5rem;
     align-items: center;
-    font-size: 0.875rem;
-    color: var(--txt3, #94a3b8);
+    font-size: var(--fs-sm, 0.875rem);
+    color: var(--txt3);
     margin-bottom: 1rem;
     flex-wrap: wrap;
   }
   .crumbs a {
-    color: var(--accent, #ec4899);
+    color: var(--accent);
     text-decoration: none;
   }
   .crumbs a:hover,
   .crumbs a:focus-visible {
     text-decoration: underline;
+  }
+  .templates {
+    margin-bottom: 1.25rem;
+  }
+  .templates-title {
+    font-size: var(--fs-md, 1rem);
+    color: var(--txt);
+    margin: 0 0 0.25rem 0;
+  }
+  .templates-sub {
+    font-size: var(--fs-sm, 0.8125rem);
+    color: var(--txt3);
+    margin: 0 0 0.75rem 0;
+  }
+  .template-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: 0.5rem;
+  }
+  .template {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--tpl-color, var(--accent));
+    border-radius: var(--radius-md, 0.625rem);
+    padding: 0.75rem 0.5rem;
+    min-height: 44px;
+    cursor: pointer;
+    color: var(--txt);
+    font-family: inherit;
+    transition: background var(--motion-fast, 120ms), transform var(--motion-fast, 120ms);
+  }
+  .template:hover {
+    background: var(--card-hover, var(--card));
+    transform: translateY(-1px);
+  }
+  .template:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .template.selected {
+    background: var(--card-hover, var(--card));
+    box-shadow: 0 0 0 2px var(--tpl-color, var(--accent));
+  }
+  .template.blank {
+    border-top-color: var(--border);
+  }
+  .tpl-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+  .tpl-name {
+    font-size: var(--fs-xs, 0.75rem);
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.25;
+  }
+  .tpl-meta {
+    font-size: 0.6875rem;
+    color: var(--txt3);
   }
   @media (min-width: 640px) {
     .novo {

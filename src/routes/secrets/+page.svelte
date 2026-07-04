@@ -39,7 +39,6 @@
   let heartTiers = $state<HeartTier[]>([]);
   let badgeCatalog = $state<Badge[]>([]);
   let heartClicks = $state(0);
-  let logoClicks = $state(0);
   let visitedCount = $state(0);
   let loadError = $state<string | null>(null);
 
@@ -70,10 +69,9 @@
       }
       badges = bMap;
 
-      // 3. Non-badge unlock conditions
+      // 3. Non-badge unlock conditions (fallback heuristics)
       const stateRow = await d.state.get('main');
       heartClicks = Number(stateRow?.heartMaxClicks ?? 0);
-      logoClicks = Number(stateRow?.logoClicks ?? 0);
 
       const visitedRows = await d.visited.toArray();
       visitedCount = visitedRows.length;
@@ -84,19 +82,40 @@
   }
 
   /**
-   * Determine if a secret is unlocked. Mirrors V3 `isSecretUnlocked()`:
+   * Determine if a secret is unlocked.
+   *
+   * The Dexie `secrets` table (written by discoverSecret()) is the primary
+   * truth — this is what makes badge-less secrets like 'logo3' or 'help'
+   * stick (the old `logoClicks >= 3` check was broken because logoClicks
+   * resets to 0 five seconds after the last click).
+   *
+   * Fallback heuristics keep pre-V8 users unlocked even if their discovery
+   * row was never written:
    *   - If it has a badge, the badge being unlocked counts.
    *   - 'heart' unlocks at heartMaxClicks >= 1.
-   *   - 'logo3' unlocks at logoClicks >= 3.
    *   - 'mascot' unlocks after 4 visited pages.
    */
   function isUnlocked(s: Secret): boolean {
+    if (discovered[s.id]) return true;
     if (s.badge && badges[s.badge]?.unlocked) return true;
     if (s.id === 'heart')  return heartClicks >= 1;
-    if (s.id === 'logo3')  return logoClicks >= 3;
     if (s.id === 'mascot') return visitedCount >= 4;
     return false;
   }
+
+  /**
+   * Localized view of the config secrets: name + hint go through i18n
+   * (keys `secrets.egg.<id>.name` / `.hint`) with the config text as the
+   * final fallback, so every locked card shows a one-line cryptic hint in
+   * the user's language.
+   */
+  let localizedSecrets = $derived(
+    secrets.map((s) => ({
+      ...s,
+      name: $t(`secrets.egg.${s.id}.name`, { default: s.name }),
+      hint: $t(`secrets.egg.${s.id}.hint`, { default: s.hint })
+    }))
+  );
 
   let discoveredCount = $derived(
     secrets.reduce((acc, s) => acc + (isUnlocked(s) ? 1 : 0), 0)
@@ -172,8 +191,16 @@
       <p>{$t('secrets.findAll.body')}</p>
     </article>
 
+    <a class="card memorias-link" href="/memorias/">
+      <div class="memorias-copy">
+        <h2>🕰️ {$t('secrets.memorias.title', { default: 'Memórias' })}</h2>
+        <p>{$t('secrets.memorias.body', { default: 'Uma linha do tempo carinhosa de tudo o que já descobriste e viveste aqui.' })}</p>
+      </div>
+      <span class="memorias-arrow" aria-hidden="true">→</span>
+    </a>
+
   <section class="grid" aria-label="{$t('a11y.aria.segredos', { default: 'Segredos' })}">
-    {#each secrets as s (s.id)}
+    {#each localizedSecrets as s (s.id)}
       <EasterEggsCard
         secret={s}
         unlocked={isUnlocked(s)}
@@ -372,6 +399,32 @@
     margin: 0.4rem 0;
   }
 
+  /* Link card to the /memorias timeline. */
+  .memorias-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3, 0.75rem);
+    text-decoration: none;
+    min-height: 44px;
+    transition: border-color var(--motion-base, 220ms) ease, background var(--motion-base, 220ms) ease;
+  }
+  .memorias-link:hover,
+  .memorias-link:focus-visible {
+    border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    outline: none;
+  }
+  .memorias-link:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .memorias-copy p { margin-bottom: 0; }
+  .memorias-arrow {
+    color: var(--accent);
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
   .grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -502,7 +555,7 @@
     font-variant-numeric: tabular-nums;
   }
   .tier-xp {
-    color: #10b981;
+    color: var(--success, #10b981);
     font-weight: 600;
     font-size: 0.78rem;
   }
@@ -573,13 +626,13 @@
     font-size: 2rem;
     line-height: 1;
     filter: grayscale(0.85);
-    color: #94a3b8;
+    color: var(--txt3);
     letter-spacing: 0.15em;
   }
   .badge-locked .name {
     font-size: 0.95rem;
     margin: 0;
-    color: #cbd5e1;
+    color: var(--txt2);
     font-weight: 600;
     line-height: 1.2;
   }
@@ -595,7 +648,7 @@
     justify-content: center;
     gap: 0.35rem;
     font-size: 0.7rem;
-    color: #94a3b8;
+    color: var(--txt3);
     margin-top: 0.25rem;
   }
   .badge-locked .status-dot {

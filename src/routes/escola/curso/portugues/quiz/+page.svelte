@@ -6,8 +6,8 @@
    * On submission we additionally persist `fat-pt-quiz-score` (percentage)
    * and, on a perfect score, write a `lusofono` completion marker.
    *
-   * The QuizRunner already awards badge b11 (Lusófono) + confetti via
-   * `recordQuizSubmission()` when the score is perfect.
+   * The QuizRunner already awards badge b11 (Lusófono) + confetti when
+   * the score is perfect (single XP path via awardXP('quiz_perfect_score')).
    */
   import { t } from 'svelte-i18n';
 
@@ -21,14 +21,19 @@
   let previousCompleted = $state(false);
 
   onMount(() => {
-    if (typeof localStorage === 'undefined') return;
-    try {
-      const s = localStorage.getItem(QUIZ_SCORE_KEY);
-      if (s) previousScore = Number(s);
-      previousCompleted = localStorage.getItem(QUIZ_COMPLETE_KEY) === '1';
-    } catch {
-      /* ignore */
+    if (typeof localStorage !== 'undefined') {
+      try {
+        const s = localStorage.getItem(QUIZ_SCORE_KEY);
+        if (s) previousScore = Number(s);
+        previousCompleted = localStorage.getItem(QUIZ_COMPLETE_KEY) === '1';
+      } catch {
+        /* ignore */
+      }
     }
+    // V8: QuizRunner dispatches 'presuntinho:quiz-submitted' on every
+    // submit, so the legacy localStorage markers stay in sync live.
+    window.addEventListener('presuntinho:quiz-submitted', onQuizSubmit);
+    return () => window.removeEventListener('presuntinho:quiz-submitted', onQuizSubmit);
   });
 
   function onQuizSubmit(event: Event): void {
@@ -80,11 +85,9 @@
     {/if}
   </header>
 
-  <!-- QuizRunner emits a custom `presuntinho:quiz-submitted` event on submit.
-       We listen via the on: event in plain HTML; QuizRunner doesn't dispatch
-       a DOM event currently, so we attach a window-level listener that the
-       QuizRunner triggers through recordQuizSubmission's window CustomEvent.
-       As a fallback we also re-read localStorage below. -->
+  <!-- QuizRunner dispatches a window-level 'presuntinho:quiz-submitted'
+       CustomEvent on submit; the onMount listener above keeps the legacy
+       localStorage score markers in sync. -->
   {#key 'ptq'}
     <QuizRunner quizId="ptq" jsonPath="/quizzes/ptq.json" />
   {/key}
@@ -110,15 +113,15 @@
     font-size: 1.75rem;
   }
   .breadcrumb {
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     font-size: 0.85rem;
     margin: 0;
   }
-  .breadcrumb a { color: var(--accent, #ec4899); text-decoration: none; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; }
   .breadcrumb a:hover { text-decoration: underline; }
   .breadcrumb .sep { margin: 0 0.4rem; opacity: 0.6; }
   .sub {
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     margin: 0.25rem 0 0;
   }
   .prev {
@@ -132,7 +135,7 @@
   }
   .back-link { text-align: center; margin-top: 2rem; }
   .back-link a {
-    color: var(--accent, #ec4899);
+    color: var(--accent);
     text-decoration: none;
   }
   .back-link a:hover { text-decoration: underline; }

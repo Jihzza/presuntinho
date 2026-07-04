@@ -41,10 +41,13 @@
     { id: 'b8',  icon: '❤️' },
     { id: 'b9',  icon: '🎮' },
     { id: 'b10', icon: '⌨️' },
+    { id: 'b11', icon: '🇵🇹' },
     { id: 'b12', icon: '🦶' },
     { id: 'b13', icon: '🚪' },
     { id: 'b14', icon: '📚' },
-    { id: 'b15', icon: '🏆' }
+    { id: 'b15', icon: '🏆' },
+    { id: 'b16', icon: '🔥' },
+    { id: 'b17', icon: '💎' }
   ];
 
   // pt-PT fallbacks for the catalog (used by $t()'s `default` option and
@@ -57,20 +60,26 @@
     b8:  'Coração',
     b9:  'Konami',
     b10: 'Palavra Mágica',
+    b11: 'Lusófono',
     b12: 'Pé',
     b13: 'Sala Secreta',
     b14: 'Leitor',
-    b15: 'Quizzmaster'
+    b15: 'Quizzmaster',
+    b16: 'Em Chamas',
+    b17: 'Imparável'
   };
   const PT_DESCRIPTIONS: Record<string, string> = {
     b7:  'Clica no logo 3 vezes',
     b8:  '5 cliques no coração',
     b9:  'Introduz o código Konami',
     b10: 'Escreve uma palavra-chave',
+    b11: '5/5 no quiz de Português',
     b12: 'Clica no footer',
     b13: 'Descobre a sala secreta',
     b14: 'Conclui uma lição',
-    b15: 'Responde todos os quizzes'
+    b15: 'Responde todos os quizzes',
+    b16: 'Mantém um hábito 7 dias seguidos',
+    b17: 'Mantém um hábito 30 dias seguidos'
   };
 
   // Stats — derived from the catalog + badges prop
@@ -119,12 +128,12 @@
     align-items: baseline;
     justify-content: space-between;
     padding: 0 0.25rem;
-    color: #94a3b8;
+    color: var(--txt3);
     font-size: 0.8125rem;
   }
   .grid-head-count {
     font-variant-numeric: tabular-nums;
-    color: #cbd5e1;
+    color: var(--txt2);
   }
   .grid {
     display: grid;

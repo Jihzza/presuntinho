@@ -25,6 +25,7 @@
 
 import type { HabitoRow, HabitLogRow } from './db';
 import type { Table } from 'dexie';
+import type { HabitCadence, HabitReminder } from '../habitos';
 
 // ---------------------------------------------------------------------------
 // Default habit definitions — task-040 brief
@@ -49,10 +50,114 @@ export interface SeedHabitoTemplate {
 
 export const DEFAULT_HABITOS_PRO: readonly SeedHabitoTemplate[] = Object.freeze([
   { name: 'Exercício 30min',   icon: '🏃', color: '#10b981', cadence: 'daily', completionRate: 0.78 },
-  { name: 'Leitura 20min',     icon: '📖', color: '#ec4899', cadence: 'daily', completionRate: 0.85 },
+  { name: 'Leitura 20min',     icon: '📖', color: '#f472b6', cadence: 'daily', completionRate: 0.85 },
   { name: 'Estudar PT',        icon: '🇵🇹', color: '#f59e0b', cadence: 'daily', completionRate: 0.72 },
   { name: 'Hidratação 2L',     icon: '💧', color: '#3b82f6', cadence: 'daily', completionRate: 0.92 },
   { name: 'Dormir 8h',         icon: '😴', color: '#6366f1', cadence: 'daily', completionRate: 0.64 }
+]);
+
+// ---------------------------------------------------------------------------
+// V8 — Template catalogue for the /habitos/novo picker
+// ---------------------------------------------------------------------------
+
+/**
+ * A pickable habit template.  `nameKey` / `metaKey` are i18n keys —
+ * the picker resolves them with `$t(key, { default })` so template
+ * names localise while the SAVED habit gets the resolved string.
+ *
+ * `days` uses JS getDay() numbering (0=Sun..6=Sat).
+ */
+export interface HabitTemplate {
+  id: string;
+  nameKey: string;
+  defaultName: string;
+  icon: string;
+  color: string;
+  cadence: HabitCadence;
+  meta?: string;
+  reminder?: HabitReminder;
+}
+
+/**
+ * DEFAULT_HABITOS_PRO re-expressed as templates + curated extras
+ * (hydration/sleep/study/exercise are covered by the Pro five;
+ * skincare, finance check and rest are the V8 additions).
+ */
+export const HABIT_TEMPLATES: readonly HabitTemplate[] = Object.freeze([
+  {
+    id: 'hydration',
+    nameKey: 'habitos.templates.hydration.name',
+    defaultName: 'Hidratação 2L',
+    icon: '💧',
+    color: '#3b82f6',
+    cadence: 'daily',
+    meta: '2L'
+  },
+  {
+    id: 'sleep',
+    nameKey: 'habitos.templates.sleep.name',
+    defaultName: 'Dormir 8h',
+    icon: '😴',
+    color: '#6366f1',
+    cadence: 'daily',
+    meta: '8h',
+    reminder: { time: '22:30' }
+  },
+  {
+    id: 'study',
+    nameKey: 'habitos.templates.study.name',
+    defaultName: 'Estudar PT',
+    icon: '🇵🇹',
+    color: '#f59e0b',
+    cadence: 'daily',
+    meta: '20 min'
+  },
+  {
+    id: 'exercise',
+    nameKey: 'habitos.templates.exercise.name',
+    defaultName: 'Exercício 30min',
+    icon: '🏃',
+    color: '#10b981',
+    // Mon / Wed / Fri — a realistic training cadence.
+    cadence: { days: [1, 3, 5] },
+    meta: '30 min'
+  },
+  {
+    id: 'skincare',
+    nameKey: 'habitos.templates.skincare.name',
+    defaultName: 'Skincare',
+    icon: '🧴',
+    color: '#f472b6',
+    cadence: 'daily',
+    reminder: { time: '21:00' }
+  },
+  {
+    id: 'reading',
+    nameKey: 'habitos.templates.reading.name',
+    defaultName: 'Leitura 20min',
+    icon: '📖',
+    color: '#a855f7',
+    cadence: 'daily',
+    meta: '20 min'
+  },
+  {
+    id: 'finance-check',
+    nameKey: 'habitos.templates.finance_check.name',
+    defaultName: 'Rever finanças',
+    icon: '🪙',
+    color: '#14b8a6',
+    cadence: 'weekly',
+    reminder: { time: '18:00', days: [0] }
+  },
+  {
+    id: 'rest',
+    nameKey: 'habitos.templates.rest.name',
+    defaultName: 'Dia de descanso',
+    icon: '🌿',
+    color: '#8b5cf6',
+    // Weekend recovery — resting is also a habit worth protecting.
+    cadence: { days: [0, 6] }
+  }
 ]);
 
 // ---------------------------------------------------------------------------

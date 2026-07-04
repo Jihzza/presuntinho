@@ -17,6 +17,8 @@
 // is emotional, not technical.
 
 import { browser } from '$app/environment';
+import { get } from 'svelte/store';
+import { t } from 'svelte-i18n';
 
 export type LoveLockKind = 'sad' | 'love' | 'sick';
 
@@ -143,65 +145,50 @@ export function isLockStale(state: LoveLockState, thresholdMs = 5 * 60 * 1000): 
 }
 
 /**
- * i18n messages — bilingual copy for the lock screen.
+ * Lock-screen copy — resolved through svelte-i18n keys (lovelock.<kind>.<slot>)
+ * so all 5 UI locales get natural copy from the locale dictionaries. The
+ * pt-PT originals stay inline as defaults so the screen never renders a raw
+ * key, even before the dictionaries load.
  */
-export const LOVE_LOCK_MESSAGES = {
+export type LoveLockSlot = 'title' | 'body' | 'button' | 'stale';
+
+const LOVE_LOCK_FALLBACKS: Record<LoveLockKind, Record<LoveLockSlot, string>> = {
   sad: {
-    title: { en: 'Are you okay, sweetheart? 🥺', 'pt-PT': 'Estás bem, amor? 🥺' },
-    body: {
-      en: "It seems like you're upset with fofinho… but fofinho loves you so, so much. Sort things out with fofinho so you can focus on your studies. 📚💕",
-      'pt-PT':
-        'Parece que estás zangada com o fofinho… mas o fofinho adora-te imenso. Faz as pazes com o fofinho para pores a estudar com calma. 📚💕',
-    },
-    button: {
-      en: "I'm great with fofinho. I love fofinho so much!",
-      'pt-PT': 'Estou ótima com o fofinho. Adoro o fofinho!',
-    },
-    stale: {
-      en: 'Still here? Fofinho is starting to miss your smile…',
-      'pt-PT': 'Ainda aqui? O fofinho já começa a sentir falta do teu sorriso…',
-    },
+    title: 'Estás bem, amor? 🥺',
+    body: 'Parece que estás zangada com o fofinho… mas o fofinho adora-te imenso. Faz as pazes com o fofinho para pores a estudar com calma. 📚💕',
+    button: 'Estou ótima com o fofinho. Adoro o fofinho!',
+    stale: 'Ainda aqui? O fofinho já começa a sentir falta do teu sorriso…',
   },
   love: {
-    title: { en: 'Fofinho misses you SO much 🥺💕', 'pt-PT': 'O fofinho tem muitas saudades tuas 🥺💕' },
-    body: {
-      en: "Go tell fofinho you love him. Just say it out loud, then tap the button below. He'll be waiting with a happy snort. 🐷✨",
-      'pt-PT':
-        'Vai dizer ao fofinho que o amas. Diz em voz alta, depois carrega no botão abaixo. Ele está à espera com um ronrom feliz. 🐷✨',
-    },
-    button: {
-      en: "I said it and I'll say it again!",
-      'pt-PT': 'Já disse e volto a dizer!',
-    },
-    stale: {
-      en: "Fofinho is still waiting… he really, really misses you.",
-      'pt-PT': 'O fofinho continua à espera… ele tem imensas saudades tuas.',
-    },
+    title: 'O fofinho tem muitas saudades tuas 🥺💕',
+    body: 'Vai dizer ao fofinho que o amas. Diz em voz alta, depois carrega no botão abaixo. Ele está à espera com um ronrom feliz. 🐷✨',
+    button: 'Já disse e volto a dizer!',
+    stale: 'O fofinho continua à espera… ele tem imensas saudades tuas.',
   },
   sick: {
-    title: { en: 'Get well soon, my little warrior 🤍', 'pt-PT': 'As melhoras, minha guerreira 🤍' },
-    body: {
-      en: 'Fofinho knows you are not feeling well, so today the mission is tiny and cosy: drink water, rest, eat something gentle, keep warm, and do one small thing at a time. The app will wait for you — your health comes first. 🫶',
-      'pt-PT':
-        'O fofinho sabe que não te estás a sentir bem, por isso hoje a missão é pequenina e fofinha: beber água, descansar, comer algo leve, manter-te quentinha e fazer só uma coisa de cada vez. A app espera por ti — a tua saúde vem primeiro. 🫶',
-    },
-    button: {
-      en: 'I drank water and I will rest now 🤍',
-      'pt-PT': 'Bebi água e vou descansar um bocadinho 🤍',
-    },
-    stale: {
-      en: 'Still here? Blanket, water, and a little pause. Fofinho orders it gently.',
-      'pt-PT': 'Ainda aqui? Mantinha, água e uma pausa pequenina. O fofinho manda com carinho.',
-    },
+    title: 'As melhoras, minha guerreira 🤍',
+    body: 'O fofinho sabe que não te estás a sentir bem, por isso hoje a missão é pequenina e fofinha: beber água, descansar, comer algo leve, manter-te quentinha e fazer só uma coisa de cada vez. A app espera por ti — a tua saúde vem primeiro. 🫶',
+    button: 'Bebi água e vou descansar um bocadinho 🤍',
+    stale: 'Ainda aqui? Mantinha, água e uma pausa pequenina. O fofinho manda com carinho.',
   },
-} as const;
+};
 
+/**
+ * Returns the lock-screen string for the given kind/slot in the ACTIVE
+ * svelte-i18n locale. The `_locale` parameter is kept for call-site
+ * compatibility (LoveLock.svelte passes it) — svelte-i18n already tracks the
+ * active locale, and the param still triggers reactive recomputes upstream.
+ */
 export function loveLockMessage(
   kind: LoveLockKind,
-  slot: 'title' | 'body' | 'button' | 'stale',
-  locale: string
+  slot: LoveLockSlot,
+  _locale?: string
 ): string {
-  const msgs = LOVE_LOCK_MESSAGES[kind][slot];
-  if (locale in msgs) return msgs[locale as 'en' | 'pt-PT'];
-  return msgs.en;
+  const fallback = LOVE_LOCK_FALLBACKS[kind][slot];
+  try {
+    const format = get(t);
+    return format ? format(`lovelock.${kind}.${slot}`, { default: fallback }) : fallback;
+  } catch {
+    return fallback;
+  }
 }

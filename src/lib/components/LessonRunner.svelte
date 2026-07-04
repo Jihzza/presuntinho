@@ -3,7 +3,7 @@
   import { goto } from '$app/navigation';
   import { markVisited } from '$lib/state/stores';
   import { t } from 'svelte-i18n';
-  import { awardXP } from '$lib/state/xp-actions';
+  import { completeLessonOnce } from '$lib/escola/progress';
 
   // ----- Types --------------------------------------------------------------
 
@@ -85,8 +85,9 @@
 
   function goNext() {
     if (!lesson?.nextLesson) return;
-    // gap-054: award XP when user advances to next lesson (= completed this one)
-    void awardXP('lesson_complete');
+    // V8 XP integrity: completeLessonOnce checks the 'lesson-done:' row in
+    // Dexie BEFORE awarding, so lesson_complete pays exactly once per lesson.
+    void completeLessonOnce(courseSlug, lessonSlug);
     goto(`/escola/licao/${courseSlug}/${lesson.nextLesson}/`);
   }
   function goPrev() {
@@ -95,8 +96,8 @@
   }
   function goQuiz() {
     if (!lesson?.quizSlug) return;
-    // gap-054: also award XP when going to the quiz (lesson done)
-    void awardXP('lesson_complete');
+    // Same idempotent path when finishing via the quiz.
+    void completeLessonOnce(courseSlug, lessonSlug);
     goto(`/escola/quiz/${lesson.quizSlug}/`);
   }
 </script>
@@ -250,11 +251,11 @@
     letter-spacing: 0.05em;
   }
   .breadcrumb {
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     font-size: 0.85rem;
     margin: 0;
   }
-  .breadcrumb a { color: var(--accent, #ec4899); text-decoration: none; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; }
   .breadcrumb a:hover { text-decoration: underline; }
   .breadcrumb .sep { margin: 0 0.4rem; opacity: 0.6; }
 
@@ -284,7 +285,7 @@
   }
   .audio-fill {
     height: 100%;
-    background: var(--accent, #ec4899);
+    background: var(--accent);
     transition: width 0.2s linear;
   }
   .audio-card audio { height: 44px; max-width: 260px; }
@@ -319,7 +320,7 @@
   .activity-step.disabled { opacity: 0.45; cursor: not-allowed; }
   .activity-step span { grid-row: span 2; font-size: 1.35rem; }
   .activity-step strong { line-height: 1; }
-  .activity-step small { color: var(--txt3, #94a3b8); }
+  .activity-step small { color: var(--txt3); }
   @media (min-width: 720px) {
     .activity-map { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
@@ -351,9 +352,9 @@
     font-size: 1.05rem;
     margin: 1.25rem 0 0.5rem;
   }
-  .lesson-body p { color: var(--txt2, #cbd5e1); margin: 0.5rem 0; }
+  .lesson-body p { color: var(--txt2); margin: 0.5rem 0; }
   .lesson-body ul {
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     margin: 0.5rem 0 0.5rem 1.25rem;
     padding: 0;
   }
@@ -366,7 +367,7 @@
   }
   .lesson-figure img { width: 100%; height: auto; display: block; border-radius: 0.4rem; }
   .lesson-figure figcaption {
-    color: var(--txt3, #94a3b8);
+    color: var(--txt3);
     font-size: 0.8rem;
     text-align: center;
     margin-top: 0.4rem;
@@ -385,7 +386,7 @@
   .callout-success { background: rgba(16, 185, 129, 0.12); border-color: #10b981; color: #a7f3d0; }
   .callout-highlight {
     background: rgba(236, 72, 153, 0.12);
-    border-color: var(--accent, #ec4899);
+    border-color: var(--accent);
     color: #fbcfe8;
     font-weight: 500;
   }
@@ -406,7 +407,7 @@
     margin: 0 0 0.5rem;
   }
   .keypoints ol {
-    color: var(--txt2, #cbd5e1);
+    color: var(--txt2);
     margin: 0 0 1rem 1.25rem;
     padding: 0;
     font-size: 0.9rem;
@@ -416,7 +417,7 @@
     display: inline-block;
     width: 100%;
     padding: 0.6rem 1rem;
-    background: var(--accent, #ec4899);
+    background: var(--accent);
     color: #fff;
     border: 0;
     border-radius: 0.5rem;
@@ -425,7 +426,7 @@
     cursor: pointer;
     text-align: center;
   }
-  .quiz-btn:hover { background: #d63780; }
+  .quiz-btn:hover { background: var(--accent-hover, var(--accent)); }
 
   /* Nav */
   .lesson-nav {
@@ -451,10 +452,10 @@
   .nav-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.12); }
   .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
   .nav-btn.primary {
-    background: var(--accent, #ec4899);
+    background: var(--accent);
     border-color: transparent;
   }
-  .nav-btn.primary:hover:not(:disabled) { background: #d63780; }
+  .nav-btn.primary:hover:not(:disabled) { background: var(--accent-hover, var(--accent)); }
 
   .progress-dots { display: flex; gap: 0.4rem; }
   .dot {
@@ -463,7 +464,7 @@
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.2);
   }
-  .dot.active { background: var(--accent, #ec4899); }
+  .dot.active { background: var(--accent); }
 
   .loading, .error { color: rgba(255, 255, 255, 0.7); text-align: center; padding: 2rem 0; }
   .error { color: #ff8888; }

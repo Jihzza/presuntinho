@@ -1,7 +1,13 @@
 // Data-driven easter eggs loader. Reads /config/easterEggs.json at runtime.
-// Single source of truth — replaces the inline SECRET_DEFS, HEART_TIERS,
-// and MASCOT_TIPS arrays that previously lived in easterEggs.ts /
-// secrets/+page.svelte.
+// Single source of truth — easterEggs.ts consumes these getters instead of
+// keeping inline copies of SECRET_DEFS / HEART_TIERS / MASCOT_TIPS, and the
+// /secrets + /memorias routes render from the same catalogue.
+//
+// V8 change: the old `fat-secret-*` localStorage API is GONE. Discovery
+// truth lives in the Dexie `secrets` table (written by discoverSecret() in
+// $lib/state/stores). The helpers below are async and read that table.
+
+import { db } from './state/db';
 
 export interface Secret {
   id: string;
@@ -25,6 +31,8 @@ export interface HeartTier {
   xp: number;
   conf: number;
   emoji: string;
+  /** Optional badge id awarded when the tier is reached (e.g. b13 at 100). */
+  badge?: string;
 }
 
 export interface EasterEggsData {
@@ -72,22 +80,30 @@ export async function getMascotTips(): Promise<string[]> {
   return d?.mascotTips ?? [];
 }
 
-// Convenience: check if a secret id is unlocked for this user.
-// Falls back to localStorage (no Dexie reads to keep this pure / sync-safe).
-export function isSecretUnlocked(secretId: string): boolean {
-  if (typeof window === 'undefined') return false;
+/**
+ * Check if a secret id has been discovered. Dexie-backed — the `secrets`
+ * table written by discoverSecret() is the single source of truth
+ * (replaces the dead `fat-secret-<id>` localStorage flags).
+ */
+export async function isSecretUnlocked(secretId: string): Promise<boolean> {
+  if (typeof indexedDB === 'undefined') return false;
   try {
-    return localStorage.getItem(`fat-secret-${secretId}`) === '1';
+    const row = await db().secrets.get(secretId);
+    return Boolean(row?.discovered);
   } catch {
     return false;
   }
 }
 
-export function getSecretDiscoveredAt(secretId: string): number | null {
-  if (typeof window === 'undefined') return null;
+/**
+ * Timestamp (ms) at which a secret was discovered, or null when it has not
+ * been discovered yet. Dexie-backed (replaces `fat-secret-<id>-at`).
+ */
+export async function getSecretDiscoveredAt(secretId: string): Promise<number | null> {
+  if (typeof indexedDB === 'undefined') return null;
   try {
-    const v = localStorage.getItem(`fat-secret-${secretId}-at`);
-    return v ? parseInt(v, 10) : null;
+    const row = await db().secrets.get(secretId);
+    return row?.discoveredAt ? row.discoveredAt : null;
   } catch {
     return null;
   }

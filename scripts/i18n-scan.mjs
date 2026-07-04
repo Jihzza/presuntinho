@@ -53,6 +53,14 @@ const EXEMPT_FILES = new Set([
   // expected to render through other components that already i18n
   // their props. Listed for clarity; the scanner would skip them
   // anyway because their template contains no literal text.
+
+  // Pedagogical Portuguese content: these pages TEACH European
+  // Portuguese, so their example sentences/vocabulary are intentionally
+  // Portuguese in every UI locale (the teaching language is the
+  // content, not chrome). UI labels around them still use $t().
+  'src/routes/pt/+page.svelte',
+  'src/routes/case/+page.svelte',
+  'src/routes/escola/curso/portugues/+page.svelte',
 ]);
 
 // -------------------------------------------------------------------

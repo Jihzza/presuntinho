@@ -18,19 +18,25 @@
 -->
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { t } from 'svelte-i18n';
+  import { locale, t } from 'svelte-i18n';
   import {
     listCategorias,
     listTransacoesMes,
     totaisPorCategoria,
     totalMes,
+    comparativoCategorias,
+    mesAnterior,
+    getChartTheme,
+    onThemeChange,
     getMesAtual,
     formatMes,
     formatValor,
+    formatValorCompacto,
     formatData,
     type CategoriaRow,
     type Transacao,
-    type TotaisMes
+    type TotaisMes,
+    type DeltaCategoria
   } from '$lib/financas';
   import { subApps } from '$lib/registry';
   import EmptyState from '$lib/components/EmptyState.svelte';
@@ -47,9 +53,12 @@
   let totaisCategoria = $state<Record<string, number>>({});          // catSlug → despesa total
   let totaisMesAtual = $state<TotaisMes>({ receitas: 0, despesas: 0, saldo: 0 });
   let totaisMesAnterior = $state<TotaisMes>({ receitas: 0, despesas: 0, saldo: 0 });
+  // V8: deltas por categoria (mês vs mês anterior) — top movers primeiro.
+  let deltasCategoria = $state<DeltaCategoria[]>([]);
 
   let loading = $state(true);
   let error = $state<string | null>(null);
+  const numberLocale = $derived($locale || 'pt-PT');
 
   let pieCanvas: HTMLCanvasElement | undefined = $state();
   let compareCanvas: HTMLCanvasElement | undefined = $state();
@@ -76,13 +85,7 @@
     }
     return out;
   }
-
-  /** Mês anterior ao fornecido, em 'YYYY-MM'. */
-  function mesAnterior(mesStr: string): string {
-    const [y, m] = mesStr.split('-').map((n) => parseInt(n, 10));
-    const d = new Date(y, m - 2, 1); // m-2 porque Date(2026,0,1) = Jan, e queremos mês antes do actual
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-  }
+  // (mesAnterior agora vem de $lib/financas — partilhado com o orçamento.)
 
   // ---------------------------------------------------------------------------
   // Derived
@@ -114,6 +117,7 @@
   // ---------------------------------------------------------------------------
 
   onMount(() => {
+    let unsubTheme: (() => void) | null = null;
     void (async () => {
       try {
         const mod = await import('chart.js/auto');
@@ -123,12 +127,20 @@
         await Promise.resolve();
         renderPie();
         renderCompare();
+        // V8: re-render dos gráficos com a paleta nova quando o tema muda.
+        unsubTheme = onThemeChange(() => {
+          renderPie();
+          renderCompare();
+        });
       } catch (e) {
         console.error('[financas/relatorios] load failed', e);
         error = e instanceof Error ? e.message : 'Erro a carregar relatórios';
         loading = false;
       }
     })();
+    return () => {
+      unsubTheme?.();
+    };
   });
 
   onDestroy(() => {
@@ -138,10 +150,12 @@
     compareChart = null;
   });
 
-  // Re-fetch + re-render quando o mês muda.
+  // Re-fetch + re-render quando o mês OU a língua muda (labels dos eixos
+  // e formatos de moeda são locale-sensíveis).
   $effect(() => {
     const _ = mes;
     const __ = Chart;
+    const ___ = numberLocale;
     if (!__) return;
     void (async () => {
       await refresh();
@@ -154,18 +168,20 @@
     error = null;
     try {
       const prevMes = mesAnterior(mes);
-      const [cats, tx, totCat, tot, totPrev] = await Promise.all([
+      const [cats, tx, totCat, tot, totPrev, deltas] = await Promise.all([
         listCategorias(),
         listTransacoesMes(mes),
         totaisPorCategoria(mes),
         totalMes(mes),
-        totalMes(prevMes)
+        totalMes(prevMes),
+        comparativoCategorias(mes)
       ]);
       categorias = cats;
       transacoesMes = tx;
       totaisCategoria = totCat;
       totaisMesAtual = tot;
       totaisMesAnterior = totPrev;
+      deltasCategoria = deltas;
     } catch (e) {
       console.error('[financas/relatorios] refresh failed', e);
       error = e instanceof Error ? e.message : 'Erro a carregar relatórios';
@@ -181,6 +197,9 @@
     pieChart?.destroy();
     pieChart = null;
 
+    // V8: paleta lida das CSS custom properties do tema activo.
+    const theme = getChartTheme();
+
     // Pie = despesas por categoria, só despesas (>0, filtradas de totaisCategoria
     // que já contém apenas 'despesa' rows).
     const slugs = Object.keys(totaisCategoria);
@@ -194,7 +213,7 @@
       const cat = categoriasPorId[slug];
       labels.push(cat?.nome ?? slug);
       data.push(v);
-      cores.push(cat?.cor ?? '#94a3b8');
+      cores.push(cat?.cor ?? theme.txt3);
       icones.push(cat?.icone ?? '📦');
     }
 
@@ -209,7 +228,7 @@
             label: $t('financas.relatorios.pie.title', { default: 'Despesas por categoria' }),
             data,
             backgroundColor: cores,
-            borderColor: 'rgba(15, 23, 42, 0.9)',
+            borderColor: theme.border,
             borderWidth: 2,
             hoverOffset: 6
           }
@@ -223,14 +242,14 @@
           legend: {
             display: true,
             position: 'bottom',
-            labels: { color: '#cbd5e1', boxWidth: 12, font: { size: 11 } }
+            labels: { color: theme.txt2, boxWidth: 12, font: { size: 11 } }
           },
           tooltip: {
             callbacks: {
               label: (ctx) => {
                 const i = ctx.dataIndex;
                 const icone = icones[i] ?? '';
-                return ` ${icone} ${ctx.label}: ${formatValor(ctx.parsed ?? 0)}`;
+                return ` ${icone} ${ctx.label}: ${formatValor(ctx.parsed ?? 0, numberLocale)}`;
               }
             }
           }
@@ -246,7 +265,10 @@
     compareChart?.destroy();
     compareChart = null;
 
-    const labelCurto = $t('financas.relatorios.month.label', { default: 'Mês' });
+    // V8: paleta do tema activo + ticks compactos em mobile.
+    const theme = getChartTheme();
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+
     const lblReceitas = $t('financas.relatorios.compare.receitas', { default: 'Receitas' });
     const lblDespesas = $t('financas.relatorios.compare.despesas', { default: 'Despesas' });
     const lblSaldo = $t('financas.relatorios.compare.saldo', { default: 'Saldo' });
@@ -254,13 +276,13 @@
     compareChart = new Chart(compareCanvas, {
       type: 'bar',
       data: {
-        labels: [formatMes(mesAnterior(mes)), formatMes(mes)],
+        labels: [formatMes(mesAnterior(mes), numberLocale), formatMes(mes, numberLocale)],
         datasets: [
           {
             label: lblReceitas,
             data: [totaisMesAnterior.receitas, totaisMesAtual.receitas],
-            backgroundColor: 'rgba(16, 185, 129, 0.7)',
-            borderColor: 'rgba(16, 185, 129, 1)',
+            backgroundColor: theme.successBg,
+            borderColor: theme.success,
             borderWidth: 1,
             borderRadius: 6,
             maxBarThickness: 36
@@ -268,8 +290,8 @@
           {
             label: lblDespesas,
             data: [totaisMesAnterior.despesas, totaisMesAtual.despesas],
-            backgroundColor: 'rgba(239, 68, 68, 0.7)',
-            borderColor: 'rgba(239, 68, 68, 1)',
+            backgroundColor: theme.errorBg,
+            borderColor: theme.error,
             borderWidth: 1,
             borderRadius: 6,
             maxBarThickness: 36
@@ -277,8 +299,8 @@
           {
             label: lblSaldo,
             data: [totaisMesAnterior.saldo, totaisMesAtual.saldo],
-            backgroundColor: 'rgba(236, 72, 153, 0.7)',
-            borderColor: 'rgba(236, 72, 153, 1)',
+            backgroundColor: theme.accentBg,
+            borderColor: theme.accent,
             borderWidth: 1,
             borderRadius: 6,
             maxBarThickness: 36
@@ -289,25 +311,29 @@
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { display: true, position: 'top', labels: { color: '#cbd5e1' } },
+          legend: { display: true, position: 'top', labels: { color: theme.txt2 } },
           tooltip: {
             callbacks: {
-              label: (ctx) => ` ${ctx.dataset.label}: ${formatValor(ctx.parsed.y ?? 0)}`
+              label: (ctx) => ` ${ctx.dataset.label}: ${formatValor(ctx.parsed.y ?? 0, numberLocale)}`
             }
           }
         },
         scales: {
           x: {
-            ticks: { color: '#cbd5e1' },
-            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+            ticks: { color: theme.txt2 },
+            grid: { color: theme.grid }
           },
           y: {
             beginAtZero: true,
             ticks: {
-              color: '#cbd5e1',
-              callback: (val) => formatValor(Number(val))
+              color: theme.txt2,
+              maxTicksLimit: isMobile ? 5 : 7,
+              callback: (val) =>
+                isMobile
+                  ? formatValorCompacto(Number(val), numberLocale)
+                  : formatValor(Number(val), numberLocale)
             },
-            grid: { color: 'rgba(255, 255, 255, 0.08)' }
+            grid: { color: theme.grid }
           }
         }
       }
@@ -434,6 +460,47 @@
     </section>
 
     <!-- ============================================================== -->
+    <!-- 1b. V8: deltas por categoria vs mês anterior (top movers)        -->
+    <!-- ============================================================== -->
+    <section class="card-section" aria-label={$t('financas.relatorios.deltas.title', { default: 'O que mudou vs mês anterior' })}>
+      <h2 class="section-title">{$t('financas.relatorios.deltas.title', { default: 'O que mudou vs mês anterior' })}</h2>
+      {#if deltasCategoria.length === 0}
+        <p class="empty muted">{$t('financas.relatorios.deltas.empty', { default: 'Sem despesas para comparar ainda.' })}</p>
+      {:else}
+        <ul class="delta-list">
+          {#each deltasCategoria.slice(0, 6) as row (row.categoriaId)}
+            {@const c = categoriasPorId[row.categoriaId]}
+            <li class="delta-row">
+              <span
+                class="cat-icon"
+                style={c ? `--cat-cor: ${c.cor}` : '--cat-cor: var(--txt3)'}
+                aria-hidden="true"
+              >
+                {c?.icone ?? '📦'}
+              </span>
+              <span class="delta-main">
+                <span class="delta-nome">{c?.nome ?? row.categoriaId}</span>
+                <span class="delta-meta">
+                  {formatValor(row.anterior, numberLocale)} → {formatValor(row.atual, numberLocale)}
+                </span>
+              </span>
+              <span class="delta-valor" class:up={row.delta > 0} class:down={row.delta < 0}>
+                {row.delta > 0 ? '▲' : row.delta < 0 ? '▼' : '•'}
+                {formatValor(Math.abs(row.delta), numberLocale)}
+                {#if row.percent === null}
+                  <span class="delta-percent">{$t('financas.relatorios.deltas.new', { default: 'novo' })}</span>
+                {:else if row.percent !== 0}
+                  <span class="delta-percent">{row.percent > 0 ? '+' : ''}{Math.round(row.percent)}%</span>
+                {/if}
+              </span>
+            </li>
+          {/each}
+        </ul>
+        <p class="delta-hint">{$t('financas.relatorios.deltas.hint', { default: 'Só informação, zero julgamentos — os meses são todos diferentes.' })}</p>
+      {/if}
+    </section>
+
+    <!-- ============================================================== -->
     <!-- 2. Pie chart despesas por categoria                              -->
     <!-- ============================================================== -->
     <section class="card-section" aria-label={$t('financas.relatorios.pie.aria', { default: 'Gráfico circular de despesas por categoria' })}>
@@ -464,7 +531,7 @@
             <li class="top-row">
               <span
                 class="cat-icon"
-                style={c ? `--cat-cor: ${c.cor}` : '--cat-cor: #94a3b8'}
+                style={c ? `--cat-cor: ${c.cor}` : '--cat-cor: var(--txt3)'}
                 aria-hidden="true"
               >
                 {c?.icone ?? '📦'}
@@ -472,11 +539,11 @@
               <span class="top-main">
                 <span class="top-desc">{tx.descricao || (c?.nome ?? '—')}</span>
                 <span class="top-meta">
-                  {c?.nome ?? tx.categoria} · <time datetime={tx.data}>{formatData(tx.data)}</time>
+                  {c?.nome ?? tx.categoria} · <time datetime={tx.data}>{formatData(tx.data, numberLocale)}</time>
                 </span>
               </span>
               <span class="top-valor" aria-label={$t('financas.relatorios.compare.despesas', { default: 'Despesas' })}>
-                − {formatValor(tx.valor)}
+                − {formatValor(tx.valor, numberLocale)}
               </span>
             </li>
           {/each}
@@ -631,6 +698,75 @@
   .chart-wrap.pie {
     height: 320px;
   }
+  /* V8: deltas por categoria */
+  .delta-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .delta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.625rem 0.75rem;
+    background: var(--bg-elev, rgba(0, 0, 0, 0.2));
+    border-radius: var(--radius-sm, 0.5rem);
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.05));
+  }
+  .delta-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+  .delta-nome {
+    font-size: 0.95rem;
+    color: var(--txt, #fff);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .delta-meta {
+    font-size: 0.75rem;
+    color: var(--txt3, #94a3b8);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .delta-valor {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--txt2, #cbd5e1);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .delta-valor.up {
+    color: var(--warning, #f59e0b);
+  }
+  .delta-valor.down {
+    color: var(--success, #10b981);
+  }
+  .delta-percent {
+    font-size: 0.75rem;
+    color: var(--txt3, #94a3b8);
+    font-weight: 500;
+  }
+  .delta-hint {
+    margin: 0.75rem 0 0;
+    font-size: var(--fs-xs, 0.8125rem);
+    color: var(--txt3, #94a3b8);
+    text-align: center;
+    font-style: italic;
+  }
   .top-list {
     list-style: none;
     margin: 0;
@@ -701,18 +837,18 @@
     gap: 0.5rem;
     padding: 0.875rem 1.25rem;
     background: var(--success, #10b981);
-    color: #052e1c;
+    color: var(--on-accent, #fff);
     border: 0;
     border-radius: 0.6rem;
     font-weight: 700;
     font-size: 1rem;
     font-family: inherit;
     cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
+    transition: filter var(--motion-fast, 120ms), transform var(--motion-fast, 120ms);
   }
   .btn-export:hover,
   .btn-export:focus-visible {
-    background: #34d399;
+    filter: brightness(1.08);
     transform: translateY(-1px);
     outline: none;
   }

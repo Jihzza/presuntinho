@@ -155,6 +155,24 @@
       <h2 id="onboarding-title" class="title">{$t(greetingKey, { default: greetingFallback })}</h2>
       <p class="lead">{$_('onboarding.firstHint')}</p>
 
+      <h3 class="section-title">{$t('onboarding.highlightsTitle', { default: 'O que há de novo' })}</h3>
+      <ul class="highlights" aria-label={$t('onboarding.highlightsTitle', { default: 'O que há de novo' })}>
+        <li class="highlight">
+          <span class="app-icon" aria-hidden="true">🎯</span>
+          <span class="highlight-text">
+            <strong>{$t('onboarding.quests.title', { default: 'Missões diárias' })}</strong>
+            {$t('onboarding.quests.body', { default: 'Todos os dias há pequenas missões na Home — completa-as e ganha XP extra.' })}
+          </span>
+        </li>
+        <li class="highlight">
+          <span class="app-icon" aria-hidden="true">📲</span>
+          <span class="highlight-text">
+            <strong>{$t('onboarding.install.title', { default: 'Instalar no telemóvel' })}</strong>
+            {$t('onboarding.install.body', { default: 'Toca no botão “Instalar app” para ter o Presuntinho sempre à mão, mesmo offline.' })}
+          </span>
+        </li>
+      </ul>
+
       <h3 class="section-title">{$_('onboarding.subAppsTitle')}</h3>
       <ul class="apps" aria-label={$t('components.onboarding.apps.aria', { default: 'Sub-apps' })}>
         {#each subApps as app (app.id)}
@@ -191,15 +209,15 @@
     animation: overlay-in 0.2s ease;
   }
   .modal {
-    background: linear-gradient(135deg, #1f2e4a 0%, #2d4373 100%);
-    border: 1px solid rgba(236, 72, 153, 0.4);
-    border-radius: 1rem;
+    background: var(--bg-elev, #1f2e4a);
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    border-radius: var(--radius-lg, 1rem);
     padding: 2rem 1.75rem 1.5rem;
     max-width: 520px;
     width: 100%;
     position: relative;
-    color: #fff;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    color: var(--txt);
+    box-shadow: var(--shadow-lg, 0 20px 60px rgba(0, 0, 0, 0.5));
     max-height: 90vh;
     overflow-y: auto;
     animation: slide-up 0.28s ease;
@@ -210,23 +228,23 @@
     right: 0.75rem;
     background: transparent;
     border: 0;
-    color: #fff;
+    color: var(--txt);
     font-size: 1.5rem;
     cursor: pointer;
     line-height: 1;
     padding: 0.5rem 0.65rem;
     min-width: 44px;
     min-height: 44px;
-    border-radius: 0.375rem;
+    border-radius: var(--radius-sm, 0.375rem);
   }
   .close:hover,
   .close:focus-visible {
-    color: #ec4899;
-    background: rgba(255, 255, 255, 0.06);
+    color: var(--accent);
+    background: var(--card-hover);
     outline: none;
   }
   .close:focus-visible {
-    box-shadow: 0 0 0 2px #ec4899;
+    box-shadow: 0 0 0 2px var(--accent);
   }
   .title {
     margin: 0 0 0.5rem 0;
@@ -234,20 +252,21 @@
     line-height: 1.25;
   }
   .lead {
-    color: #cbd5e1;
+    color: var(--txt2);
     margin: 0 0 1.25rem 0;
     font-size: 0.95rem;
     line-height: 1.4;
   }
   .section-title {
     margin: 0 0 0.5rem 0;
-    font-size: 0.875rem;
+    font-size: var(--fs-sm, 0.875rem);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #94a3b8;
+    color: var(--txt3);
     font-weight: 600;
   }
-  .apps {
+  .apps,
+  .highlights {
     list-style: none;
     margin: 0 0 1.25rem 0;
     padding: 0;
@@ -255,15 +274,33 @@
     flex-direction: column;
     gap: 0.5rem;
   }
-  .app {
+  .app,
+  .highlight {
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 0.65rem;
     padding: 0.6rem 0.75rem;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 0.625rem;
+  }
+  .highlight {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    border-color: color-mix(in srgb, var(--accent) 26%, transparent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+  .highlight-text {
+    display: block;
+    font-size: var(--fs-sm, 0.875rem);
+    color: var(--txt2);
+    line-height: 1.4;
+  }
+  .highlight-text strong {
+    display: block;
+    color: var(--txt);
+    font-size: 0.95rem;
   }
   .app-icon {
     font-size: 1.5rem;
@@ -274,7 +311,7 @@
     font-size: 0.95rem;
   }
   .app-desc {
-    color: #94a3b8;
+    color: var(--txt3);
     font-size: 0.8rem;
     text-align: right;
   }
@@ -284,24 +321,24 @@
   }
   .cta {
     padding: 0.65rem 1.25rem;
-    background: #ec4899;
-    color: #fff;
+    background: var(--accent);
+    color: var(--on-accent, #fff);
     border: 0;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-md, 0.5rem);
     cursor: pointer;
     font-weight: 600;
     font-size: 1rem;
     min-height: 44px;
     min-width: 44px;
-    transition: background 0.2s ease;
+    transition: background var(--motion-base, 200ms) ease;
   }
   .cta:hover,
   .cta:focus-visible {
-    background: #db2777;
+    background: var(--accent-hover);
     outline: none;
   }
   .cta:focus-visible {
-    box-shadow: 0 0 0 2px #fff;
+    box-shadow: 0 0 0 2px var(--txt);
   }
 
   @keyframes overlay-in {

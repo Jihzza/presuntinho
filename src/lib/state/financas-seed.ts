@@ -104,11 +104,13 @@ export const DEFAULT_TRANSACOES: readonly SeedTransacaoTemplate[] = Object.freez
  * this other than keeping older Dexie debugging output recognisable.
  */
 export function buildSeedTransacoes(now: number): TransacaoRow[] {
-  const day = 24 * 60 * 60 * 1000;
   const today = new Date();
+  // LOCAL date key, not toISOString(): a seed built at 00:30 in Tunis
+  // must not shift every row one day back (UTC) — same rule as
+  // getHojeISO() in $lib/financas.
   const iso = (offsetDays: number): string => {
-    const d = new Date(today.getTime() - offsetDays * day);
-    return d.toISOString().slice(0, 10);
+    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - offsetDays);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   };
   return DEFAULT_TRANSACOES.map((t, i) => ({
     tipo: t.tipo,

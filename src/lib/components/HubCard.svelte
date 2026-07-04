@@ -35,10 +35,13 @@
   );
   let resolvedTagline = $derived(v3?.tagline ?? tagline ?? '');
   let resolvedIcon = $derived(v3?.icon ?? app.icon ?? '🔗');
-  let resolvedAccent = $derived(v3?.accent ?? app.color ?? '#ec4899');
+  // Only override the accent when the registry provides one — otherwise the
+  // card inherits the theme's global --accent token (setting
+  // `--accent: var(--accent)` would be an invalid circular reference).
+  let resolvedAccent = $derived(v3?.accent ?? app.color ?? null);
 </script>
 
-<a class="card" href={resolvedHref} style="--accent: {resolvedAccent}">
+<a class="card" href={resolvedHref} style={resolvedAccent ? `--accent: ${resolvedAccent}` : undefined}>
   <div class="icon">{resolvedIcon}</div>
   <div class="content">
     <h2>{resolvedTitle}</h2>
@@ -54,20 +57,20 @@
   .card {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1.25rem 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    gap: var(--space-4);
+    padding: 1.25rem var(--space-4);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-left: 4px solid var(--accent);
-    border-radius: 0.75rem;
-    color: #fff;
+    border-radius: var(--radius-lg, 0.75rem);
+    color: var(--txt);
     text-decoration: none;
-    transition: transform 0.15s, background 0.2s, border-color 0.2s;
+    transition: transform var(--motion-fast, 150ms), background var(--motion-base, 200ms), border-color var(--motion-base, 200ms);
     min-height: 88px;
   }
   .card:hover,
   .card:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--card-hover);
     transform: translateY(-2px);
   }
   .card:focus-visible {
@@ -86,14 +89,14 @@
     min-width: 0;
   }
   .content h2 {
-    font-size: 1.125rem;
+    font-size: var(--fs-md, 1.125rem);
     margin: 0 0 0.25rem 0;
-    color: #fff;
+    color: var(--txt);
   }
   .content p {
-    font-size: 0.875rem;
+    font-size: var(--fs-sm, 0.875rem);
     margin: 0;
-    color: #cbd5e1;
+    color: var(--txt2);
   }
   .arrow {
     color: var(--accent);

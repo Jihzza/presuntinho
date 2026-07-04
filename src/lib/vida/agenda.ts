@@ -1,11 +1,43 @@
-import { listHabitos, isLoggedToday, type Habit } from '../habitos';
+// Vida / Calendário domain helpers — the unified daily operating system.
+//
+// This module is the ONLY place calendar-related pages read/write Dexie:
+//   - habit logs land on their REAL dates (range read, not N point reads)
+//   - assignments land on their deadlines
+//   - events table (V8): personal events / special dates / reminders,
+//     with yearly repeat expansion → AgendaItem kind 'life'
+//   - optional finance layer: one informational item per day with movements
+//   - mood overlay: read-only map date → mood kind (the mood sub-app owns
+//     the writes; we only read for the calendar dots)
+//
+// `loadAgendaItems()` is kept back-compat for the Home hub (all
+// assignments + today's habits + the next 30 days of events).
+// `loadAgendaItemsForRange()` is the calendar-grade loader.
+
+import { listHabitos, getAllLogsInRange, localizedHabit, type Habit } from '../habitos';
 import { ensureAssignmentDefaults, listAssignments, localizedAssignment, type Assignment } from '../trabalhos';
+import { db, type EventRow } from '../state/db';
+import { awardXP } from '../state/xp-actions';
+import { formatValor } from '../financas';
 import { get } from 'svelte/store';
 import { t } from 'svelte-i18n';
 import { locale } from '../i18n';
 
-export type AgendaItemKind = 'assignment' | 'habit' | 'life';
+/**
+ * V8: habit reminders may be a legacy free-text string or the structured
+ * { time, days? } shape — the agenda only needs a display label.
+ */
+function reminderLabel(r: unknown): string | undefined {
+  if (!r) return undefined;
+  if (typeof r === 'string') return r;
+  if (typeof r === 'object' && 'time' in (r as Record<string, unknown>)) {
+    return String((r as { time: string }).time);
+  }
+  return undefined;
+}
+
+export type AgendaItemKind = 'assignment' | 'habit' | 'life' | 'finance';
 export type AgendaItemTone = 'danger' | 'warning' | 'school' | 'habit' | 'life' | 'done';
+export type EventKind = EventRow['kind'];
 
 export interface AgendaItem {
   id: string;
@@ -16,6 +48,16 @@ export interface AgendaItem {
   kind: AgendaItemKind;
   tone: AgendaItemTone;
   status?: string;
+  /** Set on kind 'habit' items so the calendar can toggle logs. */
+  habitId?: number;
+  /** Structured reminder label ("20:00", "manhã") on habit items. */
+  reminder?: string;
+  /** Set on kind 'life' items so the calendar can delete the row. */
+  eventId?: number;
+  /** 'event' | 'special' | 'reminder' on kind 'life' items. */
+  eventKind?: EventKind;
+  yearly?: boolean;
+  icon?: string;
 }
 
 export interface NotificationItem {
@@ -25,6 +67,14 @@ export interface NotificationItem {
   href: string;
   tone: AgendaItemTone;
   priority: number;
+}
+
+/** Which sources to include when loading a range. All default to true. */
+export interface AgendaLayers {
+  habits: boolean;
+  school: boolean;
+  events: boolean;
+  finance: boolean;
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -67,6 +117,50 @@ export function formatDayLabel(dateKey: string, locale = 'pt-PT'): string {
   });
 }
 
+// ---------------------------------------------------------------------------
+// Shared per-day helpers (were duplicated in Home + /calendario)
+// ---------------------------------------------------------------------------
+
+/** All items that fall on a given 'YYYY-MM-DD' local date key. */
+export function itemsForDate(items: AgendaItem[], dateKey: string): AgendaItem[] {
+  return items.filter((item) => item.date === dateKey);
+}
+
+export type DayToneName = 'today' | 'danger' | 'warning' | 'special' | 'busy' | 'quiet';
+
+/**
+ * Resolve the visual tone of a day cell from that day's items.
+ * `isToday` wins over everything (the cell highlights the current day).
+ */
+export function dayTone(dayItems: AgendaItem[], isToday = false): DayToneName {
+  if (isToday) return 'today';
+  if (dayItems.some((item) => item.tone === 'danger')) return 'danger';
+  if (dayItems.some((item) => item.tone === 'warning')) return 'warning';
+  if (dayItems.some((item) => item.eventKind === 'special')) return 'special';
+  if (dayItems.length > 0) return 'busy';
+  return 'quiet';
+}
+
+// ---------------------------------------------------------------------------
+// Assignments
+// ---------------------------------------------------------------------------
+
+// ensureAssignmentDefaults() seeds the table on first boot. It only needs
+// to run once per session — the old code ran it on EVERY loadAgendaItems
+// call, which is wasted work on each Home/calendar refresh.
+let assignmentsEnsured: Promise<void> | null = null;
+function ensureAssignmentsOnce(): Promise<void> {
+  if (!assignmentsEnsured) {
+    assignmentsEnsured = ensureAssignmentDefaults().catch((err) => {
+      // Allow a retry on the next load if seeding failed (e.g. transient
+      // IndexedDB error) instead of caching the rejection forever.
+      assignmentsEnsured = null;
+      throw err;
+    });
+  }
+  return assignmentsEnsured;
+}
+
 function assignmentTone(a: Assignment): AgendaItemTone {
   if (a.status === 'submitted' || a.status === 'graded') return 'done';
   const today = new Date(localDateKey(new Date()) + 'T00:00:00').getTime();
@@ -86,15 +180,10 @@ function assignmentStatusLabel(status: Assignment['status']): string {
   }
 }
 
-export async function loadAgendaItems(): Promise<AgendaItem[]> {
-  await ensureAssignmentDefaults();
-  const [assignments, habits] = await Promise.all([listAssignments(), listHabitos()]);
-  const todayKey = localDateKey(new Date());
-
+function assignmentToItem(assignment: Assignment): AgendaItem {
   const translate = get(t);
-  const assignmentItems: AgendaItem[] = assignments.map((assignment) => {
-    const a = localizedAssignment(translate, assignment);
-    return {
+  const a = localizedAssignment(translate, assignment);
+  return {
     id: `assignment:${a.id}`,
     title: a.title,
     subtitle: `${a.cadeira ? `${a.cadeira} · ` : ''}${assignmentStatusLabel(a.status)}`,
@@ -103,28 +192,266 @@ export async function loadAgendaItems(): Promise<AgendaItem[]> {
     kind: 'assignment',
     tone: assignmentTone(a),
     status: a.status
-    };
-  });
+  };
+}
 
-  const habitStates = await Promise.all(
-    habits.map(async (h: Habit) => ({ habit: h, done: await isLoggedToday(h.id) }))
-  );
-  const habitItems: AgendaItem[] = habitStates.map(({ habit, done }) => ({
-    id: `habit:${habit.id}`,
-    title: `${habit.icon} ${habit.name}`,
-    subtitle: done
-      ? tr('agenda.habit.done_today', 'feito hoje')
-      : (habit.reminder
-        ? tr('agenda.habit.reminder', 'lembrar: {reminder}', { reminder: habit.reminder })
-        : tr('agenda.habit.today', 'hábito de hoje')),
-    href: '/habitos/',
-    date: todayKey,
-    kind: 'habit',
-    tone: done ? 'done' : 'habit',
-    status: done ? 'done' : 'pending'
-  }));
+// ---------------------------------------------------------------------------
+// Habits — logs on their real dates (one range read, not N point reads)
+// ---------------------------------------------------------------------------
 
-  return [...assignmentItems, ...habitItems].sort((a, b) => {
+function habitItemsForRange(
+  habits: Habit[],
+  logs: Array<{ habitId: number; date: string; done: boolean }>,
+  sinceKey: string,
+  untilKey: string
+): AgendaItem[] {
+  const translate = get(t);
+  const byId = new Map(habits.map((h) => [h.id, localizedHabit(translate, h)]));
+  const items: AgendaItem[] = [];
+  const seen = new Set<string>();
+
+  for (const log of logs) {
+    if (!log.done) continue;
+    const habit = byId.get(log.habitId);
+    if (!habit) continue; // habit was deleted; orphan-safe
+    const key = `${log.habitId}:${log.date}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    items.push({
+      id: `habit:${habit.id}:${log.date}`,
+      title: `${habit.icon} ${habit.name}`,
+      subtitle: tr('agenda.habit.done_on_day', 'feito neste dia'),
+      href: '/habitos/',
+      date: log.date,
+      kind: 'habit',
+      tone: 'done',
+      status: 'done',
+      habitId: habit.id,
+      reminder: reminderLabel(habit.reminder)
+    });
+  }
+
+  // Today's still-pending habits (only when today is inside the range) so
+  // the calendar shows what's left to do without waiting for a log.
+  const todayKey = localDateKey(new Date());
+  if (todayKey >= sinceKey && todayKey <= untilKey) {
+    for (const habit of byId.values()) {
+      if (seen.has(`${habit.id}:${todayKey}`)) continue;
+      items.push({
+        id: `habit:${habit.id}:${todayKey}`,
+        title: `${habit.icon} ${habit.name}`,
+        subtitle: reminderLabel(habit.reminder)
+          ? tr('agenda.habit.reminder', 'lembrar: {reminder}', { reminder: reminderLabel(habit.reminder) ?? '' })
+          : tr('agenda.habit.today', 'hábito de hoje'),
+        href: '/habitos/',
+        date: todayKey,
+        kind: 'habit',
+        tone: 'habit',
+        status: 'pending',
+        habitId: habit.id,
+        reminder: reminderLabel(habit.reminder)
+      });
+    }
+  }
+
+  return items;
+}
+
+// ---------------------------------------------------------------------------
+// Events (V8) — personal events / special dates / reminders
+// ---------------------------------------------------------------------------
+
+/** Input shape for `addEvent` — caller does not pass `id` or `createdAt`. */
+export interface NewEventInput {
+  date: string; // 'YYYY-MM-DD' local
+  title: string;
+  icon?: string;
+  kind: EventKind;
+  yearly?: boolean;
+  notes?: string;
+}
+
+/** Create a calendar event and award the `event_add` XP. Returns the row id. */
+export async function addEvent(input: NewEventInput): Promise<number> {
+  const row: EventRow = {
+    date: input.date,
+    title: input.title.trim(),
+    icon: input.icon || undefined,
+    kind: input.kind,
+    notes: input.notes?.trim() || undefined,
+    yearly: input.yearly === true ? true : undefined,
+    createdAt: Date.now()
+  };
+  const id = (await db().events.add(row)) as number;
+  await awardXP('event_add');
+  return id;
+}
+
+/** Delete a calendar event row (also removes every yearly repeat of it). */
+export async function deleteEvent(id: number): Promise<void> {
+  await db().events.delete(id);
+}
+
+function isValidDateKey(key: string): boolean {
+  const d = new Date(`${key}T12:00:00`);
+  return !Number.isNaN(d.getTime()) && localDateKey(d) === key;
+}
+
+function eventKindLabel(kind: EventKind): string {
+  switch (kind) {
+    case 'special': return tr('agenda.event.kind.special', 'data especial');
+    case 'reminder': return tr('agenda.event.kind.reminder', 'lembrete');
+    default: return tr('agenda.event.kind.event', 'evento');
+  }
+}
+
+function eventFallbackIcon(kind: EventKind): string {
+  switch (kind) {
+    case 'special': return '💗';
+    case 'reminder': return '⏰';
+    default: return '📌';
+  }
+}
+
+function eventToItem(row: EventRow & { id: number }, dateKey: string): AgendaItem {
+  const icon = row.icon || eventFallbackIcon(row.kind);
+  const yearlySuffix = row.yearly ? ` · ${tr('agenda.event.yearly', 'todos os anos')}` : '';
+  return {
+    id: `event:${row.id}:${dateKey}`,
+    title: `${icon} ${row.title}`,
+    subtitle: `${eventKindLabel(row.kind)}${yearlySuffix}`,
+    href: '/calendario/',
+    date: dateKey,
+    kind: 'life',
+    tone: 'life',
+    eventId: row.id,
+    eventKind: row.kind,
+    yearly: row.yearly === true,
+    icon
+  };
+}
+
+/**
+ * Every event that lands inside [sinceKey, untilKey], with yearly rows
+ * expanded into each year the range touches (birthdays, anniversaries).
+ * One table read — the events table is small (personal data).
+ */
+export async function loadEventsForRange(sinceKey: string, untilKey: string): Promise<AgendaItem[]> {
+  const all = await db().events.toArray();
+  const items: AgendaItem[] = [];
+  const seen = new Set<string>();
+
+  const yearFrom = Number(sinceKey.slice(0, 4));
+  const yearTo = Number(untilKey.slice(0, 4));
+
+  for (const row of all) {
+    if (typeof row.id !== 'number') continue;
+    const withId = row as EventRow & { id: number };
+    const dates: string[] = [];
+    if (row.date >= sinceKey && row.date <= untilKey) dates.push(row.date);
+    if (row.yearly) {
+      const monthDay = row.date.slice(5);
+      for (let y = yearFrom; y <= yearTo; y++) {
+        const candidate = `${y}-${monthDay}`;
+        if (candidate === row.date) continue;
+        if (candidate < sinceKey || candidate > untilKey) continue;
+        if (!isValidDateKey(candidate)) continue; // e.g. 29 Feb in a non-leap year
+        dates.push(candidate);
+      }
+    }
+    for (const dateKey of dates) {
+      const dedupe = `${row.id}:${dateKey}`;
+      if (seen.has(dedupe)) continue;
+      seen.add(dedupe);
+      items.push(eventToItem(withId, dateKey));
+    }
+  }
+  return items;
+}
+
+// ---------------------------------------------------------------------------
+// Finance layer — one informational item per day with movements
+// ---------------------------------------------------------------------------
+
+async function financeItemsForRange(sinceKey: string, untilKey: string): Promise<AgendaItem[]> {
+  const rows = await db().transacoes
+    .where('data')
+    .between(sinceKey, untilKey, true, true)
+    .toArray();
+
+  const byDay = new Map<string, { count: number; net: number }>();
+  for (const row of rows) {
+    const bucket = byDay.get(row.data) ?? { count: 0, net: 0 };
+    bucket.count += 1;
+    bucket.net += row.tipo === 'receita' ? row.valor : -row.valor;
+    byDay.set(row.data, bucket);
+  }
+
+  const items: AgendaItem[] = [];
+  for (const [date, { count, net }] of byDay) {
+    const countLabel = tr(
+      count === 1 ? 'agenda.finance.day.one' : 'agenda.finance.day.other',
+      count === 1 ? '{n} movimento' : '{n} movimentos',
+      { n: count }
+    );
+    items.push({
+      id: `finance:${date}`,
+      title: `💶 ${countLabel}`,
+      subtitle: tr('agenda.finance.net', 'saldo do dia: {value}', { value: formatValor(net) }),
+      href: '/financas/transacoes/',
+      date,
+      kind: 'finance',
+      tone: 'life'
+    });
+  }
+  return items;
+}
+
+// ---------------------------------------------------------------------------
+// Mood overlay (read-only — the Humor sub-app owns the writes)
+// ---------------------------------------------------------------------------
+
+const MOOD_EMOJI: Record<string, string> = {
+  sick: '🤒',
+  sad: '🥺',
+  love: '💗',
+  happy: '😊',
+  calm: '😌',
+  tired: '😴',
+  stressed: '😮‍💨',
+  anxious: '🫨',
+  proud: '🌟',
+  grateful: '🥰'
+};
+
+/** Soft emoji for a mood kind; unknown kinds get a gentle thought bubble. */
+export function moodEmoji(kind: string): string {
+  return MOOD_EMOJI[kind] ?? '💭';
+}
+
+/**
+ * Map of date → mood kind for the range (latest check-in of each day wins).
+ * Used by the month view to draw a soft mood dot per day.
+ */
+export async function loadMoodsForRange(sinceKey: string, untilKey: string): Promise<Record<string, string>> {
+  const rows = await db().mood_logs
+    .where('date')
+    .between(sinceKey, untilKey, true, true)
+    .toArray();
+  rows.sort((a, b) => a.startedAt - b.startedAt);
+  const out: Record<string, string> = {};
+  for (const row of rows) {
+    if (row.kind) out[row.date] = row.kind;
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// Loaders
+// ---------------------------------------------------------------------------
+
+function sortAgendaItems(items: AgendaItem[]): AgendaItem[] {
+  return items.sort((a, b) => {
     if (a.date !== b.date) return a.date.localeCompare(b.date);
     if (a.tone === 'danger' && b.tone !== 'danger') return -1;
     if (b.tone === 'danger' && a.tone !== 'danger') return 1;
@@ -132,6 +459,91 @@ export async function loadAgendaItems(): Promise<AgendaItem[]> {
     return a.title.localeCompare(b.title, loc);
   });
 }
+
+/**
+ * Calendar-grade loader: everything that happens between `sinceKey` and
+ * `untilKey` (inclusive local 'YYYY-MM-DD' keys).
+ *
+ * Habit LOGS are placed on their real dates via ONE `getAllLogsInRange`
+ * read (instead of N `isLoggedToday` point reads); assignments land on
+ * their deadlines; the events table and the finance layer are merged in.
+ * Pass `layers` to skip sources you don't need.
+ */
+export async function loadAgendaItemsForRange(
+  sinceKey: string,
+  untilKey: string,
+  layers?: Partial<AgendaLayers>
+): Promise<AgendaItem[]> {
+  const want: AgendaLayers = { habits: true, school: true, events: true, finance: true, ...layers };
+  if (want.school) await ensureAssignmentsOnce();
+
+  const [assignments, habits, logs, eventItems, financeItems] = await Promise.all([
+    want.school ? listAssignments() : Promise.resolve([] as Assignment[]),
+    want.habits ? listHabitos() : Promise.resolve([] as Habit[]),
+    want.habits ? getAllLogsInRange(sinceKey, untilKey) : Promise.resolve([]),
+    want.events ? loadEventsForRange(sinceKey, untilKey) : Promise.resolve([] as AgendaItem[]),
+    want.finance ? financeItemsForRange(sinceKey, untilKey) : Promise.resolve([] as AgendaItem[])
+  ]);
+
+  const assignmentItems = assignments
+    .map(assignmentToItem)
+    .filter((item) => item.date >= sinceKey && item.date <= untilKey);
+  const habitItems = habitItemsForRange(habits, logs, sinceKey, untilKey);
+
+  return sortAgendaItems([...assignmentItems, ...habitItems, ...eventItems, ...financeItems]);
+}
+
+/**
+ * Back-compat loader for the Home hub and /notificacoes:
+ *   - EVERY assignment (including overdue ones — notifications need them)
+ *   - today's habits (done + pending), via one batched range read
+ *   - events for the next 30 days (so special dates surface in
+ *     notifications and in the hub's "next" list)
+ */
+export async function loadAgendaItems(): Promise<AgendaItem[]> {
+  await ensureAssignmentsOnce();
+  const todayKey = localDateKey(new Date());
+  const horizon = new Date();
+  horizon.setDate(horizon.getDate() + 30);
+  const horizonKey = localDateKey(horizon);
+
+  const [assignments, habits, logs, eventItems] = await Promise.all([
+    listAssignments(),
+    listHabitos(),
+    getAllLogsInRange(todayKey, todayKey),
+    loadEventsForRange(todayKey, horizonKey)
+  ]);
+
+  const assignmentItems = assignments.map(assignmentToItem);
+  const doneToday = new Set(logs.filter((l) => l.done).map((l) => l.habitId));
+  const translate = get(t);
+  const habitItems: AgendaItem[] = habits.map((raw) => {
+    const habit = localizedHabit(translate, raw);
+    const done = doneToday.has(habit.id);
+    return {
+      id: `habit:${habit.id}`,
+      title: `${habit.icon} ${habit.name}`,
+      subtitle: done
+        ? tr('agenda.habit.done_today', 'feito hoje')
+        : (reminderLabel(habit.reminder)
+          ? tr('agenda.habit.reminder', 'lembrar: {reminder}', { reminder: reminderLabel(habit.reminder) ?? '' })
+          : tr('agenda.habit.today', 'hábito de hoje')),
+      href: '/habitos/',
+      date: todayKey,
+      kind: 'habit',
+      tone: done ? 'done' : 'habit',
+      status: done ? 'done' : 'pending',
+      habitId: habit.id,
+      reminder: reminderLabel(habit.reminder)
+    };
+  });
+
+  return sortAgendaItems([...assignmentItems, ...habitItems, ...eventItems]);
+}
+
+// ---------------------------------------------------------------------------
+// Notifications
+// ---------------------------------------------------------------------------
 
 export function buildNotifications(items: AgendaItem[]): NotificationItem[] {
   const today = localDateKey(new Date());
@@ -142,7 +554,7 @@ export function buildNotifications(items: AgendaItem[]): NotificationItem[] {
     const delta = Math.round((new Date(`${i.date}T00:00:00`).getTime() - todayDate) / DAY_MS);
     return delta >= 0 && delta <= 7;
   });
-  const todayHabits = items.filter((i) => i.kind === 'habit' && i.status !== 'done');
+  const todayHabits = items.filter((i) => i.kind === 'habit' && i.date === today && i.status !== 'done');
 
   const notifications: NotificationItem[] = [];
   if (overdue.length > 0) {
@@ -187,6 +599,45 @@ export function buildNotifications(items: AgendaItem[]): NotificationItem[] {
       priority: 3
     });
   }
+
+  // Structured habit reminders — one line per habit that set a reminder
+  // label and is still pending today ("20:00", "ao pequeno-almoço", ...).
+  for (const habit of todayHabits) {
+    if (!habit.reminder || typeof habit.habitId !== 'number') continue;
+    notifications.push({
+      id: `habit-reminder:${habit.habitId}`,
+      title: `⏰ ${habit.title}`,
+      body: tr('agenda.notifications.reminder.body', 'Lembrete: {reminder}', { reminder: reminderLabel(habit.reminder) ?? '' }),
+      href: '/habitos/',
+      tone: 'habit',
+      priority: 4
+    });
+  }
+
+  // Upcoming special dates (next 14 days) — a little romance in the inbox.
+  const specials = items
+    .filter((i) => i.kind === 'life' && i.eventKind === 'special' && i.date >= today)
+    .filter((i) => {
+      const delta = Math.round((new Date(`${i.date}T00:00:00`).getTime() - todayDate) / DAY_MS);
+      return delta >= 0 && delta <= 14;
+    });
+  for (const special of specials) {
+    const delta = Math.round((new Date(`${special.date}T00:00:00`).getTime() - todayDate) / DAY_MS);
+    const body = delta === 0
+      ? tr('agenda.notifications.special.today', 'É hoje! 💖')
+      : delta === 1
+        ? tr('agenda.notifications.special.tomorrow', 'É amanhã — prepara algo bonito.')
+        : tr('agenda.notifications.special.days', 'Faltam {n} dias.', { n: delta });
+    notifications.push({
+      id: `special:${special.id}`,
+      title: special.title,
+      body,
+      href: '/calendario/',
+      tone: 'life',
+      priority: delta === 0 ? 2 : 5
+    });
+  }
+
   if (notifications.length === 0) {
     notifications.push({
       id: 'all-clear',

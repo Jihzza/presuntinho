@@ -61,7 +61,11 @@ export default defineConfig({
     // generates sw.js from the workbox config below.
     SvelteKitPWA({
       strategies: 'generateSW',
-      registerType: 'autoUpdate',
+      // 'prompt': new SW waits until the user accepts the in-app update toast
+      // ('presuntinho:pwa-update' event dispatched from +layout.svelte's
+      // onNeedRefresh → toast button calls updateServiceWorker(true), which
+      // posts SKIP_WAITING). No more silent mid-session reloads.
+      registerType: 'prompt',
       injectRegister: false, // we register manually in +layout.svelte via virtual:pwa-register
       manifest: false, // use static/manifest.webmanifest (copied verbatim into the build)
       devOptions: {
@@ -89,7 +93,11 @@ export default defineConfig({
         navigateFallbackDenylist: [/^\/api/, /^\/legacy/, /\.html$/],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
-        skipWaiting: true,
+        // Must be false with registerType 'prompt': the new SW stays waiting
+        // until the user accepts the update toast. The generated worker always
+        // includes the SKIP_WAITING message listener, which
+        // updateServiceWorker(true) (virtual:pwa-register) triggers.
+        skipWaiting: false,
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.startsWith('/quizzes/'),
@@ -119,7 +127,23 @@ export default defineConfig({
       },
       kit: {
         trailingSlash: 'always', // match +layout.ts
-        spa: true // adapter-static + ssr=false → SPA navigation in the SW
+        // CRITICAL (production install fix): the SPA fallback entry is only
+        // added to the precache manifest when BOTH `spa` AND `adapterFallback`
+        // are set (see node_modules/@vite-pwa/sveltekit/dist/index.mjs,
+        // createManifestTransform: `if (options?.spa && options?.adapterFallback)`).
+        // With `spa: true` alone, nothing for '/' was precached, so the
+        // generated sw.js threw `non-precached-url` from
+        // createHandlerBoundToURL('/') and NEVER installed in production.
+        // - adapterFallback must match svelte.config.js → adapter-static
+        //   `fallback: 'index.html'`.
+        // - fallbackMapping: '/' makes the precached URL literally '/'
+        //   (the pushed entry bypasses the html→route rewrite), matching the
+        //   server route that serves index.html AND workbox.navigateFallback
+        //   above, so createHandlerBoundToURL('/') now resolves.
+        // - The entry's revision comes from client/_app/version.json (hashed
+        //   per build), so the fallback updates on every deploy.
+        adapterFallback: 'index.html',
+        spa: { fallbackMapping: '/' }
       }
     })
   ],
