@@ -840,16 +840,18 @@
     position: fixed;
     left: 50%;
     right: auto;
-    /* V10.1: 5.25rem clears the bottom-nav (~4rem) with real breathing room —
-       the old 4.25rem left the composer visually glued to the footer. */
+    /* V10.2: encostado MESMO ao footer (bottom-nav ≈ 4.35rem) — a barra de
+       escrever vive colada ao fundo, como no WhatsApp. O gradiente ancora-a
+       visualmente e tapa as bolhas que passam por trás ao rolar. */
     bottom: max(
-      calc(5.25rem + env(safe-area-inset-bottom)),
+      calc(4.5rem + env(safe-area-inset-bottom)),
       calc(var(--keyboard-inset, 0px) + 0.55rem)
     );
     transform: translateX(-50%);
     width: min(800px, calc(100vw - 0.75rem));
     z-index: 65;
-    background: transparent;
+    padding-top: 0.45rem;
+    background: linear-gradient(to top, var(--bg, #1f2e4a) 72%, transparent);
     border: 0;
     border-radius: 0;
     box-shadow: none;
@@ -864,7 +866,7 @@
     left: 50%;
     transform: translateX(-50%);
     bottom: max(
-      calc(12.5rem + env(safe-area-inset-bottom)),
+      calc(11.75rem + env(safe-area-inset-bottom)),
       calc(var(--keyboard-inset, 0px) + 8rem)
     );
     z-index: 66;

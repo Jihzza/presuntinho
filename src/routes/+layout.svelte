@@ -512,19 +512,18 @@
     align-items: center;
     gap: 0.5rem;
   }
-  /* V10: route transition (subtle fade + rise; global reduced-motion
-     kill-switch in app.css zeroes it). */
+  /* V10: route transition — FADE ONLY. Um transform aqui (mesmo identidade,
+     com fill-mode) tornaria este wrapper o containing block dos descendentes
+     position:fixed — o composer dos chats deixava de colar ao viewport. */
   .route-transition {
-    animation: route-in var(--motion-base, 220ms) ease both;
+    animation: route-in var(--motion-base, 220ms) ease;
   }
   @keyframes route-in {
     from {
       opacity: 0;
-      transform: translateY(8px);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
     }
   }
   /* V10.1: the "Presuntinho" wordmark stays next to the pig on every
