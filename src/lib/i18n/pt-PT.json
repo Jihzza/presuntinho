@@ -4627,5 +4627,13 @@
   "quiz.feedback.correct": "Certo! 🎉",
   "quiz.feedback.wrong": "Quase! A resposta certa era: {answer}",
   "quiz.cta.continue": "Continuar →",
-  "quiz.cta.finish": "Ver resultado 🏁"
+  "quiz.cta.finish": "Ver resultado 🏁",
+  "quiz.feedback.wrong_title": "Quase!",
+  "quiz.feedback.wrong_answer": "Resposta certa: {answer}",
+  "caminho.node.start": "CONTINUAR",
+  "caminho.node.test": "Teste da unidade",
+  "caminho.unit.open": "Ver unidade",
+  "vida.trabalhos.desc": "Entregas, prazos e progresso.",
+  "vida.biblioteca.desc": "Links e materiais guardados.",
+  "vida.caderno.desc": "Notas, áudios e ficheiros de estudo."
 }

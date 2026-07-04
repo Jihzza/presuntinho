@@ -11,7 +11,14 @@
   import { t } from 'svelte-i18n';
   import CaminhoPath from '$lib/components/CaminhoPath.svelte';
   import { localizedSchoolCourses } from '$lib/escola/catalog';
-  import { courseProgress, nextLesson, type CourseProgress, type NextLessonTarget } from '$lib/escola/progress';
+  import {
+    courseProgress,
+    nextLesson,
+    loadVisitedLessons,
+    getQuizHistory,
+    type CourseProgress,
+    type NextLessonTarget
+  } from '$lib/escola/progress';
   import { getActivityStreak, type ActivityStreak } from '$lib/gamification/streak';
   import { getActiveMascot, DEFAULT_MASCOT_ID, mascotById } from '$lib/gamification/mascots';
 
@@ -22,21 +29,41 @@
   let next = $state<NextLessonTarget | null>(null);
   let streak = $state<ActivityStreak | null>(null);
   let mascotEmoji = $state(mascotById(DEFAULT_MASCOT_ID)?.emoji ?? '🧴');
+  let visitedLessons = $state<Set<string>>(new Set());
+  let quizDone = $state<Set<string>>(new Set());
   let loaded = $state(false);
 
   onMount(() => {
     void (async () => {
       try {
-        const [p, n, s, m] = await Promise.all([
+        const [p, n, s, m, visited] = await Promise.all([
           courseProgress(courseSlug),
           nextLesson(courseSlug),
           getActivityStreak(),
-          getActiveMascot()
+          getActiveMascot(),
+          loadVisitedLessons()
         ]);
         progress = p;
         next = n;
         streak = s;
         mascotEmoji = m.emoji;
+        visitedLessons = new Set(visited.keys());
+
+        // Quizzes com pelo menos uma tentativa → nó de teste "feito".
+        const quizSlugs = [
+          ...new Set(
+            [...(course?.units ?? []), ...(course?.extras ?? [])]
+              .flatMap((u) => u.lessons.map((l) => l.quizSlug))
+              .filter((q): q is string => Boolean(q))
+          )
+        ];
+        const histories = await Promise.all(quizSlugs.map((q) => getQuizHistory(q)));
+        const done = new Set<string>();
+        quizSlugs.forEach((q, i) => {
+          const h = histories[i];
+          if (h && h.attempts > 0) done.add(q);
+        });
+        quizDone = done;
       } catch (e) {
         console.error('[caminho] load failed', e);
       } finally {
@@ -69,7 +96,7 @@
   </p>
 
   {#if course}
-    <CaminhoPath {course} {progress} {next} {streak} {mascotEmoji} />
+    <CaminhoPath {course} {progress} {next} {streak} {mascotEmoji} {visitedLessons} {quizDone} />
     {#if !loaded}
       <p class="loading">{$t('common.loading', { default: 'A carregar…' })}</p>
     {/if}

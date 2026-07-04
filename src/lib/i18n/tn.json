@@ -4640,5 +4640,13 @@
   "quiz.feedback.correct": "S7i7! 🎉",
   "quiz.feedback.wrong": "9rib! El ijeba es7i7a kenet: {answer}",
   "quiz.cta.continue": "Kammel →",
-  "quiz.cta.finish": "Chouf el resulta 🏁"
+  "quiz.cta.finish": "Chouf el resulta 🏁",
+  "quiz.feedback.wrong_title": "9rib!",
+  "quiz.feedback.wrong_answer": "El ijeba es7i7a: {answer}",
+  "caminho.node.start": "KAMMEL",
+  "caminho.node.test": "Test mta3 el wa7da",
+  "caminho.unit.open": "Chouf el wa7da",
+  "vida.trabalhos.desc": "Devoirs, delais w ta9addom.",
+  "vida.biblioteca.desc": "Liens w matériaux ma7foudhin.",
+  "vida.caderno.desc": "Notes, audios w fichiers mta3 el 9raya."
 }

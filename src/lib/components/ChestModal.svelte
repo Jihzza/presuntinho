@@ -284,4 +284,33 @@
 			transform: scale(1);
 		}
 	}
+
+	/* V10.2 — em mobile a celebracao e uma PAGINA inteira (Duolingo-style):
+	   conteudo centrado, CTA ancorado em baixo. */
+	@media (max-width: 639px) {
+		.chest-overlay {
+			padding: 0;
+			background: var(--bg, #1f2e4a);
+			backdrop-filter: none;
+		}
+
+		.chest-card {
+			width: 100%;
+			height: 100dvh;
+			max-height: none;
+			border-radius: 0;
+			border: none;
+			justify-content: center;
+			padding: calc(1.6rem + env(safe-area-inset-top)) 1.4rem calc(1.8rem + env(safe-area-inset-bottom));
+		}
+
+		.chest-card > :first-child {
+			margin-top: auto;
+		}
+
+		.chest-card .cta {
+			margin-top: auto;
+			width: 100%;
+		}
+	}
 </style>

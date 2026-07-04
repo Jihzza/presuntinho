@@ -33,7 +33,8 @@
   import { xp, initStores } from '$lib/state/stores';
   import { XP_CHANGED_EVENT, awardXP } from '$lib/state/xp-actions';
   import { getSession } from '$lib/auth/session';
-  import { getActivityStreak, type ActivityStreak } from '$lib/gamification/streak';
+  import { getActivityStreak, getWeekActivity, type ActivityStreak, type WeekDayActivity } from '$lib/gamification/streak';
+  import WeekCircles from '$lib/components/WeekCircles.svelte';
   import { progressToNext } from '$lib/gamification/levels';
   import { hoursUntilMidnight, mascotEmotion, type MascotEmotion } from '$lib/gamification/emotion';
   import { minutesSinceLastAction, ACTION_PULSE_EVENT } from '$lib/gamification/gamification-events';
@@ -70,6 +71,7 @@
   let activeMood = $state<ActiveMood | null>(null);
   let charmSeed = $state(Date.now());
   let streak = $state<ActivityStreak | null>(null);
+  let weekActivity = $state<WeekDayActivity[]>([]);
   let now = $state(new Date());
   let markingHabitId = $state<string | null>(null);
   let mascotEmoji = $state('🐷');
@@ -165,6 +167,7 @@
   async function refreshStreak(): Promise<void> {
     try {
       streak = await getActivityStreak();
+      weekActivity = await getWeekActivity();
     } catch (e) {
       console.error('[hub] getActivityStreak failed', e);
       streak = null;
@@ -390,6 +393,31 @@
   <section class="quests-section presuntinho-quest" aria-label={$t('hub.quests.aria', { default: 'Missões diárias' })}>
     <DailyQuests />
   </section>
+
+  <!-- 1b · Streak em grande na Home (V10.2 — saiu do header, pedido do
+       Daniel): chama, dias, semana e congelamentos, tudo clicável. -->
+  <a class="card streak-strip" href="/streaks/" class:lit={streak?.activeToday} data-sveltekit-preload-data>
+    <span class="strip-flame" class:unlit={!streak?.activeToday} aria-hidden="true">🔥</span>
+    <span class="strip-copy">
+      <strong>
+        {$t('streaks.hero.days', { values: { count: streak?.current ?? 0 }, default: '{count} dias seguidos' })}
+      </strong>
+      <small class:ok={streak?.activeToday}>
+        {streak?.activeToday
+          ? $t('streak.popover.active_today', { default: 'Hoje já contou — a chama está acesa!' })
+          : $t('streak.popover.idle_today', { default: 'Faz uma atividade hoje para acender a chama.' })}
+      </small>
+      <span class="strip-week">
+        <WeekCircles week={weekActivity} compact />
+      </span>
+    </span>
+    <span class="strip-side">
+      {#if streak && streak.freezes > 0}
+        <span class="strip-freezes" aria-hidden="true">❄️×{streak.freezes}</span>
+      {/if}
+      <span class="strip-arrow" aria-hidden="true">→</span>
+    </span>
+  </a>
 
   <!-- 2a · Continua de onde paraste (V10.1, tarefa A) -->
   {#if resume}
@@ -641,6 +669,79 @@
   .resume-cta:focus-visible {
     transform: translateY(-1px);
     outline: none;
+  }
+
+  /* ---- V10.2 · streak strip ------------------------------------------ */
+  .streak-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-top: var(--space-4);
+    padding: var(--space-4);
+    text-decoration: none;
+    transition: transform var(--motion-fast, 120ms) ease, border-color var(--motion-fast, 120ms) ease;
+  }
+  .streak-strip.lit {
+    border-color: color-mix(in srgb, #f97316 50%, var(--border));
+    background:
+      radial-gradient(circle at 12% 30%, color-mix(in srgb, #f97316 16%, transparent), transparent 42%),
+      var(--card);
+  }
+  .streak-strip:hover,
+  .streak-strip:focus-visible {
+    transform: translateY(-1px);
+    outline: none;
+  }
+  .streak-strip:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .strip-flame {
+    font-size: 2.6rem;
+    line-height: 1;
+  }
+  .strip-flame.unlit {
+    filter: grayscale(1) opacity(0.5);
+  }
+  .strip-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+    flex: 1;
+  }
+  .strip-copy strong {
+    font-size: var(--fs-lg);
+    color: var(--txt);
+  }
+  .strip-copy small {
+    color: var(--txt3);
+    font-size: var(--fs-xs);
+  }
+  .strip-copy small.ok {
+    color: var(--success, #10b981);
+  }
+  .strip-week {
+    margin-top: 0.15rem;
+    align-self: flex-start;
+  }
+  .strip-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4rem;
+  }
+  .strip-freezes {
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, #60a5fa 22%, transparent);
+    color: #bfdbfe;
+    font-size: var(--fs-xs);
+    font-weight: 800;
+  }
+  .strip-arrow {
+    color: var(--accent);
+    font-size: 1.2rem;
+    font-weight: 700;
   }
 
   /* ---- Hero -------------------------------------------------------- */

@@ -4627,5 +4627,13 @@
   "quiz.feedback.correct": "صحيح! 🎉",
   "quiz.feedback.wrong": "قريب! الإجابة الصحيحة كانت: {answer}",
   "quiz.cta.continue": "متابعة ←",
-  "quiz.cta.finish": "عرض النتيجة 🏁"
+  "quiz.cta.finish": "عرض النتيجة 🏁",
+  "quiz.feedback.wrong_title": "قريب!",
+  "quiz.feedback.wrong_answer": "الإجابة الصحيحة: {answer}",
+  "caminho.node.start": "متابعة",
+  "caminho.node.test": "اختبار الوحدة",
+  "caminho.unit.open": "عرض الوحدة",
+  "vida.trabalhos.desc": "تسليمات ومواعيد وتقدم.",
+  "vida.biblioteca.desc": "روابط ومواد محفوظة.",
+  "vida.caderno.desc": "ملاحظات وتسجيلات وملفات دراسة."
 }

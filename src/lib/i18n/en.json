@@ -4627,5 +4627,13 @@
   "quiz.feedback.correct": "Correct! 🎉",
   "quiz.feedback.wrong": "Almost! The right answer was: {answer}",
   "quiz.cta.continue": "Continue →",
-  "quiz.cta.finish": "See result 🏁"
+  "quiz.cta.finish": "See result 🏁",
+  "quiz.feedback.wrong_title": "Almost!",
+  "quiz.feedback.wrong_answer": "Correct answer: {answer}",
+  "caminho.node.start": "CONTINUE",
+  "caminho.node.test": "Unit test",
+  "caminho.unit.open": "View unit",
+  "vida.trabalhos.desc": "Deliveries, deadlines and progress.",
+  "vida.biblioteca.desc": "Saved links and materials.",
+  "vida.caderno.desc": "Notes, audio and study files."
 }

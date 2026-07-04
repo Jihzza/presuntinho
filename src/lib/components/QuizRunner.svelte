@@ -281,27 +281,38 @@
               >{opt}</button>
             {/each}
           </div>
-          {#if feedback === 'correct'}
-            <p class="feedback feedback-correct" role="status">
-              {$t('quiz.feedback.correct', { default: 'Certo! 🎉' })}
-            </p>
-          {:else if feedback === 'wrong'}
-            <p class="feedback feedback-wrong" role="status">
-              {$t('quiz.feedback.wrong', {
-                values: { answer: item.opts[item.a] },
-                default: 'Quase! A resposta certa era: {answer}'
-              })}
-            </p>
-          {/if}
         </section>
       {/key}
 
       {#if feedback !== null}
-        <button class="submit continue-btn" onclick={continueQuiz}>
-          {current < quiz.questions.length - 1
-            ? $t('quiz.cta.continue', { default: 'Continuar →' })
-            : $t('quiz.cta.finish', { default: 'Ver resultado 🏁' })}
-        </button>
+        <!-- V10.2 — feedback sheet estilo Duolingo: painel fixo que sobe do
+             fundo, verde no acerto / vermelho no erro, com a correção e o
+             botão Continuar lá dentro. -->
+        <div class="feedback-sheet" class:sheet-correct={feedback === 'correct'} class:sheet-wrong={feedback === 'wrong'} role="status">
+          <div class="sheet-inner">
+            <span class="sheet-icon" aria-hidden="true">{feedback === 'correct' ? '✓' : '✗'}</span>
+            <div class="sheet-copy">
+              <strong class="sheet-title">
+                {feedback === 'correct'
+                  ? $t('quiz.feedback.correct', { default: 'Certo! 🎉' })
+                  : $t('quiz.feedback.wrong_title', { default: 'Quase!' })}
+              </strong>
+              {#if feedback === 'wrong'}
+                <span class="sheet-answer">
+                  {$t('quiz.feedback.wrong_answer', {
+                    values: { answer: item.opts[item.a] },
+                    default: 'Resposta certa: {answer}'
+                  })}
+                </span>
+              {/if}
+            </div>
+          </div>
+          <button class="sheet-cta" onclick={continueQuiz}>
+            {current < quiz.questions.length - 1
+              ? $t('quiz.cta.continue', { default: 'Continuar →' })
+              : $t('quiz.cta.finish', { default: 'Ver resultado 🏁' })}
+          </button>
+        </div>
       {/if}
     {:else}
       <!-- Revisão pós-submissão: todas as perguntas com a correção visível. -->
@@ -487,24 +498,107 @@
     min-height: 54px;
     font-size: var(--fs-md, 1rem);
   }
-  .feedback {
-    margin: 0.75rem 0 0;
-    padding: 0.6rem 0.8rem;
-    border-radius: var(--radius-md, 0.5rem);
-    font-size: var(--fs-sm, 0.9rem);
-    font-weight: 600;
+  /* V10.2 — feedback sheet Duolingo (tokens reais: #d7ffb8/#58a700 no acerto,
+     #ffdfe0/#ea2b2b no erro; slide-up ~250ms; Continuar full-width com o
+     "3D press" de border-bottom mais escuro). */
+  .feedback-sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 1.1rem 1.1rem calc(1.2rem + env(safe-area-inset-bottom));
+    animation: sheet-up 250ms cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .feedback-correct {
-    background: rgba(16, 185, 129, 0.18);
-    color: var(--success, #10b981);
+  .sheet-correct {
+    background: #d7ffb8;
   }
-  .feedback-wrong {
-    background: rgba(239, 68, 68, 0.15);
-    color: var(--error, #ef4444);
+  .sheet-wrong {
+    background: #ffdfe0;
   }
-  .continue-btn {
+  .sheet-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    max-width: 720px;
     width: 100%;
-    font-size: var(--fs-md, 1rem);
+    margin: 0 auto;
+  }
+  .sheet-icon {
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 1.9rem;
+    font-weight: 900;
+    flex: none;
+  }
+  .sheet-correct .sheet-icon {
+    color: #58a700;
+  }
+  .sheet-wrong .sheet-icon {
+    color: #ea2b2b;
+  }
+  .sheet-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+  .sheet-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+  }
+  .sheet-correct .sheet-title,
+  .sheet-correct .sheet-answer {
+    color: #58a700;
+  }
+  .sheet-wrong .sheet-title,
+  .sheet-wrong .sheet-answer {
+    color: #ea2b2b;
+  }
+  .sheet-answer {
+    font-size: 0.9rem;
+  }
+  .sheet-cta {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    min-height: 50px;
+    border: none;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #fff;
+    cursor: pointer;
+    transition: transform var(--motion-fast, 120ms) ease;
+  }
+  .sheet-correct .sheet-cta {
+    background: #58cc02;
+    border-bottom: 4px solid #58a700;
+  }
+  .sheet-wrong .sheet-cta {
+    background: #ff4b4b;
+    border-bottom: 4px solid #ea2b2b;
+  }
+  .sheet-cta:active {
+    transform: translateY(3px);
+    border-bottom-width: 1px;
+  }
+  @keyframes sheet-up {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
   }
   @keyframes question-in {
     from {

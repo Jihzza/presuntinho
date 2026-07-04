@@ -12,15 +12,44 @@
   const COLORS = ['#d4af37', '#b8945a', '#9b7ede', '#e8b4b8', '#4ecdc4', '#ff6b9d', '#c47891'];
   const HEART_SHAPES = ['♥', '✦', '●', '✧'];
 
+  // V10.2 — performance sob cliques rápidos: nunca deixar o número de peças
+  // vivas ultrapassar o teto (o coração da Fatma consegue 10+ cliques/s 💗).
+  const MAX_LIVE_PIECES = 200;
+  const MIN_BURST_INTERVAL_MS = 80;
+  let lastFireAt = 0;
+
+  /** Centro real do botão do coração — o burst nasce ALINHADO ao botão. */
+  function heartAnchor(): { x: number; y: number } | null {
+    const el = document.querySelector('.heart-btn');
+    if (!(el instanceof HTMLElement)) return null;
+    const r = el.getBoundingClientRect();
+    if (r.width === 0) return null;
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  }
+
   function fire(detail: number | ConfettiBurst) {
     if (!layer) return;
     if (prefersReducedMotion()) return;
 
+    // Coalesce bursts em rajada: mais de ~12/s não acrescenta nada visual,
+    // só custo de layout.
+    const now = performance.now();
+    if (now - lastFireAt < MIN_BURST_INTERVAL_MS) return;
+    lastFireAt = now;
+
     const burst = typeof detail === 'number' ? null : detail;
-    const total = Math.min(320, typeof detail === 'number' && detail > 0 ? detail : (burst?.count ?? count));
+    let total = Math.min(320, typeof detail === 'number' && detail > 0 ? detail : (burst?.count ?? count));
     const origin = burst?.origin ?? 'top';
     const intensity = Math.max(1, burst?.intensity ?? 1);
     const palette = burst?.palette ?? COLORS;
+
+    // Teto global de peças vivas — em rajada reduz o burst em vez de acumular.
+    const live = layer.childElementCount;
+    if (live >= MAX_LIVE_PIECES) return;
+    total = Math.min(total, MAX_LIVE_PIECES - live);
+
+    const anchor = origin === 'heart' ? heartAnchor() : null;
+    const frag = document.createDocumentFragment();
 
     for (let i = 0; i < total; i++) {
       const piece = document.createElement('div');
@@ -30,16 +59,26 @@
       piece.style.setProperty('--dx', `${(Math.random() - 0.5) * (origin === 'heart' ? 320 + intensity * 38 : 90)}px`);
       piece.style.setProperty('--spin', `${(Math.random() * 900 + 360) * (Math.random() > 0.5 ? 1 : -1)}deg`);
       piece.style.setProperty('--scale', String(0.75 + Math.random() * Math.min(1.2, 0.42 + intensity * 0.13)));
-      piece.style.left = origin === 'heart' ? `calc(100vw - ${40 + Math.random() * 52}px)` : Math.random() * 100 + 'vw';
-      piece.style.top = origin === 'heart' ? `calc(100vh - ${118 + Math.random() * 60}px)` : '-12px';
+      if (origin === 'heart') {
+        // Nasce no CENTRO do botão real (com um pequeno espalhamento),
+        // não num canto adivinhado do viewport.
+        const x = (anchor?.x ?? window.innerWidth - 66) + (Math.random() - 0.5) * 26;
+        const y = (anchor?.y ?? window.innerHeight - 148) + (Math.random() - 0.5) * 18;
+        piece.style.left = `${Math.round(x)}px`;
+        piece.style.top = `${Math.round(y)}px`;
+      } else {
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.top = '-12px';
+      }
       piece.style.animationDuration = origin === 'heart' ? (Math.random() * 0.9 + 1.15) + 's' : (Math.random() * 2 + 2) + 's';
       piece.style.animationDelay = (Math.random() * 0.18) + 's';
       if (origin === 'heart' && Math.random() > 0.48) {
         piece.textContent = HEART_SHAPES[Math.floor(Math.random() * HEART_SHAPES.length)];
       }
-      layer.appendChild(piece);
+      frag.appendChild(piece);
       setTimeout(() => { piece.remove(); }, 4600);
     }
+    layer.appendChild(frag);
   }
 
   onMount(() => {
@@ -50,6 +89,10 @@
     let shakeTimer: ReturnType<typeof setTimeout> | null = null;
     const shake = () => {
       if (prefersReducedMotion()) return;
+      // V10.2 — cliques em rajada: enquanto um shake está a decorrer,
+      // NÃO reiniciar (o cancel+restart por clique forçava reflows em
+      // catadupa e era isto que "partia" a animação e deixava tudo lento).
+      if (shakeTimer) return;
       // Shake the main content area (and the sticky nav bars), NEVER
       // document.body or .app: animating transform on an ancestor of
       // position:fixed elements re-anchors them to the animated box,
@@ -59,18 +102,11 @@
         document.querySelector('header.nav'),
         document.querySelector('nav.bottom-nav')
       ].filter((el): el is HTMLElement => el instanceof HTMLElement);
-      if (shakeTimer) clearTimeout(shakeTimer);
-      for (const el of targets) {
-        // Cancel any in-flight shake so a rapid re-trigger restarts cleanly
-        // (no forced-reflow layout thrash needed).
-        el.getAnimations().forEach((a) => a.cancel());
-        el.classList.remove('presuntinho-shake');
-        el.classList.add('presuntinho-shake');
-      }
+      for (const el of targets) el.classList.add('presuntinho-shake');
       shakeTimer = setTimeout(() => {
         shakeTimer = null;
         for (const el of targets) el.classList.remove('presuntinho-shake');
-      }, 420);
+      }, 440);
     };
     window.addEventListener(CONFETTI_EVENT, handler);
     window.addEventListener('presuntinho:screen-shake', shake);
@@ -91,6 +127,7 @@
     pointer-events: none;
     z-index: 9999;
     overflow: hidden;
+    contain: strict;
   }
   :global(.confetti-piece) {
     position: absolute;
@@ -100,6 +137,7 @@
     border-radius: 4px;
     background: var(--c, #ff6b9d);
     animation: fall 3.2s cubic-bezier(.17,.67,.2,1) forwards;
+    will-change: transform, opacity;
   }
   :global(.confetti-heart) {
     width: 10px;

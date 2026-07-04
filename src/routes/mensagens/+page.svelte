@@ -1120,7 +1120,7 @@
        escrever vive colada ao fundo, como no WhatsApp. O gradiente ancora-a
        visualmente e tapa as bolhas que passam por trás ao rolar. */
     bottom: max(
-      calc(4.5rem + env(safe-area-inset-bottom)),
+      calc(4.95rem + env(safe-area-inset-bottom)),
       calc(var(--keyboard-inset, 0px) + 0.55rem)
     );
     transform: translateX(-50%);

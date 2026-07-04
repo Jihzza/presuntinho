@@ -337,33 +337,72 @@
 </div>
 
 <style>
+	/* V10.2 — em mobile a celebração é uma PÁGINA inteira (como no Duolingo):
+	   conteúdo centrado, CTAs ancorados em baixo. Em ecrãs largos volta a
+	   ser um cartão centrado. */
 	.victory-overlay {
 		position: fixed;
 		inset: 0;
 		z-index: 9000;
 		display: grid;
-		place-items: center;
-		padding: var(--space-4, 1rem);
-		background: color-mix(in srgb, var(--bg, #0b1020) 78%, transparent);
-		backdrop-filter: blur(6px);
+		place-items: stretch;
+		padding: 0;
+		background: var(--bg, #0b1020);
 		animation: victory-fade var(--motion-base, 220ms) ease both;
 	}
 
 	.flow-card {
-		width: min(430px, 100%);
-		max-height: calc(100vh - 2rem);
+		width: 100%;
+		height: 100dvh;
 		overflow-y: auto;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 0.7rem;
+		justify-content: center;
+		gap: 0.8rem;
 		text-align: center;
-		padding: 1.4rem 1.4rem 1.3rem;
+		padding: calc(1.2rem + env(safe-area-inset-top)) 1.4rem calc(1.4rem + env(safe-area-inset-bottom));
 		background: var(--card, #22314f);
-		border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
-		border-radius: var(--radius-xl, 1rem);
-		box-shadow: var(--shadow-lg, 0 12px 32px rgba(0, 0, 0, 0.4));
 		animation: victory-pop var(--motion-base, 220ms) cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.flow-card > .steps {
+		margin-bottom: auto;
+		padding-top: 0.4rem;
+	}
+
+	.flow-card > .ctas,
+	.flow-card > .cta {
+		margin-top: auto;
+	}
+
+	@media (min-width: 640px) {
+		.victory-overlay {
+			place-items: center;
+			padding: var(--space-4, 1rem);
+			background: color-mix(in srgb, var(--bg, #0b1020) 78%, transparent);
+			backdrop-filter: blur(6px);
+		}
+
+		.flow-card {
+			width: min(430px, 100%);
+			height: auto;
+			max-height: calc(100vh - 2rem);
+			justify-content: flex-start;
+			padding: 1.4rem 1.4rem 1.3rem;
+			border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+			border-radius: var(--radius-xl, 1rem);
+			box-shadow: var(--shadow-lg, 0 12px 32px rgba(0, 0, 0, 0.4));
+		}
+
+		.flow-card > .steps {
+			margin-bottom: 0;
+		}
+
+		.flow-card > .ctas,
+		.flow-card > .cta {
+			margin-top: 0;
+		}
 	}
 
 	.steps {

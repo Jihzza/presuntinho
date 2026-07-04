@@ -4627,5 +4627,13 @@
   "quiz.feedback.correct": "Correct ! 🎉",
   "quiz.feedback.wrong": "Presque ! La bonne réponse était : {answer}",
   "quiz.cta.continue": "Continuer →",
-  "quiz.cta.finish": "Voir le résultat 🏁"
+  "quiz.cta.finish": "Voir le résultat 🏁",
+  "quiz.feedback.wrong_title": "Presque !",
+  "quiz.feedback.wrong_answer": "Bonne réponse : {answer}",
+  "caminho.node.start": "CONTINUER",
+  "caminho.node.test": "Test de l’unité",
+  "caminho.unit.open": "Voir l’unité",
+  "vida.trabalhos.desc": "Devoirs, délais et progrès.",
+  "vida.biblioteca.desc": "Liens et supports enregistrés.",
+  "vida.caderno.desc": "Notes, audios et fichiers d’étude."
 }
