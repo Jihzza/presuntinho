@@ -5,6 +5,7 @@ import {
   FIELD_W,
   FIELD_H,
   clamp,
+  drawAvatar,
   glowCircle,
   glowRect,
   paintBackground,
@@ -145,13 +146,15 @@ export function createPlatformer(): ArcadeEngine {
     // stars
     for (const s of stars)
       if (!s.got) glowCircle(env, s.x, s.y, 6, '#fbbf24', 12);
-    // player pig
-    glowRect(env, px, py, PW, PH, 7, '#f9a8d4', 16);
-    ctx.fillStyle = '#9d2f63';
-    ctx.beginPath();
-    ctx.arc(px + PW / 2 - 3, py + PH / 2, 1.6, 0, Math.PI * 2);
-    ctx.arc(px + PW / 2 + 3, py + PH / 2, 1.6, 0, Math.PI * 2);
-    ctx.fill();
+    // player — the chosen mascot
+    if (!drawAvatar(env, px + PW / 2, py + PH / 2, PH + 8)) {
+      glowRect(env, px, py, PW, PH, 7, '#f9a8d4', 16);
+      ctx.fillStyle = '#9d2f63';
+      ctx.beginPath();
+      ctx.arc(px + PW / 2 - 3, py + PH / 2, 1.6, 0, Math.PI * 2);
+      ctx.arc(px + PW / 2 + 3, py + PH / 2, 1.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 
   reset();

@@ -10,6 +10,7 @@
   import { prefersReducedMotion, fireConfettiEvent } from '$lib/components/events';
   import { playSfx, vibrate } from '$lib/gamification/sound';
   import { arcadeHud } from '$lib/arcade/hud-state';
+  import { getActiveMascot, MASCOT_CHANGED_EVENT } from '$lib/gamification/mascots';
 
   let { game }: { game: ArcadeGameDefinition } = $props();
 
@@ -29,6 +30,21 @@
   let lastTs = 0;
   let elapsed = 0;
   let reduced = false;
+  let avatar = $state<string | null>(null); // active mascot emoji, drawn as the player
+  let isFullscreen = $state(false);
+  const fsSupported =
+    typeof document !== 'undefined' &&
+    typeof document.documentElement.requestFullscreen === 'function';
+
+  function toggleFullscreen(): void {
+    if (typeof document === 'undefined') return;
+    try {
+      if (document.fullscreenElement) void document.exitFullscreen();
+      else void document.documentElement.requestFullscreen?.();
+    } catch {
+      // some browsers reject without a user gesture / in an iframe — ignore
+    }
+  }
 
   const input: ArcadeInput = { held: new Set<Direction>(), turn: null, action: false, pointerX: null };
   let dragging = false;
@@ -118,7 +134,7 @@
       input.turn = null;
       input.action = false;
     }
-    if (engine && ctx) engine.draw({ ctx, t: elapsed, reduced });
+    if (engine && ctx) engine.draw({ ctx, t: elapsed, reduced, avatar });
     raf = requestAnimationFrame(frame);
   }
 
@@ -238,7 +254,7 @@
   $effect(() => {
     arcadeHud.set(
       status === 'playing'
-        ? { move: game.hud.move, action: game.hud.action, onTurn, onHold, onAction }
+        ? { left: game.hud.left, right: game.hud.right, onTurn, onHold, onAction }
         : null
     );
   });
@@ -285,6 +301,24 @@
     window.addEventListener('blur', onBlur);
     window.addEventListener('keydown', onKeydown, { passive: false });
     window.addEventListener('keyup', onKeyup);
+
+    // Draw the player as the chosen mascot; keep it live if the pick changes.
+    const loadAvatar = () => {
+      void getActiveMascot()
+        .then((m) => (avatar = m.emoji))
+        .catch(() => undefined);
+    };
+    loadAvatar();
+    const onMascotChanged = (e: Event) => {
+      const emoji = (e as CustomEvent<{ emoji?: string }>).detail?.emoji;
+      if (emoji) avatar = emoji;
+      else loadAvatar();
+    };
+    window.addEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
+
+    const onFsChange = () => (isFullscreen = !!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onFsChange);
+
     raf = requestAnimationFrame(frame);
     return () => {
       cancelAnimationFrame(raf);
@@ -292,6 +326,8 @@
       window.removeEventListener('blur', onBlur);
       window.removeEventListener('keydown', onKeydown);
       window.removeEventListener('keyup', onKeyup);
+      window.removeEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
+      document.removeEventListener('fullscreenchange', onFsChange);
     };
   });
 </script>
@@ -305,6 +341,17 @@
       <span class="cur">{score}</span>
       <span class="best" title={$t('arcade.score.best', { default: 'Melhor pontuação' })}>◆ {high}</span>
     </div>
+    {#if fsSupported}
+      <button
+        type="button"
+        class="fs-toggle"
+        onclick={toggleFullscreen}
+        aria-pressed={isFullscreen}
+        aria-label={isFullscreen
+          ? $t('arcade.fullscreen.exit', { default: 'Sair do ecrã inteiro' })
+          : $t('arcade.fullscreen.enter', { default: 'Ecrã inteiro' })}
+      >{isFullscreen ? '⤢' : '⛶'}</button>
+    {/if}
   </div>
   <p class="sr-live" aria-live="polite">{$t(statusKey)}</p>
 
@@ -374,11 +421,25 @@
   /* Slim top bar: back arrow · title · live score. */
   .topbar {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr auto auto;
     align-items: center;
     gap: 0.6rem;
     margin-bottom: 0.5rem;
   }
+  .fs-toggle {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 1.05rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    cursor: pointer;
+  }
+  .fs-toggle:hover, .fs-toggle:focus-visible { background: color-mix(in srgb, var(--accent) 20%, transparent); outline: none; }
+  .fs-toggle:active { transform: scale(0.92); }
   .back {
     display: grid;
     place-items: center;

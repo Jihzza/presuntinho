@@ -6,6 +6,7 @@ import {
   FIELD_W,
   FIELD_H,
   clamp,
+  drawAvatar,
   glowCircle,
   glowRect,
   paintBackground,
@@ -162,9 +163,11 @@ export function createPong(): ArcadeEngine {
     ctx.fillText(String(cpuPts), FIELD_W / 2, FIELD_H / 2 - 16);
     ctx.fillText(String(playerPts), FIELD_W / 2, FIELD_H / 2 + 32);
     ctx.textAlign = 'start';
-    // paddles
+    // paddles — the player's is the chosen mascot
     glowRect(env, cpuX - PADDLE_W / 2, MARGIN, PADDLE_W, PADDLE_H, 6, '#fb7185', 12);
-    glowRect(env, playerX - PADDLE_W / 2, FIELD_H - MARGIN - PADDLE_H, PADDLE_W, PADDLE_H, 6, ACCENT, 14);
+    const playerY = FIELD_H - MARGIN - PADDLE_H;
+    glowRect(env, playerX - PADDLE_W / 2, playerY, PADDLE_W, PADDLE_H, 6, ACCENT, 14);
+    drawAvatar(env, playerX, playerY + PADDLE_H / 2, PADDLE_H + 8);
     // ball
     glowCircle(env, ball.x, ball.y, BALL_R, '#fde68a', 14);
   }

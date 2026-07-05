@@ -4,6 +4,7 @@
 import {
   FIELD_W,
   FIELD_H,
+  drawAvatar,
   glowCircle,
   glowRect,
   paintBackground,
@@ -237,8 +238,10 @@ export function createMaze(): ArcadeEngine {
     // guardians
     for (const g of guardians)
       glowRect(env, g.x * CELL + 3, g.y * CELL + 3, CELL - 6, CELL - 6, 6, '#fb7185', 14);
-    // player pig
-    glowCircle(env, player.x * CELL + CELL / 2, player.y * CELL + CELL / 2, CELL * 0.4, '#f9a8d4', 16);
+    // player — the chosen mascot
+    const pcx = player.x * CELL + CELL / 2;
+    const pcy = player.y * CELL + CELL / 2;
+    if (!drawAvatar(env, pcx, pcy, CELL + 2)) glowCircle(env, pcx, pcy, CELL * 0.4, '#f9a8d4', 16);
     ctx.restore();
   }
 

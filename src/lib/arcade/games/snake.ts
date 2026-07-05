@@ -3,6 +3,7 @@
 // death). Speed ramps up gently as you eat. Original pig/fruit theme.
 import {
   FIELD_W,
+  drawAvatar,
   glowRect,
   glowCircle,
   isOpposite,
@@ -110,25 +111,16 @@ export function createSnake(): ArcadeEngine {
       }
     // food — glowing fruit
     glowCircle(env, food.x * CELL + CELL / 2, food.y * CELL + CELL / 2, CELL * 0.34, '#f97316', 16);
-    // snake body
+    // snake body (green segments); the head is the player's mascot
     for (let i = snake.length - 1; i >= 0; i -= 1) {
       const s = snake[i];
       const head = i === 0;
-      glowRect(
-        env,
-        s.x * CELL + 2,
-        s.y * CELL + 2,
-        CELL - 4,
-        CELL - 4,
-        6,
-        head ? '#f9a8d4' : ACCENT,
-        head ? 16 : 8
-      );
+      const cx = s.x * CELL + CELL / 2;
+      const cy = s.y * CELL + CELL / 2;
+      if (head && drawAvatar(env, cx, cy, CELL + 2)) continue;
+      glowRect(env, s.x * CELL + 2, s.y * CELL + 2, CELL - 4, CELL - 4, 6, head ? '#f9a8d4' : ACCENT, head ? 16 : 8);
       if (head) {
-        // pig snout dots on the head
         ctx.fillStyle = '#9d2f63';
-        const cx = s.x * CELL + CELL / 2;
-        const cy = s.y * CELL + CELL / 2;
         ctx.beginPath();
         ctx.arc(cx - 3, cy + 2, 1.6, 0, Math.PI * 2);
         ctx.arc(cx + 3, cy + 2, 1.6, 0, Math.PI * 2);

@@ -404,8 +404,8 @@
                 </div>
                 {#if $arcadeHud}
                   <ArcadeTouchHud
-                    move={$arcadeHud.move}
-                    action={$arcadeHud.action}
+                    left={$arcadeHud.left}
+                    right={$arcadeHud.right}
                     onTurn={$arcadeHud.onTurn}
                     onHold={$arcadeHud.onHold}
                     onAction={$arcadeHud.onAction}

@@ -34,6 +34,8 @@ export interface DrawEnv {
   t: number;
   /** Honour prefers-reduced-motion (skip heavy glow/particle work). */
   reduced: boolean;
+  /** The player's chosen mascot as an emoji, drawn as the player avatar. */
+  avatar?: string | null;
 }
 
 export interface StepResult {
@@ -148,6 +150,22 @@ export function paintBackground(env: DrawEnv, accent: string): void {
 
 export function clamp(v: number, lo: number, hi: number): number {
   return v < lo ? lo : v > hi ? hi : v;
+}
+
+/**
+ * Draw the player's mascot emoji centred at (x, y) at `size` px. Returns true
+ * when it drew (an avatar was set) so engines can skip their fallback shape.
+ */
+export function drawAvatar(env: DrawEnv, x: number, y: number, size: number): boolean {
+  if (!env.avatar) return false;
+  const { ctx } = env;
+  ctx.save();
+  ctx.font = `${Math.round(size)}px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(env.avatar, x, y);
+  ctx.restore();
+  return true;
 }
 
 export function rectHit(

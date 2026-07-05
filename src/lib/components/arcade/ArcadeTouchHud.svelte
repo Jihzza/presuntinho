@@ -1,24 +1,23 @@
 <script lang="ts">
-  // Free-Fire-style touch HUD: a translucent movement pad pinned bottom-left
-  // and an action button pinned bottom-right, floating OVER the canvas. The
-  // container is pointer-events:none so bare taps fall through to the canvas
-  // (swipe/drag stay alive); only the clusters capture pointers. Each button
-  // captures its own pointerId, so left-thumb move + right-thumb action work
-  // simultaneously (multi-touch). Layout is declared per game via move/action.
+  // Split touch HUD: whatever moves LEFT lives in the bottom-left corner,
+  // whatever moves RIGHT (and the action) lives in the bottom-right corner —
+  // so each thumb reaches the control it expects. Fixed to the viewport over
+  // the footer (where the mascot + heart FABs normally sit). The overlay is
+  // click-through; only the corner clusters catch pointers, each capturing its
+  // own pointerId so both thumbs work at once (multi-touch). Hidden on desktop.
   import { t } from 'svelte-i18n';
   import type { Direction } from '$lib/arcade/engine';
-  import type { HudAction, HudMove } from '$lib/arcade/games';
+  import type { HudLeft, HudRight } from '$lib/arcade/games';
 
   interface Props {
-    move: HudMove;
-    action: HudAction;
+    left: HudLeft;
+    right: HudRight;
     onTurn: (dir: Direction) => void;
     onHold: (dir: Direction, down: boolean) => void;
     onAction: (down: boolean) => void;
   }
-  let { move, action, onTurn, onHold, onAction }: Props = $props();
+  let { left, right, onTurn, onHold, onAction }: Props = $props();
 
-  // held direction buttons (leftright): press-and-hold with clean release
   function hold(dir: Direction) {
     return {
       onpointerdown: (e: PointerEvent) => {
@@ -31,14 +30,8 @@
       onlostpointercapture: () => onHold(dir, false)
     };
   }
-  // one-shot direction (dpad turn games)
   function tap(dir: Direction) {
-    return {
-      onpointerdown: (e: PointerEvent) => {
-        e.preventDefault();
-        onTurn(dir);
-      }
-    };
+    return { onpointerdown: (e: PointerEvent) => { e.preventDefault(); onTurn(dir); } };
   }
   const actionHandlers = {
     onpointerdown: (e: PointerEvent) => {
@@ -50,18 +43,15 @@
     onpointercancel: () => onAction(false)
   };
 
-  const actionLabel = $derived(
-    action === 'jump'
-      ? $t('arcade.controls.jump', { default: 'Saltar' })
-      : $t('arcade.controls.launch', { default: 'Lançar' })
-  );
-  const actionIcon = $derived(action === 'jump' ? '⤒' : '✦');
+  const jumpLabel = $derived($t('arcade.controls.jump', { default: 'Saltar' }));
+  const launchLabel = $derived($t('arcade.controls.launch', { default: 'Lançar' }));
 </script>
 
 <div class="hud-overlay" aria-hidden="false">
-  {#if move !== 'none'}
-    <div class="cluster move" aria-label={$t('arcade.hud.move_aria', { default: 'Movimento' })} role="group">
-      {#if move === 'dpad'}
+  <!-- ── bottom-left ── -->
+  {#if left !== 'none'}
+    <div class="cluster move-cluster" role="group" aria-label={$t('arcade.hud.move_aria', { default: 'Movimento' })}>
+      {#if left === 'dpad'}
         <div class="dpad">
           <span class="hub" aria-hidden="true"></span>
           <button type="button" class="d up" aria-label={$t('arcade.controls.up', { default: 'Cima' })} {...tap('up')}>▲</button>
@@ -70,28 +60,33 @@
           <button type="button" class="d down" aria-label={$t('arcade.controls.down', { default: 'Baixo' })} {...tap('down')}>▼</button>
         </div>
       {:else}
-        <div class="rocker">
-          <button type="button" class="r" aria-label={$t('arcade.controls.left', { default: 'Esquerda' })} {...hold('left')}>◀</button>
-          <button type="button" class="r" aria-label={$t('arcade.controls.right', { default: 'Direita' })} {...hold('right')}>▶</button>
-        </div>
+        <button type="button" class="side" aria-label={$t('arcade.controls.left', { default: 'Esquerda' })} {...hold('left')}>◀</button>
       {/if}
     </div>
   {/if}
 
-  {#if action !== 'none'}
-    <div class="cluster act" aria-label={$t('arcade.hud.action_aria', { default: 'Ação' })} role="group">
-      <button type="button" class="action-btn" aria-label={actionLabel} {...actionHandlers}>
-        <span class="a-icon" aria-hidden="true">{actionIcon}</span>
-        <span class="a-label">{actionLabel}</span>
-      </button>
+  <!-- ── bottom-right ── -->
+  {#if right !== 'none'}
+    <div class="cluster act-cluster" role="group" aria-label={$t('arcade.hud.action_aria', { default: 'Ação' })}>
+      {#if right === 'jump' || right === 'launch'}
+        <button type="button" class="action-btn" aria-label={right === 'jump' ? jumpLabel : launchLabel} {...actionHandlers}>
+          <span class="a-icon" aria-hidden="true">{right === 'jump' ? '⤒' : '✦'}</span>
+          <span class="a-label">{right === 'jump' ? jumpLabel : launchLabel}</span>
+        </button>
+      {:else if right === 'move-right-jump'}
+        <button type="button" class="action-btn stacked" aria-label={jumpLabel} {...actionHandlers}>
+          <span class="a-icon" aria-hidden="true">⤒</span>
+          <span class="a-label">{jumpLabel}</span>
+        </button>
+        <button type="button" class="side" aria-label={$t('arcade.controls.right', { default: 'Direita' })} {...hold('right')}>▶</button>
+      {:else}
+        <button type="button" class="side" aria-label={$t('arcade.controls.right', { default: 'Direita' })} {...hold('right')}>▶</button>
+      {/if}
     </div>
   {/if}
 </div>
 
 <style>
-  /* Fixed to the viewport: the clusters sit at the bottom corners over the
-     footer, where the mascot (left) + heart (right) FABs normally live. The
-     overlay itself is click-through; only the corner clusters catch pointers. */
   .hud-overlay {
     position: fixed;
     inset: 0;
@@ -100,17 +95,16 @@
   }
   .cluster {
     position: fixed;
-    bottom: calc(env(safe-area-inset-bottom) + 4.5rem);
+    bottom: calc(env(safe-area-inset-bottom) + 1.6rem);
     pointer-events: auto;
     touch-action: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.55rem;
   }
-  .cluster.move { left: max(0.8rem, env(safe-area-inset-left)); }
-  .cluster.act { right: max(0.8rem, env(safe-area-inset-right)); }
-
-  /* Touch-only: on real pointers we play with the keyboard + mini cluster. */
-  @media (pointer: fine) {
-    .hud-overlay { display: none; }
-  }
+  .move-cluster { left: max(0.9rem, env(safe-area-inset-left)); }
+  .act-cluster { right: max(0.9rem, env(safe-area-inset-right)); align-items: flex-end; }
 
   button {
     -webkit-tap-highlight-color: transparent;
@@ -138,7 +132,17 @@
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #67e8f9) 60%, transparent);
   }
 
-  /* ── D-pad (sized to fit the control deck) ── */
+  /* single side button (◀ / ▶) */
+  .side {
+    width: 68px;
+    height: 68px;
+    border-radius: 999px;
+    font-size: 1.55rem;
+    display: grid;
+    place-items: center;
+  }
+
+  /* D-pad */
   .dpad {
     position: relative;
     width: 132px;
@@ -171,18 +175,7 @@
   .d.left { left: 0; top: 44px; }
   .d.right { right: 0; top: 44px; }
 
-  /* ── left/right rocker ── */
-  .rocker { display: flex; gap: 0.7rem; }
-  .rocker .r {
-    width: 66px;
-    height: 66px;
-    border-radius: 999px;
-    font-size: 1.5rem;
-    display: grid;
-    place-items: center;
-  }
-
-  /* ── action button ── */
+  /* action button (jump / launch) */
   .action-btn {
     width: 78px;
     height: 78px;
@@ -195,6 +188,10 @@
   .a-icon { font-size: 1.5rem; line-height: 1; }
   .a-label { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.02em; }
 
+  /* touch-only: desktop plays with the keyboard */
+  @media (pointer: fine) {
+    .hud-overlay { display: none; }
+  }
   @media (prefers-reduced-motion: reduce) {
     button { transition: none; }
     button:active { transform: none; }

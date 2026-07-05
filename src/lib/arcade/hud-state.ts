@@ -6,11 +6,11 @@
 // edge over the footer, exactly like the app's own floating buttons.
 import { writable } from 'svelte/store';
 import type { Direction } from './engine';
-import type { HudAction, HudMove } from './games';
+import type { HudLeft, HudRight } from './games';
 
 export interface ArcadeHudState {
-  move: HudMove;
-  action: HudAction;
+  left: HudLeft;
+  right: HudRight;
   onTurn: (dir: Direction) => void;
   onHold: (dir: Direction, down: boolean) => void;
   onAction: (down: boolean) => void;

@@ -6,6 +6,7 @@ import {
   FIELD_W,
   FIELD_H,
   clamp,
+  drawAvatar,
   glowCircle,
   glowRect,
   paintBackground,
@@ -161,8 +162,9 @@ export function createBreakout(): ArcadeEngine {
     paintBackground(env, ACCENT);
     // bricks
     for (const b of bricks) if (b.alive) glowRect(env, b.x, b.y, BRICK_W, BRICK_H, 4, b.color, 8);
-    // paddle
+    // paddle with the chosen mascot riding it
     glowRect(env, paddleX - PADDLE_W / 2, PADDLE_Y, PADDLE_W, PADDLE_H, 6, ACCENT, 14);
+    drawAvatar(env, paddleX, PADDLE_Y + PADDLE_H / 2, PADDLE_H + 8);
     // ball
     glowCircle(env, ball.x, ball.y, BALL_R, '#fde68a', 14);
     // lives
