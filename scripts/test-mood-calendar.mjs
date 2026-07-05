@@ -71,7 +71,7 @@ assert('confetti supports structured heart-origin bursts', events.includes('expo
 assert('heart click computes burst density for spam taps', easter.includes('recordHeartBurst') && easter.includes('recentClicks * recentClicks') && easter.includes('burstLevel'));
 assert('theme system includes new professional themes', db.includes("'vanilla'") && db.includes("'garden'") && db.includes("'midnight'") && db.includes("'cozy'") && db.includes("'fresh'"));
 assert('theme CSS defines premium palettes', appCss.includes("[data-theme='vanilla']") && appCss.includes("[data-theme='fresh']") && appCss.includes("[data-theme='midnight']"));
-assert('school includes Duolingo-inspired lesson path', school.includes('lesson-path') && school.includes("$t('school.loop.streak')") && school.includes("$t('school.path.reward.title')"));
+assert('school includes clean course-first learning path entry', school.includes('school.clean.hero.title') && school.includes('course-grid') && school.includes('progressByCourse') && school.includes('curso → cadeiras → aulas'));
 
 console.log('\nCalendar gesture/design');
 assert('calendar uses pointer capture with guarded fallback', calendar.includes('setPointerCapture') && calendar.includes('catch'));

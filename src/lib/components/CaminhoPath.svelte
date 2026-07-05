@@ -22,14 +22,16 @@
   import { markVisited } from '$lib/state/stores';
   import { fireConfettiEvent, showToast } from '$lib/components/events';
   import { playSfx, vibrate } from '$lib/gamification/sound';
-  import PigMascot from './PigMascot.svelte';
+  import MascotAvatar from './MascotAvatar.svelte';
+  import type { MascotPose } from '$lib/gamification/mascots';
 
   interface Props {
     course: SchoolCourse;
     progress: CourseProgress | null;
     next: NextLessonTarget | null;
     streak: ActivityStreak | null;
-    mascotEmoji: string;
+    /** Id da mascote ativa (mascots.ts) — anima o mapa inteiro. */
+    mascotId: string;
     /** Ids 'lesson:<unit>:<slug>' já abertos (loadVisitedLessons). */
     visitedLessons?: Set<string>;
     /** quizSlugs com pelo menos uma tentativa. */
@@ -43,11 +45,18 @@
     progress,
     next,
     streak,
-    mascotEmoji,
+    mascotId,
     visitedLessons = new Set(),
     quizDone = new Set(),
     claimedChests = new Set()
   }: Props = $props();
+
+  // Poses das personagens nas margens — variam ao longo do caminho para o
+  // mapa parecer vivo (festeja, aponta o rumo, manda amor).
+  const CHEER_POSES: MascotPose[] = ['cheer', 'point', 'love'];
+  function cheerPose(unitIndex: number, i: number): MascotPose {
+    return CHEER_POSES[(unitIndex + ((i / 7) | 0)) % CHEER_POSES.length];
+  }
 
   let units = $derived<SchoolUnit[]>([...course.units, ...(course.extras ?? [])]);
   let openKey = $state<string | null>(null);
@@ -178,6 +187,26 @@
     }
   }
 
+  // V10.4 — salta direto para o nó ATUAL (caminhos longos obrigavam a
+  // scrollar unidades inteiras já feitas). Reage à mudança de currentKey
+  // porque no mount os Sets do Dexie ainda vêm vazios — o nó "de hoje"
+  // só se conhece quando o progresso chega.
+  let lastScrollKey: string | null = null;
+  $effect(() => {
+    const key = currentKey;
+    if (!key || key === lastScrollKey) return;
+    lastScrollKey = key;
+    const raf = requestAnimationFrame(() => {
+      const el = document.querySelector('.caminho .node.current');
+      if (!(el instanceof HTMLElement)) return;
+      const r = el.getBoundingClientRect();
+      if (r.top > window.innerHeight * 0.72 || r.top < 130) {
+        el.scrollIntoView({ block: 'center', behavior: 'auto' });
+      }
+    });
+    return () => cancelAnimationFrame(raf);
+  });
+
   // Anel de progresso do nó atual (progresso da unidade em curso).
   const RING_R = 44;
   const RING_C = 2 * Math.PI * RING_R;
@@ -191,7 +220,7 @@
 <section class="caminho" aria-label={$t('caminho.aria', { default: 'Caminho do curso' })}>
   <!-- Cabeçalho de progresso -->
   <header class="summary card">
-    <span class="mascot"><PigMascot emotion="happy" size={70} /></span>
+    <span class="mascot"><MascotAvatar mascot={mascotId} pose="point" size={76} eager /></span>
     <div class="summary-meta">
       <p class="kicker">{$t('caminho.tag', { default: '🗺️ O teu caminho' })}</p>
       <h1>{course.icon} {course.title}</h1>
@@ -308,10 +337,16 @@
               </div>
             {/if}
 
-            <!-- Presuntinho em grande nas margens (decorativo) -->
+            <!-- Mascote em grande nas margens (decorativo, como o Duo) -->
             {#if i % 7 === 3}
               <span class="cheer-pig" class:flip={offset > 0} aria-hidden="true">
-                <PigMascot emotion={isLocked ? 'neutral' : 'happy'} size={84} still={isLocked} />
+                <MascotAvatar
+                  mascot={mascotId}
+                  pose={isLocked ? 'sleep' : cheerPose(seg.unitIndex, i)}
+                  size={92}
+                  animate={!isLocked}
+                  flip={offset > 0}
+                />
               </span>
             {/if}
           </li>

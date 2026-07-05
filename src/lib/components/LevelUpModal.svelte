@@ -6,15 +6,15 @@
 	import { fireConfettiEvent } from '$lib/components/events';
 	import { progressToNext } from '$lib/gamification/levels';
 	import { playSfx, vibrate } from '$lib/gamification/sound';
-	import PigMascot from './PigMascot.svelte';
+	import MascotAvatar from './MascotAvatar.svelte';
 
 	interface Props {
 		level: number;
 		xpTotal: number;
-		mascotEmoji?: string;
+		mascotId?: string;
 		onclose?: () => void;
 	}
-	let { level, xpTotal, mascotEmoji = '🐷', onclose }: Props = $props();
+	let { level, xpTotal, mascotId = 'porquinho', onclose }: Props = $props();
 
 	const progress = $derived(progressToNext(xpTotal));
 	let primaryEl = $state<HTMLButtonElement | null>(null);
@@ -36,10 +36,7 @@
 <div class="levelup-overlay" role="dialog" aria-modal="true" aria-labelledby="levelup-title">
 	<div class="levelup-card">
 		<span class="mascot" aria-hidden="true">
-			<PigMascot emotion="euphoric" size={78} />
-			{#if mascotEmoji !== '🐷'}
-				<span class="mascot-companion">{mascotEmoji}</span>
-			{/if}
+			<MascotAvatar mascot={mascotId} pose="cheer" size={104} eager />
 		</span>
 		<p class="eyebrow">{$t('levelup.eyebrow', { default: 'Subiste de nível!' })}</p>
 		<h2 id="levelup-title" class="title">
@@ -102,13 +99,6 @@
 		position: relative;
 		line-height: 1;
 		animation: mascot-cheer 900ms cubic-bezier(0.22, 1, 0.36, 1);
-	}
-
-	.mascot-companion {
-		position: absolute;
-		right: -10px;
-		bottom: 0;
-		font-size: 1.4rem;
 	}
 
 	.eyebrow {

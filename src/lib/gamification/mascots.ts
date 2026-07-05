@@ -46,6 +46,44 @@ export const MASCOTS: readonly MascotDef[] = Object.freeze([
 /** Default active mascot — 🧴 preserves the pre-V9 FAB appearance. */
 export const DEFAULT_MASCOT_ID = 'perfume';
 
+// ---------------------------------------------------------------------------
+// Arte (V10.4) — cada mascote tem 8 poses + retrato em /static/mascotes/<id>/
+// (webp com fundo transparente, gerados por scripts/build-mascots.mjs).
+// ---------------------------------------------------------------------------
+
+/** Poses disponíveis nas folhas de arte (ordem das células 4×2). */
+export type MascotPose =
+  | 'hero'
+  | 'wave'
+  | 'jump'
+  | 'think'
+  | 'sleep'
+  | 'cheer'
+  | 'point'
+  | 'love'
+  | 'sit';
+
+/** URL absoluto do webp de uma pose (todas as mascotes têm as 9). */
+export function mascotArt(id: string, pose: MascotPose = 'wave'): string {
+  const safe = mascotById(id) ? id : DEFAULT_MASCOT_ID;
+  return `/mascotes/${safe}/${pose}.webp`;
+}
+
+/** Mapa emoção → pose (o MascotAvatar usa quando não recebe pose explícita). */
+export function poseForEmotion(emotion: string | undefined): MascotPose {
+  switch (emotion) {
+    case 'euphoric':
+      return 'cheer';
+    case 'happy':
+      return 'wave';
+    case 'worried':
+    case 'sad':
+      return 'think';
+    default:
+      return 'sit';
+  }
+}
+
 /** Window event dispatched whenever the active mascot changes. */
 export const MASCOT_CHANGED_EVENT = 'presuntinho:mascot-changed';
 

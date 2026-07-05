@@ -25,7 +25,7 @@
   import DailyQuests from '$lib/components/quests/DailyQuests.svelte';
   import MoodCheckin from '$lib/mood/MoodCheckin.svelte';
   import AppCard from '$lib/components/AppCard.svelte';
-  import PigMascot from '$lib/components/PigMascot.svelte';
+  import MascotAvatar from '$lib/components/MascotAvatar.svelte';
   import { profileFor } from '$lib/profile/people';
   import { resumeTarget, type NextLessonTarget } from '$lib/escola/progress';
 
@@ -74,7 +74,7 @@
   let weekActivity = $state<WeekDayActivity[]>([]);
   let now = $state(new Date());
   let markingHabitId = $state<string | null>(null);
-  let mascotEmoji = $state('🐷');
+  let mascotId = $state('porquinho');
   let emotionTick = $state(0);
   // V10.1 (tarefa A) — a Home é o perfil vivo da Fatma + cockpit.
   let resume = $state<NextLessonTarget | null>(null);
@@ -237,14 +237,14 @@
     })();
 
     void getActiveMascot()
-      .then((m) => (mascotEmoji = m.emoji))
+      .then((m) => (mascotId = m.id))
       .catch(() => undefined);
     void resumeTarget()
       .then((r) => (resume = r))
       .catch(() => (resume = null));
     const onMascotChanged = (event: Event) => {
-      const detail = event instanceof CustomEvent ? (event.detail as { emoji?: string } | null) : null;
-      if (detail?.emoji) mascotEmoji = detail.emoji;
+      const detail = event instanceof CustomEvent ? (event.detail as { id?: string } | null) : null;
+      if (detail?.id) mascotId = detail.id;
     };
     window.addEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
 
@@ -384,7 +384,7 @@
       </small>
     </div>
     <p class="mascot-line" aria-live="polite">
-      <PigMascot {emotion} size={40} />
+      <MascotAvatar mascot={mascotId} {emotion} size={46} eager />
       {mascotLine}
     </p>
   </header>

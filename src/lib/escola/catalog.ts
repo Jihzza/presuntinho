@@ -44,6 +44,7 @@ export interface SchoolCourseLessonDetail {
   quizSlug?: string;
   quizTitle?: string;
   estMinutes: number;
+  activityType?: SchoolLessonRef['activityType'];
 }
 
 export interface SchoolCourseDetail {
@@ -300,7 +301,8 @@ function detailFromSchoolUnit(unit: SchoolUnit): SchoolCourseDetail {
       summary: lesson.summary,
       quizSlug: lesson.quizSlug,
       quizTitle: lesson.quizTitle,
-      estMinutes: lesson.estMinutes ?? 8
+      estMinutes: lesson.estMinutes ?? 8,
+      activityType: lesson.activityType
     })),
     assignments: unit.assignments
   };

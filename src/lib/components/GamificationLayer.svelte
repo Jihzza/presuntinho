@@ -26,7 +26,7 @@
 		LEVEL_UP_EVENT,
 		STREAK_CHANGED_EVENT
 	} from '$lib/gamification/gamification-events';
-	import { getActiveMascot } from '$lib/gamification/mascots';
+	import { getActiveMascot, MASCOT_CHANGED_EVENT } from '$lib/gamification/mascots';
 	import { awardBadge } from '$lib/state/stores';
 	import { db } from '$lib/state/db';
 	import { claimHabitsFlowDay, claimStreakNotifDay } from '$lib/gamification/streak';
@@ -57,7 +57,7 @@
 
 	let queue = $state<Celebration[]>([]);
 	let active = $state<Celebration | null>(null);
-	let mascotEmoji = $state('🐷');
+	let mascotId = $state('porquinho');
 
 	let hydrated = false;
 	let processing = false;
@@ -240,14 +240,20 @@
 		// Emotion depends on the clock (worried evenings) — refresh per minute.
 		const presenceTimer = setInterval(() => void presenceTick(), 60_000);
 		void getActiveMascot()
-			.then((m) => (mascotEmoji = m.emoji))
+			.then((m) => (mascotId = m.id))
 			.catch(() => undefined);
+		const onMascotChanged = (e: Event) => {
+			const id = (e as CustomEvent<{ id?: string }>).detail?.id;
+			if (id) mascotId = id;
+		};
+		window.addEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
 		const handler = (e: Event) => void onXpChanged(e);
 		window.addEventListener(XP_CHANGED_EVENT, handler);
 		window.addEventListener(BADGE_UNLOCKED_EVENT, onBadgeUnlocked);
 		return () => {
 			window.removeEventListener(XP_CHANGED_EVENT, handler);
 			window.removeEventListener(BADGE_UNLOCKED_EVENT, onBadgeUnlocked);
+			window.removeEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
 			clearInterval(presenceTimer);
 			if (advanceTimer) clearTimeout(advanceTimer);
 		};
@@ -258,14 +264,14 @@
 	<LevelUpModal
 		level={active.level}
 		xpTotal={active.xpTotal}
-		{mascotEmoji}
+		{mascotId}
 		onclose={advance}
 	/>
 {:else if active?.kind === 'milestone'}
 	<StreakMilestoneModal
 		milestone={active.milestone}
 		earnedFreeze={active.earnedFreeze}
-		{mascotEmoji}
+		{mascotId}
 		onclose={advance}
 	/>
 {:else if active?.kind === 'badge'}

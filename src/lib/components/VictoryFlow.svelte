@@ -16,11 +16,11 @@
 		type WeekDayActivity
 	} from '$lib/gamification/streak';
 	import { peekDailyQuests } from '$lib/gamification/quests';
-	import { getActiveMascot, DEFAULT_MASCOT_ID, mascotById } from '$lib/gamification/mascots';
+	import { getActiveMascot, DEFAULT_MASCOT_ID } from '$lib/gamification/mascots';
 	import { nextLesson, type NextLessonTarget } from '$lib/escola/progress';
 	import { schoolCourses, courseForUnit } from '$lib/escola/catalog';
 	import WeekCircles from './WeekCircles.svelte';
-	import PigMascot from './PigMascot.svelte';
+	import MascotAvatar from './MascotAvatar.svelte';
 
 	export interface XpEntry {
 		label: string;
@@ -71,7 +71,7 @@
 	let cardIndex = $state(0);
 	const card = $derived(cards[Math.min(cardIndex, cards.length - 1)]);
 
-	let mascotEmoji = $state(mascotById(DEFAULT_MASCOT_ID)?.emoji ?? '🐷');
+	let mascotId = $state(DEFAULT_MASCOT_ID);
 	let streak = $state<ActivityStreak | null>(null);
 	let week = $state<WeekDayActivity[]>([]);
 	let questsDone = $state(0);
@@ -155,7 +155,7 @@
 
 		void (async () => {
 			try {
-				mascotEmoji = (await getActiveMascot()).emoji;
+				mascotId = (await getActiveMascot()).id;
 			} catch {
 				// keep default
 			}
@@ -219,10 +219,7 @@
 
 		{#if card === 'splash'}
 			<div class="mascot" aria-hidden="true">
-				<PigMascot emotion={celebrate ? 'euphoric' : 'happy'} size={76} />
-				{#if mascotEmoji !== '🐷'}
-					<span class="mascot-companion">{mascotEmoji}</span>
-				{/if}
+				<MascotAvatar mascot={mascotId} pose={celebrate ? 'cheer' : 'wave'} size={110} eager />
 			</div>
 			<h2 class="v-title">{title}</h2>
 			{#if mascotLine}
@@ -425,13 +422,6 @@
 		position: relative;
 		line-height: 1;
 		animation: mascot-cheer 900ms cubic-bezier(0.22, 1, 0.36, 1);
-	}
-
-	.mascot-companion {
-		position: absolute;
-		right: -10px;
-		bottom: 0;
-		font-size: 1.4rem;
 	}
 
 	.v-title {

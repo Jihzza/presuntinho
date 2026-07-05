@@ -21,7 +21,7 @@
     type NextLessonTarget
   } from '$lib/escola/progress';
   import { getActivityStreak, type ActivityStreak } from '$lib/gamification/streak';
-  import { getActiveMascot, DEFAULT_MASCOT_ID, mascotById } from '$lib/gamification/mascots';
+  import { getActiveMascot, DEFAULT_MASCOT_ID } from '$lib/gamification/mascots';
 
   let courseSlug = $derived(page.params.courseSlug ?? '');
   let course = $derived(localizedSchoolCourses($t).find((c) => c.slug === courseSlug) ?? null);
@@ -29,7 +29,7 @@
   let progress = $state<CourseProgress | null>(null);
   let next = $state<NextLessonTarget | null>(null);
   let streak = $state<ActivityStreak | null>(null);
-  let mascotEmoji = $state(mascotById(DEFAULT_MASCOT_ID)?.emoji ?? '🧴');
+  let mascotId = $state(DEFAULT_MASCOT_ID);
   let visitedLessons = $state<Set<string>>(new Set());
   let quizDone = $state<Set<string>>(new Set());
   let claimedChests = $state<Set<string>>(new Set());
@@ -49,7 +49,7 @@
         progress = p;
         next = n;
         streak = s;
-        mascotEmoji = m.emoji;
+        mascotId = m.id;
         visitedLessons = new Set(visited.keys());
         claimedChests = chests;
 
@@ -100,7 +100,7 @@
   </p>
 
   {#if course}
-    <CaminhoPath {course} {progress} {next} {streak} {mascotEmoji} {visitedLessons} {quizDone} {claimedChests} />
+    <CaminhoPath {course} {progress} {next} {streak} {mascotId} {visitedLessons} {quizDone} {claimedChests} />
     {#if !loaded}
       <p class="loading">{$t('common.loading', { default: 'A carregar…' })}</p>
     {/if}

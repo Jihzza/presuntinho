@@ -18,7 +18,8 @@
   import { t } from 'svelte-i18n';
   import { fireConfettiEvent } from '$lib/components/events';
   import { getActivityStreak, getWeekActivity, type WeekDayActivity } from '$lib/gamification/streak';
-  import { getActiveMascot, DEFAULT_MASCOT_ID, mascotById } from '$lib/gamification/mascots';
+  import { getActiveMascot, DEFAULT_MASCOT_ID } from '$lib/gamification/mascots';
+  import MascotAvatar from './MascotAvatar.svelte';
   import { playSfx, vibrate } from '$lib/gamification/sound';
   import WeekCircles from './WeekCircles.svelte';
   import { nextLesson, type NextLessonTarget } from '$lib/escola/progress';
@@ -66,7 +67,7 @@
   let streakDays = $state(0);
   let week = $state<WeekDayActivity[]>([]);
   let perfectWeek = $derived(week.length === 7 && week.every((d) => d.active || d.frozen));
-  let mascotEmoji = $state(mascotById(DEFAULT_MASCOT_ID)?.emoji ?? '🧴');
+  let mascotId = $state(DEFAULT_MASCOT_ID);
   let next = $state<NextLessonTarget | null>(null);
   let mounted = $state(false);
   let primaryEl = $state<HTMLElement | null>(null);
@@ -113,7 +114,7 @@
         console.warn('[quizvictory] week read failed', e);
       }
       try {
-        mascotEmoji = (await getActiveMascot()).emoji;
+        mascotId = (await getActiveMascot()).id;
       } catch (e) {
         console.warn('[quizvictory] mascot read failed', e);
       }
@@ -173,7 +174,9 @@
   aria-label={$t('quizvictory.aria', { default: 'Resultado' })}
 >
   <div class="victory-card" class:perfect>
-    <div class="mascot" aria-hidden="true">{mascotEmoji}</div>
+    <div class="mascot" aria-hidden="true">
+      <MascotAvatar mascot={mascotId} pose={tier === 'low' ? 'think' : 'cheer'} size={96} eager />
+    </div>
     <h2 class="v-title">{title}</h2>
     <p class="mascot-line">{mascotLine}</p>
 

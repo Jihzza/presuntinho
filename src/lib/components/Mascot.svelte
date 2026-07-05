@@ -18,15 +18,14 @@
   import {
     DEFAULT_MASCOT_ID,
     MASCOT_CHANGED_EVENT,
-    getActiveMascot,
-    mascotById
+    getActiveMascot
   } from '$lib/gamification/mascots';
   import {
     hoursUntilMidnight,
     mascotEmotion,
     type MascotEmotion
   } from '$lib/gamification/emotion';
-  import PigMascot from './PigMascot.svelte';
+  import MascotAvatar from './MascotAvatar.svelte';
   import { getActivityStreak } from '$lib/gamification/streak';
   import {
     minutesSinceLastAction,
@@ -39,9 +38,8 @@
 
   let visible = $state(false);
   let reduced = $state(false);
-  // V9 — the FAB renders the ACTIVE mascot (picked on /mascotes/)
-  // instead of the old hardcoded 🧴. Default preserves the V8 look.
-  let emoji = $state(mascotById(DEFAULT_MASCOT_ID)?.emoji ?? '🧴');
+  // V10.4 — the FAB renders the ACTIVE mascot's ART (picked on /mascotes/).
+  let mascotId = $state(DEFAULT_MASCOT_ID);
   // V10 — Duolingo-style emotional state (happy/neutral/worried/sad/euphoric).
   let emotion = $state<MascotEmotion>('neutral');
 
@@ -90,16 +88,16 @@
 
   async function refreshMascot(): Promise<void> {
     try {
-      emoji = (await getActiveMascot()).emoji;
+      mascotId = (await getActiveMascot()).id;
     } catch (e) {
       console.error('[mascot] active-mascot read failed', e);
     }
   }
 
   function onMascotChanged(e: Event): void {
-    const detail = (e as CustomEvent<{ emoji?: string }>).detail;
-    if (detail?.emoji) {
-      emoji = detail.emoji;
+    const detail = (e as CustomEvent<{ id?: string }>).detail;
+    if (detail?.id) {
+      mascotId = detail.id;
     } else {
       void refreshMascot();
     }
@@ -146,12 +144,8 @@
     aria-label={$t('components.mascot.aria', { default: 'Mascote — easter egg' })}
     title={emotionLine}
   >
-    <!-- V10.2 — a mascote oficial é o porquinho SVG com a emoção do dia;
-         a mascote colecionável escolhida aparece como companheiro pequeno. -->
-    <PigMascot {emotion} size={34} />
-    {#if emoji !== '🐷'}
-      <span class="companion" aria-hidden="true">{emoji}</span>
-    {/if}
+    <!-- V10.4 — a mascote ESCOLHIDA (arte real) com a emoção do dia. -->
+    <MascotAvatar mascot={mascotId} {emotion} size={38} animate={!reduced} />
   </button>
 {/if}
 
@@ -195,16 +189,6 @@
   }
   .mascot-fab:active {
     transform: scale(0.95);
-  }
-  .companion {
-    position: absolute;
-    right: -3px;
-    bottom: -3px;
-    font-size: 0.9rem;
-    line-height: 1;
-    filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.5));
-    user-select: none;
-    -webkit-user-select: none;
   }
   .mascot-fab {
     position: relative;

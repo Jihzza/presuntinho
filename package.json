@@ -24,6 +24,7 @@
     "@types/node": "^20.10.0",
     "axe-core": "^4.12.1",
     "lighthouse": "^12.8.2",
+    "sharp": "^0.35.3",
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",
     "tslib": "^2.6.0",

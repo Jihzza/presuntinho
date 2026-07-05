@@ -27,10 +27,10 @@
     type WeekDayActivity
   } from '$lib/gamification/streak';
   import { progressToNext } from '$lib/gamification/levels';
-  import { getActiveMascot, DEFAULT_MASCOT_ID, mascotById } from '$lib/gamification/mascots';
+  import { getActiveMascot, DEFAULT_MASCOT_ID } from '$lib/gamification/mascots';
   import WeekCircles from '$lib/components/WeekCircles.svelte';
   import Skeleton from '$lib/components/Skeleton.svelte';
-  import PigMascot from '$lib/components/PigMascot.svelte';
+  import MascotAvatar from '$lib/components/MascotAvatar.svelte';
 
   let loading = $state(true);
   let streak = $state<ActivityStreak | null>(null);
@@ -38,7 +38,7 @@
   let activeDays = $state<Set<string>>(new Set());
   let frozenDays = $state<Set<string>>(new Set());
   let xpDaily = $state<Record<string, number>>({});
-  let mascotEmoji = $state(mascotById(DEFAULT_MASCOT_ID)?.emoji ?? '🐷');
+  let mascotId = $state(DEFAULT_MASCOT_ID);
   let currentXp = $state(0);
   let monthOffset = $state(0);
 
@@ -108,7 +108,7 @@
       activeDays = days;
       frozenDays = new Set(Array.isArray(row?.streakFrozenDays) ? row.streakFrozenDays : []);
       xpDaily = row?.xpDailyLog ?? {};
-      if (mascot) mascotEmoji = mascot.emoji;
+      if (mascot) mascotId = mascot.id;
       currentXp = get(xp);
     } catch (e) {
       console.warn('[streaks] refresh failed', e);
@@ -162,7 +162,7 @@
             })}
       </p>
       <p class="hero-mascot">
-        <PigMascot emotion={streak?.activeToday ? 'happy' : 'neutral'} size={38} />
+        <MascotAvatar mascot={mascotId} emotion={streak?.activeToday ? 'happy' : 'neutral'} size={44} eager />
         {#if nextMilestone}
           {$t('streaks.hero.next_milestone', {
             values: { days: nextMilestone - (streak?.current ?? 0), milestone: nextMilestone },

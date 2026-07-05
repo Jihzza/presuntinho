@@ -5,17 +5,17 @@
 	import { fireConfettiEvent } from '$lib/components/events';
 	import { playSfx, vibrate } from '$lib/gamification/sound';
 	import WeekCircles from './WeekCircles.svelte';
-	import PigMascot from './PigMascot.svelte';
+	import MascotAvatar from './MascotAvatar.svelte';
 	import { getWeekActivity, type WeekDayActivity } from '$lib/gamification/streak';
 
 	interface Props {
 		milestone: number;
-		mascotEmoji?: string;
+		mascotId?: string;
 		/** True when this computation also earned a freeze token. */
 		earnedFreeze?: boolean;
 		onclose?: () => void;
 	}
-	let { milestone, mascotEmoji = '🐷', earnedFreeze = false, onclose }: Props = $props();
+	let { milestone, mascotId = 'porquinho', earnedFreeze = false, onclose }: Props = $props();
 
 	let week = $state<WeekDayActivity[]>([]);
 	let primaryEl = $state<HTMLButtonElement | null>(null);
@@ -47,7 +47,7 @@
 			})}
 		</h2>
 		<p class="subtitle">
-			<PigMascot emotion="euphoric" size={34} />
+			<MascotAvatar mascot={mascotId} pose="cheer" size={44} entrance />
 			{$t('streak.milestone.subtitle', {
 				default: 'Incrível! A tua dedicação está a dar frutos.'
 			})}
