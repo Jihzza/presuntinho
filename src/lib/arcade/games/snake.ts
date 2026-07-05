@@ -3,6 +3,7 @@
 // death). Speed ramps up gently as you eat. Original pig/fruit theme.
 import {
   FIELD_W,
+  FIELD_H,
   drawAvatar,
   glowRect,
   glowCircle,
@@ -16,7 +17,6 @@ import {
 } from '../engine';
 
 const COLS = 15;
-const ROWS = 20;
 const CELL = FIELD_W / COLS; // 24
 const ACCENT = '#4ade80';
 
@@ -33,20 +33,25 @@ export function createSnake(): ArcadeEngine {
   let points = 0;
   let acc = 0;
   let stepEvery = 0.16;
+  // Rows fill the (responsive) field height; recomputed each round.
+  let rows = 20;
+  let startY = 10;
 
   function placeFood(): void {
     let next: Cell;
     do {
-      next = { x: Math.floor(Math.random() * COLS), y: Math.floor(Math.random() * ROWS) };
+      next = { x: Math.floor(Math.random() * COLS), y: Math.floor(Math.random() * rows) };
     } while (snake.some((s) => s.x === next.x && s.y === next.y));
     food = next;
   }
 
   function reset(): void {
+    rows = Math.max(12, Math.floor(FIELD_H / CELL));
+    startY = Math.floor(rows / 2);
     snake = [
-      { x: 7, y: 10 },
-      { x: 6, y: 10 },
-      { x: 5, y: 10 }
+      { x: 7, y: startY },
+      { x: 6, y: startY },
+      { x: 5, y: startY }
     ];
     dir = 'right';
     queue.length = 0;
@@ -81,7 +86,7 @@ export function createSnake(): ArcadeEngine {
       head.x < 0 ||
       head.y < 0 ||
       head.x >= COLS ||
-      head.y >= ROWS ||
+      head.y >= rows ||
       snake.some((s) => s.x === head.x && s.y === head.y)
     ) {
       return { end: 'over', event: 'crash' };
@@ -103,7 +108,7 @@ export function createSnake(): ArcadeEngine {
     paintBackground(env, ACCENT);
     // grid dots
     ctx.fillStyle = 'rgba(255,255,255,.04)';
-    for (let y = 0; y < ROWS; y += 1)
+    for (let y = 0; y < rows; y += 1)
       for (let x = 0; x < COLS; x += 1) {
         ctx.beginPath();
         ctx.arc(x * CELL + CELL / 2, y * CELL + CELL / 2, 1, 0, Math.PI * 2);

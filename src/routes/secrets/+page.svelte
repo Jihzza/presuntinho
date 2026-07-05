@@ -190,7 +190,21 @@
 </div>
 
 <style>
-  .arcade-room { max-width: 1120px; margin: 0 auto; padding: 1rem 1rem calc(7rem + env(safe-area-inset-bottom)); color: var(--txt, #fff); }
+  /* Full-page "arcade mode": the room fills the height between the app's header
+     and footer with an immersive neon backdrop, so it reads as a dedicated
+     arcade hall rather than a card page floating on the app background. */
+  .arcade-room {
+    max-width: 1120px;
+    margin: 0 auto;
+    min-height: calc(100dvh - 3.25rem);
+    padding: 1rem 1rem calc(7rem + env(safe-area-inset-bottom));
+    color: var(--txt, #fff);
+    background:
+      radial-gradient(circle at 10% -2%, rgba(236, 72, 153, 0.16), transparent 42%),
+      radial-gradient(circle at 92% 4%, rgba(34, 211, 238, 0.14), transparent 44%),
+      repeating-linear-gradient(0deg, transparent 0 2px, rgba(255, 255, 255, 0.012) 2px 3px),
+      linear-gradient(180deg, rgba(9, 8, 22, 0.7), rgba(6, 8, 18, 0.86));
+  }
   .marquee, .featured, .cabinet, .note { border: 1px solid rgba(103, 232, 249, 0.2); border-radius: 1.4rem; background: rgba(255, 255, 255, 0.05); }
 
   /* ── marquee (arcade-hall sign) ── */

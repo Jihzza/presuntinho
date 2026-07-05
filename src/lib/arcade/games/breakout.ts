@@ -18,7 +18,6 @@ import {
 
 const PADDLE_W = 78;
 const PADDLE_H = 12;
-const PADDLE_Y = FIELD_H - 40;
 const BALL_R = 7;
 const COLS = 7;
 const ROWS = 5;
@@ -44,10 +43,12 @@ export function createBreakout(): ArcadeEngine {
   let points = 0;
   let bricks: Brick[] = [];
   let baseSpeed = 240;
+  // Paddle sits near the bottom of the RESPONSIVE field; recomputed each round.
+  let paddleY = FIELD_H - 40;
 
   function resetBall(): void {
     paddleX = FIELD_W / 2;
-    ball = { x: FIELD_W / 2, y: PADDLE_Y - BALL_R - 2, vx: 0, vy: 0 };
+    ball = { x: FIELD_W / 2, y: paddleY - BALL_R - 2, vx: 0, vy: 0 };
     launched = false;
   }
 
@@ -55,6 +56,7 @@ export function createBreakout(): ArcadeEngine {
     lives = 3;
     points = 0;
     baseSpeed = 240;
+    paddleY = FIELD_H - 40;
     bricks = [];
     for (let r = 0; r < ROWS; r += 1)
       for (let c = 0; c < COLS; c += 1)
@@ -112,8 +114,8 @@ export function createBreakout(): ArcadeEngine {
       // paddle
       if (
         ball.vy > 0 &&
-        ball.y + BALL_R >= PADDLE_Y &&
-        ball.y - BALL_R <= PADDLE_Y + PADDLE_H &&
+        ball.y + BALL_R >= paddleY &&
+        ball.y - BALL_R <= paddleY + PADDLE_H &&
         ball.x >= paddleX - PADDLE_W / 2 &&
         ball.x <= paddleX + PADDLE_W / 2
       ) {
@@ -122,7 +124,7 @@ export function createBreakout(): ArcadeEngine {
         const sp = Math.min(baseSpeed + 40, 420);
         ball.vx = Math.cos(angle) * sp;
         ball.vy = Math.sin(angle) * sp;
-        ball.y = PADDLE_Y - BALL_R - 1;
+        ball.y = paddleY - BALL_R - 1;
         result = { event: 'bounce' };
       }
       // bricks
@@ -163,8 +165,8 @@ export function createBreakout(): ArcadeEngine {
     // bricks
     for (const b of bricks) if (b.alive) glowRect(env, b.x, b.y, BRICK_W, BRICK_H, 4, b.color, 8);
     // paddle with the chosen mascot riding it
-    glowRect(env, paddleX - PADDLE_W / 2, PADDLE_Y, PADDLE_W, PADDLE_H, 6, ACCENT, 14);
-    drawAvatar(env, paddleX, PADDLE_Y + PADDLE_H / 2, PADDLE_H + 8);
+    glowRect(env, paddleX - PADDLE_W / 2, paddleY, PADDLE_W, PADDLE_H, 6, ACCENT, 14);
+    drawAvatar(env, paddleX, paddleY + PADDLE_H / 2, PADDLE_H + 8);
     // ball
     glowCircle(env, ball.x, ball.y, BALL_R, '#fde68a', 14);
     // lives

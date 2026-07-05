@@ -5,16 +5,34 @@
 // UI, sound/haptic/confetti feedback and the result overlay. Games own ONLY
 // their state, their step() logic and their draw().
 //
-// Logical resolution is a portrait 360×480 playfield; the shell scales the
-// canvas to the device pixel ratio and letterboxes to keep the aspect ratio.
+// Logical width is a fixed 360; logical HEIGHT is RESPONSIVE — the shell calls
+// setViewport() with the real canvas box so FIELD_H matches the screen's aspect
+// ratio. That lets a full-width canvas fill the whole screen edge-to-edge (no
+// letterbox, no distortion) while every HORIZONTAL layout stays put at 360.
+// Engines that use FIELD_H must read it live (or recompute in reset()) — never
+// capture it in a module-level const.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type Direction = 'up' | 'down' | 'left' | 'right';
 export type EndState = 'won' | 'over';
 
-/** Logical playfield size shared by every engine. */
+/** Logical playfield width — fixed, so horizontal layouts never shift. */
 export const FIELD_W = 360;
-export const FIELD_H = 480;
+/** Logical playfield height — RESPONSIVE (set by the shell). Read this live. */
+export let FIELD_H = 480;
+
+/**
+ * Set the logical field height from the real canvas box so the aspect ratio
+ * matches the screen. FIELD_W stays 360; FIELD_H = 360 × (h / w), clamped to a
+ * sane portrait-ish range so wide/short viewports stay playable. Returns the
+ * new FIELD_H so the shell can size the canvas bitmap to match.
+ */
+export function setViewport(cssW: number, cssH: number): number {
+  if (cssW > 0 && cssH > 0) {
+    FIELD_H = Math.min(1000, Math.max(480, Math.round((FIELD_W * cssH) / cssW)));
+  }
+  return FIELD_H;
+}
 
 /** Snapshot of player input for one step. Owned/cleared by the shell. */
 export interface ArcadeInput {

@@ -17,9 +17,7 @@ import {
 } from '../engine';
 
 const COLS = 15; // odd → clean walls on both edges
-const ROWS = 19;
 const CELL = FIELD_W / COLS; // 24
-const OFFY = (FIELD_H - ROWS * CELL) / 2; // vertical centering
 const ACCENT = '#a78bfa';
 
 interface Cell {
@@ -40,6 +38,9 @@ export function createMaze(): ArcadeEngine {
   let acc = 0;
   let gacc = 0;
   let totalStars = 0;
+  // Rows fill the (responsive) field height; kept ODD for clean walls.
+  let rows = 19;
+  let offy = 0;
 
   function key(x: number, y: number): string {
     return `${x},${y}`;
@@ -47,7 +48,7 @@ export function createMaze(): ArcadeEngine {
 
   function generate(): void {
     // start solid, carve passages on odd cells
-    wall = Array.from({ length: ROWS }, () => Array.from({ length: COLS }, () => true));
+    wall = Array.from({ length: rows }, () => Array.from({ length: COLS }, () => true));
     const stack: Cell[] = [{ x: 1, y: 1 }];
     wall[1][1] = false;
     const dirs = [
@@ -63,7 +64,7 @@ export function createMaze(): ArcadeEngine {
           c.x + d.dx > 0 &&
           c.x + d.dx < COLS - 1 &&
           c.y + d.dy > 0 &&
-          c.y + d.dy < ROWS - 1 &&
+          c.y + d.dy < rows - 1 &&
           wall[c.y + d.dy][c.x + d.dx]
       );
       if (!options.length) {
@@ -78,13 +79,13 @@ export function createMaze(): ArcadeEngine {
     // knock out a few extra walls so it isn't a perfect maze (more open, kinder)
     for (let i = 0; i < 16; i += 1) {
       const x = 1 + Math.floor(Math.random() * (COLS - 2));
-      const y = 1 + Math.floor(Math.random() * (ROWS - 2));
+      const y = 1 + Math.floor(Math.random() * (rows - 2));
       wall[y][x] = false;
     }
   }
 
   function isWall(x: number, y: number): boolean {
-    return x < 0 || y < 0 || x >= COLS || y >= ROWS || wall[y][x];
+    return x < 0 || y < 0 || x >= COLS || y >= rows || wall[y][x];
   }
 
   /** Cells reachable from the start — guarantees no star is ever stranded
@@ -112,6 +113,9 @@ export function createMaze(): ArcadeEngine {
   }
 
   function reset(): void {
+    rows = Math.max(11, Math.floor(FIELD_H / CELL));
+    if (rows % 2 === 0) rows -= 1; // odd → clean walls on both edges
+    offy = Math.max(0, (FIELD_H - rows * CELL) / 2);
     generate();
     const reachable = reachableFromStart();
     // stars on every reachable cell except the start — all collectible
@@ -126,9 +130,9 @@ export function createMaze(): ArcadeEngine {
     guardians.length = 0;
     // guardians only on distant REACHABLE cells (never sealed behind a wall)
     const spots: Cell[] = [
-      { x: COLS - 2, y: ROWS - 2 },
+      { x: COLS - 2, y: rows - 2 },
       { x: COLS - 2, y: 1 },
-      { x: 1, y: ROWS - 2 }
+      { x: 1, y: rows - 2 }
     ];
     for (const s of spots) {
       if (reachable.has(key(s.x, s.y))) guardians.push({ ...s, dir: 'left' });
@@ -218,9 +222,9 @@ export function createMaze(): ArcadeEngine {
     const { ctx, t } = env;
     paintBackground(env, ACCENT);
     ctx.save();
-    ctx.translate(0, OFFY);
+    ctx.translate(0, offy);
     // walls
-    for (let y = 0; y < ROWS; y += 1)
+    for (let y = 0; y < rows; y += 1)
       for (let x = 0; x < COLS; x += 1)
         if (wall[y][x]) {
           ctx.fillStyle = 'rgba(129,140,248,.20)';

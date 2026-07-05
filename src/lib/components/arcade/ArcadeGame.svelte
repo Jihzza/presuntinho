@@ -6,7 +6,7 @@
   import { t } from 'svelte-i18n';
   import type { ArcadeGameDefinition } from '$lib/arcade/games';
   import { highScoreKey, lastScoreKey, readArcadeScore, writeArcadeScore } from '$lib/arcade/games';
-  import { FIELD_W, FIELD_H, type ArcadeEngine, type ArcadeInput, type Direction } from '$lib/arcade/engine';
+  import { FIELD_W, FIELD_H, setViewport, type ArcadeEngine, type ArcadeInput, type Direction } from '$lib/arcade/engine';
   import { prefersReducedMotion, fireConfettiEvent } from '$lib/components/events';
   import { playSfx, vibrate } from '$lib/gamification/sound';
   import { arcadeHud } from '$lib/arcade/hud-state';
@@ -41,6 +41,8 @@
   let avatar = $state<string | null>(null); // active mascot emoji, drawn as the player
   let isFullscreen = $state(false);
   let musicOn = $state(true); // per-session chiptune toggle (reflects the audio engine)
+  let fieldH = $state(FIELD_H); // responsive logical height (reactive for the canvas aspect)
+  let playStartTs = 0; // when the current round began (for resize-vs-restart calls)
   const fsSupported =
     typeof document !== 'undefined' &&
     typeof document.documentElement.requestFullscreen === 'function';
@@ -79,14 +81,56 @@
     dragging = false;
   }
 
+  /** Match the logical field to the SCREEN aspect (FIELD_W stays 360) so a
+   *  full-width canvas fills the whole screen — no letterbox, no distortion. */
+  function resizeField(): void {
+    if (typeof window === 'undefined') return;
+    fieldH = setViewport(window.innerWidth, window.innerHeight);
+    if (canvas) {
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.width = FIELD_W * dpr;
+      canvas.height = fieldH * dpr;
+      ctx = canvas.getContext('2d');
+      ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+  }
+
+  /** On resize / rotate / entering fullscreen the screen aspect changes, so the
+   *  field is re-measured. If it changed meaningfully we rebuild the engine's
+   *  layout — but only when idle or in the first instant of a round, so a game
+   *  in progress is never yanked. */
+  function onViewportChange(): void {
+    const prev = fieldH;
+    resizeField();
+    if (Math.abs(fieldH - prev) <= 2) return;
+    const justStarted =
+      typeof performance !== 'undefined' && performance.now() - playStartTs < 1500;
+    if (status !== 'playing' || justStarted) {
+      engine?.reset();
+      score = engine?.score() ?? 0;
+      if (status === 'playing') lastTs = performance.now();
+    }
+  }
+
+  function requestGameFullscreen(): void {
+    if (typeof document === 'undefined' || !fsSupported || document.fullscreenElement) return;
+    try {
+      void document.documentElement.requestFullscreen?.();
+    } catch {
+      // rejected without a gesture / in an iframe — the immersive CSS still fills
+    }
+  }
+
   function start(): void {
     if (status === 'playing') return;
     if (status === 'won' || status === 'over') reset();
     status = 'playing';
     lastTs = performance.now();
+    playStartTs = lastTs;
     // start() is only ever reached via a user gesture (tap / key / button), so
-    // this is a valid moment to unlock + start the game's chiptune theme.
+    // this is a valid moment to unlock audio AND request true fullscreen.
     startArcadeMusic(game.id);
+    requestGameFullscreen();
   }
 
   function pause(): void {
@@ -270,14 +314,12 @@
     }
   }
 
-  // Publish the touch HUD to the root layout while playing (it renders the
-  // controls fixed at the viewport bottom and hides the mascot/heart FABs).
+  // Publish the touch HUD to the root layout for the WHOLE time the game page is
+  // open (not just while playing): that hides the app nav (immersive) and shows
+  // the controls, and pressing a control starts the game — Free Fire style. The
+  // mascot/heart FABs are hidden while this is set. Cleared on destroy.
   $effect(() => {
-    arcadeHud.set(
-      status === 'playing'
-        ? { left: game.hud.left, right: game.hud.right, onTurn, onHold, onAction }
-        : null
-    );
+    arcadeHud.set({ left: game.hud.left, right: game.hud.right, onTurn, onHold, onAction });
   });
   onDestroy(() => arcadeHud.set(null));
 
@@ -297,14 +339,11 @@
     reduced = prefersReducedMotion();
     high = readArcadeScore(highScoreKey(game.id));
     last = readArcadeScore(lastScoreKey(game.id));
+    // Size the logical field to the screen BEFORE the engine builds its layout,
+    // then size the canvas bitmap to match.
+    if (typeof window !== 'undefined') setViewport(window.innerWidth, window.innerHeight);
     engine = game.factory();
-    if (canvas) {
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
-      canvas.width = FIELD_W * dpr;
-      canvas.height = FIELD_H * dpr;
-      ctx = canvas.getContext('2d');
-      ctx?.scale(dpr, dpr);
-    }
+    resizeField();
     reset();
     // block page scroll / pull-to-refresh anywhere on the game surface WHILE
     // playing (not just the canvas), so a stray drag can't scroll the page mid-run
@@ -337,8 +376,13 @@
     };
     window.addEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
 
-    const onFsChange = () => (isFullscreen = !!document.fullscreenElement);
+    const onFsChange = () => {
+      isFullscreen = !!document.fullscreenElement;
+      onViewportChange();
+    };
     document.addEventListener('fullscreenchange', onFsChange);
+    window.addEventListener('resize', onViewportChange);
+    window.addEventListener('orientationchange', onViewportChange);
 
     // Hydrate the persisted music toggle so the ♪ button shows the real state.
     void initArcadeMusicPrefs().then(() => (musicOn = isArcadeMusicEnabled()));
@@ -353,127 +397,155 @@
       window.removeEventListener('keyup', onKeyup);
       window.removeEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
       document.removeEventListener('fullscreenchange', onFsChange);
+      window.removeEventListener('resize', onViewportChange);
+      window.removeEventListener('orientationchange', onViewportChange);
+      // leave fullscreen when navigating away from a game
+      if (typeof document !== 'undefined' && document.fullscreenElement) {
+        void document.exitFullscreen?.().catch(() => undefined);
+      }
     };
   });
 </script>
 
 <div class="shell" bind:this={shellEl} class:playing={status === 'playing'} class:fullscreen={isFullscreen} data-game={game.id} style="--accent: {game.accent};">
-  <!-- Slim top bar so the playfield gets the screen; score rides along here. -->
+  <!-- Floating top HUD over the fullscreen playfield (Free Fire style). -->
   <div class="topbar">
-    <a href="/secrets/" class="back" aria-label={$t('arcade.game.back', { default: '← Voltar à sala' })}>←</a>
-    <h1><span aria-hidden="true">{game.icon}</span> {$t(game.titleKey)}</h1>
+    <a href="/secrets/" class="tb back" aria-label={$t('arcade.game.back', { default: '← Voltar à sala' })}>←</a>
     <div class="mini-score" aria-label={$t('arcade.score.aria', { default: 'Pontuação do jogo' })}>
       <span class="cur">{score}</span>
       <span class="best" title={$t('arcade.score.best', { default: 'Melhor pontuação' })}>◆ {high}</span>
     </div>
-    <button
-      type="button"
-      class="fs-toggle music-toggle"
-      class:muted={!musicOn}
-      onclick={onToggleMusic}
-      aria-pressed={musicOn}
-      aria-label={musicOn
-        ? $t('arcade.music.off', { default: 'Desligar música' })
-        : $t('arcade.music.on', { default: 'Ligar música' })}
-      title={musicOn
-        ? $t('arcade.music.off', { default: 'Desligar música' })
-        : $t('arcade.music.on', { default: 'Ligar música' })}
-    ><span aria-hidden="true">♪</span></button>
-    {#if fsSupported}
+    <div class="tb-actions">
+      {#if status === 'playing'}
+        <button type="button" class="tb" onclick={pause} aria-label={$t('arcade.actions.pause', { default: 'Pausa' })}>⏸</button>
+        <button type="button" class="tb" onclick={restart} aria-label={$t('arcade.actions.restart', { default: 'Recomeçar' })}>⟲</button>
+      {/if}
       <button
         type="button"
-        class="fs-toggle"
-        onclick={toggleFullscreen}
-        aria-pressed={isFullscreen}
-        aria-label={isFullscreen
-          ? $t('arcade.fullscreen.exit', { default: 'Sair do ecrã inteiro' })
-          : $t('arcade.fullscreen.enter', { default: 'Ecrã inteiro' })}
-      >{isFullscreen ? '⤢' : '⛶'}</button>
-    {/if}
-  </div>
-  <p class="sr-live" aria-live="polite">{$t(statusKey)}</p>
-
-  <div class="cabinet">
-    <div class="stage">
-      <canvas
-        bind:this={canvas}
-        onpointerdown={onPointerDown}
-        onpointermove={onPointerMove}
-        onpointerup={onPointerUp}
-        onpointercancel={onPointerUp}
-        aria-label={$t('arcade.game.canvas', { default: 'Área de jogo arcade' })}
-      ></canvas>
-
-      <!-- Tasteful CRT sheen over the whole screen (pointer-events:none, so the
-           canvas still gets taps; the animated glare self-disables under
-           prefers-reduced-motion). -->
-      <CrtOverlay radius="1.25rem" />
-
-      {#if status === 'playing'}
-        <div class="mini-cluster">
-          <button type="button" class="mini" onclick={pause} aria-label={$t('arcade.actions.pause', { default: 'Pausa' })}>⏸</button>
-          <button type="button" class="mini" onclick={restart} aria-label={$t('arcade.actions.restart', { default: 'Recomeçar' })}>⟲</button>
-        </div>
-      {/if}
-
-      {#if status !== 'playing'}
-        <div class="overlay" class:win={status === 'won'} class:over={status === 'over'}>
-          {#if status === 'ready'}
-            <p class="big">{game.icon}</p>
-            <button type="button" class="cta" onclick={start}>{$t('arcade.actions.play', { default: 'Jogar' })}</button>
-            <p class="sub">{$t('arcade.overlay.tap_start', { default: 'Toca para começar' })}</p>
-          {:else if status === 'paused'}
-            <p class="big">⏸️</p>
-            <strong class="ov-title">{$t('arcade.state.paused', { default: 'Em pausa' })}</strong>
-            <button type="button" class="cta" onclick={pause}>{$t('arcade.actions.resume', { default: 'Continuar' })}</button>
-          {:else}
-            <strong class="ov-title">
-              {status === 'won'
-                ? $t('arcade.result.won', { default: 'Conseguiste! 🎉' })
-                : $t('arcade.result.over', { default: 'Fim de jogo' })}
-            </strong>
-            {#if newRecord}
-              <span class="record">⭐ {$t('arcade.overlay.new_record', { default: 'Novo recorde!' })}</span>
-            {/if}
-            <p class="ov-score">{$t('arcade.result.score_line', { values: { score, best: high }, default: 'Pontuação {score} · recorde {best}' })}</p>
-            <div class="ov-actions">
-              <button type="button" class="cta" onclick={restart}>{$t('arcade.actions.play_again', { default: 'Jogar de novo' })}</button>
-              <a class="ghost" href="/secrets/">{$t('arcade.game.back', { default: '← Voltar à sala' })}</a>
-            </div>
-          {/if}
-        </div>
+        class="tb music-toggle"
+        class:muted={!musicOn}
+        onclick={onToggleMusic}
+        aria-pressed={musicOn}
+        aria-label={musicOn ? $t('arcade.music.off', { default: 'Desligar música' }) : $t('arcade.music.on', { default: 'Ligar música' })}
+      ><span aria-hidden="true">♪</span></button>
+      {#if fsSupported}
+        <button
+          type="button"
+          class="tb"
+          onclick={toggleFullscreen}
+          aria-pressed={isFullscreen}
+          aria-label={isFullscreen ? $t('arcade.fullscreen.exit', { default: 'Sair do ecrã inteiro' }) : $t('arcade.fullscreen.enter', { default: 'Ecrã inteiro' })}
+        >{isFullscreen ? '⤢' : '⛶'}</button>
       {/if}
     </div>
   </div>
+  <p class="sr-live" aria-live="polite">{$t(statusKey)}</p>
+
+  <div class="stage">
+    <canvas
+      bind:this={canvas}
+      onpointerdown={onPointerDown}
+      onpointermove={onPointerMove}
+      onpointerup={onPointerUp}
+      onpointercancel={onPointerUp}
+      aria-label={$t('arcade.game.canvas', { default: 'Área de jogo arcade' })}
+    ></canvas>
+    <!-- CRT sheen edge-to-edge (pointer-events:none; glare off under reduced-motion). -->
+    <CrtOverlay radius="0" />
+  </div>
 
   {#if status !== 'playing'}
-    <section class="howto">
-      <p class="mobile">{$t(game.controlsKey)}</p>
-      <p class="keys">⌨️ {$t(game.keysKey)}</p>
-    </section>
+    <div class="overlay" class:win={status === 'won'} class:over={status === 'over'}>
+      {#if status === 'ready'}
+        <p class="big">{game.icon}</p>
+        <h2 class="ov-game">{$t(game.titleKey)}</h2>
+        <button type="button" class="cta" onclick={start}>{$t('arcade.actions.play', { default: 'Jogar' })}</button>
+        <p class="sub">{$t('arcade.overlay.tap_start', { default: 'Toca para começar' })}</p>
+        <p class="hint">{$t(game.controlsKey)}</p>
+      {:else if status === 'paused'}
+        <p class="big">⏸️</p>
+        <strong class="ov-title">{$t('arcade.state.paused', { default: 'Em pausa' })}</strong>
+        <button type="button" class="cta" onclick={pause}>{$t('arcade.actions.resume', { default: 'Continuar' })}</button>
+        <a class="ghost" href="/secrets/">{$t('arcade.game.back', { default: '← Voltar à sala' })}</a>
+      {:else}
+        <strong class="ov-title">
+          {status === 'won' ? $t('arcade.result.won', { default: 'Conseguiste! 🎉' }) : $t('arcade.result.over', { default: 'Fim de jogo' })}
+        </strong>
+        {#if newRecord}<span class="record">⭐ {$t('arcade.overlay.new_record', { default: 'Novo recorde!' })}</span>{/if}
+        <p class="ov-score">{$t('arcade.result.score_line', { values: { score, best: high }, default: 'Pontuação {score} · recorde {best}' })}</p>
+        <div class="ov-actions">
+          <button type="button" class="cta" onclick={restart}>{$t('arcade.actions.play_again', { default: 'Jogar de novo' })}</button>
+          <a class="ghost" href="/secrets/">{$t('arcade.game.back', { default: '← Voltar à sala' })}</a>
+        </div>
+      {/if}
+    </div>
   {/if}
 </div>
 
 <style>
+  /* The game page is a FULLSCREEN playfield: the shell breaks out of page flow
+     to cover the whole viewport, a slim translucent HUD floats over the top, and
+     the touch controls (rendered by the root layout) float over the bottom
+     corners — so the game fills the ENTIRE screen, not a centred window.
+     NOTE: the shell must NOT create a stacking context (no z-index/transform)
+     so the result overlay (z-60) can sit ABOVE the layout's floating controls
+     (z-45) while the canvas sits below them. */
   .shell {
-    max-width: 560px;
-    margin: 0 auto;
-    padding: 0.5rem 0.7rem calc(1rem + env(safe-area-inset-bottom));
+    position: fixed;
+    inset: 0;
+    background: #0a1120;
     color: var(--txt, #fff);
+    overflow: hidden;
+    touch-action: none;
   }
-  /* Slim top bar: back arrow · title · live score. */
+
+  /* Floating top HUD: back · score · actions, over a soft top gradient. */
   .topbar {
-    display: grid;
-    grid-template-columns: auto 1fr auto auto auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 8;
+    display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    padding: max(0.5rem, env(safe-area-inset-top)) max(0.7rem, env(safe-area-inset-right)) 0.9rem
+      max(0.7rem, env(safe-area-inset-left));
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent);
+    pointer-events: none; /* the gradient is click-through; controls re-enable */
   }
+  .topbar > *,
+  .tb-actions > * {
+    pointer-events: auto;
+  }
+  .tb-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .tb {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 1.05rem;
+    background: rgba(10, 16, 30, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(6px);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .tb.back { color: #bfdbfe; font-size: 1.3rem; font-weight: 850; }
+  .tb:hover,
+  .tb:focus-visible { background: color-mix(in srgb, var(--accent) 26%, rgba(10, 16, 30, 0.5)); outline: none; }
+  .tb:active { transform: scale(0.92); }
+  .tb:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent); }
+
   .music-toggle span { transition: opacity 120ms ease; }
-  .music-toggle.muted { color: var(--txt3, #94a3b8); }
-  /* struck-through note when muted, drawn with a rotated pseudo-element so it
-     works regardless of emoji/glyph support */
-  .music-toggle.muted { position: relative; }
+  .music-toggle.muted { color: var(--txt3, #94a3b8); position: relative; }
   .music-toggle.muted::after {
     content: '';
     position: absolute;
@@ -485,124 +557,58 @@
     transform: rotate(-20deg);
     border-radius: 2px;
   }
-  .fs-toggle {
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 999px;
-    color: #fff;
-    font-size: 1.05rem;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    cursor: pointer;
+
+  .mini-score {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
   }
-  .fs-toggle:hover, .fs-toggle:focus-visible { background: color-mix(in srgb, var(--accent) 20%, transparent); outline: none; }
-  .fs-toggle:active { transform: scale(0.92); }
-  .back {
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 999px;
-    color: #bfdbfe;
-    text-decoration: none;
-    font-size: 1.3rem;
-    font-weight: 850;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-  }
-  .back:hover, .back:focus-visible { background: color-mix(in srgb, var(--accent) 20%, transparent); outline: none; }
-  h1 { margin: 0; font-size: clamp(1.05rem, 4.5vw, 1.4rem); line-height: 1.1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .mini-score { display: flex; align-items: baseline; gap: 0.55rem; font-variant-numeric: tabular-nums; }
-  .mini-score .cur { font-size: 1.35rem; font-weight: 900; }
+  .mini-score .cur { font-size: 1.5rem; font-weight: 900; }
   .mini-score .best { font-size: 0.82rem; font-weight: 800; color: var(--accent); }
   .sr-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); margin: -1px; padding: 0; border: 0; }
 
-  /* Immersive playfield: the canvas fills the width and most of the height
-     (the touch controls live OUTSIDE it, fixed over the footer via the root
-     layout), so the game isn't a tiny window any more. */
-  .cabinet { max-width: 460px; margin: 0 auto; }
+  /* The playfield fills the whole shell; the canvas keeps its screen-matched
+     aspect and is centred — on a phone that means edge-to-edge with no bars. */
   .stage {
-    position: relative;
-    padding: 0.55rem;
-    border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
-    border-radius: 1.3rem;
-    background: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 46%), rgba(0, 0, 0, 0.4);
-    box-shadow: 0 22px 54px rgba(0, 0, 0, 0.4);
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: #0a1120;
   }
   canvas {
     display: block;
-    width: 100%;
-    aspect-ratio: 360 / 480;
-    /* During play the app chrome is hidden, so the canvas gets almost the whole
-       screen; the reserve leaves room for the top bar AND the full footprint of
-       the TALLEST fixed control cluster (the platformer's stacked Jump+▶ ≈ 155px
-       at bottom 1.6rem) plus the home-indicator safe area, so no control ever
-       covers the playfield even on the shortest phones. Tall phones stay
-       aspect-ratio-bound and large. */
-    max-height: min(calc(100dvh - 16.5rem - env(safe-area-inset-bottom)), 700px);
-    margin: 0 auto;
-    border-radius: 0.9rem;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    margin: auto;
     background: #0a1120;
     touch-action: none;
     image-rendering: auto;
   }
-  /* pause / restart mini cluster — floats top-right over the stage */
-  .mini-cluster {
-    position: absolute;
-    top: 0.9rem;
-    right: 0.9rem;
-    display: flex;
-    gap: 0.4rem;
-    z-index: 6;
-  }
-  .mini {
-    width: 40px;
-    height: 40px;
-    border-radius: 999px;
-    display: grid;
-    place-items: center;
-    font-size: 1.05rem;
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(10, 16, 30, 0.55);
-    backdrop-filter: blur(6px);
-    cursor: pointer;
-  }
-  .mini:active { transform: scale(0.92); }
-  .mini:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent); }
-  /* desktop plays with the keyboard, so the canvas can take the full height */
-  @media (pointer: fine) {
-    canvas { max-height: min(72vh, 640px); }
-  }
-  /* landscape: controls sit on the side edges, so the canvas can use the full
-     (short) height; it stays aspect-ratio-bound and centred between them. */
-  @media (orientation: landscape) and (max-height: 540px) {
-    canvas { max-height: min(calc(100dvh - 5.5rem - env(safe-area-inset-bottom)), 700px); }
-  }
-  /* Browser-fullscreen ("ecrã inteiro"): no URL bar, so the machine takes the
-     whole width and the playfield can breathe a little taller. */
-  .shell.fullscreen { max-width: none; }
-  .shell.fullscreen .cabinet { max-width: 560px; }
-  .shell.fullscreen canvas { max-height: min(calc(100dvh - 15rem - env(safe-area-inset-bottom)), 860px); }
+
+  /* Ready / paused / result = a fullscreen modal ABOVE the floating controls. */
   .overlay {
-    position: absolute;
-    inset: 0.6rem;
-    z-index: 7; /* above the CRT overlay (z-4) and mini-cluster (z-6) */
+    position: fixed;
+    inset: 0;
+    z-index: 60;
     display: grid;
     place-content: center;
-    gap: 0.5rem;
+    gap: 0.55rem;
     justify-items: center;
     text-align: center;
-    border-radius: 0.9rem;
-    background: rgba(6, 10, 22, 0.78);
-    backdrop-filter: blur(3px);
-    padding: 1rem;
+    padding: 2rem 1.2rem calc(2rem + env(safe-area-inset-bottom));
+    background: rgba(6, 10, 22, 0.82);
+    backdrop-filter: blur(4px);
   }
-  .overlay.win { background: rgba(8, 20, 12, 0.82); }
-  .overlay .big { margin: 0; font-size: 2.6rem; }
-  .ov-title { font-size: 1.35rem; }
+  .overlay.win { background: rgba(8, 20, 12, 0.86); }
+  .overlay .big { margin: 0; font-size: 3rem; }
+  .ov-game { margin: 0; font-size: 1.5rem; }
+  .ov-title { font-size: 1.5rem; }
   .record {
     padding: 0.25rem 0.7rem;
     border-radius: 999px;
@@ -611,30 +617,24 @@
     font-weight: 900;
     font-size: 0.82rem;
   }
-  .ov-score { margin: 0; color: var(--txt2, #cbd5e1); font-size: 0.9rem; }
+  .ov-score { margin: 0; color: var(--txt2, #cbd5e1); font-size: 0.95rem; }
   .ov-actions { display: grid; gap: 0.45rem; justify-items: center; margin-top: 0.3rem; }
   .cta {
-    min-height: 48px;
-    min-width: 160px;
-    padding: 0.7rem 1.5rem;
+    min-height: 52px;
+    min-width: 180px;
+    padding: 0.8rem 1.6rem;
     border-radius: 0.9rem;
     border: none;
     background: linear-gradient(135deg, var(--accent), #a78bfa);
     color: #06121f;
     font: inherit;
     font-weight: 900;
+    font-size: 1.05rem;
     cursor: pointer;
   }
   .cta:active { transform: scale(0.97); }
   .cta:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent); }
-  .sub { margin: 0; color: var(--txt3, #94a3b8); font-size: 0.8rem; }
-  .ghost { color: #bfdbfe; text-decoration: none; font-weight: 800; font-size: 0.88rem; padding: 0.4rem; }
-
-  .howto { margin-top: 0.6rem; text-align: center; }
-  .howto p { margin: 0.2rem 0; color: var(--txt3, #94a3b8); font-size: 0.78rem; line-height: 1.45; }
-  .howto .keys { display: none; }
-  /* keyboard hint only where a real keyboard/mouse is likely */
-  @media (pointer: fine) {
-    .howto .keys { display: block; }
-  }
+  .sub { margin: 0; color: var(--txt3, #94a3b8); font-size: 0.85rem; }
+  .hint { margin: 0.4rem 0 0; color: var(--txt3, #94a3b8); font-size: 0.78rem; line-height: 1.45; max-width: 26ch; }
+  .ghost { color: #bfdbfe; text-decoration: none; font-weight: 800; font-size: 0.9rem; padding: 0.4rem; }
 </style>
