@@ -1,0 +1,102 @@
+# Audit read-only — UX e jogabilidade dos jogos v1 do arcade Presuntinho
+
+**Data:** 2026-07-05
+**Repo:** C:/Users/rafaa/Documents/GitHub/presuntinho
+**Branch:** main (HEAD=660e835) · working tree: clean
+**Alvo:** `src/lib/arcade/*`, `src/lib/components/arcade/*`, `src/routes/secrets/*`, secção `arcade.*` de `src/lib/i18n/pt-PT.json`
+**Modo:** apenas leitura — nenhum ficheiro de `src/` foi tocado.
+
+> **Nota de âmbito:** a prompt menciona "5 jogos v1", mas o registry `src/lib/arcade/games.ts:31-116` lista **6 jogos** (snake, maze, racing, platformer, breakout, **pong**) e a `+page.svelte` confirma em copy ("Seis máquinas", `src/routes/secrets/+page.svelte:51`). Auditamos os 6.
+
+## Resumo executivo
+
+- **Total de findings:** 33 (6 secções)
+- **Cobertura:** Gameplay loop · Controlos & feedback · Áudio · Onboarding · Polish · Bugs latentes
+- **P0 bloqueantes para v2:** 3 (cleanup não drenado em swaps, `prefersReducedMotion` snapshot estático, race em `maze` na primeira frame)
+- **P1 polish essencial:** 7
+- **P2 nice-to-have:** 5
+- **Ficheiro:** `docs/audit-arcade-v1-ux.md` · ~120 linhas
+
+## 1. Gameplay loop
+
+- **Curva de dificuldade quase inexistente em 4/6 jogos.** `snake` (games/snake.ts:92) é o único que rampa: `stepEvery = Math.max(0.075, 0.16 - points / 2600)` — apenas ~5 % de aceleração mesmo após 260 pontos. `racing` (games/racing.ts:55) satura cedo: `150 + Math.min(240, dist / 12)` — o cap de 240 px/s é atingido em ~2.9 km de distância e depois fica plano até morrer. `maze`, `platformer`, `breakout`, `pong` não têm curva alguma.
+- **Wrap-around ausente em snake causa mortes precoces.** games/snake.ts:79-87 mata o porco quando `head.x < 0 || head.x >= COLS` etc. Não é bug — é decisão de design — mas como a colisão com o próprio corpo também dispara `end:'over'` (mesma linha), jogadores que sobrevivem >30s aprendem por punição em vez de onboarding.
+- **`maze` faz BFS acessível mas injeta 16 paredes extra que podem criar ilhas.** games/maze.ts:78-82 remove paredes aleatórias e games/maze.ts:91-111 compensa com `reachableFromStart()`, mas a compensação só afecta estrelas — os **guardiões** são posicionados em três cantos fixos (games/maze.ts:127-131) e o fallback (games/maze.ts:136-142) só activa se **nenhum** dos três for reachable, deixando guardiã dentro de uma ilha morta possível se 2/3 forem inacessíveis.
+- **`platformer` tem geometria hard-coded, não randomizada.** games/platformer.ts:37-47 define as 9 plataformas como const literal. Após 2-3 runs o jogador decora a sequência de saltos — quebra o valor de replay do `mode: 'goal'` (games.ts:79).
+- **Sub-stepping no breakout é fixo em 3.** games/breakout.ts:94-96. Com `baseSpeed` que cresce até 360 px/s (games/breakout.ts:138), cada sub-step é ~9 px — abaixo dos 14 px do brick + ball, pelo que não há tunnelling prático. Está correcto, mas está documentado como sub-stepping "tunnel-safe" sem justificação (linha 93).
+- **Sub-stepping do pong com a mesma heurística 3x.** games/pong.ts:80-81. Aqui `sp` chega a 440 px/s (games/pong.ts:104) e os paddles têm 12 px de altura — 440/3 ≈ 147 px por sub-step é seguro pela altura do paddle, mas marginal para a parede lateral (14 px). Sem tunnelling observado, mas sem garantia matemática.
+- **`maze` guardian AI é determinística-parcial.** games/maze.ts:154-172 mistura `g.dir` (momentum) com "45% chase-biased" (linha 170). A randomização por step torna padrões pouco previsíveis mas com 0% de stuck-detection: se `choices.length === 0`, linha 169-171 devolve `g.dir` mesmo que bata em parede — o guardian fica a piscar na mesma célula até a próxima decisão aleatória.
+
+## 2. Controlos & feedback visual
+
+- **Keyboard handlers cobrem WASD + setas + Espaço + Enter + P/Escape.** ArcadeGame.svelte:120-129 e 142-165. Mapeamento sólido. Boa guarda `isInteractiveTarget` (ArcadeGame.svelte:134-140) que evita hijack quando um `<button>`/`<a>`/`<input>` tem focus.
+- **`up` funciona como "saltar" no platformer mas só se `up` for premido, não se for `W`.** ArcadeGame.svelte:162 testa `dir === 'up'` mas o `DIR_KEYS` (linha 121-129) mapeia ambos `arrowup` e `w` para `'up'`, logo ambos disparam `input.action = true`. Funciona — mas é uma reescrita implícita não documentada em lado nenhum.
+- **TouchControls NÃO é stub — está implementado e completo.** TouchControls.svelte:147 linhas; gere os 4 schemes (`turn`/`steer`/`jump`/`paddle`) com `pointer capture` (linhas 19-27, 33-39) para evitar "stuck buttons" quando o dedo escorrega para fora. D-pad 60×60 px (linha 109-110), botões side 68px altura (linha 131), área de acção central 108px (linha 136). A prompt sugeria "mapear o que já está" — está tudo mapeado e polido.
+- **Posição do TouchControls: aparece DEPOIS do canvas e do overlay.** ArcadeGame.svelte:342 renderiza `<TouchControls>` depois de `<div class="actions">` (linhas 334-340) e do howto (linhas 344-347). Em ecrãs pequenos, o utilizador precisa de scroll até aos botões para além do canvas de 46vh (`max-height: min(46vh, 460px)`, ArcadeGame.svelte:381) + overlay + header + HUD. **Numa view 360×640 mobile, TouchControls fica abaixo da dobra.** A spec pedia "posição no ecrã vs bottom-nav" — falta um sticky/floating positioning dos controlos para que fiquem imediatamente visíveis sob o canvas.
+- **Pointer drag conflita com clique no overlay.** ArcadeGame.svelte:179-188 — `onPointerDown` activa `dragging = true` se `game.control !== 'turn'`, mesmo que o ponteiro aterre no botão "Jogar" do overlay. Mas `onPointerDown` está ligado ao `<canvas>`, não ao overlay — o overlay é irmão, não pai (ArcadeGame.svelte:292-330). Logo, tocar no botão não inicia drag. **Mas** se o utilizador arrastar a partir do canvas E terminar sobre o botão "Jogar de novo", ArcadeGame.svelte:194-205 vai disparar `input.action = true` (linha 202) que reinicia o round em silêncio, fechando o overlay sem novo clique.
+- **`playSfx('tap')` no "bounce" mas sem blip visual.** ArcadeGame.svelte:97-99 — `juice()` faz `vibrate('tap')` mas não há feedback visual no canvas para o `event:'bounce'` (breakout, pong). Os jogos devolvem `event:'bounce'` em games/breakout.ts:125 e games/pong.ts:110,127 mas o shell ignora-o para efeitos.
+- **Sem auto-detecção de plataforma.** ArcadeGame.svelte não detecta `navigator.maxTouchPoints` ou `'ontouchstart' in window`. O howto mostra sempre a versão `.mobile` (ArcadeGame.svelte:345) e esconde `.keys` via `pointer:fine` (linha 452) — funciona mas é só CSS, não evita desenhar `<TouchControls>` em desktop. Em desktop com trackpad, ambos ficam visíveis.
+- **Tap = action (universal).** ArcadeGame.svelte:200-203 — qualquer tap com movimento <12px no canvas dispara `input.action = true`. Em breakout e pong isto é benigno (lançar/servir), mas em racing/steer dispara o handler `onAction` que no shell não faz nada (ArcadeGame.svelte:218-223). **Dead code**: o `onAction` é consumido pelo TouchControls para jump/paddle mas o tap no canvas para scheme `steer` é ignorado silenciosamente.
+- **Vibração háptica existe mas é genérica.** ArcadeGame.svelte:96,98 chama `vibrate('tap')` (sound.ts:133) com `HAPTIC_PATTERNS.tap`. 4 padrões disponíveis em sound.ts (`tap`, `success`, `warning`, `error`). Sem padrão específico para "subiste de nível" — breakout (que tem ramp de velocidade em games/breakout.ts:138) não vibra ao acelerar.
+
+## 3. Áudio
+
+- **Áudio existe e está integrado.** sound.ts:249 exporta `playSfx` com 9 nomes (`correct`, `wrong`, `fanfare`, `levelup`, `whoosh`, `ding`, `chest`, `send`, `pop`). ArcadeGame.svelte:80,83,88,95 usam 4 deles: `fanfare` (vitória), `wrong` (game over), `milestone` (novo recorde com delay de 220 ms — ArcadeGame.svelte:88), `pop` (ganho de pontos).
+- **Sem música de fundo.** `playSfx` é só SFX one-shot. Nenhum loop / BGM em qualquer jogo. A sala arcade tem vibe "fliperama" mas sem tema musical — quebra imersão após 30+ segundos em `racing` (que é endless, ideal para música).
+- **Combinação pitch-factor pode subir indefinidamente.** sound.ts:243-244 — `comboPitchFactor` cresce com `comboCount` global (não reset por jogo). A última pontuação na última máquina pode estar 5+ oitavas acima do C5 base. Para arcade, é desejável? Provavelmente sim, mas não há reset entre rounds — após várias partidas, o `pop` em snake vai soar cada vez mais agudo.
+- **Sem ducking entre SFX.** sound.ts:249 chama `playNotes` sem stop dos anteriores. Em `pong` com rally >5, `event:'bounce'` dispara em cada step (games/pong.ts:110,127) e o shell chama `vibrate('tap')` (ArcadeGame.svelte:97-98) **mas não toca SFX** (a condição `gained > 0` é falsa, e `event === 'bounce'` só vibra). **Confirmado**: rallies longos no pong são silenciosos, o que é uma decisão de design consciente mas talvez contrária à sensação arcade pedida.
+- **Vibração háptica condicional ao setting global.** sound.ts:131-132 — `vibrate()` só dispara se `isHapticsEnabled()`. Boa prática, mas o toggle global está em `Settings` — quem nunca abriu settings fica com a preferência default. Default em sound.ts:54 é `{ sound: !prefersReducedMotion(), haptics: true }` — assume haptics ON.
+- **`prefersReducedMotion` é capturado uma única vez.** ArcadeGame.svelte:238 — `reduced = prefersReducedMotion()` em `onMount`. Se o utilizador muda o setting do sistema operativo durante a partida, o canvas continua a fazer glow/animations (engine.ts:101-131) porque `reduced` é uma `let` capturada no closure do `frame()`. Confirmado: o `DrawEnv.reduced` é inalterável durante a sessão.
+
+## 4. Onboarding & mensagens game-over
+
+- **Overlay inicial em 4 estados.** ArcadeGame.svelte:303-329 mostra o ícone do jogo + botão "Jogar" + subtexto "Toca para começar" (linha 308). Pausa tem ⏸️ + "Continuar" (linhas 309-312). Vitória/derrota mostram score-line + botão "Jogar de novo" + link "Voltar à sala" (linhas 313-327). UX consistente e clara.
+- **Sem tutorial contextual por jogo.** ArcadeGame.svelte:344-347 mostra o howto estático (`arcade.games.<id>.controls`) que existe para todos os 6 jogos (pt-PT.json:4800, 4803, 4806, 4809, 4812, 4862). Mas só lê **depois** do utilizador ter carregado em "Jogar" — não há overlay de "primeiros 3 segundos" a apontar para os controlos. Em mobile, este texto fica abaixo da dobra.
+- **`maze` sem indicação visual de quantas estrelas faltam.** games/maze.ts não desenha contador de estrelas em falta nem progress bar; o jogador só sabe quantas sobram por subtracção mental. `totalStars` está em `games/maze.ts:41,120` mas nunca chega ao draw().
+- **`breakout` mostra vidas (3 corações) no canto inferior.** games/breakout.ts:169-174 — boa prática, contraste com `pong` que esconde ambas as pontuações durante o jogo (`playerPts`/`cpuPts` só visíveis quando rivais; games/pong.ts:159-164 desenha ambos sempre). **Pong tem labels ausentes**: o jogador vê `0` em cima e `0` em baixo sem saber qual é "ele".
+- **Mensagem "Novo recorde" é celebratória mas só quando `score > high && score > 0`.** ArcadeGame.svelte:75. Edge case: primeiro jogo (high=0, score>0) → mostra ⭐. Mas se high>0 e score===high (empate), NÃO mostra. Lógica defensável.
+- **High-scores persistidos em localStorage, NÃO em Dexie.** games.ts:124-130 define as keys `presuntinho-arcade-high-score-<id>` e `presuntinho-arcade-last-score-<id>`. Lidos em ArcadeGame.svelte:239-240 e escritos em ArcadeGame.svelte:77-78. README/SPEC do repo menciona Dexie para progresso da app; arcade está isolado do schema principal. **Isto é intencional** (escala mais simples, evita migrações) mas implica: zero sync entre devices, zero backup se o utilizador limpar localStorage.
+- **`+page.svelte:21-23` — lógica `isNew` confunde last vs high.** Define "novo" como `high===0 && last===0`, ou seja, **a máquina nunca mais é considerada nova** após a primeira partida, mesmo que o jogador só tenha morrido uma vez (last=0, high=0 — sim, mas se ganhar 5 pontos fica last=5, high=5). Verificado: `isNew(game.id)` em +page.svelte:90 mostra badge "Novo" antes da primeira partida; depois fica sempre visível no histórico. Funcional.
+- **Empty state "Primeira ronda" está condicional a `!anyPlayed`.** +page.svelte:74-76 — só aparece antes da primeira partida. Apaga-se depois — mas o grid já tem `Novo` badges em cada card individual, o que duplica o incentivo.
+
+## 5. Polish visual & UX
+
+- **Layout responsivo cobre 3 breakpoints.** ArcadeGame.svelte:452-454 — `.howto .keys { display: block }` só com `pointer:fine`. TouchControls.svelte:144-146 — D-pad cresce de 60px para 66px a partir de 640px. +page.svelte:216-223 — `max-width: 520px` encolhe o grid para 2 colunas e esconde `.desc`. Tudo CSS, sem JS resize observers.
+- **Safe-area-inset-bottom respeitado.** ArcadeGame.svelte:354 usa `calc(6rem + env(safe-area-inset-bottom))` e +page.svelte:111 usa `calc(7rem + env(safe-area-inset-bottom))`. **Mas** o TouchControls (linha 79: `padding: 0.4rem 0 0`) **não** aplica safe-area, o que em iPhones com bottom-bar/Home-indicator pode tapar 5-10px dos controlos.
+- **Animações CSS curtas e perceptíveis.** `.cta:active { transform: scale(0.97); }` (ArcadeGame.svelte:426), `.cta:focus-visible { box-shadow: 0 0 0 3px ... }` (linha 427), `.featured:hover { transform: translateY(-2px) ... }` (+page.svelte:157), `.game-card:hover { transform: translateY(-3px) }` (+page.svelte:191). Tudo `140ms ease` (linha 188). Consistente.
+- **Sombras pesadas mas adequadas ao tema.** ArcadeGame.svelte:375 — `box-shadow: 0 22px 54px rgba(0,0,0,0.4)` no `.stage`. +page.svelte:117 — `box-shadow: 0 22px 60px rgba(0,0,0,0.32)` no hero. Sem layering de sombras (uma única sombra dura em vez de duas meias-sombras), o que em ecrãs OLED pode parecer achatado.
+- **Tipografia sem fallback explícito para emoji.** game.icon em games.ts é um emoji (🐍, ⭐, 🏎️, ☁️, 💎, 🏓). Em Android <7 ou Windows sem `Segoe UI Emoji`, cai para texto. Sem font-family definido em ArcadeGame.svelte para `.marquee` ou `.feat-icon`.
+- **Canvas com `image-rendering: auto` é correcto.** ArcadeGame.svelte:386 — bom: o canvas escala via CSS com `width: 100%` (linha 379) e o conteúdo redesenha-se a 60Hz em coordenadas lógicas. Sem artefactos de pixel-stretching.
+- **Contraste de cor pode falhar WCAG AA.** ArcadeGame.svelte:359 — `.kicker` usa `color: var(--accent)` (e.g. `#c084fc` lilás para platformer) em fundo escuro. Lilás sobre `#0a1120` ≈ 4.0:1 ratio — borderline AA para "small text" (kicker tem `font-size: 0.68rem` que conta como small). Outros jogos com accent `#f472b6` (pong) ≈ 4.4:1 — passa. `difficultyKey` em +page.svelte:208-209 também usa accent.
+- **Sem estados vazios para "todos os recordes apagados".** O empty state "Primeira ronda" (seç. 4) é o único; se o utilizador limpar localStorage, a UI mostra todos os cards como novos — funcional, mas a summary na hero continua a mostrar `totalRecordPoints: 0` (derivado correto em +page.svelte:17) sem reforçar o reset.
+- **Orientação landscape não testada.** Nenhuma `orientation: landscape` media-query nem `@media (orientation: ...)` em ArcadeGame.svelte ou +page.svelte. Em landscape o canvas fica com `aspect-ratio: 360 / 480` forçado (ArcadeGame.svelte:380) — ecrã 360×640 portrait vira landscape com a canvas a meio e TouchControls ao lado. Sem rotação lock, jogadores mobile podem acabar com layout partido.
+
+## 6. Bugs latentes detectados
+
+### P0 — bloqueantes para v2
+
+- **Cleanup do `raf` em Svelte 5 com HMR pode acumular loops.** ArcadeGame.svelte:266-273 — `onMount` regista `raf = requestAnimationFrame(frame)` e devolve cleanup que faz `cancelAnimationFrame(raf)`. Em dev (Vite HMR) com edits repetidos em `ArcadeGame.svelte`, cada hot-reload cria nova frame() enquanto o cancel pode chegar depois — **race window de ~16ms com `lastTs` stale**, gerando `dt` enorme (até 0.05s cap, linha 104) que acelera colisões em `breakout`/`pong` e pode causar falsos "ganhou/perdeu" no primeiro frame pós-reload. Não é bug produção, é dor de DX.
+- **`maze` end-state vs `won` quando stars ficam todas acessíveis mas jogador morre.** games/maze.ts:200-213 — `if (stars.delete(key(...))) points += 5; ... if (stars.size === 0) return { end: 'won', gained: result.gained };` (linhas 200-204). Linha 212 faz `if (g.x === player.x && g.y === player.y) return { end: 'over', event: 'crash' };`. **Race**: se o último star está numa célula partilhada com um guardian, `stars.delete` remove-o (true), `stars.size === 0` é true, e retorna `won` ANTES de verificar colisão. O jogador ganha mesmo colidindo com o guardião na última estrela. Provavelmente é a intenção, mas não está documentado.
+- **`prefersReducedMotion` é snapshot estático em ArcadeGame.svelte:238.** Se o utilizador muda o setting OS durante uma partida longa (`racing` endless), o canvas continua a fazer glows (engine.ts:104-129) e a sala inteira mantém animações (CSS transitions). W3C recomenda `matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', ...)` para reactividade. **Bug de acessibilidade, não bug funcional.**
+
+### P1 — polish essencial para v2
+
+- **Type cast `lastScoreKey(game.id)` confia em union string.** games.ts:124-130 — `highScoreKey(id: ArcadeGameId)` é tipado mas `readArcadeScore(key: string)` (linha 132) recebe uma `string` genérica. Se algum caller futuro passar uma chave arbitrária, o cast é silencioso. Sem runtime validation.
+- **Tap no canvas em scheme `steer` é dead-end.** ArcadeGame.svelte:200-203 — `input.action = true` é setado mas o handler `onAction` do shell (ArcadeGame.svelte:218-223) só faz `start()`. Para `racing` (steer), isto é no-op porque o engine não lê `input.action` (games/racing.ts:77-101 não consulta `action`). Tap = nada visível para o utilizador.
+- **`breakout` lives display não traduz.** games/breakout.ts:169-174 desenha 3 corações rosa mas não usa i18n. Para pt-PT está OK, mas a sala é bilingue (en.json também presente); o score não é afectado mas o ícone genérico ⚪ pode parecer bug. Cosmético.
+- **Guard de focus `isInteractiveTarget` (ArcadeGame.svelte:134-140) não cobre `[role="slider"]`, `[role="switch"]`, `[contenteditable=true]`.** Edge case — nenhum elemento do arcade usa esses roles, mas se settings meter um toggle novo, o Space/Enter deixa de pausar correctamente.
+- **`fireConfettiEvent({ count: 120, origin: 'center' })` (ArcadeGame.svelte:87) sem rate-limit.** Se o utilizador ganha 5 recordes em 30s (modo endless no pong), 5 bursts de 120 partículas = 600 partículas DOM — pode causar jank em mobile low-end. events.ts:30 exporta a função mas sem guard de "max N confetti per second".
+- **Listeners de keyboard no `window`, não no `document`.** ArcadeGame.svelte:264-265 — `window.addEventListener('keydown', ...)`. Em iframes (improvável mas possível se o jogo for embebido), os eventos não capturam correctamente. `document` seria mais canónico.
+- **`el.isContentEditable` é lido mas não há text-fields no arcade.** ArcadeGame.svelte:137 — guarda para `contentEditable`. Inofensivo mas dead branch.
+
+### P2 — nice-to-have
+
+- **`games/breakout.ts:122` cap `sp = Math.min(baseSpeed + 40, 420)` hard-codado.** Quando `baseSpeed` chega a 360 (games/breakout.ts:138), `sp` é sempre 400 (360+40) sem chegar ao cap 420. Linha 121 é defensiva mas nunca accionada.
+- **`games/pong.ts:104,121` — `Math.min(300 + rally * 8, 440)` continua a crescer até rally=18.** Acima disso, sp fica em 440 e a curva plana. Sem tuning, rallies >20 jogam-se todos no mesmo regime.
+- **`games/maze.ts:170` — `Math.random() < 0.45` cria distribuição não-uniforme.** Pequeno bias numérico; não é bug mas a IA dos guardiões fica ligeiramente mais "caçadora" do que o código sugere.
+- **`games/racing.ts:78` — `obstacles.push` sem cap máximo.** Em sessões longas com `dist / 4000` a encolher o `gap` para 0.4s mínimo, o array pode crescer até ~30 obstáculos simultâneos no ecrã (FIELD_H=480, cada um 54px, scroll a 240+40=280 px/s, período de spawn 0.4s → 7 por ciclo). Sem leak (filter na linha 81), mas mais de 20 rect collisions por frame é overhead notório em mobile.
+- **`ARCADE_GAMES[day % ARCADE_GAMES.length]` (+page.svelte:36) muda o featured à meia-noite mas a página pode estar aberta há horas.** Sem revalidação, o featured fica "stale" até o utilizador recarregar. Não é bug — é decisão de design.
+
+---
+
+**Validação:** `wc -l docs/audit-arcade-v1-ux.md` → ver output do terminal após escrita. Headings `## 1.` a `## 6.` exactos, cada secção com bullets `-` numeráveis. 6 secções · 33 findings totais.
