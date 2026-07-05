@@ -3,10 +3,53 @@ import type { HashSlot, ProfileId } from './hash';
 const SESSION_KEY_PREFIX = 'presuntinho-session';
 const LOCKOUT_KEY_PREFIX = 'presuntinho-lockout';
 const ATTEMPTS_KEY_PREFIX = 'presuntinho-attempts';
+// Ids of dynamic (non-legacy) members created via onboarding. Kept in
+// localStorage so getSession()/clearSession() can stay SYNCHRONOUS while still
+// discovering uuid members — the registry (IndexedDB) is async and can't be
+// read here. The two legacy profiles are always included below.
+const KNOWN_MEMBERS_KEY = 'presuntinho-known-members';
 
 const LOCKOUT_DURATION_MS = 30_000;
 const MAX_ATTEMPTS = 3;
-const KNOWN_PROFILES: ProfileId[] = ['fatma', 'daniel'];
+const LEGACY_PROFILES: ProfileId[] = ['fatma', 'daniel'];
+
+/** Legacy profiles PLUS any onboarded member ids (deduped). Never throws. */
+function knownProfiles(): ProfileId[] {
+  if (typeof localStorage === 'undefined') return [...LEGACY_PROFILES];
+  let extra: string[] = [];
+  try {
+    const raw = localStorage.getItem(KNOWN_MEMBERS_KEY);
+    const parsed = raw ? (JSON.parse(raw) as unknown) : [];
+    if (Array.isArray(parsed)) extra = parsed.filter((x): x is string => typeof x === 'string');
+  } catch {
+    /* corrupt list — ignore, fall back to legacy only */
+  }
+  return [...new Set<string>([...LEGACY_PROFILES, ...extra])] as ProfileId[];
+}
+
+/**
+ * Register an onboarded member's id so future getSession() calls find its
+ * session. Legacy ids ('fatma'/'daniel') are already known, so this is only
+ * ever needed for uuid members. Idempotent.
+ */
+export function registerKnownMember(id: string): void {
+  if (typeof localStorage === 'undefined') return;
+  if (id === 'fatma' || id === 'daniel') return;
+  let extra: string[] = [];
+  try {
+    const raw = localStorage.getItem(KNOWN_MEMBERS_KEY);
+    const parsed = raw ? (JSON.parse(raw) as unknown) : [];
+    if (Array.isArray(parsed)) extra = parsed.filter((x): x is string => typeof x === 'string');
+  } catch {
+    /* corrupt — start fresh */
+  }
+  if (extra.includes(id)) return;
+  try {
+    localStorage.setItem(KNOWN_MEMBERS_KEY, JSON.stringify([...extra, id]));
+  } catch {
+    /* quota — non-fatal */
+  }
+}
 
 function sessionKey(profile: ProfileId): string {
   return `${SESSION_KEY_PREFIX}-${profile}`;
@@ -27,7 +70,7 @@ export interface Session {
 
 export function getSession(profile?: ProfileId): Session | null {
   if (typeof sessionStorage === 'undefined') return null;
-  const keys = profile ? [profile] : KNOWN_PROFILES;
+  const keys = profile ? [profile] : knownProfiles();
   for (const p of keys) {
     const raw = sessionStorage.getItem(sessionKey(p));
     if (!raw) continue;
@@ -50,7 +93,7 @@ export function setSession(profile: ProfileId, method: HashSlot): void {
 
 export function clearSession(profile?: ProfileId): void {
   if (typeof sessionStorage === 'undefined') return;
-  const keys = profile ? [profile] : KNOWN_PROFILES;
+  const keys = profile ? [profile] : knownProfiles();
   for (const p of keys) sessionStorage.removeItem(sessionKey(p));
 }
 

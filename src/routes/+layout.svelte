@@ -227,7 +227,11 @@
             // navigation and yanked the user back to /splash/).
             // Only fire the initial guard once per mount, with a longer delay so
             // users actively navigating are not interrupted mid-tap.
-            if (!session && page.url.pathname !== '/splash/' && !authRedirectTimer) {
+            // Public routes a logged-out visitor is allowed to sit on: the login
+            // splash, the new-account wizard, and an invite-redemption link.
+            const p = page.url.pathname;
+            const isPublicRoute = p === '/splash/' || p.startsWith('/onboarding') || p.startsWith('/juntar');
+            if (!session && !isPublicRoute && !authRedirectTimer) {
               authRedirectTimer = setTimeout(() => {
                 authRedirectTimer = null;
                 if (!getSession()) void goto('/splash/');

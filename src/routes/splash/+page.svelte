@@ -301,6 +301,10 @@
           {$t('splash.google.hint', { default: 'A ligação com a conta Google está a caminho — para já entra com a tua palavra-passe.' })}
         </p>
       </div>
+
+      <a class="create-account" href="/onboarding/" data-sveltekit-preload-data>
+        {$t('splash.create_account', { default: 'Novo por aqui? Criar conta →' })}
+      </a>
     {/if}
 
     <p class="credit">{$t('splash.credit')}</p>
@@ -451,6 +455,18 @@
     color: #94a3b8;
     font-size: 0.72rem;
     line-height: 1.4;
+  }
+  .create-account {
+    display: inline-block;
+    margin-top: 1.1rem;
+    color: #bfdbfe;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+  .create-account:hover,
+  .create-account:focus-visible {
+    text-decoration: underline;
   }
   .credit {
     color: #94a3b8;
