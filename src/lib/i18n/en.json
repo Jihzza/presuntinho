@@ -3812,6 +3812,8 @@
   "settings.mood.toast.normal": "Mood cleared — the app is back to normal.",
   "settings.reset_password": "Reset password",
   "settings.reset_password.button": "🔑 Change password",
+  "settings.logout.button": "↩ Log out",
+  "settings.logout.confirm": "Log out on this device?",
   "settings.reset_password.cancel": "Cancel",
   "settings.reset_password.confirm": "Confirm new password",
   "settings.reset_password.current": "Current password",

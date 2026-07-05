@@ -3812,6 +3812,8 @@
   "settings.mood.toast.normal": "تم مسح المزاج — عاد التطبيق للوضع العادي.",
   "settings.reset_password": "إعادة تعيين كلمة المرور",
   "settings.reset_password.button": "🔑 تغيير كلمة المرور",
+  "settings.logout.button": "↩ تسجيل الخروج",
+  "settings.logout.confirm": "تسجيل الخروج من هذا الجهاز؟",
   "settings.reset_password.cancel": "إلغاء",
   "settings.reset_password.confirm": "تأكيد كلمة المرور الجديدة",
   "settings.reset_password.current": "كلمة المرور الحالية",

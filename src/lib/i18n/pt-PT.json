@@ -3812,6 +3812,8 @@
   "settings.mood.toast.normal": "Mood limpo — a app voltou ao normal.",
   "settings.reset_password": "Redefinir palavra-passe",
   "settings.reset_password.button": "🔑 Mudar palavra-passe",
+  "settings.logout.button": "↩ Terminar sessão",
+  "settings.logout.confirm": "Terminar a sessão neste dispositivo?",
   "settings.reset_password.cancel": "Cancelar",
   "settings.reset_password.confirm": "Confirmar nova palavra-passe",
   "settings.reset_password.current": "Palavra-passe atual",

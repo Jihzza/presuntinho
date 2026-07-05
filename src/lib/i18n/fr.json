@@ -3812,6 +3812,8 @@
   "settings.mood.toast.normal": "Mood effacé — l’app revient à la normale.",
   "settings.reset_password": "Réinitialiser le mot de passe",
   "settings.reset_password.button": "🔑 Changer le mot de passe",
+  "settings.logout.button": "↩ Se déconnecter",
+  "settings.logout.confirm": "Se déconnecter sur cet appareil ?",
   "settings.reset_password.cancel": "Annuler",
   "settings.reset_password.confirm": "Confirmer",
   "settings.reset_password.current": "Mot de passe actuel",

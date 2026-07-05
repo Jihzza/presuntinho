@@ -3814,6 +3814,8 @@
   "settings.mood.toast.normal": "Mood tnaddhaf — el app rj3et normale.",
   "settings.reset_password": "Baddel password",
   "settings.reset_password.button": "🔑 Beddel mot de passe",
+  "settings.logout.button": "↩ Okhrej mel session",
+  "settings.logout.confirm": "Tokhrej mel session 3al hetha el jihaz?",
   "settings.reset_password.cancel": "Batal",
   "settings.reset_password.confirm": "Confirmi",
   "settings.reset_password.current": "Mot de passe actuel",

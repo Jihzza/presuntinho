@@ -2,7 +2,7 @@
   import '../app.css';
   import { page } from '$app/state';
   import { goto, afterNavigate } from '$app/navigation';
-  import { getSession, setSession, clearSession } from '$lib/auth/session';
+  import { getSession, setSession } from '$lib/auth/session';
   import { initStores, markVisited } from '$lib/state/stores';
   import Confetti from '$lib/components/Confetti.svelte';
   import Toast from '$lib/components/Toast.svelte';
@@ -10,7 +10,6 @@
   import Mascot from '$lib/components/Mascot.svelte';
   import SecretModal from '$lib/components/SecretModal.svelte';
   import OfflineIndicator from '$lib/components/OfflineIndicator.svelte';
-  import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
   import { handleKonamiKey, logoClick } from '$lib/easterEggs';
   import HeartButton from '$lib/components/HeartButton.svelte';
   import XpPill from '$lib/components/XpPill.svelte';
@@ -21,7 +20,6 @@
   import ArcadeTouchHud from '$lib/components/arcade/ArcadeTouchHud.svelte';
   import { arcadeHud } from '$lib/arcade/hud-state';
   import { arcadeImmersive } from '$lib/arcade/immersive-state';
-  import { resetSoundPrefsCache } from '$lib/gamification/sound';
   import { applyAppLogo, getAppLogo } from '$lib/app-logo';
   import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, MOOD_META, type ActiveMood } from '$lib/mood';
 
@@ -275,12 +273,6 @@
     // Let the native <a> navigation proceed (no preventDefault).
   }
 
-  function logout() {
-    clearSession();
-    resetSoundPrefsCache();
-    session = null;
-    goto('/splash/');
-  }
 </script>
 
 <PageLoader />
@@ -323,20 +315,13 @@
                   <a href="/" class="logo-text" aria-label={$t('a11y.logo.brand', { default: 'Presuntinho — voltar ao hub' })}>Presuntinho</a>
                 </div>
                 <div class="nav-actions">
-                  <LanguageSwitcher />
+                  <!-- Language + logout moved to /definicoes to declutter the header. -->
                   <a href="/definicoes" class="icon-btn" aria-label={$t('a11y.settings', { default: 'Definições' })} title={$t('a11y.settings', { default: 'Definições' })}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <circle cx="12" cy="12" r="3"/>
                       <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                     </svg>
                   </a>
-                  <button type="button" class="icon-btn" onclick={logout} aria-label={$t('a11y.logout', { default: 'Sair' })} title={$t('a11y.logout', { default: 'Sair' })}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                      <polyline points="16 17 21 12 16 7"/>
-                      <line x1="21" y1="12" x2="9" y2="12"/>
-                    </svg>
-                  </button>
                 </div>
               </div>
             </header>

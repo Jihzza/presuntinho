@@ -22,6 +22,10 @@
   import { theme as themeStore, lang as langStore, funMode as funModeStore, xp as xpStore } from '$lib/state/stores';
   import { locale, waitLocale } from 'svelte-i18n';
   import { setLocale, LOCALES, LOCALE_META, type Locale } from '$lib/i18n';
+  import { goto } from '$app/navigation';
+  import { clearSession } from '$lib/auth/session';
+  import { resetSoundPrefsCache } from '$lib/gamification/sound';
+  import LogOut from 'lucide-svelte/icons/log-out';
   import {
     // task-051 — extended backup surface.
     exportAllData,
@@ -430,6 +434,13 @@
   // so the modal picks up a fresh login (e.g. switch from fatma →
   // daniel in another tab).
   let activeProfileId = $state<ProfileId | null>(null);
+
+  function handleLogout(): void {
+    if (!confirm($t('settings.logout.confirm', { default: 'Terminar a sessão neste dispositivo?' }))) return;
+    clearSession();
+    resetSoundPrefsCache();
+    void goto('/splash/');
+  }
 
   function openResetModal(): void {
     if (resetOpen) return;
@@ -1131,6 +1142,12 @@
       <Key size={16} aria-hidden="true" />
       {$t('settings.reset_password.button')}
     </Button>
+    <div class="logout-row">
+      <Button onclick={handleLogout}>
+        <LogOut size={16} aria-hidden="true" />
+        {$t('settings.logout.button', { default: 'Terminar sessão' })}
+      </Button>
+    </div>
   </section>
 
   <!-- ============ Hermes agent ============ -->
@@ -1473,6 +1490,11 @@
     border-radius: var(--radius-lg);
     padding: 1.25rem;
     backdrop-filter: blur(10px);
+  }
+  .logout-row {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
   }
   .card-head {
     display: flex;
