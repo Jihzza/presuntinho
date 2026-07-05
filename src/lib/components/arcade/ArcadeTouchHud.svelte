@@ -59,6 +59,12 @@
           <button type="button" class="d right" aria-label={$t('arcade.controls.right', { default: 'Direita' })} {...tap('right')}>▶</button>
           <button type="button" class="d down" aria-label={$t('arcade.controls.down', { default: 'Baixo' })} {...tap('down')}>▼</button>
         </div>
+      {:else if left === 'move-lr'}
+        <!-- both walk buttons on the left so the right thumb is free to JUMP -->
+        <div class="lr-pair">
+          <button type="button" class="side" aria-label={$t('arcade.controls.left', { default: 'Esquerda' })} {...hold('left')}>◀</button>
+          <button type="button" class="side" aria-label={$t('arcade.controls.right', { default: 'Direita' })} {...hold('right')}>▶</button>
+        </div>
       {:else}
         <button type="button" class="side" aria-label={$t('arcade.controls.left', { default: 'Esquerda' })} {...hold('left')}>◀</button>
       {/if}
@@ -111,20 +117,22 @@
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
-    color: #fff;
+    color: rgba(255, 255, 255, 0.92);
     font: inherit;
     font-weight: 900;
     cursor: pointer;
-    border: 1px solid color-mix(in srgb, var(--accent, #67e8f9) 55%, rgba(255, 255, 255, 0.25));
-    background: color-mix(in srgb, var(--accent, #67e8f9) 16%, rgba(10, 16, 30, 0.55));
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    /* Semi-transparent (Free Fire style): you can SEE the game through the
+       button, but a bright accent ring keeps it clearly visible. */
+    border: 1.5px solid color-mix(in srgb, var(--accent, #67e8f9) 66%, rgba(255, 255, 255, 0.3));
+    background: color-mix(in srgb, var(--accent, #67e8f9) 12%, rgba(10, 16, 30, 0.3));
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
     transition: transform 90ms ease, background 90ms ease, box-shadow 90ms ease;
   }
   button:active {
     transform: scale(0.9);
-    background: color-mix(in srgb, var(--accent, #67e8f9) 42%, rgba(10, 16, 30, 0.55));
+    background: color-mix(in srgb, var(--accent, #67e8f9) 48%, rgba(10, 16, 30, 0.4));
     box-shadow: 0 0 18px color-mix(in srgb, var(--accent, #67e8f9) 70%, transparent);
   }
   button:focus-visible {
@@ -134,19 +142,24 @@
 
   /* single side button (◀ / ▶) */
   .side {
-    width: 68px;
-    height: 68px;
+    width: 74px;
+    height: 74px;
     border-radius: 999px;
-    font-size: 1.55rem;
+    font-size: 1.6rem;
     display: grid;
     place-items: center;
+  }
+  /* platformer: ◀ ▶ side by side on the left, freeing the right thumb to jump */
+  .lr-pair {
+    display: flex;
+    gap: 0.6rem;
   }
 
   /* D-pad */
   .dpad {
     position: relative;
-    width: 132px;
-    height: 132px;
+    width: 146px;
+    height: 146px;
     border-radius: 999px;
     background: radial-gradient(circle, rgba(255, 255, 255, 0.06), transparent 68%);
   }
@@ -163,27 +176,28 @@
   }
   .d {
     position: absolute;
-    width: 44px;
-    height: 44px;
+    width: 50px;
+    height: 50px;
     border-radius: 0.8rem;
-    font-size: 1rem;
+    font-size: 1.1rem;
     display: grid;
     place-items: center;
   }
-  .d.up { left: 44px; top: 0; }
-  .d.down { left: 44px; bottom: 0; }
-  .d.left { left: 0; top: 44px; }
-  .d.right { right: 0; top: 44px; }
+  .d.up { left: 48px; top: 0; }
+  .d.down { left: 48px; bottom: 0; }
+  .d.left { left: 0; top: 48px; }
+  .d.right { right: 0; top: 48px; }
 
-  /* action button (jump / launch) */
+  /* action button (jump / launch) — the largest, slightly more opaque than the
+     move buttons since it is the primary press. */
   .action-btn {
-    width: 78px;
-    height: 78px;
+    width: 86px;
+    height: 86px;
     border-radius: 999px;
     display: grid;
     place-items: center;
     gap: 0.05rem;
-    background: color-mix(in srgb, var(--accent, #f472b6) 28%, rgba(10, 16, 30, 0.5));
+    background: color-mix(in srgb, var(--accent, #f472b6) 22%, rgba(10, 16, 30, 0.42));
   }
   .a-icon { font-size: 1.5rem; line-height: 1; }
   .a-label { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.02em; }

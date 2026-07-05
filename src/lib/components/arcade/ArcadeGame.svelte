@@ -6,7 +6,7 @@
   import { t } from 'svelte-i18n';
   import type { ArcadeGameDefinition } from '$lib/arcade/games';
   import { highScoreKey, lastScoreKey, readArcadeScore, writeArcadeScore } from '$lib/arcade/games';
-  import { FIELD_W, FIELD_H, setViewport, type ArcadeEngine, type ArcadeInput, type Direction } from '$lib/arcade/engine';
+  import { FIELD_W, FIELD_H, setViewport, setSafeInsets, type ArcadeEngine, type ArcadeInput, type Direction } from '$lib/arcade/engine';
   import { prefersReducedMotion, fireConfettiEvent } from '$lib/components/events';
   import { playSfx, vibrate } from '$lib/gamification/sound';
   import { arcadeHud } from '$lib/arcade/hud-state';
@@ -26,6 +26,7 @@
 
   let canvas = $state<HTMLCanvasElement | null>(null);
   let shellEl = $state<HTMLDivElement | null>(null);
+  let topbarEl = $state<HTMLDivElement | null>(null);
   let score = $state(0);
   let high = $state(0);
   let last = $state(0);
@@ -86,6 +87,7 @@
   function resizeField(): void {
     if (typeof window === 'undefined') return;
     fieldH = setViewport(window.innerWidth, window.innerHeight);
+    measureSafeInsets();
     if (canvas) {
       const dpr = Math.min(2, window.devicePixelRatio || 1);
       canvas.width = FIELD_W * dpr;
@@ -93,6 +95,19 @@
       ctx = canvas.getContext('2d');
       ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
+  }
+
+  /** Measure the real HUD (top) and control cluster (bottom) so games keep
+   *  full-width edge elements (e.g. the Pong paddles) clear of the chrome. */
+  function measureSafeInsets(): void {
+    if (typeof window === 'undefined') return;
+    const h = window.innerHeight;
+    const topPx = (topbarEl?.getBoundingClientRect().height ?? 54) + 6;
+    let bottomPx = 120; // sensible floor even before the controls have rendered
+    const cluster = typeof document !== 'undefined' ? document.querySelector('.hud-overlay .cluster') : null;
+    const clRect = cluster?.getBoundingClientRect();
+    if (clRect && clRect.height > 0) bottomPx = Math.max(bottomPx, h - clRect.top + 10);
+    setSafeInsets(topPx, bottomPx, h);
   }
 
   /** On resize / rotate / entering fullscreen the screen aspect changes, so the
@@ -131,6 +146,12 @@
     // this is a valid moment to unlock audio AND request true fullscreen.
     startArcadeMusic(game.id);
     requestGameFullscreen();
+    // The touch controls are on-screen now, so re-measure the real chrome and
+    // rebuild the layout — edge elements (e.g. Pong paddles) then sit clear of
+    // it. Imperceptible: the round has just begun.
+    resizeField();
+    engine?.reset();
+    score = engine?.score() ?? 0;
   }
 
   function pause(): void {
@@ -409,7 +430,7 @@
 
 <div class="shell" bind:this={shellEl} class:playing={status === 'playing'} class:fullscreen={isFullscreen} data-game={game.id} style="--accent: {game.accent};">
   <!-- Floating top HUD over the fullscreen playfield (Free Fire style). -->
-  <div class="topbar">
+  <div class="topbar" bind:this={topbarEl}>
     <a href="/secrets/" class="tb back" aria-label={$t('arcade.game.back', { default: '← Voltar à sala' })}>←</a>
     <div class="mini-score" aria-label={$t('arcade.score.aria', { default: 'Pontuação do jogo' })}>
       <span class="cur">{score}</span>
@@ -507,12 +528,13 @@
     right: 0;
     z-index: 8;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.5rem;
-    padding: max(0.5rem, env(safe-area-inset-top)) max(0.7rem, env(safe-area-inset-right)) 0.9rem
+    padding: max(0.5rem, env(safe-area-inset-top)) max(0.7rem, env(safe-area-inset-right)) 0.5rem
       max(0.7rem, env(safe-area-inset-left));
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent);
-    pointer-events: none; /* the gradient is click-through; controls re-enable */
+    /* No full-width backdrop — only the corner controls paint, so the CENTRE of
+       the top stays clear (e.g. the Pong opponent paddle is never hidden). */
+    pointer-events: none; /* click-through; only the corner controls catch taps */
   }
   .topbar > *,
   .tb-actions > * {

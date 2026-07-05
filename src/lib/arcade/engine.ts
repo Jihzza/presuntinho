@@ -22,16 +22,41 @@ export const FIELD_W = 360;
 export let FIELD_H = 480;
 
 /**
+ * Logical insets the floating HUD (top) and the corner touch controls (bottom)
+ * overlay, so games with full-width EDGE elements (e.g. Pong paddles) can keep
+ * them clear of the chrome. Read live. Set by the shell from the real pixel HUD.
+ */
+export let FIELD_SAFE_TOP = 54;
+export let FIELD_SAFE_BOTTOM = 100;
+
+/**
  * Set the logical field height from the real canvas box so the aspect ratio
  * matches the screen. FIELD_W stays 360; FIELD_H = 360 × (h / w), clamped to a
- * sane portrait-ish range so wide/short viewports stay playable. Returns the
+ * sane portrait-ish range so wide/short viewports stay playable. Also converts
+ * the fixed-pixel HUD/control footprints into logical safe insets. Returns the
  * new FIELD_H so the shell can size the canvas bitmap to match.
  */
 export function setViewport(cssW: number, cssH: number): number {
   if (cssW > 0 && cssH > 0) {
     FIELD_H = Math.min(1000, Math.max(480, Math.round((FIELD_W * cssH) / cssW)));
+    const pxToLogical = FIELD_H / cssH; // logical units per screen pixel
+    // Sensible defaults; the shell overrides these with MEASURED chrome heights.
+    FIELD_SAFE_TOP = Math.round(60 * pxToLogical);
+    FIELD_SAFE_BOTTOM = Math.round(120 * pxToLogical);
   }
   return FIELD_H;
+}
+
+/**
+ * Override the safe insets with real measured chrome. `topPx`/`bottomPx` are the
+ * pixel heights the HUD (top) and the corner controls (bottom) actually occupy;
+ * they are converted to logical units against the current viewport height.
+ */
+export function setSafeInsets(topPx: number, bottomPx: number, cssH: number): void {
+  if (cssH <= 0) return;
+  const pxToLogical = FIELD_H / cssH;
+  FIELD_SAFE_TOP = Math.round(Math.max(0, topPx) * pxToLogical);
+  FIELD_SAFE_BOTTOM = Math.round(Math.max(0, bottomPx) * pxToLogical);
 }
 
 /** Snapshot of player input for one step. Owned/cleared by the shell. */

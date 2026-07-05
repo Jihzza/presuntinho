@@ -11,7 +11,7 @@ export type ArcadeGameId = 'snake' | 'maze' | 'racing' | 'platformer' | 'breakou
 /** Mobile HUD layout, declared explicitly per game. The controls are split by
  *  SIDE so they're where the thumb expects them: `left` sits at the bottom-left
  *  corner, `right` at the bottom-right corner. */
-export type HudLeft = 'dpad' | 'move-left' | 'none';
+export type HudLeft = 'dpad' | 'move-left' | 'move-lr' | 'none';
 export type HudRight = 'move-right' | 'jump' | 'launch' | 'move-right-jump' | 'none';
 export interface HudConfig {
   left: HudLeft;
@@ -91,7 +91,7 @@ export const ARCADE_GAMES: ArcadeGameDefinition[] = [
     icon: '☁️',
     accent: '#c084fc',
     control: 'jump',
-    hud: { left: 'move-left', right: 'move-right-jump' },
+    hud: { left: 'move-lr', right: 'jump' },
     mode: 'goal',
     titleKey: 'arcade.games.platformer.title',
     descriptionKey: 'arcade.games.platformer.description',

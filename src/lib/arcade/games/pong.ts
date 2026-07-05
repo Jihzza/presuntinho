@@ -5,6 +5,8 @@
 import {
   FIELD_W,
   FIELD_H,
+  FIELD_SAFE_TOP,
+  FIELD_SAFE_BOTTOM,
   clamp,
   drawAvatar,
   glowCircle,
@@ -18,8 +20,16 @@ import {
 
 const PADDLE_W = 74;
 const PADDLE_H = 12;
-const MARGIN = 26;
 const BALL_R = 7;
+
+// Paddle Y positions keep clear of the floating HUD (top) and the corner touch
+// controls (bottom) so neither paddle is ever hidden behind the chrome.
+function cpuY(): number {
+  return FIELD_SAFE_TOP;
+}
+function playerY(): number {
+  return FIELD_H - FIELD_SAFE_BOTTOM - PADDLE_H;
+}
 const TARGET = 7;
 const ACCENT = '#f472b6';
 
@@ -91,13 +101,13 @@ export function createPong(): ArcadeEngine {
         ball.x = FIELD_W - BALL_R;
         ball.vx = -Math.abs(ball.vx);
       }
-      const playerY = FIELD_H - MARGIN - PADDLE_H;
-      const cpuY = MARGIN;
+      const pY = playerY();
+      const cY = cpuY();
       // player paddle (ball moving down)
       if (
         ball.vy > 0 &&
-        ball.y + BALL_R >= playerY &&
-        ball.y - BALL_R <= playerY + PADDLE_H &&
+        ball.y + BALL_R >= pY &&
+        ball.y - BALL_R <= pY + PADDLE_H &&
         ball.x >= playerX - PADDLE_W / 2 &&
         ball.x <= playerX + PADDLE_W / 2
       ) {
@@ -106,15 +116,15 @@ export function createPong(): ArcadeEngine {
         const ang = -Math.PI / 2 + rel * (Math.PI / 3.2);
         ball.vx = Math.cos(ang) * sp;
         ball.vy = -Math.abs(Math.sin(ang) * sp);
-        ball.y = playerY - BALL_R - 1;
+        ball.y = pY - BALL_R - 1;
         rally += 1;
         result = { event: 'bounce' };
       }
       // cpu paddle (ball moving up)
       if (
         ball.vy < 0 &&
-        ball.y - BALL_R <= cpuY + PADDLE_H &&
-        ball.y + BALL_R >= cpuY &&
+        ball.y - BALL_R <= cY + PADDLE_H &&
+        ball.y + BALL_R >= cY &&
         ball.x >= cpuX - PADDLE_W / 2 &&
         ball.x <= cpuX + PADDLE_W / 2
       ) {
@@ -123,7 +133,7 @@ export function createPong(): ArcadeEngine {
         const ang = Math.PI / 2 + rel * (Math.PI / 3.2);
         ball.vx = -Math.cos(ang) * sp;
         ball.vy = Math.abs(Math.sin(ang) * sp);
-        ball.y = cpuY + PADDLE_H + BALL_R + 1;
+        ball.y = cY + PADDLE_H + BALL_R + 1;
         rally += 1;
         result = { event: 'bounce' };
       }
@@ -164,10 +174,10 @@ export function createPong(): ArcadeEngine {
     ctx.fillText(String(playerPts), FIELD_W / 2, FIELD_H / 2 + 32);
     ctx.textAlign = 'start';
     // paddles — the player's is the chosen mascot
-    glowRect(env, cpuX - PADDLE_W / 2, MARGIN, PADDLE_W, PADDLE_H, 6, '#fb7185', 12);
-    const playerY = FIELD_H - MARGIN - PADDLE_H;
-    glowRect(env, playerX - PADDLE_W / 2, playerY, PADDLE_W, PADDLE_H, 6, ACCENT, 14);
-    drawAvatar(env, playerX, playerY + PADDLE_H / 2, PADDLE_H + 8);
+    glowRect(env, cpuX - PADDLE_W / 2, cpuY(), PADDLE_W, PADDLE_H, 6, '#fb7185', 12);
+    const pY = playerY();
+    glowRect(env, playerX - PADDLE_W / 2, pY, PADDLE_W, PADDLE_H, 6, ACCENT, 14);
+    drawAvatar(env, playerX, pY + PADDLE_H / 2, PADDLE_H + 8);
     // ball
     glowCircle(env, ball.x, ball.y, BALL_R, '#fde68a', 14);
   }
