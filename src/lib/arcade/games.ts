@@ -8,6 +8,15 @@ import { createPong } from './games/pong';
 
 export type ArcadeGameId = 'snake' | 'maze' | 'racing' | 'platformer' | 'breakout' | 'pong';
 
+/** Mobile HUD layout, declared explicitly per game (Free-Fire-style overlay).
+ *  move = the bottom-left movement cluster; action = the bottom-right button. */
+export type HudMove = 'dpad' | 'leftright' | 'none';
+export type HudAction = 'jump' | 'launch' | 'none';
+export interface HudConfig {
+  move: HudMove;
+  action: HudAction;
+}
+
 export interface ArcadeGameDefinition {
   id: ArcadeGameId;
   icon: string;
@@ -15,6 +24,8 @@ export interface ArcadeGameDefinition {
   accent: string;
   /** Which on-screen control cluster this game shows. */
   control: ControlScheme;
+  /** Explicit mobile-HUD configuration (overlay controls). */
+  hud: HudConfig;
   /** Win by reaching a goal (won) or survive-forever (endless high score)? */
   mode: 'goal' | 'endless';
   titleKey: string;
@@ -34,6 +45,7 @@ export const ARCADE_GAMES: ArcadeGameDefinition[] = [
     icon: '🐍',
     accent: '#4ade80',
     control: 'turn',
+    hud: { move: 'dpad', action: 'none' },
     mode: 'endless',
     titleKey: 'arcade.games.snake.title',
     descriptionKey: 'arcade.games.snake.description',
@@ -48,6 +60,7 @@ export const ARCADE_GAMES: ArcadeGameDefinition[] = [
     icon: '⭐',
     accent: '#a78bfa',
     control: 'turn',
+    hud: { move: 'dpad', action: 'none' },
     mode: 'goal',
     titleKey: 'arcade.games.maze.title',
     descriptionKey: 'arcade.games.maze.description',
@@ -62,6 +75,7 @@ export const ARCADE_GAMES: ArcadeGameDefinition[] = [
     icon: '🏎️',
     accent: '#38bdf8',
     control: 'steer',
+    hud: { move: 'leftright', action: 'none' },
     mode: 'endless',
     titleKey: 'arcade.games.racing.title',
     descriptionKey: 'arcade.games.racing.description',
@@ -76,6 +90,7 @@ export const ARCADE_GAMES: ArcadeGameDefinition[] = [
     icon: '☁️',
     accent: '#c084fc',
     control: 'jump',
+    hud: { move: 'leftright', action: 'jump' },
     mode: 'goal',
     titleKey: 'arcade.games.platformer.title',
     descriptionKey: 'arcade.games.platformer.description',
@@ -90,6 +105,7 @@ export const ARCADE_GAMES: ArcadeGameDefinition[] = [
     icon: '💎',
     accent: '#22d3ee',
     control: 'paddle',
+    hud: { move: 'none', action: 'launch' },
     mode: 'goal',
     titleKey: 'arcade.games.breakout.title',
     descriptionKey: 'arcade.games.breakout.description',
@@ -104,6 +120,7 @@ export const ARCADE_GAMES: ArcadeGameDefinition[] = [
     icon: '🏓',
     accent: '#f472b6',
     control: 'paddle',
+    hud: { move: 'none', action: 'none' },
     mode: 'goal',
     titleKey: 'arcade.games.pong.title',
     descriptionKey: 'arcade.games.pong.description',

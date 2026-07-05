@@ -4865,5 +4865,7 @@
   "arcade.games.racing.keys": "← → or A/D to steer · P to pause",
   "arcade.games.platformer.keys": "← → or A/D to walk, Space to jump · P to pause",
   "arcade.games.breakout.keys": "← → for the paddle, Space to launch · P to pause",
-  "arcade.games.pong.keys": "← → or A/D for the paddle · P to pause"
+  "arcade.games.pong.keys": "← → or A/D for the paddle · P to pause",
+  "arcade.hud.move_aria": "Movement",
+  "arcade.hud.action_aria": "Action"
 }

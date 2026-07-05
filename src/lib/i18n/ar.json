@@ -4865,5 +4865,7 @@
   "arcade.games.racing.keys": "← → أو A/D للتوجيه · P للإيقاف",
   "arcade.games.platformer.keys": "← → أو A/D للمشي، المسافة للقفز · P للإيقاف",
   "arcade.games.breakout.keys": "← → للمضرب، المسافة للإطلاق · P للإيقاف",
-  "arcade.games.pong.keys": "← → أو A/D للمضرب · P للإيقاف"
+  "arcade.games.pong.keys": "← → أو A/D للمضرب · P للإيقاف",
+  "arcade.hud.move_aria": "الحركة",
+  "arcade.hud.action_aria": "إجراء"
 }

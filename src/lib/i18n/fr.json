@@ -4865,5 +4865,7 @@
   "arcade.games.racing.keys": "← → ou A/D pour diriger · P pour pause",
   "arcade.games.platformer.keys": "← → ou A/D pour marcher, Espace pour sauter · P pour pause",
   "arcade.games.breakout.keys": "← → pour la raquette, Espace pour lancer · P pour pause",
-  "arcade.games.pong.keys": "← → ou A/D pour la raquette · P pour pause"
+  "arcade.games.pong.keys": "← → ou A/D pour la raquette · P pour pause",
+  "arcade.hud.move_aria": "Déplacement",
+  "arcade.hud.action_aria": "Action"
 }

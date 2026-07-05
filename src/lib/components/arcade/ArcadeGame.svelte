@@ -9,7 +9,7 @@
   import { FIELD_W, FIELD_H, type ArcadeEngine, type ArcadeInput, type Direction } from '$lib/arcade/engine';
   import { prefersReducedMotion, fireConfettiEvent } from '$lib/components/events';
   import { playSfx, vibrate } from '$lib/gamification/sound';
-  import TouchControls from './TouchControls.svelte';
+  import ArcadeTouchHud from './ArcadeTouchHud.svelte';
 
   let { game }: { game: ArcadeGameDefinition } = $props();
 
@@ -58,6 +58,12 @@
   function pause(): void {
     if (status === 'playing') {
       status = 'paused';
+      // Pausing unmounts the touch HUD; a held rocker button then never fires
+      // its pointerup, so clear held input here (mirrors the window-blur guard)
+      // — otherwise the avatar would keep sliding on resume with no finger down.
+      input.held.clear();
+      dragging = false;
+      input.pointerX = null;
     } else if (status === 'paused') {
       status = 'playing';
       lastTs = performance.now();
@@ -197,8 +203,8 @@
     const moved = Math.hypot(dx, dy);
     if (game.control === 'turn' && moved > 24) {
       input.turn = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up';
-    } else if (moved <= 12) {
-      // a tap = the action button (launch / jump), also un-pauses
+    } else if (moved <= 12 && (game.control === 'jump' || game.control === 'paddle')) {
+      // a tap on the canvas = the action (jump / launch / serve)
       input.action = true;
     }
     dragging = false;
@@ -211,9 +217,14 @@
     start();
   }
   function onHold(dir: Direction, down: boolean): void {
-    if (down) input.held.add(dir);
-    else input.held.delete(dir);
-    start();
+    if (down) {
+      input.held.add(dir);
+      start();
+    } else {
+      // release only removes the key — never (re)starts, so a release that
+      // arrives during a pause (button unmounting) can't re-unpause the game.
+      input.held.delete(dir);
+    }
   }
   function onAction(down: boolean): void {
     if (down) {
@@ -300,6 +311,15 @@
         aria-label={$t('arcade.game.canvas', { default: 'Área de jogo arcade' })}
       ></canvas>
 
+      {#if status === 'playing'}
+        <!-- Free-Fire-style overlay controls float over the canvas corners -->
+        <ArcadeTouchHud move={game.hud.move} action={game.hud.action} {onTurn} {onHold} {onAction} />
+        <div class="mini-cluster">
+          <button type="button" class="mini" onclick={pause} aria-label={$t('arcade.actions.pause', { default: 'Pausa' })}>⏸</button>
+          <button type="button" class="mini" onclick={restart} aria-label={$t('arcade.actions.restart', { default: 'Recomeçar' })}>⟲</button>
+        </div>
+      {/if}
+
       {#if status !== 'playing'}
         <div class="overlay" class:win={status === 'won'} class:over={status === 'over'}>
           {#if status === 'ready'}
@@ -331,16 +351,6 @@
     <p class="status-line" aria-live="polite">{$t(statusKey)}</p>
   </div>
 
-  <div class="actions">
-    <button type="button" onclick={start} disabled={status === 'playing'}>{$t('arcade.actions.play', { default: 'Jogar' })}</button>
-    <button type="button" onclick={pause} disabled={status !== 'playing' && status !== 'paused'}>
-      {status === 'paused' ? $t('arcade.actions.resume', { default: 'Continuar' }) : $t('arcade.actions.pause', { default: 'Pausa' })}
-    </button>
-    <button type="button" onclick={restart}>{$t('arcade.actions.restart', { default: 'Recomeçar' })}</button>
-  </div>
-
-  <TouchControls control={game.control} {onTurn} {onHold} {onAction} />
-
   <section class="howto">
     <p class="mobile">{$t(game.controlsKey)}</p>
     <p class="keys">⌨️ {$t(game.keysKey)}</p>
@@ -366,9 +376,13 @@
   .hud strong { font-size: 1.2rem; font-variant-numeric: tabular-nums; }
 
   .cabinet { max-width: 420px; margin: 0 auto; }
+  /* Mobile-first: the canvas sits in the TOP of the stage and the bottom
+     padding is a reserved "control deck" where the floating HUD lives, so the
+     thumb controls never cover the playfield (racing car / paddle / pig all
+     live at the bottom of the field). Desktop removes the deck (HUD hidden). */
   .stage {
     position: relative;
-    padding: 0.6rem;
+    padding: 0.6rem 0.6rem 9.25rem;
     border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
     border-radius: 1.3rem;
     background: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 46%), rgba(0, 0, 0, 0.4);
@@ -378,12 +392,43 @@
     display: block;
     width: 100%;
     aspect-ratio: 360 / 480;
-    max-height: min(46vh, 460px);
+    max-height: min(40vh, 350px);
     margin: 0 auto;
     border-radius: 0.9rem;
     background: #0a1120;
     touch-action: none;
     image-rendering: auto;
+  }
+  /* pause / restart mini cluster — floats top-right over the stage */
+  .mini-cluster {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    display: flex;
+    gap: 0.4rem;
+    z-index: 6;
+  }
+  .mini {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    font-size: 1.05rem;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(10, 16, 30, 0.55);
+    backdrop-filter: blur(6px);
+    cursor: pointer;
+  }
+  .mini:active { transform: scale(0.92); }
+  .mini:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent); }
+  /* thumb HUD is for touch; on real pointers we rely on keyboard + mini
+     cluster, so drop the reserved control deck and give the canvas more room. */
+  @media (pointer: fine) {
+    .stage { padding: 0.6rem; }
+    canvas { max-height: min(58vh, 520px); }
+    .stage :global(.hud-overlay) { display: none; }
   }
   .overlay {
     position: absolute;
@@ -428,22 +473,6 @@
   .sub { margin: 0; color: var(--txt3, #94a3b8); font-size: 0.8rem; }
   .ghost { color: #bfdbfe; text-decoration: none; font-weight: 800; font-size: 0.88rem; padding: 0.4rem; }
   .status-line { margin: 0.55rem 0 0; text-align: center; color: var(--txt2, #cbd5e1); font-weight: 800; font-size: 0.85rem; }
-
-  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin: 0.75rem 0 0.4rem; }
-  .actions button {
-    min-height: 44px;
-    padding: 0.55rem 0.95rem;
-    border-radius: 0.85rem;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    font: inherit;
-    font-weight: 850;
-    cursor: pointer;
-  }
-  .actions button:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 20%, transparent); }
-  .actions button:disabled { opacity: 0.45; cursor: default; }
-  .actions button:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 45%, transparent); }
 
   .howto { margin-top: 0.6rem; text-align: center; }
   .howto p { margin: 0.2rem 0; color: var(--txt3, #94a3b8); font-size: 0.78rem; line-height: 1.45; }
