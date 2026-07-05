@@ -1,361 +1,455 @@
 <script lang="ts">
+  // Arcade shell — owns the canvas, the RAF loop, all input (keyboard + swipe +
+  // drag + on-screen controls), the HUD, sound/haptic/confetti feedback and the
+  // result overlay. Game logic lives in the per-game engines (src/lib/arcade).
   import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
-  import type { ArcadeGameDefinition, ArcadeGameId } from '$lib/arcade/games';
+  import type { ArcadeGameDefinition } from '$lib/arcade/games';
   import { highScoreKey, lastScoreKey, readArcadeScore, writeArcadeScore } from '$lib/arcade/games';
+  import { FIELD_W, FIELD_H, type ArcadeEngine, type ArcadeInput, type Direction } from '$lib/arcade/engine';
+  import { prefersReducedMotion, fireConfettiEvent } from '$lib/components/events';
+  import { playSfx, vibrate } from '$lib/gamification/sound';
+  import TouchControls from './TouchControls.svelte';
 
   let { game }: { game: ArcadeGameDefinition } = $props();
 
-  let canvas: HTMLCanvasElement;
+  type Status = 'ready' | 'playing' | 'paused' | 'won' | 'over';
+
+  let canvas = $state<HTMLCanvasElement | null>(null);
+  let shellEl = $state<HTMLDivElement | null>(null);
   let score = $state(0);
-  let highScore = $state(0);
-  let lastScore = $state(0);
-  let status = $state<'ready' | 'playing' | 'paused' | 'won' | 'over'>('ready');
-  let messageKey = $state('arcade.state.ready');
+  let high = $state(0);
+  let last = $state(0);
+  let status = $state<Status>('ready');
+  let newRecord = $state(false);
 
-  const W = 360;
-  const H = 360;
-  type Direction = 'up' | 'down' | 'left' | 'right';
-
-  const keyState = new Set<string>();
+  let engine: ArcadeEngine | null = null;
+  let ctx: CanvasRenderingContext2D | null = null;
   let raf = 0;
-  let last = 0;
-  let direction: Direction = 'right';
-  let nextDirection: Direction = 'right';
-  let snake: Array<{ x: number; y: number }> = [];
-  let food = { x: 9, y: 9 };
-  let player = { x: 1, y: 1, vx: 0, vy: 0, grounded: false };
-  let enemies: Array<{ x: number; y: number; dx: number; dy: number }> = [];
-  let pellets = new Set<string>();
-  let obstacles: Array<{ x: number; y: number; w: number; h: number; speed: number }> = [];
-  let bricks: Array<{ x: number; y: number; w: number; h: number; alive: boolean }> = [];
-  let ball = { x: 180, y: 230, vx: 120, vy: -150 };
-  let tick = 0;
+  let lastTs = 0;
+  let elapsed = 0;
+  let reduced = false;
 
-  const walls = new Set<string>([
-    '3,3','4,3','5,3','7,3','8,3','9,3','11,3','12,3','13,3',
-    '3,6','5,6','7,6','9,6','11,6','13,6','3,9','4,9','5,9','8,9','9,9','10,9','13,9',
-    '6,12','7,12','8,12','9,12','10,12','11,12'
-  ]);
+  const input: ArcadeInput = { held: new Set<Direction>(), turn: null, action: false, pointerX: null };
+  let dragging = false;
+  let downX = 0;
+  let downY = 0;
 
+  // ── lifecycle ────────────────────────────────────────────────────────────
   function reset(): void {
+    engine?.reset();
     score = 0;
     status = 'ready';
-    messageKey = 'arcade.state.ready';
-    direction = 'right';
-    nextDirection = 'right';
-    tick = 0;
-    snake = [{ x: 8, y: 8 }, { x: 7, y: 8 }, { x: 6, y: 8 }];
-    food = { x: 14, y: 8 };
-    player = game.id === 'racing'
-      ? { x: 170, y: 296, vx: 0, vy: 0, grounded: false }
-      : game.id === 'platformer'
-        ? { x: 24, y: 286, vx: 0, vy: 0, grounded: true }
-        : game.id === 'maze'
-          ? { x: 1, y: 1, vx: 0, vy: 0, grounded: false }
-          : { x: 160, y: 318, vx: 0, vy: 0, grounded: false };
-    enemies = game.id === 'maze'
-      ? [{ x: 13, y: 13, dx: -1, dy: 0 }, { x: 8, y: 5, dx: 0, dy: 1 }]
-      : [];
-    pellets = new Set<string>();
-    if (game.id === 'maze') {
-      for (let y = 1; y < 15; y += 1) for (let x = 1; x < 15; x += 1) if (!walls.has(`${x},${y}`)) pellets.add(`${x},${y}`);
-      pellets.delete('1,1');
-    }
-    obstacles = [];
-    bricks = [];
-    if (game.id === 'breakout') {
-      for (let r = 0; r < 4; r += 1) for (let c = 0; c < 7; c += 1) bricks.push({ x: 24 + c * 45, y: 42 + r * 24, w: 36, h: 14, alive: true });
-      ball = { x: 180, y: 230, vx: 120, vy: -150 };
-    }
-    draw();
+    newRecord = false;
+    input.held.clear();
+    input.turn = null;
+    input.action = false;
+    input.pointerX = null;
+    dragging = false;
   }
 
   function start(): void {
     if (status === 'playing') return;
-    if (status === 'over' || status === 'won') reset();
+    if (status === 'won' || status === 'over') reset();
     status = 'playing';
-    messageKey = 'arcade.state.playing';
-    last = performance.now();
+    lastTs = performance.now();
   }
 
   function pause(): void {
     if (status === 'playing') {
       status = 'paused';
-      messageKey = 'arcade.state.paused';
     } else if (status === 'paused') {
       status = 'playing';
-      messageKey = 'arcade.state.playing';
-      last = performance.now();
+      lastTs = performance.now();
     }
   }
 
-  function finish(next: 'won' | 'over'): void {
-    status = next;
-    messageKey = next === 'won' ? 'arcade.state.won' : 'arcade.state.over';
-    lastScore = score;
-    highScore = Math.max(highScore, score);
-    writeArcadeScore(lastScoreKey(game.id), lastScore);
-    writeArcadeScore(highScoreKey(game.id), highScore);
-  }
-
-  function setDir(dir: typeof direction): void {
-    const opposite = direction === 'up' && dir === 'down' || direction === 'down' && dir === 'up' || direction === 'left' && dir === 'right' || direction === 'right' && dir === 'left';
-    if (!opposite) nextDirection = dir;
-    keyState.add(dir);
+  function restart(): void {
+    reset();
     start();
   }
 
-  function action(): void {
-    start();
-    if (game.id === 'platformer' && player.grounded) {
-      player.vy = -250;
-      player.grounded = false;
+  function finish(end: 'won' | 'over'): void {
+    status = end;
+    last = score;
+    newRecord = score > high && score > 0;
+    high = Math.max(high, score);
+    writeArcadeScore(lastScoreKey(game.id), last);
+    writeArcadeScore(highScoreKey(game.id), high);
+    if (end === 'won') {
+      playSfx('fanfare');
+      vibrate('success');
+    } else {
+      playSfx('wrong');
+      vibrate('warning');
     }
+    if (newRecord) {
+      fireConfettiEvent({ count: 120, origin: 'center' });
+      window.setTimeout(() => playSfx('milestone'), 220);
+    }
+  }
+
+  // ── feedback ─────────────────────────────────────────────────────────────
+  function juice(gained: number, event?: string): void {
+    if (gained > 0) {
+      playSfx('pop');
+      vibrate('tap');
+    } else if (event === 'bounce') {
+      vibrate('tap');
+    }
+  }
+
+  // ── loop ─────────────────────────────────────────────────────────────────
+  function frame(now: number): void {
+    const dt = Math.max(0, Math.min(0.05, (now - lastTs) / 1000 || 0.016));
+    lastTs = now;
+    elapsed += dt;
+    if (status === 'playing' && engine) {
+      const res = engine.step(dt, input);
+      score = engine.score();
+      if (res.gained || res.event) juice(res.gained ?? 0, res.event);
+      if (res.end) finish(res.end);
+      input.turn = null;
+      input.action = false;
+    }
+    if (engine && ctx) engine.draw({ ctx, t: elapsed, reduced });
+    raf = requestAnimationFrame(frame);
+  }
+
+  // ── keyboard ─────────────────────────────────────────────────────────────
+  const DIR_KEYS: Record<string, Direction> = {
+    arrowup: 'up',
+    w: 'up',
+    arrowdown: 'down',
+    s: 'down',
+    arrowleft: 'left',
+    a: 'left',
+    arrowright: 'right',
+    d: 'right'
+  };
+
+  // Don't hijack the key when a focusable control (or a text field) has focus —
+  // otherwise preventDefault would stop Space/Enter from activating the visible
+  // Jogar/Pausa/Recomeçar buttons and the Voltar links (keyboard a11y).
+  function isInteractiveTarget(e: KeyboardEvent): boolean {
+    const el = e.target as HTMLElement | null;
+    if (!el) return false;
+    if (el.isContentEditable) return true;
+    if (['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON', 'A'].includes(el.tagName)) return true;
+    return el.getAttribute('role') === 'button';
   }
 
   function onKeydown(e: KeyboardEvent): void {
+    if (isInteractiveTarget(e)) return;
     const k = e.key.toLowerCase();
-    if (['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d',' ','enter','p'].includes(k)) e.preventDefault();
-    if (k === 'p') return pause();
-    if (k === ' ' || k === 'enter') return action();
-    if (k === 'arrowup' || k === 'w') setDir('up');
-    if (k === 'arrowdown' || k === 's') setDir('down');
-    if (k === 'arrowleft' || k === 'a') setDir('left');
-    if (k === 'arrowright' || k === 'd') setDir('right');
+    if (k === 'p' || k === 'escape') {
+      e.preventDefault();
+      pause();
+      return;
+    }
+    if (k === ' ' || k === 'enter') {
+      e.preventDefault();
+      input.action = true;
+      start();
+      return;
+    }
+    const dir = DIR_KEYS[k];
+    if (dir) {
+      e.preventDefault();
+      input.held.add(dir);
+      input.turn = dir;
+      // "up" doubles as jump on jump-scheme games (platformer)
+      if (dir === 'up' && game.control === 'jump') input.action = true;
+      start();
+    }
   }
 
   function onKeyup(e: KeyboardEvent): void {
-    const k = e.key.toLowerCase();
-    if (k === 'arrowup' || k === 'w') keyState.delete('up');
-    if (k === 'arrowdown' || k === 's') keyState.delete('down');
-    if (k === 'arrowleft' || k === 'a') keyState.delete('left');
-    if (k === 'arrowright' || k === 'd') keyState.delete('right');
+    const dir = DIR_KEYS[e.key.toLowerCase()];
+    if (dir) input.held.delete(dir);
   }
 
-  function loop(now: number): void {
-    const dt = Math.min(0.05, (now - last) / 1000 || 0.016);
-    last = now;
-    if (status === 'playing') update(dt);
-    draw();
-    raf = requestAnimationFrame(loop);
+  // ── pointer (swipe + paddle drag) ─────────────────────────────────────────
+  function mapX(clientX: number): number {
+    if (!canvas) return FIELD_W / 2;
+    const r = canvas.getBoundingClientRect();
+    return ((clientX - r.left) / r.width) * FIELD_W;
   }
 
-  function update(dt: number): void {
-    if (game.id === 'snake') updateSnake(dt);
-    if (game.id === 'maze') updateMaze(dt);
-    if (game.id === 'racing') updateRacing(dt);
-    if (game.id === 'platformer') updatePlatformer(dt);
-    if (game.id === 'breakout') updateBreakout(dt);
-  }
-
-  function updateSnake(dt: number): void {
-    tick += dt;
-    if (tick < 0.115) return;
-    tick = 0;
-    direction = nextDirection;
-    const head = { ...snake[0] };
-    if (direction === 'up') head.y -= 1;
-    if (direction === 'down') head.y += 1;
-    if (direction === 'left') head.x -= 1;
-    if (direction === 'right') head.x += 1;
-    if (head.x < 0 || head.y < 0 || head.x >= 18 || head.y >= 18 || snake.some((p) => p.x === head.x && p.y === head.y)) return finish('over');
-    snake.unshift(head);
-    if (head.x === food.x && head.y === food.y) {
-      score += 10;
-      do food = { x: Math.floor(Math.random() * 18), y: Math.floor(Math.random() * 18) }; while (snake.some((p) => p.x === food.x && p.y === food.y));
-    } else snake.pop();
-  }
-
-  function updateMaze(dt: number): void {
-    tick += dt;
-    if (tick > 0.12) {
-      tick = 0;
-      const nx = player.x + (nextDirection === 'left' ? -1 : nextDirection === 'right' ? 1 : 0);
-      const ny = player.y + (nextDirection === 'up' ? -1 : nextDirection === 'down' ? 1 : 0);
-      if (nx >= 1 && ny >= 1 && nx < 15 && ny < 15 && !walls.has(`${nx},${ny}`)) { player.x = nx; player.y = ny; }
-      const key = `${player.x},${player.y}`;
-      if (pellets.delete(key)) score += 3;
-      if (pellets.size === 0) finish('won');
-      for (const e of enemies) {
-        const ex = e.x + e.dx; const ey = e.y + e.dy;
-        if (ex <= 0 || ey <= 0 || ex >= 15 || ey >= 15 || walls.has(`${ex},${ey}`)) { e.dx *= -1; e.dy *= -1; }
-        else { e.x = ex; e.y = ey; }
-        if (e.x === player.x && e.y === player.y) finish('over');
-      }
+  function onPointerDown(e: PointerEvent): void {
+    canvas?.setPointerCapture?.(e.pointerId);
+    downX = e.clientX;
+    downY = e.clientY;
+    if (status === 'ready' || status === 'paused') start();
+    if (game.control !== 'turn') {
+      dragging = true;
+      input.pointerX = mapX(e.clientX);
     }
   }
 
-  function updateRacing(dt: number): void {
-    if (keyState.has('left')) player.x -= 180 * dt;
-    if (keyState.has('right')) player.x += 180 * dt;
-    player.x = Math.max(74, Math.min(254, player.x));
-    score += Math.floor(25 * dt);
-    tick += dt;
-    if (tick > Math.max(0.35, 0.9 - score / 800)) {
-      tick = 0;
-      obstacles.push({ x: 76 + Math.floor(Math.random() * 5) * 38, y: -28, w: 30, h: 42, speed: 105 + score / 4 });
+  function onPointerMove(e: PointerEvent): void {
+    if (dragging) input.pointerX = mapX(e.clientX);
+  }
+
+  function onPointerUp(e: PointerEvent): void {
+    const dx = e.clientX - downX;
+    const dy = e.clientY - downY;
+    const moved = Math.hypot(dx, dy);
+    if (game.control === 'turn' && moved > 24) {
+      input.turn = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up';
+    } else if (moved <= 12) {
+      // a tap = the action button (launch / jump), also un-pauses
+      input.action = true;
     }
-    for (const o of obstacles) o.y += o.speed * dt;
-    obstacles = obstacles.filter((o) => o.y < H + 60);
-    for (const o of obstacles) if (rectHit(player.x, player.y, 28, 42, o.x, o.y, o.w, o.h)) finish('over');
+    dragging = false;
+    input.pointerX = null;
   }
 
-  function updatePlatformer(dt: number): void {
-    player.vx = (keyState.has('left') ? -140 : keyState.has('right') ? 140 : 0);
-    player.x += player.vx * dt;
-    player.vy += 520 * dt;
-    player.y += player.vy * dt;
-    const platforms = [{ x: 0, y: 328, w: 360, h: 18 }, { x: 62, y: 262, w: 84, h: 12 }, { x: 180, y: 206, w: 86, h: 12 }, { x: 54, y: 146, w: 78, h: 12 }, { x: 224, y: 104, w: 78, h: 12 }];
-    player.grounded = false;
-    for (const p of platforms) if (player.vy >= 0 && rectHit(player.x, player.y, 22, 28, p.x, p.y, p.w, p.h)) { player.y = p.y - 28; player.vy = 0; player.grounded = true; }
-    player.x = Math.max(0, Math.min(338, player.x));
-    score = Math.max(score, Math.floor((328 - player.y) / 2));
-    if (player.y < 72 && player.x > 230) finish('won');
-    if (player.y > H + 40) finish('over');
+  // ── on-screen controls ─────────────────────────────────────────────────────
+  function onTurn(dir: Direction): void {
+    input.turn = dir;
+    start();
+  }
+  function onHold(dir: Direction, down: boolean): void {
+    if (down) input.held.add(dir);
+    else input.held.delete(dir);
+    start();
+  }
+  function onAction(down: boolean): void {
+    if (down) {
+      input.action = true;
+      start();
+    }
   }
 
-  function updateBreakout(dt: number): void {
-    if (keyState.has('left')) player.x -= 190 * dt;
-    if (keyState.has('right')) player.x += 190 * dt;
-    player.x = Math.max(12, Math.min(268, player.x));
-    ball.x += ball.vx * dt; ball.y += ball.vy * dt;
-    if (ball.x < 8 || ball.x > W - 8) ball.vx *= -1;
-    if (ball.y < 8) ball.vy *= -1;
-    if (rectHit(ball.x - 7, ball.y - 7, 14, 14, player.x, 318, 80, 12)) ball.vy = -Math.abs(ball.vy);
-    for (const b of bricks) if (b.alive && rectHit(ball.x - 7, ball.y - 7, 14, 14, b.x, b.y, b.w, b.h)) { b.alive = false; ball.vy *= -1; score += 5; }
-    if (bricks.every((b) => !b.alive)) finish('won');
-    if (ball.y > H + 20) finish('over');
-  }
-
-  function rectHit(ax: number, ay: number, aw: number, ah: number, bx: number, by: number, bw: number, bh: number): boolean {
-    return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by;
-  }
-
-  function draw(): void {
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#09111f'; ctx.fillRect(0, 0, W, H);
-    ctx.strokeStyle = 'rgba(255,255,255,.12)'; ctx.strokeRect(0.5, 0.5, W - 1, H - 1);
-    if (game.id === 'snake') drawSnake(ctx);
-    if (game.id === 'maze') drawMaze(ctx);
-    if (game.id === 'racing') drawRacing(ctx);
-    if (game.id === 'platformer') drawPlatformer(ctx);
-    if (game.id === 'breakout') drawBreakout(ctx);
-    if (status !== 'playing') drawOverlay(ctx);
-  }
-
-  function drawSnake(ctx: CanvasRenderingContext2D): void {
-    const s = 20;
-    ctx.fillStyle = '#22c55e'; for (const p of snake) round(ctx, p.x * s + 2, p.y * s + 2, 16, 16, 5);
-    ctx.fillStyle = '#f97316'; round(ctx, food.x * s + 3, food.y * s + 3, 14, 14, 7);
-  }
-  function drawMaze(ctx: CanvasRenderingContext2D): void {
-    const s = 22;
-    ctx.fillStyle = '#1e3a8a'; for (const key of walls) { const [x,y] = key.split(',').map(Number); round(ctx, x*s+4, y*s+4, 16, 16, 4); }
-    ctx.fillStyle = '#fde68a'; for (const key of pellets) { const [x,y] = key.split(',').map(Number); ctx.beginPath(); ctx.arc(x*s+12, y*s+12, 3, 0, Math.PI*2); ctx.fill(); }
-    ctx.fillStyle = '#fb7185'; for (const e of enemies) round(ctx, e.x*s+5, e.y*s+5, 14, 14, 7);
-    ctx.fillStyle = '#38bdf8'; round(ctx, player.x*s+4, player.y*s+4, 16, 16, 8);
-  }
-  function drawRacing(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = '#1f2937'; round(ctx, 64, 0, 232, H, 18);
-    ctx.strokeStyle = '#f8fafc'; ctx.setLineDash([16,14]); ctx.beginPath(); ctx.moveTo(180, 0); ctx.lineTo(180, H); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = '#ef4444'; for (const o of obstacles) round(ctx, o.x, o.y, o.w, o.h, 7);
-    ctx.fillStyle = '#38bdf8'; round(ctx, player.x, player.y, 28, 42, 8);
-  }
-  function drawPlatformer(ctx: CanvasRenderingContext2D): void {
-    const platforms = [{ x: 0, y: 328, w: 360, h: 18 }, { x: 62, y: 262, w: 84, h: 12 }, { x: 180, y: 206, w: 86, h: 12 }, { x: 54, y: 146, w: 78, h: 12 }, { x: 224, y: 104, w: 78, h: 12 }];
-    ctx.fillStyle = '#64748b'; for (const p of platforms) round(ctx, p.x, p.y, p.w, p.h, 6);
-    ctx.fillStyle = '#facc15'; ctx.beginPath(); ctx.arc(270, 82, 12, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#a78bfa'; round(ctx, player.x, player.y, 22, 28, 8);
-  }
-  function drawBreakout(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = '#38bdf8'; for (const b of bricks) if (b.alive) round(ctx, b.x, b.y, b.w, b.h, 5);
-    ctx.fillStyle = '#e879f9'; round(ctx, player.x, 318, 80, 12, 6);
-    ctx.fillStyle = '#fde68a'; ctx.beginPath(); ctx.arc(ball.x, ball.y, 7, 0, Math.PI*2); ctx.fill();
-  }
-  function drawOverlay(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = 'rgba(0,0,0,.42)'; ctx.fillRect(0,0,W,H);
-  }
-  function round(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number): void {
-    ctx.beginPath(); ctx.roundRect(x, y, w, h, r); ctx.fill();
-  }
+  const statusKey = $derived(
+    status === 'ready'
+      ? 'arcade.state.ready'
+      : status === 'playing'
+        ? 'arcade.state.playing'
+        : status === 'paused'
+          ? 'arcade.state.paused'
+          : status === 'won'
+            ? 'arcade.state.won'
+            : 'arcade.state.over'
+  );
 
   onMount(() => {
-    highScore = readArcadeScore(highScoreKey(game.id));
-    lastScore = readArcadeScore(lastScoreKey(game.id));
+    reduced = prefersReducedMotion();
+    high = readArcadeScore(highScoreKey(game.id));
+    last = readArcadeScore(lastScoreKey(game.id));
+    engine = game.factory();
+    if (canvas) {
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.width = FIELD_W * dpr;
+      canvas.height = FIELD_H * dpr;
+      ctx = canvas.getContext('2d');
+      ctx?.scale(dpr, dpr);
+    }
     reset();
+    // block page scroll / pull-to-refresh anywhere on the game surface WHILE
+    // playing (not just the canvas), so a stray drag can't scroll the page mid-run
+    const stopTouch = (ev: TouchEvent) => {
+      if (status === 'playing') ev.preventDefault();
+    };
+    shellEl?.addEventListener('touchmove', stopTouch, { passive: false });
+    // a lost window focus never delivers keyup → clear held keys so nothing
+    // keeps sliding on its own when the player returns (alt-tab, app switch)
+    const onBlur = () => {
+      input.held.clear();
+      dragging = false;
+      input.pointerX = null;
+    };
+    window.addEventListener('blur', onBlur);
     window.addEventListener('keydown', onKeydown, { passive: false });
     window.addEventListener('keyup', onKeyup);
-    raf = requestAnimationFrame(loop);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('keydown', onKeydown); window.removeEventListener('keyup', onKeyup); };
+    raf = requestAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(raf);
+      shellEl?.removeEventListener('touchmove', stopTouch);
+      window.removeEventListener('blur', onBlur);
+      window.removeEventListener('keydown', onKeydown);
+      window.removeEventListener('keyup', onKeyup);
+    };
   });
 </script>
 
-<div class="game-shell" data-game={game.id}>
-  <header class="game-head">
+<div class="shell" bind:this={shellEl} data-game={game.id} style="--accent: {game.accent};">
+  <header class="head">
     <a href="/secrets/" class="back">{$t('arcade.game.back', { default: '← Voltar à sala' })}</a>
-    <div>
-      <p class="kicker">{$t('arcade.game.kicker', { default: 'Máquina arcade' })}</p>
+    <div class="title">
+      <p class="kicker">{$t(game.difficultyKey)} · {$t('arcade.game.kicker', { default: 'Máquina arcade' })}</p>
       <h1><span aria-hidden="true">{game.icon}</span> {$t(game.titleKey)}</h1>
-      <p>{$t(game.descriptionKey)}</p>
     </div>
   </header>
 
-  <section class="score-panel" aria-label={$t('arcade.score.aria', { default: 'Pontuação do jogo' })}>
+  <div class="hud" aria-label={$t('arcade.score.aria', { default: 'Pontuação do jogo' })}>
     <span><small>{$t('arcade.score.current', { default: 'Pontuação' })}</small><strong>{score}</strong></span>
-    <span><small>{$t('arcade.score.best', { default: 'Melhor pontuação' })}</small><strong>{highScore}</strong></span>
-    <span><small>{$t('arcade.score.last', { default: 'Última' })}</small><strong>{lastScore}</strong></span>
-  </section>
+    <span><small>{$t('arcade.score.best', { default: 'Melhor pontuação' })}</small><strong>{high}</strong></span>
+    <span><small>{$t('arcade.score.last', { default: 'Última' })}</small><strong>{last}</strong></span>
+  </div>
 
   <div class="cabinet">
-    <canvas bind:this={canvas} width={W} height={H} aria-label={$t('arcade.game.canvas', { default: 'Área de jogo arcade' })}></canvas>
-    <div class="status" aria-live="polite">
-      <strong>{$t(messageKey)}</strong>
+    <div class="stage">
+      <canvas
+        bind:this={canvas}
+        onpointerdown={onPointerDown}
+        onpointermove={onPointerMove}
+        onpointerup={onPointerUp}
+        onpointercancel={onPointerUp}
+        aria-label={$t('arcade.game.canvas', { default: 'Área de jogo arcade' })}
+      ></canvas>
+
+      {#if status !== 'playing'}
+        <div class="overlay" class:win={status === 'won'} class:over={status === 'over'}>
+          {#if status === 'ready'}
+            <p class="big">{game.icon}</p>
+            <button type="button" class="cta" onclick={start}>{$t('arcade.actions.play', { default: 'Jogar' })}</button>
+            <p class="sub">{$t('arcade.overlay.tap_start', { default: 'Toca para começar' })}</p>
+          {:else if status === 'paused'}
+            <p class="big">⏸️</p>
+            <strong class="ov-title">{$t('arcade.state.paused', { default: 'Em pausa' })}</strong>
+            <button type="button" class="cta" onclick={pause}>{$t('arcade.actions.resume', { default: 'Continuar' })}</button>
+          {:else}
+            <strong class="ov-title">
+              {status === 'won'
+                ? $t('arcade.result.won', { default: 'Conseguiste! 🎉' })
+                : $t('arcade.result.over', { default: 'Fim de jogo' })}
+            </strong>
+            {#if newRecord}
+              <span class="record">⭐ {$t('arcade.overlay.new_record', { default: 'Novo recorde!' })}</span>
+            {/if}
+            <p class="ov-score">{$t('arcade.result.score_line', { values: { score, best: high }, default: 'Pontuação {score} · recorde {best}' })}</p>
+            <div class="ov-actions">
+              <button type="button" class="cta" onclick={restart}>{$t('arcade.actions.play_again', { default: 'Jogar de novo' })}</button>
+              <a class="ghost" href="/secrets/">{$t('arcade.game.back', { default: '← Voltar à sala' })}</a>
+            </div>
+          {/if}
+        </div>
+      {/if}
     </div>
+    <p class="status-line" aria-live="polite">{$t(statusKey)}</p>
   </div>
 
   <div class="actions">
-    <button type="button" onclick={start}>{$t('arcade.actions.play', { default: 'Jogar' })}</button>
-    <button type="button" onclick={pause}>{$t('arcade.actions.pause', { default: 'Pausa' })}</button>
-    <button type="button" onclick={reset}>{$t('arcade.actions.restart', { default: 'Recomeçar' })}</button>
+    <button type="button" onclick={start} disabled={status === 'playing'}>{$t('arcade.actions.play', { default: 'Jogar' })}</button>
+    <button type="button" onclick={pause} disabled={status !== 'playing' && status !== 'paused'}>
+      {status === 'paused' ? $t('arcade.actions.resume', { default: 'Continuar' }) : $t('arcade.actions.pause', { default: 'Pausa' })}
+    </button>
+    <button type="button" onclick={restart}>{$t('arcade.actions.restart', { default: 'Recomeçar' })}</button>
   </div>
 
-  <section class="controls" aria-label={$t('arcade.controls.aria', { default: 'Controlos' })}>
-    <div class="dpad">
-      <button type="button" aria-label={$t('arcade.controls.up', { default: 'Cima' })} onpointerdown={() => setDir('up')}>↑</button>
-      <button type="button" aria-label={$t('arcade.controls.left', { default: 'Esquerda' })} onpointerdown={() => setDir('left')}>←</button>
-      <button type="button" aria-label={$t('arcade.controls.right', { default: 'Direita' })} onpointerdown={() => setDir('right')}>→</button>
-      <button type="button" aria-label={$t('arcade.controls.down', { default: 'Baixo' })} onpointerdown={() => setDir('down')}>↓</button>
-    </div>
-    <button type="button" class="action" onpointerdown={action}>{$t('arcade.controls.action', { default: 'Acção' })}</button>
-    <p>{$t(game.controlsKey)}</p>
+  <TouchControls control={game.control} {onTurn} {onHold} {onAction} />
+
+  <section class="howto">
+    <p class="mobile">{$t(game.controlsKey)}</p>
+    <p class="keys">⌨️ {$t(game.keysKey)}</p>
   </section>
 </div>
 
 <style>
-  .game-shell { max-width: 920px; margin: 0 auto; padding: 1rem 1rem 8rem; color: var(--txt, #fff); touch-action: manipulation; }
-  .game-head { display: grid; gap: .85rem; margin-bottom: 1rem; }
-  .back { color: #bfdbfe; text-decoration: none; font-weight: 850; }
-  .kicker { margin: 0; color: #67e8f9; text-transform: uppercase; letter-spacing: .09em; font-size: .72rem; font-weight: 900; }
-  h1 { margin: .15rem 0 .35rem; font-size: clamp(2rem, 8vw, 3.3rem); line-height: 1; }
-  .game-head p { color: var(--txt2); margin: 0; line-height: 1.5; }
-  .score-panel { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .55rem; margin-bottom: .85rem; }
-  .score-panel span { padding: .7rem; border-radius: 1rem; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); }
-  .score-panel small, .score-panel strong { display: block; } .score-panel small { color: var(--txt3); font-size: .72rem; } .score-panel strong { font-size: 1.25rem; }
-  .cabinet { position: relative; max-width: 480px; margin: 0 auto; padding: .8rem; border: 1px solid rgba(103,232,249,.38); border-radius: 1.5rem; background: radial-gradient(circle at top, rgba(103,232,249,.18), transparent 42%), rgba(0,0,0,.35); box-shadow: 0 24px 60px rgba(0,0,0,.34); }
-  canvas { display: block; width: 100%; aspect-ratio: 1; border-radius: 1rem; background: #09111f; image-rendering: pixelated; }
-  .status { position: absolute; left: 1.2rem; right: 1.2rem; bottom: 1.2rem; display: flex; justify-content: center; pointer-events: none; }
-  .status strong { padding: .45rem .75rem; border-radius: 999px; background: rgba(0,0,0,.62); border: 1px solid rgba(255,255,255,.18); }
-  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .55rem; margin: .85rem 0; }
-  button { min-height: 44px; border: 1px solid rgba(255,255,255,.16); border-radius: .9rem; padding: .65rem .9rem; color: white; background: rgba(255,255,255,.09); font-weight: 850; cursor: pointer; }
-  button:hover, button:focus-visible { background: rgba(103,232,249,.18); outline: 2px solid rgba(103,232,249,.45); outline-offset: 2px; }
-  .controls { display: grid; grid-template-columns: auto 1fr; gap: .85rem; align-items: center; max-width: 560px; margin: 0 auto; padding: .9rem; border-radius: 1rem; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.1); }
-  .controls p { grid-column: 1 / -1; margin: 0; color: var(--txt2); }
-  .dpad { display: grid; grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(3, 52px); gap: .25rem; }
-  .dpad button:nth-child(1) { grid-column: 2; grid-row: 1; } .dpad button:nth-child(2) { grid-column: 1; grid-row: 2; } .dpad button:nth-child(3) { grid-column: 3; grid-row: 2; } .dpad button:nth-child(4) { grid-column: 2; grid-row: 3; }
-  .action { min-width: 96px; min-height: 96px; border-radius: 999px; background: linear-gradient(135deg, #fb7185, #a78bfa); }
-  @media (max-width: 520px) { .game-shell { padding-inline: .7rem; } .score-panel { grid-template-columns: 1fr 1fr 1fr; } .score-panel span { padding: .55rem; } .controls { grid-template-columns: 1fr; justify-items: center; } .controls p { text-align: center; } }
+  .shell {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 0.75rem 0.9rem calc(6rem + env(safe-area-inset-bottom));
+    color: var(--txt, #fff);
+  }
+  .head { display: grid; gap: 0.4rem; margin-bottom: 0.6rem; }
+  .back { color: #bfdbfe; text-decoration: none; font-weight: 850; font-size: 0.9rem; }
+  .kicker { margin: 0; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.68rem; font-weight: 900; }
+  h1 { margin: 0.05rem 0 0; font-size: clamp(1.5rem, 6vw, 2.2rem); line-height: 1.05; }
+
+  .hud { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.45rem; margin-bottom: 0.7rem; }
+  .hud span { padding: 0.5rem 0.6rem; border-radius: 0.85rem; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); text-align: center; }
+  .hud small, .hud strong { display: block; }
+  .hud small { color: var(--txt3, #94a3b8); font-size: 0.66rem; }
+  .hud strong { font-size: 1.2rem; font-variant-numeric: tabular-nums; }
+
+  .cabinet { max-width: 420px; margin: 0 auto; }
+  .stage {
+    position: relative;
+    padding: 0.6rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
+    border-radius: 1.3rem;
+    background: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 46%), rgba(0, 0, 0, 0.4);
+    box-shadow: 0 22px 54px rgba(0, 0, 0, 0.4);
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    aspect-ratio: 360 / 480;
+    max-height: min(46vh, 460px);
+    margin: 0 auto;
+    border-radius: 0.9rem;
+    background: #0a1120;
+    touch-action: none;
+    image-rendering: auto;
+  }
+  .overlay {
+    position: absolute;
+    inset: 0.6rem;
+    display: grid;
+    place-content: center;
+    gap: 0.5rem;
+    justify-items: center;
+    text-align: center;
+    border-radius: 0.9rem;
+    background: rgba(6, 10, 22, 0.78);
+    backdrop-filter: blur(3px);
+    padding: 1rem;
+  }
+  .overlay.win { background: rgba(8, 20, 12, 0.82); }
+  .overlay .big { margin: 0; font-size: 2.6rem; }
+  .ov-title { font-size: 1.35rem; }
+  .record {
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #fbbf24, #f472b6);
+    color: #1a1206;
+    font-weight: 900;
+    font-size: 0.82rem;
+  }
+  .ov-score { margin: 0; color: var(--txt2, #cbd5e1); font-size: 0.9rem; }
+  .ov-actions { display: grid; gap: 0.45rem; justify-items: center; margin-top: 0.3rem; }
+  .cta {
+    min-height: 48px;
+    min-width: 160px;
+    padding: 0.7rem 1.5rem;
+    border-radius: 0.9rem;
+    border: none;
+    background: linear-gradient(135deg, var(--accent), #a78bfa);
+    color: #06121f;
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  .cta:active { transform: scale(0.97); }
+  .cta:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent); }
+  .sub { margin: 0; color: var(--txt3, #94a3b8); font-size: 0.8rem; }
+  .ghost { color: #bfdbfe; text-decoration: none; font-weight: 800; font-size: 0.88rem; padding: 0.4rem; }
+  .status-line { margin: 0.55rem 0 0; text-align: center; color: var(--txt2, #cbd5e1); font-weight: 800; font-size: 0.85rem; }
+
+  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin: 0.75rem 0 0.4rem; }
+  .actions button {
+    min-height: 44px;
+    padding: 0.55rem 0.95rem;
+    border-radius: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font: inherit;
+    font-weight: 850;
+    cursor: pointer;
+  }
+  .actions button:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 20%, transparent); }
+  .actions button:disabled { opacity: 0.45; cursor: default; }
+  .actions button:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 45%, transparent); }
+
+  .howto { margin-top: 0.6rem; text-align: center; }
+  .howto p { margin: 0.2rem 0; color: var(--txt3, #94a3b8); font-size: 0.78rem; line-height: 1.45; }
+  .howto .keys { display: none; }
+  /* keyboard hint only where a real keyboard/mouse is likely */
+  @media (pointer: fine) {
+    .howto .keys { display: block; }
+  }
 </style>

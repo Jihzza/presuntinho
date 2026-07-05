@@ -1,66 +1,125 @@
-export type ArcadeGameId = 'snake' | 'maze' | 'racing' | 'platformer' | 'breakout';
+import type { ArcadeEngine, ControlScheme } from './engine';
+import { createSnake } from './games/snake';
+import { createMaze } from './games/maze';
+import { createRacing } from './games/racing';
+import { createPlatformer } from './games/platformer';
+import { createBreakout } from './games/breakout';
+import { createPong } from './games/pong';
+
+export type ArcadeGameId = 'snake' | 'maze' | 'racing' | 'platformer' | 'breakout' | 'pong';
 
 export interface ArcadeGameDefinition {
   id: ArcadeGameId;
   icon: string;
+  /** Marquee accent colour (matches the engine's neon palette). */
+  accent: string;
+  /** Which on-screen control cluster this game shows. */
+  control: ControlScheme;
+  /** Win by reaching a goal (won) or survive-forever (endless high score)? */
+  mode: 'goal' | 'endless';
   titleKey: string;
   descriptionKey: string;
   difficultyKey: string;
+  /** Per-game control hint (mobile). */
   controlsKey: string;
+  /** Per-game keyboard hint (desktop panel). */
+  keysKey: string;
   href: string;
+  factory: () => ArcadeEngine;
 }
 
 export const ARCADE_GAMES: ArcadeGameDefinition[] = [
   {
     id: 'snake',
     icon: '🐍',
+    accent: '#4ade80',
+    control: 'turn',
+    mode: 'endless',
     titleKey: 'arcade.games.snake.title',
     descriptionKey: 'arcade.games.snake.description',
     difficultyKey: 'arcade.difficulty.easy',
     controlsKey: 'arcade.games.snake.controls',
-    href: '/secrets/snake/'
+    keysKey: 'arcade.games.snake.keys',
+    href: '/secrets/snake/',
+    factory: createSnake
   },
   {
     id: 'maze',
     icon: '⭐',
+    accent: '#a78bfa',
+    control: 'turn',
+    mode: 'goal',
     titleKey: 'arcade.games.maze.title',
     descriptionKey: 'arcade.games.maze.description',
     difficultyKey: 'arcade.difficulty.medium',
     controlsKey: 'arcade.games.maze.controls',
-    href: '/secrets/maze/'
+    keysKey: 'arcade.games.maze.keys',
+    href: '/secrets/maze/',
+    factory: createMaze
   },
   {
     id: 'racing',
     icon: '🏎️',
+    accent: '#38bdf8',
+    control: 'steer',
+    mode: 'endless',
     titleKey: 'arcade.games.racing.title',
     descriptionKey: 'arcade.games.racing.description',
     difficultyKey: 'arcade.difficulty.medium',
     controlsKey: 'arcade.games.racing.controls',
-    href: '/secrets/racing/'
+    keysKey: 'arcade.games.racing.keys',
+    href: '/secrets/racing/',
+    factory: createRacing
   },
   {
     id: 'platformer',
     icon: '☁️',
+    accent: '#c084fc',
+    control: 'jump',
+    mode: 'goal',
     titleKey: 'arcade.games.platformer.title',
     descriptionKey: 'arcade.games.platformer.description',
     difficultyKey: 'arcade.difficulty.hard',
     controlsKey: 'arcade.games.platformer.controls',
-    href: '/secrets/platformer/'
+    keysKey: 'arcade.games.platformer.keys',
+    href: '/secrets/platformer/',
+    factory: createPlatformer
   },
   {
     id: 'breakout',
     icon: '💎',
+    accent: '#22d3ee',
+    control: 'paddle',
+    mode: 'goal',
     titleKey: 'arcade.games.breakout.title',
     descriptionKey: 'arcade.games.breakout.description',
     difficultyKey: 'arcade.difficulty.easy',
     controlsKey: 'arcade.games.breakout.controls',
-    href: '/secrets/breakout/'
+    keysKey: 'arcade.games.breakout.keys',
+    href: '/secrets/breakout/',
+    factory: createBreakout
+  },
+  {
+    id: 'pong',
+    icon: '🏓',
+    accent: '#f472b6',
+    control: 'paddle',
+    mode: 'goal',
+    titleKey: 'arcade.games.pong.title',
+    descriptionKey: 'arcade.games.pong.description',
+    difficultyKey: 'arcade.difficulty.medium',
+    controlsKey: 'arcade.games.pong.controls',
+    keysKey: 'arcade.games.pong.keys',
+    href: '/secrets/pong/',
+    factory: createPong
   }
 ];
 
 export function getArcadeGame(id: string | undefined): ArcadeGameDefinition | undefined {
   return ARCADE_GAMES.find((game) => game.id === id);
 }
+
+// ── local high-score persistence (unchanged storage keys) ────────────────────
 
 export function highScoreKey(id: ArcadeGameId): string {
   return `presuntinho-arcade-high-score-${id}`;
