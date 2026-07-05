@@ -1,683 +1,96 @@
 <script lang="ts">
-  // Secrets — Easter-egg hub (V6 port of V3 #pg-secrets).
-  // Renders 12 secret definitions from /config/easterEggs.json (single source
-  // of truth) using the shared <EasterEggsCard /> component.
-  //
-  // Phase 22 — adds two NEW sections after the secrets grid:
-  //   1. ❤️ Heart Tiers — vertical timeline of the 11 click milestones
-  //      from easterEggs.json#heartTiers, with the user's current
-  //      heartClicks highlighted.
-  //   2. 🏷️ Badges — full grid of all 15 badges (config-driven); unlocked
-  //      badges render in color, locked badges are grayscale with a "???"
-  //      label. Reuses the shared <BadgeCard /> component.
-
   import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
-  import { db } from '$lib/state/db';
-  import {
-    getSecrets,
-    getHeartTiers,
-    type Secret,
-    type HeartTier
-  } from '$lib/easterEggsConfig';
-  import EasterEggsCard from '$lib/components/EasterEggsCard.svelte';
-  import BadgeCard from '$lib/components/BadgeCard.svelte';
-  // V10 — the badge wall renders from the corrected shared catalog (17
-  // badges, localized names) instead of the legacy V3 JSON labels.
-  import {
-    BADGE_CATALOG,
-    BADGE_PT_DESCRIPTIONS,
-    BADGE_PT_NAMES
-  } from '$lib/gamification/badge-catalog';
+  import { ARCADE_GAMES, highScoreKey, lastScoreKey, readArcadeScore } from '$lib/arcade/games';
 
-  /** Sparse badge record: id → { unlocked, unlockedAt }. */
-  interface BadgeStatus {
-    unlocked: boolean;
-    unlockedAt: number;
-  }
-
-  // Reactive state
-  let secrets = $state<Secret[]>([]);
-  let discovered = $state<Record<string, boolean>>({});
-  let discoveredAt = $state<Record<string, number>>({});
-  let badges = $state<Record<string, BadgeStatus>>({});
-  let heartTiers = $state<HeartTier[]>([]);
-  const badgeCatalog = $derived(
-    BADGE_CATALOG.map((def) => ({
-      id: def.id,
-      icon: def.icon,
-      label:
-        $t(`components.badge.catalog.${def.id}.name`, { default: BADGE_PT_NAMES[def.id] }) ??
-        BADGE_PT_NAMES[def.id],
-      description:
-        $t(`components.badge.catalog.${def.id}.description`, {
-          default: BADGE_PT_DESCRIPTIONS[def.id]
-        }) ?? BADGE_PT_DESCRIPTIONS[def.id]
-    }))
-  );
-  let heartClicks = $state(0);
-  let visitedCount = $state(0);
-  let loadError = $state<string | null>(null);
-
-  async function refresh(): Promise<void> {
-    if (typeof indexedDB === 'undefined') return; // SSR guard
-    try {
-      const d = db();
-
-      // 1. Secrets table (which secrets the user has explicitly discovered)
-      const secretRows = await d.secrets.toArray();
-      const dMap: Record<string, boolean> = {};
-      const daMap: Record<string, number> = {};
-      for (const r of secretRows) {
-        dMap[r.id] = Boolean(r.discovered);
-        daMap[r.id] = r.discoveredAt ?? 0;
-      }
-      discovered = dMap;
-      discoveredAt = daMap;
-
-      // 2. Badges table (b1-b15)
-      const badgeRows = await d.badges.toArray();
-      const bMap: Record<string, BadgeStatus> = {};
-      for (const r of badgeRows) {
-        bMap[r.id] = {
-          unlocked: Boolean(r.unlocked),
-          unlockedAt: Number(r.unlockedAt ?? 0)
-        };
-      }
-      badges = bMap;
-
-      // 3. Non-badge unlock conditions (fallback heuristics)
-      const stateRow = await d.state.get('main');
-      heartClicks = Number(stateRow?.heartMaxClicks ?? 0);
-
-      const visitedRows = await d.visited.toArray();
-      visitedCount = visitedRows.length;
-    } catch (e) {
-      console.error('[secrets] refresh failed', e);
-      loadError = e instanceof Error ? e.message : String(e);
-    }
-  }
-
-  /**
-   * Determine if a secret is unlocked.
-   *
-   * The Dexie `secrets` table (written by discoverSecret()) is the primary
-   * truth — this is what makes badge-less secrets like 'logo3' or 'help'
-   * stick (the old `logoClicks >= 3` check was broken because logoClicks
-   * resets to 0 five seconds after the last click).
-   *
-   * Fallback heuristics keep pre-V8 users unlocked even if their discovery
-   * row was never written:
-   *   - If it has a badge, the badge being unlocked counts.
-   *   - 'heart' unlocks at heartMaxClicks >= 1.
-   *   - 'mascot' unlocks after 4 visited pages.
-   */
-  function isUnlocked(s: Secret): boolean {
-    if (discovered[s.id]) return true;
-    if (s.badge && badges[s.badge]?.unlocked) return true;
-    if (s.id === 'heart')  return heartClicks >= 1;
-    if (s.id === 'mascot') return visitedCount >= 4;
-    return false;
-  }
-
-  /**
-   * Localized view of the config secrets: name + hint go through i18n
-   * (keys `secrets.egg.<id>.name` / `.hint`) with the config text as the
-   * final fallback, so every locked card shows a one-line cryptic hint in
-   * the user's language.
-   */
-  let localizedSecrets = $derived(
-    secrets.map((s) => ({
-      ...s,
-      name: $t(`secrets.egg.${s.id}.name`, { default: s.name }),
-      hint: $t(`secrets.egg.${s.id}.hint`, { default: s.hint })
-    }))
-  );
-
-  let discoveredCount = $derived(
-    secrets.reduce((acc, s) => acc + (isUnlocked(s) ? 1 : 0), 0)
-  );
-
-  let unlockedBadgesCount = $derived(
-    badgeCatalog.reduce((acc, b) => acc + (badges[b.id]?.unlocked ? 1 : 0), 0)
-  );
-
-  let unlockedTiersCount = $derived(
-    heartTiers.reduce((acc, t) => acc + (heartClicks >= t.at ? 1 : 0), 0)
-  );
-
-  let nextTiers = $derived(heartTiers.filter((t) => heartClicks < t.at).slice(0, 3));
-  let nextTier = $derived(nextTiers[0] ?? null);
-  let clicksToNextTier = $derived(nextTier ? nextTier.at - heartClicks : 0);
+  let highScores = $state<Record<string, number>>({});
+  let lastScores = $state<Record<string, number>>({});
 
   onMount(() => {
-    // Load the two config lists from /config/easterEggs.json in parallel —
-    // they share the same underlying cache so this is one network round
-    // trip. (Badges render from the shared badge-catalog module now.)
-    Promise.all([getSecrets(), getHeartTiers()])
-      .then(([s, ht]) => {
-        secrets = s;
-        heartTiers = ht;
-      })
-      .catch((e) => {
-        console.error('[secrets] config load failed', e);
-        loadError = e instanceof Error ? e.message : String(e);
-        secrets = [];
-        heartTiers = [];
-      });
-
-    void refresh();
-    const onVis = () => {
-      if (document.visibilityState === 'visible') void refresh();
-    };
-    document.addEventListener('visibilitychange', onVis);
-    return () => document.removeEventListener('visibilitychange', onVis);
+    const highs: Record<string, number> = {};
+    const lasts: Record<string, number> = {};
+    for (const game of ARCADE_GAMES) {
+      highs[game.id] = readArcadeScore(highScoreKey(game.id));
+      lasts[game.id] = readArcadeScore(lastScoreKey(game.id));
+    }
+    highScores = highs;
+    lastScores = lasts;
   });
 </script>
 
 <svelte:head>
-  <title>🔐 {$t('routes.secrets.title', { default: 'Secrets' })} · Presuntinho</title>
+  <title>{$t('arcade.meta.title', { default: 'Sala Arcade Secreta' })} · Presuntinho</title>
+  <meta name="description" content={$t('arcade.meta.description', { default: 'Jogos arcade secretos do Presuntinho, com pontuações locais e controlos mobile.' })} />
 </svelte:head>
 
-<div class="secrets">
-  <header class="secrets-head">
-    <p class="breadcrumb">
-      <a href="/">{$t('secrets.breadcrumb.home', { default: '← Hub' })}</a>
-      <span class="sep">›</span>
-      <span>{$t('secrets.breadcrumb.current', { default: 'Secrets' })}</span>
-    </p>
-    <span class="tag">{$t('secrets.tag.hidden')}</span>
-        <h1>
-          {$t('secrets.heading.h1')}
-          <span class="counter" aria-live="polite">
-            {$t('secrets.counter.discovered', {
-              values: { discovered: discoveredCount, total: secrets.length }
-            })}
-          </span>
-        </h1>
-    <p class="sub">{$t('routes.secrets.subtitle', { default: 'As dicas estão sempre visíveis. As recompensas desbloqueiam à medida que descobres cada easter egg.' })}</p>
+<div class="arcade-room">
+  <header class="hero">
+    <a class="back" href="/">{$t('arcade.back.home', { default: '← Home' })}</a>
+    <span class="tag">{$t('arcade.hero.tag', { default: 'Secret Room' })}</span>
+    <h1>{$t('arcade.hero.title', { default: 'Sala Arcade Secreta' })}</h1>
+    <p>{$t('arcade.hero.body', { default: 'Uma sala escondida com jogos rápidos, pontuação local e controlos pensados para telemóvel e desktop.' })}</p>
+    <div class="summary" aria-label={$t('arcade.summary.aria', { default: 'Resumo da sala arcade' })}>
+      <span><strong>{ARCADE_GAMES.length}</strong><small>{$t('arcade.summary.games', { default: 'Jogos' })}</small></span>
+      <span><strong>{Object.values(highScores).reduce((a, b) => a + b, 0)}</strong><small>{$t('arcade.summary.points', { default: 'Pontos recorde' })}</small></span>
+      <span><strong>{$t('arcade.summary.local', { default: 'Local' })}</strong><small>{$t('arcade.summary.storage', { default: 'Pontuações' })}</small></span>
+    </div>
   </header>
 
-  {#if loadError}
-      <p class="error">{$t('secrets.error.loadFailed', { values: { error: loadError } })}</p>
-    {/if}
-
-    <article class="card">
-      <h2>{$t('secrets.findAll.title')}</h2>
-      <p>{$t('secrets.findAll.body')}</p>
-    </article>
-
-    <a class="card memorias-link" href="/memorias/">
-      <div class="memorias-copy">
-        <h2>🕰️ {$t('secrets.memorias.title', { default: 'Memórias' })}</h2>
-        <p>{$t('secrets.memorias.body', { default: 'Uma linha do tempo carinhosa de tudo o que já descobriste e viveste aqui.' })}</p>
+  <section class="games" aria-label={$t('arcade.games.aria', { default: 'Jogos disponíveis' })}>
+    <div class="section-head">
+      <div>
+        <h2>{$t('arcade.games.title', { default: 'Escolhe uma máquina' })}</h2>
+        <p>{$t('arcade.games.body', { default: 'Todos os jogos são jogáveis dentro da app. Não há placeholders.' })}</p>
       </div>
-      <span class="memorias-arrow" aria-hidden="true">→</span>
-    </a>
+    </div>
 
-  <section class="grid" aria-label="{$t('a11y.aria.segredos', { default: 'Segredos' })}">
-    {#each localizedSecrets as s (s.id)}
-      <EasterEggsCard
-        secret={s}
-        unlocked={isUnlocked(s)}
-        discoveredAt={discoveredAt[s.id] || null}
-      />
-    {/each}
-  </section>
-
-  <!-- Phase 22: ❤️ Heart Tiers — vertical timeline of click milestones -->
-  <section class="tiers" aria-label={$t('secrets.heartTiersTitle')}>
-    <header class="section-head">
-      <h2>{$t('secrets.heartTiersTitle')}</h2>
-      <div class="tier-progress-head" aria-live="polite">
-        <span class="counter">
-          {#if clicksToNextTier === 0}
-            {$t('secrets.tiers.progressComplete')}
-          {:else}
-            {$t('secrets.tiers.progress', {
-              values: { current: unlockedTiersCount, remaining: clicksToNextTier }
-            })}
-          {/if}
-        </span>
-        {#each nextTiers as tier (tier.at)}
-          <span class="tier-chip tier-chip--locked">
-            {$t('secrets.tiers.upcomingChip', { values: { at: tier.at } })}
-          </span>
-        {/each}
-      </div>
-    </header>
-    <p class="section-sub">
-      {$t('secrets.tiers.help')}
-      <span class="heart-progress">
-        {$t('secrets.tiers.yourClicks', { values: { count: heartClicks } })}
-        <strong>{heartClicks}</strong>
-      </span>
-    </p>
-    <ol class="tier-list" role="list">
-      {#each heartTiers as tier (tier.at)}
-        {@const isReached = heartClicks >= tier.at}
-        <li
-          class="tier"
-          class:reached={isReached}
-          aria-label={$t('secrets.tiers.aria', {
-            values: {
-              at: tier.at,
-              msg: tier.msg,
-              status: isReached
-                ? $t('secrets.status.unlocked')
-                : $t('secrets.locked', { default: 'Bloqueado' })
-            }
-          })}
-        >
-          <div class="tier-marker" aria-hidden="true">
-            <span class="tier-emoji">{tier.emoji}</span>
-          </div>
-          <div class="tier-body">
-            <div class="tier-line">
-              <span class="tier-at">@{tier.at}</span>
-              <span class="tier-xp" aria-label={`${tier.xp} XP`}>+{tier.xp} XP</span>
-              {#if tier.conf > 0}
-                <span class="tier-conf" aria-label={`${tier.conf} confetti`}>🎉 {tier.conf}</span>
-              {/if}
+    <div class="grid">
+      {#each ARCADE_GAMES as game (game.id)}
+        <a class="game-card" href={game.href} data-sveltekit-preload-data>
+          <span class="machine" aria-hidden="true">{game.icon}</span>
+          <div>
+            <p class="kicker">{$t(game.difficultyKey)}</p>
+            <h3>{$t(game.titleKey)}</h3>
+            <p>{$t(game.descriptionKey)}</p>
+            <div class="scores">
+              <span>{$t('arcade.score.best_with_value', { values: { score: highScores[game.id] ?? 0 }, default: 'Melhor: {score}' })}</span>
+              <span>{$t('arcade.score.last_with_value', { values: { score: lastScores[game.id] ?? 0 }, default: 'Última: {score}' })}</span>
             </div>
-            <p class="tier-msg">{tier.msg}</p>
+            <strong>{$t('arcade.actions.play_now', { default: 'Jogar →' })}</strong>
           </div>
-          <div class="tier-status" aria-hidden="true">
-            {#if isReached}
-              <span class="status status--on">❤️</span>
-            {:else}
-              <span class="status status--off">🔒</span>
-            {/if}
-          </div>
-        </li>
-      {/each}
-    </ol>
-  </section>
-
-  <!-- Phase 22: 🏷️ Badges — all 15 config-driven badges, locked ones grayscale -->
-  <section class="badges" aria-label={$t('secrets.badgesTitle')}>
-    <header class="section-head">
-      <h2>{$t('secrets.badgesTitle')}</h2>
-      <span class="counter" aria-live="polite">
-              {$t('secrets.badges.counter', {
-                values: { unlocked: unlockedBadgesCount, total: badgeCatalog.length }
-              })}
-            </span>
-          </header>
-          <p class="section-sub">
-            {$t('secrets.badges.body')}
-          </p>
-    <div class="badge-grid" role="list">
-      {#each badgeCatalog as b (b.id)}
-        {@const status = badges[b.id]}
-        {@const isUnlockedBadge = Boolean(status?.unlocked)}
-        {#if isUnlockedBadge}
-          <BadgeCard
-                      id={b.id}
-                      name={b.label}
-                      description={b.description}
-                      icon={b.icon}
-                      unlocked={true}
-                      unlockedAt={status?.unlockedAt}
-                    />
-        {:else}
-          <!-- Locked tile: grayscale card with "???" label and hidden icon. -->
-          <div
-                      class="badge-locked"
-                      role="group"
-                      aria-label={$t('secrets.badge.lockedAria', { values: { name: b.label } })}
-                      aria-disabled="true"
-                      data-badge-id={b.id}
-                    >
-            <div class="icon" aria-hidden="true">???</div>
-            <h3 class="name">{b.label}</h3>
-            <p class="desc">🔒 {b.id}</p>
-            <div class="status" aria-hidden="true">
-              <span class="status-dot status-dot--off"></span>
-              <span>{$t('secrets.locked', { default: 'Bloqueado' })}</span>
-            </div>
-          </div>
-        {/if}
+        </a>
       {/each}
     </div>
+  </section>
+
+  <section class="note" aria-label={$t('arcade.ip.aria', { default: 'Nota sobre jogos originais' })}>
+    <h2>{$t('arcade.ip.title', { default: 'Clássicos, mas originais' })}</h2>
+    <p>{$t('arcade.ip.body', { default: 'A sala usa mecânicas arcade clássicas com nomes, visuais e personagens próprios do Presuntinho.' })}</p>
   </section>
 </div>
 
 <style>
-  .secrets {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 1.5rem 1rem 3rem;
-  }
-  .secrets-head { margin-bottom: 1.5rem; }
-  .secrets-head h1 {
-    color: #fff;
-    margin: 0.25rem 0 0.5rem;
-    font-size: 2rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  .counter {
-    font-size: 0.95rem;
-    color: #fde68a;
-    background: rgba(245, 158, 11, 0.12);
-    border: 1px solid rgba(245, 158, 11, 0.35);
-    padding: 0.2rem 0.7rem;
-    border-radius: 999px;
-    font-weight: 600;
-  }
-  .breadcrumb {
-    color: var(--txt3, #94a3b8);
-    font-size: 0.85rem;
-    margin: 0 0 0.5rem;
-  }
-  .breadcrumb a {
-    color: var(--accent, #ec4899);
-    text-decoration: none;
-  }
-  .breadcrumb a:hover { text-decoration: underline; }
-  .breadcrumb .sep { margin: 0 0.4rem; opacity: 0.6; }
-
-  .tag {
-    display: inline-block;
-    padding: 0.15rem 0.6rem;
-    background: rgba(168, 85, 247, 0.2);
-    border: 1px solid rgba(168, 85, 247, 0.5);
-    color: #e9d5ff;
-    border-radius: 999px;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
-  }
-  .sub {
-    color: var(--txt2, #cbd5e1);
-    margin: 0;
-  }
-
-  .card {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.75rem;
-    padding: 1.25rem;
-    margin-bottom: 1rem;
-  }
-  .card h2 {
-    color: #fff;
-    font-size: 1.15rem;
-    margin: 0 0 0.4rem;
-  }
-  .card p {
-    color: var(--txt2, #cbd5e1);
-    line-height: 1.55;
-    margin: 0.4rem 0;
-  }
-
-  /* Link card to the /memorias timeline. */
-  .memorias-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3, 0.75rem);
-    text-decoration: none;
-    min-height: 44px;
-    transition: border-color var(--motion-base, 220ms) ease, background var(--motion-base, 220ms) ease;
-  }
-  .memorias-link:hover,
-  .memorias-link:focus-visible {
-    border-color: color-mix(in srgb, var(--accent) 45%, transparent);
-    background: color-mix(in srgb, var(--accent) 8%, transparent);
-    outline: none;
-  }
-  .memorias-link:focus-visible {
-    box-shadow: 0 0 0 2px var(--accent);
-  }
-  .memorias-copy p { margin-bottom: 0; }
-  .memorias-arrow {
-    color: var(--accent);
-    font-size: 1.4rem;
-    flex-shrink: 0;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.75rem;
-  }
-  @media (min-width: 720px) {
-    .grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  .error {
-    color: #ff8888;
-    padding: 0.75rem 1rem;
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    border-radius: 0.5rem;
-  }
-
-  /* ---------------------------------------------------------------
-   * Phase 22: shared section-head used by .tiers and .badges
-   * ------------------------------------------------------------- */
-  .section-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    margin: 1.75rem 0 0.5rem;
-  }
-  .section-head h2 {
-    color: #fff;
-    margin: 0;
-    font-size: 1.25rem;
-  }
-  .section-sub {
-    color: var(--txt2, #cbd5e1);
-    margin: 0 0 0.75rem;
-    line-height: 1.5;
-    font-size: 0.92rem;
-  }
-
-  /* ---------------------------------------------------------------
-   * Phase 22: ❤️ Heart Tiers — vertical timeline
-   * ------------------------------------------------------------- */
-  .tiers {
-    margin-top: 2rem;
-  }
-  .tier-progress-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.4rem;
-  }
-  .tier-chip {
-    font-size: 0.8rem;
-    color: var(--txt2, #cbd5e1);
-    background: rgba(100, 116, 139, 0.16);
-    border: 1px solid rgba(148, 163, 184, 0.26);
-    border-radius: 999px;
-    padding: 0.18rem 0.55rem;
-    font-variant-numeric: tabular-nums;
-  }
-  .tier-chip--locked {
-    opacity: 0.8;
-  }
-  .heart-progress strong {
-    color: #fde68a;
-    font-variant-numeric: tabular-nums;
-  }
-  .tier-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .tier {
-    display: grid;
-    grid-template-columns: 56px 1fr auto;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.65rem 0.85rem;
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.6rem;
-    transition: background 0.2s, border-color 0.2s, transform 0.15s;
-  }
-  .tier.reached {
-    background: rgba(236, 72, 153, 0.08);
-    border-color: rgba(236, 72, 153, 0.35);
-  }
-  .tier:not(.reached) .tier-emoji {
-    filter: grayscale(0.9);
-    opacity: 0.55;
-  }
-  .tier:not(.reached) .tier-msg {
-    color: var(--txt3, #94a3b8);
-  }
-  .tier-marker {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.06);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    flex-shrink: 0;
-  }
-  .tier.reached .tier-marker {
-    background: rgba(236, 72, 153, 0.18);
-  }
-  .tier-body {
-    min-width: 0;
-  }
-  .tier-line {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-    margin-bottom: 0.15rem;
-  }
-  .tier-at {
-    color: #fde68a;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-  }
-  .tier-xp {
-    color: var(--success, #10b981);
-    font-weight: 600;
-    font-size: 0.78rem;
-  }
-  .tier-conf {
-    color: #c084fc;
-    font-size: 0.78rem;
-  }
-  .tier-msg {
-    margin: 0;
-    color: var(--txt2, #cbd5e1);
-    font-size: 0.92rem;
-    line-height: 1.4;
-  }
-  .tier-status .status {
-    font-size: 1.2rem;
-    line-height: 1;
-  }
-  .status--off { opacity: 0.45; }
-
-  @media (max-width: 540px) {
-    .tier {
-      grid-template-columns: 44px 1fr;
-      grid-template-rows: auto auto;
-    }
-    .tier-status {
-      grid-column: 2 / 3;
-      grid-row: 2 / 3;
-      text-align: right;
-    }
-  }
-
-  /* ---------------------------------------------------------------
-   * Phase 22: 🏷️ Badges — full catalog grid (locked = grayscale ???)
-   * ------------------------------------------------------------- */
-  .badges {
-    margin-top: 2rem;
-  }
-  .badge-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-  }
-  @media (min-width: 640px) {
-    .badge-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  }
-  @media (min-width: 1024px) {
-    .badge-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  }
-
-  /* Locked badge tile — mirrors BadgeCard layout but grayscale + "???". */
-  .badge-locked {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 0.5rem;
-    padding: 1rem 0.75rem 0.85rem;
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.75rem;
-    color: #fff;
-    min-height: 140px;
-    overflow: hidden;
-    opacity: 0.55;
-  }
-  .badge-locked .icon {
-    font-size: 2rem;
-    line-height: 1;
-    filter: grayscale(0.85);
-    color: var(--txt3);
-    letter-spacing: 0.15em;
-  }
-  .badge-locked .name {
-    font-size: 0.95rem;
-    margin: 0;
-    color: var(--txt2);
-    font-weight: 600;
-    line-height: 1.2;
-  }
-  .badge-locked .desc {
-    font-size: 0.72rem;
-    color: var(--txt3, #94a3b8);
-    margin: 0;
-    line-height: 1.3;
-  }
-  .badge-locked .status {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-    font-size: 0.7rem;
-    color: var(--txt3);
-    margin-top: 0.25rem;
-  }
-  .badge-locked .status-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .badge-locked .status-dot--off {
-    background: #64748b;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .tier { transition: none; }
-  }
+  .arcade-room { max-width: 1120px; margin: 0 auto; padding: 1rem 1rem 8rem; color: var(--txt, #fff); }
+  .hero, .game-card, .note { border: 1px solid rgba(103,232,249,.22); border-radius: 1.5rem; background: rgba(255,255,255,.055); box-shadow: 0 18px 52px rgba(0,0,0,.24); }
+  .hero { padding: 1.25rem; background: radial-gradient(circle at 10% 10%, rgba(236,72,153,.28), transparent 34%), radial-gradient(circle at 90% 20%, rgba(34,211,238,.22), transparent 34%), rgba(255,255,255,.055); }
+  .back { display: inline-flex; margin-bottom: .8rem; color: #bfdbfe; text-decoration: none; font-weight: 850; }
+  .tag, .kicker { color: #67e8f9; text-transform: uppercase; letter-spacing: .09em; font-size: .72rem; font-weight: 900; }
+  h1 { margin: .35rem 0; font-size: clamp(2.4rem, 10vw, 4.8rem); line-height: .95; }
+  .hero p, .section-head p, .game-card p, .note p { color: var(--txt2); line-height: 1.55; margin: 0; }
+  .summary { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .6rem; margin-top: 1rem; }
+  .summary span { padding: .75rem; border-radius: 1rem; background: rgba(0,0,0,.22); border: 1px solid rgba(255,255,255,.1); }
+  .summary strong, .summary small { display: block; } .summary small { color: var(--txt3); font-size: .75rem; }
+  .games { margin-top: 1.2rem; }
+  .section-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: .85rem; }
+  .section-head h2, .note h2 { margin: 0 0 .25rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: .85rem; }
+  .game-card { display: grid; grid-template-columns: auto 1fr; gap: .85rem; min-height: 170px; padding: 1rem; color: #fff; text-decoration: none; transition: transform 140ms ease, border-color 140ms ease, background 140ms ease; }
+  .game-card:hover, .game-card:focus-visible { transform: translateY(-2px); border-color: rgba(103,232,249,.54); background: rgba(255,255,255,.085); outline: none; }
+  .machine { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 1rem; background: linear-gradient(135deg, rgba(236,72,153,.28), rgba(34,211,238,.22)); font-size: 1.8rem; }
+  .game-card h3 { margin: .15rem 0 .35rem; font-size: 1.15rem; }
+  .scores { display: flex; flex-wrap: wrap; gap: .4rem; margin: .75rem 0; }
+  .scores span { padding: .25rem .5rem; border-radius: 999px; background: rgba(255,255,255,.09); color: var(--txt2); font-size: .78rem; }
+  .game-card strong { color: #bfdbfe; }
+  .note { margin-top: 1rem; padding: 1rem; }
+  @media (max-width: 520px) { .arcade-room { padding-inline: .75rem; } .summary { grid-template-columns: 1fr; } .game-card { grid-template-columns: 1fr; } }
 </style>
