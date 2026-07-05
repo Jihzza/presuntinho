@@ -4749,7 +4749,7 @@
   "settings.applogo": "Ícone da app",
   "settings.applogo.intro": "Escolhe o logo que aparece no ecrã inicial do teu telemóvel.",
   "settings.applogo.hint": "Sem reinstalar também funciona, mas com calma: no Android o ícone atualiza sozinho ao fim de 1–3 dias de abrires a app.",
-  "settings.applogo.picked": "Ícone escolhido! Vê em baixo como o aplicar já no telemóvel.",
+  "settings.applogo.picked": "Ícone escolhido! Fecha e volta a abrir a app — o telemóvel troca-o sozinho.",
   "settings.applogo.classico": "Clássico",
   "settings.applogo.sombra": "Sombra",
   "settings.applogo.brilho": "Brilho",
@@ -4766,9 +4766,16 @@
   "settings.applogo.planinho": "Planinho",
   "settings.applogo.amorzinho": "Amorzinho",
   "settings.applogo.apply_title": "Para o ícone mudar JÁ no telemóvel:",
-  "settings.applogo.apply_step1": "Se já tens a app instalada: mantém o dedo no ícone dela e escolhe Desinstalar/Remover.",
-  "settings.applogo.apply_step2": "Volta a esta página no navegador e toca em Instalar:",
+  "settings.applogo.apply_step1": "Mantém o dedo no ícone da app e escolhe Desinstalar/Remover.",
+  "settings.applogo.apply_step2": "Abre o site no navegador, volta a esta página e toca em Instalar.",
   "settings.mascot": "Mascote",
   "settings.mascot.intro": "Escolhe quem te acompanha pela app toda.",
-  "settings.mascot.open": "Abrir a página das mascotes (palco, desbloqueios) →"
+  "settings.mascot.open": "Abrir a página das mascotes (palco, desbloqueios) →",
+  "settings.applogo.auto_title": "Como se aplica no telemóvel",
+  "settings.applogo.auto_standalone": "Fecha a app por completo e volta a abri-la — o Android troca o ícone sozinho, normalmente no próprio dia. É o sistema que faz a troca; nenhuma app consegue forçá-la ao segundo.",
+  "settings.applogo.auto_ios": "No iPhone a Apple congela o ícone ao adicionar: remove a app do ecrã inicial e volta a adicioná-la (Safari → Partilhar → Adicionar ao ecrã principal) — 20 segundos.",
+  "settings.applogo.auto_browser": "Instala a app já com este ícone:",
+  "settings.applogo.auto_browser_note": "Já tens a app instalada com outro ícone? Abre-a, fecha-a e volta a abri-la — o Android troca o ícone sozinho, normalmente no próprio dia.",
+  "settings.applogo.rush_summary": "Com muita pressa? Reinstalar aplica na hora",
+  "settings.applogo.picked_ios": "Ícone escolhido! Para o aplicar: remove a app do ecrã inicial e volta a adicioná-la."
 }

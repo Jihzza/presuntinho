@@ -4749,7 +4749,7 @@
   "settings.applogo": "Icône de l’app",
   "settings.applogo.intro": "Choisis le logo affiché sur l’écran d’accueil de ton téléphone.",
   "settings.applogo.hint": "Ça marche aussi sans réinstaller, mais lentement : sur Android l’icône se met à jour toute seule après 1 à 3 jours d’ouverture de l’app.",
-  "settings.applogo.picked": "Icône choisie ! Regarde plus bas comment l’appliquer tout de suite sur ton téléphone.",
+  "settings.applogo.picked": "Icône choisie ! Ferme et rouvre l’app — ton téléphone la change tout seul.",
   "settings.applogo.classico": "Classique",
   "settings.applogo.sombra": "Ombre",
   "settings.applogo.brilho": "Éclat",
@@ -4766,9 +4766,16 @@
   "settings.applogo.planinho": "Agenda",
   "settings.applogo.amorzinho": "Amour",
   "settings.applogo.apply_title": "Pour changer l’icône TOUT DE SUITE sur ton téléphone :",
-  "settings.applogo.apply_step1": "Si l’app est déjà installée : appuie longuement sur son icône et choisis Désinstaller/Retirer.",
-  "settings.applogo.apply_step2": "Reviens sur cette page dans le navigateur et touche Installer :",
+  "settings.applogo.apply_step1": "Appuie longuement sur l’icône de l’app et choisis Désinstaller/Retirer.",
+  "settings.applogo.apply_step2": "Ouvre le site dans le navigateur, reviens sur cette page et touche Installer.",
   "settings.mascot": "Mascotte",
   "settings.mascot.intro": "Choisis qui t’accompagne dans toute l’app.",
-  "settings.mascot.open": "Ouvrir la page des mascottes (scène, déblocages) →"
+  "settings.mascot.open": "Ouvrir la page des mascottes (scène, déblocages) →",
+  "settings.applogo.auto_title": "Comment ça s’applique sur ton téléphone",
+  "settings.applogo.auto_standalone": "Ferme complètement l’app et rouvre-la — Android change l’icône tout seul, en général le jour même. C’est le système qui fait le changement ; aucune app ne peut le forcer à la seconde.",
+  "settings.applogo.auto_ios": "Sur iPhone, Apple fige l’icône à l’ajout : retire l’app de l’écran d’accueil et ajoute-la à nouveau (Safari → Partager → Sur l’écran d’accueil) — 20 secondes.",
+  "settings.applogo.auto_browser": "Installe l’app avec cette icône dès maintenant :",
+  "settings.applogo.auto_browser_note": "Tu as déjà l’app installée avec une autre icône ? Ouvre-la, ferme-la et rouvre-la — Android change l’icône tout seul, en général le jour même.",
+  "settings.applogo.rush_summary": "Très pressée ? Réinstaller l’applique tout de suite",
+  "settings.applogo.picked_ios": "Icône choisie ! Pour l’appliquer : retire l’app de l’écran d’accueil puis ajoute-la à nouveau."
 }

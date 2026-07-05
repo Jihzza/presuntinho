@@ -115,18 +115,36 @@
 
   // ----- V10.5: Ícone da app (logo do ecrã inicial) -----
   let currentLogo = $state<AppLogoId>('classico');
+  // Deteção de plataforma para o guia "como se aplica": dentro da app
+  // instalada o caminho é fechar/reabrir (o Android troca sozinho); no
+  // navegador o caminho instantâneo é instalar já com o ícone escolhido;
+  // no iOS a Apple congela o ícone e só re-adicionar resolve.
+  let inInstalledApp = $state(false);
+  let onIos = $state(false);
   onMount(() => {
     void getAppLogo().then((logo) => (currentLogo = logo));
+    inInstalledApp =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.matchMedia('(display-mode: fullscreen)').matches ||
+      Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
+    onIos =
+      /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+      (/macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
   });
   async function pickLogo(id: AppLogoId): Promise<void> {
     if (id === currentLogo) return;
     try {
       await setAppLogo(id);
       currentLogo = id;
+      // Toast fiel à plataforma: no iOS fechar/reabrir NÃO troca o ícone.
       showToast(
-        $t('settings.applogo.picked', {
-          default: 'Ícone escolhido! Vê em baixo como o aplicar já no telemóvel.'
-        })
+        onIos
+          ? $t('settings.applogo.picked_ios', {
+              default: 'Ícone escolhido! Para o aplicar: remove a app do ecrã inicial e volta a adicioná-la.'
+            })
+          : $t('settings.applogo.picked', {
+              default: 'Ícone escolhido! Fecha e volta a abrir a app — o telemóvel troca-o sozinho.'
+            })
       );
     } catch (e) {
       console.error('[definicoes] app-logo pick failed', e);
@@ -875,23 +893,44 @@
         </button>
       {/each}
     </div>
-    <!-- Aplicar JÁ: reinstalar com o manifest novo é o único caminho
-         instantâneo — o Android só verifica updates de ícone a cada
-         1-3 dias, e o iOS congela o ícone ao adicionar ao ecrã. -->
+    <!-- Como se aplica: o ícone instalado pertence ao SISTEMA — nenhuma app
+         web o troca na hora. Caminho normal: fechar/reabrir e o Android
+         troca sozinho (o momento é dele, normalmente no próprio dia).
+         Reinstalar é só o atalho para impacientes; no iOS é re-adicionar. -->
     <div class="applogo-apply">
-      <strong>{$t('settings.applogo.apply_title', { default: 'Para o ícone mudar JÁ no telemóvel:' })}</strong>
-      <ol class="applogo-steps">
-        <li>{$t('settings.applogo.apply_step1', { default: 'Se já tens a app instalada: mantém o dedo no ícone dela e escolhe Desinstalar/Remover.' })}</li>
-        <li>{$t('settings.applogo.apply_step2', { default: 'Volta a esta página no navegador e toca em Instalar:' })}</li>
-      </ol>
-      <div class="applogo-install">
-        <InstallButton />
-      </div>
-      <p class="applogo-hint">
-        {$t('settings.applogo.hint', {
-          default: 'Sem reinstalar também funciona, mas com calma: no Android o ícone atualiza sozinho ao fim de 1–3 dias de abrires a app.'
-        })}
-      </p>
+      <strong>{$t('settings.applogo.auto_title', { default: 'Como se aplica no telemóvel' })}</strong>
+      {#if onIos}
+        <p class="applogo-auto">
+          {$t('settings.applogo.auto_ios', {
+            default: 'No iPhone a Apple congela o ícone ao adicionar: remove a app do ecrã inicial e volta a adicioná-la (Safari → Partilhar → Adicionar ao ecrã principal) — 20 segundos.'
+          })}
+        </p>
+      {:else if inInstalledApp}
+        <p class="applogo-auto">
+          {$t('settings.applogo.auto_standalone', {
+            default: 'Fecha a app por completo e volta a abri-la — o Android troca o ícone sozinho, normalmente no próprio dia. É o sistema que faz a troca; nenhuma app consegue forçá-la ao segundo.'
+          })}
+        </p>
+        <details class="applogo-rush">
+          <summary>{$t('settings.applogo.rush_summary', { default: 'Com muita pressa? Reinstalar aplica na hora' })}</summary>
+          <ol class="applogo-steps">
+            <li>{$t('settings.applogo.apply_step1', { default: 'Mantém o dedo no ícone da app e escolhe Desinstalar/Remover.' })}</li>
+            <li>{$t('settings.applogo.apply_step2', { default: 'Abre o site no navegador, volta a esta página e toca em Instalar.' })}</li>
+          </ol>
+        </details>
+      {:else}
+        <p class="applogo-auto">
+          {$t('settings.applogo.auto_browser', { default: 'Instala a app já com este ícone:' })}
+        </p>
+        <div class="applogo-install">
+          <InstallButton />
+        </div>
+        <p class="applogo-hint">
+          {$t('settings.applogo.auto_browser_note', {
+            default: 'Já tens a app instalada com outro ícone? Abre-a, fecha-a e volta a abri-la — o Android troca o ícone sozinho, normalmente no próprio dia.'
+          })}
+        </p>
+      {/if}
     </div>
   </section>
 
@@ -1695,6 +1734,39 @@
       font-size: 0.85rem;
     }
     .applogo-apply strong { color: var(--txt); }
+    .applogo-auto {
+      margin: 0.45rem 0 0;
+      line-height: 1.5;
+    }
+    .applogo-rush {
+      margin-top: 0.6rem;
+    }
+    .applogo-rush summary {
+      cursor: pointer;
+      color: var(--txt3);
+      font-size: 0.78rem;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    /* display:flex mata o ::marker nativo — repor a seta (convenção do
+       .backup-preview) para se ver que expande, sobretudo em touch. */
+    .applogo-rush summary::before {
+      content: '▶';
+      font-size: 0.6rem;
+      transition: transform var(--motion-fast, 120ms) ease;
+    }
+    .applogo-rush[open] summary::before {
+      transform: rotate(90deg);
+    }
+    .applogo-rush summary:hover { color: var(--txt2); }
+    .applogo-rush summary:focus-visible {
+      color: var(--txt2);
+      outline: none;
+      box-shadow: var(--focus-ring, 0 0 0 2px var(--accent));
+      border-radius: 0.4rem;
+    }
     .applogo-steps {
       margin: 0.5rem 0 0.65rem;
       padding-inline-start: 1.2rem;
@@ -1702,7 +1774,7 @@
       gap: 0.3rem;
       line-height: 1.45;
     }
-    .applogo-install { display: flex; }
+    .applogo-install { display: flex; margin-top: 0.5rem; }
     .applogo-grid button.locked {
       opacity: 0.75;
       cursor: not-allowed;
