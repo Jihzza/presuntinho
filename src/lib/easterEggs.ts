@@ -193,9 +193,16 @@ const SECRET_ROOM_MIN = 5;          // lowered from 6 — easier to discover
 const SECRET_ROOM_MAX = 10;         // wider top end so accidental double-clicks still count
 let _logoResetTimer: ReturnType<typeof setTimeout> | null = null;
 
+async function openSecretArcadeRoom(): Promise<void> {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new CustomEvent('presuntinho:close-secret-room'));
+  window.location.href = '/secrets/';
+}
+
 export async function logoClick(): Promise<void> {
   if (get(sroomOpened)) {
-    showToast('🐷 You already found the Secret Room! Tap the logo 3× to see a hint.', 4000);
+    showToast(tr('secret.toast.already_found_arcade', '🐷 Já encontraste a sala secreta — a abrir o arcade…'), 2600);
+    await openSecretArcadeRoom();
     return;
   }
 
@@ -219,14 +226,12 @@ export async function logoClick(): Promise<void> {
   } else if (next === 4) {
     showToast('🐷 One more click! 🎯');
   } else if (next >= SECRET_ROOM_MIN && next <= SECRET_ROOM_MAX) {
-    showToast('🧴 Welcome to the Secret Room!');
+    showToast(tr('secret.toast.welcome_arcade', '🕹️ Bem-vinda à Sala Arcade Secreta!'), 2600);
     sroomOpened.set(true);
     await awardXP('easteregg_secret_room', 100);
     await awardBadge('b14');
     await discoverSecret('logo7');
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('presuntinho:open-secret-room'));
-    }
+    await openSecretArcadeRoom();
   } else if (next === 2) {
     showToast('🐷 One more...');
   }

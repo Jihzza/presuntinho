@@ -4839,5 +4839,7 @@
   "arcade.ip.title": "كلاسيكية لكن أصلية",
   "arcade.ip.body": "A sala usa mecânicas arcade clássicas com nomes, visuais e personagens próprios do Presuntinho.",
   "arcade.not_found.title": "اللعبة غير موجودة",
-  "arcade.not_found.body": "Esta máquina ainda não existe na sala arcade."
+  "arcade.not_found.body": "Esta máquina ainda não existe na sala arcade.",
+  "secret.toast.already_found_arcade": "🐷 لقد وجدتِ الغرفة السرية من قبل — جارٍ فتح صالة الألعاب…",
+  "secret.toast.welcome_arcade": "🕹️ أهلاً بكِ في صالة الألعاب السرية!"
 }

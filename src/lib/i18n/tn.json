@@ -4852,5 +4852,7 @@
   "arcade.ip.title": "Classic ama original",
   "arcade.ip.body": "A sala usa mecânicas arcade clássicas com nomes, visuais e personagens próprios do Presuntinho.",
   "arcade.not_found.title": "Game mch mawjoud",
-  "arcade.not_found.body": "Esta máquina ainda não existe na sala arcade."
+  "arcade.not_found.body": "Esta máquina ainda não existe na sala arcade.",
+  "secret.toast.already_found_arcade": "🐷 L9iti el secret room men 9bal — n7el el arcade…",
+  "secret.toast.welcome_arcade": "🕹️ Ahla bik fi Secret Arcade Room!"
 }

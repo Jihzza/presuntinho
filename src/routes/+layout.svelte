@@ -187,7 +187,8 @@
     // visit-tracking throw — breaking the 7×-logo-click easter egg path
     // (task-073). Bind eagerly; cleanup still runs in the same return().
     function onOpenSRoom() {
-      secretRoomOpen = true;
+      secretRoomOpen = false;
+      window.location.href = '/secrets/';
     }
     function onCloseSRoom() {
       secretRoomOpen = false;
