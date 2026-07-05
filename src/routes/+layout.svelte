@@ -292,7 +292,7 @@
   <OfflineIndicator />
   <a class="skip-link" href="#main-content">{$t('a11y.skipToContent')}</a>
   <div
-    class={`app ${isMessagesRoute ? 'app-messages' : ''} ${activeMood ? `app-mood app-mood-${activeMood.kind}` : ''}`}
+    class={`app ${isMessagesRoute ? 'app-messages' : ''} ${activeMood ? `app-mood app-mood-${activeMood.kind}` : ''} ${$arcadeHud ? 'arcade-immersive' : ''}`}
     style={`--page-bottom-inset: ${pageBottomInset};${moodAccent ? ` --mood-accent: ${moodAccent};` : ''}`}
   >
     {#if activeMood}
@@ -729,6 +729,11 @@
     /* Arcade game mode: mascot + heart FABs step aside for the touch HUD. */
     .fab-stack.game-hidden,
     .mascot-corner.game-hidden {
+      display: none;
+    }
+    /* Immersive play: hide the app chrome so the game gets the whole screen. */
+    .app.arcade-immersive :global(header.nav),
+    .app.arcade-immersive :global(nav.bottom-nav) {
       display: none;
     }
     /* PWA update banner — actionable "toast" pinned above the bottom nav. */
