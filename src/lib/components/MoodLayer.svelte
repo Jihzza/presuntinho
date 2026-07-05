@@ -9,6 +9,7 @@
     MOOD_META,
     type ActiveMood
   } from '$lib/mood';
+  import MoodExitButton from '$lib/components/MoodExitButton.svelte';
   import { t } from 'svelte-i18n';
 
   type Props = { mood: ActiveMood; onCleared: () => void };
@@ -149,9 +150,7 @@
 
         <div class="recover-zone">
           <p>{meta.body}</p>
-          <button type="button" class="recover" onclick={clearMood} disabled={clearing}>
-            {clearing ? $t('mood.layer.saving', { default: 'A guardar…' }) : meta.action}
-          </button>
+          <MoodExitButton mood={mood} saving={clearing} onConfirm={clearMood} />
         </div>
       </div>
     {/if}

@@ -31,6 +31,10 @@ const home = read('src/routes/+page.svelte');
 const school = read('src/routes/escola/+page.svelte');
 const appCss = read('src/app.css');
 const db = read('src/lib/state/db.ts');
+const exitButton = read('src/lib/components/MoodExitButton.svelte');
+const ptPT = read('src/lib/i18n/pt-PT.json');
+const en = read('src/lib/i18n/en.json');
+const tn = read('src/lib/i18n/tn.json');
 
 console.log('\nMood/Vibe architecture');
 assert('mood.ts defines ActiveMood', /export interface ActiveMood/.test(mood));
@@ -43,7 +47,12 @@ assert('layout renders MoodLayer after acknowledged mood', layout.includes('<Moo
 assert('layout listens to mood event', layout.includes('window.addEventListener(MOOD_EVENT'));
 assert('layout keeps footer navigation enabled during active mood', layout.includes("setSession('fatma', 'secret')") && layout.includes('await initStores(session.profile)'));
 assert('mood bottom nav stays above mood layer', layout.includes('z-index: 9701'));
-assert('MoodLayer has recovery CTA', layer.includes('Já me sinto melhor 🤍') || layer.includes('meta.action'));
+assert('MoodLayer has recovery CTA', layer.includes('MoodExitButton') || layer.includes('meta.action'));
+assert('MoodExitButton exists with all three mood emojis', exitButton.includes('🌱') && exitButton.includes('🌤️') && exitButton.includes('💗'));
+assert('MoodExitButton respects prefers-reduced-motion', exitButton.includes('prefers-reduced-motion') && exitButton.includes('matchMedia'));
+assert('mood.exit.{sick,sad,love}.title in pt-PT', ptPT.includes('"mood.exit.sick.title"') && ptPT.includes('"mood.exit.sad.title"') && ptPT.includes('"mood.exit.love.title"'));
+assert('mood.exit.{sick,sad,love}.title in en', en.includes('"mood.exit.sick.title"') && en.includes('"mood.exit.sad.title"') && en.includes('"mood.exit.love.title"'));
+assert('mood.exit.{sick,sad,love}.title in tn (latin only)', tn.includes('"mood.exit.sick.title"') && tn.includes('"mood.exit.sad.title"') && tn.includes('"mood.exit.love.title"') && !/[\u0600-\u06FF]/.test(tn.match(/"mood\.exit\.[^"]+":\s*"([^"]+)"/g).join(' ')));
 assert('MoodLayer has interactive care actions', layer.includes('careActions') && layer.includes('care-grid') && layer.includes('comfort-note'));
 assert('layout applies app-wide mood ambience', layout.includes('app-mood') && layout.includes('--mood-accent'));
 assert('MoodLayer keeps app usable while active', layer.includes('class:compact={!expanded}') && layer.includes('pointer-events: none') && layer.includes('pointer-events: auto') && layer.includes('max-height: min(54vh, 460px)'));
