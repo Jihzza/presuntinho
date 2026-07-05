@@ -2,14 +2,14 @@
   // Arcade shell — owns the canvas, the RAF loop, all input (keyboard + swipe +
   // drag + on-screen controls), the HUD, sound/haptic/confetti feedback and the
   // result overlay. Game logic lives in the per-game engines (src/lib/arcade).
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { t } from 'svelte-i18n';
   import type { ArcadeGameDefinition } from '$lib/arcade/games';
   import { highScoreKey, lastScoreKey, readArcadeScore, writeArcadeScore } from '$lib/arcade/games';
   import { FIELD_W, FIELD_H, type ArcadeEngine, type ArcadeInput, type Direction } from '$lib/arcade/engine';
   import { prefersReducedMotion, fireConfettiEvent } from '$lib/components/events';
   import { playSfx, vibrate } from '$lib/gamification/sound';
-  import ArcadeTouchHud from './ArcadeTouchHud.svelte';
+  import { arcadeHud } from '$lib/arcade/hud-state';
 
   let { game }: { game: ArcadeGameDefinition } = $props();
 
@@ -233,6 +233,17 @@
     }
   }
 
+  // Publish the touch HUD to the root layout while playing (it renders the
+  // controls fixed at the viewport bottom and hides the mascot/heart FABs).
+  $effect(() => {
+    arcadeHud.set(
+      status === 'playing'
+        ? { move: game.hud.move, action: game.hud.action, onTurn, onHold, onAction }
+        : null
+    );
+  });
+  onDestroy(() => arcadeHud.set(null));
+
   const statusKey = $derived(
     status === 'ready'
       ? 'arcade.state.ready'
@@ -285,20 +296,17 @@
   });
 </script>
 
-<div class="shell" bind:this={shellEl} data-game={game.id} style="--accent: {game.accent};">
-  <header class="head">
-    <a href="/secrets/" class="back">{$t('arcade.game.back', { default: '← Voltar à sala' })}</a>
-    <div class="title">
-      <p class="kicker">{$t(game.difficultyKey)} · {$t('arcade.game.kicker', { default: 'Máquina arcade' })}</p>
-      <h1><span aria-hidden="true">{game.icon}</span> {$t(game.titleKey)}</h1>
+<div class="shell" bind:this={shellEl} class:playing={status === 'playing'} data-game={game.id} style="--accent: {game.accent};">
+  <!-- Slim top bar so the playfield gets the screen; score rides along here. -->
+  <div class="topbar">
+    <a href="/secrets/" class="back" aria-label={$t('arcade.game.back', { default: '← Voltar à sala' })}>←</a>
+    <h1><span aria-hidden="true">{game.icon}</span> {$t(game.titleKey)}</h1>
+    <div class="mini-score" aria-label={$t('arcade.score.aria', { default: 'Pontuação do jogo' })}>
+      <span class="cur">{score}</span>
+      <span class="best" title={$t('arcade.score.best', { default: 'Melhor pontuação' })}>◆ {high}</span>
     </div>
-  </header>
-
-  <div class="hud" aria-label={$t('arcade.score.aria', { default: 'Pontuação do jogo' })}>
-    <span><small>{$t('arcade.score.current', { default: 'Pontuação' })}</small><strong>{score}</strong></span>
-    <span><small>{$t('arcade.score.best', { default: 'Melhor pontuação' })}</small><strong>{high}</strong></span>
-    <span><small>{$t('arcade.score.last', { default: 'Última' })}</small><strong>{last}</strong></span>
   </div>
+  <p class="sr-live" aria-live="polite">{$t(statusKey)}</p>
 
   <div class="cabinet">
     <div class="stage">
@@ -312,8 +320,6 @@
       ></canvas>
 
       {#if status === 'playing'}
-        <!-- Free-Fire-style overlay controls float over the canvas corners -->
-        <ArcadeTouchHud move={game.hud.move} action={game.hud.action} {onTurn} {onHold} {onAction} />
         <div class="mini-cluster">
           <button type="button" class="mini" onclick={pause} aria-label={$t('arcade.actions.pause', { default: 'Pausa' })}>⏸</button>
           <button type="button" class="mini" onclick={restart} aria-label={$t('arcade.actions.restart', { default: 'Recomeçar' })}>⟲</button>
@@ -348,41 +354,58 @@
         </div>
       {/if}
     </div>
-    <p class="status-line" aria-live="polite">{$t(statusKey)}</p>
   </div>
 
-  <section class="howto">
-    <p class="mobile">{$t(game.controlsKey)}</p>
-    <p class="keys">⌨️ {$t(game.keysKey)}</p>
-  </section>
+  {#if status !== 'playing'}
+    <section class="howto">
+      <p class="mobile">{$t(game.controlsKey)}</p>
+      <p class="keys">⌨️ {$t(game.keysKey)}</p>
+    </section>
+  {/if}
 </div>
 
 <style>
   .shell {
     max-width: 560px;
     margin: 0 auto;
-    padding: 0.75rem 0.9rem calc(6rem + env(safe-area-inset-bottom));
+    padding: 0.5rem 0.7rem calc(1rem + env(safe-area-inset-bottom));
     color: var(--txt, #fff);
   }
-  .head { display: grid; gap: 0.4rem; margin-bottom: 0.6rem; }
-  .back { color: #bfdbfe; text-decoration: none; font-weight: 850; font-size: 0.9rem; }
-  .kicker { margin: 0; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.68rem; font-weight: 900; }
-  h1 { margin: 0.05rem 0 0; font-size: clamp(1.5rem, 6vw, 2.2rem); line-height: 1.05; }
+  /* Slim top bar: back arrow · title · live score. */
+  .topbar {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+  }
+  .back {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    color: #bfdbfe;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 850;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .back:hover, .back:focus-visible { background: color-mix(in srgb, var(--accent) 20%, transparent); outline: none; }
+  h1 { margin: 0; font-size: clamp(1.05rem, 4.5vw, 1.4rem); line-height: 1.1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mini-score { display: flex; align-items: baseline; gap: 0.55rem; font-variant-numeric: tabular-nums; }
+  .mini-score .cur { font-size: 1.35rem; font-weight: 900; }
+  .mini-score .best { font-size: 0.82rem; font-weight: 800; color: var(--accent); }
+  .sr-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); margin: -1px; padding: 0; border: 0; }
 
-  .hud { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.45rem; margin-bottom: 0.7rem; }
-  .hud span { padding: 0.5rem 0.6rem; border-radius: 0.85rem; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); text-align: center; }
-  .hud small, .hud strong { display: block; }
-  .hud small { color: var(--txt3, #94a3b8); font-size: 0.66rem; }
-  .hud strong { font-size: 1.2rem; font-variant-numeric: tabular-nums; }
-
-  .cabinet { max-width: 420px; margin: 0 auto; }
-  /* Mobile-first: the canvas sits in the TOP of the stage and the bottom
-     padding is a reserved "control deck" where the floating HUD lives, so the
-     thumb controls never cover the playfield (racing car / paddle / pig all
-     live at the bottom of the field). Desktop removes the deck (HUD hidden). */
+  /* Immersive playfield: the canvas fills the width and most of the height
+     (the touch controls live OUTSIDE it, fixed over the footer via the root
+     layout), so the game isn't a tiny window any more. */
+  .cabinet { max-width: 460px; margin: 0 auto; }
   .stage {
     position: relative;
-    padding: 0.6rem 0.6rem 9.25rem;
+    padding: 0.55rem;
     border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
     border-radius: 1.3rem;
     background: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 46%), rgba(0, 0, 0, 0.4);
@@ -392,7 +415,13 @@
     display: block;
     width: 100%;
     aspect-ratio: 360 / 480;
-    max-height: min(40vh, 350px);
+    /* Reserve enough for the top bar AND the full footprint of the fixed
+       controls (bottom 4.5rem + the 132px/8.25rem d-pad) PLUS the home-
+       indicator safe area, so the canvas bottom always clears the touch HUD —
+       otherwise on short viewports (iPhone SE, landscape) the d-pad would cover
+       the bottom of the playfield again. On tall phones the aspect ratio binds
+       first, so the canvas stays large there. */
+    max-height: min(calc(100dvh - 18.5rem - env(safe-area-inset-bottom)), 620px);
     margin: 0 auto;
     border-radius: 0.9rem;
     background: #0a1120;
@@ -402,8 +431,8 @@
   /* pause / restart mini cluster — floats top-right over the stage */
   .mini-cluster {
     position: absolute;
-    top: 0.85rem;
-    right: 0.85rem;
+    top: 0.9rem;
+    right: 0.9rem;
     display: flex;
     gap: 0.4rem;
     z-index: 6;
@@ -423,12 +452,9 @@
   }
   .mini:active { transform: scale(0.92); }
   .mini:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent); }
-  /* thumb HUD is for touch; on real pointers we rely on keyboard + mini
-     cluster, so drop the reserved control deck and give the canvas more room. */
+  /* desktop plays with the keyboard, so the canvas can take the full height */
   @media (pointer: fine) {
-    .stage { padding: 0.6rem; }
-    canvas { max-height: min(58vh, 520px); }
-    .stage :global(.hud-overlay) { display: none; }
+    canvas { max-height: min(72vh, 640px); }
   }
   .overlay {
     position: absolute;
@@ -472,7 +498,6 @@
   .cta:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent); }
   .sub { margin: 0; color: var(--txt3, #94a3b8); font-size: 0.8rem; }
   .ghost { color: #bfdbfe; text-decoration: none; font-weight: 800; font-size: 0.88rem; padding: 0.4rem; }
-  .status-line { margin: 0.55rem 0 0; text-align: center; color: var(--txt2, #cbd5e1); font-weight: 800; font-size: 0.85rem; }
 
   .howto { margin-top: 0.6rem; text-align: center; }
   .howto p { margin: 0.2rem 0; color: var(--txt3, #94a3b8); font-size: 0.78rem; line-height: 1.45; }

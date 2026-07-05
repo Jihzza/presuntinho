@@ -89,20 +89,28 @@
 </div>
 
 <style>
+  /* Fixed to the viewport: the clusters sit at the bottom corners over the
+     footer, where the mascot (left) + heart (right) FABs normally live. The
+     overlay itself is click-through; only the corner clusters catch pointers. */
   .hud-overlay {
-    position: absolute;
+    position: fixed;
     inset: 0;
-    pointer-events: none; /* bare canvas taps (swipe/drag) fall through */
-    z-index: 5;
+    pointer-events: none;
+    z-index: 45;
   }
   .cluster {
-    position: absolute;
-    bottom: max(0.9rem, env(safe-area-inset-bottom));
+    position: fixed;
+    bottom: calc(env(safe-area-inset-bottom) + 4.5rem);
     pointer-events: auto;
     touch-action: none;
   }
-  .cluster.move { left: 0.7rem; }
-  .cluster.act { right: 0.7rem; }
+  .cluster.move { left: max(0.8rem, env(safe-area-inset-left)); }
+  .cluster.act { right: max(0.8rem, env(safe-area-inset-right)); }
+
+  /* Touch-only: on real pointers we play with the keyboard + mini cluster. */
+  @media (pointer: fine) {
+    .hud-overlay { display: none; }
+  }
 
   button {
     -webkit-tap-highlight-color: transparent;

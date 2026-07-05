@@ -18,6 +18,8 @@
   import InstallButton from '$lib/components/InstallButton.svelte';
   import MoodLayer from '$lib/components/MoodLayer.svelte';
   import GamificationLayer from '$lib/components/GamificationLayer.svelte';
+  import ArcadeTouchHud from '$lib/components/arcade/ArcadeTouchHud.svelte';
+  import { arcadeHud } from '$lib/arcade/hud-state';
   import { resetSoundPrefsCache } from '$lib/gamification/sound';
   import { applyAppLogo, getAppLogo } from '$lib/app-logo';
   import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, MOOD_META, type ActiveMood } from '$lib/mood';
@@ -390,14 +392,25 @@
                   One stack above the bottom nav, anchored at the bottom so the
                   heart never moves when the pill/install button toggle.
                 -->
-                <div class="fab-stack" aria-live="polite">
+                <!-- In arcade game mode the mascot + heart FABs step aside and
+                     the game's own touch controls take their corners. -->
+                <div class="fab-stack" class:game-hidden={$arcadeHud} aria-live="polite" aria-hidden={$arcadeHud ? 'true' : undefined}>
                   <XpPill />
                   <InstallButton />
                   <HeartButton />
                 </div>
-                <div class="mascot-corner" aria-live="polite">
+                <div class="mascot-corner" class:game-hidden={$arcadeHud} aria-hidden={$arcadeHud ? 'true' : undefined}>
                   <Mascot />
                 </div>
+                {#if $arcadeHud}
+                  <ArcadeTouchHud
+                    move={$arcadeHud.move}
+                    action={$arcadeHud.action}
+                    onTurn={$arcadeHud.onTurn}
+                    onHold={$arcadeHud.onHold}
+                    onAction={$arcadeHud.onAction}
+                  />
+                {/if}
   </div>
 {/if}
 
@@ -712,6 +725,11 @@
       position: absolute;
       right: 0;
       bottom: 4.05rem;
+    }
+    /* Arcade game mode: mascot + heart FABs step aside for the touch HUD. */
+    .fab-stack.game-hidden,
+    .mascot-corner.game-hidden {
+      display: none;
     }
     /* PWA update banner — actionable "toast" pinned above the bottom nav. */
     .pwa-update {
