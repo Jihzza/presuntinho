@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { verifyAgainstHashes, type ProfileId } from '$lib/auth/hash';
-  import { setSession, isLockedOut, recordFailedAttempt, resetAttempts, getSession } from '$lib/auth/session';
+  import { verifyAgainstHashes, verifyPassword, type ProfileId } from '$lib/auth/hash';
+  import { setSession, isLockedOut, recordFailedAttempt, resetAttempts, getSession, registerKnownMember } from '$lib/auth/session';
+  import { listMembers } from '$lib/space/registry-db';
+  import type { Membership } from '$lib/space/types';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
   import { t, waitLocale } from 'svelte-i18n';
@@ -38,6 +40,47 @@
   // 'en' until svelte-i18n has hydrated (LoveLock falls back to en anyway).
   let currentLocale = $state<string>('en');
 
+  // Returning onboarded members on THIS device (uuid members with a password).
+  // Legacy fatma/daniel keep their own pass-order form above; this only adds a
+  // way for a new member to log back in after their session expired.
+  let extraMembers = $state<Membership[]>([]);
+  let pickedMember = $state<Membership | null>(null);
+  let memberPassword = $state('');
+  let memberError = $state('');
+  let memberLoading = $state(false);
+
+  function pickMember(m: Membership): void {
+    pickedMember = pickedMember?.id === m.id ? null : m;
+    memberPassword = '';
+    memberError = '';
+  }
+
+  async function loginMember(e: Event, m: Membership): Promise<void> {
+    e.preventDefault();
+    if (memberLoading || !m.secret) return;
+    if (!memberPassword.trim()) {
+      memberError = $t('splash.error.empty', { default: 'Escreve a palavra-passe.' });
+      return;
+    }
+    memberLoading = true;
+    memberError = '';
+    try {
+      const ok = await verifyPassword(memberPassword, m.secret.salt, m.secret.hash);
+      if (!ok) {
+        memberError = $t('splash.members.wrong', { default: 'Palavra-passe errada.' });
+        return;
+      }
+      registerKnownMember(m.id);
+      setSession(m.id as ProfileId, 'primary');
+      await goto('/');
+    } catch (err) {
+      console.error('[splash] member login failed', err);
+      memberError = $t('splash.members.error', { default: 'Não consegui entrar. Tenta outra vez.' });
+    } finally {
+      memberLoading = false;
+    }
+  }
+
   onMount(() => {
       // Ensure translations are ready before first paint.
       void waitLocale();
@@ -51,6 +94,11 @@
         goto('/');
         return;
       }
+      // Load returning onboarded members (uuid + password) so they can log back
+      // in. Legacy fatma/daniel are excluded — they use the pass-order form.
+      void listMembers()
+        .then((ms) => (extraMembers = ms.filter((m) => !m.legacyProfileId && m.status === 'active' && !!m.secret)))
+        .catch(() => undefined);
       // Async love-lock fetch — onMount itself isn't async so we void the promise.
       void (async () => {
         // If a Love Lock is active (persisted from a previous tab or refresh),
@@ -307,6 +355,38 @@
       </a>
     {/if}
 
+    {#if extraMembers.length > 0}
+      <div class="members">
+        <span class="members-label">{$t('splash.members.on_device', { default: 'Contas neste dispositivo' })}</span>
+        <div class="member-list">
+          {#each extraMembers as m (m.id)}
+            {#if pickedMember?.id === m.id}
+              <form class="member-login" onsubmit={(e) => loginMember(e, m)}>
+                <div class="member-head"><span class="member-emoji" aria-hidden="true">{m.emoji}</span> <strong>{m.displayName}</strong></div>
+                <input
+                  type="password"
+                  bind:value={memberPassword}
+                  placeholder={$t('splash.password.placeholder', { default: 'Palavra-passe' })}
+                  aria-label={$t('splash.password.label')}
+                  autocomplete="current-password"
+                  disabled={memberLoading}
+                />
+                <button type="submit" disabled={memberLoading}>
+                  {memberLoading ? $t('splash.checking') : $t('splash.members.enter', { default: 'Entrar' })}
+                </button>
+                {#if memberError}<p class="error">{memberError}</p>{/if}
+              </form>
+            {:else}
+              <button type="button" class="member-tile" onclick={() => pickMember(m)}>
+                <span class="member-emoji" aria-hidden="true">{m.emoji}</span>
+                <span class="member-name">{m.displayName}</span>
+              </button>
+            {/if}
+          {/each}
+        </div>
+      </div>
+    {/if}
+
     <p class="credit">{$t('splash.credit')}</p>
   </div>
   {/if}
@@ -467,6 +547,53 @@
   .create-account:hover,
   .create-account:focus-visible {
     text-decoration: underline;
+  }
+  .members {
+    margin-top: 1.4rem;
+    text-align: left;
+  }
+  .members-label {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+  }
+  .member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .member-tile {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border-radius: 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+  }
+  .member-emoji {
+    font-size: 1.3rem;
+  }
+  .member-login {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    border-radius: 0.9rem;
+    border: 1px solid var(--accent, #ec4899);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .member-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
   .credit {
     color: #94a3b8;
