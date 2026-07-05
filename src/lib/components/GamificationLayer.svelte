@@ -26,7 +26,7 @@
 		LEVEL_UP_EVENT,
 		STREAK_CHANGED_EVENT
 	} from '$lib/gamification/gamification-events';
-	import { getActiveMascot, MASCOT_CHANGED_EVENT } from '$lib/gamification/mascots';
+	import { DEFAULT_MASCOT_ID, getActiveMascot, MASCOT_CHANGED_EVENT } from '$lib/gamification/mascots';
 	import { awardBadge } from '$lib/state/stores';
 	import { db } from '$lib/state/db';
 	import { claimHabitsFlowDay, claimStreakNotifDay } from '$lib/gamification/streak';
@@ -57,7 +57,7 @@
 
 	let queue = $state<Celebration[]>([]);
 	let active = $state<Celebration | null>(null);
-	let mascotId = $state('porquinho');
+	let mascotId = $state(DEFAULT_MASCOT_ID);
 
 	let hydrated = false;
 	let processing = false;

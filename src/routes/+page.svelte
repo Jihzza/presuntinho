@@ -38,7 +38,7 @@
   import { progressToNext } from '$lib/gamification/levels';
   import { hoursUntilMidnight, mascotEmotion, type MascotEmotion } from '$lib/gamification/emotion';
   import { minutesSinceLastAction, ACTION_PULSE_EVENT } from '$lib/gamification/gamification-events';
-  import { getActiveMascot, MASCOT_CHANGED_EVENT } from '$lib/gamification/mascots';
+  import { DEFAULT_MASCOT_ID, getActiveMascot, MASCOT_CHANGED_EVENT } from '$lib/gamification/mascots';
   import { setHabitLog } from '$lib/habitos';
   import { showToast } from '$lib/components/events';
   import { isMoodIntroAcknowledged, moodAffirmation, moodMicrocopy, readActiveMood, MOOD_META, type ActiveMood } from '$lib/mood';
@@ -74,7 +74,7 @@
   let weekActivity = $state<WeekDayActivity[]>([]);
   let now = $state(new Date());
   let markingHabitId = $state<string | null>(null);
-  let mascotId = $state('porquinho');
+  let mascotId = $state(DEFAULT_MASCOT_ID);
   let emotionTick = $state(0);
   // V10.1 (tarefa A) — a Home é o perfil vivo da Fatma + cockpit.
   let resume = $state<NextLessonTarget | null>(null);
