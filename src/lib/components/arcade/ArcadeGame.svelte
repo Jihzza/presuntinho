@@ -11,6 +11,14 @@
   import { playSfx, vibrate } from '$lib/gamification/sound';
   import { arcadeHud } from '$lib/arcade/hud-state';
   import { getActiveMascot, MASCOT_CHANGED_EVENT } from '$lib/gamification/mascots';
+  import {
+    startArcadeMusic,
+    stopArcadeMusic,
+    toggleArcadeMusic,
+    isArcadeMusicEnabled,
+    initArcadeMusicPrefs
+  } from '$lib/arcade/audio';
+  import CrtOverlay from '$lib/components/arcade/CrtOverlay.svelte';
 
   let { game }: { game: ArcadeGameDefinition } = $props();
 
@@ -32,6 +40,7 @@
   let reduced = false;
   let avatar = $state<string | null>(null); // active mascot emoji, drawn as the player
   let isFullscreen = $state(false);
+  let musicOn = $state(true); // per-session chiptune toggle (reflects the audio engine)
   const fsSupported =
     typeof document !== 'undefined' &&
     typeof document.documentElement.requestFullscreen === 'function';
@@ -44,6 +53,12 @@
     } catch {
       // some browsers reject without a user gesture / in an iframe — ignore
     }
+  }
+
+  function onToggleMusic(): void {
+    // The button click is a user gesture, so flipping this on can unlock audio
+    // and resume the active theme immediately.
+    musicOn = toggleArcadeMusic();
   }
 
   const input: ArcadeInput = { held: new Set<Direction>(), turn: null, action: false, pointerX: null };
@@ -69,6 +84,9 @@
     if (status === 'won' || status === 'over') reset();
     status = 'playing';
     lastTs = performance.now();
+    // start() is only ever reached via a user gesture (tap / key / button), so
+    // this is a valid moment to unlock + start the game's chiptune theme.
+    startArcadeMusic(game.id);
   }
 
   function pause(): void {
@@ -80,9 +98,11 @@
       input.held.clear();
       dragging = false;
       input.pointerX = null;
+      stopArcadeMusic();
     } else if (status === 'paused') {
       status = 'playing';
       lastTs = performance.now();
+      startArcadeMusic(game.id);
     }
   }
 
@@ -93,6 +113,7 @@
 
   function finish(end: 'won' | 'over'): void {
     status = end;
+    stopArcadeMusic(); // let the win/lose jingle ring out without the loop under it
     last = score;
     newRecord = score > high && score > 0;
     high = Math.max(high, score);
@@ -319,9 +340,13 @@
     const onFsChange = () => (isFullscreen = !!document.fullscreenElement);
     document.addEventListener('fullscreenchange', onFsChange);
 
+    // Hydrate the persisted music toggle so the ♪ button shows the real state.
+    void initArcadeMusicPrefs().then(() => (musicOn = isArcadeMusicEnabled()));
+
     raf = requestAnimationFrame(frame);
     return () => {
       cancelAnimationFrame(raf);
+      stopArcadeMusic();
       shellEl?.removeEventListener('touchmove', stopTouch);
       window.removeEventListener('blur', onBlur);
       window.removeEventListener('keydown', onKeydown);
@@ -332,7 +357,7 @@
   });
 </script>
 
-<div class="shell" bind:this={shellEl} class:playing={status === 'playing'} data-game={game.id} style="--accent: {game.accent};">
+<div class="shell" bind:this={shellEl} class:playing={status === 'playing'} class:fullscreen={isFullscreen} data-game={game.id} style="--accent: {game.accent};">
   <!-- Slim top bar so the playfield gets the screen; score rides along here. -->
   <div class="topbar">
     <a href="/secrets/" class="back" aria-label={$t('arcade.game.back', { default: '← Voltar à sala' })}>←</a>
@@ -341,6 +366,19 @@
       <span class="cur">{score}</span>
       <span class="best" title={$t('arcade.score.best', { default: 'Melhor pontuação' })}>◆ {high}</span>
     </div>
+    <button
+      type="button"
+      class="fs-toggle music-toggle"
+      class:muted={!musicOn}
+      onclick={onToggleMusic}
+      aria-pressed={musicOn}
+      aria-label={musicOn
+        ? $t('arcade.music.off', { default: 'Desligar música' })
+        : $t('arcade.music.on', { default: 'Ligar música' })}
+      title={musicOn
+        ? $t('arcade.music.off', { default: 'Desligar música' })
+        : $t('arcade.music.on', { default: 'Ligar música' })}
+    ><span aria-hidden="true">♪</span></button>
     {#if fsSupported}
       <button
         type="button"
@@ -365,6 +403,11 @@
         onpointercancel={onPointerUp}
         aria-label={$t('arcade.game.canvas', { default: 'Área de jogo arcade' })}
       ></canvas>
+
+      <!-- Tasteful CRT sheen over the whole screen (pointer-events:none, so the
+           canvas still gets taps; the animated glare self-disables under
+           prefers-reduced-motion). -->
+      <CrtOverlay radius="1.25rem" />
 
       {#if status === 'playing'}
         <div class="mini-cluster">
@@ -421,10 +464,26 @@
   /* Slim top bar: back arrow · title · live score. */
   .topbar {
     display: grid;
-    grid-template-columns: auto 1fr auto auto;
+    grid-template-columns: auto 1fr auto auto auto;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.5rem;
     margin-bottom: 0.5rem;
+  }
+  .music-toggle span { transition: opacity 120ms ease; }
+  .music-toggle.muted { color: var(--txt3, #94a3b8); }
+  /* struck-through note when muted, drawn with a rotated pseudo-element so it
+     works regardless of emoji/glyph support */
+  .music-toggle.muted { position: relative; }
+  .music-toggle.muted::after {
+    content: '';
+    position: absolute;
+    left: 22%;
+    right: 22%;
+    top: 50%;
+    height: 2px;
+    background: currentColor;
+    transform: rotate(-20deg);
+    border-radius: 2px;
   }
   .fs-toggle {
     display: grid;
@@ -522,9 +581,15 @@
   @media (orientation: landscape) and (max-height: 540px) {
     canvas { max-height: min(calc(100dvh - 5.5rem - env(safe-area-inset-bottom)), 700px); }
   }
+  /* Browser-fullscreen ("ecrã inteiro"): no URL bar, so the machine takes the
+     whole width and the playfield can breathe a little taller. */
+  .shell.fullscreen { max-width: none; }
+  .shell.fullscreen .cabinet { max-width: 560px; }
+  .shell.fullscreen canvas { max-height: min(calc(100dvh - 15rem - env(safe-area-inset-bottom)), 860px); }
   .overlay {
     position: absolute;
     inset: 0.6rem;
+    z-index: 7; /* above the CRT overlay (z-4) and mini-cluster (z-6) */
     display: grid;
     place-content: center;
     gap: 0.5rem;

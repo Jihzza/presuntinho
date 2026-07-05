@@ -157,6 +157,15 @@ function audioCtx(): AudioContext | null {
 	return ctx;
 }
 
+/**
+ * Shared AudioContext so the arcade chiptune engine (src/lib/arcade/audio.ts)
+ * mixes through the SAME output as the SFX — one context, resumed on the first
+ * user gesture. Returns null when Web Audio is unavailable.
+ */
+export function getAudioContext(): AudioContext | null {
+	return audioCtx();
+}
+
 const MASTER_GAIN = 0.18;
 
 interface NoteSpec {

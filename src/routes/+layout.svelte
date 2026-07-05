@@ -416,7 +416,15 @@
 
 <style>
   .app {
+    /* Dynamic viewport height: on mobile, `100vh` is the LARGE viewport (URL
+       bar hidden), so with the sticky bottom-nav as the last flex child the
+       document ends up a few px taller than the visible area whenever the URL
+       bar is shown — that overflow lets the sticky footer slide up/down (most
+       visible on full-height pages like /agente). `100dvh` tracks the current
+       viewport, so there is no overflow and the footer stays put. `100vh` is
+       kept as a fallback for browsers without dvh. */
     min-height: 100vh;
+    min-height: 100dvh;
     background: var(--bg, #1f2e4a);
     color: var(--txt, #fff);
     display: flex;

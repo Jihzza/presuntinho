@@ -698,8 +698,11 @@
          última mensagem está SEMPRE visível ao entrar, sem scroll manual. */
       display: flex;
       flex-direction: column;
-      /* 64px header sticky + ~4.35rem bottom-nav em fluxo. */
-      height: calc(100dvh - 64px - 4.75rem - env(safe-area-inset-bottom));
+      /* Header sticky (medido ≈69px) + bottom-nav (~4.75rem, JÁ inclui o
+         safe-area-inset-bottom no seu próprio padding). NÃO voltar a subtrair o
+         inset aqui — contá-lo duas vezes fazia o .app transbordar 100dvh em
+         telemóveis com notch e o footer sticky deslizava. */
+      height: calc(100dvh - 69px - 4.75rem);
       overflow: hidden;
       max-width: 800px;
       margin: 0 auto;
