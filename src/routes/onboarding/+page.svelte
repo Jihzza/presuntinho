@@ -30,10 +30,48 @@
   } from '$lib/space/onboarding';
   import type { SpaceKind } from '$lib/space/types';
   import { putSpace, putMember } from '$lib/space/registry-db';
+  import {
+    takePendingSpaceToken,
+    setSpaceToken,
+    setPendingSpaceToken,
+    createInvite,
+    inviteUrl
+  } from '$lib/space/pairing';
 
   let ob = $state(initialOnboarding());
   let busy = $state(false);
   let errorMsg = $state('');
+  let inviteCode = $state('');
+  let inviteBusy = $state(false);
+  let inviteErr = $state('');
+  let copied = $state(false);
+
+  async function genInvite(): Promise<void> {
+    if (inviteBusy) return;
+    inviteBusy = true;
+    inviteErr = '';
+    try {
+      const inv = await createInvite();
+      inviteCode = inv.code;
+      // Bind the shared token to THIS device's member once it is created.
+      setPendingSpaceToken(inv.token);
+    } catch (e) {
+      console.error('[onboarding] invite failed', e);
+      inviteErr = $t('onboarding.invite.error', { default: 'Não consegui criar o convite agora. Podes convidar mais tarde nas Definições.' });
+    } finally {
+      inviteBusy = false;
+    }
+  }
+
+  async function copyInvite(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(inviteUrl(inviteCode));
+      copied = true;
+      setTimeout(() => (copied = false), 1600);
+    } catch {
+      /* clipboard blocked — the code is shown on screen to copy manually */
+    }
+  }
 
   const EMOJIS = ['🐷', '🌙', '🚀', '🐱', '⚽', '🌸', '⭐', '💖', '🦊', '🐰', '🌵', '🍄'];
   const INTENTS: { kind: SpaceKind; icon: string; key: string }[] = [
@@ -72,6 +110,10 @@
       await putSpace(space);
       await putMember(member);
       registerKnownMember(memberId);
+      // If we arrived here after redeeming an invite, bind the shared space
+      // token to this new member so the two devices are paired.
+      const pendingToken = takePendingSpaceToken();
+      if (pendingToken) setSpaceToken(memberId, pendingToken);
       setSession(memberId as ProfileId, 'primary');
       // Create + hydrate the new member's OWN database, then set their mascot.
       await initStores(memberId as ProfileId);
@@ -163,8 +205,23 @@
   {:else if ob.step === 'invite'}
     <section class="step">
       <h1>{$t('onboarding.invite.title', { default: 'Convida quando fizer sentido' })}</h1>
-      <p class="lead">{$t('onboarding.invite.body', { default: 'Vais poder ligar o telemóvel de outra pessoa ao teu espaço a partir das Definições.' })}</p>
-      <p class="note">{$t('onboarding.invite.local_note', { default: '🔗 Os convites ligam dois telemóveis ao mesmo espaço. Podes fazê-lo mais tarde, sem pressa.' })}</p>
+      <p class="lead">{$t('onboarding.invite.body', { default: 'Gera um código e partilha-o com a outra pessoa. Ao abri-lo no telemóvel dela, ficam ligados ao mesmo espaço.' })}</p>
+
+      {#if !inviteCode}
+        <button type="button" class="cta wide" onclick={genInvite} disabled={inviteBusy}>
+          {inviteBusy ? $t('onboarding.invite.generating', { default: 'A gerar…' }) : $t('onboarding.invite.generate', { default: '🔗 Gerar convite' })}
+        </button>
+        {#if inviteErr}<p class="hint err">{inviteErr}</p>{/if}
+      {:else}
+        <div class="invite-box">
+          <span class="invite-label">{$t('onboarding.invite.code_label', { default: 'Código de convite' })}</span>
+          <strong class="invite-code">{inviteCode}</strong>
+          <button type="button" class="ghost wide" onclick={copyInvite}>
+            {copied ? $t('onboarding.invite.copied', { default: 'Link copiado ✓' }) : $t('onboarding.invite.copy', { default: 'Copiar link' })}
+          </button>
+        </div>
+      {/if}
+      <p class="note">{$t('onboarding.invite.local_note', { default: '🔗 O convite liga dois telemóveis ao mesmo espaço. Podes também fazê-lo mais tarde, sem pressa.' })}</p>
     </section>
   {:else}
     <section class="step done">
@@ -219,7 +276,12 @@
   .mascot { display: grid; place-items: center; padding: 0.5rem; border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.05); cursor: pointer; min-height: 74px; }
   .mascot.on { border-color: var(--accent, #ec4899); background: color-mix(in srgb, var(--accent, #ec4899) 16%, transparent); }
   .hint { color: var(--txt3, #94a3b8); font-size: 0.82rem; margin: 0.2rem 0 1rem; }
-  .note { padding: 0.85rem 1rem; border-radius: 1rem; border: 1px dashed rgba(103, 232, 249, 0.4); background: rgba(34, 211, 238, 0.08); color: var(--txt2, #cbd5e1); line-height: 1.5; }
+  .note { padding: 0.85rem 1rem; border-radius: 1rem; border: 1px dashed rgba(103, 232, 249, 0.4); background: rgba(34, 211, 238, 0.08); color: var(--txt2, #cbd5e1); line-height: 1.5; margin-top: 1rem; }
+  .err { color: #fca5a5; }
+  .wide { width: 100%; }
+  .invite-box { display: grid; gap: 0.6rem; place-items: center; padding: 1.1rem; border-radius: 1.1rem; border: 1px solid var(--accent, #ec4899); background: color-mix(in srgb, var(--accent, #ec4899) 12%, transparent); }
+  .invite-label { color: var(--txt2, #cbd5e1); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  .invite-code { font-size: 1.8rem; font-weight: 900; letter-spacing: 0.28em; font-variant-numeric: tabular-nums; }
   .switch-row { display: flex; align-items: flex-start; gap: 0.6rem; margin-top: 0.4rem; color: var(--txt2, #cbd5e1); font-size: 0.9rem; line-height: 1.4; }
   .switch-row input { margin-top: 0.2rem; accent-color: var(--accent, #ec4899); width: 18px; height: 18px; }
   .done { display: grid; place-items: center; text-align: center; gap: 0.4rem; }
