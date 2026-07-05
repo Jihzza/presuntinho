@@ -175,7 +175,9 @@
 >
   <div class="victory-card" class:perfect>
     <div class="mascot" aria-hidden="true">
-      <MascotAvatar mascot={mascotId} pose={tier === 'low' ? 'think' : 'cheer'} size={96} eager />
+      <!-- Lição concluída celebra SEMPRE (o tier 'low' vem do total=0);
+           só um quiz fraco merece a pose pensativa. -->
+      <MascotAvatar mascot={mascotId} pose={variant === 'quiz' && tier === 'low' ? 'think' : 'cheer'} size={96} eager />
     </div>
     <h2 class="v-title">{title}</h2>
     <p class="mascot-line">{mascotLine}</p>

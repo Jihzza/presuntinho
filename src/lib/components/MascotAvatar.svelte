@@ -48,12 +48,14 @@
   const src = $derived(mascotArt(mascot, pose ?? poseForEmotion(emotion)));
 </script>
 
+<!-- min-width reserva espaço horizontal aproximado antes do decode (os
+     rácios das poses variam 0.66–1.21) — evita o salto do texto vizinho. -->
 <span
   class="mavatar"
   class:animate
   class:entrance
   class:flip
-  style="height: {size}px;"
+  style="height: {size}px; min-width: {Math.round(size * 0.72)}px;"
   aria-hidden={alt ? undefined : 'true'}
 >
   <img

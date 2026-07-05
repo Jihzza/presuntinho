@@ -16,6 +16,7 @@
   import MascotAvatar from '$lib/components/MascotAvatar.svelte';
   import {
     MASCOTS,
+    mascotArt,
     mascotStatuses,
     setActiveMascot,
     type MascotPose,
@@ -63,6 +64,17 @@
     clearInterval(poseTimer);
     poseTimer = setInterval(() => (poseIdx += 1), 2400);
   }
+
+  // Pré-carrega as poses do palco da mascote em pré-visualização — o {#key}
+  // remonta o <img> a cada troca e sem preload a 1.ª volta piscava.
+  $effect(() => {
+    const p = preview;
+    if (!p?.unlocked || typeof window === 'undefined') return;
+    for (const pose of STAGE_POSES) {
+      const img = new Image();
+      img.src = mascotArt(p.id, pose);
+    }
+  });
 
   onMount(() => {
     reduced = prefersReducedMotion();
@@ -332,8 +344,10 @@
     align-items: flex-end;
     animation: stage-swap 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
   }
+  /* Silhueta legível em QUALQUER tema: versão dessaturada e escurecida em
+     vez de recorte 100% preto (invisível nos temas escuros). */
   .stage-actor.silhouette :global(img) {
-    filter: brightness(0) opacity(0.4);
+    filter: grayscale(1) brightness(0.55) opacity(0.6) drop-shadow(0 0 10px rgba(255, 255, 255, 0.22));
   }
   .stage-lock {
     position: absolute;
@@ -461,7 +475,7 @@
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
   }
   .rail-card.locked :global(.mavatar img) {
-    filter: brightness(0) opacity(0.38);
+    filter: grayscale(1) brightness(0.55) opacity(0.55);
   }
   .rail-art {
     position: relative;

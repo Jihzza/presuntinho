@@ -629,21 +629,25 @@
   .popup-cta:active { transform: translateY(2px); border-bottom-width: 2px; }
   .popup-cta:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
+  /* Posicionamento FÍSICO (left/right) de propósito: o offset serpentina é
+     um translateX físico e o flip também — com inset-inline, em RTL (ar) a
+     personagem mudava de lado, ficava de costas para o nó e podia sair do
+     ecrã. Físico alinha com o offset em ambas as direções. */
   .cheer-pig {
     position: absolute;
     top: -6px;
-    inset-inline-start: calc(50% + 78px);
+    left: calc(50% + 78px);
     opacity: 0.95;
     pointer-events: none;
   }
   .cheer-pig.flip {
-    inset-inline-start: auto;
-    inset-inline-end: calc(50% + 78px);
+    left: auto;
+    right: calc(50% + 78px);
   }
 
   @media (max-width: 420px) {
     .step { transform: translateX(calc(var(--offset, 0px) * 0.6)); }
-    .cheer-pig { inset-inline-start: calc(50% + 58px); }
-    .cheer-pig.flip { inset-inline-start: auto; inset-inline-end: calc(50% + 58px); }
+    .cheer-pig { left: calc(50% + 58px); }
+    .cheer-pig.flip { left: auto; right: calc(50% + 58px); }
   }
 </style>
