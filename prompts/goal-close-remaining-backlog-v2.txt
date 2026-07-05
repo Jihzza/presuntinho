@@ -1,0 +1,417 @@
+================================================================================
+PRESUNTINHO PIPELINE — TEMPLATE DE EXECUÇÃO
+goal-close-remaining-backlog-v2
+================================================================================
+Origem phase  : task-162 (tasks.html)
+Spec origem   : CEO msg 76963 — orquestração 12-bot pool, 13 passos numerados
+Perfil autor  : Skander 1 (raciocínio + copywriting estruturado)
+Idioma        : pt-PT (foco)
+Modo          : execução batch com watchdog; orquestrador NUNCA edita código
+                  directamente — delegar sempre a Skander 2 (mecânico) ou bot
+                  aplicador do pool quando aplicável.
+Repo canónico : C:/Users/rafaa/Documents/GitHub/presuntinho
+Deploy alvo   : https://presuntinho.netlify.app/
+Encodings     : PYTHONIOENCODING=utf-8 PYTHONUTF8=1 LC_ALL=C.UTF-8 LANG=C.UTF-8
+Redirect logs : usar > log 2>&1 (NUNCA pipe | tee — proibido por convenção)
+Cron tick     : este template é despachado pelo Cron #4 execute (job_id 285b92153801, every 20m, profile=default). Pode também ser invocado ad-hoc por humano via `hermes --profile skander1 chat -q "$(cat prompts/goal-close-remaining-backlog-v2.txt | envsubst)"`.
+================================================================================
+
+
+================================================================================
+METADATA BLOCK — PARAMETRIZAÇÃO
+================================================================================
+Todas as variáveis abaixo DEVEM ser preenchidas antes do passo 1.
+Placeholders não substituídos = ABORT antes de arrancar bots.
+
+{{backlog-name}}     Nome humano do item de backlog a fechar (ex: "fix(i18n)
+                      splash copy rewrite task-224"). Usado em commit message
+                      e em run-state.json.
+{{branch}}           Nome completo da branch integration a criar (formato
+                      integration/<slug>-YYYYMMDD-HHMM). Derivado de
+                      backlog-name; já vem pronto do planeamento.
+{{output-dir}}       Caminho absoluto da pasta de artefactos do tick (logs,
+                      run-state.json, matrizes A/B/C/D, final report). Criado
+                      no passo 1 se não existir.
+{{validators}}       Lista CSV dos validadores a correr no passo 7
+                      (default: check:i18n, scan:i18n, check, build, browser
+                      smoke). Cada validador escreve log próprio em
+                      {{output-dir}}/logs/.
+{{tick-id}}          Identificador único do tick de execução (ex: tick-20260705-
+                      1410-001). Reutilizado em run-state.json, nome de PR e
+                      final report.
+
+================================================================================
+PRÉ-CONDIÇÕES (verificar ANTES do passo 1)
+================================================================================
+[ ] git status limpo no repo canónico (sem uncommitted changes)
+[ ] origin verificado: git remote -v aponta para o remote do presuntinho
+[ ] {{backlog-name}}, {{branch}}, {{output-dir}}, {{validators}}, {{tick-id}}
+    todos preenchidos (sem "{{" pendente)
+[ ] {{output-dir}} existe ou pode ser criado com mkdir -p
+[ ] hermes CLI disponível: hermes --version devolve string
+[ ] Bots do pool registados no config: skander1, skander2, piccolo, piccolo1,
+    piccolo2, krillin, krillin1, krillin2, vegeta, f0probe, presuntinho,
+    central-mensageiros (12 no total)
+
+
+## PASSO 1 — Arrancar 12 bots em background
+
+Objectivo: levantar o pool completo de 12 bots em background para recolha
+paralela de decisões, sem bloquear o orquestrador.
+
+Acções:
+  a) Criar {{output-dir}} se não existir.
+  b) Para cada bot da lista (skander1, skander2, piccolo, piccolo1, piccolo2,
+     krillin, krillin1, krillin2, vegeta, f0probe, presuntinho,
+     central-mensageiros) emitir:
+        hermes --profile <bot> run --goal "avaliar {{backlog-name}}" \
+          --output {{output-dir}}/matrices/<bot>.json > {{output-dir}}/logs/<bot>.log 2>&1 &
+  c) Registar PIDs em {{output-dir}}/run-state.json (campo bot_pids).
+  d) Confirmar que os 12 processos estão vivos (ps/pidof).
+
+Micro-checklist:
+  [ ] {{output-dir}} criado e gravável
+  [ ] 12 comandos `hermes --profile ... run` despachados
+  [ ] 12 PIDs registados em run-state.json
+  [ ] Nenhum processo morreu imediatamente (verificar exit codes nos logs)
+  [ ] Watchdog pronto para monitorizar (poll ou cron 10min)
+
+Output esperado: 12 processos ativos, run-state.json com bot_pids preenchido.
+
+
+## PASSO 2 — Cada bot devolve matriz decisão A/B/C/D
+
+Objectivo: recolher a decisão estruturada de cada bot, em formato matriz
+A/B/C/D, e persistir para uso do passo 3.
+
+Acções:
+  a) Esperar que cada bot termine OU continue em background e observe.
+  b) Conforme cada bot termina, parsear o seu ficheiro de output
+     {{output-dir}}/matrices/<bot>.json.
+  c) Validar schema da matriz: { "A": ..., "B": ..., "C": ..., "D": ... }
+     onde A=aprovar, B=aprovar-com-ressalvas, C=rejeitar, D=abster.
+  d) Anexar resultado à lista global em {{output-dir}}/matrices/all.json
+     com timestamp, bot, decisão, rationale curto.
+
+Micro-checklist:
+  [ ] 12 matrizes recebidas (ou marcadas como D=abster se timeout)
+  [ ] Schema A/B/C/D validado em cada uma
+  [ ] all.json escrito de forma atómica (write tmp + rename)
+  [ ] Botões de timeout registados com motivo
+  [ ] Nenhuma matriz vazia
+
+Output esperado: all.json contém exactamente 12 entradas A/B/C/D.
+
+
+## PASSO 3 — Skander principal sintetiza
+
+Objectivo: agregar as 12 decisões numa decisão única de execução
+(aprovar, aprovar-com-changes, rejeitar, escalar) com rationale consolidado.
+
+Acções:
+  a) Carregar all.json.
+  b) Skander principal (perfil skander1) lê as 12 entradas e pondera:
+     - majority A → aprovar
+     - mix A+B → aprovar-com-changes (lista de changes obrigatórias)
+     - qualquer C dominante → rejeitar
+     - qualquer D maioritário → escalar para CEO
+  c) Escrever síntese em {{output-dir}}/synthesis.json com:
+     { "decision": "...", "rationale": "...", "required_changes": [...],
+       "escalation": bool }
+  d) Notificar operador (Telegram) com sumário 5 linhas.
+
+Micro-checklist:
+  [ ] all.json carregado sem erro
+  [ ] Regra de agregação aplicada de forma determinística
+  [ ] synthesis.json escrito e validado
+  [ ] required_changes é lista (pode ser vazia)
+  [ ] Notificação enviada ao operador
+
+Output esperado: synthesis.json presente e notificação entregue.
+
+
+## PASSO 4 — Criar branch integration/<slug>-YYYYMMDD-HHMM
+
+Objectivo: isolar as alterações numa branch integration pronta para merge
+em main, com slug legível e timestamp.
+
+Acções:
+  a) Garantir que estamos em main actualizado: git checkout main && git pull.
+  b) Derivar slug de {{backlog-name}} (lowercase, kebab-case, max 40 chars).
+  c) Gerar timestamp UTC no formato YYYYMMDD-HHMM.
+  d) Construir nome de branch = integration/<slug>-YYYYMMDD-HHMM
+     (validar que {{branch}} coincide com este formato).
+  e) git checkout -b {{branch}} && git push -u origin {{branch}}.
+
+Micro-checklist:
+  [ ] Working tree limpo antes de checkout
+  [ ] main actualizado (sem diverge vs origin/main)
+  [ ] slug derivado e validado
+  [ ] branch local criada
+  [ ] branch publicada no origin
+
+Output esperado: {{branch}} existe local e remote, tracking configurado.
+
+
+## PASSO 5 — Inicializar run-state.json
+
+Objectivo: criar o livro de bordo do tick, atualizado a cada passo, com
+estado persistido para resiliência a crash/restart do orquestrador.
+
+Acções:
+  a) Criar {{output-dir}}/run-state.json com schema:
+     {
+       "tick_id": "{{tick-id}}",
+       "backlog_name": "{{backlog-name}}",
+       "branch": "{{branch}}",
+       "started_at": "<iso8601>",
+       "current_step": 5,
+       "bot_pids": [...],
+       "matrices_file": "{{output-dir}}/matrices/all.json",
+       "synthesis_file": "{{output-dir}}/synthesis.json",
+       "patches": [],
+       "validations": [],
+       "commit_sha": null,
+       "pr_url": null,
+       "final_report": null
+     }
+  b) Gravar com fsync (echo > tmp.json; mv tmp.json run-state.json).
+  c) Em cada passo subsequente, atualizar current_step antes de agir.
+
+Micro-checklist:
+  [ ] run-state.json criado
+  [ ] Todos os campos obrigatórios preenchidos
+  [ ] Escrita atómica (tmp + rename)
+  [ ] Schema validado (jq .)
+  [ ] Backup incremental a cada passo (run-state.json.bak)
+
+Output esperado: run-state.json presente e válido.
+
+
+## PASSO 6 — Aplicar patches
+
+Objectivo: executar as alterações de código derivadas da synthesis, sempre
+via Skander 2 (mecânico) ou bot aplicador — NUNCA o orquestrador escreve
+código.
+
+Acções:
+  a) Ler required_changes de synthesis.json.
+  b) Despachar sub-tarefas para Skander 2 (perfil skander2) com
+     contexto: synthesis.json, branch atual, lista de changes.
+  c) Skander 2 devolve lista de patches (unified diff) ou write_file paths.
+  d) Validar cada patch (git apply --check) e aplicar (git apply).
+  e) Registar patches aplicados em run-state.json (campo patches).
+
+Micro-checklist:
+  [ ] required_changes interpretado
+  [ ] Sub-tarefa enviada a Skander 2 (mecânico)
+  [ ] Cada patch passa git apply --check
+  [ ] git status mostra apenas ficheiros esperados modificados
+  [ ] run-state.json.patches actualizado
+
+Output esperado: working tree contém exactamente as alterações aprovadas.
+
+
+## PASSO 7 — Validação check:i18n
+
+Objectivo: confirmar que as alterações não introduzem strings hardcoded
+ou chaves i18n em falta.
+
+Acções:
+  a) Executar: npm run check:i18n > {{output-dir}}/logs/check-i18n.log 2>&1
+  b) Verificar exit code 0.
+  c) Se falhar: listar ficheiros/linhas offending do log.
+  d) Despachar fix para Skander 2; voltar a correr até passar.
+
+Micro-checklist:
+  [ ] Comando executado
+  [ ] Exit code 0 (ou documentado como falso-positivo conhecido)
+  [ ] Log arquivado em {{output-dir}}/logs/
+  [ ] run-state.json.validations += { "check:i18n": "pass" }
+  [ ] Nenhuma chave i18n hardcoded introduzida
+
+Output esperado: check:i18n verde e log persistido.
+
+
+## PASSO 8 — Validação scan:i18n
+
+Objectivo: varrer código por padrões problemáticos (PT/EN misturados,
+placeholders esquecidos, locale fallbacks em falta).
+
+Acções:
+  a) Executar: npm run scan:i18n > {{output-dir}}/logs/scan-i18n.log 2>&1
+  b) Verificar exit code 0.
+  c) Triar findings: ignorar falso-positivos documentados, despachar
+     restantes para Skander 2.
+  d) Re-correr até zero findings accionáveis.
+
+Micro-checklist:
+  [ ] Comando executado
+  [ ] Findings triados
+  [ ] Falso-positivos documentados em {{output-dir}}/scan-fp.md
+  [ ] run-state.json.validations += { "scan:i18n": "pass" }
+  [ ] Log arquivado
+
+Output esperado: scan:i18n verde ou zero findings accionáveis.
+
+
+## PASSO 9 — Validação check + build
+
+Objectivo: garantir typecheck, lint e build de produção sem erros.
+
+Acções:
+  a) Executar: npm run check > {{output-dir}}/logs/check.log 2>&1
+  b) Se passar, executar: npm run build > {{output-dir}}/logs/build.log 2>&1
+  c) Verificar exit codes (0 = pass).
+  d) Despachar fix para Skander 2 em qualquer falha; iterar.
+  e) Validar que build/ contém _app/, .svelte-kit/output, etc.
+
+Micro-checklist:
+  [ ] npm run check exit 0
+  [ ] npm run build exit 0
+  [ ] Artefactos de build presentes
+  [ ] Logs arquivados
+  [ ] run-state.json.validations += { "check": "pass", "build": "pass" }
+
+Output esperado: check + build verdes.
+
+
+## PASSO 10 — Validação browser smoke
+
+Objectivo: confirmar que a app arranca e responde nos fluxos principais
+sem regressão visual ou runtime.
+
+Acções:
+  a) Subir dev server: npm run dev -- --port 5180 &
+  b) Aguardar readiness (curl http://localhost:5180/).
+  c) Disparar smoke QA multi-rota (skill browser-smoke-qa).
+  d) Capturar screenshots e logs em {{output-dir}}/browser-smoke/.
+  e) Validar zero erros JS no console.
+
+Micro-checklist:
+  [ ] Dev server up e responde 200
+  [ ] Smoke QA multi-rota executado
+  [ ] Zero erros JS no browser_console
+  [ ] Screenshots arquivados
+  [ ] run-state.json.validations += { "browser_smoke": "pass" }
+
+Output esperado: browser smoke verde e artefactos guardados.
+
+
+## PASSO 11 — Atomic commit
+
+Objectivo: gravar todas as alterações validadas num único commit atómico,
+com mensagem conventional e referência ao backlog.
+
+Acções:
+  a) git add -A (apenas ficheiros sob scope do {{backlog-name}}).
+  b) git status para revisão final.
+  c) git commit -m "<tipo>(<scope>): <resumo> ({{backlog-name}})
+
+     Refs: task-162
+     Tick: {{tick-id}}
+     Validators: {{validators}}
+
+     Co-authored-by: Skander 1 <noreply@presuntinho>
+     Co-authored-by: Skander 2 <noreply@presuntinho>"
+  d) Capturar SHA: git rev-parse HEAD.
+  e) Gravar SHA em run-state.json.commit_sha.
+
+Micro-checklist:
+  [ ] git add -A só inclui scope esperado
+  [ ] Mensagem segue conventional commits
+  [ ] Co-authored-by presente
+  [ ] SHA capturado
+  [ ] run-state.json.commit_sha actualizado
+
+Output esperado: 1 commit novo, SHA gravado.
+
+
+## PASSO 12 — Push + PR ou merge
+
+Objectivo: promover as alterações para o remote via PR (preferencial)
+ou merge directo se política do repo permitir.
+
+Acões:
+  a) git push origin {{branch}} (idempotente se já feito no passo 4).
+  b) gh pr create --base main --head {{branch}} --title "{{backlog-name}}"
+     --body-file {{output-dir}}/pr-body.md (gerar body a partir de
+     synthesis.json + lista de validações).
+  c) Se PR: capturar URL e marcar como draft se validações manuais
+     pendentes.
+  d) Se merge directo: gh pr merge --squash --delete-branch (apenas
+     se {{validators}} incluiu merge-direct policy).
+  e) Gravar pr_url em run-state.json.
+
+Micro-checklist:
+  [ ] Push OK
+  [ ] PR criado OU merge directo executado
+  [ ] URL capturado
+  [ ] run-state.json.pr_url preenchido
+  [ ] Branch de trabalho tratada (mergeada ou marcada para delete)
+
+Output esperado: PR aberto/merged e URL persistido.
+
+
+## PASSO 13 — Browser smoke final + final report
+
+Objectivo: confirmar a app em produção (Netlify preview do PR) e emitir
+o relatório final do tick, notificando o operador.
+
+Acções:
+  a) Aguardar deploy preview do PR (poll Netlify API ou status check).
+  b) Re-correr browser smoke QA contra a URL de preview.
+  c) Validar zero regressões vs baseline (screenshot diff ou smoke list).
+  d) Compilar final report em {{output-dir}}/final-report.md com:
+     - resumo 1-linha
+     - link do PR
+     - lista de validações (check:i18n, scan:i18n, check, build, browser)
+     - SHA do commit
+     - contagem de ficheiros alterados
+     - próximos passos (deploy prod, monitor, etc.)
+  e) Gravar em run-state.json.final_report.
+  f) Notificar operador (Telegram) com sumário + link do report.
+
+Micro-checklist:
+  [ ] Deploy preview disponível
+  [ ] Browser smoke final verde
+  [ ] final-report.md escrito
+  [ ] run-state.json.final_report preenchido
+  [ ] Notificação enviada
+
+Output esperado: relatório final entregue e tick fechado.
+
+
+================================================================================
+DONE CRITERIA — O tick só é considerado FECHADO quando TODAS as condições
+abaixo forem verdadeiras
+================================================================================
+[ ] 13 passos executados e marcados em run-state.json
+[ ] 5 validações verdes: check:i18n, scan:i18n, check, build, browser_smoke
+[ ] Commit atómico presente em {{branch}} com SHA gravado
+[ ] PR aberto (ou merge directo conforme policy) com URL gravado
+[ ] Browser smoke final verde contra deploy preview
+[ ] final-report.md escrito e notificação enviada ao operador
+[ ] run-state.json.final_report != null
+[ ] Nenhum PID órfão de bot em background (limpos no fim)
+[ ] Logs todos arquivados em {{output-dir}}/logs/
+[ ] Operador confirmou fecho (resposta positiva no Telegram)
+
+
+================================================================================
+FAILURE MODES E ROLLBACK
+================================================================================
+- Bot timeout no passo 2: marcar D=abster, prosseguir; se > 4 D, escalar.
+- Patch inválido no passo 6: git apply --abort, voltar a synthesis.
+- Validação falha passos 7-10: NÃO avançar; despachar fix ao Skander 2.
+- Conflito no push do passo 12: rebase contra origin/main e re-run
+  validações 7-10 antes de novo push.
+- Crash do orquestrador: watchdog (cron 10min) retoma do current_step em
+  run-state.json.
+- Deploy preview não chega em 10min: notificar operador e marcar tick
+  como "deploy-pending" em vez de fechado.
+
+
+================================================================================
+FIM DO TEMPLATE — goal-close-remaining-backlog-v2
+================================================================================
