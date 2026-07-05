@@ -476,13 +476,13 @@
     display: block;
     width: 100%;
     aspect-ratio: 360 / 480;
-    /* Reserve enough for the top bar AND the full footprint of the fixed
-       controls (bottom 4.5rem + the 132px/8.25rem d-pad) PLUS the home-
-       indicator safe area, so the canvas bottom always clears the touch HUD —
-       otherwise on short viewports (iPhone SE, landscape) the d-pad would cover
-       the bottom of the playfield again. On tall phones the aspect ratio binds
-       first, so the canvas stays large there. */
-    max-height: min(calc(100dvh - 18.5rem - env(safe-area-inset-bottom)), 620px);
+    /* During play the app chrome is hidden, so the canvas gets almost the whole
+       screen; the reserve leaves room for the top bar AND the full footprint of
+       the TALLEST fixed control cluster (the platformer's stacked Jump+▶ ≈ 155px
+       at bottom 1.6rem) plus the home-indicator safe area, so no control ever
+       covers the playfield even on the shortest phones. Tall phones stay
+       aspect-ratio-bound and large. */
+    max-height: min(calc(100dvh - 16.5rem - env(safe-area-inset-bottom)), 700px);
     margin: 0 auto;
     border-radius: 0.9rem;
     background: #0a1120;
@@ -516,6 +516,11 @@
   /* desktop plays with the keyboard, so the canvas can take the full height */
   @media (pointer: fine) {
     canvas { max-height: min(72vh, 640px); }
+  }
+  /* landscape: controls sit on the side edges, so the canvas can use the full
+     (short) height; it stays aspect-ratio-bound and centred between them. */
+  @media (orientation: landscape) and (max-height: 540px) {
+    canvas { max-height: min(calc(100dvh - 5.5rem - env(safe-area-inset-bottom)), 700px); }
   }
   .overlay {
     position: absolute;

@@ -731,9 +731,12 @@
     .mascot-corner.game-hidden {
       display: none;
     }
-    /* Immersive play: hide the app chrome so the game gets the whole screen. */
+    /* Immersive play: hide the app chrome so the game gets the whole screen.
+       The PWA update banner is hidden too — with the bottom-nav gone it would
+       otherwise float over the playfield/controls (it returns after the game). */
     .app.arcade-immersive :global(header.nav),
-    .app.arcade-immersive :global(nav.bottom-nav) {
+    .app.arcade-immersive :global(nav.bottom-nav),
+    .app.arcade-immersive :global(.pwa-update) {
       display: none;
     }
     /* PWA update banner — actionable "toast" pinned above the bottom nav. */

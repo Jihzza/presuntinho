@@ -4867,5 +4867,7 @@
   "arcade.games.breakout.keys": "← → للمضرب، المسافة للإطلاق · P للإيقاف",
   "arcade.games.pong.keys": "← → أو A/D للمضرب · P للإيقاف",
   "arcade.hud.move_aria": "الحركة",
-  "arcade.hud.action_aria": "إجراء"
+  "arcade.hud.action_aria": "إجراء",
+  "arcade.fullscreen.enter": "ملء الشاشة",
+  "arcade.fullscreen.exit": "الخروج من ملء الشاشة"
 }

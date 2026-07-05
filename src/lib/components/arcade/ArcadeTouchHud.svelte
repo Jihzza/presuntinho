@@ -188,6 +188,17 @@
   .a-icon { font-size: 1.5rem; line-height: 1; }
   .a-label { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.02em; }
 
+  /* Landscape (phone on its side): controls move to the vertical middle of the
+     left/right edges so both thumbs rest there and the centred playfield is
+     free above/below. */
+  @media (orientation: landscape) and (max-height: 540px) {
+    .cluster {
+      bottom: auto;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
   /* touch-only: desktop plays with the keyboard */
   @media (pointer: fine) {
     .hud-overlay { display: none; }

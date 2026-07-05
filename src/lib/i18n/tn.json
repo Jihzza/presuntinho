@@ -4880,5 +4880,7 @@
   "arcade.games.breakout.keys": "← → lel base, Space bech tlanci · P bech twa9ef",
   "arcade.games.pong.keys": "← → wala A/D lel base · P bech twa9ef",
   "arcade.hud.move_aria": "El 7arka",
-  "arcade.hud.action_aria": "Action"
+  "arcade.hud.action_aria": "Action",
+  "arcade.fullscreen.enter": "Ecran kamel",
+  "arcade.fullscreen.exit": "Okhrej mel ecran kamel"
 }

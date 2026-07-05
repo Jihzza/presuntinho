@@ -4867,5 +4867,7 @@
   "arcade.games.breakout.keys": "← → para a base, Espaço para lançar · P para pausa",
   "arcade.games.pong.keys": "← → ou A/D para a base · P para pausa",
   "arcade.hud.move_aria": "Movimento",
-  "arcade.hud.action_aria": "Ação"
+  "arcade.hud.action_aria": "Ação",
+  "arcade.fullscreen.enter": "Ecrã inteiro",
+  "arcade.fullscreen.exit": "Sair do ecrã inteiro"
 }
