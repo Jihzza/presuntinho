@@ -4817,6 +4817,7 @@
   "arcade.music.off": "إيقاف الموسيقى",
   "arcade.actions.insert_coin": "🪙 أدخل قطعة نقدية",
   "arcade.lobby.marquee": "أركيد",
+  "arcade.lobby.press_start": "PRESS START",
   "arcade.host.first_time": "أهلًا بكِ في الأركيد! أدخلي قطعة نقدية واختاري لعبة. 🕹️",
   "arcade.host.greeting": "رجعتِ؟ يالله، جولة أخرى! 🎮",
   "arcade.host.mastered": "واو، رقم قياسي في كل لعبة! أنتِ ملكة الأركيد. 👑",

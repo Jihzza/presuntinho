@@ -8,7 +8,7 @@
     readArcadeScore,
     type ArcadeGameDefinition
   } from '$lib/arcade/games';
-  import MascotAvatar from '$lib/components/MascotAvatar.svelte';
+  import MascotWalker from '$lib/components/arcade/MascotWalker.svelte';
   import CrtOverlay from '$lib/components/arcade/CrtOverlay.svelte';
   import { getActiveMascot, MASCOT_CHANGED_EVENT, DEFAULT_MASCOT_ID } from '$lib/gamification/mascots';
   import {
@@ -30,10 +30,7 @@
   const machinesPlayed = $derived(Object.values(highScores).filter((v) => v > 0).length);
   const anyPlayed = $derived(machinesPlayed > 0);
   const allMastered = $derived(machinesPlayed === ARCADE_GAMES.length && ARCADE_GAMES.length > 0);
-  // The host mascot reacts to progress: cheering once every machine has a
-  // record, pointing you at the featured cabinet once you've played, waving
-  // hello on the very first visit.
-  const hostPose = $derived(allMastered ? 'cheer' : anyPlayed ? 'point' : 'wave');
+  // The host mascot's speech reacts to progress.
   const hostSpeechKey = $derived(
     allMastered ? 'arcade.host.mastered' : anyPlayed ? 'arcade.host.greeting' : 'arcade.host.first_time'
   );
@@ -118,10 +115,13 @@
     <h1 class="neon" data-text={$t('arcade.lobby.marquee', { default: 'ARCADE' })}>{$t('arcade.lobby.marquee', { default: 'ARCADE' })}</h1>
     <p class="sub">{$t('arcade.hero.body', { default: 'Encontraste a sala escondida do Presuntinho. Seis máquinas, recordes só teus e controlos pensados para o telemóvel e para o teclado.' })}</p>
 
-    <!-- ── the active mascot as the arcade host ── -->
-    <div class="host">
-      <MascotAvatar mascot={hostId} pose={hostPose} size={78} alt={$t('arcade.host.aria', { default: 'Mascote anfitriã da sala arcade' })} eager />
+    <!-- ── attract mode: the active mascot walks the arcade floor forever ── -->
+    <div class="attract">
       <p class="bubble">{$t(hostSpeechKey, { default: 'Insere uma moeda e escolhe uma máquina! 🕹️' })}</p>
+      <div class="floor" aria-label={$t('arcade.host.aria', { default: 'Mascote anfitriã da sala arcade' })}>
+        <MascotWalker mascot={hostId} size={72} />
+      </div>
+      <p class="press-start">{$t('arcade.lobby.press_start', { default: 'PRESS START' })}</p>
     </div>
 
     <div class="summary" aria-label={$t('arcade.summary.aria', { default: 'Resumo da sala arcade' })}>
@@ -155,7 +155,7 @@
       <p>{$t('arcade.games.body', { default: 'Todos os jogos são jogáveis dentro da app. Sem placeholders.' })}</p>
     </div>
 
-    <div class="grid">
+    <div class="rail">
       {#each ARCADE_GAMES as game (game.id)}
         <a class="cabinet" href={game.href} data-sveltekit-preload-data style="--accent: {game.accent};">
           <!-- machine marquee -->
@@ -204,6 +204,15 @@
       radial-gradient(circle at 92% 4%, rgba(34, 211, 238, 0.14), transparent 44%),
       repeating-linear-gradient(0deg, transparent 0 2px, rgba(255, 255, 255, 0.012) 2px 3px),
       linear-gradient(180deg, rgba(9, 8, 22, 0.7), rgba(6, 8, 18, 0.86));
+  }
+  /* the hall "switches on" like a CRT tube when you enter */
+  @media (prefers-reduced-motion: no-preference) {
+    .arcade-room { animation: power-on 440ms ease-out; }
+    @keyframes power-on {
+      0% { opacity: 0; filter: brightness(3.2) contrast(1.4); }
+      55% { opacity: 1; }
+      100% { filter: brightness(1) contrast(1); }
+    }
   }
   .marquee, .featured, .cabinet, .note { border: 1px solid rgba(103, 232, 249, 0.2); border-radius: 1.4rem; background: rgba(255, 255, 255, 0.05); }
 
@@ -290,10 +299,38 @@
   .sub { position: relative; z-index: 6; margin: 0 auto; max-width: 46ch; text-align: center; color: var(--txt2, #cbd5e1); line-height: 1.55; }
 
   /* ── mascot host + speech bubble ── */
-  .host { position: relative; z-index: 6; display: flex; align-items: flex-end; gap: 0.7rem; justify-content: center; margin: 1rem 0 0.4rem; }
+  /* attract mode: speech bubble, a neon FLOOR the mascot patrols, PRESS START */
+  .attract { position: relative; z-index: 6; margin: 1rem 0 0.2rem; display: grid; justify-items: center; gap: 0.55rem; }
+  .floor {
+    position: relative;
+    width: 100%;
+    max-width: 30rem;
+    height: 94px;
+    border-radius: 0.8rem;
+    background:
+      linear-gradient(180deg, transparent, rgba(103, 232, 249, 0.05)),
+      repeating-linear-gradient(90deg, transparent 0 26px, rgba(103, 232, 249, 0.1) 26px 27px);
+    border-bottom: 2px solid rgba(103, 232, 249, 0.32);
+    box-shadow: 0 12px 30px -14px rgba(103, 232, 249, 0.5);
+  }
+  .press-start {
+    margin: 0;
+    color: #fde68a;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    font-size: 0.82rem;
+    text-shadow: 0 0 10px rgba(253, 230, 138, 0.7);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .press-start { animation: blink 1.05s steps(1, end) infinite; }
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0.14; }
+    }
+  }
   .bubble {
     position: relative;
-    margin: 0 0 0.6rem;
+    margin: 0;
     max-width: 15rem;
     padding: 0.6rem 0.85rem;
     border-radius: 1rem 1rem 1rem 0.2rem;
@@ -363,7 +400,22 @@
   .section-head { margin-bottom: 0.85rem; }
   .section-head h2, .note h2 { margin: 0 0 0.25rem; }
   .section-head p, .note p { color: var(--txt2, #cbd5e1); line-height: 1.55; margin: 0; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.9rem; }
+  /* an arcade LINEUP you swipe through, not a grid of cards */
+  .rail {
+    display: flex;
+    gap: 0.9rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.2rem 0.2rem 0.5rem;
+    scroll-padding: 0 0.2rem;
+  }
+  .rail::-webkit-scrollbar { display: none; }
+  .rail .cabinet { flex: 0 0 82%; scroll-snap-align: center; }
+  @media (min-width: 720px) {
+    .rail .cabinet { flex-basis: 300px; }
+  }
 
   /* ── cabinet = a little arcade machine ── */
   .cabinet {
@@ -428,9 +480,6 @@
     .arcade-room { padding-inline: 0.8rem; }
     .summary { gap: 0.4rem; }
     .summary strong { font-size: 1.15rem; }
-    .grid { grid-template-columns: 1fr 1fr; }
-    .host { gap: 0.5rem; }
-    .bubble { max-width: 11rem; font-size: 0.82rem; }
-    .cab-screen .desc { display: none; }
+    .bubble { max-width: 13rem; font-size: 0.82rem; }
   }
 </style>

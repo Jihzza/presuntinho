@@ -4817,6 +4817,7 @@
   "arcade.music.off": "Turn music off",
   "arcade.actions.insert_coin": "🪙 Insert coin →",
   "arcade.lobby.marquee": "ARCADE",
+  "arcade.lobby.press_start": "PRESS START",
   "arcade.host.first_time": "Welcome to the arcade! Insert a coin and pick a machine. 🕹️",
   "arcade.host.greeting": "Back again? Go on, one more round! 🎮",
   "arcade.host.mastered": "Wow, a record on every machine! You rule the arcade. 👑",

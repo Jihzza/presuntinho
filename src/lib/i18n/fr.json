@@ -4817,6 +4817,7 @@
   "arcade.music.off": "Couper la musique",
   "arcade.actions.insert_coin": "🪙 Insérer une pièce →",
   "arcade.lobby.marquee": "ARCADE",
+  "arcade.lobby.press_start": "PRESS START",
   "arcade.host.first_time": "Bienvenue dans la salle ! Insère une pièce et choisis une borne. 🕹️",
   "arcade.host.greeting": "De retour ? Allez, encore une partie ! 🎮",
   "arcade.host.mastered": "Waouh, un record sur chaque borne ! Tu règnes ici. 👑",
