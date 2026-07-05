@@ -88,7 +88,10 @@ export default defineConfig({
         // Skander 1 diagnosis (deleg_aef67789, 2026-06-27) pinpointed the
         // regression to commit 53c842f which first added @vite-pwa/sveltekit.
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB
-        globIgnores: ['prerendered/**/*'],
+        // logos/**: ~1.8MB de ícones de app alternativos (V10.5) — o launcher
+        // busca-os fora do SW e as previews caem no runtime images-cache;
+        // pré-cachear tudo só inchava a instalação.
+        globIgnores: ['prerendered/**/*', 'client/logos/**'],
         navigateFallback: '/',
         navigateFallbackDenylist: [/^\/api/, /^\/legacy/, /\.html$/],
         cleanupOutdatedCaches: true,

@@ -51,7 +51,15 @@
   import Github from 'lucide-svelte/icons/github';
   import ExternalLink from 'lucide-svelte/icons/external-link';
   import Bot from 'lucide-svelte/icons/bot';
+  import Smartphone from 'lucide-svelte/icons/smartphone';
   import { getHermesConfig, setHermesConfig, checkHermesHealth } from '$lib/agent/hermes';
+  import {
+    APP_LOGOS,
+    appLogoPreview,
+    getAppLogo,
+    setAppLogo,
+    type AppLogoId
+  } from '$lib/app-logo';
   // gap-116: real PBKDF2 reset-password flow imports.
   import { getSession } from '$lib/auth/session';
   import {
@@ -95,6 +103,26 @@
   onMount(() => {
     void waitLocale();
   });
+
+  // ----- V10.5: Ícone da app (logo do ecrã inicial) -----
+  let currentLogo = $state<AppLogoId>('classico');
+  onMount(() => {
+    void getAppLogo().then((logo) => (currentLogo = logo));
+  });
+  async function pickLogo(id: AppLogoId): Promise<void> {
+    if (id === currentLogo) return;
+    try {
+      await setAppLogo(id);
+      currentLogo = id;
+      showToast(
+        $t('settings.applogo.picked', {
+          default: 'Ícone escolhido! No telemóvel atualiza na próxima abertura da app.'
+        })
+      );
+    } catch (e) {
+      console.error('[definicoes] app-logo pick failed', e);
+    }
+  }
 
   // ----- V10: Sons & Vibração -----
   let soundOn = $state(true);
@@ -773,6 +801,52 @@
         </button>
       {/each}
     </div>
+  </section>
+
+  <!-- ============ V10.5: Ícone da app ============ -->
+  <section class="card" aria-labelledby="applogo-h">
+    <div class="card-head">
+      <span class="icon-wrap"><Smartphone size={18} /></span>
+      <h2 id="applogo-h">{$t('settings.applogo', { default: 'Ícone da app' })}</h2>
+    </div>
+    <p class="theme-intro">
+      {$t('settings.applogo.intro', {
+        default: 'Escolhe o logo que aparece no ecrã inicial do teu telemóvel.'
+      })}
+    </p>
+    <div
+      class="applogo-grid"
+      role="radiogroup"
+      aria-label={$t('settings.applogo', { default: 'Ícone da app' })}
+    >
+      {#each APP_LOGOS as id (id)}
+        <button
+          type="button"
+          role="radio"
+          aria-checked={currentLogo === id}
+          class:active={currentLogo === id}
+          onclick={() => void pickLogo(id)}
+          aria-label={$t(`settings.applogo.${id}`, { default: id })}
+        >
+          <img
+            class="applogo-thumb"
+            src={appLogoPreview(id)}
+            alt=""
+            width="64"
+            height="64"
+            loading="lazy"
+            decoding="async"
+          />
+          <small>{$t(`settings.applogo.${id}`, { default: id })}</small>
+        </button>
+      {/each}
+    </div>
+    <p class="applogo-hint">
+      {$t('settings.applogo.hint', {
+        default:
+          'Android: o ícone atualiza sozinho pouco depois de abrires a app instalada. iPhone: remove a app do ecrã inicial e volta a adicioná-la.'
+      })}
+    </p>
   </section>
 
   <!-- ============ Mood / Vibe ============ -->
@@ -1469,6 +1543,57 @@
     .theme-copy { min-width: 0; display: grid; gap: 0.15rem; }
     .theme-copy strong { color: inherit; font-size: 0.92rem; }
     .theme-copy small { color: var(--txt2); font-size: 0.74rem; line-height: 1.25; }
+
+    /* ----- V10.5: Ícone da app ----- */
+    .applogo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+      gap: 0.6rem;
+    }
+    .applogo-grid button {
+      display: grid;
+      justify-items: center;
+      gap: 0.35rem;
+      padding: 0.6rem 0.35rem 0.5rem;
+      min-height: 44px;
+      background: var(--card-hover, rgba(255, 255, 255, 0.05));
+      border: 2px solid var(--border, rgba(255, 255, 255, 0.11));
+      border-radius: 0.9rem;
+      color: var(--txt2);
+      font: inherit;
+      cursor: pointer;
+      transition: transform var(--motion-fast, 120ms) ease, border-color var(--motion-fast, 120ms) ease;
+    }
+    .applogo-grid button:hover,
+    .applogo-grid button:focus-visible {
+      transform: translateY(-2px);
+      outline: none;
+    }
+    .applogo-grid button:focus-visible {
+      box-shadow: var(--focus-ring, 0 0 0 2px var(--accent));
+    }
+    .applogo-grid button.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
+      color: var(--txt);
+    }
+    .applogo-thumb {
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+      box-shadow: 0 3px 10px rgba(2, 6, 23, 0.35);
+    }
+    .applogo-grid small {
+      font-size: 0.7rem;
+      line-height: 1.15;
+      text-align: center;
+    }
+    .applogo-hint {
+      margin: 0.75rem 0 0;
+      color: var(--txt3);
+      font-size: 0.76rem;
+      line-height: 1.45;
+    }
     .mood-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));

@@ -19,6 +19,7 @@
   import MoodLayer from '$lib/components/MoodLayer.svelte';
   import GamificationLayer from '$lib/components/GamificationLayer.svelte';
   import { resetSoundPrefsCache } from '$lib/gamification/sound';
+  import { applyAppLogo, getAppLogo } from '$lib/app-logo';
   import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, MOOD_META, type ActiveMood } from '$lib/mood';
 
   import { showToast } from '$lib/components/events';
@@ -86,6 +87,13 @@
 
   onMount(() => {
     applyInitialDocumentLocale();
+
+    // V10.5 — ícone da app personalizado: aplica o manifest/apple-touch-icon
+    // do logo escolhido o mais cedo possível (o Chrome só apanha a mudança
+    // de ícone quando a página carrega com o manifest novo lincado).
+    void getAppLogo()
+      .then((logo) => applyAppLogo(logo))
+      .catch(() => undefined);
 
     let unbindKey: (() => void) | null = null;
     let unbindExtra: (() => void) | null = null;

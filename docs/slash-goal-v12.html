@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Slash Goal V12 — Presuntinho (Fable 5 / Claude handoff)</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #120817;
+      --panel: rgba(255, 255, 255, .08);
+      --panel2: rgba(255, 255, 255, .12);
+      --text: #fff7fb;
+      --muted: #d9bad0;
+      --pink: #ff6fb6;
+      --hot: #ff2f92;
+      --blue: #72d6ff;
+      --green: #8df5b8;
+      --yellow: #ffd66e;
+      --warn: #ffb86b;
+      --line: rgba(255, 255, 255, .16);
+      --shadow: 0 24px 80px rgba(0, 0, 0, .42);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(255, 111, 182, .33), transparent 32rem),
+        radial-gradient(circle at 85% 8%, rgba(114, 214, 255, .22), transparent 28rem),
+        radial-gradient(circle at 50% 100%, rgba(141, 245, 184, .14), transparent 32rem),
+        linear-gradient(135deg, #120817 0%, #20102d 48%, #0f172a 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .wrap { width: min(1180px, calc(100% - 28px)); margin: 0 auto; padding: 28px 0 60px; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .045));
+      border-radius: 36px;
+      padding: clamp(26px, 6vw, 62px);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+    .hero:after {
+      content: "🐷💕";
+      position: absolute;
+      right: clamp(20px, 5vw, 70px);
+      top: clamp(18px, 4vw, 48px);
+      font-size: clamp(44px, 10vw, 118px);
+      opacity: .18;
+      transform: rotate(-8deg);
+    }
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      background: rgba(255, 255, 255, .08);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    h1 {
+      font-size: clamp(34px, 6vw, 76px);
+      line-height: .95;
+      margin: 22px 0 18px;
+      letter-spacing: -.05em;
+    }
+    h2 { font-size: clamp(22px, 3.5vw, 36px); line-height: 1.05; margin: 0 0 14px; letter-spacing: -.03em; }
+    h3 { margin: 0 0 10px; font-size: 18px; }
+    .lead { max-width: 850px; color: #f1d7e6; font-size: clamp(16px, 2vw, 21px); line-height: 1.55; }
+    .meta { color: var(--muted); font-size: 14px; margin-top: 14px; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+    button, .pill {
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 999px;
+      padding: 12px 16px;
+      color: #fff;
+      background: rgba(255, 255, 255, .09);
+      font-weight: 800;
+      text-decoration: none;
+      font-family: inherit;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .primary {
+      background: linear-gradient(135deg, var(--hot), #9b5cff);
+      border: 0;
+      box-shadow: 0 12px 30px rgba(255, 47, 146, .32);
+    }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; margin-top: 18px; }
+    .card {
+      grid-column: span 4;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 22px;
+      background: var(--panel);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, .22);
+      backdrop-filter: blur(12px);
+    }
+    .card.wide { grid-column: span 8; }
+    .card.full { grid-column: 1 / -1; }
+    .muted { color: var(--muted); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(255, 255, 255, .09);
+      color: #ffe2f0;
+      font-size: 13px;
+      margin: 4px 4px 0 0;
+    }
+    .toc a {
+      display: block;
+      padding: 7px 0;
+      text-decoration: none;
+      color: #ffe6f3;
+      border-bottom: 1px dashed rgba(255, 255, 255, .12);
+    }
+    .toc a:last-child { border-bottom: 0; }
+    .item {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 14px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+    }
+    .item:first-of-type { border-top: 0; }
+    .item .n {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--hot);
+      background: rgba(255, 47, 146, .12);
+      border: 1px solid rgba(255, 47, 146, .35);
+      border-radius: 14px;
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .item h3 { margin: 0 0 6px; }
+    .item .quote {
+      border-left: 3px solid var(--accent, var(--blue));
+      background: rgba(114, 214, 255, .08);
+      padding: 8px 12px;
+      border-radius: 0 12px 12px 0;
+      color: #f1d7e6;
+      font-size: 14px;
+      margin: 6px 0 10px;
+    }
+    .item .dod {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .item .dod strong { color: #fff; }
+    .promptBox {
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 30px;
+      background: rgba(5, 8, 22, .72);
+      overflow: hidden;
+    }
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+      padding: 26px;
+      color: #fff8fc;
+      line-height: 1.6;
+      font-size: 14px;
+      max-height: 72vh;
+      overflow: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .sticky-copy {
+      position: sticky;
+      top: 0;
+      display: flex;
+      justify-content: flex-end;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(5, 8, 22, .94), rgba(5, 8, 22, .38));
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      z-index: 2;
+    }
+    .drift {
+      border: 1px solid rgba(255, 184, 107, .45);
+      background: rgba(255, 184, 107, .08);
+      border-radius: 20px;
+      padding: 16px 18px;
+      margin-top: 14px;
+      color: #ffe1c5;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .drift b { color: var(--warn); }
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 30px;
+      font-size: 13px;
+    }
+    @media (max-width: 860px) {
+      .card, .card.wide { grid-column: 1 / -1; }
+      .item { grid-template-columns: 44px 1fr; }
+      pre { font-size: 12.5px; padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+<main class="wrap">
+<section class="hero">
+  <div class="eyebrow">Presuntinho · V12 · Fable 5 / Claude handoff</div>
+  <h1>Slash Goal V12<br/>Mega-spec CEO msg 106905 + escola refactor</h1>
+  <p class="lead">Compilação dos 12 itens do mega-spec mais o refactor completo da escola (4 passos), pronta para o Fable 5 validar visualmente antes de qualquer Skander 1/2 patch. Inclui quotes verbatim do CEO, critérios done verificáveis, gating questions abertas e ordem sugerida de execução.</p>
+  <div class="actions">
+    <button class="primary" onclick="copyPrompt()">Copiar prompt completo</button>
+    <a class="pill" href="#prompt">Ver prompt</a>
+    <a class="pill" href="#items">12 itens</a>
+    <a class="pill" href="#escola">Escola refactor</a>
+    <span class="pill">Gerado em 2026-07-05 · tick 138</span>
+  </div>
+  <p class="meta">Repo: <code>C:/Users/rafaa/Documents/GitHub/presuntinho</code> · Branch alvo: <code>main</code> · HEAD verificado: <code>42b362c</code></p>
+</section>
+
+<section class="grid">
+  <article class="card"><h3>🎯 Missão</h3><p class="muted">Transformar Presuntinho em Duolingo-style para Escola + Vida + Streaks + Calendário + Agente com UX premium, fixos e i18n 5-way.</p></article>
+  <article class="card"><h3>👩‍🎓 Persona</h3><p class="muted">Fatma (Tunisian, Barcelona, gamer, Barça/Messi, anime, motas). Tom carinhoso, fofo premium, pt-PT como fonte de verdade.</p></article>
+  <article class="card"><h3>🧪 Evidência</h3><p class="muted">Audit escola tick-137 em <code>docs/audit-escola-tick137.md</code>. Working tree CLEAN (só audit untracked). Gates corridos: <code>npm run check</code> 0/0, <code>npm run build</code> verde.</p></article>
+  <article class="card wide toc"><h2>Índice rápido</h2>
+    <a href="#drift">⚠️ Drift detectada entre task-228 e questions.html (lê primeiro)</a>
+    <a href="#items">1. Os 12 itens do mega-spec CEO msg 106905</a>
+    <a href="#escola">2. Escola refactor — 4 passos (msg 106913 / 106915)</a>
+    <a href="#ordem">3. Ordem sugerida de execução</a>
+    <a href="#gating">4. Gating questions CEO-pendentes</a>
+    <a href="#prompt">5. Prompt copy-paste para Fable 5</a>
+  </article>
+  <article class="card"><h2>Badges</h2>
+    <span class="badge">Duolingo-inspired</span>
+    <span class="badge">PWA install</span>
+    <span class="badge">i18n 5 locales</span>
+    <span class="badge">Mobile-first</span>
+    <span class="badge">Fatma-personalised</span>
+  </article>
+</section>
+
+<section id="drift" class="grid">
+  <article class="card full">
+    <h2>⚠️ Drift detectada (lê primeiro)</h2>
+    <div class="drift">
+      <p>Durante a compilação deste slash goal, detectei um mismatch de <b>q-IDs</b> entre a <b>task-228</b> (que pediu este entregável) e o <b>questions.html canónico</b>:</p>
+      <ul>
+        <li><b>task-228 diz:</b> q-044 = Google OAuth nesta sprint? · q-045 = nome caminho Duolingo (/escola/caminho/[slug]/ vs /escola/curso/[slug]/caminho/) · q-046 = esconder bib/trab/caderno.</li>
+        <li><b>questions.html canónico diz:</b> q-044 = caminho Duolingo rota dedicada vs aninhada · q-045 = onde ficam guardados biblioteca/trabalhos/caderno/mascotes enquanto CEO decide refactor · q-046 = mood popup único header (msg 106905 item K) · q-047 = calendário swipe (msg 106905 item J) · q-048 = quizzes paginados (msg 106905 item L).</li>
+      </ul>
+      <p><b>Resolução adoptada neste entregável:</b> usar os IDs canónicos do <code>questions.html</code> (q-044/045/046/047/048 são as questões mega-spec, todas NOVAS tick 13, todas abertas alta prioridade). A drift entre task-228 e questions.html fica registada aqui para o CEO a corrigir no próximo turno.</p>
+    </div>
+  </article>
+</section>
+
+<section id="items" class="grid">
+  <article class="card full">
+    <h2>1. Os 12 itens do mega-spec CEO msg 106905</h2>
+    <p class="muted">Compilação a partir das tasks 233–238 + excerpts do plan.html. Cada item tem: quote verbatim do CEO, critério done verificável, i18n keys necessárias, dependências e agente sugerido.</p>
+
+    <div class="item">
+      <div class="n">1</div>
+      <div>
+        <h3>Home redesign — root = Perfil (Fatma) + dashboards agregados</h3>
+        <div class="quote">"/ (Home) deve ser a página de perfil dela (Fatma). Hoje a home perdeu o perfil. Restaurar como root, adicionar dashboards agregados (streaks, próximas aulas, tarefas pendentes, mood activo)."</div>
+        <div class="dod"><strong>Done:</strong> reescrever <code>src/routes/+page.svelte</code> com hero perfil Fatma (avatar+nome+bio+posts counter) + secções agregadas (Streaks chip, Próximas 3 aulas do <code>static/lessons/</code>, Próximas 3 tarefas do kanban, Mood indicator) + atalhos 2-up escola/vida. Logo Presuntinho no HEADER sempre acoplado ao texto. i18n ≥10 chaves × 5 locales. Skander 2 (mecânico).</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="n">2</div>
+      <div>
+        <h3>Login melhorado — user+password + Google OAuth</h3>
+        <div class="quote">"O login podia ter tambem um login asserio com nome de utilizador e password. Podia dar para ligar o google tambem."</div>
+        <div class="dod"><strong>Done:</strong> 2 inputs (user, password) ANTES do pass-order em <code>src/routes/splash/+page.svelte</code> + botão "Continuar com Google" via Netlify Identity ou OAuth flow com <code>client_id</code> via env. Validar user/password contra store local; fallback pass-order se inválido. Componente <code>src/lib/components/GoogleSignIn.svelte</code> + backend <code>src/routes/api/auth/google/+server.ts</code>. i18n ≥6 chaves × 5 locales. Skander 1 (design OAuth flow) + Skander 2 (implementar).</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="n">3</div>
+      <div>
+        <h3>Vida uniformizar cards — todas sub-apps visualmente idênticas</h3>
+        <div class="quote">"A pagina da vida tem as varias apps duma maneira mas a escola está apresentada duma maneira diferente e eu gostava que todas as apps dentro da pagina vida estivessem apresentadas da mesma maneira."</div>
+        <div class="dod"><strong>Done:</strong> criar <code>src/lib/components/AppCard.svelte</code> (props: title, icon, route, color?, badge?) com border-radius, hover state e badge opcional. Migrar <code>src/routes/vida/+page.svelte</code> e sub-rotas para usar <code>&lt;AppCard&gt;</code>. Garantir escola/finanças/hábitos/trabalhos/biblioteca visualmente idênticos. i18n ≥3 chaves × 5 locales. Skander 2 (mecânico).</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="n">4</div>
+      <div>
+        <h3>Agente composer fixo no footer + auto-scroll mensagens</h3>
+        <div class="quote">"A barra de escrever do agente nao esta fixa por cima do footer e deveria estar. Para ver a ultima menssagem no agente e nas menssagens neste momento tenho que fazer scroll para baixo."</div>
+        <div class="dod"><strong>Done:</strong> composer (textarea + send btn) com <code>position: fixed; bottom: var(--footer-height); left/right: 0; z-index: 50</code> em <code>src/routes/agente/+page.svelte</code> e <code>src/routes/mensagens/+page.svelte</code>. Padding-bottom do scroll area = altura do composer. <code>$effect</code> que faz <code>scrollIntoView({ behavior: 'smooth', block: 'end' })</code> em cada <code>messages.length</code> change. i18n ≥2 chaves × 5 locales. Skander 2 (mecânico).</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="n">5</div>
+      <div>
+        <h3>Streaks = página própria tipo Duolingo com sequência semanal chama</h3>
+        <div class="quote">"Streaks = página própria tipo Duolingo — remover card-popup; criar /streaks com sequência semanal tipo chama Duolingo + métricas (dias seguidos, record, freeze days)."</div>
+        <div class="dod"><strong>Done:</strong> criar <code>src/routes/streaks/+page.svelte</code>. Render: chama grande SVG (acesa colorida / expirada cinzento) + sequência semanal horizontal 7 nós (hoje destacado) + métricas 3-up (dias seguidos, record, freeze days disponíveis) + botão "Freeze hoje" (consome 1 freeze day). Source: <code>localStorage.streakData</code> já existe (schema: currentDays, recordDays, freezesUsed, freezesAvailable, lastActive, weekly). Componentes: <code>src/lib/components/streaks/{StreakFlame,StreakWeek,StreakMetric,FreezeButton,StreakHomeCard}.svelte</code>. i18n ≥12 chaves × 5 locales. Skander 2 (mecânico).</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="n">6</div>
+      <div>
+        <h3>Streaks também replicado como card simples na Home</h3>
+        <div class="quote">"Streaks = página própria tipo Duolingo — remover card-popup; criar /streaks ..." (parte do item 5 da Home repensada — item 6 do polish)</div>
+        <div class="dod"><strong>Done:</strong> na Home (item 1), replicar a sequência semanal como card simples "Streak X dias — Toque para ver" usando o <code>StreakHomeCard.svelte</code> criado no item 5. Reutiliza o mesmo <code>localStorage.streakData</code>. Sem popup de streak na Home — abrir <code>/streaks</code> ao tocar. i18n ≥2 chaves × 5 locales. Skander 2 (mecânico, mesmo agente do item 5).</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="n">7</div>
+      <div>
+        <h3>Home repensada umbrella — greeting contextual + "Continuar onde paraste"</h3>
+        <div class="quote">"a Home podia ser melhor pensada ainda" (msg 67159, fase <code>deep-product-polish-heart-mood</code> ITEM 6)</div>
+        <div class="dod"><strong>Done:</strong> além do perfil (item 1), adicionar (a) greeting contextual combinando <code>activeMood</code> + hora-do-dia (manhã/tarde/noite); (b) "Continuar onde paraste" — 3 últimos itens tocados (Dexie <code>lastTouched</code> store ou criar com shape <code>{ kind, id, label, ts }</code>, limpar &gt;30 dias); (c) "Hoje" com hábitos pendentes / trabalhos próximos / transacção recente. Hook <code>touchItem()</code> em cada sub-app. i18n ≥10 chaves × 5 locales. Skander 1 (reasoning) + Skander 2 (mecânico).</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="n">8</div>
+      <div>
+        <h3>Logo Presuntinho + nome acoplados no HEADER</h3>
+        <div class="quote">Logo+nome juntos (parte do item 1 da Home repensada — item 8 do polish)</div>
+        <div class="dod"><strong>Done:</strong> em <code>src/lib/components/Header.svelte</code> (ou +layout.svelte — verificar), logo Presuntinho SEMPRE acoplado ao texto "Presuntinho". Nunca só logo. Resolver via <code>$t('brand.logo_text')</code> — verificar que NÃO há literal hardcoded "Presuntinho" no +layout (grep deve retornar 0 hits após patch). i18n ≥1 chave × 5 locales. Skander 2 (mecânico).</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="n">9</div>
+      <div>
+        <h3>Escola reorganizada tipo Duolingo (Cursos → Cadeiras → Aulas → Teoria/Quiz/Teste/Trabalho/Biblioteca)</h3>
+        <div class="quote">"Quero fazer escolas tipo duolingo onde se tem cadeiras nas cadeiras tem aulas, exercicios e testes."</div>
+        <div class="dod"><strong>Done:</strong> ver secção 2 abaixo — 4 passos detalhados do escola refactor (audit já DONE; refactor /escola/; caminho visual Duolingo; esconder bib/trab/caderno). Pré-requisito: gating questions CEO-pendentes (q-044, q-045, q-046). Skander 1 (audit) + Skander 2 (mecânico).</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="n">10</div>
+      <div>
+        <h3>Calendário swipe monthly↔weekly</h3>
+        <div class="quote">"Calendário swipe monthly↔weekly" (item J do mega-spec)</div>
+        <div class="dod"><strong>Done:</strong> em <code>src/routes/calendario/+page.svelte</code>, adicionar pointer events no container: swipe-up = vista semanal (dias em colunas), swipe-down = vista mensal (grid 7×5). Funciona em qualquer ponto do calendário, não só num botão. Reutilizar dados de <code>static/calendario/</code> ou equivalente. i18n ≥2 chaves × 5 locales (calendar.swipe.{hint_monthly, hint_weekly}). Skander 2 (mecânico).</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="n">11</div>
+      <div>
+        <h3>Quizzes paginados tipo Duolingo</h3>
+        <div class="quote">"Quizzes paginados tipo Duolingo" (item L do mega-spec)</div>
+        <div class="dod"><strong>Done:</strong> refactor de <code>src/routes/escola/quiz/[quizSlug]/+page.svelte</code> para layout Duolingo: 1 pergunta por ecrã, swipe OU botão "Seguinte" (≥44px tap target), barra de progresso topo (ex.: "3 de 10"), estado final = "Quiz concluído! X / Y" + botão "Voltar à cadeira". Substitui o quiz multi-pergunta de uma vez. Reutilizar <code>src/routes/escola/quiz/[quizSlug]/</code> já existente. i18n ≥4 chaves × 5 locales (quiz.paginated.{progress, next, finish, score}). Skander 2 (mecânico).</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="n">12</div>
+      <div>
+        <h3>Mood popup único no HEADER (eliminar popup de baixo)</h3>
+        <div class="quote">"Mood popup único no header — eliminar popup de baixo" (item K do mega-spec)</div>
+        <div class="dod"><strong>Done:</strong> criar <code>src/lib/components/MoodChip.svelte</code> — emoji + nome do modo, click = dropdown com tarefas para sair do modo (funcionalidade que estava no popup de baixo). Remover o popup de baixo existente no layout. Posicionar no header junto com logo + StreakChip. i18n ≥6 chaves × 5 locales (mood.chip.{label, a, e, r}, mood.dropdown.{title, empty}). Skander 2 (mecânico).</div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<section id="escola" class="grid">
+  <article class="card full">
+    <h2>2. Escola refactor — 4 passos (msg 106913 + 106915)</h2>
+    <p class="muted">CEO insiste (msg 106913) que /escola está "muito confuso". Ao abrir /escola/, Fatma deve ver SÓ a lista de cursos. Ao clicar num curso → cadeiras. Ao clicar numa cadeira → aulas/exercícios/testes com CAMINHO VISUAL tipo Duolingo. Mascotes SAEM da escola (vão para Definições/Home/Streaks). Biblioteca/trabalhos/caderno ESCONDIDOS da entrada principal.</p>
+
+    <h3>Estado actual verificado (audit tick-137 DONE em <code>docs/audit-escola-tick137.md</code>)</h3>
+    <ul>
+      <li>Catálogo: <code>src/lib/escola/catalog.ts</code> (422 LOC) com 2 cursos agregadores (<code>business-administration</code> 9 cadeiras + 1 extra; <code>portugues</code> 1 cadeira).</li>
+      <li><code>static/lessons/</code>: 45 pastas com ~197 lições JSON. Nem todas as 45 pastas correspondem a <code>SchoolUnit</code> no catálogo — <code>legacy-course-details.ts</code> faz ponte.</li>
+      <li><code>static/quizzes/</code>: 52 quizzes com esquema uniforme (<code>&lt;3-letter-code&gt;q[.json|+suffix].json</code>).</li>
+      <li>Rota <code>/escola/caminho/[courseSlug]/</code> já existe (commit <code>5e1ba0d</code>) e renderiza caminho Duolingo vertical para o curso agregador.</li>
+      <li>Rota <code>/escola/curso/[slug]/+page.svelte</code> (243 LOC) já existe mas hoje trata <code>slug = unitSlug</code> (mostra lições dessa cadeira, não cadeiras do curso).</li>
+      <li>Working tree CLEAN; <code>npm run check</code> 0/0; <code>npm run build</code> verde.</li>
+    </ul>
+
+    <h3>Passo 1 — Audit estrutural ✓ DONE</h3>
+    <div class="dod"><strong>Done:</strong> <code>docs/audit-escola-tick137.md</code> escrito, commitado implicitamente via <code>git status</code> (untracked). Mapeia COURSES, cadeiras, lições, quizzes, caminho Duolingo, detalhe de lição, chaves de progresso Dexie.</div>
+
+    <h3>Passo 2 — Reorganizar /escola (gatear por curso → cadeira)</h3>
+    <div class="dod"><strong>Done:</strong> (a) <code>/escola/</code> lista cursos (já feito no patch actual — agente principal reescreveu escola/+page.svelte de 325→170 linhas); (b) <code>/escola/curso/[slug]/</code> lista cadeiras (units) — refactor de curso/[slug]/+page.svelte para iterar <code>parentCourse.units</code> em vez de <code>course.lessons</code>; (c) <code>/escola/cadeira/[courseSlug]/[unitSlug]/</code> lista aulas/exercícios/testes com progresso; (d) reutilizar <code>/escola/licao/[c]/[l]/</code> (já canónica) para lições; (e) caminho visual tipo Duolingo (passo 2 cont.) — por cadeira, render um path vertical com nós = aulas; nós concluídos cheios, nó actual com glow, nós bloqueados com cadeado; reutilizar lógica de <code>/escola/caminho/[slug]/</code> mas ligada a cadeira, não curso. <strong>Gate CEO:</strong> q-044 decide entre <code>/escola/caminho/[slug]/</code> (já commitado) vs <code>/escola/curso/[slug]/caminho/</code> novo. <strong>i18n 5 chaves × 5 locales</strong> (escola.course.units.{title, empty, locked, in_progress, completed}). Skander 2 (mecânico).</div>
+
+    <h3>Passo 3 — Mover mascotes para Definições/Home/Streaks</h3>
+    <div class="dod"><strong>Done:</strong> confirmar que <code>/escola/+page.svelte</code> não tem mascote (já feito no patch actual); adicionar mascote a <code>/definições</code> ou <code>/streaks</code> ou Home (ver item 1 / item 5 deste slash goal). Reutilizar <code>getActiveMascot()</code> já existente. Skander 2 (mecânico).</div>
+
+    <h3>Passo 4 — Esconder biblioteca/trabalhos/caderno</h3>
+    <div class="dod"><strong>Done:</strong> em <code>src/routes/escola/+page.svelte</code>, <strong>remover</strong> cards/links para <code>/biblioteca</code>, <code>/trabalhos</code>, <code>/caderno</code>. <strong>NÃO</strong> deletar ficheiros das rotas; só remover da UI. Smoke check: <code>curl -sI https://presuntinho.love/biblioteca</code> → 200, <code>/trabalhos</code> → 200, <code>/caderno</code> → 200 (rotas preservadas). <strong>Gate CEO:</strong> q-045 decide entre ESCONDER (URL continua viva) vs REDIRECT 307 (URL aponta para <code>/escola</code>). Default = esconder. Se CEO quiser redirect, Skander 2 adiciona <code>throw redirect(307, '/escola')</code> em <code>+page.server.ts</code> das 3 rotas. Skander 2 (mecânico, a task mais pequena).</div>
+  </article>
+</section>
+
+<section id="ordem" class="grid">
+  <article class="card full">
+    <h2>3. Ordem sugerida de execução</h2>
+    <ol>
+      <li><b>AGORA — slash goal V12 (este ficheiro)</b> para Fable 5 validar visualmente. Esperar CEO-Presente.</li>
+      <li><b>Após CEO-Presente "ok segue"</b>: gates escola (q-044 + q-045 + q-046) — CEO decide em áudio sincronamente. Sem isto, task-230/231/232 não arrancam.</li>
+      <li><b>Sprint paralelo A (sem gates)</b>: task-228 (este entregável) DONE; tasks 234 (streaks page), 235 (calendário swipe + mood chip), 236 (login + Google OAuth), 237 (Vida uniformizar cards), 238 (Agente composer) podem arrancar em paralelo — Skander 2 diferentes ficheiros. Skander 1 só necessário para OAuth flow design (task-236).</li>
+      <li><b>Sprint paralelo B (com gates escola)</b>: tasks 230 + 231 (refactor escola) → task-232 (esconder bib/trab/caderno) → task-233 (Home redesign root=Perfil — depende do item 5 streaks card). Esta sprint pode incluir re-categorização dos items 6/7/8 deste slash goal se CEO reorganizar prioridades.</li>
+      <li><b>Após sprint B</b>: tasks 084-141 do backlog existente (M1-S5 dashboard finanças Chart.js, sick-mode race, M4 multi-bot integration backlog) podem ser retomadas se CEO-Presente der luz verde.</li>
+    </ol>
+  </article>
+</section>
+
+<section id="gating" class="grid">
+  <article class="card full">
+    <h2>4. Gating questions CEO-pendentes (questions.html canónico)</h2>
+    <p class="muted">Todas estas são NOVAS tick 13, alta prioridade, do mega-spec msg 106905/106913. CEO precisa decidir sincronamente antes de gates escola abrirem.</p>
+    <ul>
+      <li><b>q-044 · alta</b> — Caminho Duolingo fica em rota dedicada <code>/escola/caminho/[slug]/</code> (existente, commit 5e1ba0d) ou cria-se <code>/escola/curso/[slug]/caminho/</code> aninhada?</li>
+      <li><b>q-045 · alta</b> — Sprint síncrono #50 escondeu biblioteca/trabalhos/caderno/mascotes da porta principal da Escola. Onde ficam guardados enquanto CEO decide o refactor? (Default sugerido: escondidos da entrada principal, URL directa preservada.)</li>
+      <li><b>q-046 · alta</b> — Mood popup único (msg 106905 item K): o de cima passa a ser simples (emoji+nome) e o de baixo deixa de existir — funcionalidades migram para o de cima?</li>
+      <li><b>q-047 · alta</b> — Calendário swipe (msg 106905 item J): monthly↔weekly com swipe horizontal em qualquer parte do calendário — quer gesto vertical ou horizontal? Onde fica o handle visível?</li>
+      <li><b>q-048 · alta</b> — Quizzes paginados tipo Duolingo (msg 106905 item L): cada pergunta numa página própria com progresso + feedback + next — substituir quiz multi-pergunta de uma vez ou coexistir?</li>
+    </ul>
+    <p class="muted"><b>Drift a corrigir pelo CEO:</b> a task-228 referencia q-044/045/046 com semântica diferente das do questions.html canónico. Confirmar com CEO se a semântica de questions.html (listada acima) é a que prevalece.</p>
+  </article>
+</section>
+
+<section id="prompt" class="grid">
+  <article class="card full">
+    <h2>5. Prompt copy-paste para Fable 5</h2>
+    <p class="muted">Usa o botão "Copiar prompt completo" no hero OU este bloco. Cola directamente no Fable 5 / Claude. Inclui contexto do repo, os 12 itens, escola refactor e regras de gates.</p>
+    <div class="promptBox">
+      <div class="sticky-copy">
+        <button class="primary" onclick="copyPrompt()">Copiar tudo</button>
+      </div>
+      <pre id="promptText"># Slash Goal V12 — Presuntinho (Fable 5 / Claude handoff)
+
+You are Fable 5 / Claude, acting as a senior product engineer, SvelteKit architect, i18n QA specialist, mobile-first designer and emotionally-sensitive product designer for Fatma (Tunisian, Barcelona, gamer, Barça/Messi, anime, motas).
+
+Your mission is to take the existing Presuntinho app and apply the V12 mega-spec from CEO msg 106905 (14:01 WEST 2026-07-05) plus the escola refactor from msg 106913/106915. This is NOT a superficial redesign — it is a focused sprint to bring Escola/Vida/Streaks/Calendário/Agente/Home into a Duolingo-style flow with mobile-first polish, i18n 5-way, and Fatma-personalised UX.
+
+## 0. Non-negotiable operating rules
+
+1. Read this entire prompt + the audit file `docs/audit-escola-tick137.md` before changing anything.
+2. Use tools. Don't speculate about file contents — read them.
+3. Preserve Presuntinho soul: fofo premium, carinhoso, pt-PT source of truth, TN Latin-only, AR RTL, never infantilised.
+4. Translations are product quality. Every visible UI string must be natural in each locale. Add every new key to all 5 locales (`pt-PT`, `en`, `fr`, `ar`, `tn`).
+5. No fake completion. Run `npm run check`, `npm run check:i18n`, `node scripts/i18n-tn-no-arabic.test.mjs --strict`, `npm run scan:i18n`, `npm run test`, `npm run build` and capture exit codes. Browser smoke against production build, not dev.
+6. Never commit garbage: `.state/`, `build/`, `.svelte-kit/`, `node_modules/`, `logs`, `screenshots`, bot dumps, secrets.
+7. Mobile-first. Touch targets ≥44px. `env(safe-area-inset-bottom)` respected. VisualViewport handling correct on iOS.
+8. i18n TN rules: Latin script only, LTR, no Arabic-script characters, prefer simple Tunisian transliteration (`Ahla`, `Flous`, `3adat`, `Maktba`, `E3dadet`, `Okhroj`, `Qa3ed ychargi`).
+9. i18n AR rules: Arabic script, RTL, `dir="rtl"` on `<html>` when locale=ar.
+10. HeartButton / FAB / mood decorative elements: `pointer-events: none` for decoration, `pointer-events: auto` for controls.
+
+## 1. Repository context
+
+- Repo path: `C:/Users/rafaa/Documents/GitHub/presuntinho`
+- Branch target: `main`
+- Current verified HEAD: `42b362c` (`fix(spa): load assets from root on deep school routes`)
+- App version: V10.4 mascotes shipped, V11 chat tokens, V12 mega-spec in progress
+- Stack: SvelteKit 2 + Svelte 5 + svelte-i18n + Dexie 4 + Chart.js (planned) + PWA
+- Locales: `pt-PT` (source), `en`, `fr`, `ar`, `tn` (TN = Tunisian Arabic transliterated to Latin)
+- Existing relevant files:
+  - `src/routes/+page.svelte` (Home — to be rewritten for item 1)
+  - `src/routes/splash/+page.svelte` (Login — to be extended for item 2)
+  - `src/routes/vida/+page.svelte` (Vida — to be migrated for item 3)
+  - `src/routes/agente/+page.svelte` (Agente — composer fix for item 4)
+  - `src/routes/streaks/+page.svelte` (DOES NOT EXIST yet — to be created for item 5)
+  - `src/routes/calendario/+page.svelte` (Calendário — swipe for item 10)
+  - `src/routes/escola/quiz/[quizSlug]/+page.svelte` (Quiz — paginated for item 11)
+  - `src/routes/escola/+page.svelte` (Escola hub — refactor for item 9, already partially rewritten 325→170 by main agent)
+  - `src/routes/escola/curso/[slug]/+page.svelte` (Curso — refactor for escola passo 2)
+  - `src/lib/escola/catalog.ts` (422 LOC — 2 cursos agregadores: business-administration 9 cadeiras + 1 extra, portugues 1 cadeira)
+  - `static/lessons/<slug>/` (45 pastas, ~197 lições JSON)
+  - `static/quizzes/<slug>q.json` (52 quizzes)
+  - `docs/audit-escola-tick137.md` (audit estrutural — DONE)
+  - `localStorage.streakData` (schema: currentDays, recordDays, freezesUsed, freezesAvailable, lastActive, weekly)
+  - `src/lib/mood.ts` (activateMood, readActiveMood, clearActiveMood, MOOD_EVENT)
+  - `src/lib/components/HeartButton.svelte`, `src/lib/components/Header.svelte`, `src/lib/components/StreakIndicator.svelte`
+
+## 2. The 12 items (CEO mega-spec msg 106905)
+
+### Item 1 — Home redesign root = Perfil (Fatma) + dashboards agregados
+- Quote: "/ (Home) deve ser a página de perfil dela (Fatma). Hoje a home perdeu o perfil. Restaurar como root, adicionar dashboards agregados (streaks, próximas aulas, tarefas pendentes, mood activo)."
+- Patch: reescrever `src/routes/+page.svelte` com hero perfil Fatma (avatar+nome+bio+posts counter) + secções "Streaks" (sem popup — /streaks é a página própria item 5), "Próximas 3 aulas" (do `static/lessons/` via `progressData`), "Próximas 3 tarefas" (do kanban/trabalhos), "Mood indicator" (popup único no header — item 12), "Atalhos /escola /vida" (cards 2-up).
+- i18n ≥10 chaves × 5 locales: `home.greeting.{morning,afternoon,evening}`, `home.sections.{profile,streaks,next_lessons,next_tasks,mood}`, `home.empty.{lessons,tasks}`, `home.shortcuts.{escola,vida}`, `brand.logo_text`.
+
+### Item 2 — Login melhorado — user+password + Google OAuth
+- Quote: "O login podia ter tambem um login asserio com nome de utilizador e password. Podia dar para ligar o google tambem."
+- Patch A: 2 inputs (user, password) ANTES do pass-order em `src/routes/splash/+page.svelte`. Validar contra store local; fallback pass-order se inválido.
+- Patch B: botão "Continuar com Google" via Netlify Identity ou OAuth flow. `src/lib/components/GoogleSignIn.svelte` + backend `src/routes/api/auth/google/+server.ts` (ou similar). `client_id` via env.
+- i18n ≥6 chaves × 5 locales: `login.user.label`, `login.password.label`, `login.submit`, `login.google.cta`, `login.error.invalid`, `login.fallback.pass_order`.
+
+### Item 3 — Vida uniformizar cards
+- Quote: "A pagina da vida tem as varias apps duma maneira mas a escola está apresentada duma maneira diferente e eu gostava que todas as apps dentro da pagina vida estivessem apresentadas da mesma maneira."
+- Patch A: criar `src/lib/components/AppCard.svelte` (props: title, icon, route, color?, badge?).
+- Patch B: migrar `src/routes/vida/+page.svelte` e sub-rotas para `<AppCard>`. Escola/finanças/hábitos/trabalhos/biblioteca visualmente idênticos.
+- i18n ≥3 chaves × 5 locales: `appcard.badge.new`, `appcard.aria.open`, `vida.subapps.placeholder`.
+
+### Item 4 — Agente composer fixo no footer + auto-scroll
+- Quote: "A barra de escrever do agente nao esta fixa por cima do footer e deveria estar. Para ver a ultima menssagem no agente e nas menssagens neste momento tenho que fazer scroll para baixo."
+- Patch A: composer com `position: fixed; bottom: var(--footer-height); left/right: 0; z-index: 50` em `src/routes/agente/+page.svelte` e `src/routes/mensagens/+page.svelte`. Padding-bottom do scroll area = altura do composer.
+- Patch B: `$effect` que faz `scrollIntoView({ behavior: 'smooth', block: 'end' })` em cada `messages.length` change ou streaming.
+- i18n ≥2 chaves × 5 locales: `chat.composer.placeholder`, `chat.scroll.bottom`.
+
+### Item 5 — /streaks página própria tipo Duolingo
+- Quote: "Streaks = página própria tipo Duolingo — remover card-popup; criar /streaks com sequência semanal tipo chama Duolingo + métricas (dias seguidos, record, freeze days)."
+- Patch: criar `src/routes/streaks/+page.svelte`. Render: chama grande SVG (acesa colorida / expirada cinzento) + sequência semanal horizontal 7 nós (hoje destacado) + métricas 3-up (dias seguidos, record, freeze days) + botão "Freeze hoje" (consome 1 freeze day).
+- Componentes: `src/lib/components/streaks/{StreakFlame,StreakWeek,StreakMetric,FreezeButton,StreakHomeCard}.svelte`.
+- i18n ≥12 chaves × 5 locales: `streaks.title`, `streaks.flame.{active,extinct}`, `streaks.metrics.{current,record,freezes}`, `streaks.days.{mon,tue,wed,thu,fri,sat,sun,short}`, `streaks.freeze.{use,used,unavailable}`, `streaks.home_card.{title,cta}`.
+
+### Item 6 — Streaks como card simples na Home
+- Patch: na Home (item 1), replicar sequência semanal como card simples "Streak X dias — Toque para ver" usando `StreakHomeCard.svelte` do item 5. Sem popup de streak na Home — abrir `/streaks` ao tocar.
+
+### Item 7 — Home repensada umbrella — greeting contextual + "Continuar onde paraste"
+- Quote: "a Home podia ser melhor pensada ainda" (msg 67159, ITEM 6 do polish)
+- Patch: além do perfil (item 1), adicionar (a) greeting contextual combinando `activeMood` + hora-do-dia (manhã/tarde/noite); (b) "Continuar onde paraste" — 3 últimos itens tocados (Dexie `lastTouched` store OU criar com shape `{ kind, id, label, ts }`, limpar >30 dias); (c) "Hoje" com hábitos pendentes / trabalhos próximos / transacção recente. Hook `touchItem()` em cada sub-app.
+- i18n ≥10 chaves × 5 locales.
+
+### Item 8 — Logo Presuntinho + nome acoplados no HEADER
+- Patch: em `src/lib/components/Header.svelte` (ou +layout.svelte), logo Presuntinho SEMPRE acoplado ao texto "Presuntinho". Nunca só logo. Resolver via `$t('brand.logo_text')` — verificar que NÃO há literal hardcoded "Presuntinho" no +layout (grep deve retornar 0 hits após patch).
+- i18n ≥1 chave × 5 locales.
+
+### Item 9 — Escola reorganizada tipo Duolingo
+- Quote: "Quero fazer escolas tipo duolingo onde se tem cadeiras nas cadeiras tem aulas, exercicios e testes."
+- Ver secção 3 abaixo — 4 passos detalhados.
+
+### Item 10 — Calendário swipe monthly↔weekly
+- Quote: "Calendário swipe monthly↔weekly"
+- Patch: em `src/routes/calendario/+page.svelte`, adicionar pointer events no container: swipe-up = vista semanal (dias em colunas), swipe-down = vista mensal (grid 7×5). Funciona em qualquer ponto do calendário, não só num botão.
+- i18n ≥2 chaves × 5 locales: `calendar.swipe.{hint_monthly, hint_weekly}`.
+
+### Item 11 — Quizzes paginados tipo Duolingo
+- Quote: "Quizzes paginados tipo Duolingo"
+- Patch: refactor `src/routes/escola/quiz/[quizSlug]/+page.svelte` para layout Duolingo: 1 pergunta por ecrã, swipe OU botão "Seguinte" (≥44px tap target), barra de progresso topo (ex.: "3 de 10"), estado final = "Quiz concluído! X / Y" + botão "Voltar à cadeira". Substitui o quiz multi-pergunta de uma vez.
+- i18n ≥4 chaves × 5 locales: `quiz.paginated.{progress, next, finish, score}`.
+
+### Item 12 — Mood popup único no HEADER (eliminar popup de baixo)
+- Quote: "Mood popup único no header — eliminar popup de baixo"
+- Patch: criar `src/lib/components/MoodChip.svelte` — emoji + nome do modo, click = dropdown com tarefas para sair do modo. Remover o popup de baixo existente no layout. Posicionar no header junto com logo + StreakChip.
+- i18n ≥6 chaves × 5 locales: `mood.chip.{label, a, e, r}`, `mood.dropdown.{title, empty}`.
+
+## 3. Escola refactor — 4 passos (msg 106913 + 106915)
+
+### Passo 1 — Audit estrutural ✓ DONE
+`docs/audit-escola-tick137.md` escrito. Mapeia COURSES, cadeiras, lições, quizzes, caminho Duolingo, detalhe de lição, chaves de progresso Dexie.
+
+### Passo 2 — Reorganizar /escola (gatear por curso → cadeira)
+- (a) `/escola/` lista cursos (já feito no patch actual — escola/+page.svelte reescrito de 325→170 linhas).
+- (b) `/escola/curso/[slug]/` lista cadeiras (units) — refactor para iterar `parentCourse.units` em vez de `course.lessons`.
+- (c) `/escola/cadeira/[courseSlug]/[unitSlug]/` lista aulas/exercícios/testes com progresso.
+- (d) Reutilizar `/escola/licao/[c]/[l]/` (já canónica) para lições.
+- (e) Caminho visual tipo Duolingo — por cadeira, render um path vertical com nós = aulas; nós concluídos cheios, nó actual com glow, nós bloqueados com cadeado.
+- GATE CEO: q-044 decide entre `/escola/caminho/[slug]/` (já commitado 5e1ba0d) vs `/escola/curso/[slug]/caminho/` novo.
+- i18n 5 chaves × 5 locales: `escola.course.units.{title, empty, locked, in_progress, completed}`.
+
+### Passo 3 — Mover mascotes para Definições/Home/Streaks
+- Confirmar `/escola/+page.svelte` sem mascote (já feito).
+- Adicionar mascote a `/definições` ou `/streaks` (item 5) ou Home (item 1). Reutilizar `getActiveMascot()`.
+
+### Passo 4 — Esconder biblioteca/trabalhos/caderno
+- Em `src/routes/escola/+page.svelte`, REMOVER cards/links para `/biblioteca`, `/trabalhos`, `/caderno`.
+- NÃO deletar ficheiros das rotas; só remover da UI.
+- Smoke: `curl -sI https://presuntinho.love/biblioteca` → 200, `/trabalhos` → 200, `/caderno` → 200.
+- GATE CEO: q-045 decide entre ESCONDER (URL continua viva) vs REDIRECT 307 (URL aponta para /escola). Default = esconder.
+
+## 4. Gating questions CEO-pendentes (questions.html canónico, todas NOVAS tick 13, alta)
+
+- **q-044** — Caminho Duolingo: rota dedicada `/escola/caminho/[slug]/` (existente 5e1ba0d) OU aninhada `/escola/curso/[slug]/caminho/`?
+- **q-045** — biblioteca/trabalhos/caderno/mascotes escondidos: onde ficam guardados enquanto CEO decide refactor? Default sugerido: escondidos da entrada principal, URL directa preservada.
+- **q-046** — Mood popup único header: o de cima passa a ser simples (emoji+nome) e o de baixo deixa de existir — funcionalidades migram para o de cima?
+- **q-047** — Calendário swipe: monthly↔weekly com gesto em qualquer parte — vertical ou horizontal? Onde fica o handle visível?
+- **q-048** — Quizzes paginados: substituir o quiz multi-pergunta de uma vez ou coexistir?
+
+## 5. Order of operations
+
+1. Esperar CEO-Presente confirmar q-044/045/046 (gates escola) + autorizar sprint.
+2. Sprint paralelo A (sem gates): tasks 234, 235, 236, 237, 238 + partes de 233 que não tocam escola.
+3. Sprint paralelo B (com gates escola): 230 + 231 → 232 → 233 (Home redesign).
+4. Após sprint B: retomar backlog 084-141 (M1-S5 dashboard finanças Chart.js, sick-mode race, M4 backlog).
+
+## 6. Validation gates (must all be green before declaring done)
+
+```bash
+git diff --check
+npm run check:i18n
+node scripts/i18n-tn-no-arabic.test.mjs --strict
+npm run scan:i18n
+npm run check
+node scripts/test-mood-calendar.mjs
+node scripts/test-lovelock.mjs
+npm run test
+npm run build
+```
+
+Browser smoke against production build (serve `build/` via static server, not dev):
+- `/` mostra perfil Fatma + 4 secções agregadas + 2 atalhos + logo+texto juntos (item 1)
+- `/splash/` mostra user/password inputs + botão Google (item 2)
+- `/vida/` mostra 6 cards visualmente idênticos (item 3)
+- `/agente/` composer fixed bottom, scroll auto (item 4)
+- `/streaks/` chama SVG + 7 dias + 3 métricas + freeze button (item 5)
+- `/escola/` lista só cursos (passo 2a)
+- `/escola/curso/business-administration/` lista 9 cadeiras (passo 2b)
+- `/escola/cadeira/business-administration/marketing-digital/` lista aulas com path Duolingo (passo 2c+2e)
+- `/escola/quiz/mdq/` 1 pergunta por ecrã com progresso topo (item 11)
+- `/calendario/` swipe-up = semana, swipe-down = mês (item 10)
+- Mood chip no header (item 12)
+- `curl -sI https://presuntinho.love/biblioteca` → 200, `/trabalhos` → 200, `/caderno` → 200 (passo 4)
+
+## 7. Final output
+
+End with:
+- Changed files (path list)
+- Validation outputs (exit codes from section 6)
+- Browser smoke summary (route × status × visual OK/NOK)
+- Known limitations
+- Recommended next iteration
+
+— end of slash goal V12 —</pre>
+    </div>
+  </article>
+</section>
+
+<p class="footer">Compilado em 2026-07-05 · tick tasks-agent 138 · cron b21ec6a274ef · task-228.</p>
+</main>
+
+<script>
+function copyPrompt() {
+  const text = document.getElementById('promptText').innerText;
+  const fallback = () => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).catch(fallback);
+  } else {
+    fallback();
+  }
+}
+</script>
+</body>
+</html>
