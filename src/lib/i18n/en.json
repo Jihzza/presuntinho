@@ -4651,5 +4651,34 @@
   "caminho.chest.done": "You already collected this chest. ✨",
   "caminho.unit.open_aria": "Open unit {title}",
   "school.course.caminho_cta": "🗺️ Continue on the path →",
-  "school.course.details": "View course details"
+  "school.course.details": "View course details",
+  "splash": {
+    "title": "Your little corner",
+    "subtitle": "Come in with your password",
+    "username": {
+      "placeholder": "What's your name",
+      "label": "Name"
+    },
+    "password": {
+      "placeholder": "Password",
+      "label": "Password"
+    },
+    "checking": "Opening…",
+    "submit": "Enter",
+    "error": {
+      "empty": "Type your name and password."
+    },
+    "wrong_password": "Wrong password. Try again.",
+    "wrong_user": "That name isn't here — try another.",
+    "user_mismatch": "That name and password don't match.",
+    "lockout": "Try again in {n}.",
+    "providers": {
+      "or": "or"
+    },
+    "google": {
+      "cta": "Continue with Google",
+      "hint": "Sign-in with Google is on the way — for now use your password."
+    },
+    "credit": "Made with care for the two of us."
+  }
 }

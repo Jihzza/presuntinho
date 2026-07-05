@@ -4651,5 +4651,34 @@
   "caminho.chest.done": "Tu as déjà récupéré ce coffre. ✨",
   "caminho.unit.open_aria": "Ouvrir l’unité {title}",
   "school.course.caminho_cta": "🗺️ Continuer sur le chemin →",
-  "school.course.details": "Voir les détails du cours"
+  "school.course.details": "Voir les détails du cours",
+  "splash": {
+    "title": "Ton petit coin",
+    "subtitle": "Entre avec ton mot de passe",
+    "username": {
+      "placeholder": "Comment tu t'appelles",
+      "label": "Nom"
+    },
+    "password": {
+      "placeholder": "Mot de passe",
+      "label": "Mot de passe"
+    },
+    "checking": "Ouverture…",
+    "submit": "Entrer",
+    "error": {
+      "empty": "Écris ton nom et ton mot de passe."
+    },
+    "wrong_password": "Mot de passe incorrect. Réessaie.",
+    "wrong_user": "Ce nom n'est pas là — essaie un autre.",
+    "user_mismatch": "Ce nom et ce mot de passe ne vont pas ensemble.",
+    "lockout": "Réessaie dans {n}.",
+    "providers": {
+      "or": "ou"
+    },
+    "google": {
+      "cta": "Continuer avec Google",
+      "hint": "La connexion avec Google arrive — pour l'instant utilise ton mot de passe."
+    },
+    "credit": "Fait avec tendresse pour nous deux."
+  }
 }

@@ -4651,5 +4651,34 @@
   "caminho.chest.done": "جمعتِ هذا الصندوق بالفعل. ✨",
   "caminho.unit.open_aria": "فتح الوحدة {title}",
   "school.course.caminho_cta": "🗺️ تابعي في الطريق ←",
-  "school.course.details": "عرض تفاصيل الدورة"
+  "school.course.details": "عرض تفاصيل الدورة",
+  "splash": {
+    "title": "ركنك الصغير",
+    "subtitle": "ادخل بكلمة مرورك",
+    "username": {
+      "placeholder": "ما اسمك",
+      "label": "الاسم"
+    },
+    "password": {
+      "placeholder": "كلمة المرور",
+      "label": "كلمة المرور"
+    },
+    "checking": "جارٍ الفتح…",
+    "submit": "دخول",
+    "error": {
+      "empty": "اكتب اسمك وكلمة مرورك."
+    },
+    "wrong_password": "كلمة المرور غير صحيحة. حاول مرة أخرى.",
+    "wrong_user": "هذا الاسم غير موجود — جرّب اسمًا آخر.",
+    "user_mismatch": "هذا الاسم وكلمة المرور لا يتطابقان.",
+    "lockout": "حاول مرة أخرى بعد {n}.",
+    "providers": {
+      "or": "أو"
+    },
+    "google": {
+      "cta": "متابعة باستخدام Google",
+      "hint": "تسجيل الدخول عبر Google قادم — الآن استخدم كلمة مرورك."
+    },
+    "credit": "مصنوع بحب لنا نحن الاثنين."
+  }
 }

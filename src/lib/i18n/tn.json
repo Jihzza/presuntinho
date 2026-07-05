@@ -4664,5 +4664,34 @@
   "caminho.chest.done": "Khdhit el sandou9 hedha 9bal. ✨",
   "caminho.unit.open_aria": "7ell el wa7da {title}",
   "school.course.caminho_cta": "🗺️ Kammel fel thnaya →",
-  "school.course.details": "Chouf details el cours"
+  "school.course.details": "Chouf details el cours",
+  "splash": {
+    "title": "El cantinho dyalek",
+    "subtitle": "Dkhol b'el password dyalek",
+    "username": {
+      "placeholder": "Chnia esmek",
+      "label": "Esm"
+    },
+    "password": {
+      "placeholder": "Password",
+      "label": "Password"
+    },
+    "checking": "Amma naftahou…",
+    "submit": "Dkhol",
+    "error": {
+      "empty": "Ekteb esmek w el password."
+    },
+    "wrong_password": "Password ghalta. Erjaa jarreb.",
+    "wrong_user": "Esmha mech hna — jarreb wahed okher.",
+    "user_mismatch": "Esmha w el password makomch yemchiw maa baadh.",
+    "lockout": "Jarreb okhra fi {n}.",
+    "providers": {
+      "or": "walla"
+    },
+    "google": {
+      "cta": "Kompletti m3a Google",
+      "hint": "El connexion m3a Google geaa — tawa testa3mel el password."
+    },
+    "credit": "M3ammlou b'el 7ob l'el zouz."
+  }
 }

@@ -4651,5 +4651,34 @@
   "caminho.chest.done": "Já recolheste este baú. ✨",
   "caminho.unit.open_aria": "Abrir a unidade {title}",
   "school.course.caminho_cta": "🗺️ Continuar no caminho →",
-  "school.course.details": "Ver detalhes do curso"
+  "school.course.details": "Ver detalhes do curso",
+  "splash": {
+    "title": "O teu cantinho",
+    "subtitle": "Entra com a tua palavra-passe",
+    "username": {
+      "placeholder": "Como te chamas",
+      "label": "Nome"
+    },
+    "password": {
+      "placeholder": "Palavra-passe",
+      "label": "Palavra-passe"
+    },
+    "checking": "A abrir…",
+    "submit": "Entrar",
+    "error": {
+      "empty": "Escreve o nome e a palavra-passe."
+    },
+    "wrong_password": "Palavra-passe não confere. Tenta outra vez.",
+    "wrong_user": "Esse nome não está cá — tenta outro.",
+    "user_mismatch": "Esse nome e essa palavra-passe não combinam.",
+    "lockout": "Tenta outra vez em {n}.",
+    "providers": {
+      "or": "ou"
+    },
+    "google": {
+      "cta": "Continuar com Google",
+      "hint": "A entrada com Google está a chegar — por agora entra com a palavra-passe."
+    },
+    "credit": "Feito com carinho para nós os dois."
+  }
 }
