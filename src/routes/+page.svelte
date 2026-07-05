@@ -538,7 +538,8 @@
       <AppCard href="/mensagens/" icon="💬" title={$t('nav.mensagens', { default: 'Mensagens' })} desc={$t('hub.map.messages.desc', { default: 'conversas com o Daniel' })} />
       <AppCard href="/humor/" icon="💗" title={$t('hub.map.mood', { default: 'Humor' })} desc={$t('hub.map.mood.desc', { default: 'como te tens sentido' })} />
       <AppCard href="/memorias/" icon="📸" title={$t('hub.map.memories', { default: 'Memórias' })} desc={$t('hub.map.memories.desc', { default: 'momentos guardados com carinho' })} />
-      <AppCard href="/mascotes/" icon="🎭" title={$t('hub.map.mascots', { default: 'Mascotes' })} desc={$t('hub.map.mascots.desc', { default: 'a tua coleção fofa' })} />
+      <!-- V10.6: o cartão Mascotes saiu da Home — a seleção vive agora nas
+           Definições (secção Mascote), com link para /mascotes/ lá dentro. -->
       <AppCard href="/definicoes/" icon="⚙️" title={$t('a11y.settings', { default: 'Definições' })} desc={$t('hub.map.settings.desc', { default: 'temas, sons e conta' })} />
     </div>
   </section>

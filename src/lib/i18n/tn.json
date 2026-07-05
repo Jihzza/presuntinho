@@ -4761,8 +4761,8 @@
   "escola.curso.activity.exercise": "Exercise",
   "settings.applogo": "Icone mta3 el app",
   "settings.applogo.intro": "Ekhtari el logo eli yodhher fel ecran principal mta3 telifounek.",
-  "settings.applogo.hint": "Android: el icone tetbaddel wa7adha chwaya ba3d ma t7elli el app. iPhone: na7i el app mel ecran principal w zidha marra okhra.",
-  "settings.applogo.picked": "Icone tekhtaret! Fel telifoun tetbaddel el marra el jeya eli t7elli fiha el app.",
+  "settings.applogo.hint": "Temchi zeda bla ma t3awed el installation, ama bechwaya: fel Android el icone tetbaddel wa7adha ba3d 1–3 iyem ki t7elli el app.",
+  "settings.applogo.picked": "Icone tekhtaret! Chouf lta7t kifech tapplikiha taw fel telifoun.",
   "settings.applogo.classico": "Classique",
   "settings.applogo.sombra": "Dhal",
   "settings.applogo.brilho": "Dhaw",
@@ -4777,5 +4777,11 @@
   "settings.applogo.conversa": "Klem",
   "settings.applogo.lacinho": "Feyounka",
   "settings.applogo.planinho": "Planning",
-  "settings.applogo.amorzinho": "7obbi"
+  "settings.applogo.amorzinho": "7obbi",
+  "settings.applogo.apply_title": "Bech el icone tetbaddel TAW fel telifoun:",
+  "settings.applogo.apply_step1": "Ken el app deja installee: aksi twil 3al icone mte3ha w ekhtari Désinstaller/Na7i.",
+  "settings.applogo.apply_step2": "Arja3i lel page hedhi fel navigateur w aksi 3la Installer:",
+  "settings.mascot": "Mascota",
+  "settings.mascot.intro": "Ekhtari chkoun yraf9ek fel app el kol.",
+  "settings.mascot.open": "7elli page el mascotat (el stage, el unlocks) →"
 }

@@ -56,6 +56,15 @@
   for = "/manifest.webmanifest"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+    Content-Type = "application/manifest+json"
+
+# Manifests por logo (V10.5 — ícone da app personalizável): mesmo contrato
+# do manifest base. Sem a regra, o Netlify servia-os como octet-stream.
+[[headers]]
+  for = "/manifests/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Content-Type = "application/manifest+json"
 
 # Security headers (UNCHANGED from V3 — must persist)
 [[headers]]

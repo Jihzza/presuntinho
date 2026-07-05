@@ -52,6 +52,7 @@
   import ExternalLink from 'lucide-svelte/icons/external-link';
   import Bot from 'lucide-svelte/icons/bot';
   import Smartphone from 'lucide-svelte/icons/smartphone';
+  import PawPrint from 'lucide-svelte/icons/paw-print';
   import { getHermesConfig, setHermesConfig, checkHermesHealth } from '$lib/agent/hermes';
   import {
     APP_LOGOS,
@@ -60,6 +61,14 @@
     setAppLogo,
     type AppLogoId
   } from '$lib/app-logo';
+  import InstallButton from '$lib/components/InstallButton.svelte';
+  import MascotAvatar from '$lib/components/MascotAvatar.svelte';
+  import {
+    MASCOTS,
+    mascotStatuses,
+    setActiveMascot,
+    type MascotStatus
+  } from '$lib/gamification/mascots';
   // gap-116: real PBKDF2 reset-password flow imports.
   import { getSession } from '$lib/auth/session';
   import {
@@ -116,11 +125,36 @@
       currentLogo = id;
       showToast(
         $t('settings.applogo.picked', {
-          default: 'Ícone escolhido! No telemóvel atualiza na próxima abertura da app.'
+          default: 'Ícone escolhido! Vê em baixo como o aplicar já no telemóvel.'
         })
       );
     } catch (e) {
       console.error('[definicoes] app-logo pick failed', e);
+    }
+  }
+
+  // ----- V10.6: Mascote (seleção rápida, movida da Home) -----
+  let mascotList = $state<MascotStatus[]>(
+    MASCOTS.map((def) => ({ ...def, unlocked: false, active: false }))
+  );
+  onMount(() => {
+    void mascotStatuses()
+      .then((r) => (mascotList = r.statuses))
+      .catch(() => undefined);
+  });
+  async function pickMascot(m: MascotStatus): Promise<void> {
+    if (!m.unlocked || m.active) return;
+    try {
+      await setActiveMascot(m.id);
+      mascotList = mascotList.map((s) => ({ ...s, active: s.id === m.id }));
+      showToast(
+        $t('mascots.toast.picked', {
+          values: { emoji: m.emoji, name: $t(`mascots.${m.id}.name`, { default: m.id }) },
+          default: '{emoji} {name} é agora a tua mascote!'
+        })
+      );
+    } catch (e) {
+      console.error('[definicoes] mascot pick failed', e);
     }
   }
 
@@ -841,11 +875,68 @@
         </button>
       {/each}
     </div>
+    <!-- Aplicar JÁ: reinstalar com o manifest novo é o único caminho
+         instantâneo — o Android só verifica updates de ícone a cada
+         1-3 dias, e o iOS congela o ícone ao adicionar ao ecrã. -->
+    <div class="applogo-apply">
+      <strong>{$t('settings.applogo.apply_title', { default: 'Para o ícone mudar JÁ no telemóvel:' })}</strong>
+      <ol class="applogo-steps">
+        <li>{$t('settings.applogo.apply_step1', { default: 'Se já tens a app instalada: mantém o dedo no ícone dela e escolhe Desinstalar/Remover.' })}</li>
+        <li>{$t('settings.applogo.apply_step2', { default: 'Volta a esta página no navegador e toca em Instalar:' })}</li>
+      </ol>
+      <div class="applogo-install">
+        <InstallButton />
+      </div>
+      <p class="applogo-hint">
+        {$t('settings.applogo.hint', {
+          default: 'Sem reinstalar também funciona, mas com calma: no Android o ícone atualiza sozinho ao fim de 1–3 dias de abrires a app.'
+        })}
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ V10.6: Mascote (movida da Home) ============ -->
+  <section class="card" aria-labelledby="mascote-h">
+    <div class="card-head">
+      <span class="icon-wrap"><PawPrint size={18} /></span>
+      <h2 id="mascote-h">{$t('settings.mascot', { default: 'Mascote' })}</h2>
+    </div>
+    <p class="theme-intro">
+      {$t('settings.mascot.intro', { default: 'Escolhe quem te acompanha pela app toda.' })}
+    </p>
+    <div
+      class="applogo-grid"
+      role="radiogroup"
+      aria-label={$t('settings.mascot', { default: 'Mascote' })}
+    >
+      {#each mascotList as m (m.id)}
+        <button
+          type="button"
+          role="radio"
+          aria-checked={m.active}
+          class:active={m.active}
+          class:locked={!m.unlocked}
+          disabled={!m.unlocked}
+          onclick={() => void pickMascot(m)}
+          aria-label={m.unlocked
+            ? $t('mascots.page.pick_aria', {
+                values: { name: $t(`mascots.${m.id}.name`, { default: m.id }) },
+                default: 'Escolher {name}'
+              })
+            : `${$t(`mascots.${m.id}.name`, { default: m.id })} 🔒`}
+        >
+          <span class="mascot-mini" class:dim={!m.unlocked} aria-hidden="true">
+            <MascotAvatar mascot={m.id} pose="wave" size={56} animate={false} />
+            {#if !m.unlocked}<span class="mascot-mini-lock">🔒</span>{/if}
+          </span>
+          <small>{$t(`mascots.${m.id}.name`, { default: m.id })}</small>
+        </button>
+      {/each}
+    </div>
     <p class="applogo-hint">
-      {$t('settings.applogo.hint', {
-        default:
-          'Android: o ícone atualiza sozinho pouco depois de abrires a app instalada. iPhone: remove a app do ecrã inicial e volta a adicioná-la.'
-      })}
+      <a class="mascot-more" href="/mascotes/">
+        {$t('settings.mascot.open', { default: 'Abrir a página das mascotes (palco, desbloqueios) →' })}
+      </a>
     </p>
   </section>
 
@@ -1594,6 +1685,50 @@
       font-size: 0.76rem;
       line-height: 1.45;
     }
+    .applogo-apply {
+      margin-top: 0.9rem;
+      padding: 0.85rem 0.95rem;
+      border: 1px dashed color-mix(in srgb, var(--accent) 45%, transparent);
+      border-radius: 0.9rem;
+      background: color-mix(in srgb, var(--accent) 7%, transparent);
+      color: var(--txt2);
+      font-size: 0.85rem;
+    }
+    .applogo-apply strong { color: var(--txt); }
+    .applogo-steps {
+      margin: 0.5rem 0 0.65rem;
+      padding-inline-start: 1.2rem;
+      display: grid;
+      gap: 0.3rem;
+      line-height: 1.45;
+    }
+    .applogo-install { display: flex; }
+    .applogo-grid button.locked {
+      opacity: 0.75;
+      cursor: not-allowed;
+    }
+    .mascot-mini {
+      position: relative;
+      height: 60px;
+      display: flex;
+      align-items: flex-end;
+    }
+    .mascot-mini.dim :global(.mavatar img) {
+      filter: grayscale(1) brightness(0.55) opacity(0.55);
+    }
+    .mascot-mini-lock {
+      position: absolute;
+      right: -8px;
+      bottom: -2px;
+      font-size: 1rem;
+      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.55));
+    }
+    .mascot-more {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .mascot-more:hover,
+    .mascot-more:focus-visible { text-decoration: underline; outline: none; }
     .mood-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));

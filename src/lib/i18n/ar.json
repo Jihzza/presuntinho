@@ -4748,8 +4748,8 @@
   "escola.curso.activity.exercise": "تمرين",
   "settings.applogo": "أيقونة التطبيق",
   "settings.applogo.intro": "اختاري الشعار الذي يظهر على الشاشة الرئيسية لهاتفك.",
-  "settings.applogo.hint": "أندرويد: تتحدّث الأيقونة تلقائيًا بعد فتح التطبيق المثبّت بقليل. آيفون: احذفي التطبيق من الشاشة الرئيسية ثم أضيفيه من جديد.",
-  "settings.applogo.picked": "تم اختيار الأيقونة! على هاتفك تتحدّث عند فتح التطبيق المرة القادمة.",
+  "settings.applogo.hint": "يعمل أيضًا دون إعادة تثبيت لكن ببطء: على أندرويد تتحدّث الأيقونة وحدها بعد يوم إلى ثلاثة أيام من فتح التطبيق.",
+  "settings.applogo.picked": "تم اختيار الأيقونة! انظري بالأسفل كيف تطبّقينها فورًا على هاتفك.",
   "settings.applogo.classico": "كلاسيكي",
   "settings.applogo.sombra": "الظل",
   "settings.applogo.brilho": "توهّج",
@@ -4764,5 +4764,11 @@
   "settings.applogo.conversa": "دردشة",
   "settings.applogo.lacinho": "فيونكة",
   "settings.applogo.planinho": "مخطط",
-  "settings.applogo.amorzinho": "حبيبي"
+  "settings.applogo.amorzinho": "حبيبي",
+  "settings.applogo.apply_title": "لتغيير الأيقونة فورًا على هاتفك:",
+  "settings.applogo.apply_step1": "إذا كان التطبيق مثبتًا: اضغطي مطولًا على أيقونته واختاري إلغاء التثبيت/الإزالة.",
+  "settings.applogo.apply_step2": "عودي إلى هذه الصفحة في المتصفح واضغطي تثبيت:",
+  "settings.mascot": "التميمة",
+  "settings.mascot.intro": "اختاري من يرافقك في التطبيق كله.",
+  "settings.mascot.open": "افتحي صفحة التمائم (المسرح، الفتح) ←"
 }
