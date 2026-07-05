@@ -28,13 +28,13 @@
       "purpose": "any"
     },
     {
-      "src": "/logos/sombra/icon-192.png",
+      "src": "/logos/sombra/icon-maskable-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/logos/sombra/icon-512.png",
+      "src": "/logos/sombra/icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

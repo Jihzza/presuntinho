@@ -47,6 +47,17 @@ export const DEFAULT_APP_LOGO: AppLogoId = 'classico';
 /** Evento de janela disparado quando o logo ativo muda. */
 export const APP_LOGO_CHANGED_EVENT = 'presuntinho:app-logo-changed';
 
+/**
+ * Espelho em localStorage (padrão do 'fat-theme'): o fetcher de updates do
+ * Chrome/WebAPK lê o <link rel="manifest"> no fim do page-load e NÃO volta a
+ * ler se o href mudar depois — trocar só no onMount (depois do Dexie abrir)
+ * perdia essa corrida e o ícone escolhido podia nunca aplicar, ou até
+ * reverter um ícone já instalado. O script inline em app.html lê esta chave
+ * e troca os links ANTES do primeiro paint; o Dexie continua a ser a fonte
+ * de verdade e o espelho cura-se em applyAppLogo.
+ */
+export const APP_LOGO_LS_KEY = 'fat-app-logo';
+
 type SettingsRowV10_5 = SettingsRow & { appLogo?: string };
 
 export function isAppLogoId(id: string | undefined): id is AppLogoId {
@@ -84,6 +95,11 @@ export async function getAppLogo(): Promise<AppLogoId> {
  */
 export function applyAppLogo(id: AppLogoId): void {
 	if (typeof document === 'undefined') return;
+	try {
+		localStorage.setItem(APP_LOGO_LS_KEY, id);
+	} catch {
+		// localStorage indisponível — fica só a troca tardia dos links.
+	}
 	const manifest = document.querySelector('link[rel="manifest"]');
 	if (manifest instanceof HTMLLinkElement) {
 		const target = appLogoManifest(id);

@@ -35,6 +35,25 @@
     <link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="%sveltekit.assets%/apple-touch-icon.png" />
     <link rel="manifest" href="%sveltekit.assets%/manifest.webmanifest" />
+    <!-- Ícone da app escolhido (V10.5): aplicar ANTES do primeiro paint.
+         O Chrome/WebAPK lê o link do manifest no fim do page-load e não o
+         relê se mudar depois — o espelho 'fat-app-logo' (localStorage,
+         escrito por src/lib/app-logo.ts; Dexie é a fonte de verdade) torna
+         a troca síncrona, como o 'fat-theme' acima. -->
+    <script>
+      (function () {
+        try {
+          var logo = localStorage.getItem('fat-app-logo');
+          if (!logo || logo === 'classico' || !/^[a-z-]{2,24}$/.test(logo)) return;
+          var m = document.querySelector('link[rel="manifest"]');
+          if (m) m.href = '/manifests/logo-' + logo + '.webmanifest';
+          var a = document.querySelector('link[rel="apple-touch-icon"]');
+          if (a) a.href = '/logos/' + logo + '/icon-180.png';
+        } catch (e) {
+          /* localStorage indisponível — o hook do layout aplica mais tarde */
+        }
+      })();
+    </script>
 
     <!-- Open Graph defaults (overridden per-route via <svelte:head>). -->
     <meta property="og:site_name" content="Presuntinho" />

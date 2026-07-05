@@ -101,6 +101,46 @@ async function cropToArtwork(inputBuffer) {
 	return sharp(inputBuffer).extract({ left, top, width: side, height: side }).png().toBuffer();
 }
 
+/**
+ * Cor de fundo do design: mediana dos 4 pontos médios das margens da arte
+ * cortada (os cantos podem ser o enchimento removido; os meios das margens
+ * são sempre o fundo verdadeiro do design).
+ */
+async function designBackground(buffer) {
+	const { data, info } = await sharp(buffer).raw().toBuffer({ resolveWithObject: true });
+	const ch = info.channels;
+	const px = (x, y) => {
+		const o = (y * info.width + x) * ch;
+		return [data[o], data[o + 1], data[o + 2]];
+	};
+	const mids = [
+		px((info.width / 2) | 0, 2),
+		px((info.width / 2) | 0, info.height - 3),
+		px(2, (info.height / 2) | 0),
+		px(info.width - 3, (info.height / 2) | 0)
+	];
+	const med = (i) => mids.map((c) => c[i]).sort((a, b) => a - b)[1];
+	return { r: med(0), g: med(1), b: med(2) };
+}
+
+/**
+ * Variante maskable: arte a 78% centrada num fundo sólido — os launchers
+ * Android recortam ao círculo/squircle da safe zone (80% central) e sem
+ * este padding cortavam 15-49% da arte (orelhas, molduras, brilhos).
+ */
+async function maskableIcon(cropped, size, bg, outFile) {
+	const inner = Math.round(size * 0.78);
+	const art = await sharp(cropped).resize(inner, inner, { fit: 'cover' }).png().toBuffer();
+	await sharp({
+		create: { width: size, height: size, channels: 4, background: { ...bg, alpha: 1 } }
+	})
+		.composite([
+			{ input: art, left: Math.round((size - inner) / 2), top: Math.round((size - inner) / 2) }
+		])
+		.png({ palette: true, quality: 90, compressionLevel: 9 })
+		.toFile(outFile);
+}
+
 async function main() {
 	const baseManifest = JSON.parse(
 		fs.readFileSync(path.join(ROOT, 'static', 'manifest.webmanifest'), 'utf8')
@@ -134,13 +174,17 @@ async function main() {
 			.webp({ quality: 82 })
 			.toFile(path.join(outDir, 'preview.webp'));
 
+		const bg = await designBackground(cropped);
+		await maskableIcon(cropped, 512, bg, path.join(outDir, 'icon-maskable-512.png'));
+		await maskableIcon(cropped, 192, bg, path.join(outDir, 'icon-maskable-192.png'));
+
 		const manifest = {
 			...baseManifest,
 			icons: [
 				{ src: `/logos/${id}/icon-192.png`, sizes: '192x192', type: 'image/png', purpose: 'any' },
 				{ src: `/logos/${id}/icon-512.png`, sizes: '512x512', type: 'image/png', purpose: 'any' },
-				{ src: `/logos/${id}/icon-192.png`, sizes: '192x192', type: 'image/png', purpose: 'maskable' },
-				{ src: `/logos/${id}/icon-512.png`, sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+				{ src: `/logos/${id}/icon-maskable-192.png`, sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+				{ src: `/logos/${id}/icon-maskable-512.png`, sizes: '512x512', type: 'image/png', purpose: 'maskable' }
 			]
 		};
 		fs.writeFileSync(
