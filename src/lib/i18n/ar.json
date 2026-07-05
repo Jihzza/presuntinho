@@ -4821,6 +4821,7 @@
   "arcade.actions.pause": "إيقاف مؤقت",
   "arcade.actions.restart": "إعادة",
   "arcade.game.back": "← العودة إلى الغرفة",
+  "arcade.game.new": "جديد",
   "arcade.game.kicker": "Máquina arcade",
   "arcade.game.canvas": "Área de jogo arcade",
   "arcade.state.ready": "جاهزة للعب",

@@ -49,7 +49,10 @@
         <a class="game-card" href={game.href} data-sveltekit-preload-data>
           <span class="machine" aria-hidden="true">{game.icon}</span>
           <div>
-            <p class="kicker">{$t(game.difficultyKey)}</p>
+            <p class="kicker">
+              {$t(game.difficultyKey)}
+              <span>{$t('arcade.game.new', { default: 'Novo' })}</span>
+            </p>
             <h3>{$t(game.titleKey)}</h3>
             <p>{$t(game.descriptionKey)}</p>
             <div class="scores">
@@ -75,6 +78,7 @@
   .hero { padding: 1.25rem; background: radial-gradient(circle at 10% 10%, rgba(236,72,153,.28), transparent 34%), radial-gradient(circle at 90% 20%, rgba(34,211,238,.22), transparent 34%), rgba(255,255,255,.055); }
   .back { display: inline-flex; margin-bottom: .8rem; color: #bfdbfe; text-decoration: none; font-weight: 850; }
   .tag, .kicker { color: #67e8f9; text-transform: uppercase; letter-spacing: .09em; font-size: .72rem; font-weight: 900; }
+  .kicker span { margin-left: .35rem; padding: .1rem .4rem; border-radius: 999px; background: rgba(34,211,238,.16); color: #fff; letter-spacing: .05em; }
   h1 { margin: .35rem 0; font-size: clamp(2.4rem, 10vw, 4.8rem); line-height: .95; }
   .hero p, .section-head p, .game-card p, .note p { color: var(--txt2); line-height: 1.55; margin: 0; }
   .summary { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .6rem; margin-top: 1rem; }

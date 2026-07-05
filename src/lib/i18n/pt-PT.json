@@ -4821,6 +4821,7 @@
   "arcade.actions.pause": "Pausa",
   "arcade.actions.restart": "Recomeçar",
   "arcade.game.back": "← Voltar à sala",
+  "arcade.game.new": "Novo",
   "arcade.game.kicker": "Máquina arcade",
   "arcade.game.canvas": "Área de jogo arcade",
   "arcade.state.ready": "Pronta para jogar",
