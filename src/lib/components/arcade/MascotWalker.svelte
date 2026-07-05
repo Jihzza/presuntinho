@@ -16,8 +16,10 @@
     size?: number;
     /** Walk speed in px/s. */
     speed?: number;
+    /** Render the mascot chunky 8-bit. */
+    pixelated?: boolean;
   }
-  let { mascot, size = 76, speed = 34 }: Props = $props();
+  let { mascot, size = 76, speed = 34, pixelated = false }: Props = $props();
 
   let track = $state<HTMLDivElement | null>(null);
   let x = $state(0);
@@ -59,8 +61,8 @@
 </script>
 
 <div class="track" bind:this={track} aria-hidden="true">
-  <div class="walker" class:reduced style={`transform: translate3d(${Math.round(x)}px, 0, 0)`}>
-    <MascotAvatar {mascot} pose="hero" size={size} flip={dir < 0} animate={reduced} />
+  <div class="walker" class:reduced class:pixelated style={`transform: translate3d(${Math.round(x)}px, 0, 0)`}>
+    <MascotAvatar {mascot} pose="hero" size={size} flip={dir < 0} animate={reduced} {pixelated} />
   </div>
 </div>
 
@@ -81,6 +83,30 @@
   .walker :global(.mavatar) {
     animation: walk-bob 0.46s steps(2, end) infinite;
     transform-origin: 50% 100%;
+  }
+  /* pixelated: a harder stepped bob (no rotate) so it reads as a 2-frame sprite */
+  .walker.pixelated :global(.mavatar) {
+    animation: sprite-bob 0.42s steps(2, end) infinite;
+  }
+  @keyframes sprite-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12%);
+    }
+  }
+  /* square (un-blurred) pixel shadow so the sprite plants on the floor */
+  .walker.pixelated::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -2px;
+    width: 52%;
+    height: 6px;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.45);
   }
   .walker.reduced :global(.mavatar) {
     animation: none;

@@ -1,15 +1,16 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  import { goto } from '$app/navigation';
   import { t } from 'svelte-i18n';
   import {
     ARCADE_GAMES,
     highScoreKey,
     lastScoreKey,
-    readArcadeScore,
-    type ArcadeGameDefinition
+    readArcadeScore
   } from '$lib/arcade/games';
   import MascotWalker from '$lib/components/arcade/MascotWalker.svelte';
   import CrtOverlay from '$lib/components/arcade/CrtOverlay.svelte';
+  import { arcadeImmersive } from '$lib/arcade/immersive-state';
   import { getActiveMascot, MASCOT_CHANGED_EVENT, DEFAULT_MASCOT_ID } from '$lib/gamification/mascots';
   import {
     startArcadeMusic,
@@ -22,18 +23,19 @@
   let highScores = $state<Record<string, number>>({});
   let lastScores = $state<Record<string, number>>({});
   let loaded = $state(false);
-  let featured = $state<ArcadeGameDefinition>(ARCADE_GAMES[0]);
   let hostId = $state<string>(DEFAULT_MASCOT_ID);
   let musicOn = $state(true);
+  let selected = $state(0);
 
   const totalRecordPoints = $derived(Object.values(highScores).reduce((a, b) => a + b, 0));
   const machinesPlayed = $derived(Object.values(highScores).filter((v) => v > 0).length);
   const anyPlayed = $derived(machinesPlayed > 0);
   const allMastered = $derived(machinesPlayed === ARCADE_GAMES.length && ARCADE_GAMES.length > 0);
-  // The host mascot's speech reacts to progress.
   const hostSpeechKey = $derived(
     allMastered ? 'arcade.host.mastered' : anyPlayed ? 'arcade.host.greeting' : 'arcade.host.first_time'
   );
+  const hiScoreText = $derived(String(totalRecordPoints).padStart(6, '0'));
+  const heartsTotal = ARCADE_GAMES.length;
 
   function isNew(id: string): boolean {
     return (highScores[id] ?? 0) === 0 && (lastScores[id] ?? 0) === 0;
@@ -44,8 +46,27 @@
     if (musicOn) startArcadeMusic('lobby');
   }
 
-  let removeGesture: (() => void) | null = null;
+  function move(delta: number): void {
+    selected = (selected + delta + ARCADE_GAMES.length) % ARCADE_GAMES.length;
+  }
+  function launch(): void {
+    void goto(ARCADE_GAMES[selected].href);
+  }
+  function onKey(e: KeyboardEvent): void {
+    const k = e.key.toLowerCase();
+    if (k === 'arrowdown' || k === 's') {
+      e.preventDefault();
+      move(1);
+    } else if (k === 'arrowup' || k === 'w') {
+      e.preventDefault();
+      move(-1);
+    } else if (k === 'enter' || k === ' ') {
+      e.preventDefault();
+      launch();
+    }
+  }
 
+  let removeGesture: (() => void) | null = null;
   function loadHost(): void {
     void getActiveMascot()
       .then((m) => (hostId = m.id))
@@ -53,6 +74,7 @@
   }
 
   onMount(() => {
+    arcadeImmersive.set(true); // true fullscreen — hide the app chrome
     const highs: Record<string, number> = {};
     const lasts: Record<string, number> = {};
     for (const game of ARCADE_GAMES) {
@@ -61,16 +83,15 @@
     }
     highScores = highs;
     lastScores = lasts;
-    // "Máquina da noite" rotates by day (browser-only, SSR-safe).
-    const day = new Date().getDate();
-    featured = ARCADE_GAMES[day % ARCADE_GAMES.length];
+    // pre-select the "machine of the night" (rotates by day, SSR-safe).
+    selected = new Date().getDate() % ARCADE_GAMES.length;
     loaded = true;
 
     loadHost();
     const onMascotChanged = () => loadHost();
     window.addEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
+    window.addEventListener('keydown', onKey);
 
-    // Chiptune lobby theme — starts on the FIRST user gesture (autoplay policy).
     void initArcadeMusicPrefs().then(() => (musicOn = isArcadeMusicEnabled()));
     const startOnGesture = () => startArcadeMusic('lobby');
     window.addEventListener('pointerdown', startOnGesture, { once: true });
@@ -78,12 +99,13 @@
 
     return () => {
       window.removeEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
+      window.removeEventListener('keydown', onKey);
       removeGesture?.();
     };
   });
 
   onDestroy(() => {
-    // Leaving the room silences the lobby loop; a game will start its own theme.
+    arcadeImmersive.set(false);
     stopArcadeMusic();
     removeGesture?.();
   });
@@ -94,392 +116,313 @@
   <meta name="description" content={$t('arcade.meta.description', { default: 'Jogos arcade secretos do Presuntinho, com pontuações locais e controlos mobile.' })} />
 </svelte:head>
 
-<div class="arcade-room">
-  <!-- ── backlit marquee (the arcade hall sign) ── -->
-  <header class="marquee">
-    <CrtOverlay radius="1.4rem" intensity={0.42} />
-    <div class="marquee-top">
-      <a class="back" href="/">{$t('arcade.back.home', { default: '← Home' })}</a>
-      <span class="tag"><span class="dot" aria-hidden="true"></span>{$t('arcade.hero.tag', { default: 'Sala secreta desbloqueada' })}</span>
-      <button
-        type="button"
-        class="music-btn"
-        class:muted={!musicOn}
-        onclick={onToggleMusic}
-        aria-pressed={musicOn}
-        aria-label={musicOn ? $t('arcade.music.off', { default: 'Desligar música' }) : $t('arcade.music.on', { default: 'Ligar música' })}
-        title={musicOn ? $t('arcade.music.off', { default: 'Desligar música' }) : $t('arcade.music.on', { default: 'Ligar música' })}
-      ><span aria-hidden="true">♪</span></button>
-    </div>
+<div class="crt-screen">
+  <CrtOverlay radius="0" intensity={0.55} />
 
-    <h1 class="neon" data-text={$t('arcade.lobby.marquee', { default: 'ARCADE' })}>{$t('arcade.lobby.marquee', { default: 'ARCADE' })}</h1>
-    <p class="sub">{$t('arcade.hero.body', { default: 'Encontraste a sala escondida do Presuntinho. Seis máquinas, recordes só teus e controlos pensados para o telemóvel e para o teclado.' })}</p>
-
-    <!-- ── attract mode: the active mascot walks the arcade floor forever ── -->
-    <div class="attract">
-      <p class="bubble">{$t(hostSpeechKey, { default: 'Insere uma moeda e escolhe uma máquina! 🕹️' })}</p>
-      <div class="floor" aria-label={$t('arcade.host.aria', { default: 'Mascote anfitriã da sala arcade' })}>
-        <MascotWalker mascot={hostId} size={72} />
-      </div>
-      <p class="press-start">{$t('arcade.lobby.press_start', { default: 'PRESS START' })}</p>
-    </div>
-
-    <div class="summary" aria-label={$t('arcade.summary.aria', { default: 'Resumo da sala arcade' })}>
-      <span><strong>{ARCADE_GAMES.length}</strong><small>{$t('arcade.summary.games', { default: 'Máquinas' })}</small></span>
-      <span><strong>{totalRecordPoints}</strong><small>{$t('arcade.summary.points', { default: 'Pontos recorde' })}</small></span>
-      <span><strong>{machinesPlayed}/{ARCADE_GAMES.length}</strong><small>{$t('arcade.summary.mastered', { default: 'Com recorde' })}</small></span>
-    </div>
-  </header>
-
-  {#if loaded}
-    <a class="featured" href={featured.href} data-sveltekit-preload-data style="--accent: {featured.accent};">
-      <span class="feat-label">{$t('arcade.featured.label', { default: '✨ Máquina da noite' })}</span>
-      <div class="feat-body">
-        <span class="feat-icon" aria-hidden="true">{featured.icon}</span>
-        <div>
-          <h2>{$t(featured.titleKey)}</h2>
-          <p>{$t(featured.descriptionKey)}</p>
-        </div>
-      </div>
-      <strong class="feat-cta">{$t('arcade.actions.insert_coin', { default: '🪙 Inserir moeda →' })}</strong>
-    </a>
-  {/if}
-
-  {#if loaded && !anyPlayed}
-    <p class="first-round">{$t('arcade.empty.body', { default: '🕹️ Primeira ronda! Escolhe uma máquina — as tuas pontuações ficam guardadas aqui.' })}</p>
-  {/if}
-
-  <section class="games" aria-label={$t('arcade.games.aria', { default: 'Jogos disponíveis' })}>
-    <div class="section-head">
-      <h2>{$t('arcade.games.title', { default: 'Escolhe uma máquina' })}</h2>
-      <p>{$t('arcade.games.body', { default: 'Todos os jogos são jogáveis dentro da app. Sem placeholders.' })}</p>
-    </div>
-
-    <div class="rail">
-      {#each ARCADE_GAMES as game (game.id)}
-        <a class="cabinet" href={game.href} data-sveltekit-preload-data style="--accent: {game.accent};">
-          <!-- machine marquee -->
-          <span class="cab-marquee" aria-hidden="true">{game.icon}</span>
-          <!-- machine screen -->
-          <span class="cab-screen">
-            <span class="cab-scan" aria-hidden="true"></span>
-            <span class="kicker">
-              {$t(game.difficultyKey)}
-              {#if loaded && isNew(game.id)}<span class="badge">{$t('arcade.game.new', { default: 'Novo' })}</span>{/if}
-            </span>
-            <span class="cab-title">{$t(game.titleKey)}</span>
-            <span class="desc">{$t(game.descriptionKey)}</span>
-          </span>
-          <!-- control panel -->
-          <span class="cab-panel">
-            <span class="scores">
-              <span>{$t('arcade.score.best_with_value', { values: { score: highScores[game.id] ?? 0 }, default: 'Melhor: {score}' })}</span>
-              <span>{$t('arcade.score.last_with_value', { values: { score: lastScores[game.id] ?? 0 }, default: 'Última: {score}' })}</span>
-            </span>
-            <strong class="play">{$t('arcade.actions.insert_coin', { default: '🪙 Inserir moeda →' })}</strong>
-          </span>
-        </a>
+  <!-- ── top HUD row: back · HI-SCORE · hearts · music ── -->
+  <div class="topbar">
+    <a class="px-btn" href="/" aria-label={$t('arcade.back.home', { default: '← Home' })}>◄</a>
+    <span class="hi">{$t('arcade.hud.hi_score', { default: 'HI-SCORE' })} {hiScoreText}</span>
+    <div class="hearts" aria-label={$t('arcade.hud.lives_aria', { default: 'Máquinas com recorde' })}>
+      {#each Array(heartsTotal) as _, i (i)}
+        <span class="px-heart" class:full={i < machinesPlayed} aria-hidden="true"></span>
       {/each}
     </div>
-  </section>
+    <button
+      type="button"
+      class="px-btn"
+      class:muted={!musicOn}
+      onclick={onToggleMusic}
+      aria-pressed={musicOn}
+      aria-label={musicOn ? $t('arcade.music.off', { default: 'Desligar música' }) : $t('arcade.music.on', { default: 'Ligar música' })}
+    >♪</button>
+  </div>
 
-  <section class="note" aria-label={$t('arcade.ip.aria', { default: 'Nota sobre jogos originais' })}>
-    <h2>{$t('arcade.ip.title', { default: 'Clássicos, mas originais' })}</h2>
-    <p>{$t('arcade.ip.body', { default: 'A sala usa mecânicas arcade clássicas com nomes, visuais e personagens próprios do Presuntinho.' })}</p>
-  </section>
+  <!-- ── attract title ── -->
+  <div class="attract">
+    <h1 class="px-start" data-text="START">{$t('arcade.lobby.start', { default: 'START' })}</h1>
+    <p class="ready">{$t('arcade.lobby.ready', { default: 'ESTÁS PRONTA?' })}</p>
+    <p class="yesno"><span class="sel">► {$t('arcade.lobby.yes', { default: 'SIM' })}</span>&nbsp;&nbsp;&nbsp;{$t('arcade.lobby.no', { default: 'NÃO' })}</p>
+  </div>
+
+  <!-- ── vertical pixel MENU (the cabinet select) ── -->
+  <nav class="menu" aria-label={$t('arcade.games.aria', { default: 'Jogos disponíveis' })}>
+    {#each ARCADE_GAMES as game, i (game.id)}
+      <a
+        class="row"
+        class:on={i === selected}
+        style={`--accent: ${game.accent}`}
+        href={game.href}
+        data-sveltekit-preload-data
+        onmouseenter={() => (selected = i)}
+        onfocus={() => (selected = i)}
+      >
+        <span class="arrow" aria-hidden="true">{i === selected ? '►' : ''}</span>
+        <span class="ic" aria-hidden="true">{game.icon}</span>
+        <span class="name">{$t(game.titleKey)}</span>
+        <span class="best">{highScores[game.id] ?? 0}</span>
+        {#if loaded && isNew(game.id)}<span class="tag-new">{$t('arcade.game.new', { default: 'NEW' })}</span>{/if}
+      </a>
+    {/each}
+  </nav>
+
+  <!-- ── attract-mode: the mascot patrols a pixel floor ── -->
+  <div class="floor">
+    <p class="bubble">{$t(hostSpeechKey, { default: 'Insere uma moeda e escolhe uma máquina! 🕹️' })}</p>
+    <div class="floor-strip">
+      <MascotWalker mascot={hostId} size={64} pixelated />
+    </div>
+    <p class="press">{$t('arcade.lobby.press_start', { default: 'PRESS START' })}</p>
+  </div>
 </div>
 
 <style>
-  /* Full-page "arcade mode": the room fills the height between the app's header
-     and footer with an immersive neon backdrop, so it reads as a dedicated
-     arcade hall rather than a card page floating on the app background. */
-  .arcade-room {
-    max-width: 1120px;
-    margin: 0 auto;
-    min-height: calc(100dvh - 3.25rem);
-    padding: 1rem 1rem calc(7rem + env(safe-area-inset-bottom));
-    color: var(--txt, #fff);
-    background:
-      radial-gradient(circle at 10% -2%, rgba(236, 72, 153, 0.16), transparent 42%),
-      radial-gradient(circle at 92% 4%, rgba(34, 211, 238, 0.14), transparent 44%),
-      repeating-linear-gradient(0deg, transparent 0 2px, rgba(255, 255, 255, 0.012) 2px 3px),
-      linear-gradient(180deg, rgba(9, 8, 22, 0.7), rgba(6, 8, 18, 0.86));
-  }
-  /* the hall "switches on" like a CRT tube when you enter */
-  @media (prefers-reduced-motion: no-preference) {
-    .arcade-room { animation: power-on 440ms ease-out; }
-    @keyframes power-on {
-      0% { opacity: 0; filter: brightness(3.2) contrast(1.4); }
-      55% { opacity: 1; }
-      100% { filter: brightness(1) contrast(1); }
-    }
-  }
-  .marquee, .featured, .cabinet, .note { border: 1px solid rgba(103, 232, 249, 0.2); border-radius: 1.4rem; background: rgba(255, 255, 255, 0.05); }
-
-  /* ── marquee (arcade-hall sign) ── */
-  .marquee {
-    position: relative;
-    overflow: hidden;
-    padding: 1.35rem 1.25rem;
-    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.42), inset 0 0 60px rgba(103, 232, 249, 0.05);
-    background:
-      radial-gradient(circle at 8% 0%, rgba(236, 72, 153, 0.34), transparent 40%),
-      radial-gradient(circle at 96% 8%, rgba(34, 211, 238, 0.3), transparent 42%),
-      linear-gradient(180deg, rgba(14, 10, 32, 0.86), rgba(8, 10, 24, 0.9));
-  }
-  .marquee-top { display: flex; align-items: center; gap: 0.6rem; position: relative; z-index: 6; }
-  .back { display: inline-flex; color: #bfdbfe; text-decoration: none; font-weight: 850; }
-  .tag {
-    display: inline-flex;
+  .crt-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    overflow: auto;
+    color: #e8fff4;
+    background: radial-gradient(circle at 50% -10%, #171033, #070510 60%);
+    font-family: 'Courier New', ui-monospace, 'SFMono-Regular', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 0.4rem;
-    margin-left: auto;
-    color: #67e8f9;
-    text-transform: uppercase;
-    letter-spacing: 0.09em;
-    font-size: 0.68rem;
+    padding: calc(env(safe-area-inset-top) + 0.7rem) 1rem calc(env(safe-area-inset-bottom) + 1rem);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .crt-screen {
+      animation: power-on 440ms ease-out;
+    }
+    @keyframes power-on {
+      0% { opacity: 0; transform: scaleY(0.7); filter: brightness(3) contrast(1.4); }
+      55% { opacity: 1; }
+      100% { transform: scaleY(1); filter: brightness(1); }
+    }
+  }
+
+  /* ── top HUD ── */
+  .topbar {
+    width: min(46rem, 100%);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
     font-weight: 900;
+    z-index: 6;
   }
-  .tag .dot { width: 8px; height: 8px; border-radius: 999px; background: #34d399; box-shadow: 0 0 10px #34d399; }
-  .music-btn {
-    display: grid;
-    place-items: center;
+  .hi {
+    color: #67e8f9;
+    font-size: clamp(0.72rem, 3.4vw, 1rem);
+    text-shadow: 2px 2px 0 #075985;
+    white-space: nowrap;
+  }
+  .hearts {
+    margin-left: auto;
+    display: flex;
+    gap: 5px;
+  }
+  .px-heart {
     position: relative;
-    width: 38px;
-    height: 38px;
-    border-radius: 999px;
-    color: #fff;
-    font-size: 1.05rem;
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    cursor: pointer;
+    width: 16px;
+    height: 14px;
+    --c: #334155;
   }
-  .music-btn:hover, .music-btn:focus-visible { background: rgba(103, 232, 249, 0.18); outline: none; }
-  .music-btn:active { transform: scale(0.92); }
-  .music-btn.muted { color: #94a3b8; }
-  .music-btn.muted::after {
+  .px-heart::before,
+  .px-heart::after {
     content: '';
     position: absolute;
-    left: 22%;
-    right: 22%;
+    top: 0;
+    width: 8px;
+    height: 12px;
+    border-radius: 8px 8px 0 0;
+    background: var(--c);
+  }
+  .px-heart::before {
+    left: 8px;
+    transform: rotate(45deg);
+    transform-origin: 0 100%;
+  }
+  .px-heart::after {
+    left: 0;
+    transform: rotate(-45deg);
+    transform-origin: 100% 100%;
+  }
+  .px-heart.full {
+    --c: #f472b6;
+    filter: drop-shadow(0 0 4px #f472b6);
+  }
+  .px-btn {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 auto;
+    border-radius: 0.4rem;
+    border: 2px solid rgba(103, 232, 249, 0.4);
+    background: rgba(10, 16, 30, 0.55);
+    color: #e8fff4;
+    text-decoration: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    position: relative;
+  }
+  .px-btn:hover,
+  .px-btn:focus-visible {
+    border-color: #67e8f9;
+    outline: none;
+  }
+  .px-btn.muted {
+    color: #64748b;
+  }
+  .px-btn.muted::after {
+    content: '';
+    position: absolute;
+    left: 20%;
+    right: 20%;
     top: 50%;
     height: 2px;
     background: currentColor;
     transform: rotate(-20deg);
-    border-radius: 2px;
   }
 
-  /* neon marquee title with a doubled glow layer */
-  .neon {
-    position: relative;
-    z-index: 6;
-    margin: 0.6rem 0 0.4rem;
-    font-size: clamp(2.4rem, 12vw, 4.6rem);
-    line-height: 0.92;
-    letter-spacing: 0.14em;
+  /* ── attract title ── */
+  .attract {
     text-align: center;
+    margin-top: 0.6rem;
+    z-index: 6;
+  }
+  .px-start {
+    margin: 0;
+    font-size: clamp(3rem, 17vw, 6.5rem);
     font-weight: 900;
-    color: #fff;
-    text-shadow:
-      0 0 6px rgba(255, 255, 255, 0.9),
-      0 0 16px rgba(236, 72, 153, 0.8),
-      0 0 34px rgba(34, 211, 238, 0.7),
-      0 0 60px rgba(34, 211, 238, 0.5);
+    letter-spacing: 0.12em;
+    line-height: 1;
+    color: #fde047;
+    text-shadow: 3px 3px 0 #b45309, 6px 6px 0 #7c2d12, 0 0 24px rgba(253, 224, 71, 0.55);
   }
   @media (prefers-reduced-motion: no-preference) {
-    .neon { animation: neon-flicker 5.5s infinite; }
-    @keyframes neon-flicker {
-      0%, 92%, 100% { opacity: 1; }
-      93% { opacity: 0.72; }
-      94% { opacity: 1; }
-      96% { opacity: 0.85; }
-      97% { opacity: 1; }
+    .px-start {
+      animation: px-blink 1.15s steps(1, end) infinite;
+    }
+    @keyframes px-blink {
+      0%, 60% { opacity: 1; }
+      61%, 100% { opacity: 0.5; }
     }
   }
-  .sub { position: relative; z-index: 6; margin: 0 auto; max-width: 46ch; text-align: center; color: var(--txt2, #cbd5e1); line-height: 1.55; }
+  .ready {
+    margin: 0.5rem 0 0.2rem;
+    color: #e2e8f0;
+    font-weight: 900;
+    font-size: clamp(0.8rem, 4vw, 1.2rem);
+  }
+  .yesno {
+    margin: 0;
+    color: #94a3b8;
+    font-weight: 900;
+    font-size: clamp(0.8rem, 4vw, 1.1rem);
+  }
+  .yesno .sel {
+    color: #4ade80;
+  }
 
-  /* ── mascot host + speech bubble ── */
-  /* attract mode: speech bubble, a neon FLOOR the mascot patrols, PRESS START */
-  .attract { position: relative; z-index: 6; margin: 1rem 0 0.2rem; display: grid; justify-items: center; gap: 0.55rem; }
+  /* ── vertical pixel MENU ── */
+  .menu {
+    width: min(30rem, 92vw);
+    display: grid;
+    gap: 0.18rem;
+    margin: 0.9rem 0;
+    z-index: 6;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1.4rem 1.6rem 1fr auto auto;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: clamp(0.78rem, 3.6vw, 1rem);
+    border: 2px solid transparent;
+    border-radius: 0.3rem;
+  }
+  .row.on {
+    color: #fff;
+    background: color-mix(in srgb, var(--accent) 22%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+  }
+  .row .arrow {
+    color: var(--accent);
+  }
+  .row .ic {
+    font-size: 1.15rem;
+  }
+  .row .best {
+    color: #67e8f9;
+    font-variant-numeric: tabular-nums;
+  }
+  .row .tag-new {
+    color: #0b0f19;
+    background: #4ade80;
+    padding: 0 0.3rem;
+    border-radius: 0.2rem;
+    font-size: 0.6rem;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .row.on .arrow {
+      animation: px-blink 1s steps(1, end) infinite;
+    }
+  }
+
+  /* ── floor + mascot + press start ── */
   .floor {
+    width: min(46rem, 100%);
+    margin-top: auto;
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+    z-index: 6;
+  }
+  .bubble {
+    margin: 0;
+    max-width: 24ch;
+    text-align: center;
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.4rem;
+    border: 2px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    font-size: 0.78rem;
+    text-transform: none;
+    letter-spacing: normal;
+    line-height: 1.4;
+  }
+  .floor-strip {
     position: relative;
     width: 100%;
     max-width: 30rem;
-    height: 94px;
-    border-radius: 0.8rem;
+    height: 88px;
+    border-radius: 0.4rem;
     background:
-      linear-gradient(180deg, transparent, rgba(103, 232, 249, 0.05)),
-      repeating-linear-gradient(90deg, transparent 0 26px, rgba(103, 232, 249, 0.1) 26px 27px);
-    border-bottom: 2px solid rgba(103, 232, 249, 0.32);
-    box-shadow: 0 12px 30px -14px rgba(103, 232, 249, 0.5);
+      linear-gradient(180deg, transparent, rgba(103, 232, 249, 0.06)),
+      repeating-linear-gradient(90deg, transparent 0 24px, rgba(103, 232, 249, 0.12) 24px 25px);
+    border-bottom: 3px solid rgba(103, 232, 249, 0.35);
   }
-  .press-start {
+  .press {
     margin: 0;
     color: #fde68a;
     font-weight: 900;
     letter-spacing: 0.22em;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     text-shadow: 0 0 10px rgba(253, 230, 138, 0.7);
   }
   @media (prefers-reduced-motion: no-preference) {
-    .press-start { animation: blink 1.05s steps(1, end) infinite; }
-    @keyframes blink {
-      0%, 49% { opacity: 1; }
-      50%, 100% { opacity: 0.14; }
+    .press {
+      animation: px-blink 1.05s steps(1, end) infinite;
     }
-  }
-  .bubble {
-    position: relative;
-    margin: 0;
-    max-width: 15rem;
-    padding: 0.6rem 0.85rem;
-    border-radius: 1rem 1rem 1rem 0.2rem;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    color: #fff;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    backdrop-filter: blur(6px);
-  }
-  .bubble::before {
-    content: '';
-    position: absolute;
-    left: -7px;
-    bottom: 8px;
-    border: 7px solid transparent;
-    border-right-color: rgba(255, 255, 255, 0.1);
-    border-left: 0;
-  }
-
-  .summary { position: relative; z-index: 6; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.55rem; margin-top: 1.1rem; }
-  .summary span { padding: 0.7rem; border-radius: 1rem; background: rgba(0, 0, 0, 0.34); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center; }
-  .summary strong, .summary small { display: block; }
-  .summary strong { font-size: 1.35rem; font-variant-numeric: tabular-nums; }
-  .summary small { color: var(--txt3, #94a3b8); font-size: 0.72rem; }
-
-  /* ── featured cabinet (attract mode) ── */
-  .featured {
-    display: grid;
-    gap: 0.6rem;
-    margin-top: 1rem;
-    padding: 1.1rem 1.15rem;
-    text-decoration: none;
-    color: #fff;
-    border-color: color-mix(in srgb, var(--accent) 50%, transparent);
-    background:
-      radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 46%),
-      rgba(255, 255, 255, 0.05);
-    transition: transform 140ms ease, box-shadow 140ms ease;
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .featured { animation: attract 3.6s ease-in-out infinite; }
-    @keyframes attract {
-      0%, 100% { box-shadow: 0 16px 40px color-mix(in srgb, var(--accent) 12%, transparent); }
-      50% { box-shadow: 0 20px 54px color-mix(in srgb, var(--accent) 34%, transparent); }
-    }
-  }
-  .featured:hover, .featured:focus-visible { transform: translateY(-2px); box-shadow: 0 20px 50px color-mix(in srgb, var(--accent) 30%, transparent); outline: none; }
-  .feat-label { color: var(--accent); font-weight: 900; letter-spacing: 0.04em; font-size: 0.78rem; text-transform: uppercase; }
-  .feat-body { display: grid; grid-template-columns: auto 1fr; gap: 0.85rem; align-items: center; }
-  .feat-icon { display: grid; place-items: center; width: 62px; height: 62px; border-radius: 1.1rem; font-size: 2rem; background: color-mix(in srgb, var(--accent) 24%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
-  .featured h2 { margin: 0 0 0.15rem; font-size: 1.3rem; }
-  .featured p { margin: 0; color: var(--txt2, #cbd5e1); line-height: 1.5; }
-  .feat-cta { color: var(--accent); font-weight: 900; }
-
-  .first-round {
-    margin: 0.9rem 0 0;
-    padding: 0.85rem 1rem;
-    border-radius: 1rem;
-    border: 1px dashed rgba(103, 232, 249, 0.4);
-    background: rgba(34, 211, 238, 0.08);
-    color: var(--txt2, #cbd5e1);
-    line-height: 1.5;
-  }
-
-  .games { margin-top: 1.2rem; }
-  .section-head { margin-bottom: 0.85rem; }
-  .section-head h2, .note h2 { margin: 0 0 0.25rem; }
-  .section-head p, .note p { color: var(--txt2, #cbd5e1); line-height: 1.55; margin: 0; }
-  /* an arcade LINEUP you swipe through, not a grid of cards */
-  .rail {
-    display: flex;
-    gap: 0.9rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    padding: 0.2rem 0.2rem 0.5rem;
-    scroll-padding: 0 0.2rem;
-  }
-  .rail::-webkit-scrollbar { display: none; }
-  .rail .cabinet { flex: 0 0 82%; scroll-snap-align: center; }
-  @media (min-width: 720px) {
-    .rail .cabinet { flex-basis: 300px; }
-  }
-
-  /* ── cabinet = a little arcade machine ── */
-  .cabinet {
-    position: relative;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    color: #fff;
-    text-decoration: none;
-    overflow: hidden;
-    border-color: color-mix(in srgb, var(--accent) 34%, transparent);
-    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.3);
-    transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
-  }
-  .cabinet:hover, .cabinet:focus-visible {
-    transform: translateY(-3px);
-    border-color: color-mix(in srgb, var(--accent) 70%, transparent);
-    box-shadow: 0 20px 46px color-mix(in srgb, var(--accent) 24%, transparent);
-    outline: none;
-  }
-  .cabinet:active { transform: translateY(-1px) scale(0.99); }
-  .cab-marquee {
-    display: grid;
-    place-items: center;
-    padding: 0.5rem;
-    font-size: 1.7rem;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 40%, transparent), color-mix(in srgb, var(--accent) 14%, transparent));
-    border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
-    text-shadow: 0 0 12px color-mix(in srgb, var(--accent) 80%, transparent);
-  }
-  .cab-screen {
-    position: relative;
-    display: grid;
-    align-content: start;
-    gap: 0.28rem;
-    padding: 0.8rem 0.85rem;
-    background: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 55%), #0a1020;
-    overflow: hidden;
-  }
-  .cab-scan {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: repeating-linear-gradient(0deg, transparent 0 2px, rgba(0, 0, 0, 0.16) 2px 3px);
-  }
-  .kicker { display: flex; align-items: center; gap: 0.4rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.66rem; font-weight: 900; }
-  .badge { padding: 0.1rem 0.45rem; border-radius: 999px; background: color-mix(in srgb, var(--accent) 30%, transparent); color: #fff; letter-spacing: 0.04em; }
-  .cab-title { font-size: 1.12rem; font-weight: 800; }
-  .desc { color: var(--txt2, #cbd5e1); line-height: 1.5; font-size: 0.86rem; }
-  .cab-panel {
-    display: grid;
-    gap: 0.4rem;
-    padding: 0.7rem 0.85rem;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.25));
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  .scores { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-  .scores span { padding: 0.22rem 0.5rem; border-radius: 999px; background: rgba(255, 255, 255, 0.08); color: var(--txt2, #cbd5e1); font-size: 0.72rem; font-variant-numeric: tabular-nums; }
-  .play { color: var(--accent); font-weight: 900; font-size: 0.9rem; }
-  .note { margin-top: 1rem; padding: 1rem; }
-
-  @media (max-width: 520px) {
-    .arcade-room { padding-inline: 0.8rem; }
-    .summary { gap: 0.4rem; }
-    .summary strong { font-size: 1.15rem; }
-    .bubble { max-width: 13rem; font-size: 0.82rem; }
   }
 </style>

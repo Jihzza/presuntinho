@@ -32,6 +32,8 @@
     alt?: string;
     /** Carregamento prioritário (above the fold). */
     eager?: boolean;
+    /** Render chunky 8-bit (pixelated upscale + hard pixel shadow). */
+    pixelated?: boolean;
   }
   let {
     mascot,
@@ -42,10 +44,18 @@
     entrance = false,
     flip = false,
     alt = '',
-    eager = false
+    eager = false,
+    pixelated = false
   }: Props = $props();
 
   const src = $derived(mascotArt(mascot, pose ?? poseForEmotion(emotion)));
+
+  // 8-bit mode: render the art at ~1/PX resolution then upscale it with
+  // nearest-neighbour so it reads as chunky pixels (a smooth webp displayed
+  // small just looks smooth; the downscale/upscale is what makes real chunk).
+  const PX = 4;
+  const pxH = $derived(Math.max(8, Math.round(size / PX)));
+  const pxTransform = $derived(flip ? `scaleX(-${PX}) scaleY(${PX})` : `scale(${PX})`);
 </script>
 
 <!-- min-width reserva espaço horizontal aproximado antes do decode (os
@@ -55,6 +65,7 @@
   class:animate
   class:entrance
   class:flip
+  class:pixelated
   style="height: {size}px; min-width: {Math.round(size * 0.72)}px;"
   aria-hidden={alt ? undefined : 'true'}
 >
@@ -65,6 +76,9 @@
     loading={eager ? 'eager' : 'lazy'}
     decoding="async"
     draggable="false"
+    style={pixelated
+      ? `height: ${pxH}px; transform: ${pxTransform}; transform-origin: bottom center;`
+      : undefined}
   />
 </span>
 
@@ -84,6 +98,13 @@
   }
   .mavatar.flip img {
     transform: scaleX(-1);
+  }
+  /* 8-bit: nearest-neighbour upscale (chunky pixels) + a hard pixel shadow. The
+     scale/flip transform is applied inline so it composes with the downscale. */
+  .mavatar.pixelated img {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.5)) saturate(1.25) contrast(1.12);
   }
   /* Vida ambiente: bob de respiração com origem no chão. */
   .mavatar.animate img {

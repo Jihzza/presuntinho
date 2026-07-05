@@ -20,6 +20,7 @@
   import GamificationLayer from '$lib/components/GamificationLayer.svelte';
   import ArcadeTouchHud from '$lib/components/arcade/ArcadeTouchHud.svelte';
   import { arcadeHud } from '$lib/arcade/hud-state';
+  import { arcadeImmersive } from '$lib/arcade/immersive-state';
   import { resetSoundPrefsCache } from '$lib/gamification/sound';
   import { applyAppLogo, getAppLogo } from '$lib/app-logo';
   import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, MOOD_META, type ActiveMood } from '$lib/mood';
@@ -296,7 +297,7 @@
   <OfflineIndicator />
   <a class="skip-link" href="#main-content">{$t('a11y.skipToContent')}</a>
   <div
-    class={`app ${isMessagesRoute ? 'app-messages' : ''} ${activeMood ? `app-mood app-mood-${activeMood.kind}` : ''} ${$arcadeHud ? 'arcade-immersive' : ''}`}
+    class={`app ${isMessagesRoute ? 'app-messages' : ''} ${activeMood ? `app-mood app-mood-${activeMood.kind}` : ''} ${$arcadeHud || $arcadeImmersive ? 'arcade-immersive' : ''}`}
     style={`--page-bottom-inset: ${pageBottomInset};${moodAccent ? ` --mood-accent: ${moodAccent};` : ''}`}
   >
     {#if activeMood}
@@ -398,12 +399,12 @@
                 -->
                 <!-- In arcade game mode the mascot + heart FABs step aside and
                      the game's own touch controls take their corners. -->
-                <div class="fab-stack" class:game-hidden={$arcadeHud} aria-live="polite" aria-hidden={$arcadeHud ? 'true' : undefined}>
+                <div class="fab-stack" class:game-hidden={$arcadeHud || $arcadeImmersive} aria-live="polite" aria-hidden={$arcadeHud || $arcadeImmersive ? 'true' : undefined}>
                   <XpPill />
                   <InstallButton />
                   <HeartButton />
                 </div>
-                <div class="mascot-corner" class:game-hidden={$arcadeHud} aria-hidden={$arcadeHud ? 'true' : undefined}>
+                <div class="mascot-corner" class:game-hidden={$arcadeHud || $arcadeImmersive} aria-hidden={$arcadeHud || $arcadeImmersive ? 'true' : undefined}>
                   <Mascot />
                 </div>
                 {#if $arcadeHud}
