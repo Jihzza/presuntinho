@@ -79,10 +79,16 @@ let seededPing = false;
 let started = false;
 let cleanupListeners: (() => void) | null = null;
 
-// Realtime fast-path (optional; only when Supabase is configured). The Netlify
-// Blobs counter stays the durable source of truth — this just PUSHES the
-// partner's confirmed totals so a tap lands instantly instead of after a poll.
+// Realtime fast-path (optional; only when Supabase is configured). Pings ride
+// this broadcast channel for instant delivery.
 let room: Room | null = null;
+
+// Durable POINTS backend. When Supabase is configured, the shared heart counter
+// lives in a real Supabase table (durable + realtime via postgres_changes) with
+// NO chat token needed; otherwise it falls back to the Netlify-Blobs counter.
+let supaActive = false;
+let supa: typeof import('$lib/couple/couple-supabase') | null = null;
+let supaPointsUnsub: (() => void) | null = null;
 
 function profile(): ChatProfile | null {
   const p = getSession()?.profile;
@@ -98,10 +104,14 @@ function partnerName(me: ChatProfile): string {
 /** Fold a fresh server snapshot into the reactive state (+ ping detection). */
 function applySnapshot(me: ChatProfile, snap: CoupleSnapshot): void {
   const other = otherProfile(me);
-  couple.myPoints = snap.couple.points[me] ?? 0;
-  couple.partnerPoints = snap.couple.points[other] ?? 0;
-  // Keep any not-yet-flushed optimistic taps on top of the authoritative total.
-  couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+  // In Supabase mode the couple_points table owns the counter — don't let the
+  // Blobs snapshot overwrite it (Blobs still carries scores/pings).
+  if (!supaActive) {
+    couple.myPoints = snap.couple.points[me] ?? 0;
+    couple.partnerPoints = snap.couple.points[other] ?? 0;
+    // Keep any not-yet-flushed optimistic taps on top of the authoritative total.
+    couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+  }
   couple.scores = snap.couple.scores ?? {};
   couple.online = true;
   couple.ready = true;
@@ -175,6 +185,37 @@ async function connectRealtime(me: ChatProfile): Promise<void> {
   }
 }
 
+/** Hydrate + live-subscribe the durable Supabase points counter. On any failure
+ *  we clear supaActive so the Blobs counter transparently takes back over. */
+async function initSupabasePoints(me: ChatProfile): Promise<void> {
+  try {
+    const mod = await import('$lib/couple/couple-supabase');
+    supa = mod;
+    const other = otherProfile(me);
+    const points = await mod.fetchCouplePoints();
+    couple.myPoints = points[me] ?? 0;
+    couple.partnerPoints = points[other] ?? 0;
+    couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+    couple.ready = true;
+    couple.online = true;
+    // Pings arrive purely over the broadcast channel here (no Blobs snapshot to
+    // seed from), so mark seeded → the first incoming ping actually fires.
+    seededPing = true;
+    supaPointsUnsub?.();
+    supaPointsUnsub = mod.subscribeCouplePoints((prof, pts) => {
+      if (prof === me) couple.myPoints = pts;
+      else if (prof === other) couple.partnerPoints = pts;
+      couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+    });
+  } catch (e) {
+    console.warn('[couple] Supabase points unavailable; using the Blobs counter', e);
+    supa = null;
+    supaActive = false;
+    supaPointsUnsub?.();
+    supaPointsUnsub = null;
+  }
+}
+
 /** Fire-and-forget a channel message; a dead channel is fine (poll reconciles). */
 function broadcast(event: string, payload: unknown): void {
   try {
@@ -204,6 +245,22 @@ async function flushPoints(): Promise<void> {
   if (!me || pendingTaps <= 0) return;
   const n = pendingTaps;
   pendingTaps = 0;
+
+  // Supabase mode: persist to the couple_points table (durable + realtime).
+  if (supaActive && supa) {
+    try {
+      const total = await supa.bumpCouplePoints(me, n);
+      couple.myPoints = total;
+      couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+      couple.online = true;
+    } catch (e) {
+      pendingTaps += n; // retry on the next flush
+      couple.online = false;
+    }
+    return;
+  }
+
+  // Netlify-Blobs fallback (no Supabase configured).
   try {
     const snap = await postCouplePoints(me, n);
     applySnapshot(me, snap);
@@ -295,6 +352,12 @@ export function startCouplePoller(): void {
   couple.enabled = !!(me && getChatToken(me));
   // Open the realtime fast-path when Supabase is configured (no-op otherwise).
   if (me) void connectRealtime(me);
+  // Durable POINTS via Supabase when configured — set the flag synchronously so
+  // the Blobs poll below never overwrites the Supabase counter, then hydrate.
+  if (me && isMultiplayerConfigured()) {
+    supaActive = true;
+    void initSupabasePoints(me);
+  }
 
   const onVisible = () => {
     if (document.visibilityState === 'visible') void poll();
@@ -347,4 +410,8 @@ export function stopCouplePoller(): void {
   void room?.leave();
   room = null;
   couple.partnerOnline = false;
+  supaPointsUnsub?.();
+  supaPointsUnsub = null;
+  supa = null;
+  supaActive = false;
 }

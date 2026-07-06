@@ -57,6 +57,26 @@ broadcast channel (`arcade:<ROOM-CODE>`).
    board, one fruit; bite the other snake's tail to steal a point. A crash ends
    the round for the survivor — then **Revanche** for another.
 
+## Durable couple points on Supabase (no chat token)
+
+To make the shared heart counter persist across reloads and sync live **without
+the Netlify-Blobs chat token**, apply the migration and set one more env var:
+
+1. **Apply the schema** — run `supabase/migrations/0001_couple_core.sql` against
+   the project (Supabase dashboard → SQL editor, or `supabase db push`). It
+   creates `couple_points` + `couple_messages`, RLS, the `couple_points_bump`
+   RPC, and adds both tables to the Realtime publication.
+2. **Set the couple id** — add `VITE_COUPLE_ID` in Netlify (a shared, hard-to-guess
+   string used by BOTH phones to scope the couple's rows), then redeploy. If
+   unset it falls back to a constant, which works but is guessable.
+
+Once applied: tapping the heart writes to `couple_points` (atomic bump) and the
+partner's total updates live via `postgres_changes`. With no Supabase configured
+it transparently falls back to the Netlify-Blobs counter. Security note: there is
+no Supabase Auth yet, so RLS is permissive and access rests on the secret
+`couple_id` (same posture as the shipped anon key). Roadmap: anonymous auth +
+`couple_members` to scope RLS by `auth.uid()`.
+
 ## Also powers real-time couple points
 
 The same `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` also switch on **instant
