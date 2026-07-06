@@ -10,8 +10,12 @@ import { COUPLE_ID, resolveCoupleId } from '$lib/couple/couple-supabase';
 import type { ChatProfile } from '$lib/chat/client';
 import type { LocalChatMessage } from '$lib/chat/store.svelte';
 
-const BUCKET = 'couple-media';
+const CHAT_BUCKET = 'couple-chat'; // PRIVATE — account-couple media, via signed URLs
+const LEGACY_BUCKET = 'couple-media'; // PUBLIC — legacy pair media (unchanged posture)
+const SIGN_TTL = 60 * 60 * 8; // 8h signed-URL lifetime (re-signed on every #load)
 const READ_KEY_PREFIX = 'presuntinho-couple-chat-read';
+// Account couples key on a space uuid; the legacy pair on a non-uuid text id.
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 interface Row {
   id: string;
@@ -89,10 +93,39 @@ export class CoupleChatStore {
       from: row.sender as ChatProfile,
       text: row.body ?? undefined,
       mediaType: row.kind === 'image' ? 'image/*' : row.kind === 'audio' ? 'audio/*' : undefined,
-      mediaKey: row.media_url ?? undefined, // holds the public URL; mediaSrc returns it
+      // The STABLE media key: a private-bucket object path (account couples,
+      // signed lazily into .signedUrl by #signMedia) or a legacy full http(s)
+      // URL (public bucket, used directly). mediaKey is never overwritten so it
+      // can be re-signed after the signed-URL TTL expires.
+      mediaKey: row.media_url ?? undefined,
       conversationId: row.conversation_id,
       ts: new Date(row.created_at).getTime()
     };
+  }
+
+  /** Resolve private-bucket object paths on these messages into short-lived
+   *  signed URLs, written to .signedUrl (mediaKey — the path — is left intact so
+   *  a later #load can re-sign). Legacy http(s) URLs and local previews are not
+   *  paths and are skipped. Called BEFORE the messages enter the reactive list,
+   *  so the render never flashes a raw path. Best-effort: on failure mediaSrc
+   *  falls back to a placeholder and the next #load re-signs. */
+  async #signMedia(msgs: LocalChatMessage[]): Promise<void> {
+    const targets = msgs.filter(
+      (m) => m.mediaKey && !m.mediaKey.startsWith('http') && !m.mediaKey.startsWith('data:')
+    );
+    if (!targets.length) return;
+    try {
+      const paths = targets.map((m) => m.mediaKey as string);
+      const { data } = await this.#sb.storage.from(CHAT_BUCKET).createSignedUrls(paths, SIGN_TTL);
+      const signed = new Map<string, string>();
+      for (const item of data ?? []) if (item.path && item.signedUrl) signed.set(item.path, item.signedUrl);
+      for (const m of targets) {
+        const url = signed.get(m.mediaKey as string);
+        if (url) m.signedUrl = url;
+      }
+    } catch {
+      /* offline / policy — no signed URL; mediaSrc shows a placeholder */
+    }
   }
 
   #sortMerge(list: LocalChatMessage[]): void {
@@ -101,10 +134,11 @@ export class CoupleChatStore {
     this.messages = [...byId.values()].sort((a, b) => a.ts - b.ts || (a.id < b.id ? -1 : 1));
   }
 
-  #ingest(row: Row): void {
+  async #ingest(row: Row): Promise<void> {
     if (row.conversation_id !== this.conversationId) return;
     const msg = this.#rowToMsg(row);
     if (this.messages.some((m) => m.id === msg.id)) return;
+    await this.#signMedia([msg]);
     // Drop a matching optimistic bubble from this sender (same text or a media send).
     const withoutOptimistic = this.messages.filter(
       (m) => !(m.pending && m.from === msg.from && (m.text ?? '') === (msg.text ?? '') && Boolean(m.mediaType) === Boolean(msg.mediaType))
@@ -126,7 +160,7 @@ export class CoupleChatStore {
         .on(
           'postgres_changes',
           { event: 'INSERT', schema: 'public', table: 'couple_messages', filter: `couple_id=eq.${COUPLE_ID}` },
-          (payload) => this.#ingest(payload.new as Row)
+          (payload) => void this.#ingest(payload.new as Row)
         )
         .subscribe((status) => {
           // A dropped/rejoined socket can miss inserts — re-load on (re)subscribe
@@ -168,7 +202,9 @@ export class CoupleChatStore {
         .order('created_at', { ascending: false })
         .limit(500);
       if (error) throw error;
-      this.#sortMerge([...this.messages, ...(data ?? []).map((r) => this.#rowToMsg(r as Row))]);
+      const loaded = (data ?? []).map((r) => this.#rowToMsg(r as Row));
+      await this.#signMedia(loaded);
+      this.#sortMerge([...this.messages, ...loaded]);
       this.offline = false;
     } catch (e) {
       console.warn('[couple-chat] load failed', e);
@@ -213,19 +249,28 @@ export class CoupleChatStore {
       const upload = isAudio ? file : await shrinkImage(file);
       const ext = isAudio ? (name.split('.').pop() || 'webm') : 'webp';
       const path = `${COUPLE_ID}/${this.conversationId}/${crypto.randomUUID()}.${ext}`;
-      const { error: upErr } = await this.#sb.storage.from(BUCKET).upload(path, upload, {
+      // Account couples (uuid id) → the PRIVATE bucket, store the object path
+      // (signed on load). The legacy pair → the PUBLIC bucket, store the public
+      // URL, exactly as before (the private bucket rejects non-uuid folders).
+      const account = UUID_RE.test(COUPLE_ID);
+      const bucket = account ? CHAT_BUCKET : LEGACY_BUCKET;
+      const { error: upErr } = await this.#sb.storage.from(bucket).upload(path, upload, {
         contentType: isAudio ? file.type || 'audio/webm' : 'image/webp',
         upsert: false
       });
       if (upErr) throw upErr;
-      const publicUrl = this.#sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+      const mediaValue = account ? path : this.#sb.storage.from(bucket).getPublicUrl(path).data.publicUrl;
       const { data, error } = await this.#sb
         .from('couple_messages')
-        .insert({ couple_id: COUPLE_ID, conversation_id: this.conversationId, sender: this.profile, kind, media_url: publicUrl })
+        .insert({ couple_id: COUPLE_ID, conversation_id: this.conversationId, sender: this.profile, kind, media_url: mediaValue })
         .select()
         .single();
       if (error) throw error;
-      this.messages = this.messages.map((m) => (m.id === localId ? this.#rowToMsg(data as Row) : m));
+      // Keep the local preview on the persisted bubble so the sender sees it
+      // instantly (no round-trip to sign); a reload signs it from the path.
+      const finalMsg = this.#rowToMsg(data as Row);
+      finalMsg.localDataUrl = previewUrl;
+      this.messages = this.messages.map((m) => (m.id === localId ? finalMsg : m));
       return 'sent';
     } catch (e) {
       console.warn('[couple-chat] media send failed', e);
@@ -255,7 +300,11 @@ export class CoupleChatStore {
   }
 
   mediaSrc(m: LocalChatMessage): string | null {
-    return m.localDataUrl ?? m.mediaKey ?? null;
+    if (m.localDataUrl) return m.localDataUrl; // instant local preview
+    if (m.signedUrl) return m.signedUrl; // resolved private-bucket media
+    // Legacy public URLs live directly in mediaKey; a bare object path is not
+    // yet signed → return null (placeholder) rather than a broken <img> src.
+    return m.mediaKey && m.mediaKey.startsWith('http') ? m.mediaKey : null;
   }
 
   // ── read state (local only in v1 — no cross-device "seen" ticks yet) ─────
