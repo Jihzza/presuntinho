@@ -41,6 +41,10 @@ export interface LocalChatMessage extends ChatMessage {
   failed?: boolean;
   /** Local preview for optimistic media bubbles (before the server ack). */
   localDataUrl?: string;
+  /** Resolved display URL for private-bucket media (a freshly signed URL).
+   *  Kept separate from mediaKey (the stable object path) so it can be
+   *  re-signed after the signed-URL TTL expires without losing the path. */
+  signedUrl?: string;
 }
 
 const POLL_MS = 4000;
