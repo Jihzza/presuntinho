@@ -22,4 +22,15 @@ create policy profiles_select on public.profiles for select using (true);
 create policy profiles_insert on public.profiles for insert with check (char_length(couple_id) >= 8);
 create policy profiles_update on public.profiles for update using (char_length(couple_id) >= 8) with check (char_length(couple_id) >= 8);
 
-alter publication supabase_realtime add table public.profiles;
+-- Add to the realtime publication only once (a plain ALTER errors on re-run).
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'profiles'
+  ) then
+    execute 'alter publication supabase_realtime add table public.profiles';
+  end if;
+end $$;
