@@ -12,6 +12,7 @@
   import CrtOverlay from '$lib/components/arcade/CrtOverlay.svelte';
   import { arcadeImmersive } from '$lib/arcade/immersive-state';
   import { getActiveMascot, MASCOT_CHANGED_EVENT, DEFAULT_MASCOT_ID } from '$lib/gamification/mascots';
+  import { isMultiplayerConfigured } from '$lib/multiplayer/config';
   import {
     startArcadeMusic,
     stopArcadeMusic,
@@ -36,6 +37,7 @@
   );
   const hiScoreText = $derived(String(totalRecordPoints).padStart(6, '0'));
   const heartsTotal = ARCADE_GAMES.length;
+  const versusEnabled = isMultiplayerConfigured();
 
   function isNew(id: string): boolean {
     return (highScores[id] ?? 0) === 0 && (lastScores[id] ?? 0) === 0;
@@ -196,6 +198,14 @@
       </a>
     {/each}
   </nav>
+
+  {#if versusEnabled}
+    <a class="versus-cta" href="/secrets/versus/" data-sveltekit-preload-data>
+      <span class="vs-ic" aria-hidden="true">🐍</span>
+      <span class="vs-txt">{$t('versus.lobby_cta', { default: 'JOGAR 1v1' })}</span>
+      <span class="vs-badge">{$t('versus.badge', { default: 'ao vivo' })}</span>
+    </a>
+  {/if}
 
   <!-- ── attract-mode: the mascot patrols a pixel floor ── -->
   <div class="floor">
@@ -407,6 +417,37 @@
     .row.on .arrow {
       animation: px-blink 1s steps(1, end) infinite;
     }
+  }
+
+  /* ── 1v1 call-to-action ── */
+  .versus-cta {
+    width: min(30rem, 92vw);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin: 0 0 0.4rem;
+    padding: 0.7rem 1rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    color: #06121f;
+    background: linear-gradient(135deg, #f472b6, #a78bfa);
+    box-shadow: 0 0 18px rgba(244, 114, 182, 0.4);
+    z-index: 6;
+  }
+  .versus-cta .vs-ic { font-size: 1.2rem; }
+  .versus-cta .vs-badge {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.3rem;
+    background: rgba(6, 18, 31, 0.6);
+    color: #fde047;
+    text-transform: uppercase;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .versus-cta { animation: px-blink 1.6s steps(1, end) infinite; }
   }
 
   /* ── floor + mascot + press start ── */
