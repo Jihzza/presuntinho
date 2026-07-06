@@ -46,6 +46,8 @@
   import Upload from 'lucide-svelte/icons/upload';
   import Info from 'lucide-svelte/icons/info';
   import { VERSION, REPO_URL } from '$lib/version';
+  import RefreshCw from 'lucide-svelte/icons/refresh-cw';
+  import { forceAppUpdate } from '$lib/pwa/app-update';
   import Palette from 'lucide-svelte/icons/palette';
   import Volume2 from 'lucide-svelte/icons/volume-2';
   import Bell from 'lucide-svelte/icons/bell';
@@ -127,6 +129,21 @@
   // no iOS a Apple congela o ícone e só re-adicionar resolve.
   let inInstalledApp = $state(false);
   let onIos = $state(false);
+
+  // "Atualizar app" — force the newest deploy (defeats a stale service worker /
+  // cache). Always ends in a reload, so the `updatingApp` spinner just covers
+  // the brief gap before the page reloads.
+  let updatingApp = $state(false);
+  async function updateApp(): Promise<void> {
+    if (updatingApp) return;
+    updatingApp = true;
+    showToast($t('settings.update.checking', { default: 'A procurar a versão mais recente… 🐷' }), 2000);
+    try {
+      await forceAppUpdate(); // reloads; the line below only runs if it somehow doesn't
+    } finally {
+      updatingApp = false;
+    }
+  }
   onMount(() => {
     void getAppLogo().then((logo) => (currentLogo = logo));
     inInstalledApp =
@@ -1329,6 +1346,15 @@
         <Globe size={14} aria-hidden="true" />
         {$t('settings.version')} · {VERSION}
       </li>
+      <li class="update-li">
+        <button type="button" class="update-btn" onclick={updateApp} disabled={updatingApp}>
+          <RefreshCw size={15} aria-hidden="true" class={updatingApp ? 'spin' : ''} />
+          {updatingApp
+            ? $t('settings.update.updating', { default: 'A atualizar…' })
+            : $t('settings.update.button', { default: 'Atualizar a app' })}
+        </button>
+        <small class="update-hint muted">{$t('settings.update.hint', { default: 'Vai buscar a versão mais recente e recarrega — resolve ecrãs em branco depois de uma atualização.' })}</small>
+      </li>
       <li>
         <a href="/legacy/" target="_blank" rel="noopener noreferrer">
           <ExternalLink size={14} aria-hidden="true" />
@@ -1994,6 +2020,58 @@
   }
   .about-list a:hover {
     color: var(--accent);
+  }
+  /* The update row stacks the button over its hint (siblings above are rows). */
+  .about-list li.update-li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    margin-top: 0.2rem;
+  }
+  .update-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 44px;
+    padding: 0.5rem 0.95rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--txt);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
+  .update-btn:hover:not(:disabled),
+  .update-btn:focus-visible:not(:disabled) {
+    background: color-mix(in srgb, var(--accent) 20%, transparent);
+    border-color: var(--accent);
+    outline: none;
+  }
+  .update-btn:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+  .update-btn:disabled {
+    opacity: 0.65;
+    cursor: progress;
+  }
+  .update-hint {
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+  .update-btn :global(.spin) {
+    animation: update-spin 0.9s linear infinite;
+  }
+  @keyframes update-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .update-btn :global(.spin) {
+      animation: none;
+    }
   }
   .modal-backdrop {
     position: fixed;

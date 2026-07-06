@@ -168,7 +168,7 @@
     // o banner "nova versão" possa aplicar o update + reload num toque.
     if ('serviceWorker' in navigator) {
       import('virtual:pwa-register')
-        .then(({ registerSW }) => {
+        .then(async ({ registerSW }) => {
           updateSW = registerSW({
             immediate: true,
             onRegisteredSW(swUrl: string, r?: ServiceWorkerRegistration) {
@@ -198,6 +198,10 @@
               );
             }
           });
+          // Expose the update callback so the Definições "Atualizar app" button
+          // can force the newest deploy on demand.
+          const { setUpdateSW } = await import('$lib/pwa/app-update');
+          if (updateSW) setUpdateSW(updateSW);
         })
         .catch(() => {
           // Plugin inativo (modo dev ou build sem PWA) — silencioso.
