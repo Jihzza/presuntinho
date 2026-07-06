@@ -270,7 +270,7 @@
     title={emotionLine}
   >
     <!-- V10.4 — a mascote ESCOLHIDA (arte real) com a emoção do dia. -->
-    <MascotAvatar mascot={mascotId} {emotion} size={48} animate={!reduced} />
+    <MascotAvatar mascot={mascotId} {emotion} size={64} animate={!reduced} />
     {#each particles as p (p.id)}
       <span class="particle" style={`--a:${p.a}deg`} aria-hidden="true">{burst === 'love' ? (special ? '❤️' : '💛') : '💭'}</span>
     {/each}
@@ -279,11 +279,12 @@
 
 <style>
   .mascot-fab {
-    /* 60 × 60 px — bigger & more present than before, still a comfy touch target. */
-    width: 60px;
-    height: 60px;
-    min-width: 60px;
-    min-height: 60px;
+    /* 78 × 78 px — a bigger, more present companion (Daniel's ask), still a
+       comfy touch target and clear of the bottom nav. */
+    width: 78px;
+    height: 78px;
+    min-width: 78px;
+    min-height: 78px;
     border-radius: 999px;
     border: 1px solid transparent;
     background: transparent;
