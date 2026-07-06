@@ -603,6 +603,14 @@
   /* V10: route transition — FADE ONLY. Um transform aqui (mesmo identidade,
      com fill-mode) tornaria este wrapper o containing block dos descendentes
      position:fixed — o composer dos chats deixava de colar ao viewport. */
+  /* Guard: no route's top-level wrapper may exceed the viewport width. A flex
+     item (this wrapper's child) with width:auto resolves to its MAX-content,
+     which on narrow phones blew pages ~76px past the viewport and bled the
+     fixed chrome. Capping at 100% ties every page to the real viewport. */
+  .route-transition > :global(*) {
+    max-width: 100%;
+    min-width: 0;
+  }
   .route-transition {
     animation: route-in var(--motion-base, 220ms) ease;
     /* Height passthrough for full-height routes. Only `opacity` is animated
@@ -610,6 +618,9 @@
        the chat composer's position:fixed — see the note above. */
     flex: 1;
     min-height: 0;
+    /* min-width:0 so a wide descendant can't floor this flex item at its
+       min-content width and push the page past the viewport (horizontal bleed). */
+    min-width: 0;
     display: flex;
     flex-direction: column;
   }
@@ -696,6 +707,8 @@
     display: flex;
     flex-direction: column;
     min-height: 0;
+    /* min-width:0 so a wide child can't blow the column out horizontally. */
+    min-width: 0;
   }
   .bottom-nav {
       position: sticky;

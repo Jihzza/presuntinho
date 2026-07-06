@@ -572,6 +572,13 @@
     max-width: 980px;
     margin: 0 auto;
     padding: 1.25rem var(--space-4) 8rem;
+    /* .hub is a flex item of the layout's flex column (.route-transition).
+       With width:auto a flex item's cross size resolves to its MAX-content,
+       which on a narrow phone blew the page out to ~488px and bled past the
+       412px viewport. Pinning width:100% ties it to the container width so it
+       never overflows (max-width:980 still caps it on desktop). */
+    width: 100%;
+    min-width: 0;
   }
   .card {
     border-radius: var(--radius-xl);
