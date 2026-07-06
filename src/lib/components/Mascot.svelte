@@ -20,7 +20,8 @@
   import {
     DEFAULT_MASCOT_ID,
     MASCOT_CHANGED_EVENT,
-    getActiveMascot
+    getActiveMascot,
+    isSpecialMascot
   } from '$lib/gamification/mascots';
   import {
     hoursUntilMidnight,
@@ -49,6 +50,8 @@
   let mascotId = $state(DEFAULT_MASCOT_ID);
   // V10 — Duolingo-style emotional state (happy/neutral/worried/sad/euphoric).
   let emotion = $state<MascotEmotion>('neutral');
+  // The 3 personal família mascots get a glowing aura + heartbeat idle.
+  const special = $derived(isSpecialMascot(mascotId));
 
   const EMOTION_FALLBACKS: Record<MascotEmotion, string> = {
     happy: 'Hoje já contou — orgulho em ti! 🎀',
@@ -251,6 +254,7 @@
     type="button"
     class="mascot-fab"
     class:reduced
+    class:special
     class:sad={emotion === 'sad'}
     class:worried={emotion === 'worried'}
     class:euphoric={emotion === 'euphoric'}
@@ -268,7 +272,7 @@
     <!-- V10.4 — a mascote ESCOLHIDA (arte real) com a emoção do dia. -->
     <MascotAvatar mascot={mascotId} {emotion} size={48} animate={!reduced} />
     {#each particles as p (p.id)}
-      <span class="particle" style={`--a:${p.a}deg`} aria-hidden="true">{burst === 'love' ? '💛' : '💭'}</span>
+      <span class="particle" style={`--a:${p.a}deg`} aria-hidden="true">{burst === 'love' ? (special ? '❤️' : '💛') : '💭'}</span>
     {/each}
   </button>
 {/if}
@@ -314,6 +318,38 @@
   }
   .mascot-fab:active {
     transform: scale(0.95);
+  }
+  /* ── Família (especiais): aura a brilhar + batimento cardíaco suave. ── */
+  .mascot-fab.special {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 60%, transparent))
+      drop-shadow(0 3px 8px rgba(15, 23, 42, 0.42));
+    animation: mascot-heartbeat 2.4s ease-in-out infinite;
+  }
+  /* Soft pulsing halo behind the special mascot. */
+  .mascot-fab.special::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 999px;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent) 34%, transparent) 0%,
+      transparent 68%
+    );
+    z-index: -1;
+    animation: mascot-halo 2.4s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes mascot-heartbeat {
+    0%, 100% { transform: scale(1); }
+    18% { transform: scale(1.09); }
+    32% { transform: scale(1); }
+    46% { transform: scale(1.06); }
+  }
+  @keyframes mascot-halo {
+    0%, 100% { opacity: 0.45; transform: scale(0.94); }
+    40% { opacity: 0.85; transform: scale(1.12); }
   }
   /* Gesture bursts — love (hold) pulses HARD, nudge (multi-tap) shakes wildly. */
   .mascot-fab.loving {
@@ -363,10 +399,16 @@
     .mascot-fab:hover,
     .mascot-fab:active,
     .mascot-fab.loving,
-    .mascot-fab.nudging {
+    .mascot-fab.nudging,
+    .mascot-fab.special {
       transform: none;
       transition: none;
       animation: none;
+    }
+    /* Keep the special aura as a static glow (no pulse) so it still reads as special. */
+    .mascot-fab.special::before {
+      animation: none;
+      opacity: 0.5;
     }
     .particle {
       animation: none;

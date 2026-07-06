@@ -31,9 +31,18 @@ export interface MascotDef {
   minXp?: number;
   /** Unlocked badge count needed to unlock. */
   minBadges?: number;
+  /** The three personal "família" mascots (Fatma, Rafa, o gato Hamy). They are
+   *  always unlocked and get special treatment: a glowing aura + a gentle
+   *  heartbeat idle, and a heart burst instead of the generic sparkle. */
+  special?: boolean;
 }
 
 export const MASCOTS: readonly MascotDef[] = Object.freeze([
+  // ── Família (especiais) — sempre desbloqueadas, com brilho próprio. ──
+  { id: 'fatma', emoji: '🌙', special: true },
+  { id: 'rafa', emoji: '🧔', special: true },
+  { id: 'hamy', emoji: '🐈', special: true },
+  // ── Coleção clássica (desbloqueadas por XP / medalhas). ──
   { id: 'porquinho', emoji: '🐷' },
   { id: 'perfume', emoji: '🧴' },
   { id: 'bola-barca', emoji: '⚽', minXp: 100 },
@@ -42,6 +51,11 @@ export const MASCOTS: readonly MascotDef[] = Object.freeze([
   { id: 'falcao-tunisia', emoji: '🦅', minXp: 750 },
   { id: 'coracao', emoji: '💖', minBadges: 10 }
 ]);
+
+/** Is this mascot one of the special "família" trio? */
+export function isSpecialMascot(id: string | undefined): boolean {
+  return Boolean(mascotById(id)?.special);
+}
 
 /** Default active mascot — 🧴 preserves the pre-V9 FAB appearance. */
 export const DEFAULT_MASCOT_ID = 'perfume';
