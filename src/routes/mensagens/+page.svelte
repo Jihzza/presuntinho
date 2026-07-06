@@ -54,6 +54,9 @@
   let setupOpen = $state(false);
   let store = $state<ChatStore | null>(null);
   let selectedConversationId = $state('main');
+  // WhatsApp-style two-pane flow on one screen: the conversation LIST, then the
+  // open THREAD. Always start on the list so it reads like a messenger home.
+  let view = $state<'list' | 'thread'>('list');
   let panelMode = $state<PanelMode>('none');
 
   let input = $state('');
@@ -168,8 +171,21 @@
     selectedConversationId = id;
     if (typeof localStorage !== 'undefined') localStorage.setItem(SELECTED_CONVERSATION_KEY, id);
     panelMode = 'none';
+    view = 'thread'; // WhatsApp-style: tapping a chat row opens its thread
     startChat();
     void scrollToBottom();
+  }
+
+  /** WhatsApp-style back arrow: return from a thread to the conversation list. */
+  function backToList(): void {
+    panelMode = 'none';
+    view = 'list';
+  }
+
+  /** Timestamp of the last message in a conversation (0 when unknown/empty). */
+  function conversationLastTs(id: string): number {
+    const last = [...(store?.messages ?? [])].reverse().find((m) => (m.conversationId || 'main') === id);
+    return last?.ts ?? 0;
   }
 
   function saveSecureKey() {
@@ -393,23 +409,30 @@
 
 <div class="chat-root">
   <header class="chat-header">
+    {#if view === 'thread' && !noSession}
+      <button type="button" class="back-btn" onclick={backToList} aria-label={$t('mensagens.back', { default: 'Voltar às conversas' })}>←</button>
+    {/if}
     <div class="header-text">
-      <span class="chat-kicker">{$t('mensagens.header.kicker', { default: 'Chat privado' })}</span>
-      <h1>
-        <a class="person-link" href={`/perfil/${other}/`} aria-label={$t('mensagens.aria.open_partner_profile', { default: 'Abrir perfil de {name}', values: { name: $t(otherPerson.nameKey) } })}>
-          {otherPerson.emoji} {$t(otherPerson.nameKey)}
-        </a>
-      </h1>
-      <p class="subtitle">
-        {#if syncBlocked}
-          {$t('mensagens.status.local', { default: 'Modo local — a sincronização segura ainda não está activa neste dispositivo.' })}
-        {:else if store?.offline}
-          {$t('mensagens.status.offline', { default: 'Offline — guardado no dispositivo.' })}
-        {:else}
-          {$t('mensagens.status.secure', { default: 'Ligação segura activa.' })}
-        {/if}
-      </p>
-      <p class="conversation-label">{selectedConversation.icon} {$t(selectedConversation.titleKey)}</p>
+      {#if view === 'list'}
+        <span class="chat-kicker">{$t('mensagens.header.kicker', { default: 'Chat privado' })}</span>
+        <h1>{$t('nav.mensagens', { default: 'Mensagens' })}</h1>
+      {:else}
+        <span class="chat-kicker">{selectedConversation.icon} {$t(selectedConversation.titleKey)}</span>
+        <h1>
+          <a class="person-link" href={`/perfil/${other}/`} aria-label={$t('mensagens.aria.open_partner_profile', { default: 'Abrir perfil de {name}', values: { name: $t(otherPerson.nameKey) } })}>
+            {otherPerson.emoji} {$t(otherPerson.nameKey)}
+          </a>
+        </h1>
+        <p class="subtitle">
+          {#if syncBlocked}
+            {$t('mensagens.status.local', { default: 'Modo local — a sincronização segura ainda não está activa neste dispositivo.' })}
+          {:else if store?.offline}
+            {$t('mensagens.status.offline', { default: 'Offline — guardado no dispositivo.' })}
+          {:else}
+            {$t('mensagens.status.secure', { default: 'Ligação segura activa.' })}
+          {/if}
+        </p>
+      {/if}
     </div>
     <a class="profile-link" href="/perfil/" aria-label={$t('mensagens.aria.open_own_profile', { default: 'Abrir o meu perfil' })} title={$t('mensagens.aria.open_own_profile', { default: 'Abrir o meu perfil' })}>
       {meProfile.emoji}
@@ -417,6 +440,34 @@
   </header>
 
   {#if !noSession}
+    {#if view === 'list'}
+      <!-- WhatsApp-style conversation list: the couple chat is pinned + special,
+           the topic threads follow. Tapping a row opens its thread. -->
+      <div class="chat-list" role="list" aria-label={$t('mensagens.conversations.title', { default: 'Conversas' })}>
+        <button type="button" class="chat-row couple" role="listitem" onclick={() => selectConversation('main')}>
+          <span class="row-av couple-av" aria-hidden="true">{otherPerson.emoji}</span>
+          <span class="row-body">
+            <span class="row-top">
+              <strong>{$t(otherPerson.nameKey)} <span class="couple-heart" aria-hidden="true">💞</span></strong>
+              {#if conversationLastTs('main')}<time>{fmtTime(conversationLastTs('main'))}</time>{/if}
+            </span>
+            <small>{conversationPreview('main')}</small>
+          </span>
+        </button>
+        {#each CONVERSATIONS.filter((c) => c.id !== 'main') as c (c.id)}
+          <button type="button" class="chat-row" role="listitem" onclick={() => selectConversation(c.id)}>
+            <span class="row-av" aria-hidden="true">{c.icon}</span>
+            <span class="row-body">
+              <span class="row-top">
+                <strong>{$t(c.titleKey)}</strong>
+                {#if conversationLastTs(c.id)}<time>{fmtTime(conversationLastTs(c.id))}</time>{/if}
+              </span>
+              <small>{conversationPreview(c.id)}</small>
+            </span>
+          </button>
+        {/each}
+      </div>
+    {:else}
     <nav class="chat-tools" aria-label={$t('mensagens.tools.aria', { default: 'Ferramentas da conversa' })}>
       <button type="button" class:active={panelMode === 'conversations'} onclick={() => (panelMode = panelMode === 'conversations' ? 'none' : 'conversations')}>
         💬 {$t('mensagens.tools.conversations', { default: 'Conversas' })}
@@ -477,7 +528,7 @@
     </div>
   {/if}
 
-  {#if syncBlocked && !noSession}
+  {#if syncBlocked && !noSession && view === 'thread'}
     <div class="sync-banner" role="status">
       <div>
         <strong>{$t('mensagens.secure_setup.title', { default: 'Chat privado ainda não está sincronizado neste dispositivo' })}</strong>
@@ -509,7 +560,7 @@
       <span class="gate-emoji" aria-hidden="true">🔐</span>
       <p>{$t('mensagens.no_session', { default: 'Abre primeiro a tua sessão no ecrã inicial para entrares no chat privado.' })}</p>
     </div>
-  {:else if store}
+  {:else if store && view === 'thread'}
     <div class="chat-scroll" bind:this={scrollEl} onscroll={onListScroll}>
       {#if store.ready && store.messages.length === 0}
         <div class="empty">
@@ -642,6 +693,7 @@
         </button>
       </div>
     </div>
+    {/if}
   {/if}
 </div>
 
@@ -686,9 +738,78 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: var(--space-2);
     padding: var(--space-3) var(--space-4);
     border-bottom: 1px solid var(--border);
   }
+  .back-btn {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    color: var(--accent);
+    font-size: 1.6rem;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  .back-btn:hover,
+  .back-btn:focus-visible { background: color-mix(in srgb, var(--accent) 14%, transparent); outline: none; }
+  .header-text { min-width: 0; flex: 1; }
+
+  /* ── WhatsApp-style conversation list ── */
+  .chat-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+    text-align: start;
+    cursor: pointer;
+    color: var(--txt);
+  }
+  .chat-row:hover,
+  .chat-row:focus-visible { background: color-mix(in srgb, var(--accent) 8%, transparent); outline: none; }
+  .row-av {
+    flex: 0 0 auto;
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    font-size: 1.6rem;
+    background: color-mix(in srgb, var(--accent) 14%, var(--bg-elev));
+    border: 1.5px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+  }
+  .chat-row.couple .couple-av {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 30%, transparent), color-mix(in srgb, #a78bfa 30%, transparent));
+    border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
+  }
+  .row-body { min-width: 0; flex: 1; display: grid; gap: 2px; }
+  .row-top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
+  .row-top strong { font-size: var(--fs-md); font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .row-top time { flex: 0 0 auto; font-size: var(--fs-xs); color: var(--txt3); }
+  .row-body small {
+    color: var(--txt3);
+    font-size: var(--fs-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chat-row.couple { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+  .couple-heart { font-size: 0.9em; }
   .chat-header h1 {
     margin: 0;
     font-size: var(--fs-lg);
