@@ -171,6 +171,15 @@ async function hydrateStores(profile: ProfileId): Promise<void> {
 // High-level helpers (preserve V3 addXP / awardBadge semantics)
 // ============================================================================
 
+/** Notify the cross-device progress sync (Layer A) that a forward-only
+ *  achievement mutation happened. String literal (not an import of
+ *  progress-sync) so this module stays dependency-free and cycle-free. */
+function notifyProgressChanged(): void {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('presuntinho:progress-changed'));
+  }
+}
+
 /** Add XP and persist. Mirrors V3 `addXP(n)`. */
 export async function addXP(n: number): Promise<void> {
   if (!n) return;
@@ -188,6 +197,7 @@ export async function awardBadge(id: string, xpAmount: number = 0): Promise<void
   if (existing?.unlocked) return;
   const now = Date.now();
   await db().badges.put({ id, unlocked: true, unlockedAt: now });
+  notifyProgressChanged();
   if (xpAmount) await addXP(xpAmount);
   // V10 — a FRESH unlock gets a celebration. String literal (not the
   // gamification-events constant) to keep this module dependency-free.
@@ -201,6 +211,7 @@ export async function discoverSecret(id: string): Promise<void> {
   const existing = await db().secrets.get(id);
   if (existing?.discovered) return;
   await db().secrets.put({ id, discovered: true, discoveredAt: Date.now() });
+  notifyProgressChanged();
 }
 
 /** Mark a page visited (V3 `state.visited[page] = true`). */
@@ -208,6 +219,7 @@ export async function markVisited(pageId: string): Promise<void> {
   const existing = await db().visited.get(pageId);
   if (existing?.visited) return;
   await db().visited.put({ id: pageId, visited: true, visitedAt: Date.now() });
+  notifyProgressChanged();
 }
 
 /** Look up badge status. */
@@ -241,6 +253,7 @@ export async function saveQuizScore(
       ? [] // boolean true → caller doesn't track per-question indices
       : [];
   await db().quizScores.put({ id: quizId, score, answered: answeredArr, updatedAt: Date.now() });
+  notifyProgressChanged();
 }
 
 /** Append a single answered question index for a quiz (V3 quizAnswered push). */
@@ -256,6 +269,7 @@ export async function recordQuizAnswer(quizId: string, qIdx: number, isCorrect: 
     answered: prevAnswered,
     updatedAt: Date.now()
   });
+  notifyProgressChanged();
 }
 
 /** Read a quiz score. */

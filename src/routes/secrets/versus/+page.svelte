@@ -111,7 +111,7 @@
         <div class="join">
           <input
             type="text"
-            inputmode="latin"
+            inputmode="text"
             maxlength="6"
             placeholder={$t('versus.code_placeholder', { default: 'CÓDIGO' })}
             bind:value={joinCode}

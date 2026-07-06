@@ -14,6 +14,10 @@
 import type { Direction } from '../engine';
 import { isOpposite } from '../engine';
 
+// Re-export so consumers (SnakeVersus.svelte, versus-net.ts) can pull Direction
+// from this module alongside VersusState instead of reaching into the engine.
+export type { Direction };
+
 export type PlayerId = 0 | 1;
 
 export interface VCell {

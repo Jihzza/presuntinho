@@ -251,6 +251,16 @@
         // Continue rendering; stores will fall back to defaults
       }
 
+      // Layer A — cross-device achievement sync (XP / badges / secrets /
+      // visited / quiz). Non-destructive merge, so it's safe to run
+      // automatically. Dynamic import keeps @supabase out of the main bundle;
+      // no-ops when Supabase isn't configured.
+      if (session && storesReady) {
+        void import('$lib/state/progress-sync')
+          .then((m) => m.startProgressSync(session!.profile))
+          .catch((err) => console.warn('[presuntinho] progress sync unavailable', err));
+      }
+
       // Visit tracking now runs in afterNavigate (covers EVERY navigation,
       // including the initial one) — see trackVisit() above.
 
@@ -282,6 +292,7 @@
       if (swPoll) clearInterval(swPoll);
       if (seasonalTimer) clearTimeout(seasonalTimer);
       stopCouplePoller();
+      void import('$lib/state/progress-sync').then((m) => m.stopProgressSync()).catch(() => {});
     };
   });
 

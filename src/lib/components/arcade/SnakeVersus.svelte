@@ -30,7 +30,10 @@
 
   let canvas = $state<HTMLCanvasElement | null>(null);
   let ctx: CanvasRenderingContext2D | null = null;
-  let state = $state<VersusState | null>(null);
+  // Named `board` (not `state`) so it can't collide with the `$state` rune —
+  // that shadow made svelte-check treat `$state<…>()` as an untyped call and
+  // cascade `any` through the render loop.
+  let board = $state<VersusState | null>(null);
   let net: VersusNet | null = null;
   const localP = $derived(room.role === 'host' ? 0 : 1);
   let lastScores: [number, number] = [0, 0];
@@ -61,8 +64,8 @@
 
   let seededScores = false;
   function onState(s: VersusState): void {
-    const prev = state;
-    state = s;
+    const prev = board;
+    board = s;
     // Seed the score baseline from the first state / a fresh round so we don't
     // play a pickup sound for the jump 0 → current on join or on rematch.
     if (!seededScores || (prev?.result != null && s.result === null) || s.tick <= 1) {
@@ -135,7 +138,7 @@
       c.lineTo(W, y * cell + 0.5);
       c.stroke();
     }
-    const s = state;
+    const s = board;
     if (!s) return;
     // food
     c.fillStyle = '#fbbf24';
@@ -191,11 +194,11 @@
   });
   onDestroy(() => cancelAnimationFrame(raf));
 
-  const myScore = $derived(state ? state.snakes[localP].score : 0);
-  const theirScore = $derived(state ? state.snakes[1 - localP].score : 0);
-  const finished = $derived(state?.result != null);
-  const iWon = $derived(state?.result === localP);
-  const isDraw = $derived(state?.result === 'draw');
+  const myScore = $derived(board ? board.snakes[localP].score : 0);
+  const theirScore = $derived(board ? board.snakes[1 - localP].score : 0);
+  const finished = $derived(board?.result != null);
+  const iWon = $derived(board?.result === localP);
+  const isDraw = $derived(board?.result === 'draw');
 </script>
 
 <!-- Swipe is a progressive enhancement; the d-pad buttons below are the

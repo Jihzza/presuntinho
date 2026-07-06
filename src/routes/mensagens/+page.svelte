@@ -450,8 +450,8 @@
     {#if view === 'list'}
       <!-- WhatsApp-style conversation list: the couple chat is pinned + special,
            the topic threads follow. Tapping a row opens its thread. -->
-      <div class="chat-list" role="list" aria-label={$t('mensagens.conversations.title', { default: 'Conversas' })}>
-        <button type="button" class="chat-row couple" role="listitem" onclick={() => selectConversation('main')}>
+      <div class="chat-list" role="group" aria-label={$t('mensagens.conversations.title', { default: 'Conversas' })}>
+        <button type="button" class="chat-row couple" onclick={() => selectConversation('main')}>
           <span class="row-av couple-av" aria-hidden="true">{otherPerson.emoji}</span>
           <span class="row-body">
             <span class="row-top">
@@ -462,7 +462,7 @@
           </span>
         </button>
         {#each CONVERSATIONS.filter((c) => c.id !== 'main') as c (c.id)}
-          <button type="button" class="chat-row" role="listitem" onclick={() => selectConversation(c.id)}>
+          <button type="button" class="chat-row" onclick={() => selectConversation(c.id)}>
             <span class="row-av" aria-hidden="true">{c.icon}</span>
             <span class="row-body">
               <span class="row-top">
@@ -836,12 +836,6 @@
     margin: 0.15rem 0 0;
     font-size: var(--fs-xs);
     color: var(--txt3);
-  }
-  .conversation-label {
-    margin: 0.25rem 0 0;
-    color: var(--txt2);
-    font-size: var(--fs-sm);
-    font-weight: 700;
   }
   .chat-kicker {
     display: block;
