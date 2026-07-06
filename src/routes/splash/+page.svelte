@@ -5,6 +5,8 @@
   import type { Membership } from '$lib/space/types';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
+  import { signInWithGoogle } from '$lib/account/auth';
+  import { bridgeSupabaseSession } from '$lib/account/session-bridge';
   import { t, waitLocale } from 'svelte-i18n';
   import { locale as localeStore } from '$lib/i18n';
   import LoveLock from '$lib/components/LoveLock.svelte';
@@ -32,7 +34,21 @@
   let shake = $state(false);
   let locked = $state({ locked: false, remainingMs: 0 });
   let loading = $state(false);
+  let googleBusy = $state(false);
   let selectedProfile = $state<ProfileId>('fatma');
+
+  /** Start "Continue with Google" (redirects to Google, returns to /splash/). */
+  async function onGoogle(): Promise<void> {
+    if (googleBusy) return;
+    googleBusy = true;
+    error = '';
+    try {
+      await signInWithGoogle(); // navigates away on success
+    } catch (e) {
+      error = e instanceof Error ? e.message : String(e);
+      googleBusy = false;
+    }
+  }
   // Love Lock state — when non-null the splash card is replaced by the
   // LoveLock full-screen modal until the user clicks the confirmation.
   let loveLockState = $state<ActiveMood | null>(null);
@@ -94,6 +110,15 @@
         goto('/');
         return;
       }
+      // Real-account bridge: a Supabase session (email / Google / later Saikan
+      // ID) opens the app as the matching profile. This also catches the Google
+      // OAuth redirect that lands back here.
+      void bridgeSupabaseSession()
+        .then((r) => {
+          if (r === 'bridged') location.href = '/';
+          else if (r === 'needs-handle') void goto('/conta/');
+        })
+        .catch(() => undefined);
       // Load returning onboarded members (uuid + password) so they can log back
       // in. Legacy fatma/daniel are excluded — they use the pass-order form.
       void listMembers()
@@ -341,12 +366,16 @@
 
       <div class="providers">
         <span class="providers-divider" aria-hidden="true">{$t('splash.providers.or', { default: 'ou' })}</span>
-        <button type="button" class="google-btn" disabled aria-describedby="google-hint">
+        <button type="button" class="google-btn" onclick={onGoogle} disabled={googleBusy}>
           <span class="google-g" aria-hidden="true">G</span>
-          {$t('splash.google.cta', { default: 'Continuar com Google' })}
+          {googleBusy ? $t('splash.google.connecting', { default: 'A ligar…' }) : $t('splash.google.cta', { default: 'Continuar com Google' })}
         </button>
-        <p id="google-hint" class="google-hint">
-          {$t('splash.google.hint', { default: 'A ligação com a conta Google está a caminho — para já entra com a tua palavra-passe.' })}
+        <button type="button" class="saikan-btn" disabled aria-describedby="saikan-hint">
+          <span class="saikan-s" aria-hidden="true">S</span>
+          {$t('splash.saikan.cta', { default: 'Continuar com Saikan ID' })}
+        </button>
+        <p id="saikan-hint" class="google-hint">
+          {$t('splash.saikan.hint', { default: 'Entrar com Saikan ID está a caminho.' })}
         </p>
       </div>
 
@@ -503,32 +532,41 @@
     height: 1px;
     background: rgba(255, 255, 255, 0.14);
   }
-  .google-btn {
+  .google-btn,
+  .saikan-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.55rem;
+    width: 100%;
     min-height: 44px;
     padding: 0.6rem 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.16);
     border-radius: 0.5rem;
-    background: rgba(255, 255, 255, 0.08);
-    color: #e2e8f0;
+    background: #ffffff;
+    color: #1f2937;
     font-size: 0.95rem;
     font-weight: 600;
-    cursor: not-allowed;
-    opacity: 0.62;
+    cursor: pointer;
   }
-  .google-g {
+  .google-btn:hover { background: #f3f4f6; }
+  .google-btn:disabled { cursor: progress; opacity: 0.7; }
+  .saikan-btn { cursor: not-allowed; opacity: 0.6; }
+  .google-g,
+  .saikan-s {
     display: grid;
     place-items: center;
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: #fff;
-    color: #4285f4;
+    background: #4285f4;
+    color: #fff;
     font-weight: 900;
     font-size: 0.85rem;
+  }
+  .saikan-s {
+    background: linear-gradient(135deg, #f472b6, #a78bfa);
+    color: #fff;
   }
   .google-hint {
     margin: 0;

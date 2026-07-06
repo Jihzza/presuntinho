@@ -12,6 +12,7 @@
     accountsEnabled,
     signInWithEmail,
     signUpWithEmail,
+    signInWithGoogle,
     signInWithMagicLink,
     sendPasswordReset,
     signOut,
@@ -63,11 +64,29 @@
       } else {
         await signInWithEmail(email, password);
         showToast($t('conta.signin.ok', { default: 'Sessão iniciada! 👋' }), 2000);
+        password = '';
+        // Real login → open the app as the matching profile.
+        const { bridgeSupabaseSession } = await import('$lib/account/session-bridge');
+        if ((await bridgeSupabaseSession()) === 'bridged') {
+          location.href = '/';
+          return;
+        }
       }
       password = '';
     } catch (e) {
       showToast(authError(e), 3200);
     } finally {
+      busy = false;
+    }
+  }
+
+  async function doGoogle(): Promise<void> {
+    if (busy) return;
+    busy = true;
+    try {
+      await signInWithGoogle(); // redirects away
+    } catch (e) {
+      showToast(authError(e), 3200);
       busy = false;
     }
   }
@@ -211,6 +230,10 @@
       <button type="button" class="cta" onclick={doAuth} disabled={busy}>
         {mode === 'signup' ? $t('conta.tab.signup', { default: 'Criar conta' }) : $t('conta.tab.signin', { default: 'Entrar' })}
       </button>
+      <button type="button" class="google" onclick={doGoogle} disabled={busy}>
+        <span class="g" aria-hidden="true">G</span>
+        {$t('conta.google', { default: 'Continuar com Google' })}
+      </button>
       <div class="alt">
         <button type="button" class="link" onclick={doMagicLink} disabled={busy}>{$t('conta.magic', { default: 'Entrar por link mágico (sem palavra-passe)' })}</button>
         {#if mode === 'signin'}
@@ -308,6 +331,9 @@
   .handle-hint.bad { color: var(--error, #ef4444); }
   .cta { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .7rem 1.1rem; border-radius: var(--radius-md, .6rem); border: 0; background: var(--accent); color: var(--on-accent, #fff); font: inherit; font-weight: 800; cursor: pointer; text-decoration: none; }
   .cta:disabled { opacity: .55; cursor: not-allowed; }
+  .google { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 48px; padding: .7rem 1.1rem; border-radius: var(--radius-md, .6rem); border: 1px solid var(--border); background: var(--bg-elev, transparent); color: var(--txt); font: inherit; font-weight: 700; cursor: pointer; }
+  .google:disabled { opacity: .55; cursor: not-allowed; }
+  .google .g { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #fff; color: #4285f4; font-weight: 900; font-size: .85rem; }
   .alt { display: flex; flex-direction: column; gap: .1rem; align-items: flex-start; }
   .link { background: transparent; border: 0; color: var(--accent); font: inherit; font-size: .85rem; cursor: pointer; padding: .5rem .1rem; }
   .link:hover { text-decoration: underline; }

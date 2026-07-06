@@ -461,6 +461,9 @@
     if (!confirm($t('settings.logout.confirm', { default: 'Terminar a sessão neste dispositivo?' }))) return;
     clearSession();
     resetSoundPrefsCache();
+    // Also end the real-account (Supabase) session, else the splash bridge would
+    // silently log you straight back in.
+    void import('$lib/account/session-bridge').then((m) => m.signOutEverywhere()).catch(() => {});
     void goto('/splash/');
   }
 

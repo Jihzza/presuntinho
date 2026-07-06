@@ -51,6 +51,19 @@ export async function signInWithMagicLink(email: string): Promise<void> {
   if (error) throw error;
 }
 
+/** Start the "Sign in with Google" OAuth flow. Redirects the browser to Google
+ *  and back to /splash/, where detectSessionInUrl picks up the session and the
+ *  session bridge maps the account to the local profile. Requires the Google
+ *  provider enabled in Supabase Auth + the redirect URL allow-listed. */
+export async function signInWithGoogle(): Promise<void> {
+  const redirectTo = typeof window !== 'undefined' ? `${window.location.origin}/splash/` : undefined;
+  const { error } = await getSupabaseClient().auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo }
+  });
+  if (error) throw error;
+}
+
 export async function sendPasswordReset(email: string): Promise<void> {
   const redirectTo = typeof window !== 'undefined' ? `${window.location.origin}/conta` : undefined;
   const { error } = await getSupabaseClient().auth.resetPasswordForEmail(email.trim(), { redirectTo });
