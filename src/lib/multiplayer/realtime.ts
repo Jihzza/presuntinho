@@ -8,8 +8,8 @@
 // Supabase for Ably/PartyKit later means re-implementing only this file against
 // the same `Room` shape.
 
-import { createClient, type RealtimeChannel, type SupabaseClient } from '@supabase/supabase-js';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config';
+import { type RealtimeChannel } from '@supabase/supabase-js';
+import { getSupabaseClient as supabase } from './client';
 
 export type RoomRole = 'host' | 'guest';
 
@@ -33,20 +33,6 @@ export interface Room {
   peerPresent(): boolean;
   /** Leave the room and tear everything down. */
   leave(): Promise<void>;
-}
-
-let client: SupabaseClient | null = null;
-function supabase(): SupabaseClient {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    throw new Error('Multiplayer not configured (missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY).');
-  }
-  if (!client) {
-    client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      realtime: { params: { eventsPerSecond: 30 } },
-      auth: { persistSession: false, autoRefreshToken: false }
-    });
-  }
-  return client;
 }
 
 /** A short, unambiguous room code (no easily-confused characters). */
