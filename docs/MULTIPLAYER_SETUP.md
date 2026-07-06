@@ -57,6 +57,17 @@ broadcast channel (`arcade:<ROOM-CODE>`).
    board, one fruit; bite the other snake's tail to steal a point. A crash ends
    the round for the survivor — then **Revanche** for another.
 
+## Also powers real-time couple points
+
+The same `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` also switch on **instant
+couple-point sync**: tapping the surprise heart now pushes the confirmed total
+over a shared realtime channel (`couple-presuntinho`, override with
+`VITE_COUPLE_CHANNEL`) so the partner's count updates immediately instead of
+waiting for the ~5s poll. Netlify Blobs stays the durable source of truth; the
+channel only accelerates delivery. With no Supabase configured it silently
+falls back to the existing poller — nothing breaks. A "parceira online"
+indicator is also available (`couple.partnerOnline`).
+
 ## Notes / limits
 
 - The **host** (whoever created the room) is authoritative. If they close the
