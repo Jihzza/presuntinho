@@ -421,7 +421,10 @@
 	.mascot {
 		position: relative;
 		line-height: 1;
-		animation: mascot-cheer 900ms cubic-bezier(0.22, 1, 0.36, 1);
+		animation:
+			mascot-cheer 900ms cubic-bezier(0.22, 1, 0.36, 1) both,
+			mascot-hop 1.5s 1s ease-in-out infinite;
+		transform-origin: 50% 100%;
 	}
 
 	.v-title {
@@ -534,7 +537,10 @@
 
 	.flame-big.lit {
 		filter: none;
-		animation: mascot-cheer 900ms cubic-bezier(0.22, 1, 0.36, 1);
+		animation:
+			mascot-cheer 900ms cubic-bezier(0.22, 1, 0.36, 1) both,
+			mascot-hop 1.5s 1s ease-in-out infinite;
+		transform-origin: 50% 100%;
 	}
 
 	.quests-progress {
@@ -633,5 +639,15 @@
 		100% {
 			transform: scale(1) rotate(0deg);
 		}
+	}
+	/* Looping celebratory hop after the entrance — keeps the card lively. */
+	@keyframes mascot-hop {
+		0%, 100% { transform: translateY(0) rotate(0deg); }
+		25% { transform: translateY(-10px) rotate(-4deg); }
+		50% { transform: translateY(0) rotate(0deg); }
+		72% { transform: translateY(-5px) rotate(4deg); }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.mascot { animation: none; }
 	}
 </style>
