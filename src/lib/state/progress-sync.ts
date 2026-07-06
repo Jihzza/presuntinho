@@ -14,8 +14,9 @@
 // (collections with real deletes — habits/finances/… — are deliberately NOT
 // here; they get explicit backup/restore in Layer B).
 
-import { createClient, type SupabaseClient, type RealtimeChannel } from '@supabase/supabase-js';
-import { SUPABASE_URL, SUPABASE_ANON_KEY, isMultiplayerConfigured } from '$lib/multiplayer/config';
+import { type RealtimeChannel } from '@supabase/supabase-js';
+import { isMultiplayerConfigured } from '$lib/multiplayer/config';
+import { getSupabaseClient as sb } from '$lib/multiplayer/client';
 import { COUPLE_ID } from '$lib/couple/couple-supabase';
 import { db } from '$lib/state/db';
 import { xp as xpStore } from '$lib/state/stores';
@@ -38,19 +39,6 @@ export interface ProgressSnapshot {
 
 export function progressSyncEnabled(): boolean {
   return isMultiplayerConfigured();
-}
-
-// ── Supabase client (lazy singleton, no session persistence) ────────────────
-let client: SupabaseClient | null = null;
-function sb(): SupabaseClient {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) throw new Error('Supabase not configured');
-  if (!client) {
-    client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: false, autoRefreshToken: false },
-      realtime: { params: { eventsPerSecond: 5 } }
-    });
-  }
-  return client;
 }
 
 // ── local snapshot / apply ──────────────────────────────────────────────────
@@ -82,12 +70,21 @@ function earliest(a: number, b: number): number {
  *  defaults to '{}'::jsonb, and the shape may grow over time) can't make
  *  `Object.keys(undefined)` throw and silently abort a sync. */
 export function normalizeSnapshot(s: Partial<ProgressSnapshot> | null | undefined): ProgressSnapshot {
+  // Deep-sanitize quiz entries: a malformed row (missing `answered`, or a
+  // non-array) would otherwise throw on the `...answered` spread / `.length`.
+  const quiz: ProgressSnapshot['quiz'] = {};
+  for (const [k, v] of Object.entries(s?.quiz ?? {})) {
+    quiz[k] = {
+      score: typeof v?.score === 'number' ? v.score : 0,
+      answered: Array.isArray(v?.answered) ? v.answered : []
+    };
+  }
   return {
     xp: typeof s?.xp === 'number' ? s.xp : 0,
     badges: s?.badges ?? {},
     visited: s?.visited ?? {},
     secrets: s?.secrets ?? {},
-    quiz: s?.quiz ?? {}
+    quiz
   };
 }
 

@@ -4,8 +4,8 @@
 // referenced by URL (never a base64 blob in the row). Offline-first: the local
 // Dexie registry stays the working copy; this just mirrors + hydrates.
 
-import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import { SUPABASE_URL, SUPABASE_ANON_KEY, isMultiplayerConfigured } from '$lib/multiplayer/config';
+import { isMultiplayerConfigured } from '$lib/multiplayer/config';
+import { getSupabaseClient as sb } from '$lib/multiplayer/client';
 import { COUPLE_ID } from '$lib/couple/couple-supabase';
 import type { ChatProfile } from '$lib/chat/client';
 
@@ -25,18 +25,6 @@ export interface ProfilePushPatch {
   emoji?: string;
   bio?: string;
   photo?: string; // data-URI or an existing http(s) URL, or '' to clear
-}
-
-let client: SupabaseClient | null = null;
-function sb(): SupabaseClient {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) throw new Error('Supabase not configured');
-  if (!client) {
-    client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: false, autoRefreshToken: false },
-      realtime: { params: { eventsPerSecond: 10 } }
-    });
-  }
-  return client;
 }
 
 export function profileSyncEnabled(): boolean {

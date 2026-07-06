@@ -6,23 +6,11 @@
 // couple_id scopes the data: a shared secret both devices hold (VITE_COUPLE_ID),
 // defaulting to a constant for the single legacy pair. See supabase/migrations.
 
-import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import { SUPABASE_URL, SUPABASE_ANON_KEY, isMultiplayerConfigured } from '$lib/multiplayer/config';
+import { isMultiplayerConfigured } from '$lib/multiplayer/config';
+import { getSupabaseClient as sb } from '$lib/multiplayer/client';
 
 export const COUPLE_ID: string =
   (import.meta.env.VITE_COUPLE_ID as string | undefined) || 'presuntinho-couple-v1';
-
-let client: SupabaseClient | null = null;
-function sb(): SupabaseClient {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) throw new Error('Supabase not configured');
-  if (!client) {
-    client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: false, autoRefreshToken: false },
-      realtime: { params: { eventsPerSecond: 20 } }
-    });
-  }
-  return client;
-}
 
 export function coupleDbEnabled(): boolean {
   return isMultiplayerConfigured();

@@ -4,8 +4,8 @@
 // tiny). Drop-in for ChatStore: the mensagens page treats them structurally the
 // same and picks this one only when Supabase is configured.
 
-import { createClient, type SupabaseClient, type RealtimeChannel } from '@supabase/supabase-js';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from '$lib/multiplayer/config';
+import { type SupabaseClient, type RealtimeChannel } from '@supabase/supabase-js';
+import { getSupabaseClient } from '$lib/multiplayer/client';
 import { COUPLE_ID } from '$lib/couple/couple-supabase';
 import type { ChatProfile } from '$lib/chat/client';
 import type { LocalChatMessage } from '$lib/chat/store.svelte';
@@ -79,10 +79,7 @@ export class CoupleChatStore {
     this.other = profile === 'fatma' ? 'daniel' : 'fatma';
     this.conversationId = conversationId;
     this.#readKey = `${READ_KEY_PREFIX}-${conversationId}`;
-    this.#sb = createClient(SUPABASE_URL as string, SUPABASE_ANON_KEY as string, {
-      auth: { persistSession: false, autoRefreshToken: false },
-      realtime: { params: { eventsPerSecond: 20 } }
-    });
+    this.#sb = getSupabaseClient();
   }
 
   #rowToMsg(row: Row): LocalChatMessage {
