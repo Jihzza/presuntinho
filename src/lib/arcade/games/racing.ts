@@ -4,6 +4,7 @@
 import {
   FIELD_W,
   FIELD_H,
+  FIELD_SAFE_BOTTOM,
   clamp,
   drawAvatar,
   glowRect,
@@ -81,7 +82,7 @@ export function createRacing(): ArcadeEngine {
     for (const o of obstacles) o.y += (o.speed + 40) * dt;
     obstacles = obstacles.filter((o) => o.y < FIELD_H + CAR_H);
 
-    const carTop = FIELD_H - CAR_H - 24;
+    const carTop = FIELD_H - CAR_H - Math.max(24, FIELD_SAFE_BOTTOM + 12);
     for (const o of obstacles) {
       if (
         rectHit(
@@ -121,7 +122,7 @@ export function createRacing(): ArcadeEngine {
     for (const o of obstacles)
       glowRect(env, o.x - CAR_W / 2, o.y, CAR_W, CAR_H, 8, '#f43f5e', 12);
     // player car with the chosen mascot at the wheel
-    const carTop = FIELD_H - CAR_H - 24;
+    const carTop = FIELD_H - CAR_H - Math.max(24, FIELD_SAFE_BOTTOM + 12);
     glowRect(env, carX - CAR_W / 2, carTop, CAR_W, CAR_H, 9, ACCENT, 16);
     ctx.fillStyle = '#e0f2fe';
     rr(ctx, carX - CAR_W / 2 + 6, carTop + 8, CAR_W - 12, 16, 4);

@@ -5,6 +5,8 @@
 import {
   FIELD_W,
   FIELD_H,
+  FIELD_SAFE_TOP,
+  FIELD_SAFE_BOTTOM,
   clamp,
   drawAvatar,
   glowCircle,
@@ -43,10 +45,15 @@ export function createBreakout(): ArcadeEngine {
   let points = 0;
   let bricks: Brick[] = [];
   let baseSpeed = 240;
-  // Paddle sits near the bottom of the RESPONSIVE field; recomputed each round.
+  // Paddle sits above the bottom-corner controls. Derived LIVE from the safe
+  // inset so it stays clear of the chrome even after a mid-game rotation.
   let paddleY = FIELD_H - 40;
+  function paddleTop(): number {
+    return FIELD_H - (FIELD_SAFE_BOTTOM + PADDLE_H + 6);
+  }
 
   function resetBall(): void {
+    paddleY = paddleTop();
     paddleX = FIELD_W / 2;
     ball = { x: FIELD_W / 2, y: paddleY - BALL_R - 2, vx: 0, vy: 0 };
     launched = false;
@@ -56,13 +63,13 @@ export function createBreakout(): ArcadeEngine {
     lives = 3;
     points = 0;
     baseSpeed = 240;
-    paddleY = FIELD_H - 40;
+    paddleY = paddleTop();
     bricks = [];
     for (let r = 0; r < ROWS; r += 1)
       for (let c = 0; c < COLS; c += 1)
         bricks.push({
           x: GRID_X + c * (BRICK_W + GAP),
-          y: 60 + r * (BRICK_H + GAP),
+          y: FIELD_SAFE_TOP + 10 + r * (BRICK_H + GAP),
           alive: true,
           color: BRICK_COLORS[r % BRICK_COLORS.length]
         });
@@ -78,6 +85,7 @@ export function createBreakout(): ArcadeEngine {
   }
 
   function step(dt: number, input: ArcadeInput): StepResult {
+    paddleY = paddleTop(); // track live insets (survives a mid-game rotation)
     // paddle
     if (input.pointerX != null) paddleX = input.pointerX;
     else {
@@ -107,8 +115,8 @@ export function createBreakout(): ArcadeEngine {
         ball.x = FIELD_W - BALL_R;
         ball.vx = -Math.abs(ball.vx);
       }
-      if (ball.y < BALL_R) {
-        ball.y = BALL_R;
+      if (ball.y < FIELD_SAFE_TOP + BALL_R) {
+        ball.y = FIELD_SAFE_TOP + BALL_R;
         ball.vy = Math.abs(ball.vy);
       }
       // paddle
@@ -149,7 +157,7 @@ export function createBreakout(): ArcadeEngine {
         }
       }
       if (bricks.every((b) => !b.alive)) return { end: 'won', gained: result.gained };
-      if (ball.y > FIELD_H + BALL_R) {
+      if (ball.y - BALL_R > paddleY + PADDLE_H + 28) {
         lives -= 1;
         if (lives <= 0) return { end: 'over', event: 'crash' };
         resetBall();
@@ -161,6 +169,7 @@ export function createBreakout(): ArcadeEngine {
 
   function draw(env: DrawEnv): void {
     const { ctx } = env;
+    paddleY = paddleTop();
     paintBackground(env, ACCENT);
     // bricks
     for (const b of bricks) if (b.alive) glowRect(env, b.x, b.y, BRICK_W, BRICK_H, 4, b.color, 8);
@@ -169,11 +178,14 @@ export function createBreakout(): ArcadeEngine {
     drawAvatar(env, paddleX, paddleY + PADDLE_H / 2, PADDLE_H + 8);
     // ball
     glowCircle(env, ball.x, ball.y, BALL_R, '#fde68a', 14);
-    // lives
+    // lives — centred above the paddle + control band so they never hide in a
+    // bottom corner behind the touch buttons
     ctx.fillStyle = '#f9a8d4';
+    const ly = FIELD_H - FIELD_SAFE_BOTTOM - 30;
+    const lx0 = FIELD_W / 2 - ((lives - 1) * 16) / 2;
     for (let i = 0; i < lives; i += 1) {
       ctx.beginPath();
-      ctx.arc(14 + i * 16, FIELD_H - 14, 4, 0, Math.PI * 2);
+      ctx.arc(lx0 + i * 16, ly, 4, 0, Math.PI * 2);
       ctx.fill();
     }
   }
