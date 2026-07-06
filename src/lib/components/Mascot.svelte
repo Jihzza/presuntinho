@@ -12,9 +12,11 @@
    */
 
   import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
   import { db } from '$lib/state/db';
-  import { mascotClick } from '$lib/easterEggs';
-  import { prefersReducedMotion } from './events';
+  import { sendLove, sendNudge, type PingResult } from '$lib/couple/couple-store.svelte';
+  import { playSfx, vibrate } from '$lib/gamification/sound';
+  import { prefersReducedMotion, showToast } from './events';
   import {
     DEFAULT_MASCOT_ID,
     MASCOT_CHANGED_EVENT,
@@ -36,8 +38,13 @@
 
   const VISITED_THRESHOLD = 4;
 
+  let { interactive = true }: { interactive?: boolean } = $props();
+
   let visible = $state(false);
   let reduced = $state(false);
+  // Gesture burst overlay: 'love' (hold) or 'nudge' (multi-tap) or none.
+  let burst = $state<'none' | 'love' | 'nudge'>('none');
+  let particles = $state<{ id: number; a: number }[]>([]);
   // V10.4 — the FAB renders the ACTIVE mascot's ART (picked on /mascotes/).
   let mascotId = $state(DEFAULT_MASCOT_ID);
   // V10 — Duolingo-style emotional state (happy/neutral/worried/sad/euphoric).
@@ -82,8 +89,102 @@
     }
   }
 
+  // ── gesture disambiguation ─────────────────────────────────────────────
+  //   1 tap  → agent · 2 taps → couple chat · ≥4 taps → nudge (saudades)
+  //   hold   → send love (💛) with an "explode" burst
+  const HOLD_MS = 550;
+  const TAP_WINDOW = 320;
+  let tapCount = 0;
+  let holdFired = false;
+  let holdTimer: ReturnType<typeof setTimeout> | null = null;
+  let tapTimer: ReturnType<typeof setTimeout> | null = null;
+  let pseq = 0;
+
+  function fireParticles(kind: 'love' | 'nudge'): void {
+    burst = kind;
+    if (!reduced) {
+      const n = 8;
+      particles = Array.from({ length: n }, (_, i) => ({ id: ++pseq, a: Math.round((360 / n) * i) }));
+    }
+    setTimeout(() => {
+      burst = 'none';
+      particles = [];
+    }, 900);
+  }
+
+  function toastForResult(res: PingResult): void {
+    if (res === 'cooldown') showToast($t('couple.ping.cooldown', { default: 'Espera um bocadinho 😅' }), 2000);
+    else if (res === 'offline') showToast($t('couple.ping.offline', { default: 'Sem ligação — tenta já a seguir' }), 2200);
+    else if (res === 'disabled') showToast($t('couple.ping.disabled', { default: 'Liga a conta do casal nas Definições 💑' }), 2600);
+  }
+
+  async function doLove(): Promise<void> {
+    fireParticles('love');
+    playSfx('milestone');
+    vibrate('success');
+    const res = await sendLove();
+    if (res === 'sent') showToast($t('couple.love.sent', { default: '💌 Amor enviado 💛' }), 2200);
+    else toastForResult(res);
+  }
+
+  async function doNudge(): Promise<void> {
+    fireParticles('nudge');
+    playSfx('whoosh');
+    vibrate('warning');
+    const res = await sendNudge();
+    if (res === 'sent') showToast($t('couple.nudge.sent', { default: '📳 Saudades enviadas!' }), 2200);
+    else toastForResult(res);
+  }
+
+  function resolveTaps(): void {
+    const n = tapCount;
+    tapCount = 0;
+    if (n >= 4) void doNudge();
+    else if (n >= 2) void goto('/mensagens');
+    else void goto('/agente');
+  }
+
+  function onPointerDown(): void {
+    if (!interactive) return;
+    holdFired = false;
+    if (holdTimer) clearTimeout(holdTimer);
+    holdTimer = setTimeout(() => {
+      holdTimer = null;
+      holdFired = true;
+      tapCount = 0;
+      if (tapTimer) {
+        clearTimeout(tapTimer);
+        tapTimer = null;
+      }
+      void doLove();
+    }, HOLD_MS);
+  }
+
+  function onPointerEnd(): void {
+    if (holdTimer) {
+      clearTimeout(holdTimer);
+      holdTimer = null;
+    }
+  }
+
+  // Click carries the taps (fires for mouse, touch-tap AND keyboard Enter/Space,
+  // so the gesture stays accessible); a completed hold suppresses the trailing
+  // click so it isn't double-counted as a tap.
   function onClick(): void {
-    void mascotClick();
+    if (!interactive) {
+      void goto('/agente');
+      return;
+    }
+    if (holdFired) {
+      holdFired = false;
+      return;
+    }
+    tapCount += 1;
+    if (tapTimer) clearTimeout(tapTimer);
+    tapTimer = setTimeout(() => {
+      tapTimer = null;
+      resolveTaps();
+    }, TAP_WINDOW);
   }
 
   async function refreshMascot(): Promise<void> {
@@ -140,12 +241,22 @@
     class:sad={emotion === 'sad'}
     class:worried={emotion === 'worried'}
     class:euphoric={emotion === 'euphoric'}
+    class:loving={burst === 'love'}
+    class:nudging={burst === 'nudge'}
+    onpointerdown={onPointerDown}
+    onpointerup={onPointerEnd}
+    onpointercancel={onPointerEnd}
+    onpointerleave={onPointerEnd}
     onclick={onClick}
-    aria-label={$t('components.mascot.aria', { default: 'Mascote — easter egg' })}
+    oncontextmenu={(e) => e.preventDefault()}
+    aria-label={$t('mascot.gesture.aria', { default: 'Mascote — toca para o agente, duas vezes para a conversa, mantém para enviar amor' })}
     title={emotionLine}
   >
     <!-- V10.4 — a mascote ESCOLHIDA (arte real) com a emoção do dia. -->
     <MascotAvatar mascot={mascotId} {emotion} size={38} animate={!reduced} />
+    {#each particles as p (p.id)}
+      <span class="particle" style={`--a:${p.a}deg`} aria-hidden="true">{burst === 'love' ? '💛' : '💭'}</span>
+    {/each}
   </button>
 {/if}
 
@@ -193,12 +304,59 @@
   .mascot-fab {
     position: relative;
   }
+  /* Gesture bursts — love (hold) pulses, nudge (multi-tap) shakes. */
+  .mascot-fab.loving {
+    animation: mascot-love 0.6s ease;
+  }
+  .mascot-fab.nudging {
+    animation: mascot-shake 0.5s ease;
+  }
+  @keyframes mascot-love {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+  @keyframes mascot-shake {
+    0%, 100% { transform: translateX(0) rotate(0); }
+    20% { transform: translateX(-4px) rotate(-7deg); }
+    40% { transform: translateX(4px) rotate(7deg); }
+    60% { transform: translateX(-3px) rotate(-4deg); }
+    80% { transform: translateX(3px) rotate(4deg); }
+  }
+  /* Radial particle burst flung from the mascot's centre. */
+  .particle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    font-size: 1rem;
+    line-height: 1;
+    pointer-events: none;
+    z-index: 5;
+    animation: particle-fly 0.9s ease-out forwards;
+  }
+  @keyframes particle-fly {
+    from {
+      opacity: 1;
+      transform: translate(-50%, -50%) rotate(var(--a, 0deg)) translateY(0) scale(0.6);
+    }
+    to {
+      opacity: 0;
+      transform: translate(-50%, -50%) rotate(var(--a, 0deg)) translateY(-46px) scale(1.15);
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
     .mascot-fab,
     .mascot-fab:hover,
-    .mascot-fab:active {
+    .mascot-fab:active,
+    .mascot-fab.loving,
+    .mascot-fab.nudging {
       transform: none;
       transition: none;
+      animation: none;
+    }
+    .particle {
+      animation: none;
+      display: none;
     }
   }
 </style>

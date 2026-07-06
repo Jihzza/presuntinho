@@ -10,8 +10,9 @@
   import Mascot from '$lib/components/Mascot.svelte';
   import SecretModal from '$lib/components/SecretModal.svelte';
   import OfflineIndicator from '$lib/components/OfflineIndicator.svelte';
-  import { handleKonamiKey, logoClick } from '$lib/easterEggs';
-  import HeartButton from '$lib/components/HeartButton.svelte';
+  import { handleKonamiKey, logoClick, checkSeasonalEggs } from '$lib/easterEggs';
+  import { loadEasterEggs } from '$lib/easterEggsConfig';
+  import SurpriseHeart from '$lib/components/SurpriseHeart.svelte';
   import XpPill from '$lib/components/XpPill.svelte';
   import XpToast from '$lib/components/XpToast.svelte';
   import InstallButton from '$lib/components/InstallButton.svelte';
@@ -101,6 +102,7 @@
     let unbindExtra: (() => void) | null = null;
     let moodPoll: ReturnType<typeof setInterval> | null = null;
     let swPoll: ReturnType<typeof setInterval> | null = null;
+    let seasonalTimer: ReturnType<typeof setTimeout> | null = null;
 
     async function refreshMood(): Promise<void> {
       const mood = await readActiveMood();
@@ -131,6 +133,13 @@
     // Couple sync: one global poller keeps shared points fresh and surfaces
     // incoming love/nudge pings as toasts (+ a buzz). No-ops without a token.
     startCouplePoller();
+
+    // Easter-egg boot hooks — used to live on the always-mounted HeartButton,
+    // which the SurpriseHeart replaced. Warm the config cache and run the
+    // once-per-day seasonal check a beat after boot so its toast doesn't
+    // collide with the splash toasts.
+    void loadEasterEggs();
+    seasonalTimer = setTimeout(() => void checkSeasonalEggs(), 2200);
 
     // PWA: regista o service worker gerado pelo @vite-pwa/sveltekit.
     // Em dev (devOptions.enabled = false) o módulo virtual:pwa-register não
@@ -251,6 +260,7 @@
       window.removeEventListener('presuntinho:pwa-update', onPwaUpdate);
       if (moodPoll) clearInterval(moodPoll);
       if (swPoll) clearInterval(swPoll);
+      if (seasonalTimer) clearTimeout(seasonalTimer);
       stopCouplePoller();
     };
   });
@@ -393,10 +403,12 @@
                 <div class="fab-stack" class:game-hidden={$arcadeHud || $arcadeImmersive} aria-live="polite" aria-hidden={$arcadeHud || $arcadeImmersive ? 'true' : undefined}>
                   <XpPill />
                   <InstallButton />
-                  <HeartButton />
                 </div>
+                <!-- Mascot lives bottom-RIGHT now; the surprise heart pops on
+                     top of it at random moments (couple points). -->
                 <div class="mascot-corner" class:game-hidden={$arcadeHud || $arcadeImmersive} aria-hidden={$arcadeHud || $arcadeImmersive ? 'true' : undefined}>
-                  <Mascot />
+                  <Mascot interactive />
+                  <SurpriseHeart />
                 </div>
                 {#if $arcadeHud}
                   <ArcadeTouchHud
@@ -703,13 +715,15 @@
        Generalised for N children: a bottom-anchored column packed towards
        the end, so the bottom-most target (heart) never moves when the
        XP pill or install button appear/disappear above it. */
+    /* XP pill + install button now sit bottom-LEFT (the mascot took the right
+       corner). Two children: XP pill on top, install button below. */
     .fab-stack {
       position: fixed;
-      right: max(1rem, env(safe-area-inset-right));
+      left: max(1rem, env(safe-area-inset-left));
       bottom: calc(env(safe-area-inset-bottom) + 5.75rem + var(--page-bottom-inset, 0px));
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
+      align-items: flex-start;
       justify-content: flex-end;
       gap: 0.65rem;
       width: 9.25rem;
@@ -722,12 +736,12 @@
     }
     .fab-stack > :global(:last-child) {
       position: absolute;
-      right: 0;
+      left: 0;
       bottom: 0;
     }
     .fab-stack > :global(:first-child) {
       position: absolute;
-      right: 0;
+      left: 0;
       bottom: 4.05rem;
     }
     /* Arcade game mode: mascot + heart FABs step aside for the touch HUD. */
@@ -811,9 +825,11 @@
     .pwa-update-dismiss:focus-visible {
       box-shadow: 0 0 0 2px var(--accent);
     }
+    /* Mascot: bottom-RIGHT, and the anchor for the surprise heart that pops on
+       top of it (absolutely positioned inside this fixed box). */
     .mascot-corner {
       position: fixed;
-      left: max(0.85rem, env(safe-area-inset-left));
+      right: max(0.85rem, env(safe-area-inset-right));
       bottom: calc(env(safe-area-inset-bottom) + 5.55rem + var(--page-bottom-inset, 0px));
       z-index: 60;
       pointer-events: none;
@@ -824,10 +840,10 @@
     /* On wide screens give a little extra breathing room from the edge. */
     @media (min-width: 768px) {
       .fab-stack {
-        right: max(1.5rem, env(safe-area-inset-right));
+        left: max(1.5rem, env(safe-area-inset-left));
       }
       .mascot-corner {
-        left: max(1.25rem, env(safe-area-inset-left));
+        right: max(1.25rem, env(safe-area-inset-right));
       }
     }
     /* /mensagens/ has its own fixed composer. On small screens the mascot
