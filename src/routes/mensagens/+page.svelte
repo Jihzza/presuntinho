@@ -25,6 +25,8 @@
   import { showToast } from '$lib/components/events';
   import { playSfx } from '$lib/gamification/sound';
   import { ChatApiError, getChatToken, setChatToken, otherProfile, type ChatProfile } from '$lib/chat/client';
+  import { CoupleChatStore } from '$lib/couple/couple-chat-store.svelte';
+  import { isMultiplayerConfigured } from '$lib/multiplayer/config';
   import { ChatStore, type LocalChatMessage } from '$lib/chat/store.svelte';
   import { profileFor } from '$lib/profile/people';
 
@@ -52,7 +54,8 @@
   let secureSetupNeeded = $state(false);
   let setupKeyInput = $state('');
   let setupOpen = $state(false);
-  let store = $state<ChatStore | null>(null);
+  const supabaseChat = isMultiplayerConfigured();
+  let store = $state<ChatStore | CoupleChatStore | null>(null);
   let selectedConversationId = $state('main');
   // WhatsApp-style two-pane flow on one screen: the conversation LIST, then the
   // open THREAD. Always start on the list so it reads like a messenger home.
@@ -162,8 +165,12 @@
   function startChat() {
     if (!profile) return;
     store?.stop();
-    store = new ChatStore(profile, selectedConversationId);
-    secureSetupNeeded = !getChatToken(profile);
+    // Supabase-backed couple chat when configured (durable + realtime, no token);
+    // otherwise the Netlify-Blobs ChatStore. Both share the same shape.
+    store = supabaseChat
+      ? new CoupleChatStore(profile, selectedConversationId)
+      : new ChatStore(profile, selectedConversationId);
+    secureSetupNeeded = !supabaseChat && !getChatToken(profile);
     store.start();
   }
 

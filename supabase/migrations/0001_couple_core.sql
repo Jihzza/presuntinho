@@ -20,13 +20,14 @@ drop policy if exists couple_points_insert on public.couple_points;
 drop policy if exists couple_points_update on public.couple_points;
 create policy couple_points_select on public.couple_points for select using (true);
 create policy couple_points_insert on public.couple_points for insert with check (char_length(couple_id) >= 8);
-create policy couple_points_update on public.couple_points for update using (true) with check (char_length(couple_id) >= 8);
+create policy couple_points_update on public.couple_points for update using (char_length(couple_id) >= 8) with check (char_length(couple_id) >= 8);
 
 -- Atomic, idempotent-ish increment so two devices can't clobber each other.
 create or replace function public.couple_points_bump(p_couple_id text, p_profile text, p_delta int)
 returns integer
 language sql
 security invoker
+set search_path = ''
 as $$
   insert into public.couple_points (couple_id, profile, points, updated_at)
   values (p_couple_id, p_profile, greatest(0, p_delta), now())
