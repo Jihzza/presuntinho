@@ -25,6 +25,7 @@
   import { applyAppLogo, getAppLogo } from '$lib/app-logo';
   import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, MOOD_META, type ActiveMood } from '$lib/mood';
 
+  import { notifBadge, refreshNotifBadge, bindNotifBadge } from '$lib/vida/notif-badge.svelte';
   import { showToast } from '$lib/components/events';
   import { t } from 'svelte-i18n';
   import { get } from 'svelte/store';
@@ -77,6 +78,25 @@
   afterNavigate((nav) => {
     const pathname = nav.to?.url.pathname ?? page.url.pathname;
     void trackVisit(pathname);
+    // Keep the header bell fresh as you move around (throttled inside).
+    if (session && storesReady) void refreshNotifBadge();
+  });
+
+  // Load the badge as soon as Dexie stores are ready, and keep it live on
+  // NOTIF_CHANGED + tab focus. No timer — getDailyQuests() must not be polled.
+  $effect(() => {
+    if (session && storesReady) void refreshNotifBadge();
+  });
+  onMount(() => {
+    const unbind = bindNotifBadge();
+    const onVis = () => {
+      if (document.visibilityState === 'visible' && session && storesReady) void refreshNotifBadge();
+    };
+    document.addEventListener('visibilitychange', onVis);
+    return () => {
+      unbind();
+      document.removeEventListener('visibilitychange', onVis);
+    };
   });
 
   function applyPwaUpdate(): void {
@@ -331,6 +351,23 @@
                   <a href="/" class="logo-text" aria-label={$t('a11y.logo.brand', { default: 'Presuntinho — voltar ao hub' })}>Presuntinho</a>
                 </div>
                 <div class="nav-actions">
+                  <!-- Global notifications bell with an unread badge — reachable
+                       from every screen, not just the Home hero chip. -->
+                  <a
+                    href="/notificacoes/"
+                    class="icon-btn notif-btn"
+                    aria-current={isActive('/notificacoes/') ? 'page' : undefined}
+                    aria-label={$t('a11y.notifications', { values: { count: notifBadge.count }, default: 'Notificações' })}
+                    title={$t('a11y.notifications', { values: { count: notifBadge.count }, default: 'Notificações' })}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    {#if notifBadge.count > 0}
+                      <span class="notif-badge" aria-hidden="true">{notifBadge.count > 9 ? '9+' : notifBadge.count}</span>
+                    {/if}
+                  </a>
                   <!-- Language + logout moved to /definicoes to declutter the header. -->
                   <a href="/definicoes" class="icon-btn" aria-label={$t('a11y.settings', { default: 'Definições' })} title={$t('a11y.settings', { default: 'Definições' })}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -611,6 +648,28 @@
   }
   .icon-btn:focus-visible {
     box-shadow: 0 0 0 2px var(--accent);
+  }
+  .notif-btn {
+    position: relative;
+  }
+  .notif-badge {
+    position: absolute;
+    top: -2px;
+    inset-inline-end: -2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: var(--error, #ef4444);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 900;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
   }
   .content {
     flex: 1;

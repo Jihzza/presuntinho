@@ -4953,5 +4953,6 @@
   "arcade.hud.move_aria": "Movement",
   "arcade.hud.action_aria": "Action",
   "arcade.fullscreen.enter": "Fullscreen",
-  "arcade.fullscreen.exit": "Exit fullscreen"
+  "arcade.fullscreen.exit": "Exit fullscreen",
+  "a11y.notifications": "Notifications"
 }

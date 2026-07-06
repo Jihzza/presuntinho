@@ -4953,5 +4953,6 @@
   "arcade.hud.move_aria": "Movimento",
   "arcade.hud.action_aria": "Ação",
   "arcade.fullscreen.enter": "Ecrã inteiro",
-  "arcade.fullscreen.exit": "Sair do ecrã inteiro"
+  "arcade.fullscreen.exit": "Sair do ecrã inteiro",
+  "a11y.notifications": "Notificações"
 }
