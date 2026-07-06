@@ -66,6 +66,38 @@ export async function loadProfile(): Promise<void> {
     }
   }
   profileState.loaded = true;
+
+  // Cross-device: hydrate from Supabase (wins over the local copy) + live-sync.
+  if (id) void hydrateFromCloud(id);
+}
+
+/** Pull the cloud profile over the local one and subscribe for live updates so
+ *  an edit on one phone shows on the other. Non-fatal if Supabase is off/down. */
+async function hydrateFromCloud(id: 'fatma' | 'daniel'): Promise<void> {
+  try {
+    const sync = await import('$lib/profile/profile-sync');
+    if (!sync.profileSyncEnabled()) return;
+    const remote = await sync.fetchRemoteProfile(id);
+    if (remote) applyRemote(remote);
+    remoteUnsub?.();
+    remoteUnsub = sync.subscribeRemoteProfile(id, applyRemote);
+  } catch (e) {
+    console.warn('[profile] cloud sync unavailable', e);
+  }
+}
+
+let remoteUnsub: (() => void) | null = null;
+function applyRemote(r: {
+  display_name: string | null;
+  emoji: string | null;
+  bio: string | null;
+  photo_url: string | null;
+}): void {
+  if (r.display_name != null) profileState.displayName = r.display_name;
+  if (r.emoji) profileState.emoji = r.emoji;
+  if (r.bio != null) profileState.bio = r.bio;
+  if (r.photo_url != null) profileState.photo = r.photo_url;
+  if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent(PROFILE_CHANGED_EVENT));
 }
 
 export async function saveProfile(patch: ProfilePatch): Promise<void> {
@@ -78,4 +110,20 @@ export async function saveProfile(patch: ProfilePatch): Promise<void> {
   if (patch.photo !== undefined) profileState.photo = patch.photo;
   if (patch.bio !== undefined) profileState.bio = patch.bio;
   if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent(PROFILE_CHANGED_EVENT));
+
+  // Mirror to the cloud so the other device sees it (photo → Storage URL).
+  try {
+    const sync = await import('$lib/profile/profile-sync');
+    if (sync.profileSyncEnabled()) {
+      const url = await sync.pushRemoteProfile(id, patch);
+      // Persist the resolved Storage URL locally too, so we stop carrying the
+      // heavy data-URI once it's uploaded.
+      if (url && url !== profileState.photo) {
+        profileState.photo = url;
+        await updateMember(id, { photo: url });
+      }
+    }
+  } catch (e) {
+    console.warn('[profile] cloud push failed (kept locally)', e);
+  }
 }
