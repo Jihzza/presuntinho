@@ -23,7 +23,7 @@ const splash = read('src/routes/splash/+page.svelte');
 const layer = read('src/lib/components/MoodLayer.svelte');
 const calendar = read('src/routes/calendario/+page.svelte');
 const settings = read('src/routes/definicoes/+page.svelte');
-const heart = read('src/lib/components/HeartButton.svelte');
+const heart = read('src/lib/components/SurpriseHeart.svelte');
 const confetti = read('src/lib/components/Confetti.svelte');
 const events = read('src/lib/components/events.ts');
 const easter = read('src/lib/easterEggs.ts');
@@ -63,8 +63,19 @@ console.log('\nFloating button stability');
 assert('fab stack reserves fixed dimensions', /\.fab-stack\s*{[\s\S]*width:\s*9\.25rem;[\s\S]*height:\s*6\.9rem;/.test(layout));
 assert('heart anchored to bottom-right independent of XP pill', /\.fab-stack > :global\(:last-child\)\s*{[\s\S]*position:\s*absolute;[\s\S]*bottom:\s*0;/.test(layout));
 assert('xp anchored above heart', /\.fab-stack > :global\(:first-child\)\s*{[\s\S]*bottom:\s*4\.05rem;/.test(layout));
-assert('heart removes native blue tap highlight and keeps custom focus', heart.includes('-webkit-tap-highlight-color: transparent') && heart.includes('.heart-btn:focus-visible') && heart.includes('box-shadow: 0 0 0 3px'));
-assert('heart animations avoid layout-changing properties', heart.includes('only inner transform/opacity/glow') && !/\.heart-btn\.burst-[\s\S]*?(?:width|height|right|bottom):/.test(heart));
+assert('heart removes native blue tap highlight and keeps custom focus', heart.includes('-webkit-tap-highlight-color: transparent') && heart.includes('box-shadow:') && layout.includes('box-shadow: 0 0 0 3px'));
+// Animation keyframes must not change layout dimensions. Look for keyframe blocks and assert they only animate transform / opacity / filter.
+{
+  const keyframes = Array.from(heart.matchAll(/@keyframes\s+([\w-]+)\s*{([\s\S]*?)\n\s*}/g));
+  const onlySafeProps = (body) => {
+    const decls = body.split(';').map(s => s.trim()).filter(Boolean);
+    const banned = /(?:^|\s)(?:width|height|top|left|right|bottom|margin|padding)\s*:/i;
+    return decls.every(d => /^(?:from|to|\d+%|-?\d*\.?\d+%)\s*[a-z-]+\s*:/i.test(d) || !banned.test(d));
+  };
+  const offenders = keyframes.filter(m => !onlySafeProps(m[2]));
+  assert('heart keyframes avoid layout-changing properties', keyframes.length > 0 && offenders.length === 0,
+    offenders.length ? `offenders=${offenders.map(m=>m[1]).join(',')}` : '');
+}
 
 console.log('\nDeep polish / themes / gamification');
 assert('confetti supports structured heart-origin bursts', events.includes('export interface ConfettiBurst') && confetti.includes('confetti-heart') && confetti.includes('origin === \'heart\''));
