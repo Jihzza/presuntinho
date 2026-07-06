@@ -320,8 +320,11 @@
   color: var(--txt) !important;
 }
 
-[data-theme='light'] a:not(.btn),
-[data-theme='tunisia'] a:not(.btn) {
+/* :where() keeps this at zero extra specificity so any component-scoped
+   link style (e.g. .ui-btn--primary, filled CTAs) can still win — without
+   it, accent text lands on accent backgrounds and CTA labels vanish. */
+[data-theme='light'] :where(a:not(.btn)),
+[data-theme='tunisia'] :where(a:not(.btn)) {
   color: var(--accent);
 }
 
@@ -460,7 +463,7 @@
 [data-theme='cozy'] h1, [data-theme='cozy'] h2, [data-theme='cozy'] h3, [data-theme='cozy'] strong, [data-theme='cozy'] .nav-label, [data-theme='cozy'] .logo, [data-theme='cozy'] .logo-text {
   color: var(--txt) !important;
 }
-[data-theme='vanilla'] a:not(.btn), [data-theme='cozy'] a:not(.btn) { color: var(--accent); }
+[data-theme='vanilla'] :where(a:not(.btn)), [data-theme='cozy'] :where(a:not(.btn)) { color: var(--accent); }
 [data-theme='vanilla'] p, [data-theme='vanilla'] small, [data-theme='vanilla'] span, [data-theme='vanilla'] label,
 [data-theme='cozy'] p, [data-theme='cozy'] small, [data-theme='cozy'] span, [data-theme='cozy'] label { color: inherit; }
 [data-theme='vanilla'] .section-head span, [data-theme='vanilla'] .section-head p, [data-theme='vanilla'] .sub, [data-theme='vanilla'] .empty, [data-theme='vanilla'] .theme-copy small,

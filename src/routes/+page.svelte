@@ -30,6 +30,7 @@
   import { profileState, loadProfile } from '$lib/profile/profile-store.svelte';
   import ProfileEditor from '$lib/profile/ProfileEditor.svelte';
   import { resumeTarget, type NextLessonTarget } from '$lib/escola/progress';
+  import { weekdayShort } from '$lib/i18n/dates';
 
   import { db } from '$lib/state/db';
   import { xp, initStores } from '$lib/state/stores';
@@ -522,7 +523,7 @@
           href="/calendario/"
           aria-label={$t('hub.calendar.day_aria', { values: { day: formatDayLabel(localDateKey(day), dateLocale), count: itemsForDate(day).length } })}
         >
-          <span>{day.toLocaleDateString(dateLocale, { weekday: 'short' })}</span>
+          <span>{weekdayShort(day, dateLocale)}</span>
           <strong>{day.getDate()}</strong>
           {#if itemsForDate(day).length > 0}
             <small>{itemsForDate(day).length}</small>

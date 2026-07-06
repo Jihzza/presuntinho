@@ -267,7 +267,10 @@
 
 <style>
   .mascotes {
-    max-width: 860px;
+    /* min(…, 100%) — a flex-item pode resolver para max-content e furar o
+       viewport em ecrãs estreitos; o cap a 100% prende-a sempre à largura real. */
+    max-width: min(860px, 100%);
+    width: 100%;
     margin: 0 auto;
     padding: 1.25rem 1rem 8rem;
   }

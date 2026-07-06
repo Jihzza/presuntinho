@@ -31,6 +31,7 @@
     type HabitCadence,
     type HeatmapData
   } from '$lib/habitos';
+  import { weekdayShort } from '$lib/i18n/dates';
 
   interface Props {
     year: number;
@@ -100,9 +101,8 @@
   });
 
   let weekdayLabels = $derived.by(() => {
-    const formatter = new Intl.DateTimeFormat(dateLocale, { weekday: 'short' });
     // 2024-01-01 is a Monday; keep the app's existing Monday-first habit grid.
-    return Array.from({ length: 7 }, (_, i) => formatter.format(new Date(2024, 0, 1 + i)));
+    return Array.from({ length: 7 }, (_, i) => weekdayShort(new Date(2024, 0, 1 + i), dateLocale));
   });
 
   function cellFill(cell: Cell): string {

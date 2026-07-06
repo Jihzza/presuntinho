@@ -3,6 +3,7 @@
 // rows to the two parties; only contacts can be invited).
 
 import { getSupabaseClient } from '$lib/multiplayer/client';
+import { isMultiplayerConfigured } from '$lib/multiplayer/config';
 import { getAuthUser, type Account } from './auth';
 
 export interface GameInvite {
@@ -40,6 +41,8 @@ async function resolveAccount(id: string): Promise<Account | null> {
 /** Subscribe to invites addressed to me (live). Resolves the inviter's account
  *  before firing so the prompt can show their @handle. Returns an unsubscribe. */
 export function subscribeIncomingInvites(onInvite: (invite: GameInvite) => void): () => void {
+  // Sem Supabase configurado não há canal a abrir — unsubscribe inerte.
+  if (!isMultiplayerConfigured()) return () => {};
   let userId: string | null = null;
   const channel = sb().channel('game-invites');
   void (async () => {

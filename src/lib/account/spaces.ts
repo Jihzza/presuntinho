@@ -4,6 +4,7 @@
 // key on (replacing the hard-coded couple_id).
 
 import { getSupabaseClient } from '$lib/multiplayer/client';
+import { isMultiplayerConfigured } from '$lib/multiplayer/config';
 import { getAuthUser, type Account } from './auth';
 
 export type SpaceKind = 'couple' | 'group';
@@ -129,6 +130,9 @@ export function otherMember(space: Space, meId: string): SpaceMember | null {
 }
 
 export function subscribeSpaces(onChange: () => void): () => void {
+  // Sem Supabase configurado não há canal a abrir — unsubscribe inerte
+  // em vez de uma rejeição solta no onMount de /grupos.
+  if (!isMultiplayerConfigured()) return () => {};
   const channel = sb()
     .channel('my-spaces')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'space_members' }, () => onChange())

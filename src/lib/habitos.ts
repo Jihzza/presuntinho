@@ -31,6 +31,7 @@
 //     guarded behind an `onMount` / `browser` check.
 
 import { addDays, format, subDays } from 'date-fns';
+import { weekdayShort } from './i18n/dates';
 import { db } from './state/db';
 import { awardXP } from './state/xp-actions';
 import type { HabitoRow, HabitLogRow } from './state/db';
@@ -178,7 +179,7 @@ export function weekdayShortName(locale: string, weekday: number): string {
   // 2024-01-07 is a Sunday → offset by getDay index gives each weekday.
   const ref = new Date(2024, 0, 7 + weekday);
   try {
-    return new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(ref);
+    return weekdayShort(ref, locale);
   } catch {
     return String(weekday);
   }

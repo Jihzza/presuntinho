@@ -18,6 +18,7 @@
     type EventKind
   } from '$lib/vida/agenda';
   import { listHabitos, localizedHabit, setHabitLog, type Habit } from '$lib/habitos';
+  import { weekdayShort } from '$lib/i18n/dates';
   import { awardXP } from '$lib/state/xp-actions';
   import { fireConfettiEvent, showToast } from '$lib/components/events';
 
@@ -412,7 +413,7 @@
               default: 'Abrir {day} — {count} itens'
             })}
           >
-            <span>{day.toLocaleDateString(dateLocale, { weekday: 'short' })}</span>
+            <span>{weekdayShort(day, dateLocale)}</span>
             <strong>{day.getDate()}</strong>
             <span class="cell-meta">
               {#if layers.moods && moods[key]}

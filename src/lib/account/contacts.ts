@@ -4,6 +4,7 @@
 // single follow-up query, so no fragile FK-hint joins.
 
 import { getSupabaseClient } from '$lib/multiplayer/client';
+import { isMultiplayerConfigured } from '$lib/multiplayer/config';
 import { getAuthUser, type Account } from './auth';
 
 export type ConnStatus = 'pending' | 'accepted';
@@ -136,6 +137,9 @@ export async function removeConnection(connectionId: string): Promise<void> {
 
 /** Live-subscribe to changes in my connections (new requests / accepts). */
 export function subscribeConnections(onChange: () => void): () => void {
+  // Sem Supabase configurado não há canal a abrir — devolve um unsubscribe
+  // inerte em vez de rebentar o onMount das páginas com uma rejeição solta.
+  if (!isMultiplayerConfigured()) return () => {};
   const channel = sb()
     .channel('my-connections')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'connections' }, () => onChange())

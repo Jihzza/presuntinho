@@ -48,6 +48,7 @@
 
   const moodAccent = $derived(activeMood ? MOOD_META[activeMood.kind].accent : null);
   const isMessagesRoute = $derived(isActive('/mensagens/'));
+  const isComposerRoute = $derived(isActive('/mensagens/') || isActive('/agente/'));
 
   // Pages with a fixed bottom composer (chat input) need the floating
   // elements (fab-stack, mascot, mood chip, PWA banner) lifted above it.
@@ -356,7 +357,7 @@
   <OfflineIndicator />
   <a class="skip-link" href="#main-content">{$t('a11y.skipToContent')}</a>
   <div
-    class={`app ${isMessagesRoute ? 'app-messages' : ''} ${activeMood ? `app-mood app-mood-${activeMood.kind}` : ''} ${$arcadeHud || $arcadeImmersive ? 'arcade-immersive' : ''}`}
+    class={`app ${isMessagesRoute ? 'app-messages' : ''} ${isComposerRoute ? 'app-composer' : ''} ${activeMood ? `app-mood app-mood-${activeMood.kind}` : ''} ${$arcadeHud || $arcadeImmersive ? 'arcade-immersive' : ''}`}
     style={`--page-bottom-inset: ${pageBottomInset};${moodAccent ? ` --mood-accent: ${moodAccent};` : ''}`}
   >
     {#if activeMood}
@@ -676,16 +677,18 @@
     height: 44px;
     border-radius: var(--radius-md);
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #fff;
+    /* Tokens, não brancos fixos — nos temas claros um #fff fica invisível
+       (antes era "salvo" por uma regra global de <a> que já não se sobrepõe). */
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
+    color: var(--txt, #fff);
     cursor: pointer;
     text-decoration: none;
     transition: background 0.2s, border-color 0.2s;
   }
   .icon-btn:hover,
   .icon-btn:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: color-mix(in srgb, var(--txt, #fff) 8%, transparent);
+    border-color: var(--border-strong, rgba(255, 255, 255, 0.3));
     outline: none;
   }
   .icon-btn:focus-visible {
@@ -751,7 +754,8 @@
       gap: 2px;
       background: transparent;
       border: 0;
-      color: rgba(255, 255, 255, 0.78);
+      /* Token em vez de branco fixo — legível em temas claros e escuros. */
+      color: color-mix(in srgb, var(--txt, #fff) 78%, transparent);
       text-decoration: none;
       font: inherit;
       cursor: pointer;
@@ -963,11 +967,11 @@
         right: max(1.25rem, env(safe-area-inset-right));
       }
     }
-    /* /mensagens/ has its own fixed composer. On small screens the mascot
-       competes with the chat input; keep it visible on desktop but remove the
-       mobile overlap entirely. */
+    /* /mensagens/ and /agente/ have their own fixed composer. On small
+       screens the mascot competes with the chat input + suggestion chips;
+       keep it visible on desktop but remove the mobile overlap entirely. */
     @media (max-width: 767px) {
-      .app-messages .mascot-corner {
+      .app-composer .mascot-corner {
         display: none;
       }
     }

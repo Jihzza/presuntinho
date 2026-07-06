@@ -31,6 +31,8 @@
     name?: string;
     /** config secret id (for i18n name lookup) */
     secretId?: string;
+    /** badge id (for i18n name lookup via components.badge.catalog.<id>.name) */
+    badgeId?: string;
     /** heart tier click count */
     at?: number;
     /** secondary line (event notes, mood note) */
@@ -97,7 +99,8 @@
           ts: r.unlockedAt,
           type: 'badge',
           icon: meta?.icon ?? '🏷️',
-          name: meta?.label ?? r.id
+          name: meta?.label ?? r.id,
+          badgeId: r.id
         });
       }
 
@@ -184,11 +187,17 @@
 
   function itemTitle(it: MemoryItem): string {
     switch (it.type) {
-      case 'badge':
+      case 'badge': {
+        // Resolve o nome localizado pelo id (como o BadgeUnlockModal faz) — o
+        // label do catálogo é o fallback em inglês e não muda com o idioma.
+        const localizedBadge = it.badgeId
+          ? $t(`components.badge.catalog.${it.badgeId}.name`, { default: it.name ?? it.badgeId })
+          : (it.name ?? '');
         return $t('memorias.item.badge', {
-          values: { name: it.name ?? '' },
-          default: `Conquista desbloqueada: ${it.name ?? ''}`
+          values: { name: localizedBadge },
+          default: `Conquista desbloqueada: ${localizedBadge}`
         });
+      }
       case 'secret': {
         const localizedName = it.secretId
           ? $t(`secrets.egg.${it.secretId}.name`, { default: it.name ?? it.secretId })
