@@ -15,6 +15,9 @@
     q: string;
     opts: string[];
     a: number;
+    /** Alternate schema used by some content JSONs (aiq/goq/gqq/lcq). */
+    correct?: number;
+    explanation?: string;
   }
   interface Quiz {
     id: string;
@@ -54,18 +57,37 @@
       } catch (e) {
         console.error('[quiz] history read failed', e);
       }
-      if (quiz) return; // already have inline data
+      if (quiz) {
+        quiz = normalizeQuiz(quiz); // inline data also gets schema-normalized
+        return;
+      }
       if (!jsonPath) return;
       try {
         const res = await fetch(jsonPath);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: Quiz = await res.json();
-        quiz = data;
+        quiz = normalizeQuiz(data);
       } catch (e) {
         loadError = e instanceof Error ? e.message : String(e);
       }
     })();
   });
+
+  /** Alguns JSONs de conteúdo usam `correct` em vez de `a` para o índice da
+   *  resposta certa — sem normalizar, `item.a` fica undefined e o quiz é
+   *  impossível de ganhar. Também filtra perguntas malformadas para o runner
+   *  nunca rebentar com conteúdo inválido (e sinaliza quiz vazio como erro). */
+  function normalizeQuiz(data: Quiz): Quiz {
+    const questions = (Array.isArray(data?.questions) ? data.questions : [])
+      .filter((raw) => raw && typeof raw.q === 'string' && Array.isArray(raw.opts) && raw.opts.length > 0)
+      .map((raw) => ({ ...raw, a: typeof raw.a === 'number' ? raw.a : (raw.correct ?? 0) }))
+      .filter((q) => q.a >= 0 && q.a < q.opts.length);
+    if (questions.length === 0) {
+      loadError = 'empty quiz';
+      return { ...data, questions: [] };
+    }
+    return { ...data, questions };
+  }
 
   // ── V10.1 (tarefa H): fluxo Duolingo — UMA pergunta por ecrã ──────────
   // Escolher uma opção é um compromisso: feedback imediato (cor + som +

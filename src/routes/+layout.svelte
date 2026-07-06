@@ -80,6 +80,24 @@
   afterNavigate((nav) => {
     const pathname = nav.to?.url.pathname ?? page.url.pathname;
     void trackVisit(pathname);
+    // A sessão é lida uma vez no arranque; /login e /splash escrevem-na e
+    // navegam SPA para "/" sem reload — sem re-ler aqui, a bottom-nav ficava
+    // presa em "inicia sessão primeiro" até um refresh manual.
+    if (!session) {
+      const fresh = getSession();
+      if (fresh) {
+        session = fresh;
+        if (authRedirectTimer) {
+          clearTimeout(authRedirectTimer);
+          authRedirectTimer = null;
+        }
+        // initStores é idempotente e sensível ao perfil — chamamos sempre,
+        // porque o boot marca storesReady=true mesmo sem sessão (defaults).
+        void initStores(fresh.profile)
+          .then(() => (storesReady = true))
+          .catch((e) => console.error('[presuntinho] initStores failed:', e));
+      }
+    }
     // Keep the header bell fresh as you move around (throttled inside).
     if (session && storesReady) void refreshNotifBadge();
   });
