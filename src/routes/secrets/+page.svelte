@@ -8,7 +8,7 @@
     lastScoreKey,
     readArcadeScore
   } from '$lib/arcade/games';
-  import MascotWalker from '$lib/components/arcade/MascotWalker.svelte';
+  import MascotRunner from '$lib/components/arcade/MascotRunner.svelte';
   import CrtOverlay from '$lib/components/arcade/CrtOverlay.svelte';
   import { arcadeImmersive } from '$lib/arcade/immersive-state';
   import { getActiveMascot, MASCOT_CHANGED_EVENT, DEFAULT_MASCOT_ID } from '$lib/gamification/mascots';
@@ -46,6 +46,29 @@
     if (musicOn) startArcadeMusic('lobby');
   }
 
+  // Tap-anywhere-to-mute: a tap on the arcade backdrop (not a button, menu row,
+  // link or the runner) flips the chiptune on/off — like slapping the cabinet.
+  // We require a still tap (pointerup close to pointerdown) so a scroll drag on
+  // the CRT screen never toggles it by accident.
+  let tapX = 0;
+  let tapY = 0;
+  let tapOnBackdrop = false;
+  function isBackdrop(target: EventTarget | null): boolean {
+    const el = target as HTMLElement | null;
+    if (!el) return false;
+    return !el.closest('a, button, .menu, .runner, [role="button"], input, select, textarea');
+  }
+  function onBackdropDown(e: PointerEvent): void {
+    tapX = e.clientX;
+    tapY = e.clientY;
+    tapOnBackdrop = isBackdrop(e.target);
+  }
+  function onBackdropUp(e: PointerEvent): void {
+    if (!tapOnBackdrop || !isBackdrop(e.target)) return;
+    if (Math.hypot(e.clientX - tapX, e.clientY - tapY) > 10) return; // was a drag/scroll
+    onToggleMusic();
+  }
+
   function move(delta: number): void {
     selected = (selected + delta + ARCADE_GAMES.length) % ARCADE_GAMES.length;
   }
@@ -53,6 +76,11 @@
     void goto(ARCADE_GAMES[selected].href);
   }
   function onKey(e: KeyboardEvent): void {
+    // The playable runner owns Space/↑ for jumping while it's focused — don't
+    // also fire the cabinet's Enter/Space = launch (it would yank us into a game
+    // mid-jump). The runner handles those keys itself and stops the default.
+    const active = typeof document !== 'undefined' ? document.activeElement : null;
+    if (active && active.classList.contains('runner')) return;
     const k = e.key.toLowerCase();
     if (k === 'arrowdown' || k === 's') {
       e.preventDefault();
@@ -116,7 +144,10 @@
   <meta name="description" content={$t('arcade.meta.description', { default: 'Jogos arcade secretos do Presuntinho, com pontuações locais e controlos mobile.' })} />
 </svelte:head>
 
-<div class="crt-screen">
+<!-- The mute toggle is fully operable via the ♪ button; the backdrop tap is a
+     progressive enhancement (slap-the-cabinet), so a static-element handler is ok. -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div class="crt-screen" onpointerdown={onBackdropDown} onpointerup={onBackdropUp}>
   <CrtOverlay radius="0" intensity={0.55} />
 
   <!-- ── top HUD row: back · HI-SCORE · hearts · music ── -->
@@ -170,7 +201,7 @@
   <div class="floor">
     <p class="bubble">{$t(hostSpeechKey, { default: 'Insere uma moeda e escolhe uma máquina! 🕹️' })}</p>
     <div class="floor-strip">
-      <MascotWalker mascot={hostId} size={64} pixelated />
+      <MascotRunner mascot={hostId} size={64} />
     </div>
     <p class="press">{$t('arcade.lobby.press_start', { default: 'PRESS START' })}</p>
   </div>
