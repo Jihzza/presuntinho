@@ -78,7 +78,22 @@ function earliest(a: number, b: number): number {
   return a > 0 ? a : b;
 }
 
-export function mergeSnapshots(a: ProgressSnapshot, b: ProgressSnapshot): ProgressSnapshot {
+/** Fill in any missing sub-objects so a partial/empty remote row (the column
+ *  defaults to '{}'::jsonb, and the shape may grow over time) can't make
+ *  `Object.keys(undefined)` throw and silently abort a sync. */
+export function normalizeSnapshot(s: Partial<ProgressSnapshot> | null | undefined): ProgressSnapshot {
+  return {
+    xp: typeof s?.xp === 'number' ? s.xp : 0,
+    badges: s?.badges ?? {},
+    visited: s?.visited ?? {},
+    secrets: s?.secrets ?? {},
+    quiz: s?.quiz ?? {}
+  };
+}
+
+export function mergeSnapshots(rawA: ProgressSnapshot, rawB: ProgressSnapshot): ProgressSnapshot {
+  const a = normalizeSnapshot(rawA);
+  const b = normalizeSnapshot(rawB);
   const out: ProgressSnapshot = { xp: Math.max(a.xp || 0, b.xp || 0), badges: {}, visited: {}, secrets: {}, quiz: {} };
   const mergeStamped = (x: Record<string, number>, y: Record<string, number>): Record<string, number> => {
     const r: Record<string, number> = {};
@@ -97,7 +112,9 @@ export function mergeSnapshots(a: ProgressSnapshot, b: ProgressSnapshot): Progre
 }
 
 /** True when `merged` carries anything `local` doesn't (so we know to push). */
-export function isAhead(merged: ProgressSnapshot, local: ProgressSnapshot): boolean {
+export function isAhead(rawMerged: ProgressSnapshot, rawLocal: ProgressSnapshot): boolean {
+  const merged = normalizeSnapshot(rawMerged);
+  const local = normalizeSnapshot(rawLocal);
   if (merged.xp > local.xp) return true;
   for (const key of ['badges', 'visited', 'secrets'] as const) {
     if (Object.keys(merged[key]).length > Object.keys(local[key]).length) return true;
@@ -153,7 +170,8 @@ export async function fetchRemote(profile: ProfileId): Promise<ProgressSnapshot 
     .eq('profile', profile)
     .maybeSingle();
   if (error) throw error;
-  return (data?.data as ProgressSnapshot) ?? null;
+  // Normalize so a partial/empty ('{}') row can't throw downstream in merge.
+  return data?.data ? normalizeSnapshot(data.data as Partial<ProgressSnapshot>) : null;
 }
 
 export async function pushRemote(profile: ProfileId, snap: ProgressSnapshot): Promise<void> {
