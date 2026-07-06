@@ -30,6 +30,8 @@
 
   let showTimer: ReturnType<typeof setTimeout> | null = null;
   let hideTimer: ReturnType<typeof setTimeout> | null = null;
+  // Track the short "+1" pop timers so none survive an unmount mid-animation.
+  const popTimers = new Set<ReturnType<typeof setTimeout>>();
 
   function rand(min: number, max: number): number {
     return min + Math.random() * (max - min);
@@ -65,9 +67,11 @@
     if (!reduced) {
       const id = ++popSeq;
       pops = [...pops, { id, dx: Math.round(rand(-14, 14)) }];
-      setTimeout(() => {
+      const timer = setTimeout(() => {
+        popTimers.delete(timer);
         pops = pops.filter((p) => p.id !== id);
       }, 750);
+      popTimers.add(timer);
     }
     // Reward a keen tapper by keeping the heart a touch longer, capped so it
     // still disappears promptly.
@@ -84,6 +88,8 @@
   onDestroy(() => {
     if (showTimer) clearTimeout(showTimer);
     if (hideTimer) clearTimeout(hideTimer);
+    for (const t of popTimers) clearTimeout(t);
+    popTimers.clear();
   });
 </script>
 

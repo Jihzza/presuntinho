@@ -98,6 +98,7 @@
   let holdFired = false;
   let holdTimer: ReturnType<typeof setTimeout> | null = null;
   let tapTimer: ReturnType<typeof setTimeout> | null = null;
+  let particleTimer: ReturnType<typeof setTimeout> | null = null;
   let pseq = 0;
 
   function fireParticles(kind: 'love' | 'nudge'): void {
@@ -106,10 +107,21 @@
       const n = 8;
       particles = Array.from({ length: n }, (_, i) => ({ id: ++pseq, a: Math.round((360 / n) * i) }));
     }
-    setTimeout(() => {
+    if (particleTimer) clearTimeout(particleTimer);
+    particleTimer = setTimeout(() => {
+      particleTimer = null;
       burst = 'none';
       particles = [];
     }, 900);
+  }
+
+  // Clear every gesture timer — called from the onMount cleanup so a pending
+  // hold/tap/particle timer can't fire (and navigate/send) after unmount.
+  function clearGestureTimers(): void {
+    if (holdTimer) clearTimeout(holdTimer);
+    if (tapTimer) clearTimeout(tapTimer);
+    if (particleTimer) clearTimeout(particleTimer);
+    holdTimer = tapTimer = particleTimer = null;
   }
 
   function toastForResult(res: PingResult): void {
@@ -229,6 +241,7 @@
       window.removeEventListener(ACTION_PULSE_EVENT, onPulse);
       window.removeEventListener(STREAK_CHANGED_EVENT, onPulse);
       clearInterval(emotionTimer);
+      clearGestureTimers();
     };
   });
 </script>
@@ -276,9 +289,10 @@
     align-items: center;
     justify-content: center;
     padding: 0;
-    /* Position is owned by the shared .fab-stack in +layout.svelte. Keeping
-       this component non-fixed prevents it sitting behind the Vida footer tab. */
-    position: static;
+    /* The .mascot-corner in +layout owns the on-screen placement; this stays
+       non-fixed so it isn't hidden behind the Vida footer tab. `relative` also
+       makes it the positioning context for the gesture particles below. */
+    position: relative;
     opacity: 0.64;
     filter: drop-shadow(0 3px 8px rgba(15, 23, 42, 0.42));
     transition:
@@ -300,9 +314,6 @@
   }
   .mascot-fab:active {
     transform: scale(0.95);
-  }
-  .mascot-fab {
-    position: relative;
   }
   /* Gesture bursts — love (hold) pulses, nudge (multi-tap) shakes. */
   .mascot-fab.loving {

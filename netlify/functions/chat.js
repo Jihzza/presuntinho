@@ -46,7 +46,11 @@ const MAX_POINT_BATCH = 100; // a single tap-flush can carry at most this many
 const MAX_COUPLE_POINTS = 100_000_000; // hard ceiling so a bug can't run away
 const MAX_GAME_SCORE = 10_000_000;
 const MAX_GAME_ID_LEN = 40;
+const MAX_GAME_IDS = 64; // cap distinct games so scores{} can't grow unbounded
 const COUPLE_KINDS = new Set(['point', 'love', 'nudge', 'score']);
+
+const clampPoints = (v) => Math.max(0, Math.min(MAX_COUPLE_POINTS, Math.floor(v)));
+const clampScore = (v) => Math.max(0, Math.min(MAX_GAME_SCORE, Math.floor(v)));
 
 const ALLOWED_ORIGINS = new Set([
   'https://presuntinho.netlify.app',
@@ -173,15 +177,20 @@ function normalizeCouple(raw) {
   const couple = defaultCouple();
   if (!raw || typeof raw !== 'object') return couple;
   if (raw.points && typeof raw.points === 'object') {
-    if (Number.isFinite(raw.points.fatma)) couple.points.fatma = Math.max(0, Math.floor(raw.points.fatma));
-    if (Number.isFinite(raw.points.daniel)) couple.points.daniel = Math.max(0, Math.floor(raw.points.daniel));
+    // Clamp on READ too so a corrupted/oversized historical value can't leak
+    // past the write-side ceilings via the max() merge later.
+    if (Number.isFinite(raw.points.fatma)) couple.points.fatma = clampPoints(raw.points.fatma);
+    if (Number.isFinite(raw.points.daniel)) couple.points.daniel = clampPoints(raw.points.daniel);
   }
   if (raw.scores && typeof raw.scores === 'object') {
     for (const [gameId, entry] of Object.entries(raw.scores)) {
+      // Also bound the number of distinct games kept on read, so an already
+      // bloated blob is trimmed rather than re-persisted in full.
+      if (Object.keys(couple.scores).length >= MAX_GAME_IDS) break;
       if (!/^[a-zA-Z0-9_-]{1,40}$/.test(gameId) || !entry || typeof entry !== 'object') continue;
       const e = {};
-      if (Number.isFinite(entry.fatma)) e.fatma = Math.max(0, Math.floor(entry.fatma));
-      if (Number.isFinite(entry.daniel)) e.daniel = Math.max(0, Math.floor(entry.daniel));
+      if (Number.isFinite(entry.fatma)) e.fatma = clampScore(entry.fatma);
+      if (Number.isFinite(entry.daniel)) e.daniel = clampScore(entry.daniel);
       if ('fatma' in e || 'daniel' in e) couple.scores[gameId] = e;
     }
   }
@@ -308,6 +317,63 @@ async function handleGet(event, profile) {
   return buildResponse(200, { messages, meta, profile });
 }
 
+/**
+ * Compare-and-swap the shared meta blob for couple writes. Reads the current
+ * meta WITH its etag, applies `mutate(meta)` (which may return an error string
+ * to abort), then writes only if the etag still matches — retrying on conflict
+ * so concurrent writers can't silently clobber each other. This is what makes
+ * the additive point counter safe even when both partners (or two tabs) tap at
+ * once. Falls back to one unconditional write after MAX_CAS_RETRIES so a user's
+ * action is never dropped outright.
+ * Returns { meta } on success or { error } when the mutation rejected input.
+ */
+const MAX_CAS_RETRIES = 6;
+async function commitCoupleMeta(store, mutate) {
+  for (let attempt = 0; attempt < MAX_CAS_RETRIES; attempt++) {
+    let raw = null;
+    let etag;
+    try {
+      const res = await store.getWithMetadata(META_KEY, { type: 'json' });
+      if (res) {
+        raw = res.data;
+        etag = res.etag;
+      }
+    } catch (e) {
+      console.error('[chat] couple meta read failed', e);
+    }
+    const meta = normalizeMeta(raw);
+    const err = mutate(meta);
+    if (err) return { error: err };
+    try {
+      const opts = etag ? { onlyIfMatch: etag } : { onlyIfNew: true };
+      const result = await store.setJSON(META_KEY, meta, opts);
+      if (result && result.modified) return { meta };
+      // Not modified → the blob changed under us (etag stale / key now exists).
+      // Loop to re-read the fresh value and re-apply.
+    } catch (e) {
+      console.error('[chat] couple CAS write failed', e);
+    }
+  }
+  // Exhausted retries under sustained contention — do a best-effort plain
+  // read-modify-write so the action isn't lost (accepts the rare lost update).
+  let raw = null;
+  try {
+    raw = await store.get(META_KEY, { type: 'json' });
+  } catch (e) {
+    console.error('[chat] couple meta fallback read failed', e);
+  }
+  const meta = normalizeMeta(raw);
+  const err = mutate(meta);
+  if (err) return { error: err };
+  try {
+    await store.setJSON(META_KEY, meta);
+  } catch (e) {
+    console.error('[chat] couple write failed', e);
+    return {};
+  }
+  return { meta };
+}
+
 // ── POST ── send text / send media / mark read ──
 async function handlePost(event, profile) {
   if (!isAllowedOrigin(event)) {
@@ -352,44 +418,46 @@ async function handlePost(event, profile) {
       return buildResponse(400, { error: 'invalid_couple_kind' });
     }
     const now = Date.now();
-    // Single read-modify-write. Each profile only ever mutates its OWN point
-    // tally / ping slot, and game scores are merged with max(), so the common
-    // case (the two partners touching different fields) is race-free. A dropped
-    // update in the rare same-100ms double-write is cosmetic and self-heals on
-    // the next tap — not worth an etag CAS for a 2-person backend.
-    const meta = await readMeta(store);
-    if (kind === 'point') {
-      let n = Number(payload.couple.n);
-      n = Number.isFinite(n) ? Math.floor(n) : 1;
-      n = Math.max(1, Math.min(MAX_POINT_BATCH, n));
-      meta.couple.points[profile] = Math.min(
-        MAX_COUPLE_POINTS,
-        (meta.couple.points[profile] || 0) + n
-      );
-    } else if (kind === 'love' || kind === 'nudge') {
-      meta.couple.pings[profile] = { kind, ts: now };
-    } else if (kind === 'score') {
-      const gameId = String(payload.couple.gameId || '');
-      if (!/^[a-zA-Z0-9_-]{1,40}$/.test(gameId)) {
+
+    // Pre-validate the score payload once (outside the CAS retry loop) so a bad
+    // request 400s deterministically instead of burning retries.
+    let gameId = null;
+    let score = 0;
+    if (kind === 'score') {
+      gameId = String(payload.couple.gameId || '');
+      if (!/^[a-zA-Z0-9_-]{1,40}$/.test(gameId) || gameId.length > MAX_GAME_ID_LEN) {
         return buildResponse(400, { error: 'invalid_game_id' });
       }
-      if (gameId.length > MAX_GAME_ID_LEN) {
-        return buildResponse(400, { error: 'invalid_game_id' });
+      score = clampScore(Number.isFinite(Number(payload.couple.score)) ? Number(payload.couple.score) : 0);
+    }
+
+    // The mutation, applied to the freshest meta on every CAS attempt. Additive
+    // point increments are NOT idempotent, so they must run against a snapshot
+    // guarded by an etag (commitCoupleMeta re-reads + re-applies on conflict).
+    const mutate = (meta) => {
+      if (kind === 'point') {
+        let n = Number(payload.couple.n);
+        n = Number.isFinite(n) ? Math.floor(n) : 1;
+        n = Math.max(1, Math.min(MAX_POINT_BATCH, n));
+        meta.couple.points[profile] = clampPoints((meta.couple.points[profile] || 0) + n);
+      } else if (kind === 'love' || kind === 'nudge') {
+        meta.couple.pings[profile] = { kind, ts: now };
+      } else if (kind === 'score') {
+        const isNew = !meta.couple.scores[gameId];
+        if (isNew && Object.keys(meta.couple.scores).length >= MAX_GAME_IDS) {
+          return 'too_many_games';
+        }
+        const entry = { ...(meta.couple.scores[gameId] || {}) };
+        entry[profile] = Math.max(entry[profile] || 0, score);
+        meta.couple.scores[gameId] = entry;
       }
-      let s = Number(payload.couple.score);
-      s = Number.isFinite(s) ? Math.floor(s) : 0;
-      s = Math.max(0, Math.min(MAX_GAME_SCORE, s));
-      const entry = { ...(meta.couple.scores[gameId] || {}) };
-      entry[profile] = Math.max(entry[profile] || 0, s);
-      meta.couple.scores[gameId] = entry;
-    }
-    try {
-      await store.setJSON(META_KEY, meta);
-    } catch (e) {
-      console.error('[chat] couple write failed', e);
-      return buildResponse(500, { error: 'couple_write_failed' });
-    }
-    return buildResponse(200, { ok: true, meta });
+      return null;
+    };
+
+    const outcome = await commitCoupleMeta(store, mutate);
+    if (outcome.error) return buildResponse(400, { error: outcome.error });
+    if (!outcome.meta) return buildResponse(500, { error: 'couple_write_failed' });
+    return buildResponse(200, { ok: true, meta: outcome.meta });
   }
 
   const ts = Date.now();
