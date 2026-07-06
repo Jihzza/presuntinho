@@ -14,7 +14,8 @@
     "auth:bypass:fatma": "node scripts/dev-auth-bypass.mjs fatma",
     "check:depth": "node scripts/depth-gates.mjs",
     "check:i18n": "node scripts/i18n-parity-check.mjs",
-    "scan:i18n": "node scripts/i18n-scan.mjs --report-only"
+    "scan:i18n": "node scripts/i18n-scan.mjs --report-only",
+    "quota:gate": "node scripts/quota-gate.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.45.0",
