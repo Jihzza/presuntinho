@@ -553,6 +553,13 @@
      position:fixed — o composer dos chats deixava de colar ao viewport. */
   .route-transition {
     animation: route-in var(--motion-base, 220ms) ease;
+    /* Height passthrough for full-height routes. Only `opacity` is animated
+       (never transform), so this wrapper never becomes a containing block for
+       the chat composer's position:fixed — see the note above. */
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
   }
   @keyframes route-in {
     from {
@@ -608,6 +615,13 @@
   .content {
     flex: 1;
     width: 100%;
+    /* Pass the real flex height (100dvh − sticky header − sticky footer) down to
+       the page so full-height routes (e.g. the /agente chat) fill EXACTLY the
+       gap between header and footer — no hardcoded magic numbers, no dead band
+       above the footer, no overflow on notched devices. */
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
   .bottom-nav {
       position: sticky;
