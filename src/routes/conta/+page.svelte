@@ -255,7 +255,10 @@
           <small>@{accountState.account.handle} · {accountState.user.email}</small>
         </div>
       </div>
-      <a class="cta" href="/contactos/">{$t('conta.contacts', { default: 'Os meus contactos →' })}</a>
+      <div class="links">
+        <a class="linkcard" href="/contactos/">👥 {$t('conta.contacts', { default: 'Contactos' })}</a>
+        <a class="linkcard" href="/grupos/">💞 {$t('conta.spaces', { default: 'Casal e grupos' })}</a>
+      </div>
     </div>
 
     <div class="card">
@@ -312,6 +315,9 @@
   .me-emoji { font-size: 2.2rem; line-height: 1; }
   .me strong { display: block; font-size: 1.05rem; }
   .me small { display: block; color: var(--txt3); font-size: .8rem; }
+  .links { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .linkcard { display: flex; align-items: center; justify-content: center; gap: .4rem; min-height: 48px; border-radius: var(--radius-md, .6rem); border: 1px solid var(--border); background: var(--bg-elev, rgba(255,255,255,.04)); color: var(--txt); text-decoration: none; font-weight: 700; font-size: .9rem; }
+  .linkcard:hover { border-color: var(--accent); }
   .inline { display: flex; gap: .4rem; }
   .inline input { flex: 1; }
   .mini { flex-shrink: 0; border: 1px solid var(--border); background: var(--bg-elev, transparent); color: var(--txt); font: inherit; font-weight: 700; border-radius: var(--radius-md, .6rem); padding: 0 .9rem; cursor: pointer; min-height: 44px; }
