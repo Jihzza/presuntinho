@@ -309,12 +309,26 @@
   .mascot {
     font-size: 3.2rem;
     line-height: 1;
-    animation: mascot-cheer 900ms ease both;
+    /* Pop in, then keep celebrating with a gentle looping hop (Duolingo-style)
+       so the card feels alive instead of a static freeze-frame. */
+    animation:
+      mascot-cheer 900ms ease both,
+      mascot-hop 1.5s 1s ease-in-out infinite;
+    transform-origin: 50% 100%;
   }
   @keyframes mascot-cheer {
     0% { transform: scale(0.4) rotate(-12deg); opacity: 0; }
     55% { transform: scale(1.18) rotate(6deg); opacity: 1; }
     100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  @keyframes mascot-hop {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-10px) rotate(-4deg); }
+    50% { transform: translateY(0) rotate(0deg); }
+    72% { transform: translateY(-5px) rotate(4deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mascot { animation: none; }
   }
   .v-title {
     margin: 0.5rem 0 0.2rem;
