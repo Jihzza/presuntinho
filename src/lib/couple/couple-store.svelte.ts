@@ -318,6 +318,24 @@ export function startCouplePoller(): void {
   };
 }
 
+/**
+ * Recompute `couple.enabled` after the chat token changes (e.g. saved/cleared in
+ * Settings) so the couple features light up WITHOUT a reload, and (re)open the
+ * realtime channel + do an immediate reconciliation poll.
+ */
+export function refreshCoupleEnabled(): void {
+  const me = profile();
+  couple.enabled = !!(me && getChatToken(me));
+  if (me) {
+    void connectRealtime(me);
+    void poll();
+  } else {
+    void room?.leave();
+    room = null;
+    couple.partnerOnline = false;
+  }
+}
+
 export function stopCouplePoller(): void {
   if (pollTimer) clearInterval(pollTimer);
   if (flushTimer) clearTimeout(flushTimer);

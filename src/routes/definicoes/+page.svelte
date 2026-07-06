@@ -75,6 +75,8 @@
   } from '$lib/gamification/mascots';
   // gap-116: real PBKDF2 reset-password flow imports.
   import { getSession } from '$lib/auth/session';
+  import { getChatToken, setChatToken, clearChatToken, type ChatProfile } from '$lib/chat/client';
+  import { couple, refreshCoupleEnabled } from '$lib/couple/couple-store.svelte';
   import {
       verifyAgainstEffectiveHashes,
       setPassword,
@@ -812,6 +814,36 @@
     }
   }
 
+  // ── Couple connection (the chat token that unlocks shared points + pings) ──
+  let coupleProfile = $state<ChatProfile | null>(null);
+  let coupleToken = $state('');
+  let coupleConnected = $state(false);
+
+  onMount(() => {
+    const p = getSession()?.profile;
+    coupleProfile = p === 'fatma' || p === 'daniel' ? p : null;
+    coupleConnected = !!(coupleProfile && getChatToken(coupleProfile));
+  });
+
+  function saveCoupleToken(): void {
+    if (!coupleProfile) return;
+    const token = coupleToken.trim();
+    if (!token) return;
+    setChatToken(coupleProfile, token);
+    coupleConnected = true;
+    coupleToken = '';
+    refreshCoupleEnabled(); // light it up now, no reload
+    showToast($t('settings.couple.saved', { default: 'Conta do casal ligada 💞' }));
+  }
+
+  function disconnectCouple(): void {
+    if (!coupleProfile) return;
+    clearChatToken(coupleProfile);
+    coupleConnected = false;
+    refreshCoupleEnabled();
+    showToast($t('settings.couple.disconnected', { default: 'Conta do casal desligada' }));
+  }
+
   // Misc — gap-115: read version from a single source of truth
   // (src/lib/version.ts) so the About card never shows a misleading date.
   void REPO_URL;
@@ -1193,6 +1225,39 @@
       <p class="hint err">{$t('settings.hermes.test_fail')}</p>
     {/if}
   </section>
+
+  <!-- ============ Couple connection ============ -->
+  {#if coupleProfile}
+    <section class="card" aria-labelledby="couple-h">
+      <div class="card-head">
+        <span class="icon-wrap"><Heart size={18} /></span>
+        <h2 id="couple-h">{$t('settings.couple.title', { default: 'Conta do casal' })}</h2>
+      </div>
+      <p class="muted">{$t('settings.couple.hint', { default: 'Liga a chave partilhada para sincronizar pontos, amor e saudades entre os dois telemóveis.' })}</p>
+      {#if coupleConnected}
+        <p class="hint ok">
+          {$t('settings.couple.connected', { default: 'Ligada ✓' })}
+          {#if couple.partnerOnline}· {$t('settings.couple.partner_online', { default: 'parceira online 🟢' })}{/if}
+        </p>
+        <div class="data-actions">
+          <Button variant="danger" onclick={disconnectCouple}>
+            {$t('settings.couple.disconnect', { default: 'Desligar' })}
+          </Button>
+        </div>
+      {:else}
+        <form onsubmit={(e) => { e.preventDefault(); saveCoupleToken(); }}>
+          <label class="field">
+            <span class="field-label">{$t('settings.couple.key_label', { default: 'Chave de ligação' })}</span>
+            <input type="password" bind:value={coupleToken} autocomplete="off" placeholder="••••••••" />
+          </label>
+          <div class="data-actions">
+            <Button type="submit">{$t('settings.couple.save', { default: 'Ligar' })}</Button>
+          </div>
+        </form>
+      {/if}
+      <p class="hint">{$t('settings.couple.note', { default: 'A mesma chave tem de ser usada nos dois telemóveis. Também podes geri-la nas Mensagens.' })}</p>
+    </section>
+  {/if}
 
   <!-- ============ Data ============ -->
   <section class="card" aria-labelledby="data-h">
