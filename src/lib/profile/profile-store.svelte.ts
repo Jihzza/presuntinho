@@ -87,22 +87,39 @@ async function hydrateFromCloud(id: 'fatma' | 'daniel'): Promise<void> {
 }
 
 let remoteUnsub: (() => void) | null = null;
+// Timestamp of the last LOCAL edit, so a stale remote echo can't clobber a fresh
+// local change (last-write-wins by recency instead of by arrival order).
+let lastLocalSaveTs = 0;
 function applyRemote(r: {
   display_name: string | null;
   emoji: string | null;
   bio: string | null;
   photo_url: string | null;
+  updated_at?: string;
 }): void {
-  if (r.display_name != null) profileState.displayName = r.display_name;
+  const remoteTs = r.updated_at ? new Date(r.updated_at).getTime() : 0;
+  if (lastLocalSaveTs && remoteTs && remoteTs < lastLocalSaveTs) return; // local is newer — keep it
+  profileState.displayName = r.display_name ?? '';
   if (r.emoji) profileState.emoji = r.emoji;
-  if (r.bio != null) profileState.bio = r.bio;
-  if (r.photo_url != null) profileState.photo = r.photo_url;
+  profileState.bio = r.bio ?? '';
+  profileState.photo = r.photo_url ?? '';
+  // Persist to the local registry so IndexedDB matches the cloud (survives reload).
+  const id = profileState.id;
+  if (id) {
+    void updateMember(id, {
+      displayName: profileState.displayName,
+      emoji: profileState.emoji,
+      bio: profileState.bio,
+      photo: profileState.photo
+    });
+  }
   if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent(PROFILE_CHANGED_EVENT));
 }
 
 export async function saveProfile(patch: ProfilePatch): Promise<void> {
   const id = profileState.id;
   if (!id) return;
+  lastLocalSaveTs = Date.now();
   await seedLegacyRegistry();
   await updateMember(id, patch);
   if (patch.displayName !== undefined) profileState.displayName = patch.displayName;

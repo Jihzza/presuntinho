@@ -160,7 +160,10 @@ export class SnakeVersusSim {
       const h = heads[p];
       if (!h) continue;
       if (this.outOfBounds(h)) dead[p] = 'wall';
-      else if (this.snakes[p].body.some((c) => c.x === h.x && c.y === h.y)) dead[p] = 'self';
+      // Exclude the vacating tail: it moves away this tick, so entering that cell
+      // is legal. (Food never spawns on a snake, so this never coincides with
+      // growth, where the tail would stay.)
+      else if (this.snakes[p].body.slice(0, -1).some((c) => c.x === h.x && c.y === h.y)) dead[p] = 'self';
     }
 
     // 4) head-on: both heads target the same cell (or swap places) → both die

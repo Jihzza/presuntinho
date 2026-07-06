@@ -101,8 +101,11 @@ export function joinRoom(code: string, self: PeerMeta): Promise<Room> {
   channel.on('presence', { event: 'leave' }, recomputePeer);
 
   return new Promise<Room>((resolve, reject) => {
+    let settled = false;
     channel.subscribe(async (status) => {
       if (status === 'SUBSCRIBED') {
+        if (settled) return; // a later SUBSCRIBED on auto-rejoin — ignore
+        settled = true;
         await channel.track(self);
         recomputePeer();
         resolve({
@@ -138,7 +141,13 @@ export function joinRoom(code: string, self: PeerMeta): Promise<Room> {
             await sb.removeChannel(channel);
           }
         });
-      } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+      } else if (!settled && (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED')) {
+        // Terminal before we ever subscribed: on flaky mobile the socket can
+        // close before the join replies, so CLOSED must settle the promise too —
+        // otherwise the caller's await hangs forever. Tear the errored channel
+        // down (it would keep auto-rejoining) and reject once.
+        settled = true;
+        void sb.removeChannel(channel);
         reject(new Error(`Realtime channel ${status}`));
       }
     });

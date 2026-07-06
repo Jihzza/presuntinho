@@ -185,6 +185,23 @@ async function connectRealtime(me: ChatProfile): Promise<void> {
   }
 }
 
+/** Pull the authoritative point tallies from Supabase — used to seed and to
+ *  reconcile after a dropped realtime event or a failed flush. */
+async function reconcileSupabasePoints(): Promise<void> {
+  const me = profile();
+  if (!supaActive || !supa || !me) return;
+  try {
+    const points = await supa.fetchCouplePoints();
+    const other = otherProfile(me);
+    couple.myPoints = points[me] ?? 0;
+    couple.partnerPoints = points[other] ?? 0;
+    couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+    couple.online = true;
+  } catch {
+    /* keep the current display */
+  }
+}
+
 /** Hydrate + live-subscribe the durable Supabase points counter. On any failure
  *  we clear supaActive so the Blobs counter transparently takes back over. */
 async function initSupabasePoints(me: ChatProfile): Promise<void> {
@@ -192,21 +209,19 @@ async function initSupabasePoints(me: ChatProfile): Promise<void> {
     const mod = await import('$lib/couple/couple-supabase');
     supa = mod;
     const other = otherProfile(me);
-    const points = await mod.fetchCouplePoints();
-    couple.myPoints = points[me] ?? 0;
-    couple.partnerPoints = points[other] ?? 0;
-    couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
-    couple.ready = true;
-    couple.online = true;
     // Pings arrive purely over the broadcast channel here (no Blobs snapshot to
     // seed from), so mark seeded → the first incoming ping actually fires.
     seededPing = true;
+    // Subscribe FIRST so no change is missed in the gap before the initial fetch.
     supaPointsUnsub?.();
     supaPointsUnsub = mod.subscribeCouplePoints((prof, pts) => {
-      if (prof === me) couple.myPoints = pts;
-      else if (prof === other) couple.partnerPoints = pts;
+      // Monotonic: never let an out-of-order event lower the count.
+      if (prof === me) couple.myPoints = Math.max(couple.myPoints, pts);
+      else if (prof === other) couple.partnerPoints = Math.max(couple.partnerPoints, pts);
       couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
     });
+    await reconcileSupabasePoints();
+    couple.ready = true;
   } catch (e) {
     console.warn('[couple] Supabase points unavailable; using the Blobs counter', e);
     supa = null;
@@ -254,8 +269,11 @@ async function flushPoints(): Promise<void> {
       couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
       couple.online = true;
     } catch (e) {
-      pendingTaps += n; // retry on the next flush
+      // At-most-once on failure: the bump is NOT idempotent, so re-queuing after
+      // a possibly-committed write would inflate the server total. Drop the n
+      // taps and let the periodic reconcile pull the authoritative count instead.
       couple.online = false;
+      void reconcileSupabasePoints();
     }
     return;
   }
@@ -283,9 +301,11 @@ async function flushPoints(): Promise<void> {
 export function tapCouplePoint(): number {
   const me = profile();
   if (!me) return couple.points;
+  // Track the unflushed taps in pendingTaps ONLY (not myPoints — that is the
+  // server-authoritative tally set on flush). Incrementing both double-counts an
+  // unflushed tap whenever a recompute (partner event) runs before the flush.
   pendingTaps += 1;
   couple.points += 1;
-  couple.myPoints += 1;
   if (!flushTimer) flushTimer = setTimeout(() => void flushPoints(), POINT_FLUSH_MS);
   return couple.points;
 }
@@ -360,7 +380,10 @@ export function startCouplePoller(): void {
   }
 
   const onVisible = () => {
-    if (document.visibilityState === 'visible') void poll();
+    if (document.visibilityState === 'visible') {
+      void poll();
+      void reconcileSupabasePoints(); // catch up on anything realtime missed
+    }
   };
   const onHide = () => {
     // Best-effort flush of queued taps before the tab is frozen/closed.
@@ -373,6 +396,8 @@ export function startCouplePoller(): void {
   pollTimer = setInterval(() => {
     if (typeof document !== 'undefined' && document.hidden) return;
     void poll();
+    // In Supabase mode poll() no-ops on points; reconcile heals realtime gaps.
+    void reconcileSupabasePoints();
   }, POLL_MS);
 
   cleanupListeners = () => {

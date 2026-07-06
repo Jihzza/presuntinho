@@ -67,8 +67,20 @@ export class VersusNet {
   /** HOST: begin a fresh round from a seed and start broadcasting. No-op on guest. */
   start(seed: number): void {
     if (!this.isHost) {
-      // Guest just announces itself; the host replies with the current board.
-      this.room.send('hello', {});
+      // Guest announces itself; the host replies with the current board. Keep
+      // re-announcing until the first state lands so a dropped/late hello (or a
+      // reconnect) can't leave the guest stuck on a blank board forever.
+      const hello = () => this.room.send('hello', {});
+      hello();
+      this.timer && clearInterval(this.timer);
+      this.timer = setInterval(() => {
+        if (this.latest) {
+          if (this.timer) clearInterval(this.timer);
+          this.timer = null;
+        } else {
+          hello();
+        }
+      }, 1500);
       return;
     }
     this.sim = new SnakeVersusSim(this.opts.cols, this.opts.rows, seed);

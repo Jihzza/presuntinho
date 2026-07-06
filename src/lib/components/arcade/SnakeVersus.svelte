@@ -59,8 +59,16 @@
     ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
+  let seededScores = false;
   function onState(s: VersusState): void {
+    const prev = state;
     state = s;
+    // Seed the score baseline from the first state / a fresh round so we don't
+    // play a pickup sound for the jump 0 → current on join or on rematch.
+    if (!seededScores || (prev?.result != null && s.result === null) || s.tick <= 1) {
+      lastScores = [s.snakes[0].score, s.snakes[1].score];
+      seededScores = true;
+    }
     if (s.snakes[0].score !== lastScores[0] || s.snakes[1].score !== lastScores[1]) {
       const mineUp =
         (localP === 0 && s.snakes[0].score > lastScores[0]) ||

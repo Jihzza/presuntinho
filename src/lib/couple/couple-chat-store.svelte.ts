@@ -72,6 +72,7 @@ export class CoupleChatStore {
   #sb: SupabaseClient;
   #channel: RealtimeChannel | null = null;
   #readKey: string;
+  #onVis: (() => void) | null = null;
 
   constructor(profile: ChatProfile, conversationId = 'main') {
     this.profile = profile;
@@ -122,25 +123,45 @@ export class CoupleChatStore {
         { event: 'INSERT', schema: 'public', table: 'couple_messages', filter: `couple_id=eq.${COUPLE_ID}` },
         (payload) => this.#ingest(payload.new as Row)
       )
-      .subscribe();
+      .subscribe((status) => {
+        // A dropped/rejoined socket can miss inserts — re-load on (re)subscribe
+        // and on any terminal status so no message is permanently lost.
+        if (status === 'SUBSCRIBED' || status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          void this.#load();
+        }
+      });
+    if (typeof document !== 'undefined') {
+      this.#onVis = () => {
+        if (document.visibilityState === 'visible') void this.#load();
+      };
+      document.addEventListener('visibilitychange', this.#onVis);
+    }
   }
 
   stop(): void {
     if (this.#channel) void this.#sb.removeChannel(this.#channel);
     this.#channel = null;
+    if (this.#onVis && typeof document !== 'undefined') {
+      document.removeEventListener('visibilitychange', this.#onVis);
+      this.#onVis = null;
+    }
   }
 
   async #load(): Promise<void> {
     try {
+      // Newest 500 (a busy thread's oldest history would otherwise be fetched
+      // and the recent messages dropped by the limit). #sortMerge re-orders
+      // ascending and MERGES with what we already have, so optimistic bubbles
+      // and already-loaded rows are preserved, not replaced.
       const { data, error } = await this.#sb
         .from('couple_messages')
         .select('*')
         .eq('couple_id', COUPLE_ID)
         .eq('conversation_id', this.conversationId)
-        .order('created_at', { ascending: true })
+        .order('created_at', { ascending: false })
         .limit(500);
       if (error) throw error;
-      this.#sortMerge((data ?? []).map((r) => this.#rowToMsg(r as Row)));
+      this.#sortMerge([...this.messages, ...(data ?? []).map((r) => this.#rowToMsg(r as Row))]);
       this.offline = false;
     } catch (e) {
       console.warn('[couple-chat] load failed', e);
@@ -209,10 +230,21 @@ export class CoupleChatStore {
   async retryMessage(localId: string): Promise<'sent' | 'queued' | 'failed'> {
     const msg = this.messages.find((m) => m.id === localId);
     if (!msg) return 'failed';
-    // Drop the failed bubble; re-send fresh.
-    this.messages = this.messages.filter((m) => m.id !== localId);
-    if (msg.text) return this.sendTextMessage(msg.text);
-    return 'failed'; // media retry needs the original blob, which we no longer hold
+    if (msg.text) {
+      this.messages = this.messages.filter((m) => m.id !== localId);
+      return this.sendTextMessage(msg.text);
+    }
+    // Media retry: we still hold the preview data-URI — rebuild a Blob from it.
+    if (msg.localDataUrl) {
+      try {
+        const blob = await (await fetch(msg.localDataUrl)).blob();
+        this.messages = this.messages.filter((m) => m.id !== localId);
+        return this.sendMediaMessage(blob, msg.name || 'ficheiro');
+      } catch {
+        return 'failed';
+      }
+    }
+    return 'failed';
   }
 
   mediaSrc(m: LocalChatMessage): string | null {
