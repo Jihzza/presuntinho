@@ -1,11 +1,16 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { t } from 'svelte-i18n';
+  import { page } from '$app/state';
+  import { showToast } from '$lib/components/events';
   import { arcadeImmersive } from '$lib/arcade/immersive-state';
   import { isMultiplayerConfigured } from '$lib/multiplayer/config';
   import { getActiveMascot } from '$lib/gamification/mascots';
   import SnakeVersus from '$lib/components/arcade/SnakeVersus.svelte';
   import type { Room, PeerMeta } from '$lib/multiplayer/realtime';
+  import { accountState, startAccountSync } from '$lib/account/account-store.svelte';
+  import { listContacts, type Contact } from '$lib/account/contacts';
+  import { inviteToGame } from '$lib/account/game-invites';
 
   type Phase = 'menu' | 'creating' | 'waiting' | 'joining' | 'playing' | 'error';
 
@@ -18,12 +23,25 @@
   let errorMsg = $state('');
   let mascot = $state('perfume');
   let unsubPeer: (() => void) | null = null;
+  let contacts = $state<Contact[]>([]);
+  let invited = $state<Set<string>>(new Set());
 
   onMount(() => {
     arcadeImmersive.set(true);
     void getActiveMascot()
       .then((m) => (mascot = m.id))
       .catch(() => undefined);
+    // Load contacts so a host can invite one straight into their room.
+    void (async () => {
+      await startAccountSync();
+      if (accountState.account) contacts = await listContacts().catch(() => []);
+    })();
+    // Arrived from an invite link (?join=CODE) → auto-join that room.
+    const j = page.url.searchParams.get('join');
+    if (j) {
+      joinCode = j.toUpperCase();
+      void joinRoomByCode();
+    }
   });
   onDestroy(() => {
     arcadeImmersive.set(false);
@@ -77,6 +95,17 @@
     else void navigator.clipboard?.writeText(code).catch(() => undefined);
   }
 
+  async function inviteContact(c: Contact): Promise<void> {
+    if (!code || invited.has(c.id)) return;
+    try {
+      await inviteToGame(c.id, code);
+      invited = new Set([...invited, c.id]);
+      showToast($t('versus.invited', { values: { handle: c.handle }, default: 'Convite enviado a @{handle} 🎮' }), 2000);
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : String(e), 2600);
+    }
+  }
+
   function leave(): void {
     unsubPeer?.();
     void room?.leave();
@@ -128,6 +157,18 @@
             <span>{code}</span>
             <small>{$t('versus.tap_share', { default: 'toca para partilhar' })}</small>
           </div>
+          {#if accountState.account && contacts.length > 0}
+            <div class="invite-contacts">
+              <small>{$t('versus.invite_contact', { default: 'ou convida um contacto direto:' })}</small>
+              <div class="ic-chips">
+                {#each contacts as c (c.id)}
+                  <button type="button" class="ic-chip" class:done={invited.has(c.id)} disabled={invited.has(c.id)} onclick={() => inviteContact(c)}>
+                    {c.emoji ?? '🙂'} @{c.handle}{invited.has(c.id) ? ' ✓' : ''}
+                  </button>
+                {/each}
+              </div>
+            </div>
+          {/if}
         {/if}
         <button type="button" class="ghost" onclick={leave}>{$t('versus.cancel', { default: 'Cancelar' })}</button>
       {:else if phase === 'error'}
@@ -171,4 +212,13 @@
   }
   .code span { font-size: 2.2rem; font-weight: 900; letter-spacing: 0.3em; color: #fde047; }
   .code small { color: #94a3b8; }
+  .invite-contacts { display: grid; gap: 0.5rem; justify-items: center; width: 100%; }
+  .invite-contacts > small { color: #64748b; font-size: 0.82rem; }
+  .ic-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; justify-content: center; }
+  .ic-chip {
+    padding: 0.45rem 0.8rem; border-radius: 999px; font: inherit; font-weight: 800; font-size: 0.9rem;
+    border: 1.5px solid rgba(103,232,249,0.5); background: rgba(10,16,30,0.5); color: #e8fff4; cursor: pointer;
+  }
+  .ic-chip:disabled { cursor: default; }
+  .ic-chip.done { border-color: rgba(74,222,128,0.6); color: #86efac; opacity: 0.85; }
 </style>
