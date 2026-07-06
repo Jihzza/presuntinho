@@ -13,12 +13,16 @@
     listSpaces,
     createGroup,
     addToGroup,
-    formCouple,
+    proposeCouple,
+    acceptCouple,
+    isCoupleActive,
+    pendingCoupleInvites,
     leaveSpace,
     otherMember,
     subscribeSpaces,
     type Space
   } from '$lib/account/spaces';
+  import { invalidateCoupleId } from '$lib/couple/couple-supabase';
 
   let spaces = $state<Space[]>([]);
   let contacts = $state<Contact[]>([]);
@@ -28,10 +32,17 @@
   let unsub: (() => void) | null = null;
 
   const myId = $derived(accountState.user?.id ?? '');
-  const couples = $derived(spaces.filter((s) => s.kind === 'couple'));
+  const allCouples = $derived(spaces.filter((s) => s.kind === 'couple'));
+  const activeCouples = $derived(allCouples.filter(isCoupleActive));
+  // Couple invites waiting for MY acceptance (they proposed, I'm pending).
+  const invites = $derived(pendingCoupleInvites(spaces, myId));
+  // Couples I proposed that the other hasn't accepted yet.
+  const sentCouples = $derived(
+    allCouples.filter((s) => !isCoupleActive(s) && s.members.some((m) => m.id === myId && m.status === 'accepted'))
+  );
   const groups = $derived(spaces.filter((s) => s.kind === 'group'));
-  // Contacts not already in a couple with me (so we don't offer a 2nd couple).
-  const coupleWith = $derived(new Set(couples.flatMap((s) => s.members.map((m) => m.id))));
+  // Contacts already in ANY couple with me (so we don't offer a duplicate).
+  const coupleWith = $derived(new Set(allCouples.flatMap((s) => s.members.map((m) => m.id))));
 
   async function refresh(): Promise<void> {
     if (!accountState.account) return;
@@ -67,13 +78,40 @@
     }
   }
 
-  async function onFormCouple(c: Contact): Promise<void> {
+  /** Both people are now a couple → the couple data rescopes on reload. */
+  function activateAndReload(handle: string): void {
+    invalidateCoupleId();
+    showToast($t('grupos.couple_active', { values: { handle }, default: 'Casal com @{handle} ativo! A recarregar para sincronizar… 💞' }), 2400);
+    setTimeout(() => location.reload(), 1400);
+  }
+
+  async function onProposeCouple(c: Contact): Promise<void> {
+    if (busy) return;
+    busy = true;
     try {
-      await formCouple(c.id);
+      const { active } = await proposeCouple(c.id);
       await refresh();
-      showToast($t('grupos.couple_formed', { values: { handle: c.handle }, default: 'Modo casal com @{handle} ativado! 💞' }), 2600);
+      if (active) activateAndReload(c.handle);
+      else showToast($t('grupos.couple_proposed', { values: { handle: c.handle }, default: 'Pedido de casal enviado a @{handle} — falta ela aceitar 💌' }), 2800);
     } catch (e) {
       showToast(e instanceof Error ? e.message : String(e), 3000);
+    } finally {
+      busy = false;
+    }
+  }
+
+  async function onAcceptCouple(s: Space): Promise<void> {
+    if (busy) return;
+    busy = true;
+    try {
+      const active = await acceptCouple(s.id);
+      await refresh();
+      const other = otherMember(s, myId);
+      if (active) activateAndReload(other?.handle ?? '');
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : String(e), 3000);
+    } finally {
+      busy = false;
     }
   }
 
@@ -119,9 +157,26 @@
       <a href="/conta/">{$t('conta.title', { default: 'A minha conta' })} →</a>
     </p>
   {:else}
+    <!-- ── Couple invites waiting for me ── -->
+    {#if invites.length > 0}
+      <h2 class="section">💌 {$t('grupos.invites', { default: 'Pedidos de casal' })}</h2>
+      {#each invites as s (s.id)}
+        {@const other = otherMember(s, myId)}
+        <div class="space-card invite">
+          <span class="sp-emoji">{other?.emoji ?? '💞'}</span>
+          <span class="sp-copy">
+            <strong>{other?.display_name || (other ? `@${other.handle}` : '')}</strong>
+            <small>{$t('grupos.invite_sub', { default: 'quer formar casal contigo' })}</small>
+          </span>
+          <button type="button" class="chip accept" onclick={() => onAcceptCouple(s)} disabled={busy}>{$t('grupos.accept', { default: 'Aceitar' })}</button>
+          <button type="button" class="leave" onclick={() => onLeave(s)} aria-label={$t('contactos.decline', { default: 'Recusar' })}>✕</button>
+        </div>
+      {/each}
+    {/if}
+
     <!-- ── Couple ── -->
     <h2 class="section">💞 {$t('grupos.couple', { default: 'Casal' })}</h2>
-    {#each couples as s (s.id)}
+    {#each activeCouples as s (s.id)}
       {@const other = otherMember(s, myId)}
       <div class="space-card">
         <span class="sp-emoji">{other?.emoji ?? '💞'}</span>
@@ -132,7 +187,18 @@
         <button type="button" class="leave" onclick={() => onLeave(s)} aria-label={$t('grupos.leave', { default: 'Sair' })}>✕</button>
       </div>
     {/each}
-    {#if couples.length === 0}
+    {#each sentCouples as s (s.id)}
+      {@const other = otherMember(s, myId)}
+      <div class="space-card pending">
+        <span class="sp-emoji">{other?.emoji ?? '💞'}</span>
+        <span class="sp-copy">
+          <strong>{other?.display_name || (other ? `@${other.handle}` : '')}</strong>
+          <small>{$t('grupos.couple_pending', { default: 'à espera que aceite…' })}</small>
+        </span>
+        <button type="button" class="leave" onclick={() => onLeave(s)} aria-label={$t('contactos.cancel', { default: 'Cancelar' })}>✕</button>
+      </div>
+    {/each}
+    {#if activeCouples.length === 0 && sentCouples.length === 0}
       <p class="hint">{$t('grupos.couple_hint', { default: 'Forma casal com um contacto para sincronizarem pontos, chat e mais.' })}</p>
     {/if}
     {#if contacts.filter((c) => !coupleWith.has(c.id)).length > 0}
@@ -140,7 +206,7 @@
         <span class="pick-label">{$t('grupos.form_couple', { default: 'Formar casal com:' })}</span>
         <div class="chips">
           {#each contacts.filter((c) => !coupleWith.has(c.id)) as c (c.id)}
-            <button type="button" class="chip" onclick={() => onFormCouple(c)}>{c.emoji ?? '🙂'} @{c.handle}</button>
+            <button type="button" class="chip" onclick={() => onProposeCouple(c)} disabled={busy}>{c.emoji ?? '🙂'} @{c.handle}</button>
           {/each}
         </div>
       </div>
@@ -196,6 +262,11 @@
   .hint { color: var(--txt3); font-size: .84rem; padding: .3rem .25rem; line-height: 1.4; }
   .space-card { display: flex; align-items: center; gap: .8rem; padding: .8rem; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg, 1rem); margin-bottom: .5rem; }
   .space-card.group { border-color: color-mix(in srgb, var(--accent) 25%, var(--border)); }
+  .space-card.invite { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); background: color-mix(in srgb, var(--accent) 8%, var(--card)); }
+  .space-card.pending { opacity: .82; }
+  .chip.accept { border-color: var(--success, #10b981); color: var(--success, #10b981); background: color-mix(in srgb, var(--success, #10b981) 12%, transparent); }
+  .chip.accept:hover { background: color-mix(in srgb, var(--success, #10b981) 22%, transparent); }
+  .chip:disabled { opacity: .55; cursor: not-allowed; }
   .sp-emoji { font-size: 1.9rem; line-height: 1; }
   .sp-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; }
   .sp-copy strong { font-weight: 700; }

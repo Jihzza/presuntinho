@@ -77,6 +77,9 @@ async function hydrateFromCloud(id: 'fatma' | 'daniel'): Promise<void> {
   try {
     const sync = await import('$lib/profile/profile-sync');
     if (!sync.profileSyncEnabled()) return;
+    // Phase 3b: resolve the couple space id (timeout-guarded) before fetch/
+    // subscribe so an account-couple's profiles are scoped to its own space.
+    await (await import('$lib/couple/couple-supabase')).resolveCoupleId();
     const remote = await sync.fetchRemoteProfile(id);
     if (remote) applyRemote(remote);
     remoteUnsub?.();

@@ -152,7 +152,12 @@
 
     // Couple sync: one global poller keeps shared points fresh and surfaces
     // incoming love/nudge pings as toasts (+ a buzz). No-ops without a token.
-    startCouplePoller();
+    // Phase 3b: resolve the couple_id from an ACTIVE couple space first (<=3s,
+    // timeout-guarded so it can't stall), then start; falls back to legacy.
+    void import('$lib/couple/couple-supabase')
+      .then((m) => m.resolveCoupleId())
+      .catch(() => {})
+      .finally(() => startCouplePoller());
 
     // Easter-egg boot hooks — used to live on the always-mounted HeartButton,
     // which the SurpriseHeart replaced. Warm the config cache and run the
@@ -260,7 +265,10 @@
       // automatically. Dynamic import keeps @supabase out of the main bundle;
       // no-ops when Supabase isn't configured.
       if (session && storesReady) {
-        void import('$lib/state/progress-sync')
+        void import('$lib/couple/couple-supabase')
+          .then((c) => c.resolveCoupleId())
+          .catch(() => {})
+          .then(() => import('$lib/state/progress-sync'))
           .then((m) => m.startProgressSync(session!.profile))
           .catch((err) => console.warn('[presuntinho] progress sync unavailable', err));
       }
