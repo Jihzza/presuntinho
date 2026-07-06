@@ -265,6 +265,12 @@
           .catch((err) => console.warn('[presuntinho] progress sync unavailable', err));
       }
 
+      // Phase 1 — track the real Supabase account (login state) for the whole
+      // app. Independent of the local profile; no-ops when Supabase is off.
+      void import('$lib/account/account-store.svelte')
+        .then((m) => m.startAccountSync())
+        .catch((err) => console.warn('[presuntinho] account sync unavailable', err));
+
       // Visit tracking now runs in afterNavigate (covers EVERY navigation,
       // including the initial one) — see trackVisit() above.
 
@@ -277,7 +283,7 @@
             // Public routes a logged-out visitor is allowed to sit on: the login
             // splash, the new-account wizard, and an invite-redemption link.
             const p = page.url.pathname;
-            const isPublicRoute = p === '/splash/' || p.startsWith('/onboarding') || p.startsWith('/juntar');
+            const isPublicRoute = p === '/splash/' || p.startsWith('/onboarding') || p.startsWith('/juntar') || p.startsWith('/conta') || p.startsWith('/contactos');
             if (!session && !isPublicRoute && !authRedirectTimer) {
               authRedirectTimer = setTimeout(() => {
                 authRedirectTimer = null;

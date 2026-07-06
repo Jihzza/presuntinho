@@ -49,6 +49,8 @@
   import RefreshCw from 'lucide-svelte/icons/refresh-cw';
   import { forceAppUpdate } from '$lib/pwa/app-update';
   import CollapsibleCard from '$lib/components/settings/CollapsibleCard.svelte';
+  import { accountState } from '$lib/account/account-store.svelte';
+  import { accountsEnabled } from '$lib/account/auth';
   import Palette from 'lucide-svelte/icons/palette';
   import Volume2 from 'lucide-svelte/icons/volume-2';
   import Bell from 'lucide-svelte/icons/bell';
@@ -876,6 +878,26 @@
     <h1>{$t('settings.title')}</h1>
   </header>
 
+  <!-- ============ Conta real (Supabase Auth) ============ -->
+  {#if accountsEnabled()}
+    <a class="account-row card" href="/conta/">
+      <span class="account-emoji">{accountState.account?.emoji ?? (accountState.user ? '🙂' : '👤')}</span>
+      <span class="account-copy">
+        {#if accountState.account}
+          <strong>{accountState.account.display_name || `@${accountState.account.handle}`}</strong>
+          <small>@{accountState.account.handle} · {$t('settings.account.manage', { default: 'gerir conta, contactos e privacidade' })}</small>
+        {:else if accountState.user}
+          <strong>{$t('settings.account.finish', { default: 'Termina a tua conta' })}</strong>
+          <small>{$t('settings.account.pick_handle', { default: 'escolhe o teu @handle' })}</small>
+        {:else}
+          <strong>{$t('settings.account.create', { default: 'Criar conta / iniciar sessão' })}</strong>
+          <small>{$t('settings.account.why', { default: 'para contactos, modo casal e grupos' })}</small>
+        {/if}
+      </span>
+      <span class="account-arrow" aria-hidden="true">→</span>
+    </a>
+  {/if}
+
   <!-- ============ Theme (expansível — muitos temas) ============ -->
   <CollapsibleCard
     id="theme-h"
@@ -1576,6 +1598,31 @@
     flex-direction: column;
     gap: 1rem;
   }
+  .account-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-xl, 1.25rem);
+    text-decoration: none;
+    color: var(--txt);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    background:
+      radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%),
+      var(--card);
+    transition: transform 0.12s ease, border-color 0.12s ease;
+  }
+  .account-row:hover,
+  .account-row:focus-visible {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    outline: none;
+  }
+  .account-emoji { font-size: 2rem; line-height: 1; flex-shrink: 0; }
+  .account-copy { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; flex: 1; }
+  .account-copy strong { font-weight: 700; }
+  .account-copy small { color: var(--txt3); font-size: 0.8rem; }
+  .account-arrow { color: var(--txt3); font-size: 1.1rem; flex-shrink: 0; }
   .header h1 {
     margin: 0 0 0.5rem 0;
     font-size: 1.75rem;
