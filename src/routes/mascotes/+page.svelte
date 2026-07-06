@@ -233,6 +233,7 @@
           class:active={m.active}
           class:previewing={preview?.id === m.id}
           class:locked={!m.unlocked}
+          class:special={m.special}
           style="--stagger: {(i * 0.35).toFixed(2)}s;"
           onclick={() => selectForPreview(m)}
           aria-pressed={preview?.id === m.id}
@@ -241,6 +242,7 @@
             : `${nameOf(m)} — ${unlockHint(m)}`}
         >
           <span class="rail-art" class:bob={!reduced} aria-hidden="true">
+            {#if m.special}<span class="rail-sparkle" aria-hidden="true">✨</span>{/if}
             <MascotAvatar mascot={m.id} pose="wave" size={64} animate={false} />
             {#if !m.unlocked}<span class="rail-lock">🔒</span>{/if}
           </span>
@@ -476,6 +478,33 @@
   }
   .rail-card.locked :global(.mavatar img) {
     filter: grayscale(1) brightness(0.55) opacity(0.55);
+  }
+  /* Família (especiais) — moldura a brilhar + fundo quente, sempre destacadas. */
+  .rail-card.special {
+    border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    background:
+      radial-gradient(circle at top, color-mix(in srgb, var(--accent) 16%, transparent), transparent 62%),
+      var(--card, rgba(255, 255, 255, 0.055));
+    box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+  .rail-card.special.active {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 32%, transparent),
+      0 0 18px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  .rail-sparkle {
+    position: absolute;
+    top: -4px;
+    left: -6px;
+    font-size: 0.85rem;
+    z-index: 3;
+    animation: rail-sparkle 1.8s ease-in-out infinite;
+  }
+  @keyframes rail-sparkle {
+    0%, 100% { opacity: 0.5; transform: scale(0.85) rotate(-8deg); }
+    50% { opacity: 1; transform: scale(1.15) rotate(8deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rail-sparkle { animation: none; }
   }
   .rail-art {
     position: relative;
