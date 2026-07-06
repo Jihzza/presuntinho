@@ -9,8 +9,47 @@
 import { isMultiplayerConfigured } from '$lib/multiplayer/config';
 import { getSupabaseClient as sb } from '$lib/multiplayer/client';
 
-export const COUPLE_ID: string =
+// The couple_id scopes ALL couple data (points, chat, profiles, progress).
+//
+// Phase 3b (redesigned): resolved ONCE at boot. If the signed-in account has an
+// ACTIVE couple space (both people accepted — mutual consent), that space's
+// uuid becomes the couple_id, giving each couple its own private data. Until a
+// couple is formed AND accepted it stays the legacy shared id, so the existing
+// 2-person flow is untouched. `export let` is a LIVE binding, so setting it
+// before the couple features start transparently rescopes them.
+//
+// The resolve is TIMEOUT-GUARDED (<=3s): a slow/expired auth token can never
+// stall the couple features — they just start on the legacy id and pick up the
+// couple space on the next fast boot.
+export const LEGACY_COUPLE_ID: string =
   (import.meta.env.VITE_COUPLE_ID as string | undefined) || 'presuntinho-couple-v1';
+export let COUPLE_ID: string = LEGACY_COUPLE_ID;
+
+let _resolved: Promise<string> | null = null;
+export function resolveCoupleId(): Promise<string> {
+  if (_resolved) return _resolved;
+  _resolved = (async () => {
+    let timedOut = false;
+    const work = (async () => {
+      try {
+        const { getActiveCoupleSpaceId } = await import('$lib/account/spaces');
+        const id = await getActiveCoupleSpaceId();
+        if (id && !timedOut) COUPLE_ID = id;
+      } catch {
+        /* signed-out / accounts off — keep the legacy id */
+      }
+    })();
+    await Promise.race([work, new Promise<void>((r) => setTimeout(r, 3000))]);
+    timedOut = true; // a late-completing work must not reassign after the race
+    return COUPLE_ID;
+  })();
+  return _resolved;
+}
+
+/** Force a re-resolve on the next call (after forming/accepting a couple). */
+export function invalidateCoupleId(): void {
+  _resolved = null;
+}
 
 export function coupleDbEnabled(): boolean {
   return isMultiplayerConfigured();

@@ -6,7 +6,7 @@
 
 import { type SupabaseClient, type RealtimeChannel } from '@supabase/supabase-js';
 import { getSupabaseClient } from '$lib/multiplayer/client';
-import { COUPLE_ID } from '$lib/couple/couple-supabase';
+import { COUPLE_ID, resolveCoupleId } from '$lib/couple/couple-supabase';
 import type { ChatProfile } from '$lib/chat/client';
 import type { LocalChatMessage } from '$lib/chat/store.svelte';
 
@@ -73,6 +73,7 @@ export class CoupleChatStore {
   #channel: RealtimeChannel | null = null;
   #readKey: string;
   #onVis: (() => void) | null = null;
+  #stopped = false; // guards the async start() from leaking a channel after stop()
 
   constructor(profile: ChatProfile, conversationId = 'main') {
     this.profile = profile;
@@ -112,21 +113,29 @@ export class CoupleChatStore {
   }
 
   start(): void {
-    void this.#load();
-    this.#channel = this.#sb
-      .channel(`couple_msg:${COUPLE_ID}:${this.conversationId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'couple_messages', filter: `couple_id=eq.${COUPLE_ID}` },
-        (payload) => this.#ingest(payload.new as Row)
-      )
-      .subscribe((status) => {
-        // A dropped/rejoined socket can miss inserts — re-load on (re)subscribe
-        // and on any terminal status so no message is permanently lost.
-        if (status === 'SUBSCRIBED' || status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-          void this.#load();
-        }
-      });
+    // Resolve the couple space id BEFORE building the channel / loading, so an
+    // account-couple's chat is scoped to its own space (Phase 3b).
+    this.#stopped = false;
+    void (async () => {
+      await resolveCoupleId();
+      if (this.#stopped) return; // stopped mid-resolve — don't create a leaked channel
+      await this.#load();
+      if (this.#stopped) return;
+      this.#channel = this.#sb
+        .channel(`couple_msg:${COUPLE_ID}:${this.conversationId}`)
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'couple_messages', filter: `couple_id=eq.${COUPLE_ID}` },
+          (payload) => this.#ingest(payload.new as Row)
+        )
+        .subscribe((status) => {
+          // A dropped/rejoined socket can miss inserts — re-load on (re)subscribe
+          // and on any terminal status so no message is permanently lost.
+          if (status === 'SUBSCRIBED' || status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+            void this.#load();
+          }
+        });
+    })();
     if (typeof document !== 'undefined') {
       this.#onVis = () => {
         if (document.visibilityState === 'visible') void this.#load();
@@ -136,6 +145,7 @@ export class CoupleChatStore {
   }
 
   stop(): void {
+    this.#stopped = true;
     if (this.#channel) void this.#sb.removeChannel(this.#channel);
     this.#channel = null;
     if (this.#onVis && typeof document !== 'undefined') {

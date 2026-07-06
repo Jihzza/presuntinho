@@ -8,8 +8,10 @@ import { getAuthUser, type Account } from './auth';
 
 export type SpaceKind = 'couple' | 'group';
 
+export type MemberStatus = 'pending' | 'accepted';
 export interface SpaceMember extends Account {
   role: 'owner' | 'member';
+  status: MemberStatus;
 }
 export interface Space {
   id: string;
@@ -22,13 +24,27 @@ export interface Space {
 
 const sb = () => getSupabaseClient();
 
+/** A couple space is ACTIVE only when both members have accepted. */
+export function isCoupleActive(s: Space): boolean {
+  return s.kind === 'couple' && s.members.length >= 2 && s.members.every((m) => m.status === 'accepted');
+}
+
 // ── writes (RPCs) ────────────────────────────────────────────────────────────
 
-/** Form (or fetch) the couple space with an accepted contact. Returns space id. */
-export async function formCouple(otherAccountId: string): Promise<string> {
-  const { data, error } = await sb().rpc('form_couple', { p_other: otherAccountId });
+/** Propose a couple to an accepted contact (mutual consent). If they already
+ *  proposed you, this accepts. Returns { spaceId, active }. */
+export async function proposeCouple(otherAccountId: string): Promise<{ spaceId: string; active: boolean }> {
+  const { data, error } = await sb().rpc('propose_couple', { p_other: otherAccountId });
   if (error) throw error;
-  return data as string;
+  const row = Array.isArray(data) ? data[0] : data;
+  return { spaceId: row?.space_id as string, active: Boolean(row?.active) };
+}
+
+/** Accept a pending couple invite. Returns true if the couple is now active. */
+export async function acceptCouple(spaceId: string): Promise<boolean> {
+  const { data, error } = await sb().rpc('accept_couple', { p_space: spaceId });
+  if (error) throw error;
+  return Boolean(data);
 }
 
 export async function createGroup(name: string, emoji?: string): Promise<string> {
@@ -63,10 +79,10 @@ export async function listSpaces(): Promise<Space[]> {
 
   const { data: members, error: e2 } = await sb()
     .from('space_members')
-    .select('space_id, account, role')
+    .select('space_id, account, role, status')
     .in('space_id', spaceRows.map((s) => s.id));
   if (e2) throw e2;
-  const memberRows = (members as { space_id: string; account: string; role: 'owner' | 'member' }[]) ?? [];
+  const memberRows = (members as { space_id: string; account: string; role: 'owner' | 'member'; status: MemberStatus }[]) ?? [];
 
   // Resolve the account details for every member in one query.
   const ids = [...new Set(memberRows.map((m) => m.account))];
@@ -86,10 +102,25 @@ export async function listSpaces(): Promise<Space[]> {
       .filter((m) => m.space_id === s.id)
       .map((m) => {
         const a = accMap.get(m.account);
-        return a ? { ...a, role: m.role } : null;
+        return a ? { ...a, role: m.role, status: m.status } : null;
       })
       .filter((x): x is SpaceMember => x !== null)
   }));
+}
+
+/** The ACTIVE couple space id (both accepted), or null. Used to rescope the
+ *  couple data — a pending proposal never counts, so consent is enforced. */
+export async function getActiveCoupleSpaceId(): Promise<string | null> {
+  const spaces = await listSpaces();
+  const active = spaces.find(isCoupleActive);
+  return active?.id ?? null;
+}
+
+/** Couple invites waiting for MY acceptance (I'm a pending member). */
+export function pendingCoupleInvites(spaces: Space[], meId: string): Space[] {
+  return spaces.filter(
+    (s) => s.kind === 'couple' && s.members.some((m) => m.id === meId && m.status === 'pending')
+  );
 }
 
 /** The other member of a couple space (for labels). */
