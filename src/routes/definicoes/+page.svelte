@@ -48,6 +48,7 @@
   import { VERSION, REPO_URL } from '$lib/version';
   import RefreshCw from 'lucide-svelte/icons/refresh-cw';
   import { forceAppUpdate } from '$lib/pwa/app-update';
+  import CollapsibleCard from '$lib/components/settings/CollapsibleCard.svelte';
   import Palette from 'lucide-svelte/icons/palette';
   import Volume2 from 'lucide-svelte/icons/volume-2';
   import Bell from 'lucide-svelte/icons/bell';
@@ -875,12 +876,14 @@
     <h1>{$t('settings.title')}</h1>
   </header>
 
-  <!-- ============ Theme ============ -->
-  <section class="card" aria-labelledby="theme-h">
-    <div class="card-head">
-      <span class="icon-wrap"><Palette size={18} /></span>
-      <h2 id="theme-h">{$t('settings.theme')}</h2>
-    </div>
+  <!-- ============ Theme (expansível — muitos temas) ============ -->
+  <CollapsibleCard
+    id="theme-h"
+    title={$t('settings.theme')}
+    preview={$t(`settings.theme.${currentTheme}`, { default: currentTheme })}
+  >
+    {#snippet icon()}<Palette size={18} />{/snippet}
+    <div class="ccard-content">
     <p class="theme-intro">{$t('settings.theme.intro', { default: 'Escolhe um visual para a app. Alguns temas desbloqueiam com XP.' })}</p>
     <div class="theme-grid" role="radiogroup" aria-label={$t('settings.theme')}>
       {#each THEME_OPTIONS as option (option.id)}
@@ -913,14 +916,17 @@
         </button>
       {/each}
     </div>
-  </section>
+    </div>
+  </CollapsibleCard>
 
   <!-- ============ V10.5: Ícone da app ============ -->
-  <section class="card" aria-labelledby="applogo-h">
-    <div class="card-head">
-      <span class="icon-wrap"><Smartphone size={18} /></span>
-      <h2 id="applogo-h">{$t('settings.applogo', { default: 'Ícone da app' })}</h2>
-    </div>
+  <CollapsibleCard
+    id="applogo-h"
+    title={$t('settings.applogo', { default: 'Ícone da app' })}
+    preview={$t(`settings.applogo.${currentLogo}`, { default: currentLogo })}
+  >
+    {#snippet icon()}<Smartphone size={18} />{/snippet}
+    <div class="ccard-content">
     <p class="theme-intro">
       {$t('settings.applogo.intro', {
         default: 'Escolhe o logo que aparece no ecrã inicial do teu telemóvel.'
@@ -992,14 +998,13 @@
         </p>
       {/if}
     </div>
-  </section>
+    </div>
+  </CollapsibleCard>
 
   <!-- ============ V10.6: Mascote (movida da Home) ============ -->
-  <section class="card" aria-labelledby="mascote-h">
-    <div class="card-head">
-      <span class="icon-wrap"><PawPrint size={18} /></span>
-      <h2 id="mascote-h">{$t('settings.mascot', { default: 'Mascote' })}</h2>
-    </div>
+  <CollapsibleCard id="mascote-h" title={$t('settings.mascot', { default: 'Mascote' })}>
+    {#snippet icon()}<PawPrint size={18} />{/snippet}
+    <div class="ccard-content">
     <p class="theme-intro">
       {$t('settings.mascot.intro', { default: 'Escolhe quem te acompanha pela app toda.' })}
     </p>
@@ -1037,7 +1042,8 @@
         {$t('settings.mascot.open', { default: 'Abrir a página das mascotes (palco, desbloqueios) →' })}
       </a>
     </p>
-  </section>
+    </div>
+  </CollapsibleCard>
 
   <!-- ============ Mood / Vibe ============ -->
   <section class="card" aria-labelledby="mood-h">
