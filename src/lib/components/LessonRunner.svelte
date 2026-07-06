@@ -48,6 +48,44 @@
   let audioPlaying = $state(false);
   let audioProgress = $state(0); // 0..1
 
+  // ----- Duolingo-style stepped theory -------------------------------------
+  // Chunk the flat section list into cards (a new card starts at each h2) and
+  // reveal one at a time behind a "Continuar" bar, ending in the quiz.
+  let step = $state(0);
+  function chunkSections(sections: Section[]): Section[][] {
+    if (!sections.length) return [];
+    const out: Section[][] = [];
+    let cur: Section[] = [];
+    for (const s of sections) {
+      if (s.type === 'h2' && cur.length) {
+        out.push(cur);
+        cur = [];
+      }
+      cur.push(s);
+    }
+    if (cur.length) out.push(cur);
+    return out;
+  }
+  const steps = $derived(chunkSections(lesson?.sections ?? []));
+  const totalSteps = $derived(Math.max(1, steps.length));
+  const isLastStep = $derived(step >= totalSteps - 1);
+
+  function nextStep(): void {
+    if (step < totalSteps - 1) {
+      step += 1;
+      if (typeof document !== 'undefined') {
+        document.querySelector('.lesson-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } else if (lesson?.quizSlug) {
+      goQuiz();
+    } else if (typeof history !== 'undefined') {
+      history.back();
+    }
+  }
+  function prevStep(): void {
+    if (step > 0) step -= 1;
+  }
+
   // ----- Data load ----------------------------------------------------------
 
   onMount(async () => {
@@ -191,8 +229,11 @@
     <!-- Body + Key points sidebar ---------------------------------------- -->
     <div class="lesson-grid">
       <div class="lesson-body">
-        <h2 class="lane-title">{$t('lesson.activity.theory.heading')}</h2>
-        {#each lesson.sections as section, i (i)}
+        <div class="step-progress" aria-hidden="true">
+          <div class="step-fill" style="width: {Math.round(((step + 1) / totalSteps) * 100)}%"></div>
+        </div>
+        <p class="step-count">{$t('lesson.step.count', { values: { n: step + 1, total: totalSteps }, default: 'Passo {n} de {total}' })}</p>
+        {#each steps[step] ?? [] as section, i (i)}
           {#if section.type === 'h2'}
             <h2>{section.text}</h2>
           {:else if section.type === 'h3'}
@@ -216,22 +257,39 @@
             </figure>
           {/if}
         {/each}
+
+        <div class="step-bar">
+          {#if step > 0}
+            <button type="button" class="step-back" onclick={prevStep}>← {$t('lesson.step.back', { default: 'Anterior' })}</button>
+          {/if}
+          <button type="button" class="step-next" onclick={nextStep}>
+            {#if !isLastStep}
+              {$t('lesson.step.next', { default: 'Continuar →' })}
+            {:else if lesson.quizSlug}
+              {$t('lesson.step.quiz', { default: 'Ir para o quiz →' })}
+            {:else}
+              {$t('lesson.step.finish', { default: 'Concluir ✓' })}
+            {/if}
+          </button>
+        </div>
       </div>
 
-      <aside class="keypoints" aria-label={$t('lesson.keypoints.aria', { default: 'Pontos-chave' })}>
-        <h2>{$t('lesson.keypoints.title', { default: '🔑 Pontos-chave' })}</h2>
-        <ol>
-          {#each lesson.keyPoints as kp, i (i)}
-            <li>{kp}</li>
-          {/each}
-        </ol>
-        {#if lesson.quizSlug}
-          <p class="quiz-context">{$t('lesson.quiz.linked')}</p>
-          <button type="button" class="quiz-btn" onclick={goQuiz}>
-            {$t('lesson.quiz.cta', { default: 'Ir para o quiz →' })}
-          </button>
-        {/if}
-      </aside>
+      {#if isLastStep}
+        <aside class="keypoints" aria-label={$t('lesson.keypoints.aria', { default: 'Pontos-chave' })}>
+          <h2>{$t('lesson.keypoints.title', { default: '🔑 Pontos-chave' })}</h2>
+          <ol>
+            {#each lesson.keyPoints as kp, i (i)}
+              <li>{kp}</li>
+            {/each}
+          </ol>
+          {#if lesson.quizSlug}
+            <p class="quiz-context">{$t('lesson.quiz.linked')}</p>
+            <button type="button" class="quiz-btn" onclick={goQuiz}>
+              {$t('lesson.quiz.cta', { default: 'Ir para o quiz →' })}
+            </button>
+          {/if}
+        </aside>
+      {/if}
     </div>
 
     <!-- Nav footer --------------------------------------------------------- -->
@@ -371,6 +429,52 @@
 
   /* Body */
   .lesson-body { color: var(--txt, #fff); line-height: 1.6; }
+  /* ── Duolingo-style stepped theory ── */
+  .step-progress {
+    height: 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent, #3b82f6) 18%, rgba(255, 255, 255, 0.1));
+    overflow: hidden;
+    margin-bottom: 0.4rem;
+  }
+  .step-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent, #3b82f6), #a78bfa);
+    transition: width 260ms cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  .step-count { margin: 0 0 1rem; font-size: 0.78rem; font-weight: 800; color: var(--txt3, #94a3b8); }
+  .step-bar {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1.4rem;
+    padding-top: 1rem;
+    border-top: 1px solid color-mix(in srgb, var(--accent, #3b82f6) 20%, transparent);
+  }
+  .step-next {
+    margin-inline-start: auto;
+    min-height: 48px;
+    padding: 0 1.6rem;
+    border: none;
+    border-radius: 0.8rem;
+    background: linear-gradient(135deg, var(--accent, #3b82f6), #a78bfa);
+    color: #06121f;
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  .step-next:active { transform: scale(0.97); }
+  .step-back {
+    min-height: 48px;
+    padding: 0 1.1rem;
+    border: 1.5px solid color-mix(in srgb, var(--accent, #3b82f6) 35%, transparent);
+    border-radius: 0.8rem;
+    background: transparent;
+    color: var(--txt, #fff);
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+  }
   .lane-title {
     margin-top: 0 !important;
     padding-bottom: 0.45rem;

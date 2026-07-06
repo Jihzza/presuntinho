@@ -4,6 +4,8 @@
 import {
   FIELD_W,
   FIELD_H,
+  FIELD_SAFE_TOP,
+  FIELD_SAFE_BOTTOM,
   drawAvatar,
   glowCircle,
   glowRect,
@@ -113,9 +115,14 @@ export function createMaze(): ArcadeEngine {
   }
 
   function reset(): void {
-    rows = Math.max(11, Math.floor(FIELD_H / CELL));
+    // Fit the maze into the band clear of the top HUD and bottom controls so no
+    // wall, star, guardian or the player spawns under the chrome.
+    const usableH = Math.max(CELL * 11, FIELD_H - FIELD_SAFE_TOP - FIELD_SAFE_BOTTOM);
+    rows = Math.max(11, Math.floor(usableH / CELL));
     if (rows % 2 === 0) rows -= 1; // odd → clean walls on both edges
-    offy = Math.max(0, (FIELD_H - rows * CELL) / 2);
+    offy = FIELD_SAFE_TOP + Math.max(0, (FIELD_H - FIELD_SAFE_TOP - FIELD_SAFE_BOTTOM - rows * CELL) / 2);
+    // Guard against pathologically large insets pushing the grid off the bottom.
+    offy = Math.min(offy, Math.max(FIELD_SAFE_TOP, FIELD_H - FIELD_SAFE_BOTTOM - rows * CELL));
     generate();
     const reachable = reachableFromStart();
     // stars on every reachable cell except the start — all collectible

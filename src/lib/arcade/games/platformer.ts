@@ -6,6 +6,8 @@
 import {
   FIELD_W,
   FIELD_H,
+  FIELD_SAFE_TOP,
+  FIELD_SAFE_BOTTOM,
   clamp,
   drawAvatar,
   glowCircle,
@@ -74,12 +76,19 @@ export function createPlatformer(): ArcadeEngine {
   /** Build the level: the hand-tuned upper climb + a staircase down to a
    *  full-width ground at the bottom of the (responsive) field. */
   function buildLevel(): void {
-    platforms = UPPER.map((p) => ({ ...p }));
-    goal = platforms[platforms.length - 1];
-    stars = UPPER_STARS.map((s) => ({ ...s, got: false }));
-
     const bottomGround = Math.round(FIELD_H) - 24;
-    let y = 452;
+    // Shift the hand-tuned upper climb DOWN so the goal cloud + the player
+    // standing on it clear the top HUD band — but clamp the shift so the base
+    // never sinks into the generated staircase / below ground on short screens.
+    const desiredOff = Math.max(0, FIELD_SAFE_TOP + PH + 10 - UPPER[UPPER.length - 1].y);
+    const maxOff = Math.max(0, bottomGround - 96 - 452);
+    const topOff = Math.min(desiredOff, maxOff);
+
+    platforms = UPPER.map((p) => ({ ...p, y: p.y + topOff }));
+    goal = platforms[platforms.length - 1];
+    stars = UPPER_STARS.map((s) => ({ ...s, y: s.y + topOff, got: false }));
+
+    let y = 452 + topOff;
     let cx = 180; // start under the upper base
     let toggle = 0;
     // Steps of 56px (< the ~80px max jump) and wide, overlapping platforms so a
@@ -88,7 +97,11 @@ export function createPlatformer(): ArcadeEngine {
       y += 56;
       cx = clamp(cx + (Math.random() < 0.5 ? -1 : 1) * (44 + Math.random() * 26), 60, FIELD_W - 60);
       const w = 100;
-      const x = clamp(cx - w / 2, 6, FIELD_W - w - 6);
+      // Steps inside the bottom-control band are pinned to a central corridor so
+      // neither the step nor its star hides under the corner d-pad / jump button.
+      const inBand = y > bottomGround - FIELD_SAFE_BOTTOM;
+      const lo = inBand ? 96 : 6;
+      const x = clamp(cx - w / 2, lo, FIELD_W - w - lo);
       platforms.push({ x, y, w });
       if (toggle++ % 2 === 0) stars.push({ x: x + w / 2, y: y - 16, got: false });
     }

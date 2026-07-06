@@ -12,7 +12,7 @@
   import { t } from 'svelte-i18n';
   import { couple, tapCouplePoint } from '$lib/couple/couple-store.svelte';
   import { playSfx, vibrate } from '$lib/gamification/sound';
-  import { prefersReducedMotion } from './events';
+  import { prefersReducedMotion, fireConfettiEvent } from './events';
 
   // Timing (ms). First appearance is soon-ish so it's discoverable; later gaps
   // are longer so it stays a treat. Each visit lasts a short, limited window.
@@ -23,10 +23,20 @@
   const SHOW_MIN = 7_000;
   const SHOW_MAX = 11_000;
 
+  // Feedback escalation — the FASTER you tap, the more (and wilder) the reaction
+  // grows, exponentially, but capped so a frantic tapper can never lag the app.
+  const RATE_WINDOW = 1300; // ms sliding window used to measure tap speed
+  const MAX_LEVEL = 12; // hard ceiling on intensity (the "upper limit")
+  const MAX_POPS = 28; // hard ceiling on concurrent floating particles
+
   let visible = $state(false);
   let reduced = $state(false);
-  let pops = $state<{ id: number; dx: number }[]>([]);
+  let pops = $state<
+    { id: number; dx: number; dy: number; rot: number; scale: number; big: boolean }[]
+  >([]);
   let popSeq = 0;
+  let tapTimes: number[] = [];
+  let heartEl = $state<HTMLButtonElement | null>(null);
 
   let showTimer: ReturnType<typeof setTimeout> | null = null;
   let hideTimer: ReturnType<typeof setTimeout> | null = null;
@@ -60,18 +70,68 @@
     scheduleAppearance();
   }
 
+  /** A short, level-scaled shake of the heart via the Web Animations API
+   *  (retriggerable + capped). Skipped under reduced motion. */
+  function shake(level: number): void {
+    if (!heartEl || reduced) return;
+    const amp = Math.min(16, 2 + level); // px, capped
+    const rot = Math.min(14, level); // deg, capped
+    const s = 1 + Math.min(0.24, level * 0.02);
+    heartEl.animate(
+      [
+        { transform: 'translateX(-50%) rotate(0) scale(1)' },
+        { transform: `translateX(calc(-50% - ${amp}px)) rotate(-${rot}deg) scale(${s})` },
+        { transform: `translateX(calc(-50% + ${amp}px)) rotate(${rot}deg) scale(${s})` },
+        { transform: 'translateX(-50%) rotate(0) scale(1)' }
+      ],
+      { duration: Math.max(120, 260 - level * 10), easing: 'ease-in-out' }
+    );
+  }
+
   function onTap(): void {
     tapCouplePoint();
+
+    // Measure tap speed over a sliding window → an intensity level, capped.
+    const now = performance.now();
+    tapTimes = tapTimes.filter((ts) => now - ts < RATE_WINDOW);
+    tapTimes.push(now);
+    const level = Math.min(MAX_LEVEL, tapTimes.length);
+
+    // Sound + haptics escalate with level.
     playSfx('pop');
-    vibrate('tap');
+    if (level >= 6 && level % 3 === 0) playSfx('milestone');
+    vibrate(level < 4 ? 'tap' : level < 8 ? 'success' : 'warning');
+
     if (!reduced) {
-      const id = ++popSeq;
-      pops = [...pops, { id, dx: Math.round(rand(-14, 14)) }];
+      // Confetti — Confetti.svelte keeps its OWN decaying heat/tier, so rapid
+      // taps ramp the burst size, glow and screen-flash exponentially; we scale
+      // the base burst with the local tap rate too. Both sides are hard-capped.
+      fireConfettiEvent({
+        origin: 'heart',
+        count: Math.min(10 + level * 6, 90),
+        intensity: 1 + level * 0.35
+      });
+
+      // More floating hearts/points per tap the faster you go (capped), flung
+      // wider and bigger as it heats up.
+      const n = Math.min(6, 1 + Math.floor(level / 2));
+      const batch = Array.from({ length: n }, () => ({
+        id: ++popSeq,
+        dx: Math.round(rand(-12 - level * 3, 12 + level * 3)),
+        dy: -(24 + level * 5),
+        rot: Math.round(rand(-50, 50)),
+        scale: Math.min(2, 1 + level * 0.08),
+        big: level >= 7
+      }));
+      pops = [...pops, ...batch].slice(-MAX_POPS);
+      const ids = new Set(batch.map((b) => b.id));
       const timer = setTimeout(() => {
         popTimers.delete(timer);
-        pops = pops.filter((p) => p.id !== id);
-      }, 750);
+        pops = pops.filter((p) => !ids.has(p.id));
+      }, 800);
       popTimers.add(timer);
+
+      shake(level);
     }
     // Reward a keen tapper by keeping the heart a touch longer, capped so it
     // still disappears promptly.
@@ -95,6 +155,7 @@
 
 {#if visible}
   <button
+    bind:this={heartEl}
     type="button"
     class="surprise-heart"
     class:reduced
@@ -108,7 +169,11 @@
       <span class="count" aria-hidden="true">{couple.points}</span>
     {/if}
     {#each pops as p (p.id)}
-      <span class="plus" style={`--dx:${p.dx}px`} aria-hidden="true">+1</span>
+      <span
+        class="plus"
+        class:big={p.big}
+        style={`--dx:${p.dx}px; --dy:${p.dy}px; --rot:${p.rot}deg; --scale:${p.scale}`}
+        aria-hidden="true">{p.big ? '💗' : '+1'}</span>
     {/each}
   </button>
 {/if}
@@ -188,7 +253,11 @@
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
     pointer-events: none;
     z-index: 4;
-    animation: plus-float 0.75s ease-out forwards;
+    animation: plus-float 0.8s ease-out forwards;
+  }
+  .plus.big {
+    font-size: 1.15rem;
+    filter: drop-shadow(0 2px 6px rgba(244, 114, 182, 0.6));
   }
   @keyframes heart-in {
     from {
@@ -214,11 +283,12 @@
   @keyframes plus-float {
     from {
       opacity: 1;
-      transform: translate(calc(-50% + var(--dx, 0px)), 0) scale(1);
+      transform: translate(calc(-50% + var(--dx, 0px)), 0) rotate(0deg) scale(1);
     }
     to {
       opacity: 0;
-      transform: translate(calc(-50% + var(--dx, 0px)), -28px) scale(1.3);
+      transform: translate(calc(-50% + var(--dx, 0px)), var(--dy, -28px))
+        rotate(var(--rot, 0deg)) scale(calc(1.3 * var(--scale, 1)));
     }
   }
   @media (prefers-reduced-motion: reduce) {

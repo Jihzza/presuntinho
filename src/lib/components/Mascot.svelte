@@ -104,7 +104,7 @@
   function fireParticles(kind: 'love' | 'nudge'): void {
     burst = kind;
     if (!reduced) {
-      const n = 8;
+      const n = 12;
       particles = Array.from({ length: n }, (_, i) => ({ id: ++pseq, a: Math.round((360 / n) * i) }));
     }
     if (particleTimer) clearTimeout(particleTimer);
@@ -266,7 +266,7 @@
     title={emotionLine}
   >
     <!-- V10.4 — a mascote ESCOLHIDA (arte real) com a emoção do dia. -->
-    <MascotAvatar mascot={mascotId} {emotion} size={38} animate={!reduced} />
+    <MascotAvatar mascot={mascotId} {emotion} size={48} animate={!reduced} />
     {#each particles as p (p.id)}
       <span class="particle" style={`--a:${p.a}deg`} aria-hidden="true">{burst === 'love' ? '💛' : '💭'}</span>
     {/each}
@@ -275,11 +275,11 @@
 
 <style>
   .mascot-fab {
-    /* 48 × 48 px touch target — still accessible, but visually quiet. */
-    width: 48px;
-    height: 48px;
-    min-width: 48px;
-    min-height: 48px;
+    /* 60 × 60 px — bigger & more present than before, still a comfy touch target. */
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    min-height: 60px;
     border-radius: 999px;
     border: 1px solid transparent;
     background: transparent;
@@ -293,7 +293,7 @@
        non-fixed so it isn't hidden behind the Vida footer tab. `relative` also
        makes it the positioning context for the gesture particles below. */
     position: relative;
-    opacity: 0.64;
+    opacity: 0.82;
     filter: drop-shadow(0 3px 8px rgba(15, 23, 42, 0.42));
     transition:
       transform 0.18s ease,
@@ -315,35 +315,38 @@
   .mascot-fab:active {
     transform: scale(0.95);
   }
-  /* Gesture bursts — love (hold) pulses, nudge (multi-tap) shakes. */
+  /* Gesture bursts — love (hold) pulses HARD, nudge (multi-tap) shakes wildly. */
   .mascot-fab.loving {
-    animation: mascot-love 0.6s ease;
+    animation: mascot-love 0.72s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .mascot-fab.nudging {
-    animation: mascot-shake 0.5s ease;
+    animation: mascot-shake 0.6s ease;
   }
   @keyframes mascot-love {
-    0% { transform: scale(1); }
-    40% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+    0% { transform: scale(1) rotate(0); }
+    30% { transform: scale(1.5) rotate(-6deg); }
+    55% { transform: scale(1.32) rotate(6deg); }
+    75% { transform: scale(1.42) rotate(-3deg); }
+    100% { transform: scale(1) rotate(0); }
   }
   @keyframes mascot-shake {
     0%, 100% { transform: translateX(0) rotate(0); }
-    20% { transform: translateX(-4px) rotate(-7deg); }
-    40% { transform: translateX(4px) rotate(7deg); }
-    60% { transform: translateX(-3px) rotate(-4deg); }
-    80% { transform: translateX(3px) rotate(4deg); }
+    15% { transform: translateX(-9px) rotate(-13deg); }
+    30% { transform: translateX(9px) rotate(13deg); }
+    45% { transform: translateX(-7px) rotate(-10deg); }
+    60% { transform: translateX(7px) rotate(10deg); }
+    80% { transform: translateX(-4px) rotate(-5deg); }
   }
-  /* Radial particle burst flung from the mascot's centre. */
+  /* Radial particle burst flung from the mascot's centre — bigger + further. */
   .particle {
     position: absolute;
     left: 50%;
     top: 50%;
-    font-size: 1rem;
+    font-size: 1.35rem;
     line-height: 1;
     pointer-events: none;
     z-index: 5;
-    animation: particle-fly 0.9s ease-out forwards;
+    animation: particle-fly 0.95s ease-out forwards;
   }
   @keyframes particle-fly {
     from {
@@ -352,7 +355,7 @@
     }
     to {
       opacity: 0;
-      transform: translate(-50%, -50%) rotate(var(--a, 0deg)) translateY(-46px) scale(1.15);
+      transform: translate(-50%, -50%) rotate(var(--a, 0deg)) translateY(-68px) scale(1.3);
     }
   }
   @media (prefers-reduced-motion: reduce) {

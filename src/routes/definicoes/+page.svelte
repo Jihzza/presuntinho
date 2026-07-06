@@ -46,6 +46,8 @@
   import Upload from 'lucide-svelte/icons/upload';
   import Info from 'lucide-svelte/icons/info';
   import { VERSION, REPO_URL } from '$lib/version';
+  import RefreshCw from 'lucide-svelte/icons/refresh-cw';
+  import { forceAppUpdate } from '$lib/pwa/app-update';
   import Palette from 'lucide-svelte/icons/palette';
   import Volume2 from 'lucide-svelte/icons/volume-2';
   import Bell from 'lucide-svelte/icons/bell';
@@ -75,6 +77,8 @@
   } from '$lib/gamification/mascots';
   // gap-116: real PBKDF2 reset-password flow imports.
   import { getSession } from '$lib/auth/session';
+  import { getChatToken, setChatToken, clearChatToken, type ChatProfile } from '$lib/chat/client';
+  import { couple, refreshCoupleEnabled } from '$lib/couple/couple-store.svelte';
   import {
       verifyAgainstEffectiveHashes,
       setPassword,
@@ -125,6 +129,21 @@
   // no iOS a Apple congela o ícone e só re-adicionar resolve.
   let inInstalledApp = $state(false);
   let onIos = $state(false);
+
+  // "Atualizar app" — force the newest deploy (defeats a stale service worker /
+  // cache). Always ends in a reload, so the `updatingApp` spinner just covers
+  // the brief gap before the page reloads.
+  let updatingApp = $state(false);
+  async function updateApp(): Promise<void> {
+    if (updatingApp) return;
+    updatingApp = true;
+    showToast($t('settings.update.checking', { default: 'A procurar a versão mais recente… 🐷' }), 2000);
+    try {
+      await forceAppUpdate(); // reloads; the line below only runs if it somehow doesn't
+    } finally {
+      updatingApp = false;
+    }
+  }
   onMount(() => {
     void getAppLogo().then((logo) => (currentLogo = logo));
     inInstalledApp =
@@ -812,6 +831,36 @@
     }
   }
 
+  // ── Couple connection (the chat token that unlocks shared points + pings) ──
+  let coupleProfile = $state<ChatProfile | null>(null);
+  let coupleToken = $state('');
+  let coupleConnected = $state(false);
+
+  onMount(() => {
+    const p = getSession()?.profile;
+    coupleProfile = p === 'fatma' || p === 'daniel' ? p : null;
+    coupleConnected = !!(coupleProfile && getChatToken(coupleProfile));
+  });
+
+  function saveCoupleToken(): void {
+    if (!coupleProfile) return;
+    const token = coupleToken.trim();
+    if (!token) return;
+    setChatToken(coupleProfile, token);
+    coupleConnected = true;
+    coupleToken = '';
+    refreshCoupleEnabled(); // light it up now, no reload
+    showToast($t('settings.couple.saved', { default: 'Conta do casal ligada 💞' }));
+  }
+
+  function disconnectCouple(): void {
+    if (!coupleProfile) return;
+    clearChatToken(coupleProfile);
+    coupleConnected = false;
+    refreshCoupleEnabled();
+    showToast($t('settings.couple.disconnected', { default: 'Conta do casal desligada' }));
+  }
+
   // Misc — gap-115: read version from a single source of truth
   // (src/lib/version.ts) so the About card never shows a misleading date.
   void REPO_URL;
@@ -1194,6 +1243,39 @@
     {/if}
   </section>
 
+  <!-- ============ Couple connection ============ -->
+  {#if coupleProfile}
+    <section class="card" aria-labelledby="couple-h">
+      <div class="card-head">
+        <span class="icon-wrap"><Heart size={18} /></span>
+        <h2 id="couple-h">{$t('settings.couple.title', { default: 'Conta do casal' })}</h2>
+      </div>
+      <p class="muted">{$t('settings.couple.hint', { default: 'Liga a chave partilhada para sincronizar pontos, amor e saudades entre os dois telemóveis.' })}</p>
+      {#if coupleConnected}
+        <p class="hint ok">
+          {$t('settings.couple.connected', { default: 'Ligada ✓' })}
+          {#if couple.partnerOnline}· {$t('settings.couple.partner_online', { default: 'parceira online 🟢' })}{/if}
+        </p>
+        <div class="data-actions">
+          <Button variant="danger" onclick={disconnectCouple}>
+            {$t('settings.couple.disconnect', { default: 'Desligar' })}
+          </Button>
+        </div>
+      {:else}
+        <form onsubmit={(e) => { e.preventDefault(); saveCoupleToken(); }}>
+          <label class="field">
+            <span class="field-label">{$t('settings.couple.key_label', { default: 'Chave de ligação' })}</span>
+            <input type="password" bind:value={coupleToken} autocomplete="off" placeholder="••••••••" />
+          </label>
+          <div class="data-actions">
+            <Button type="submit">{$t('settings.couple.save', { default: 'Ligar' })}</Button>
+          </div>
+        </form>
+      {/if}
+      <p class="hint">{$t('settings.couple.note', { default: 'A mesma chave tem de ser usada nos dois telemóveis. Também podes geri-la nas Mensagens.' })}</p>
+    </section>
+  {/if}
+
   <!-- ============ Data ============ -->
   <section class="card" aria-labelledby="data-h">
     <div class="card-head">
@@ -1263,6 +1345,15 @@
       <li>
         <Globe size={14} aria-hidden="true" />
         {$t('settings.version')} · {VERSION}
+      </li>
+      <li class="update-li">
+        <button type="button" class="update-btn" onclick={updateApp} disabled={updatingApp}>
+          <RefreshCw size={15} aria-hidden="true" class={updatingApp ? 'spin' : ''} />
+          {updatingApp
+            ? $t('settings.update.updating', { default: 'A atualizar…' })
+            : $t('settings.update.button', { default: 'Atualizar a app' })}
+        </button>
+        <small class="update-hint muted">{$t('settings.update.hint', { default: 'Vai buscar a versão mais recente e recarrega — resolve ecrãs em branco depois de uma atualização.' })}</small>
       </li>
       <li>
         <a href="/legacy/" target="_blank" rel="noopener noreferrer">
@@ -1929,6 +2020,58 @@
   }
   .about-list a:hover {
     color: var(--accent);
+  }
+  /* The update row stacks the button over its hint (siblings above are rows). */
+  .about-list li.update-li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    margin-top: 0.2rem;
+  }
+  .update-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 44px;
+    padding: 0.5rem 0.95rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--txt);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
+  .update-btn:hover:not(:disabled),
+  .update-btn:focus-visible:not(:disabled) {
+    background: color-mix(in srgb, var(--accent) 20%, transparent);
+    border-color: var(--accent);
+    outline: none;
+  }
+  .update-btn:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+  .update-btn:disabled {
+    opacity: 0.65;
+    cursor: progress;
+  }
+  .update-hint {
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+  .update-btn :global(.spin) {
+    animation: update-spin 0.9s linear infinite;
+  }
+  @keyframes update-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .update-btn :global(.spin) {
+      animation: none;
+    }
   }
   .modal-backdrop {
     position: fixed;

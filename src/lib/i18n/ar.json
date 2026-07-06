@@ -4953,5 +4953,6 @@
   "arcade.hud.move_aria": "الحركة",
   "arcade.hud.action_aria": "إجراء",
   "arcade.fullscreen.enter": "ملء الشاشة",
-  "arcade.fullscreen.exit": "الخروج من ملء الشاشة"
+  "arcade.fullscreen.exit": "الخروج من ملء الشاشة",
+  "a11y.notifications": "الإشعارات"
 }

@@ -110,7 +110,7 @@
         {@const progress = progressByCourse.get(course.slug)}
         {@const lessons = courseLessonCount(course)}
         {@const quizzes = courseQuizCount(course)}
-        <a class="course-card" href={course.href} style="--course-color: {course.color};" data-sveltekit-preload-data>
+        <a class="course-card" href={`/escola/caminho/${course.slug}/`} style="--course-color: {course.color};" data-sveltekit-preload-data>
           <span class="course-icon" aria-hidden="true">{course.icon}</span>
           <div class="course-body">
             <p class="kicker">{course.tagline}</p>

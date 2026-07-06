@@ -13,6 +13,9 @@
 // token or the session profile isn't one of the two legacy partners.
 
 import { getSession } from '$lib/auth/session';
+import { isMultiplayerConfigured } from '$lib/multiplayer/config';
+import { COUPLE_CHANNEL, coupleRole } from '$lib/couple/couple-channel';
+import type { Room } from '$lib/multiplayer/realtime';
 import { showToast } from '$lib/components/events';
 import { playSfx, vibrate, vibrateNudge } from '$lib/gamification/sound';
 import { get } from 'svelte/store';
@@ -45,6 +48,8 @@ interface CoupleUiState {
   partnerPoints: number;
   /** Async-competition high scores: scores[gameId] = { fatma?, daniel? }. */
   scores: Record<string, Partial<Record<ChatProfile, number>>>;
+  /** The partner is connected on the realtime channel right now. */
+  partnerOnline: boolean;
 }
 
 export const couple: CoupleUiState = $state({
@@ -54,7 +59,8 @@ export const couple: CoupleUiState = $state({
   points: 0,
   myPoints: 0,
   partnerPoints: 0,
-  scores: {}
+  scores: {},
+  partnerOnline: false
 });
 
 const POLL_MS = 5000;
@@ -73,6 +79,17 @@ let seededPing = false;
 let started = false;
 let cleanupListeners: (() => void) | null = null;
 
+// Realtime fast-path (optional; only when Supabase is configured). Pings ride
+// this broadcast channel for instant delivery.
+let room: Room | null = null;
+
+// Durable POINTS backend. When Supabase is configured, the shared heart counter
+// lives in a real Supabase table (durable + realtime via postgres_changes) with
+// NO chat token needed; otherwise it falls back to the Netlify-Blobs counter.
+let supaActive = false;
+let supa: typeof import('$lib/couple/couple-supabase') | null = null;
+let supaPointsUnsub: (() => void) | null = null;
+
 function profile(): ChatProfile | null {
   const p = getSession()?.profile;
   return p === 'fatma' || p === 'daniel' ? p : null;
@@ -87,10 +104,14 @@ function partnerName(me: ChatProfile): string {
 /** Fold a fresh server snapshot into the reactive state (+ ping detection). */
 function applySnapshot(me: ChatProfile, snap: CoupleSnapshot): void {
   const other = otherProfile(me);
-  couple.myPoints = snap.couple.points[me] ?? 0;
-  couple.partnerPoints = snap.couple.points[other] ?? 0;
-  // Keep any not-yet-flushed optimistic taps on top of the authoritative total.
-  couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+  // In Supabase mode the couple_points table owns the counter — don't let the
+  // Blobs snapshot overwrite it (Blobs still carries scores/pings).
+  if (!supaActive) {
+    couple.myPoints = snap.couple.points[me] ?? 0;
+    couple.partnerPoints = snap.couple.points[other] ?? 0;
+    // Keep any not-yet-flushed optimistic taps on top of the authoritative total.
+    couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+  }
   couple.scores = snap.couple.scores ?? {};
   couple.online = true;
   couple.ready = true;
@@ -122,6 +143,103 @@ function receivePing(me: ChatProfile, kind: 'love' | 'nudge'): void {
   }
 }
 
+// ── realtime broadcast fast-path (optional, Supabase-gated) ─────────────────
+
+/** Monotonic merge so a dropped/dup/stale broadcast can never lower the count. */
+function applyPartnerPoints(me: ChatProfile, from: ChatProfile, total: number): void {
+  if (from === me) return; // self:false already filters; belt-and-suspenders
+  couple.partnerPoints = Math.max(couple.partnerPoints, total);
+  couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+}
+
+async function connectRealtime(me: ChatProfile): Promise<void> {
+  if (room || typeof window === 'undefined' || !isMultiplayerConfigured()) return;
+  try {
+    const { joinRoom } = await import('$lib/multiplayer/realtime');
+    const r = await joinRoom(COUPLE_CHANNEL, { role: coupleRole(me), name: me, mascot: '' });
+    room = r;
+    const other = otherProfile(me);
+    r.on('points', (p: { profile?: ChatProfile; total?: number }) => {
+      if (p?.profile && typeof p.total === 'number') applyPartnerPoints(me, p.profile, p.total);
+    });
+    const onPing = (kind: 'love' | 'nudge') => (p: { profile?: ChatProfile; ts?: number }) => {
+      if (p?.profile !== other) return;
+      const ts = p.ts ?? 0;
+      // Before the first snapshot seeds lastPartnerPingTs, adopt without firing.
+      if (!seededPing) {
+        lastPartnerPingTs = Math.max(lastPartnerPingTs, ts);
+        return;
+      }
+      if (ts > lastPartnerPingTs) {
+        lastPartnerPingTs = ts;
+        receivePing(me, kind);
+      }
+    };
+    r.on('love', onPing('love'));
+    r.on('nudge', onPing('nudge'));
+    r.onPeerChange((peer) => (couple.partnerOnline = peer !== null));
+  } catch (e) {
+    // Realtime is a pure enhancement — any failure just leaves the poller alone.
+    console.warn('[couple] realtime connect failed; poll-only', e);
+    room = null;
+  }
+}
+
+/** Pull the authoritative point tallies from Supabase — used to seed and to
+ *  reconcile after a dropped realtime event or a failed flush. */
+async function reconcileSupabasePoints(): Promise<void> {
+  const me = profile();
+  if (!supaActive || !supa || !me) return;
+  try {
+    const points = await supa.fetchCouplePoints();
+    const other = otherProfile(me);
+    couple.myPoints = points[me] ?? 0;
+    couple.partnerPoints = points[other] ?? 0;
+    couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+    couple.online = true;
+  } catch {
+    /* keep the current display */
+  }
+}
+
+/** Hydrate + live-subscribe the durable Supabase points counter. On any failure
+ *  we clear supaActive so the Blobs counter transparently takes back over. */
+async function initSupabasePoints(me: ChatProfile): Promise<void> {
+  try {
+    const mod = await import('$lib/couple/couple-supabase');
+    supa = mod;
+    const other = otherProfile(me);
+    // Pings arrive purely over the broadcast channel here (no Blobs snapshot to
+    // seed from), so mark seeded → the first incoming ping actually fires.
+    seededPing = true;
+    // Subscribe FIRST so no change is missed in the gap before the initial fetch.
+    supaPointsUnsub?.();
+    supaPointsUnsub = mod.subscribeCouplePoints((prof, pts) => {
+      // Monotonic: never let an out-of-order event lower the count.
+      if (prof === me) couple.myPoints = Math.max(couple.myPoints, pts);
+      else if (prof === other) couple.partnerPoints = Math.max(couple.partnerPoints, pts);
+      couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+    });
+    await reconcileSupabasePoints();
+    couple.ready = true;
+  } catch (e) {
+    console.warn('[couple] Supabase points unavailable; using the Blobs counter', e);
+    supa = null;
+    supaActive = false;
+    supaPointsUnsub?.();
+    supaPointsUnsub = null;
+  }
+}
+
+/** Fire-and-forget a channel message; a dead channel is fine (poll reconciles). */
+function broadcast(event: string, payload: unknown): void {
+  try {
+    room?.send(event, payload);
+  } catch {
+    /* channel down — the poller reconciles */
+  }
+}
+
 async function poll(): Promise<void> {
   const me = profile();
   if (!me || !getChatToken(me)) return;
@@ -142,9 +260,30 @@ async function flushPoints(): Promise<void> {
   if (!me || pendingTaps <= 0) return;
   const n = pendingTaps;
   pendingTaps = 0;
+
+  // Supabase mode: persist to the couple_points table (durable + realtime).
+  if (supaActive && supa) {
+    try {
+      const total = await supa.bumpCouplePoints(me, n);
+      couple.myPoints = total;
+      couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+      couple.online = true;
+    } catch (e) {
+      // At-most-once on failure: the bump is NOT idempotent, so re-queuing after
+      // a possibly-committed write would inflate the server total. Drop the n
+      // taps and let the periodic reconcile pull the authoritative count instead.
+      couple.online = false;
+      void reconcileSupabasePoints();
+    }
+    return;
+  }
+
+  // Netlify-Blobs fallback (no Supabase configured).
   try {
     const snap = await postCouplePoints(me, n);
     applySnapshot(me, snap);
+    // Push the server-confirmed authoritative total so the partner sees it now.
+    broadcast('points', { profile: me, total: couple.myPoints });
   } catch (e) {
     // Roll the taps back into the pending bucket so a later flush retries them,
     // but drop the optimistic display back in step so it doesn't drift upward.
@@ -162,9 +301,11 @@ async function flushPoints(): Promise<void> {
 export function tapCouplePoint(): number {
   const me = profile();
   if (!me) return couple.points;
+  // Track the unflushed taps in pendingTaps ONLY (not myPoints — that is the
+  // server-authoritative tally set on flush). Incrementing both double-counts an
+  // unflushed tap whenever a recompute (partner event) runs before the flush.
   pendingTaps += 1;
   couple.points += 1;
-  couple.myPoints += 1;
   if (!flushTimer) flushTimer = setTimeout(() => void flushPoints(), POINT_FLUSH_MS);
   return couple.points;
 }
@@ -180,6 +321,8 @@ async function sendPing(kind: 'love' | 'nudge'): Promise<PingResult> {
   try {
     const snap = kind === 'love' ? await postCoupleLove(me) : await postCoupleNudge(me);
     applySnapshot(me, snap);
+    // Instant delivery to the partner (idempotent — carries its own ts).
+    broadcast(kind, { profile: me, ts: now });
     return 'sent';
   } catch (e) {
     // Let the user retry immediately after a network failure.
@@ -227,9 +370,20 @@ export function startCouplePoller(): void {
   started = true;
   const me = profile();
   couple.enabled = !!(me && getChatToken(me));
+  // Open the realtime fast-path when Supabase is configured (no-op otherwise).
+  if (me) void connectRealtime(me);
+  // Durable POINTS via Supabase when configured — set the flag synchronously so
+  // the Blobs poll below never overwrites the Supabase counter, then hydrate.
+  if (me && isMultiplayerConfigured()) {
+    supaActive = true;
+    void initSupabasePoints(me);
+  }
 
   const onVisible = () => {
-    if (document.visibilityState === 'visible') void poll();
+    if (document.visibilityState === 'visible') {
+      void poll();
+      void reconcileSupabasePoints(); // catch up on anything realtime missed
+    }
   };
   const onHide = () => {
     // Best-effort flush of queued taps before the tab is frozen/closed.
@@ -242,12 +396,32 @@ export function startCouplePoller(): void {
   pollTimer = setInterval(() => {
     if (typeof document !== 'undefined' && document.hidden) return;
     void poll();
+    // In Supabase mode poll() no-ops on points; reconcile heals realtime gaps.
+    void reconcileSupabasePoints();
   }, POLL_MS);
 
   cleanupListeners = () => {
     document.removeEventListener('visibilitychange', onVisible);
     window.removeEventListener('pagehide', onHide);
   };
+}
+
+/**
+ * Recompute `couple.enabled` after the chat token changes (e.g. saved/cleared in
+ * Settings) so the couple features light up WITHOUT a reload, and (re)open the
+ * realtime channel + do an immediate reconciliation poll.
+ */
+export function refreshCoupleEnabled(): void {
+  const me = profile();
+  couple.enabled = !!(me && getChatToken(me));
+  if (me) {
+    void connectRealtime(me);
+    void poll();
+  } else {
+    void room?.leave();
+    room = null;
+    couple.partnerOnline = false;
+  }
 }
 
 export function stopCouplePoller(): void {
@@ -258,4 +432,11 @@ export function stopCouplePoller(): void {
   started = false;
   cleanupListeners?.();
   cleanupListeners = null;
+  void room?.leave();
+  room = null;
+  couple.partnerOnline = false;
+  supaPointsUnsub?.();
+  supaPointsUnsub = null;
+  supa = null;
+  supaActive = false;
 }

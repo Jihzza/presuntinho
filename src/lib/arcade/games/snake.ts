@@ -4,6 +4,8 @@
 import {
   FIELD_W,
   FIELD_H,
+  FIELD_SAFE_TOP,
+  FIELD_SAFE_BOTTOM,
   drawAvatar,
   glowRect,
   glowCircle,
@@ -33,9 +35,12 @@ export function createSnake(): ArcadeEngine {
   let points = 0;
   let acc = 0;
   let stepEvery = 0.16;
-  // Rows fill the (responsive) field height; recomputed each round.
+  // Rows fill the (responsive) field height BETWEEN the safe insets so the head
+  // and food never travel under the top HUD or the bottom-corner controls.
+  // originY is the logical top of the grid; recomputed each round.
   let rows = 20;
   let startY = 10;
+  let originY = 0;
 
   function placeFood(): void {
     let next: Cell;
@@ -46,7 +51,14 @@ export function createSnake(): ArcadeEngine {
   }
 
   function reset(): void {
-    rows = Math.max(12, Math.floor(FIELD_H / CELL));
+    // Carve the grid out of the band clear of the top HUD and bottom controls.
+    const topCells = Math.ceil(FIELD_SAFE_TOP / CELL);
+    const bottomCells = Math.ceil(FIELD_SAFE_BOTTOM / CELL);
+    rows = Math.max(10, Math.floor(FIELD_H / CELL) - topCells - bottomCells);
+    originY = topCells * CELL;
+    // Guard: if measured insets are pathologically large, shrink further so the
+    // grid bottom can never slide back under the bottom chrome.
+    while (rows > 10 && originY + rows * CELL > FIELD_H - FIELD_SAFE_BOTTOM) rows -= 1;
     startY = Math.floor(rows / 2);
     snake = [
       { x: 7, y: startY },
@@ -111,19 +123,19 @@ export function createSnake(): ArcadeEngine {
     for (let y = 0; y < rows; y += 1)
       for (let x = 0; x < COLS; x += 1) {
         ctx.beginPath();
-        ctx.arc(x * CELL + CELL / 2, y * CELL + CELL / 2, 1, 0, Math.PI * 2);
+        ctx.arc(x * CELL + CELL / 2, y * CELL + CELL / 2 + originY, 1, 0, Math.PI * 2);
         ctx.fill();
       }
     // food — glowing fruit
-    glowCircle(env, food.x * CELL + CELL / 2, food.y * CELL + CELL / 2, CELL * 0.34, '#f97316', 16);
+    glowCircle(env, food.x * CELL + CELL / 2, food.y * CELL + CELL / 2 + originY, CELL * 0.34, '#f97316', 16);
     // snake body (green segments); the head is the player's mascot
     for (let i = snake.length - 1; i >= 0; i -= 1) {
       const s = snake[i];
       const head = i === 0;
       const cx = s.x * CELL + CELL / 2;
-      const cy = s.y * CELL + CELL / 2;
+      const cy = s.y * CELL + CELL / 2 + originY;
       if (head && drawAvatar(env, cx, cy, CELL + 2)) continue;
-      glowRect(env, s.x * CELL + 2, s.y * CELL + 2, CELL - 4, CELL - 4, 6, head ? '#f9a8d4' : ACCENT, head ? 16 : 8);
+      glowRect(env, s.x * CELL + 2, s.y * CELL + 2 + originY, CELL - 4, CELL - 4, 6, head ? '#f9a8d4' : ACCENT, head ? 16 : 8);
       if (head) {
         ctx.fillStyle = '#9d2f63';
         ctx.beginPath();

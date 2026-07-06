@@ -8,10 +8,11 @@
     lastScoreKey,
     readArcadeScore
   } from '$lib/arcade/games';
-  import MascotWalker from '$lib/components/arcade/MascotWalker.svelte';
+  import MascotRunner from '$lib/components/arcade/MascotRunner.svelte';
   import CrtOverlay from '$lib/components/arcade/CrtOverlay.svelte';
   import { arcadeImmersive } from '$lib/arcade/immersive-state';
   import { getActiveMascot, MASCOT_CHANGED_EVENT, DEFAULT_MASCOT_ID } from '$lib/gamification/mascots';
+  import { isMultiplayerConfigured } from '$lib/multiplayer/config';
   import {
     startArcadeMusic,
     stopArcadeMusic,
@@ -36,6 +37,7 @@
   );
   const hiScoreText = $derived(String(totalRecordPoints).padStart(6, '0'));
   const heartsTotal = ARCADE_GAMES.length;
+  const versusEnabled = isMultiplayerConfigured();
 
   function isNew(id: string): boolean {
     return (highScores[id] ?? 0) === 0 && (lastScores[id] ?? 0) === 0;
@@ -46,6 +48,29 @@
     if (musicOn) startArcadeMusic('lobby');
   }
 
+  // Tap-anywhere-to-mute: a tap on the arcade backdrop (not a button, menu row,
+  // link or the runner) flips the chiptune on/off — like slapping the cabinet.
+  // We require a still tap (pointerup close to pointerdown) so a scroll drag on
+  // the CRT screen never toggles it by accident.
+  let tapX = 0;
+  let tapY = 0;
+  let tapOnBackdrop = false;
+  function isBackdrop(target: EventTarget | null): boolean {
+    const el = target as HTMLElement | null;
+    if (!el) return false;
+    return !el.closest('a, button, .menu, .runner, [role="button"], input, select, textarea');
+  }
+  function onBackdropDown(e: PointerEvent): void {
+    tapX = e.clientX;
+    tapY = e.clientY;
+    tapOnBackdrop = isBackdrop(e.target);
+  }
+  function onBackdropUp(e: PointerEvent): void {
+    if (!tapOnBackdrop || !isBackdrop(e.target)) return;
+    if (Math.hypot(e.clientX - tapX, e.clientY - tapY) > 10) return; // was a drag/scroll
+    onToggleMusic();
+  }
+
   function move(delta: number): void {
     selected = (selected + delta + ARCADE_GAMES.length) % ARCADE_GAMES.length;
   }
@@ -53,6 +78,11 @@
     void goto(ARCADE_GAMES[selected].href);
   }
   function onKey(e: KeyboardEvent): void {
+    // The playable runner owns Space/↑ for jumping while it's focused — don't
+    // also fire the cabinet's Enter/Space = launch (it would yank us into a game
+    // mid-jump). The runner handles those keys itself and stops the default.
+    const active = typeof document !== 'undefined' ? document.activeElement : null;
+    if (active && active.classList.contains('runner')) return;
     const k = e.key.toLowerCase();
     if (k === 'arrowdown' || k === 's') {
       e.preventDefault();
@@ -116,7 +146,10 @@
   <meta name="description" content={$t('arcade.meta.description', { default: 'Jogos arcade secretos do Presuntinho, com pontuações locais e controlos mobile.' })} />
 </svelte:head>
 
-<div class="crt-screen">
+<!-- The mute toggle is fully operable via the ♪ button; the backdrop tap is a
+     progressive enhancement (slap-the-cabinet), so a static-element handler is ok. -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div class="crt-screen" onpointerdown={onBackdropDown} onpointerup={onBackdropUp}>
   <CrtOverlay radius="0" intensity={0.55} />
 
   <!-- ── top HUD row: back · HI-SCORE · hearts · music ── -->
@@ -166,11 +199,19 @@
     {/each}
   </nav>
 
+  {#if versusEnabled}
+    <a class="versus-cta" href="/secrets/versus/" data-sveltekit-preload-data>
+      <span class="vs-ic" aria-hidden="true">🐍</span>
+      <span class="vs-txt">{$t('versus.lobby_cta', { default: 'JOGAR 1v1' })}</span>
+      <span class="vs-badge">{$t('versus.badge', { default: 'ao vivo' })}</span>
+    </a>
+  {/if}
+
   <!-- ── attract-mode: the mascot patrols a pixel floor ── -->
   <div class="floor">
     <p class="bubble">{$t(hostSpeechKey, { default: 'Insere uma moeda e escolhe uma máquina! 🕹️' })}</p>
     <div class="floor-strip">
-      <MascotWalker mascot={hostId} size={64} pixelated />
+      <MascotRunner mascot={hostId} size={64} />
     </div>
     <p class="press">{$t('arcade.lobby.press_start', { default: 'PRESS START' })}</p>
   </div>
@@ -376,6 +417,37 @@
     .row.on .arrow {
       animation: px-blink 1s steps(1, end) infinite;
     }
+  }
+
+  /* ── 1v1 call-to-action ── */
+  .versus-cta {
+    width: min(30rem, 92vw);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin: 0 0 0.4rem;
+    padding: 0.7rem 1rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    color: #06121f;
+    background: linear-gradient(135deg, #f472b6, #a78bfa);
+    box-shadow: 0 0 18px rgba(244, 114, 182, 0.4);
+    z-index: 6;
+  }
+  .versus-cta .vs-ic { font-size: 1.2rem; }
+  .versus-cta .vs-badge {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.3rem;
+    background: rgba(6, 18, 31, 0.6);
+    color: #fde047;
+    text-transform: uppercase;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .versus-cta { animation: px-blink 1.6s steps(1, end) infinite; }
   }
 
   /* ── floor + mascot + press start ── */

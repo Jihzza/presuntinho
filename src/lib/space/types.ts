@@ -67,6 +67,10 @@ export interface Membership {
    */
   dbName: string;
   mascotId?: string;
+  /** User-editable profile photo, stored as a small downscaled data-URI. */
+  photo?: string;
+  /** User-editable short bio/status line. */
+  bio?: string;
   /** Optional per-member password (legacy members auth via the existing flow). */
   secret?: MemberSecret;
   createdAt: number;

@@ -27,6 +27,8 @@
   import AppCard from '$lib/components/AppCard.svelte';
   import MascotAvatar from '$lib/components/MascotAvatar.svelte';
   import { profileFor } from '$lib/profile/people';
+  import { profileState, loadProfile } from '$lib/profile/profile-store.svelte';
+  import ProfileEditor from '$lib/profile/ProfileEditor.svelte';
   import { resumeTarget, type NextLessonTarget } from '$lib/escola/progress';
 
   import { db } from '$lib/state/db';
@@ -62,6 +64,7 @@
 
   let currentXp = $state(0);
   let activeProfile = $state<'fatma' | 'daniel' | null>(null);
+  let profileEditorOpen = $state(false);
   let badgesMap = $state<Record<string, BadgeStatus>>({});
   let showOnboarding = $state(false);
   let heroIn = $state(false);
@@ -222,6 +225,7 @@
 
   onMount(() => {
     activeProfile = getSession()?.profile ?? null;
+    void loadProfile();
     heroIn = true;
     notifState = loadNotifState();
     const unsubXp = xp.subscribe((v) => (currentXp = v));
@@ -303,27 +307,36 @@
 </svelte:head>
 
 <OnboardingModal open={showOnboarding} onClose={handleOnboardingClose} profile={activeProfile} />
+<ProfileEditor open={profileEditorOpen} onClose={() => (profileEditorOpen = false)} />
 
 <div class="hub">
   <!-- 1 · Hero compacto mood-aware -->
   <header class="card hub-hero" class:hero-in={heroIn} class:mooded={Boolean(activeMood)}>
     <!-- V10.1 (tarefa A): perfil vivo — avatar clicável + nome + handle. -->
     <div class="profile-row">
-      <a
+      <button
+        type="button"
         class="profile-avatar"
-        href="/perfil/"
-        aria-label={$t('hub.profile.open_aria', { default: 'Abrir o teu perfil' })}
-        data-sveltekit-preload-data
+        onclick={() => (profileEditorOpen = true)}
+        aria-label={$t('hub.profile.edit', { default: 'Editar o teu perfil' })}
       >
-        <span aria-hidden="true">{person.emoji}</span>
-      </a>
+        {#if profileState.photo}
+          <img src={profileState.photo} alt="" />
+        {:else}
+          <span aria-hidden="true">{profileState.emoji || person.emoji}</span>
+        {/if}
+      </button>
       <div class="profile-id">
-        <strong>{$t(person.nameKey)}</strong>
-        <small>{$t(person.handleKey)}</small>
+        <strong>{profileState.displayName || $t(person.nameKey)}</strong>
+        {#if profileState.bio}
+          <small>{profileState.bio}</small>
+        {:else}
+          <small>{$t(person.handleKey)}</small>
+        {/if}
       </div>
-      <a class="profile-link" href="/perfil/" data-sveltekit-preload-data>
-        {$t('hub.profile.view', { default: 'Ver perfil →' })}
-      </a>
+      <button type="button" class="profile-link" onclick={() => (profileEditorOpen = true)}>
+        {$t('hub.profile.edit', { default: 'Editar' })}
+      </button>
     </div>
     <span class="eyebrow">
       {activeMood ? `${moodMeta?.emoji} ${moodMeta?.label}` : $t('hub.hero.eyebrow')}
@@ -588,6 +601,15 @@
     border: 2px solid color-mix(in srgb, var(--accent) 45%, var(--border));
     text-decoration: none;
     transition: transform var(--motion-fast, 120ms) ease;
+    padding: 0;
+    overflow: hidden;
+    cursor: pointer;
+    color: inherit;
+  }
+  .profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .profile-avatar:hover,
   .profile-avatar:focus-visible {
@@ -620,6 +642,10 @@
     font-weight: 700;
     text-decoration: none;
     white-space: nowrap;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
   }
   .profile-link:hover,
   .profile-link:focus-visible {

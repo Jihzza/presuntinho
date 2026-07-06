@@ -4966,5 +4966,6 @@
   "arcade.hud.move_aria": "El 7arka",
   "arcade.hud.action_aria": "Action",
   "arcade.fullscreen.enter": "Ecran kamel",
-  "arcade.fullscreen.exit": "Okhrej mel ecran kamel"
+  "arcade.fullscreen.exit": "Okhrej mel ecran kamel",
+  "a11y.notifications": "Notifications"
 }

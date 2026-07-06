@@ -177,7 +177,9 @@ export function createPong(): ArcadeEngine {
     glowRect(env, cpuX - PADDLE_W / 2, cpuY(), PADDLE_W, PADDLE_H, 6, '#fb7185', 12);
     const pY = playerY();
     glowRect(env, playerX - PADDLE_W / 2, pY, PADDLE_W, PADDLE_H, 6, ACCENT, 14);
-    drawAvatar(env, playerX, pY + PADDLE_H / 2, PADDLE_H + 8);
+    // Keep the mascot within the paddle bounds so it doesn't overhang into the
+    // bottom control band (the paddle itself already clears it via playerY()).
+    drawAvatar(env, playerX, pY + PADDLE_H / 2, PADDLE_H);
     // ball
     glowCircle(env, ball.x, ball.y, BALL_R, '#fde68a', 14);
   }
