@@ -107,7 +107,7 @@
   "agente.empty_prompt": "Pergunta qualquer coisa — eu leio da app.",
   "agente.error.send_failed": "Desculpa, tive um erro a processar a mensagem.",
   "agente.hermes.error_stream": "Não consegui obter resposta do agente.",
-  "agente.hermes.offline_prefix": "⚡ Sem ligação ao agente inteligente — resposta local:",
+  "agente.hermes.offline_prefix": "😴 O agente inteligente está a dormir (liga o PC) — aqui vai uma resposta local:",
   "agente.hermes.stop": "Parar resposta",
   "agente.hermes.stopped": "(interrompido)",
   "agente.placeholder": "Pergunta qualquer coisa…",
