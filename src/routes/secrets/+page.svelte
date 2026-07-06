@@ -477,7 +477,9 @@
     position: relative;
     width: 100%;
     max-width: 30rem;
-    height: 88px;
+    /* Tall enough for a full jump to stay on-screen (sprite 64 + ground + arc).
+       The runner derives its jump height from this box, so it always fits. */
+    height: 168px;
     border-radius: 0.4rem;
     background:
       linear-gradient(180deg, transparent, rgba(103, 232, 249, 0.06)),

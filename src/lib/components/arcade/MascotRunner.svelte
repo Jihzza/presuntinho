@@ -37,7 +37,9 @@
   // ── sprites ────────────────────────────────────────────────────────────────
   // We downscale the smooth webp into a small offscreen buffer once per pose,
   // then blit it upscaled with smoothing OFF → chunky 8-bit pixels on canvas.
-  const PX = 4;
+  // PX=3 keeps the character recognisable (≈21px buffer) instead of the mushy
+  // ~15px a PX of 4 produced — chunky, but not "broken".
+  const PX = 3;
   let runImg: HTMLImageElement | null = null;
   let jumpImg: HTMLImageElement | null = null;
   let runBuf: HTMLCanvasElement | null = null;
@@ -94,7 +96,11 @@
   let y = 0; // height above ground (px)
   let vy = 0;
   const GRAVITY = 1600; // px/s²
-  const JUMP_V = 560; // px/s
+  // Jump velocity + apex are derived from the canvas height in measure() so the
+  // mascot ALWAYS stays inside the playfield (it used to fly off the top of a
+  // short strip). Sensible defaults until the first measure().
+  let JUMP_V = 520; // px/s
+  let maxJump = 96; // apex cap (px above ground)
   let grounded = true;
 
   let speed = 168; // px/s world scroll
@@ -185,6 +191,10 @@
     const r = host.getBoundingClientRect();
     W = Math.max(160, Math.round(r.width));
     H = Math.max(64, Math.round(r.height));
+    // Keep the jump apex inside the canvas: the sprite top must never cross y=0.
+    // Available headroom = H − ground − sprite − small top margin.
+    maxJump = Math.max(34, H - GROUND - size - 6);
+    JUMP_V = Math.sqrt(2 * GRAVITY * maxJump);
     dpr = Math.min(2, window.devicePixelRatio || 1);
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
@@ -205,6 +215,11 @@
     if (!grounded) {
       vy -= GRAVITY * dt;
       y += vy * dt;
+      // Cap the apex to the playfield so the sprite can't leave the top.
+      if (y > maxJump) {
+        y = maxJump;
+        if (vy > 0) vy = 0;
+      }
       if (y <= 0) {
         y = 0;
         vy = 0;
