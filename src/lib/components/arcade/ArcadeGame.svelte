@@ -19,8 +19,12 @@
     initArcadeMusicPrefs
   } from '$lib/arcade/audio';
   import CrtOverlay from '$lib/components/arcade/CrtOverlay.svelte';
+  import { couple, submitCoupleScore, partnerBest } from '$lib/couple/couple-store.svelte';
 
   let { game }: { game: ArcadeGameDefinition } = $props();
+
+  // Async "play against her": her synced best for this game (null until synced).
+  const herBest = $derived(couple.enabled ? partnerBest(game.id) : null);
 
   type Status = 'ready' | 'playing' | 'paused' | 'won' | 'over';
 
@@ -184,6 +188,9 @@
     high = Math.max(high, score);
     writeArcadeScore(lastScoreKey(game.id), last);
     writeArcadeScore(highScoreKey(game.id), high);
+    // Async competition: push a new personal best to the couple backend so the
+    // partner sees it on her device (fire-and-forget; no-op without a token).
+    if (newRecord) submitCoupleScore(game.id, high);
     if (end === 'won') {
       playSfx('fanfare');
       vibrate('success');
@@ -494,6 +501,18 @@
         </strong>
         {#if newRecord}<span class="record">⭐ {$t('arcade.overlay.new_record', { default: 'Novo recorde!' })}</span>{/if}
         <p class="ov-score">{$t('arcade.result.score_line', { values: { score, best: high }, default: 'Pontuação {score} · recorde {best}' })}</p>
+        {#if herBest !== null}
+          <p class="ov-versus">
+            {$t('arcade.versus.her_best', { values: { best: herBest }, default: 'Recorde dela: {best}' })}
+            {#if high > herBest}
+              <span class="lead win">{$t('arcade.versus.you_lead', { default: '🏆 estás à frente!' })}</span>
+            {:else if high === herBest}
+              <span class="lead tie">{$t('arcade.versus.tie', { default: '🤝 empate!' })}</span>
+            {:else}
+              <span class="lead behind">{$t('arcade.versus.she_leads', { default: '🔥 apanha-a!' })}</span>
+            {/if}
+          </p>
+        {/if}
         <div class="ov-actions">
           <button type="button" class="cta" onclick={restart}>{$t('arcade.actions.play_again', { default: 'Jogar de novo' })}</button>
           <a class="ghost" href="/secrets/">{$t('arcade.game.back', { default: '← Voltar à sala' })}</a>
@@ -640,6 +659,20 @@
     font-size: 0.82rem;
   }
   .ov-score { margin: 0; color: var(--txt2, #cbd5e1); font-size: 0.95rem; }
+  .ov-versus {
+    margin: 0.15rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    color: var(--txt2, #cbd5e1);
+    font-size: 0.86rem;
+  }
+  .ov-versus .lead { font-weight: 900; }
+  .ov-versus .lead.win { color: #4ade80; }
+  .ov-versus .lead.tie { color: #fbbf24; }
+  .ov-versus .lead.behind { color: #f472b6; }
   .ov-actions { display: grid; gap: 0.45rem; justify-items: center; margin-top: 0.3rem; }
   .cta {
     min-height: 52px;

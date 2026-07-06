@@ -349,3 +349,102 @@ export async function flushOutbox(profile: ChatProfile): Promise<ChatMessage[]> 
 export function mintLocalId(profile: ChatProfile): string {
   return `local-${Date.now()}-${profile}-${Math.random().toString(36).slice(2, 6)}`;
 }
+
+// ── couple sync (shared points + love/nudge pings + async game scores) ──────
+//
+// Rides the same blob + token backend as chat; the state lives on `meta.couple`
+// so a single GET returns both the chat cursor and the couple state.
+
+export interface CouplePing {
+  kind: 'love' | 'nudge';
+  ts: number;
+}
+
+export interface CoupleData {
+  points: Record<ChatProfile, number>;
+  scores: Record<string, Partial<Record<ChatProfile, number>>>;
+  pings: Record<ChatProfile, CouplePing | null>;
+}
+
+export interface CoupleSnapshot {
+  couple: CoupleData;
+  latestTs: number;
+}
+
+function normalizePing(raw: unknown): CouplePing | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const p = raw as { kind?: unknown; ts?: unknown };
+  if ((p.kind !== 'love' && p.kind !== 'nudge') || typeof p.ts !== 'number') return null;
+  return { kind: p.kind, ts: p.ts };
+}
+
+function normalizeCouple(raw: unknown): CoupleData {
+  const couple: CoupleData = {
+    points: { fatma: 0, daniel: 0 },
+    scores: {},
+    pings: { fatma: null, daniel: null }
+  };
+  if (!raw || typeof raw !== 'object') return couple;
+  const r = raw as {
+    points?: { fatma?: unknown; daniel?: unknown };
+    scores?: Record<string, { fatma?: unknown; daniel?: unknown }>;
+    pings?: { fatma?: unknown; daniel?: unknown };
+  };
+  if (typeof r.points?.fatma === 'number') couple.points.fatma = r.points.fatma;
+  if (typeof r.points?.daniel === 'number') couple.points.daniel = r.points.daniel;
+  if (r.scores && typeof r.scores === 'object') {
+    for (const [gameId, entry] of Object.entries(r.scores)) {
+      if (!entry || typeof entry !== 'object') continue;
+      const e: Partial<Record<ChatProfile, number>> = {};
+      if (typeof entry.fatma === 'number') e.fatma = entry.fatma;
+      if (typeof entry.daniel === 'number') e.daniel = entry.daniel;
+      couple.scores[gameId] = e;
+    }
+  }
+  couple.pings.fatma = normalizePing(r.pings?.fatma);
+  couple.pings.daniel = normalizePing(r.pings?.daniel);
+  return couple;
+}
+
+function snapshotFromMeta(raw: unknown): CoupleSnapshot {
+  const meta = raw as { couple?: unknown; latestTs?: unknown } | null;
+  return {
+    couple: normalizeCouple(meta?.couple),
+    latestTs: typeof meta?.latestTs === 'number' ? meta.latestTs : 0
+  };
+}
+
+/** Read the shared couple state (cheap: hits the chat GET meta fast-path). */
+export async function fetchCoupleSnapshot(profile: ChatProfile, since: number): Promise<CoupleSnapshot> {
+  const query = `?since=${Math.max(0, Math.floor(since))}&conversationId=__couple`;
+  const data = await api<{ meta?: unknown }>(profile, query);
+  return snapshotFromMeta(data.meta);
+}
+
+async function postCouple(profile: ChatProfile, couple: Record<string, unknown>): Promise<CoupleSnapshot> {
+  const data = await api<{ meta?: unknown }>(profile, '', {
+    method: 'POST',
+    body: JSON.stringify({ couple })
+  });
+  return snapshotFromMeta(data.meta);
+}
+
+/** Add `n` shared points authored by `profile` (batched tap flush). */
+export function postCouplePoints(profile: ChatProfile, n: number): Promise<CoupleSnapshot> {
+  return postCouple(profile, { kind: 'point', n: Math.max(1, Math.floor(n)) });
+}
+
+/** Leave a "love" ping the partner's poller will surface as a toast. */
+export function postCoupleLove(profile: ChatProfile): Promise<CoupleSnapshot> {
+  return postCouple(profile, { kind: 'love' });
+}
+
+/** Leave a "nudge/saudades" ping — the partner's poller vibrates on it. */
+export function postCoupleNudge(profile: ChatProfile): Promise<CoupleSnapshot> {
+  return postCouple(profile, { kind: 'nudge' });
+}
+
+/** Submit an async-competition high score for a game (server keeps the max). */
+export function postCoupleScore(profile: ChatProfile, gameId: string, score: number): Promise<CoupleSnapshot> {
+  return postCouple(profile, { kind: 'score', gameId, score: Math.max(0, Math.floor(score)) });
+}

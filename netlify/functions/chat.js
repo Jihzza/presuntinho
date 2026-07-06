@@ -41,6 +41,12 @@ const MAX_NAME_LEN = 180;
 const MAX_CONVERSATION_ID_LEN = 64;
 const MAX_DAY_CHUNKS = 7; // never scan more than a week of chunks
 const DAY_MS = 24 * 60 * 60 * 1000;
+// ── couple sync (shared points + love/nudge pings + async game scores) ──
+const MAX_POINT_BATCH = 100; // a single tap-flush can carry at most this many
+const MAX_COUPLE_POINTS = 100_000_000; // hard ceiling so a bug can't run away
+const MAX_GAME_SCORE = 10_000_000;
+const MAX_GAME_ID_LEN = 40;
+const COUPLE_KINDS = new Set(['point', 'love', 'nudge', 'score']);
 
 const ALLOWED_ORIGINS = new Set([
   'https://presuntinho.netlify.app',
@@ -144,8 +150,50 @@ function logKey(ts) {
   return `log:${dayKey(ts)}`;
 }
 
+function defaultCouple() {
+  return {
+    // per-profile tally — total shared points = fatma + daniel. Splitting the
+    // counter by author keeps the two partners' increments race-free.
+    points: { fatma: 0, daniel: 0 },
+    // async game competition: high score per game per profile.
+    scores: {},
+    // transient "someone pinged you" markers; the partner's poller reacts once
+    // to a ts it hasn't seen and then ignores it.
+    pings: { fatma: null, daniel: null },
+  };
+}
+
+function normalizePing(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  if ((raw.kind !== 'love' && raw.kind !== 'nudge') || typeof raw.ts !== 'number') return null;
+  return { kind: raw.kind, ts: raw.ts };
+}
+
+function normalizeCouple(raw) {
+  const couple = defaultCouple();
+  if (!raw || typeof raw !== 'object') return couple;
+  if (raw.points && typeof raw.points === 'object') {
+    if (Number.isFinite(raw.points.fatma)) couple.points.fatma = Math.max(0, Math.floor(raw.points.fatma));
+    if (Number.isFinite(raw.points.daniel)) couple.points.daniel = Math.max(0, Math.floor(raw.points.daniel));
+  }
+  if (raw.scores && typeof raw.scores === 'object') {
+    for (const [gameId, entry] of Object.entries(raw.scores)) {
+      if (!/^[a-zA-Z0-9_-]{1,40}$/.test(gameId) || !entry || typeof entry !== 'object') continue;
+      const e = {};
+      if (Number.isFinite(entry.fatma)) e.fatma = Math.max(0, Math.floor(entry.fatma));
+      if (Number.isFinite(entry.daniel)) e.daniel = Math.max(0, Math.floor(entry.daniel));
+      if ('fatma' in e || 'daniel' in e) couple.scores[gameId] = e;
+    }
+  }
+  if (raw.pings && typeof raw.pings === 'object') {
+    couple.pings.fatma = normalizePing(raw.pings.fatma);
+    couple.pings.daniel = normalizePing(raw.pings.daniel);
+  }
+  return couple;
+}
+
 function defaultMeta() {
-  return { latestTs: 0, lastRead: { fatma: 0, daniel: 0 } };
+  return { latestTs: 0, lastRead: { fatma: 0, daniel: 0 }, couple: defaultCouple() };
 }
 
 function normalizeMeta(raw) {
@@ -158,6 +206,7 @@ function normalizeMeta(raw) {
       if (typeof raw.lastRead.fatma === 'number') meta.lastRead.fatma = raw.lastRead.fatma;
       if (typeof raw.lastRead.daniel === 'number') meta.lastRead.daniel = raw.lastRead.daniel;
     }
+    meta.couple = normalizeCouple(raw.couple);
   }
   return meta;
 }
@@ -292,6 +341,53 @@ async function handlePost(event, profile) {
     } catch (e) {
       console.error('[chat] meta write failed', e);
       return buildResponse(500, { error: 'meta_write_failed' });
+    }
+    return buildResponse(200, { ok: true, meta });
+  }
+
+  // ── couple sync: shared points / love / nudge / async game score ──
+  if (payload.couple && typeof payload.couple === 'object') {
+    const kind = payload.couple.kind;
+    if (!COUPLE_KINDS.has(kind)) {
+      return buildResponse(400, { error: 'invalid_couple_kind' });
+    }
+    const now = Date.now();
+    // Single read-modify-write. Each profile only ever mutates its OWN point
+    // tally / ping slot, and game scores are merged with max(), so the common
+    // case (the two partners touching different fields) is race-free. A dropped
+    // update in the rare same-100ms double-write is cosmetic and self-heals on
+    // the next tap — not worth an etag CAS for a 2-person backend.
+    const meta = await readMeta(store);
+    if (kind === 'point') {
+      let n = Number(payload.couple.n);
+      n = Number.isFinite(n) ? Math.floor(n) : 1;
+      n = Math.max(1, Math.min(MAX_POINT_BATCH, n));
+      meta.couple.points[profile] = Math.min(
+        MAX_COUPLE_POINTS,
+        (meta.couple.points[profile] || 0) + n
+      );
+    } else if (kind === 'love' || kind === 'nudge') {
+      meta.couple.pings[profile] = { kind, ts: now };
+    } else if (kind === 'score') {
+      const gameId = String(payload.couple.gameId || '');
+      if (!/^[a-zA-Z0-9_-]{1,40}$/.test(gameId)) {
+        return buildResponse(400, { error: 'invalid_game_id' });
+      }
+      if (gameId.length > MAX_GAME_ID_LEN) {
+        return buildResponse(400, { error: 'invalid_game_id' });
+      }
+      let s = Number(payload.couple.score);
+      s = Number.isFinite(s) ? Math.floor(s) : 0;
+      s = Math.max(0, Math.min(MAX_GAME_SCORE, s));
+      const entry = { ...(meta.couple.scores[gameId] || {}) };
+      entry[profile] = Math.max(entry[profile] || 0, s);
+      meta.couple.scores[gameId] = entry;
+    }
+    try {
+      await store.setJSON(META_KEY, meta);
+    } catch (e) {
+      console.error('[chat] couple write failed', e);
+      return buildResponse(500, { error: 'couple_write_failed' });
     }
     return buildResponse(200, { ok: true, meta });
   }

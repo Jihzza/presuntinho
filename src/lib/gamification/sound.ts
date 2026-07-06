@@ -136,6 +136,20 @@ export function vibrate(kind: HapticKind): void {
 	}
 }
 
+// A deliberately attention-grabbing buzz for a partner "nudge" (saudades) —
+// stronger than any of the ambient HapticKind patterns. Still gated on the
+// user's haptics preference.
+const NUDGE_PATTERN: number[] = [90, 50, 90, 50, 140];
+export function vibrateNudge(): void {
+	if (typeof navigator === 'undefined') return;
+	if (!isHapticsEnabled()) return;
+	try {
+		navigator.vibrate?.(NUDGE_PATTERN);
+	} catch {
+		// Vibration unsupported — silently ignore.
+	}
+}
+
 // ── synth engine ─────────────────────────────────────────────────────────────
 
 let ctx: AudioContext | null = null;

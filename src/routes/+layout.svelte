@@ -20,6 +20,7 @@
   import ArcadeTouchHud from '$lib/components/arcade/ArcadeTouchHud.svelte';
   import { arcadeHud } from '$lib/arcade/hud-state';
   import { arcadeImmersive } from '$lib/arcade/immersive-state';
+  import { startCouplePoller, stopCouplePoller } from '$lib/couple/couple-store.svelte';
   import { applyAppLogo, getAppLogo } from '$lib/app-logo';
   import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, MOOD_META, type ActiveMood } from '$lib/mood';
 
@@ -126,6 +127,10 @@
     void refreshMood();
     window.addEventListener(MOOD_EVENT, onMoodChanged);
     moodPoll = setInterval(refreshMood, 30_000);
+
+    // Couple sync: one global poller keeps shared points fresh and surfaces
+    // incoming love/nudge pings as toasts (+ a buzz). No-ops without a token.
+    startCouplePoller();
 
     // PWA: regista o service worker gerado pelo @vite-pwa/sveltekit.
     // Em dev (devOptions.enabled = false) o módulo virtual:pwa-register não
@@ -246,6 +251,7 @@
       window.removeEventListener('presuntinho:pwa-update', onPwaUpdate);
       if (moodPoll) clearInterval(moodPoll);
       if (swPoll) clearInterval(swPoll);
+      stopCouplePoller();
     };
   });
 
