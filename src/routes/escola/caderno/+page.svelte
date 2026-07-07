@@ -31,6 +31,7 @@
   let newCategory = $state<Note['category']>('escola');
   let isRecording = $state(false);
   let mediaRecorder: MediaRecorder | null = null;
+  let mediaStream: MediaStream | null = null;
   let audioChunks: Blob[] = [];
   let recordingStart = 0;
   const dateLocale = $derived($locale || 'pt-PT');
@@ -103,6 +104,7 @@
     if (!browser || isRecording) return;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStream = stream;
       mediaRecorder = new MediaRecorder(stream);
       audioChunks = [];
       mediaRecorder.ondataavailable = (e) => {
@@ -120,6 +122,7 @@
           blob
         });
         stream.getTracks().forEach((t) => t.stop());
+        mediaStream = null;
         void awardBadge('b5');
         await refresh();
       };
@@ -173,6 +176,15 @@
   onDestroy(() => {
     for (const url of objectUrls.values()) URL.revokeObjectURL(url);
     objectUrls.clear();
+    // Se sair a meio de uma gravação, o onstop nunca corre — largar o
+    // microfone à mão para não ficar o indicador vermelho ligado.
+    if (mediaRecorder && isRecording) {
+      try { mediaRecorder.stop(); } catch { /* ignore */ }
+    }
+    if (mediaStream) {
+      mediaStream.getTracks().forEach((track) => track.stop());
+      mediaStream = null;
+    }
   });
 
   function formatDate(ts: number): string {

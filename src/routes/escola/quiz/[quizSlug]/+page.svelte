@@ -33,7 +33,10 @@
     <p class="breadcrumb">
       <a href="/escola/">{$t('escola.quiz.breadcrumb.home', { default: '← Escola' })}</a>
       <span class="sep">›</span>
-      <a href={courseHref}>{$t('escola.quiz.breadcrumb.curso', { default: courseTitle })}</a>
+      <!-- courseTitle vem do catálogo (já localizado). NÃO passar por uma
+           chave i18n estática — `escola.quiz.breadcrumb.curso` está fixa em
+           "Equivalenza" e ganhava sempre ao default dinâmico. -->
+      <a href={courseHref}>{courseTitle}</a>
       <span class="sep">›</span>
       <span>{$t('escola.quiz.breadcrumb.current', { default: 'Quiz' })} {quizSlug.toUpperCase()}</span>
     </p>
@@ -44,7 +47,7 @@
   {/key}
 
   <p class="back-link">
-    <a href={courseHref}>{$t('escola.quiz.back_to_course', { default: `← Voltar a ${courseTitle}` })}</a>
+    <a href={courseHref}>← {courseTitle}</a>
   </p>
 </div>
 

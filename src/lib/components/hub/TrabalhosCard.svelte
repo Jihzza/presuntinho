@@ -42,9 +42,12 @@
       try {
         const now = Date.now();
         const upper = now + WINDOW_DAYS * DAY_MS;
+        // Incluir prazos JÁ passados (não entregues): antes o limite inferior
+        // era `now`, por isso um trabalho atrasado desaparecia e o cartão dizia
+        // "Nada para os próximos 7 dias ✓" — exactamente quando havia urgência.
         const rows = await db().assignments
           .where('deadline')
-          .between(now, upper, true, true)
+          .belowOrEqual(upper)
           .toArray();
         const open = rows.filter(
           (r) => r.status !== 'submitted' && r.status !== 'graded'
@@ -54,7 +57,8 @@
           id: r.id,
           title: r.title,
           deadline: r.deadline,
-          daysLeft: Math.max(0, Math.ceil((r.deadline - now) / DAY_MS)),
+          // Pode ser negativo = atrasado; a UI mostra "Atrasado".
+          daysLeft: Math.ceil((r.deadline - now) / DAY_MS),
           status: r.status
         }));
       } catch (e) {
@@ -66,6 +70,9 @@
   });
 
   function formatDeadline(deadline: number, daysLeft: number): string {
+    if (daysLeft < 0) {
+      return $t('routes.hub.card.trabalhos.overdue', { default: 'Atrasado' });
+    }
     if (daysLeft === 0) {
       return $t('routes.hub.card.trabalhos.today', { default: 'Hoje' });
     }
