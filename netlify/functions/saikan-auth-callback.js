@@ -1,11 +1,12 @@
 // netlify/functions/saikan-auth-callback.js
 //
-// "Continuar com Saikan ID" — step 2 of the OIDC bridge (see
-// saikan-auth-start.js for the flow overview).
+// "Continuar com Saikan ID" — step 2 of the OIDC bridge.
 //
-// Receives the authorization code from id.saikan.io, and — entirely
-// server-side —
-//   1. validates state against the HttpOnly cookie set at start,
+// The browser starts the flow client-side (src/lib/account/auth.ts →
+// signInWithSaikan: PKCE + state + nonce in a SameSite=Lax cookie, then a
+// direct redirect to id.saikan.io). id.saikan.io sends the authorization code
+// back HERE, and — entirely server-side — this function:
+//   1. validates state against the cookie the browser set at start,
 //   2. exchanges the code at /oauth/token (client secret + PKCE verifier),
 //   3. verifies the RS256 id_token against Saikan's published JWKS
 //      (issuer, audience, expiry, nonce, email_verified),
@@ -24,7 +25,12 @@
 
 import crypto from 'crypto';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
-import { createClient } from '@supabase/supabase-js';
+// NOTE: we deliberately do NOT import @supabase/supabase-js here. Its
+// createClient eagerly builds a RealtimeClient that needs a global WebSocket,
+// which the Netlify (Node 20) functions runtime lacks — createClient throws
+// "native WebSocket not found". This function only needs a few Auth Admin
+// operations, so it calls the GoTrue Admin REST API directly with fetch
+// (no realtime, no heavy SDK, smaller bundle → faster cold start).
 
 const COOKIE_NAME = 'saikan_oidc';
 
@@ -168,10 +174,13 @@ export const handler = async (event) => {
     return failToSplash(origin, 'email');
   }
 
-  // ── 3. find-or-create the Presuntinho account (service role, server-only) ──
-  const admin = createClient(supabaseUrl, serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  });
+  // ── 3. find-or-create the Presuntinho account (GoTrue Admin REST, server-only) ──
+  const gotrue = `${supabaseUrl.replace(/\/+$/, '')}/auth/v1`;
+  const adminHeaders = {
+    apikey: serviceRoleKey,
+    Authorization: `Bearer ${serviceRoleKey}`,
+    'Content-Type': 'application/json'
+  };
 
   try {
     const metadata = {
@@ -180,34 +189,54 @@ export const handler = async (event) => {
       avatar_url: typeof claims.picture === 'string' ? claims.picture : undefined
     };
 
-    const { error: createError } = await admin.auth.admin.createUser({
-      email,
-      email_confirm: true, // Saikan already verified this address
-      user_metadata: metadata
+    // Idempotent create: an existing email (422 / "already registered") is fine.
+    const createResp = await fetch(`${gotrue}/admin/users`, {
+      method: 'POST',
+      headers: adminHeaders,
+      body: JSON.stringify({ email, email_confirm: true, user_metadata: metadata })
     });
-    if (createError && !/already|exists|registered/i.test(createError.message || '')) {
-      console.error('[saikan-callback] createUser failed', createError.message);
-      return failToSplash(origin, 'account');
+    if (!createResp.ok) {
+      const body = await createResp.text().catch(() => '');
+      const alreadyExists =
+        createResp.status === 422 || /already|exists|registered|email_exists/i.test(body);
+      if (!alreadyExists) {
+        console.error('[saikan-callback] createUser failed', createResp.status, body);
+        return failToSplash(origin, 'account');
+      }
     }
 
     // ── 4. mint a one-time login token for the browser (no secrets exposed) ──
-    const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
-      type: 'magiclink',
-      email
+    // Admin generate_link does NOT send an email; it returns the hashed_token
+    // that /splash/ exchanges via supabase.auth.verifyOtp.
+    const linkResp = await fetch(`${gotrue}/admin/generate_link`, {
+      method: 'POST',
+      headers: adminHeaders,
+      body: JSON.stringify({ type: 'magiclink', email })
     });
-    const tokenHash = linkData?.properties?.hashed_token;
-    if (linkError || !tokenHash) {
-      console.error('[saikan-callback] generateLink failed', linkError?.message);
+    if (!linkResp.ok) {
+      const body = await linkResp.text().catch(() => '');
+      console.error('[saikan-callback] generateLink failed', linkResp.status, body);
+      return failToSplash(origin, 'account');
+    }
+    const linkData = await linkResp.json();
+    // GoTrue merges the link props onto the user object at the top level;
+    // tolerate a wrapped { properties, user } shape too, just in case.
+    const tokenHash = linkData?.hashed_token ?? linkData?.properties?.hashed_token;
+    if (!tokenHash) {
+      console.error('[saikan-callback] generateLink returned no hashed_token');
       return failToSplash(origin, 'account');
     }
 
     // Keep the Saikan profile fresh on repeat logins (best-effort).
-    if (linkData.user?.id) {
-      await admin.auth.admin
-        .updateUserById(linkData.user.id, {
-          user_metadata: { ...linkData.user.user_metadata, ...metadata }
+    const userId = linkData?.id ?? linkData?.user?.id;
+    if (userId) {
+      await fetch(`${gotrue}/admin/users/${userId}`, {
+        method: 'PUT',
+        headers: adminHeaders,
+        body: JSON.stringify({
+          user_metadata: { ...(linkData.user_metadata || {}), ...metadata }
         })
-        .catch(() => undefined);
+      }).catch(() => undefined);
     }
 
     // Fragment (#…) never leaves the browser — not sent to servers, not logged.
