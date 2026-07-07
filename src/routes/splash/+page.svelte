@@ -52,11 +52,16 @@
   }
 
   /** Start "Continuar com Saikan ID" (redirects to id.saikan.io, returns here). */
-  function onSaikan(): void {
+  async function onSaikan(): Promise<void> {
     if (saikanBusy) return;
     saikanBusy = true;
     error = '';
-    signInWithSaikan(); // navigates away
+    try {
+      await signInWithSaikan(); // navigates away on success
+    } catch (e) {
+      error = e instanceof Error ? e.message : String(e);
+      saikanBusy = false;
+    }
   }
 
   /** Human copy for the ?saikan_error=<code> the callback function can send. */
@@ -590,9 +595,12 @@
     font-weight: 600;
     cursor: pointer;
   }
-  .google-btn:hover { background: #f3f4f6; }
-  .google-btn:disabled { cursor: progress; opacity: 0.7; }
-  .saikan-btn { cursor: not-allowed; opacity: 0.6; }
+  .google-btn:hover,
+  .saikan-btn:hover { background: #f3f4f6; }
+  .google-btn:disabled,
+  .saikan-btn:disabled { cursor: progress; opacity: 0.7; }
+  /* The [disabled] "coming soon" variant (accounts off) still reads as inert. */
+  .saikan-btn[disabled][aria-describedby] { cursor: not-allowed; opacity: 0.6; }
   .google-g,
   .saikan-s {
     display: grid;

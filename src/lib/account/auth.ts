@@ -64,15 +64,65 @@ export async function signInWithGoogle(): Promise<void> {
   if (error) throw error;
 }
 
-/** Start the "Continuar com Saikan ID" OIDC flow. Full-page navigation to the
- *  serverless bridge (netlify/functions/saikan-auth-start), which redirects to
- *  id.saikan.io for login + consent and comes back to /splash/ with a one-time
- *  Supabase token_hash in the URL fragment — completeSaikanSignIn() finishes
- *  the job. The client secret and service role live ONLY in the functions. */
-export function signInWithSaikan(): void {
-  if (typeof window !== 'undefined') {
-    window.location.href = '/.netlify/functions/saikan-auth-start';
-  }
+// Saikan ID is a public OIDC provider; the issuer and client_id are NOT secret
+// (only the client_secret is, and it stays server-side in the callback
+// function). Overridable via build-time env, with stable public defaults.
+const SAIKAN_ISSUER = (import.meta.env.VITE_SAIKAN_OIDC_ISSUER ?? 'https://id.saikan.io').replace(
+  /\/+$/,
+  ''
+);
+const SAIKAN_CLIENT_ID = import.meta.env.VITE_SAIKAN_CLIENT_ID ?? 'presuntinho';
+const SAIKAN_STATE_COOKIE = 'saikan_oidc';
+
+function base64url(bytes: Uint8Array): string {
+  let bin = '';
+  for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+async function pkceChallenge(verifier: string): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier));
+  return base64url(new Uint8Array(digest));
+}
+
+/**
+ * Start the "Continuar com Saikan ID" OIDC flow. PKCE + state + nonce are
+ * generated in the browser and stashed in a short-lived SameSite=Lax cookie
+ * (readable by the callback function on the way back), then we redirect
+ * STRAIGHT to id.saikan.io — no intermediate serverless hop, so the jump is
+ * instant. The code→token exchange (which needs the client secret) still
+ * happens server-side in saikan-auth-callback. The cookie is not HttpOnly (JS
+ * sets it), which is fine: the PKCE verifier is a single-use, short-lived
+ * value, exactly like the sessionStorage verifier a normal SPA PKCE client
+ * would keep.
+ */
+export async function signInWithSaikan(): Promise<void> {
+  if (typeof window === 'undefined') return;
+
+  const verifier = base64url(crypto.getRandomValues(new Uint8Array(48)));
+  const state = base64url(crypto.getRandomValues(new Uint8Array(32)));
+  const nonce = base64url(crypto.getRandomValues(new Uint8Array(32)));
+  const origin = window.location.origin;
+  const challenge = await pkceChallenge(verifier);
+
+  const payload = base64url(
+    new TextEncoder().encode(JSON.stringify({ v: verifier, s: state, n: nonce, o: origin }))
+  );
+  // Path is the functions dir so the callback receives it; Lax survives the
+  // top-level redirect back from id.saikan.io.
+  document.cookie = `${SAIKAN_STATE_COOKIE}=${payload}; Path=/.netlify/functions/; Max-Age=600; SameSite=Lax; Secure`;
+
+  const authorize = new URL(`${SAIKAN_ISSUER}/oauth/authorize`);
+  authorize.searchParams.set('client_id', SAIKAN_CLIENT_ID);
+  authorize.searchParams.set('redirect_uri', `${origin}/.netlify/functions/saikan-auth-callback`);
+  authorize.searchParams.set('response_type', 'code');
+  authorize.searchParams.set('scope', 'openid email profile');
+  authorize.searchParams.set('state', state);
+  authorize.searchParams.set('nonce', nonce);
+  authorize.searchParams.set('code_challenge', challenge);
+  authorize.searchParams.set('code_challenge_method', 'S256');
+
+  window.location.href = authorize.toString();
 }
 
 /**
