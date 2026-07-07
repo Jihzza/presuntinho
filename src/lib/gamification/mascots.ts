@@ -194,3 +194,36 @@ export async function mascotStatuses(): Promise<{
     activeId: active.id
   };
 }
+
+/**
+ * Mascots newly unlocked since the last check — drives a one-time unlock
+ * celebration (mascot unlocks were previously completely silent). Persists a
+ * per-profile marker in the `visited` table so each mascot celebrates exactly
+ * once. On the FIRST call it silently adopts whatever's already unlocked, so
+ * existing users aren't flooded with celebrations for mascots earned long ago;
+ * only genuine crossings fire afterwards. Excludes the always-unlocked special
+ * "família" mascots.
+ */
+export async function claimNewMascotUnlocks(): Promise<string[]> {
+  if (!hasIndexedDb()) return [];
+  const d = db();
+  const { statuses } = await mascotStatuses();
+  const unlocked = statuses.filter((s) => s.unlocked && !s.special).map((s) => s.id);
+  const now = Date.now();
+  const seeded = await d.visited.get('mascot-celebrated:__seeded__');
+  if (!seeded?.visited) {
+    const rows = unlocked.map((id) => ({ id: `mascot-celebrated:${id}`, visited: true, visitedAt: now }));
+    rows.push({ id: 'mascot-celebrated:__seeded__', visited: true, visitedAt: now });
+    await d.visited.bulkPut(rows);
+    return [];
+  }
+  const fresh: string[] = [];
+  for (const id of unlocked) {
+    const marker = await d.visited.get(`mascot-celebrated:${id}`);
+    if (!marker?.visited) {
+      await d.visited.put({ id: `mascot-celebrated:${id}`, visited: true, visitedAt: now });
+      fresh.push(id);
+    }
+  }
+  return fresh;
+}
