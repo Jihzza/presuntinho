@@ -19,6 +19,7 @@
   import MoodLayer from '$lib/components/MoodLayer.svelte';
   import GamificationLayer from '$lib/components/GamificationLayer.svelte';
   import GameInviteListener from '$lib/components/GameInviteListener.svelte';
+  import HabitReminders from '$lib/components/habitos/HabitReminders.svelte';
   import ArcadeTouchHud from '$lib/components/arcade/ArcadeTouchHud.svelte';
   import { arcadeHud } from '$lib/arcade/hud-state';
   import { arcadeImmersive } from '$lib/arcade/immersive-state';
@@ -370,6 +371,7 @@
   <XpToast />
   <GamificationLayer />
   <GameInviteListener />
+  <HabitReminders />
   <SecretModal bind:open={secretRoomOpen} />
   <!-- Phase 15: offline status banner (listens to online/offline events). -->
   <OfflineIndicator />

@@ -42,6 +42,12 @@
   import Languages from 'lucide-svelte/icons/languages';
   import Coins from 'lucide-svelte/icons/coins';
   import { SUPPORTED_CURRENCIES, activeCurrency, setCurrency } from '$lib/financas';
+  import {
+    remindersEnabled,
+    setRemindersEnabled,
+    requestReminderPermission,
+    notificationPermission
+  } from '$lib/habitos/reminders';
   import Key from 'lucide-svelte/icons/key-round';
   import Trash from 'lucide-svelte/icons/trash-2';
   import Download from 'lucide-svelte/icons/download';
@@ -433,6 +439,33 @@
     currentCurrency = code;
     setCurrency(code);
     showToast($t('settings.currency.saved', { default: 'Moeda atualizada — vê nas Finanças 💶' }));
+  }
+
+  // ----- Lembretes de hábitos (Notification API, best-effort in-app) -----
+  let remindersOn = $state(false);
+  let remindersPerm = $state<NotificationPermission | 'unsupported'>('default');
+  onMount(() => {
+    remindersOn = remindersEnabled();
+    remindersPerm = notificationPermission();
+  });
+  async function toggleReminders(): Promise<void> {
+    if (remindersOn) {
+      setRemindersEnabled(false);
+      remindersOn = false;
+      showToast($t('settings.reminders.off', { default: 'Lembretes desligados.' }));
+      return;
+    }
+    const perm = await requestReminderPermission();
+    remindersPerm = perm;
+    if (perm === 'granted') {
+      setRemindersEnabled(true);
+      remindersOn = true;
+      showToast($t('settings.reminders.on', { default: 'Lembretes ligados — aviso-te à hora certa 🐷' }));
+    } else if (perm === 'unsupported') {
+      showToast($t('settings.reminders.unsupported', { default: 'Este browser não suporta notificações.' }));
+    } else {
+      showToast($t('settings.reminders.denied', { default: 'Precisas de permitir notificações no browser.' }));
+    }
   }
 
   // ----- Fun mode (just a checkbox, persists via existing store) -----
@@ -1243,6 +1276,37 @@
           </button>
         {/each}
       </div>
+    </section>
+
+    <!-- ============ Lembretes de hábitos (V11) ============ -->
+    <section class="card" aria-labelledby="reminders-h">
+      <div class="card-head">
+        <span class="icon-wrap"><Bell size={18} /></span>
+        <h2 id="reminders-h">{$t('settings.reminders.title', { default: 'Lembretes de hábitos' })}</h2>
+      </div>
+      <p class="section-sub">{$t('settings.reminders.sub', { default: 'Aviso-te à hora do hábito, enquanto a app estiver aberta.' })}</p>
+      <div class="switch-list">
+        <button
+          type="button"
+          class="switch-row"
+          role="switch"
+          aria-checked={remindersOn}
+          onclick={toggleReminders}
+        >
+          <span class="switch-copy">
+            <strong>{$t('settings.reminders.enable', { default: 'Ativar lembretes' })}</strong>
+            <small>{$t('settings.reminders.enable_desc', { default: 'Notifica-te quando um hábito passa da hora e ainda não o marcaste.' })}</small>
+          </span>
+          <span class="switch-track" class:on={remindersOn} aria-hidden="true">
+            <span class="switch-thumb"></span>
+          </span>
+        </button>
+      </div>
+      {#if remindersPerm === 'denied'}
+        <p class="section-sub">{$t('settings.reminders.hint_denied', { default: 'As notificações estão bloqueadas nas definições do browser.' })}</p>
+      {:else if remindersPerm === 'unsupported'}
+        <p class="section-sub">{$t('settings.reminders.hint_unsupported', { default: 'Este browser não suporta notificações.' })}</p>
+      {/if}
     </section>
 
   <!-- ============ Account / Password ============ -->
