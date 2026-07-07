@@ -93,7 +93,12 @@ export default defineConfig({
         // pré-cachear tudo só inchava a instalação.
         globIgnores: ['prerendered/**/*', 'client/logos/**'],
         navigateFallback: '/',
-        navigateFallbackDenylist: [/^\/api/, /^\/legacy/, /\.html$/],
+        // /.netlify/* are server routes (Functions) — the SW must NOT swallow a
+        // full-page navigation to them and serve the SPA shell (which would then
+        // 404 client-side). This is what powers "Continuar com Saikan ID":
+        // window.location = /.netlify/functions/saikan-auth-start must reach
+        // Netlify, not the app shell.
+        navigateFallbackDenylist: [/^\/api/, /^\/legacy/, /^\/\.netlify\//, /\.html$/],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         // Must be false with registerType 'prompt': the new SW stays waiting
