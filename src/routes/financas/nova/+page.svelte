@@ -23,6 +23,7 @@
     type CategoriaRow
   } from '$lib/financas';
   import { showToast } from '$lib/components/events';
+  import { initStores } from '$lib/state/stores';
   import { useMoodState } from '$lib/mood/useMoodState.svelte';
 
   let tipo = $state<'receita' | 'despesa'>('despesa');
@@ -74,6 +75,10 @@
   onMount(() => {
     void (async () => {
       try {
+        // ensureDefaults (via initStores, idempotente) semeia as categorias —
+        // sem este await, abrir /financas/nova como primeira página corria à
+        // frente do seed e deixava o submit desativado para sempre (0 categorias).
+        await initStores();
         categorias = await listCategorias();
       } catch (e) {
         console.error('[financas/nova] listCategorias failed', e);
@@ -95,7 +100,9 @@
     if (readOnly) return;
     error = null;
 
-    const valorNum = Number(valorStr.trim().replace(',', '.'));
+    // bind:value num input type="number" entrega number (não string) no
+    // Svelte 5 — String() evita um TypeError silencioso em .trim().
+    const valorNum = Number(String(valorStr ?? '').trim().replace(',', '.'));
     if (!Number.isFinite(valorNum) || valorNum <= 0) {
       error = $t('financas.nova.erro.valor_zero', { default: 'O valor tem de ser maior que zero.' });
       return;
