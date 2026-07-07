@@ -39,6 +39,7 @@
     streamHermesChat
   } from '$lib/agent/hermes';
   import { buildContextSummary } from '$lib/agent/context';
+  import { renderMarkdown } from '$lib/agent/markdown';
   import {
     listChatMessages,
     appendChatMessage,
@@ -562,7 +563,13 @@
               <span class="file-name">{m.attachment.name}</span>
             </div>
           {/if}
-          <div class="text">{m.content}</div>
+          {#if m.role === 'assistant'}
+            <!-- Model replies in Markdown; renderMarkdown escapes all HTML first,
+                 so this {@html} only ever emits a safe whitelisted tag subset. -->
+            <div class="text md">{@html renderMarkdown(m.content)}</div>
+          {:else}
+            <div class="text">{m.content}</div>
+          {/if}
         </div>
       </div>
     {/each}
@@ -812,6 +819,42 @@
     color: var(--txt);
     border: 1px solid var(--border);
     border-bottom-left-radius: 4px;
+  }
+  /* Rendered-markdown assistant content — block layout governs spacing (the
+     bubble's pre-wrap would otherwise turn the inter-block newlines into gaps).
+     :global() because the HTML is injected via {@html} and misses Svelte's
+     scope class. */
+  .md { white-space: normal; }
+  .md :global(p) { margin: 0 0 0.5rem; }
+  .md :global(> :last-child) { margin-bottom: 0; }
+  .md :global(ul),
+  .md :global(ol) { margin: 0.3rem 0 0.5rem; padding-inline-start: 1.2rem; }
+  .md :global(li) { margin: 0.12rem 0; }
+  .md :global(h3),
+  .md :global(h4),
+  .md :global(h5),
+  .md :global(h6) { margin: 0.5rem 0 0.3rem; font-size: 1em; font-weight: 800; }
+  .md :global(strong) { font-weight: 800; }
+  .md :global(a) { color: var(--accent); text-decoration: underline; }
+  .md :global(code) {
+    background: color-mix(in srgb, var(--txt) 12%, transparent);
+    padding: 0.05rem 0.3rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .md :global(pre) {
+    background: color-mix(in srgb, var(--txt) 10%, transparent);
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 0.4rem 0;
+  }
+  .md :global(pre code) { background: none; padding: 0; }
+  .md :global(blockquote) {
+    margin: 0.4rem 0;
+    padding-inline-start: 0.7rem;
+    border-inline-start: 3px solid var(--border-strong);
+    color: var(--txt2);
   }
   .bubble.thinking {
     opacity: 0.6;
