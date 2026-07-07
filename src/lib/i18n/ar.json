@@ -4973,5 +4973,9 @@
   "routes.hub.card.trabalhos.overdue": "متأخر",
   "habitos.stats.no_streak_yet": "ما زال بلا سلسلة — ابدأ اليوم 💪",
   "financas.categorias.erro.carregar": "ما نجمتش نحمّل الفئات. عاود.",
-  "habitos.list.streak_weeks": "🔥 {n, plural, zero {# أسبوع} one {# أسبوع} two {# أسبوعان} few {# أسابيع} many {# أسبوعًا} other {# أسبوع}}"
+  "habitos.list.streak_weeks": "🔥 {n, plural, zero {# أسبوع} one {# أسبوع} two {# أسبوعان} few {# أسابيع} many {# أسبوعًا} other {# أسبوع}}",
+  "hub.hero.greeting.morning_generic": "صباح الخير 🌤️",
+  "hub.hero.greeting.afternoon_generic": "مساء الخير ☀️",
+  "hub.hero.greeting.evening_generic": "مساء الخير 🌙",
+  "profile.generic.name": "ملفك"
 }

@@ -28,6 +28,7 @@
   import MascotAvatar from '$lib/components/MascotAvatar.svelte';
   import { profileFor } from '$lib/profile/people';
   import { profileState, loadProfile } from '$lib/profile/profile-store.svelte';
+  import { accountState } from '$lib/account/account-store.svelte';
   import ProfileEditor from '$lib/profile/ProfileEditor.svelte';
   import { resumeTarget, type NextLessonTarget } from '$lib/escola/progress';
   import { weekdayShort } from '$lib/i18n/dates';
@@ -136,10 +137,23 @@
   });
 
   const greeting = $derived.by(() => {
-    const name = $t(`profile.${activeProfile ?? 'fatma'}`, { default: 'Fatma' });
-    if (daySlot === 'morning') return $t('hub.hero.greeting.morning', { values: { name }, default: 'Bom dia, {name} 🌤️' });
-    if (daySlot === 'afternoon') return $t('hub.hero.greeting.afternoon', { values: { name }, default: 'Boa tarde, {name} ☀️' });
-    return $t('hub.hero.greeting.evening', { values: { name }, default: 'Boa noite, {name} 🌙' });
+    // Nome vindo do UTILIZADOR (perfil editável → conta), não hardcoded. Só
+    // recorre aos nomes fixos legados (fatma/daniel) quando o perfil é um
+    // deles; um membro onboarded (id uuid) ou visitante genérico é saudado
+    // sem nome, em vez de "Bom dia, Fatma".
+    const legacy = activeProfile === 'fatma' || activeProfile === 'daniel'
+      ? ($t(`profile.${activeProfile}`, { default: '' }) as string)
+      : '';
+    const name = (profileState.displayName || accountState.account?.display_name || legacy || '').trim();
+    if (name) {
+      if (daySlot === 'morning') return $t('hub.hero.greeting.morning', { values: { name }, default: 'Bom dia, {name} 🌤️' });
+      if (daySlot === 'afternoon') return $t('hub.hero.greeting.afternoon', { values: { name }, default: 'Boa tarde, {name} ☀️' });
+      return $t('hub.hero.greeting.evening', { values: { name }, default: 'Boa noite, {name} 🌙' });
+    }
+    // Sem nome — saudação genérica e acolhedora.
+    if (daySlot === 'morning') return $t('hub.hero.greeting.morning_generic', { default: 'Bom dia 🌤️' });
+    if (daySlot === 'afternoon') return $t('hub.hero.greeting.afternoon_generic', { default: 'Boa tarde ☀️' });
+    return $t('hub.hero.greeting.evening_generic', { default: 'Boa noite 🌙' });
   });
 
   function itemsForDate(date: Date): AgendaItem[] {
@@ -340,7 +354,7 @@
         {/if}
       </button>
       <div class="profile-id">
-        <strong>{profileState.displayName || $t(person.nameKey)}</strong>
+        <strong>{profileState.displayName || accountState.account?.display_name || (activeProfile === 'fatma' || activeProfile === 'daniel' ? $t(person.nameKey) : $t('profile.generic.name', { default: 'O teu perfil' }))}</strong>
         {#if profileState.bio}
           <small>{profileState.bio}</small>
         {:else}

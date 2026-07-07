@@ -4973,5 +4973,9 @@
   "routes.hub.card.trabalhos.overdue": "En retard",
   "habitos.stats.no_streak_yet": "Pas encore de série — commence aujourd’hui 💪",
   "financas.categorias.erro.carregar": "Impossible de charger les catégories. Réessaie.",
-  "habitos.list.streak_weeks": "🔥 {n, plural, one {# semaine} other {# semaines}}"
+  "habitos.list.streak_weeks": "🔥 {n, plural, one {# semaine} other {# semaines}}",
+  "hub.hero.greeting.morning_generic": "Bonjour 🌤️",
+  "hub.hero.greeting.afternoon_generic": "Bon après-midi ☀️",
+  "hub.hero.greeting.evening_generic": "Bonsoir 🌙",
+  "profile.generic.name": "Ton profil"
 }

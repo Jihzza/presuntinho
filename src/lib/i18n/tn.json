@@ -4986,5 +4986,9 @@
   "routes.hub.card.trabalhos.overdue": "M3attal",
   "habitos.stats.no_streak_yet": "Mazel bla sequence — abda lyoum 💪",
   "financas.categorias.erro.carregar": "Ma najjamtech nchargi el categories. 3awed.",
-  "habitos.list.streak_weeks": "🔥 {n, plural, one {# jem3a} other {# jma3}}"
+  "habitos.list.streak_weeks": "🔥 {n, plural, one {# jem3a} other {# jma3}}",
+  "hub.hero.greeting.morning_generic": "Sbah el khir 🌤️",
+  "hub.hero.greeting.afternoon_generic": "Mse el khir ☀️",
+  "hub.hero.greeting.evening_generic": "Tesbah 3la khir 🌙",
+  "profile.generic.name": "El profil mte3ek"
 }
