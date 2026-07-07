@@ -4990,5 +4990,14 @@
   "hub.hero.greeting.morning_generic": "Sbah el khir 🌤️",
   "hub.hero.greeting.afternoon_generic": "Mse el khir ☀️",
   "hub.hero.greeting.evening_generic": "Tesbah 3la khir 🌙",
-  "profile.generic.name": "El profil mte3ek"
+  "profile.generic.name": "El profil mte3ek",
+  "profile.generic.handle": "@enti",
+  "profile.generic.role": "Qraya, 7ayet w dhikrayet",
+  "profile.generic.subtitle": "Rokna mte3ek",
+  "profile.generic.bio": "Les raccourcis mte3ek lel qraya, el 7ayet el yawmiya w bech tkhalli kol chay 9rib.",
+  "profile.generic.locale": "Português",
+  "profile.generic.location": "—",
+  "profile.generic.focus.study": "Qraya",
+  "profile.generic.focus.life": "7ayet",
+  "profile.generic.focus.social": "Social"
 }

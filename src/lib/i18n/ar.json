@@ -4977,5 +4977,14 @@
   "hub.hero.greeting.morning_generic": "صباح الخير 🌤️",
   "hub.hero.greeting.afternoon_generic": "مساء الخير ☀️",
   "hub.hero.greeting.evening_generic": "مساء الخير 🌙",
-  "profile.generic.name": "ملفك"
+  "profile.generic.name": "ملفك",
+  "profile.generic.handle": "@أنت",
+  "profile.generic.role": "دراسة، حياة وذكريات",
+  "profile.generic.subtitle": "ركنك الخاص",
+  "profile.generic.bio": "اختصاراتك للدراسة والحياة اليومية وإبقاء كل شيء قريبًا.",
+  "profile.generic.locale": "Português",
+  "profile.generic.location": "—",
+  "profile.generic.focus.study": "الدراسة",
+  "profile.generic.focus.life": "الحياة",
+  "profile.generic.focus.social": "اجتماعي"
 }

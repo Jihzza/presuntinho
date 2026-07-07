@@ -57,8 +57,38 @@ export const PEOPLE: Record<ChatProfile, PersonProfile> = {
   }
 };
 
+/**
+ * Neutral profile for onboarded members (uuid ids) — so a new user is NOT
+ * shown Fatma's name/bio/role/location. Display call sites already prefer the
+ * account's own name/emoji when available; this is the generic fallback for
+ * everything else. All keys resolve in every locale (profile.generic.*).
+ */
+const GENERIC_PROFILE: PersonProfile = {
+  id: 'fatma', // sentinel — only used in a display guard, never for routing
+  nameKey: 'profile.generic.name',
+  handleKey: 'profile.generic.handle',
+  roleKey: 'profile.generic.role',
+  subtitleKey: 'profile.generic.subtitle',
+  bioKey: 'profile.generic.bio',
+  emoji: '🐷',
+  accent: 'var(--accent)',
+  localeKey: 'profile.generic.locale',
+  locationKey: 'profile.generic.location',
+  focusKeys: ['profile.generic.focus.study', 'profile.generic.focus.life', 'profile.generic.focus.social'],
+  shortcuts: [
+    { href: '/escola/', icon: '🎓', labelKey: 'nav.escola', descKey: 'profile.shortcut.school.desc' },
+    { href: '/vida/', icon: '🌿', labelKey: 'nav.vida', descKey: 'profile.shortcut.life.desc' },
+    { href: '/mensagens/', icon: '💬', labelKey: 'nav.mensagens', descKey: 'profile.shortcut.messages.desc' },
+    { href: '/definicoes/', icon: '⚙️', labelKey: 'nav.definicoes', descKey: 'profile.shortcut.settings.desc' }
+  ]
+};
+
 export function profileFor(id: ChatProfile | null | undefined): PersonProfile {
-  return PEOPLE[id === 'daniel' ? 'daniel' : 'fatma'];
+  if (id === 'daniel') return PEOPLE.daniel;
+  if (id === 'fatma') return PEOPLE.fatma;
+  // Onboarded member (uuid) or unknown → generic, carrying the real id so the
+  // display guard in profile-store still works.
+  return id ? { ...GENERIC_PROFILE, id: id as ChatProfile } : PEOPLE.fatma;
 }
 
 export function otherPerson(id: ChatProfile | null | undefined): PersonProfile {

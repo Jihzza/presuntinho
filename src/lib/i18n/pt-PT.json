@@ -4977,5 +4977,14 @@
   "hub.hero.greeting.morning_generic": "Bom dia 🌤️",
   "hub.hero.greeting.afternoon_generic": "Boa tarde ☀️",
   "hub.hero.greeting.evening_generic": "Boa noite 🌙",
-  "profile.generic.name": "O teu perfil"
+  "profile.generic.name": "O teu perfil",
+  "profile.generic.handle": "@tu",
+  "profile.generic.role": "Estudo, vida e memórias",
+  "profile.generic.subtitle": "O teu cantinho",
+  "profile.generic.bio": "Aqui ficam os atalhos que te ajudam no estudo, na vida diária e a manter tudo à mão.",
+  "profile.generic.locale": "Português",
+  "profile.generic.location": "—",
+  "profile.generic.focus.study": "Estudo",
+  "profile.generic.focus.life": "Vida",
+  "profile.generic.focus.social": "Social"
 }

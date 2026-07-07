@@ -4977,5 +4977,14 @@
   "hub.hero.greeting.morning_generic": "Good morning 🌤️",
   "hub.hero.greeting.afternoon_generic": "Good afternoon ☀️",
   "hub.hero.greeting.evening_generic": "Good evening 🌙",
-  "profile.generic.name": "Your profile"
+  "profile.generic.name": "Your profile",
+  "profile.generic.handle": "@you",
+  "profile.generic.role": "Study, life and memories",
+  "profile.generic.subtitle": "Your little space",
+  "profile.generic.bio": "Your shortcuts for study, daily life and keeping everything close.",
+  "profile.generic.locale": "Português",
+  "profile.generic.location": "—",
+  "profile.generic.focus.study": "Study",
+  "profile.generic.focus.life": "Life",
+  "profile.generic.focus.social": "Social"
 }

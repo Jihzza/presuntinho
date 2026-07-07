@@ -4977,5 +4977,14 @@
   "hub.hero.greeting.morning_generic": "Bonjour 🌤️",
   "hub.hero.greeting.afternoon_generic": "Bon après-midi ☀️",
   "hub.hero.greeting.evening_generic": "Bonsoir 🌙",
-  "profile.generic.name": "Ton profil"
+  "profile.generic.name": "Ton profil",
+  "profile.generic.handle": "@toi",
+  "profile.generic.role": "Études, vie et souvenirs",
+  "profile.generic.subtitle": "Ton petit coin",
+  "profile.generic.bio": "Tes raccourcis pour les études, le quotidien et tout garder à portée.",
+  "profile.generic.locale": "Português",
+  "profile.generic.location": "—",
+  "profile.generic.focus.study": "Études",
+  "profile.generic.focus.life": "Vie",
+  "profile.generic.focus.social": "Social"
 }
