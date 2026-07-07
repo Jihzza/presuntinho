@@ -330,13 +330,13 @@
 <style>
   .lesson { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
   .lesson-head { margin-bottom: 1rem; }
-  .lesson-head h1 { color: #fff; margin: 0.25rem 0 0.5rem; }
+  .lesson-head h1 { color: var(--txt); margin: 0.25rem 0 0.5rem; }
   .tag {
     display: inline-block;
     padding: 0.15rem 0.6rem;
-    background: rgba(59, 130, 246, 0.25);
-    border: 1px solid rgba(59, 130, 246, 0.5);
-    color: #bfdbfe;
+    background: color-mix(in srgb, var(--accent) 25%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+    color: var(--accent);
     border-radius: 999px;
     font-size: 0.72rem;
     text-transform: uppercase;
@@ -353,8 +353,8 @@
 
   /* Audio */
   .audio-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 0.75rem;
     padding: 0.75rem 1rem;
     margin-bottom: 1.5rem;
@@ -367,11 +367,11 @@
   }
   .audio-icon { font-size: 1.4rem; }
   .audio-meta { flex: 1; min-width: 200px; }
-  .audio-meta strong { color: #fff; font-size: 0.9rem; display: block; margin-bottom: 0.3rem; }
+  .audio-meta strong { color: var(--txt); font-size: 0.9rem; display: block; margin-bottom: 0.3rem; }
   .audio-bar {
     width: 100%;
     height: 4px;
-    background: rgba(255, 255, 255, 0.15);
+    background: var(--border-strong);
     border-radius: 2px;
     overflow: hidden;
   }
@@ -400,14 +400,14 @@
     min-height: 64px;
     padding: 0.75rem 0.85rem;
     border-radius: 0.85rem;
-    border: 1px solid rgba(255, 255, 255, 0.11);
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--txt);
     text-align: left;
     font: inherit;
   }
   button.activity-step { cursor: pointer; }
-  .activity-step.active { border-color: rgba(59, 130, 246, 0.35); background: rgba(59, 130, 246, 0.13); }
+  .activity-step.active { border-color: color-mix(in srgb, var(--accent) 35%, transparent); background: color-mix(in srgb, var(--accent) 13%, transparent); }
   .activity-step.muted { opacity: 0.82; }
   .activity-step.disabled { opacity: 0.45; cursor: not-allowed; }
   .activity-step span { grid-row: span 2; font-size: 1.35rem; }
@@ -433,7 +433,7 @@
   .step-progress {
     height: 8px;
     border-radius: 999px;
-    background: color-mix(in srgb, var(--accent, #3b82f6) 18%, rgba(255, 255, 255, 0.1));
+    background: color-mix(in srgb, var(--accent, #3b82f6) 18%, var(--border));
     overflow: hidden;
     margin-bottom: 0.4rem;
   }
@@ -457,8 +457,8 @@
     padding: 0 1.6rem;
     border: none;
     border-radius: 0.8rem;
-    background: linear-gradient(135deg, var(--accent, #3b82f6), #a78bfa);
-    color: #06121f;
+    background: var(--accent);
+    color: var(--on-accent);
     font: inherit;
     font-weight: 900;
     cursor: pointer;
@@ -478,15 +478,15 @@
   .lane-title {
     margin-top: 0 !important;
     padding-bottom: 0.45rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border);
   }
   .lesson-body h2 {
-    color: #fff;
+    color: var(--txt);
     font-size: 1.25rem;
     margin: 1.5rem 0 0.5rem;
   }
   .lesson-body h3 {
-    color: #fff;
+    color: var(--txt);
     font-size: 1.05rem;
     margin: 1.25rem 0 0.5rem;
   }
@@ -499,7 +499,7 @@
   .lesson-body ul li { margin: 0.3rem 0; }
   .lesson-figure {
     margin: 1rem 0;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--card);
     border-radius: 0.5rem;
     padding: 0.5rem;
   }
@@ -519,20 +519,20 @@
     border-left: 4px solid;
     font-size: 0.95rem;
   }
-  .callout-info { background: rgba(59, 130, 246, 0.12); border-color: #3b82f6; color: #bfdbfe; }
-  .callout-warning { background: rgba(245, 158, 11, 0.12); border-color: #f59e0b; color: #fde68a; }
-  .callout-success { background: rgba(16, 185, 129, 0.12); border-color: #10b981; color: #a7f3d0; }
+  .callout-info { background: rgba(59, 130, 246, 0.12); border-color: #3b82f6; color: var(--txt); }
+  .callout-warning { background: rgba(245, 158, 11, 0.12); border-color: var(--warning); color: var(--txt); }
+  .callout-success { background: rgba(16, 185, 129, 0.12); border-color: var(--success); color: var(--txt); }
   .callout-highlight {
-    background: rgba(236, 72, 153, 0.12);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
     border-color: var(--accent);
-    color: #fbcfe8;
+    color: var(--txt);
     font-weight: 500;
   }
 
   /* Sidebar */
   .keypoints {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 0.75rem;
     padding: 1rem 1.25rem;
     align-self: start;
@@ -540,7 +540,7 @@
     top: 1rem;
   }
   .keypoints h2 {
-    color: #fff;
+    color: var(--txt);
     font-size: 1rem;
     margin: 0 0 0.5rem;
   }
@@ -556,7 +556,7 @@
     width: 100%;
     padding: 0.6rem 1rem;
     background: var(--accent);
-    color: #fff;
+    color: var(--on-accent);
     border: 0;
     border-radius: 0.5rem;
     font: inherit;
@@ -574,24 +574,25 @@
     gap: 1rem;
     margin-top: 2rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--border);
   }
   .nav-btn {
     padding: 0.6rem 1.25rem;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #fff;
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    color: var(--txt);
     border-radius: 0.5rem;
     cursor: pointer;
     font: inherit;
     font-weight: 500;
     text-decoration: none;
   }
-  .nav-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.12); }
+  .nav-btn:hover:not(:disabled) { background: var(--card-hover); }
   .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
   .nav-btn.primary {
     background: var(--accent);
     border-color: transparent;
+    color: var(--on-accent);
   }
   .nav-btn.primary:hover:not(:disabled) { background: var(--accent-hover, var(--accent)); }
 
@@ -600,10 +601,10 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--border-strong);
   }
   .dot.active { background: var(--accent); }
 
-  .loading, .error { color: rgba(255, 255, 255, 0.7); text-align: center; padding: 2rem 0; }
-  .error { color: #ff8888; }
+  .loading, .error { color: var(--txt2); text-align: center; padding: 2rem 0; }
+  .error { color: var(--error); }
 </style>

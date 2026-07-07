@@ -484,8 +484,8 @@
   .opt:hover:not(:disabled) { background: var(--card-hover, rgba(255, 255, 255, 0.08)); }
   .opt:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .opt.chosen { border-color: var(--accent); }
-  .opt.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--success, #10b981); }
-  .opt.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--error, #ef4444); }
+  .opt.correct { background: color-mix(in srgb, var(--success) 20%, transparent); border-color: var(--success, #10b981); }
+  .opt.wrong { background: color-mix(in srgb, var(--error) 20%, transparent); border-color: var(--error, #ef4444); }
   .opt:disabled { cursor: default; }
 
   /* V10.1 — fluxo one-question-at-a-time */
