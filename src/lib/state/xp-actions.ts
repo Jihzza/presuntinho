@@ -93,6 +93,7 @@ export const XP_TABLE: Readonly<Record<string, number>> = Object.freeze({
   // Escola
   lesson_complete: 8,
   quiz_first_answer: 1,
+  quiz_complete: 10, // any finished quiz — effort/accuracy rewarded, not only 100%
   quiz_perfect_score: 25,
 
   // Trabalhos

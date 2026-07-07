@@ -181,6 +181,9 @@
       // NOTE (V9): the perfect-score confetti now fires inside
       // QuizVictory on mount (single fire point, no double burst).
     } else {
+      // Reward completion/accuracy too — rewarding only 100% felt punishing and
+      // is off-genre (Duolingo pays for finishing + getting some right).
+      void awardXP('quiz_complete');
       showToast(
         $t('quiz.toast.score', {
           values: { correct, total, score },
@@ -327,6 +330,9 @@
                   })}
                 </span>
               {/if}
+              {#if item.explanation}
+                <span class="sheet-why">💡 {item.explanation}</span>
+              {/if}
             </div>
           </div>
           <button class="sheet-cta" onclick={continueQuiz}>
@@ -392,6 +398,9 @@
                     <p class="review-yours">✗ {$t('quiz.review.yours', { default: 'A tua resposta:' })} {entry.question.opts[entry.chosen]}</p>
                   {/if}
                   <p class="review-correct">✓ {$t('quiz.review.correct', { default: 'Resposta certa:' })} {entry.question.opts[entry.question.a]}</p>
+                  {#if entry.question.explanation}
+                    <p class="review-why">💡 {entry.question.explanation}</p>
+                  {/if}
                 </li>
               {/each}
             </ol>
@@ -431,7 +440,12 @@
               amount: boostedXp(XP_TABLE.quiz_perfect_score)
             }
           ]
-        : []}
+        : [
+            {
+              label: $t('victoryflow.entry.quiz_complete', { default: 'Quiz concluído' }),
+              amount: boostedXp(XP_TABLE.quiz_complete)
+            }
+          ]}
       courseSlug={quizContext?.courseSlug}
       wrongCount={wrongAnswers.length}
       onclose={() => {
@@ -587,6 +601,14 @@
   .sheet-answer {
     font-size: 0.9rem;
   }
+  /* Explanation on the feedback sheet — a calm dark tone so it stays readable
+     on both the green (correct) and pink (wrong) sheets. */
+  .sheet-why {
+    color: #33404a;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    margin-top: 0.15rem;
+  }
   .sheet-cta {
     width: 100%;
     max-width: 720px;
@@ -698,4 +720,5 @@
   .review-q { color: var(--txt, #fff); font-weight: 600; margin: 0 0 0.3rem; }
   .review-yours { color: var(--error, #f87171); margin: 0 0 0.15rem; font-size: var(--fs-sm, 0.9rem); }
   .review-correct { color: var(--success, #34d399); margin: 0; font-size: var(--fs-sm, 0.9rem); }
+  .review-why { color: var(--txt2); margin: 0.35rem 0 0; font-size: var(--fs-sm, 0.9rem); line-height: 1.45; }
 </style>

@@ -4527,6 +4527,7 @@
   "victoryflow.quests.aria": "Missions du jour",
   "victoryflow.quests.label": "Missions du jour : {done}/{total}",
   "victoryflow.entry.quiz_perfect": "Quiz parfait",
+  "victoryflow.entry.quiz_complete": "Quiz terminé",
   "victoryflow.entry.habit_done": "Habitude accomplie",
   "victoryflow.entry.assignment_done": "Devoir rendu",
   "victoryflow.habits.title": "Toutes les habitudes faites ! 🌱",

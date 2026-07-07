@@ -4527,6 +4527,7 @@
   "victoryflow.quests.aria": "المهام اليومية",
   "victoryflow.quests.label": "المهام اليومية: {done}/{total}",
   "victoryflow.entry.quiz_perfect": "اختبار مثالي",
+  "victoryflow.entry.quiz_complete": "اكتمل الاختبار",
   "victoryflow.entry.habit_done": "عادة مكتملة",
   "victoryflow.entry.assignment_done": "واجب مُسلَّم",
   "victoryflow.habits.title": "كل العادات منجزة! 🌱",
