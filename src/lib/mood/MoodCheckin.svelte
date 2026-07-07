@@ -14,6 +14,7 @@
   import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
   import { fireConfettiEvent, showToast } from '$lib/components/events';
+  import { activateMood, readActiveMood, MOOD_EVENT, MOOD_META, type MoodKind } from '$lib/mood';
   import {
     CHECKIN_EMOJI,
     CHECKIN_KINDS,
@@ -66,6 +67,23 @@
   const showForm = $derived(ready && !hidden && (!existing || editing));
   const showDone = $derived(ready && !hidden && Boolean(existing) && !editing);
 
+  // Bridge the passive check-in to the live app "vibe": a rough day can offer
+  // the calmer Soft Mood, a loved day the warm Love Vibe. Always opt-in — we
+  // only surface the suggestion, never flip the whole app on the user's behalf.
+  const VIBE_FOR: Partial<Record<CheckinKind, MoodKind>> = { low: 'sad', loved: 'love' };
+  let activeVibe = $state<MoodKind | null>(null);
+  const suggestedVibe = $derived.by<MoodKind | null>(() => {
+    const kind = existing && isCheckinKind(existing.kind) ? existing.kind : null;
+    const vibe = kind ? VIBE_FOR[kind] : undefined;
+    return vibe && vibe !== activeVibe ? vibe : null;
+  });
+
+  async function activateVibe(kind: MoodKind): Promise<void> {
+    await activateMood(kind, 'manual');
+    activeVibe = kind;
+    showToast($t('mood.checkin.vibe_on', { values: { vibe: MOOD_META[kind].label }, default: `${MOOD_META[kind].label} ligada 🤍` }));
+  }
+
   onMount(() => {
     try {
       hidden = dismissible && localStorage.getItem(DISMISS_PREFIX + localDateKey()) === '1';
@@ -81,6 +99,14 @@
       }
       ready = true;
     });
+    // Track the live vibe so we never suggest one that's already on.
+    void readActiveMood().then((m) => { activeVibe = m?.kind ?? null; }).catch(() => {});
+    const onMoodChange = (e: Event) => {
+      const detail = e instanceof CustomEvent ? (e.detail as { kind?: MoodKind } | null) : null;
+      activeVibe = detail?.kind ?? null;
+    };
+    window.addEventListener(MOOD_EVENT, onMoodChange);
+    return () => window.removeEventListener(MOOD_EVENT, onMoodChange);
   });
 
   function toggleTag(tag: string): void {
@@ -128,21 +154,36 @@
 
 {#if showDone && existing}
   <div class="checkin-card done-card">
-    <span class="done-emoji" aria-hidden="true">{isCheckinKind(existing.kind) ? CHECKIN_EMOJI[existing.kind] : '🤍'}</span>
-    <div class="done-copy">
-      <strong>{$t('mood.checkin.done_title', { default: 'Check-in de hoje feito' })}</strong>
-      <small>
-        {isCheckinKind(existing.kind)
-          ? $t(`mood.feeling.${existing.kind}`, { default: FEELING_DEFAULTS[existing.kind] })
-          : existing.kind}
-        {#if (existing.tags ?? []).filter((tag) => !tag.startsWith('care:')).length}
-          · {(existing.tags ?? []).filter((tag) => !tag.startsWith('care:')).map((tag) => $t(`mood.tag.${tag}`, { default: TAG_DEFAULTS[tag] ?? tag })).join(', ')}
-        {/if}
-      </small>
+    <div class="done-row">
+      <span class="done-emoji" aria-hidden="true">{isCheckinKind(existing.kind) ? CHECKIN_EMOJI[existing.kind] : '🤍'}</span>
+      <div class="done-copy">
+        <strong>{$t('mood.checkin.done_title', { default: 'Check-in de hoje feito' })}</strong>
+        <small>
+          {isCheckinKind(existing.kind)
+            ? $t(`mood.feeling.${existing.kind}`, { default: FEELING_DEFAULTS[existing.kind] })
+            : existing.kind}
+          {#if (existing.tags ?? []).filter((tag) => !tag.startsWith('care:')).length}
+            · {(existing.tags ?? []).filter((tag) => !tag.startsWith('care:')).map((tag) => $t(`mood.tag.${tag}`, { default: TAG_DEFAULTS[tag] ?? tag })).join(', ')}
+          {/if}
+        </small>
+      </div>
+      <button type="button" class="ghost-btn" onclick={() => (editing = true)}>
+        {$t('mood.checkin.edit', { default: 'Ajustar' })}
+      </button>
     </div>
-    <button type="button" class="ghost-btn" onclick={() => (editing = true)}>
-      {$t('mood.checkin.edit', { default: 'Ajustar' })}
-    </button>
+    {#if suggestedVibe}
+      {@const v = suggestedVibe}
+      <div class="vibe-suggest">
+        <span>
+          {v === 'love'
+            ? $t('mood.checkin.vibe_suggest_loved', { default: 'Que bom sentires-te assim 🥰 Queres a app mais quentinha?' })
+            : $t('mood.checkin.vibe_suggest_low', { default: 'Dia difícil? Posso deixar a app mais suave contigo.' })}
+        </span>
+        <button type="button" class="ghost-btn vibe-btn" onclick={() => void activateVibe(v)}>
+          {$t('mood.checkin.vibe_activate', { values: { vibe: MOOD_META[v].label }, default: `Ligar ${MOOD_META[v].label}` })}
+        </button>
+      </div>
+    {/if}
   </div>
 {:else if showForm}
   <div class="checkin-card" role="group" aria-label={$t('mood.checkin.title', { default: 'Como te sentes hoje?' })}>
@@ -345,9 +386,34 @@
   .save-btn:hover { background: var(--accent-hover, color-mix(in srgb, var(--accent, #db2777) 85%, #000)); }
   .save-btn:active { transform: scale(0.98); }
   .save-btn:disabled { opacity: 0.65; cursor: wait; }
-  .done-card {
+  .done-row {
+    display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
+    gap: var(--space-3, 0.75rem);
+  }
+  .vibe-suggest {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-2, 0.5rem);
+    padding: var(--space-2, 0.5rem) var(--space-3, 0.75rem);
+    border-radius: var(--radius-md, 0.6rem);
+    background: color-mix(in srgb, var(--accent, #db2777) 10%, var(--bg-elev, rgba(255, 255, 255, 0.04)));
+    border: 1px solid color-mix(in srgb, var(--accent, #db2777) 30%, var(--border, rgba(255, 255, 255, 0.12)));
+  }
+  .vibe-suggest span {
+    flex: 1 1 12rem;
+    font-size: var(--fs-sm, 0.85rem);
+    color: var(--txt2, rgba(255, 255, 255, 0.72));
+    line-height: 1.4;
+  }
+  .vibe-btn {
+    flex: 0 0 auto;
+    border-color: color-mix(in srgb, var(--accent, #db2777) 45%, var(--border, rgba(255, 255, 255, 0.12)));
+    color: color-mix(in srgb, var(--accent, #db2777) 85%, var(--txt, #fff));
+    font-weight: 700;
   }
   .done-emoji { font-size: 1.6rem; line-height: 1; }
   .done-copy { display: grid; gap: 0.1rem; min-width: 0; }

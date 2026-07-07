@@ -23,7 +23,7 @@
   import ArcadeTouchHud from '$lib/components/arcade/ArcadeTouchHud.svelte';
   import { arcadeHud } from '$lib/arcade/hud-state';
   import { arcadeImmersive } from '$lib/arcade/immersive-state';
-  import { startCouplePoller, stopCouplePoller } from '$lib/couple/couple-store.svelte';
+  import { couple, startCouplePoller, stopCouplePoller } from '$lib/couple/couple-store.svelte';
   import { applyAppLogo, getAppLogo } from '$lib/app-logo';
   import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, MOOD_META, type ActiveMood } from '$lib/mood';
 
@@ -491,7 +491,12 @@
                      top of it at random moments (couple points). -->
                 <div class="mascot-corner" class:game-hidden={$arcadeHud || $arcadeImmersive} aria-hidden={$arcadeHud || $arcadeImmersive ? 'true' : undefined}>
                   <Mascot interactive />
-                  <SurpriseHeart />
+                  <!-- The surprise heart only makes sense when this session can
+                       actually contribute couple points — hide the inert affordance
+                       for solo / onboarded (non-couple) users. -->
+                  {#if couple.available}
+                    <SurpriseHeart />
+                  {/if}
                 </div>
                 {#if $arcadeHud}
                   <ArcadeTouchHud

@@ -36,6 +36,10 @@ import {
 export type PingResult = 'sent' | 'cooldown' | 'offline' | 'disabled';
 
 interface CoupleUiState {
+  /** This session participates in couple sync at all (a legacy partner profile).
+   *  When false the surprise heart / couple points are inert — so the UI must
+   *  hide them rather than show a fake affordance to a solo/onboarded user. */
+  available: boolean;
   /** A partner profile + a chat token are present — sync can happen. */
   enabled: boolean;
   /** At least one snapshot has synced from the server. */
@@ -53,6 +57,7 @@ interface CoupleUiState {
 }
 
 export const couple: CoupleUiState = $state({
+  available: false,
   enabled: false,
   ready: false,
   online: false,
@@ -369,6 +374,7 @@ export function startCouplePoller(): void {
   if (started || typeof window === 'undefined') return;
   started = true;
   const me = profile();
+  couple.available = !!me;
   couple.enabled = !!(me && getChatToken(me));
   // Open the realtime fast-path when Supabase is configured (no-op otherwise).
   if (me) void connectRealtime(me);
@@ -413,6 +419,7 @@ export function startCouplePoller(): void {
  */
 export function refreshCoupleEnabled(): void {
   const me = profile();
+  couple.available = !!me;
   couple.enabled = !!(me && getChatToken(me));
   if (me) {
     void connectRealtime(me);
@@ -439,4 +446,5 @@ export function stopCouplePoller(): void {
   supaPointsUnsub = null;
   supa = null;
   supaActive = false;
+  couple.available = false;
 }
