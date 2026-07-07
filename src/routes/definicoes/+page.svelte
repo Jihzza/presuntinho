@@ -1655,6 +1655,18 @@
           {$t('settings.about.repo')}
         </a>
       </li>
+      <li>
+        <a href="/privacidade/">
+          <Lock size={14} aria-hidden="true" />
+          {$t('settings.about.privacy', { default: 'Privacidade' })}
+        </a>
+      </li>
+      <li>
+        <a href="/termos/">
+          <Info size={14} aria-hidden="true" />
+          {$t('settings.about.terms', { default: 'Termos' })}
+        </a>
+      </li>
     </ul>
   </section>
 </div>
