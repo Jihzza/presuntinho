@@ -413,6 +413,15 @@
     return $t('habitos.cadence.daily', { default: 'diário' }) as string;
   }
 
+  /** Streak com a unidade certa: hábitos semanais contam SEMANAS, não dias. */
+  function streakLabel(h: Habit): string {
+    const n = streaks.get(h.id) ?? 0;
+    if (h.cadence === 'weekly') {
+      return $t('habitos.list.streak_weeks', { values: { n }, default: '🔥 {n, plural, one {# semana} other {# semanas}}' }) as string;
+    }
+    return $t('habitos.list.streak', { values: { n }, default: '🔥 {n, plural, one {# dia} other {# dias}}' }) as string;
+  }
+
   function scheduledToday(h: Habit): boolean {
     return isScheduledOn(h.cadence, new Date());
   }
@@ -531,7 +540,7 @@
                     · {cadenceLabel(h.cadence)}
                   </span>
                   <span class="status">
-                    <span class="streak">{$t('habitos.list.streak', { default: '🔥 {n} dias', values: { n: streaks.get(h.id) ?? 0 } })}</span>
+                    <span class="streak">{streakLabel(h)}</span>
                     <span class="today" data-done={logged.get(h.id) ? 'true' : 'false'}>
                       {#if logged.get(h.id)}
                         {$t('habitos.list.today_done', { default: '✓ hoje' })}

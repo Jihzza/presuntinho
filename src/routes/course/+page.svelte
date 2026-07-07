@@ -26,7 +26,7 @@
       descKey: 'course.frameworks.swot.desc',
       descDefault: 'Forças, fraquezas, oportunidades, ameaças. O retrato estratégico da Equivalenza: 528 lojas, 2/3 de margem, NPS 17, segmento dupe em queda.',
       accent: '#10b981',
-      href: '/escola/curso/equivalenza/licao/swot/'
+      href: '/escola/walkthrough/swot/'
     },
     {
       id: 'tows',
@@ -37,7 +37,7 @@
       descKey: 'course.frameworks.tows.desc',
       descDefault: 'SO, WO, ST, WT — quatro tipos de estratégia que cruzam os quadrantes. A escolha que a Marta vai defender no Q5 do trabalho.',
       accent: '#f59e0b',
-      href: '/escola/curso/equivalenza/licao/tows/'
+      href: '/escola/walkthrough/tows/'
     },
     {
       id: 'scqa',
@@ -48,7 +48,7 @@
       descKey: 'course.frameworks.scqa.desc',
       descDefault: 'Situation → Complication → Question → Answer. Onde a análise vira um problema de marketing formulado em 1-2 frases.',
       accent: '#3b82f6',
-      href: '/escola/curso/equivalenza/licao/problem/'
+      href: '/escola/walkthrough/problem/'
     },
     {
       id: 'persona',
@@ -59,7 +59,7 @@
       descKey: 'course.frameworks.persona.desc',
       descDefault: 'Demografia, psicografia, comportamento. Marta, 27 — The Discerning Explorer. A persona que ancora a recomendação estratégica.',
       accent: '#ec4899',
-      href: '/escola/curso/equivalenza/licao/persona/'
+      href: '/escola/walkthrough/persona/'
     }
   ];
 </script>
@@ -107,7 +107,7 @@
   }
   .course-head { margin-bottom: 1.5rem; }
   .course-head h1 {
-    color: #fff;
+    color: var(--txt);
     margin: 0.25rem 0 0.5rem;
     font-size: 2rem;
   }
@@ -126,9 +126,9 @@
   .tag {
     display: inline-block;
     padding: 0.15rem 0.6rem;
-    background: rgba(139, 92, 246, 0.2);
-    border: 1px solid rgba(139, 92, 246, 0.5);
-    color: #ddd6fe;
+    background: color-mix(in srgb, var(--accent) 20%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+    color: var(--accent);
     border-radius: 999px;
     font-size: 0.72rem;
     text-transform: uppercase;
@@ -154,17 +154,17 @@
     align-items: flex-start;
     gap: 1rem;
     padding: 1.25rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-left: 4px solid var(--fw-accent);
     border-radius: 0.75rem;
-    color: #fff;
+    color: var(--txt);
     text-decoration: none;
     transition: background 0.15s, transform 0.15s;
   }
   .fw-card:hover,
   .fw-card:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--card-hover);
     transform: translateY(-1px);
     outline: none;
   }
@@ -174,7 +174,7 @@
   .fw-icon { font-size: 2.25rem; line-height: 1; }
   .fw-body { flex: 1; min-width: 0; }
   .fw-body h2 {
-    color: #fff;
+    color: var(--txt);
     font-size: 1.25rem;
     margin: 0 0 0.2rem;
   }

@@ -928,7 +928,7 @@
   "habitos.habit.ultimos_90_dias": "آخر 90 يوماً",
   "habitos.hero.sub": "عادات يومية مع السلاسل وخريطة الحرارة.",
   "habitos.hero.title": "✅ العادات",
-  "habitos.list.streak": "🔥 {n} يوم",
+  "habitos.list.streak": "🔥 {n, plural, zero {# يوم} one {# يوم} two {# يومان} few {# أيام} many {# يومًا} other {# يوم}}",
   "habitos.list.today_done": "✓ اليوم",
   "habitos.list.today_pending": "— قيد الانتظار",
   "habitos.list.today_rest": "🌿 راحة",
@@ -4972,5 +4972,6 @@
   "hub.today.more": "+{n} أكثر →",
   "routes.hub.card.trabalhos.overdue": "متأخر",
   "habitos.stats.no_streak_yet": "ما زال بلا سلسلة — ابدأ اليوم 💪",
-  "financas.categorias.erro.carregar": "ما نجمتش نحمّل الفئات. عاود."
+  "financas.categorias.erro.carregar": "ما نجمتش نحمّل الفئات. عاود.",
+  "habitos.list.streak_weeks": "🔥 {n, plural, zero {# أسبوع} one {# أسبوع} two {# أسبوعان} few {# أسابيع} many {# أسبوعًا} other {# أسبوع}}"
 }

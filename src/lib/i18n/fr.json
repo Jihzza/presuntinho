@@ -928,7 +928,7 @@
   "habitos.habit.ultimos_90_dias": "90 derniers jours",
   "habitos.hero.sub": "Habitudes quotidiennes avec séries et carte de chaleur.",
   "habitos.hero.title": "✅ Habitudes",
-  "habitos.list.streak": "🔥 {n} jours",
+  "habitos.list.streak": "🔥 {n, plural, one {# jour} other {# jours}}",
   "habitos.list.today_done": "✓ aujourd'hui",
   "habitos.list.today_pending": "— en attente",
   "habitos.list.today_rest": "🌿 repos",
@@ -4972,5 +4972,6 @@
   "hub.today.more": "+{n} de plus →",
   "routes.hub.card.trabalhos.overdue": "En retard",
   "habitos.stats.no_streak_yet": "Pas encore de série — commence aujourd’hui 💪",
-  "financas.categorias.erro.carregar": "Impossible de charger les catégories. Réessaie."
+  "financas.categorias.erro.carregar": "Impossible de charger les catégories. Réessaie.",
+  "habitos.list.streak_weeks": "🔥 {n, plural, one {# semaine} other {# semaines}}"
 }

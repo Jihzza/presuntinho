@@ -928,7 +928,7 @@
   "habitos.habit.ultimos_90_dias": "90 derniers jours",
   "habitos.hero.sub": "3adot yomlya m3a streaks w heatmap.",
   "habitos.hero.title": "✅ 3adot",
-  "habitos.list.streak": "🔥 {n} nhar",
+  "habitos.list.streak": "🔥 {n, plural, one {# nhar} other {# ayem}}",
   "habitos.list.today_done": "✓ lyoum",
   "habitos.list.today_pending": "— pendan",
   "habitos.list.today_rest": "🌿 raha",
@@ -4985,5 +4985,6 @@
   "hub.today.more": "+{n} okhrin →",
   "routes.hub.card.trabalhos.overdue": "M3attal",
   "habitos.stats.no_streak_yet": "Mazel bla sequence — abda lyoum 💪",
-  "financas.categorias.erro.carregar": "Ma najjamtech nchargi el categories. 3awed."
+  "financas.categorias.erro.carregar": "Ma najjamtech nchargi el categories. 3awed.",
+  "habitos.list.streak_weeks": "🔥 {n, plural, one {# jem3a} other {# jma3}}"
 }
