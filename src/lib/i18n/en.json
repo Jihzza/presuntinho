@@ -4801,7 +4801,7 @@
   "arcade.games.platformer.controls": "Left/right to walk, Jump button (or Space) to hop.",
   "arcade.games.breakout.title": "Neon Crystals",
   "arcade.games.breakout.description": "Smash every crystal with the ball and guard your base until the machine is clear.",
-  "arcade.games.breakout.controls": "Drag the paddle or use left/right. Launch button (or Space) fires the ball.",
+  "arcade.games.breakout.controls": "Drag the paddle or use left/right. The ball launches on its own (or press Space).",
   "arcade.score.aria": "Game score",
   "arcade.score.current": "Score",
   "arcade.score.best": "High score",

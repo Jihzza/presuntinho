@@ -269,6 +269,16 @@ function triggerDownload(payload: BackupPayload, filename: string): void {
  * Alias kept for the existing /definicoes page.  Internally identical
  * to `exportAllData`.
  */
+/** localStorage keys that must NEVER be written into a plaintext backup file —
+ *  live credentials the user could email/store in the cloud. Exact keys plus
+ *  prefixes. The import path tolerates their absence (a restored device just
+ *  re-authenticates / re-sets its password). */
+const BACKUP_SENSITIVE_KEYS = new Set(['presuntinho-hashes-override']);
+const BACKUP_SENSITIVE_PREFIXES = ['presuntinho-chat-token-', 'presuntinho-hermes-'];
+function isSensitiveBackupKey(k: string): boolean {
+  return BACKUP_SENSITIVE_KEYS.has(k) || BACKUP_SENSITIVE_PREFIXES.some((p) => k.startsWith(p));
+}
+
 export async function exportData(profile: ProfileId = getActiveProfile()): Promise<BackupPayload> {
   const payload: BackupPayload = {
     version: BACKUP_VERSION,
@@ -298,12 +308,15 @@ export async function exportData(profile: ProfileId = getActiveProfile()): Promi
     console.warn('[backup] dexie snapshot failed', e);
   }
 
-  // 2. localStorage — copy every key verbatim.
+  // 2. localStorage — copy every key EXCEPT live credentials (API key, chat
+  //    tokens, password hash). A backup file is meant to be portable/shareable;
+  //    it must not carry secrets.
   try {
     const ls = window.localStorage;
     for (let i = 0; i < ls.length; i++) {
       const k = ls.key(i);
       if (k === null) continue;
+      if (isSensitiveBackupKey(k)) continue;
       const v = ls.getItem(k);
       if (v !== null) payload.localStorage[k] = v;
     }

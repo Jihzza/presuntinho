@@ -4801,7 +4801,7 @@
   "arcade.games.platformer.controls": "يسار/يمين للمشي، زر القفز (أو المسافة) للقفز.",
   "arcade.games.breakout.title": "بلورات النيون",
   "arcade.games.breakout.description": "حطّمي كل البلورات بالكرة واحمي قاعدتك حتى تُفرَّغ الماكينة.",
-  "arcade.games.breakout.controls": "اسحبي المضرب أو استخدمي يسار/يمين. زر الإطلاق (أو المسافة) يطلق الكرة.",
+  "arcade.games.breakout.controls": "اسحبي المضرب أو استخدمي يسار/يمين. الكرة تنطلق تلقائيًا (أو اضغطي المسافة).",
   "arcade.score.aria": "نتيجة اللعبة",
   "arcade.score.current": "النقاط",
   "arcade.score.best": "أفضل نتيجة",

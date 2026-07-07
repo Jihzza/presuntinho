@@ -4801,7 +4801,7 @@
   "arcade.games.platformer.controls": "Esquerda/direita para andar, botão Saltar (ou Espaço) para saltar.",
   "arcade.games.breakout.title": "Cristais de Néon",
   "arcade.games.breakout.description": "Parte todos os cristais com a bola e protege a base até limpar a máquina.",
-  "arcade.games.breakout.controls": "Arrasta a base ou usa esquerda/direita. Botão Lançar (ou Espaço) atira a bola.",
+  "arcade.games.breakout.controls": "Arrasta a base ou usa esquerda/direita. A bola sai sozinha (ou carrega em Espaço).",
   "arcade.score.aria": "Pontuação do jogo",
   "arcade.score.current": "Pontuação",
   "arcade.score.best": "Melhor pontuação",

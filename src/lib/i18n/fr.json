@@ -4801,7 +4801,7 @@
   "arcade.games.platformer.controls": "Gauche/droite pour marcher, bouton Sauter (ou Espace) pour bondir.",
   "arcade.games.breakout.title": "Cristaux Néon",
   "arcade.games.breakout.description": "Casse tous les cristaux avec la balle et protège ta base jusqu’à vider la machine.",
-  "arcade.games.breakout.controls": "Glisse la raquette ou utilise gauche/droite. Le bouton Lancer (ou Espace) tire la balle.",
+  "arcade.games.breakout.controls": "Glisse la raquette ou utilise gauche/droite. La balle part toute seule (ou appuie sur Espace).",
   "arcade.score.aria": "Score du jeu",
   "arcade.score.current": "Score",
   "arcade.score.best": "Meilleur score",
