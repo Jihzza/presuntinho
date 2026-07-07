@@ -10,6 +10,10 @@ export interface SchoolLessonRef {
   quizTitle?: string;
   estMinutes?: number;
   activityType?: 'theory' | 'quiz' | 'test' | 'assignment' | 'case';
+  /** Override the default `/escola/licao/<unit>/<slug>/` link — for lessons
+   *  whose content uses a bespoke renderer (e.g. the Português mini-curso,
+   *  whose JSON schema differs from the standard section format). */
+  href?: string;
 }
 
 export interface SchoolUnit {
@@ -45,6 +49,7 @@ export interface SchoolCourseLessonDetail {
   quizTitle?: string;
   estMinutes: number;
   activityType?: SchoolLessonRef['activityType'];
+  href?: string;
 }
 
 export interface SchoolCourseDetail {
@@ -231,7 +236,7 @@ export const schoolCourses: SchoolCourse[] = [
         color: '#10b981',
         summary: 'Vogais, vocabulário, diálogos, verbos e quiz rápido.',
         lessons: [
-          { slug: 'curso', title: 'Mini-curso de Português', summary: 'Português de Portugal para a Fatma.', quizSlug: 'ptq', activityType: 'theory' }
+          { slug: 'curso', title: 'Mini-curso de Português', summary: 'Vogais, vocabulário, diálogos, verbos e quiz.', quizSlug: 'ptq', activityType: 'theory', href: '/escola/curso/portugues/curso/' }
         ]
       }
     ]
@@ -302,7 +307,8 @@ function detailFromSchoolUnit(unit: SchoolUnit): SchoolCourseDetail {
       quizSlug: lesson.quizSlug,
       quizTitle: lesson.quizTitle,
       estMinutes: lesson.estMinutes ?? 8,
-      activityType: lesson.activityType
+      activityType: lesson.activityType,
+      href: lesson.href
     })),
     assignments: unit.assignments
   };

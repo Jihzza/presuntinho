@@ -3,7 +3,7 @@
   import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
   import { localizedSchoolCourseDetailForSlug, localizedSchoolCourses, type SchoolCourseDetail, type SchoolCourseLessonDetail } from '$lib/escola/catalog';
-  import { quizHistoryMap, visitedLessonsForUnit, type QuizHistory } from '$lib/escola/progress';
+  import { quizHistoryMap, completedLessonsForUnit, type QuizHistory } from '$lib/escola/progress';
   import { ensureAssignmentDefaults, getAssignment, localizedAssignment, type Assignment } from '$lib/trabalhos';
   import Countdown from '$lib/components/Countdown.svelte';
 
@@ -27,7 +27,7 @@
     void (async () => {
       try {
         const [visited, histories] = await Promise.all([
-          visitedLessonsForUnit(slug),
+          completedLessonsForUnit(slug),
           quizHistoryMap()
         ]);
         visitedLessons = visited;
@@ -140,7 +140,7 @@
           {@const visited = visitedLessons.has(lesson.slug)}
           {@const best = bestLabelFor(lesson.quizSlug)}
           <li class="lesson-item" class:visited>
-            <a class="lesson-link" href={`/escola/licao/${course.slug}/${lesson.slug}/`}>
+            <a class="lesson-link" href={lesson.href ?? `/escola/licao/${course.slug}/${lesson.slug}/`}>
               <div class="lesson-num" class:num-done={visited} aria-hidden="true">{visited ? '✓' : i + 1}</div>
               <div class="lesson-meta">
                 <span class="activity-chip">{activityLabel(lesson)}</span>
@@ -148,7 +148,7 @@
                 <p>{lessonSummary(lesson)}</p>
                 <span class="lesson-time">⏱ ~{lesson.estMinutes} min</span>
                 {#if visited}
-                  <span class="lesson-done-tag">{$t('escola.curso.lesson_done', { default: 'aberta ✓' })}</span>
+                  <span class="lesson-done-tag">{$t('escola.curso.lesson_done', { default: 'feita ✓' })}</span>
                 {/if}
               </div>
               <span class="lesson-cta" aria-hidden="true">→</span>

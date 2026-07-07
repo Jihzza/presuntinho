@@ -78,8 +78,10 @@
       }
     } else if (lesson?.quizSlug) {
       goQuiz();
-    } else if (typeof history !== 'undefined') {
-      history.back();
+    } else {
+      // Lição sem quiz: "Concluir" tem de MARCAR a conclusão (lesson-done + XP +
+      // festa) — antes fazia só history.back() e a lição nunca contava como feita.
+      void completeAndGo(`/escola/curso/${courseSlug}/`);
     }
   }
   function prevStep(): void {

@@ -84,7 +84,7 @@
         kind: 'lesson' as const,
         unit,
         title: lesson.title,
-        href: `/escola/licao/${unit.slug}/${lesson.slug}/`,
+        href: lesson.href ?? `/escola/licao/${unit.slug}/${lesson.slug}/`,
         done: visitedLessons.has(`lesson:${unit.slug}:${lesson.slug}`)
       }));
 
