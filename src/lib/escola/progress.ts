@@ -283,31 +283,33 @@ function nextLessonFromVisited(course: SchoolCourse, visited: Map<string, number
   return null;
 }
 
-/** First not-yet-opened lesson of a course, in catalog order. */
+/** First not-yet-COMPLETED lesson of a course, in catalog order. */
 export async function nextLesson(courseSlug: string): Promise<NextLessonTarget | null> {
   const course = schoolCourses.find((c) => c.slug === courseSlug);
   if (!course) return null;
-  const visited = await loadVisitedLessons();
-  return nextLessonFromVisited(course, visited);
+  const completed = await loadCompletedLessons();
+  return nextLessonFromVisited(course, completed);
 }
 
 /**
- * "Continue where you left off": looks at the most recently opened
- * lesson, then suggests the next unopened lesson in that unit (then in
- * that course).  Falls back to the first unopened lesson anywhere.
- * Returns null only when every catalog lesson has been opened.
+ * "Continue where you left off": looks at the most recently COMPLETED lesson,
+ * then suggests the next not-yet-completed lesson in that unit (then in that
+ * course). Falls back to the first uncompleted lesson anywhere. Uses COMPLETED
+ * (not merely opened) so a lesson you opened but never finished is the very
+ * lesson resume points you back to — instead of being skipped.
+ * Returns null only when every catalog lesson has been completed.
  */
 export async function resumeTarget(): Promise<NextLessonTarget | null> {
-  const visited = await loadVisitedLessons();
+  const completed = await loadCompletedLessons();
 
-  // Find the most recent catalog lesson visit.
+  // Find the most recent catalog lesson completion.
   let lastUnit: SchoolUnit | null = null;
   let lastCourse: SchoolCourse | null = null;
   let lastAt = -1;
   for (const course of schoolCourses) {
     for (const unit of allUnits(course)) {
       for (const lesson of unit.lessons) {
-        const at = visited.get(lessonVisitedId(unit.slug, lesson.slug));
+        const at = completed.get(lessonVisitedId(unit.slug, lesson.slug));
         if (at !== undefined && at > lastAt) {
           lastAt = at;
           lastUnit = unit;
@@ -319,16 +321,16 @@ export async function resumeTarget(): Promise<NextLessonTarget | null> {
 
   if (lastUnit && lastCourse) {
     for (const lesson of lastUnit.lessons) {
-      if (!visited.has(lessonVisitedId(lastUnit.slug, lesson.slug))) {
+      if (!completed.has(lessonVisitedId(lastUnit.slug, lesson.slug))) {
         return targetFor(lastCourse, lastUnit, lesson.slug, lesson.title);
       }
     }
-    const inCourse = nextLessonFromVisited(lastCourse, visited);
+    const inCourse = nextLessonFromVisited(lastCourse, completed);
     if (inCourse) return inCourse;
   }
 
   for (const course of schoolCourses) {
-    const target = nextLessonFromVisited(course, visited);
+    const target = nextLessonFromVisited(course, completed);
     if (target) return target;
   }
   return null;
