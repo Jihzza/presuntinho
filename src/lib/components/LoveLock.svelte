@@ -177,11 +177,11 @@
 
     <p class="hint">
       {#if lockState.kind === 'sad'}
-        ✨ {$t('lovelock.hint.sad', { default: 'Fofinho perdoa tudo.' })}
+        ✨ {$t('lovelock.hint.sad', { default: 'O Presuntinho perdoa tudo.' })}
       {:else if lockState.kind === 'sick'}
         ✨ {$t('lovelock.hint.sick', { default: 'Descansa. Hoje produtividade é cuidar de ti.' })}
       {:else}
-        ✨ {$t('lovelock.hint.love', { default: 'Fofinho acredita em ti.' })}
+        ✨ {$t('lovelock.hint.love', { default: 'O Presuntinho acredita em ti.' })}
       {/if}
     </p>
   </div>

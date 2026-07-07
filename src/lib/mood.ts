@@ -337,7 +337,7 @@ export const MOOD_META: Record<MoodKind, MoodMeta> = {
     },
     get microcopy() {
       return [
-        tr('mood.meta.sad.microcopy.1', 'Respira. O fofinho está do teu lado.'),
+        tr('mood.meta.sad.microcopy.1', 'Respira. O Presuntinho está do teu lado.'),
         tr('mood.meta.sad.microcopy.2', 'Uma mensagem fofinha pode resolver muita coisa.'),
         tr('mood.meta.sad.microcopy.3', 'Sem pressa: primeiro acalmar, depois estudar.'),
         tr('mood.meta.sad.microcopy.4', 'Hoje a app tira os cantos afiados ao dia.')
@@ -370,9 +370,9 @@ export const MOOD_META: Record<MoodKind, MoodMeta> = {
     },
     get microcopy() {
       return [
-        tr('mood.meta.love.microcopy.1', 'Fofinho tem saudades tuas.'),
+        tr('mood.meta.love.microcopy.1', 'O Presuntinho tem saudades tuas.'),
         tr('mood.meta.love.microcopy.2', 'Hoje a app está em modo carinho.'),
-        tr('mood.meta.love.microcopy.3', 'Vai com calma, princesa.'),
+        tr('mood.meta.love.microcopy.3', 'Vai com calma. 🌸'),
         tr('mood.meta.love.microcopy.4', 'Pequenos detalhes, muito coração.')
       ];
     }
