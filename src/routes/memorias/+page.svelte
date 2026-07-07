@@ -233,6 +233,9 @@
         title: text,
         icon: '💌',
         kind: 'special',
+        // Marca de nota de amor — aparece na linha do tempo mas nunca é
+        // celebrada como "aniversário/dia especial" pelo checkSeasonalEggs.
+        loveNote: true,
         createdAt: Date.now()
       });
       await awardXP('event_add');

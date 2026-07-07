@@ -411,6 +411,11 @@ export interface EventRow {
   notes?: string;
   /** Repeat every year on the same day (birthdays, anniversaries). */
   yearly?: boolean;
+  /** True for spontaneous love notes stored as kind 'special'. They appear in
+   *  the Memórias timeline but must NOT be treated as anniversaries by the
+   *  seasonal-egg check (you just wrote it — no "today is special" surprise).
+   *  Additive, non-indexed. */
+  loveNote?: boolean;
   createdAt: number;
 }
 

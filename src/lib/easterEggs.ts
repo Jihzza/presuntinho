@@ -463,6 +463,9 @@ export async function checkSeasonalEggs(): Promise<void> {
     const match = rows.find(
       (r) =>
         typeof r.date === 'string' &&
+        // Notas de amor são guardadas como kind 'special' mas NÃO são datas
+        // especiais — nunca celebrar a própria nota como aniversário.
+        r.loveNote !== true &&
         (r.date === today || (r.yearly === true && r.date.slice(5) === todayMd))
     );
     if (match && !alreadyCelebrated('specialday', today)) {
