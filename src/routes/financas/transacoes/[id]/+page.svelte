@@ -27,6 +27,7 @@
     updateTransacao,
     deleteTransacao,
     getHojeISO,
+    currencySymbol,
     type CategoriaRow,
     type Transacao
   } from '$lib/financas';
@@ -47,6 +48,7 @@
   let error = $state<string | null>(null);
   let confirmarEliminar = $state(false);
   const sortLocale = $derived($locale || 'pt-PT');
+  const curSymbol = $derived(currencySymbol($locale || 'pt-PT'));
 
   // V8 (mood): Sick/Soft ⇒ só leitura, com aviso explícito.
   const moodState = useMoodState();
@@ -262,7 +264,7 @@
             aria-invalid={error ? 'true' : undefined}
             disabled={readOnly}
           />
-          <span class="euro" aria-hidden="true">{$t('currency.symbol')}</span>
+          <span class="euro" aria-hidden="true">{curSymbol}</span>
         </div>
       </div>
 

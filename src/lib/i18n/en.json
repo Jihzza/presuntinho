@@ -4965,5 +4965,12 @@
   "arcade.hud.action_aria": "Action",
   "arcade.fullscreen.enter": "Fullscreen",
   "arcade.fullscreen.exit": "Exit fullscreen",
-  "a11y.notifications": "Notifications"
+  "a11y.notifications": "Notifications",
+  "settings.currency.title": "Currency",
+  "settings.currency.sub": "How amounts show in Finances.",
+  "settings.currency.saved": "Currency updated — check Finances 💶",
+  "hub.today.more": "+{n} more →",
+  "routes.hub.card.trabalhos.overdue": "Overdue",
+  "habitos.stats.no_streak_yet": "No streak yet — start today 💪",
+  "financas.categorias.erro.carregar": "Could not load categories. Try again."
 }

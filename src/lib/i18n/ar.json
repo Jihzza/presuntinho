@@ -4965,5 +4965,12 @@
   "arcade.hud.action_aria": "إجراء",
   "arcade.fullscreen.enter": "ملء الشاشة",
   "arcade.fullscreen.exit": "الخروج من ملء الشاشة",
-  "a11y.notifications": "الإشعارات"
+  "a11y.notifications": "الإشعارات",
+  "settings.currency.title": "العملة",
+  "settings.currency.sub": "كيف تظهر المبالغ في المالية.",
+  "settings.currency.saved": "تم تحديث العملة — شوف في المالية 💶",
+  "hub.today.more": "+{n} أكثر →",
+  "routes.hub.card.trabalhos.overdue": "متأخر",
+  "habitos.stats.no_streak_yet": "ما زال بلا سلسلة — ابدأ اليوم 💪",
+  "financas.categorias.erro.carregar": "ما نجمتش نحمّل الفئات. عاود."
 }

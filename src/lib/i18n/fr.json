@@ -4965,5 +4965,12 @@
   "arcade.hud.action_aria": "Action",
   "arcade.fullscreen.enter": "Plein écran",
   "arcade.fullscreen.exit": "Quitter le plein écran",
-  "a11y.notifications": "Notifications"
+  "a11y.notifications": "Notifications",
+  "settings.currency.title": "Devise",
+  "settings.currency.sub": "Comment les montants apparaissent dans Finances.",
+  "settings.currency.saved": "Devise mise à jour — vois dans Finances 💶",
+  "hub.today.more": "+{n} de plus →",
+  "routes.hub.card.trabalhos.overdue": "En retard",
+  "habitos.stats.no_streak_yet": "Pas encore de série — commence aujourd’hui 💪",
+  "financas.categorias.erro.carregar": "Impossible de charger les catégories. Réessaie."
 }

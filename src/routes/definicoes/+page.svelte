@@ -40,6 +40,8 @@
     type ImportReport
   } from '$lib/backup';
   import Languages from 'lucide-svelte/icons/languages';
+  import Coins from 'lucide-svelte/icons/coins';
+  import { SUPPORTED_CURRENCIES, activeCurrency, setCurrency } from '$lib/financas';
   import Key from 'lucide-svelte/icons/key-round';
   import Trash from 'lucide-svelte/icons/trash-2';
   import Download from 'lucide-svelte/icons/download';
@@ -420,6 +422,17 @@
     langStore.set(loc);      // mirrors into Dexie `settings.lang`
     await tick();
     await waitLocale();      // ensure dictionary swap is settled
+  }
+
+  // ----- Moeda (V11) — escolha guardada em localStorage via financas.ts -----
+  let currentCurrency = $state('EUR');
+  onMount(() => {
+    currentCurrency = activeCurrency();
+  });
+  function pickCurrency(code: string): void {
+    currentCurrency = code;
+    setCurrency(code);
+    showToast($t('settings.currency.saved', { default: 'Moeda atualizada — vê nas Finanças 💶' }));
   }
 
   // ----- Fun mode (just a checkbox, persists via existing store) -----
@@ -1203,6 +1216,30 @@
           >
             <span class="lang-flag" aria-hidden="true">{LOCALE_META[loc].flag}</span>
             <span class="lang-native">{LOCALE_META[loc].native}</span>
+          </button>
+        {/each}
+      </div>
+    </section>
+
+    <!-- ============ Moeda (V11) ============ -->
+    <section class="card" aria-labelledby="currency-h">
+      <div class="card-head">
+        <span class="icon-wrap"><Coins size={18} /></span>
+        <h2 id="currency-h">{$t('settings.currency.title', { default: 'Moeda' })}</h2>
+      </div>
+      <p class="section-sub">{$t('settings.currency.sub', { default: 'Como os valores aparecem nas Finanças.' })}</p>
+      <div class="seg seg-currency" role="radiogroup" aria-label={$t('settings.currency.title', { default: 'Moeda' })}>
+        {#each SUPPORTED_CURRENCIES as cur (cur.code)}
+          <button
+            type="button"
+            role="radio"
+            aria-checked={currentCurrency === cur.code}
+            class:active={currentCurrency === cur.code}
+            onclick={() => pickCurrency(cur.code)}
+            title={cur.label}
+          >
+            <span class="cur-code">{cur.code}</span>
+            <span class="cur-label">{cur.label}</span>
           </button>
         {/each}
       </div>
@@ -2034,6 +2071,29 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    .section-sub {
+      margin: 0 0 0.75rem;
+      color: var(--txt2);
+      font-size: 0.9rem;
+    }
+    .seg-currency button {
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .cur-code {
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+    }
+    .cur-label {
+      font-size: 0.78rem;
+      color: var(--txt3);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+    .seg-currency button.active .cur-label { color: var(--txt2); }
   /* Action buttons now come from the shared $lib/components/ui Button
      primitive (token-driven, theme-aware). */
   .data-actions {

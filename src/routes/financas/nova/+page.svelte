@@ -20,11 +20,15 @@
     listCategorias,
     addTransacao,
     getHojeISO,
+    currencySymbol,
     type CategoriaRow
   } from '$lib/financas';
   import { showToast } from '$lib/components/events';
   import { initStores } from '$lib/state/stores';
   import { useMoodState } from '$lib/mood/useMoodState.svelte';
+
+  // Símbolo da moeda ativa (reativo ao idioma) para o sufixo do input.
+  const curSymbol = $derived(currencySymbol($locale || 'pt-PT'));
 
   let tipo = $state<'receita' | 'despesa'>('despesa');
   let valorStr = $state('');
@@ -222,7 +226,7 @@
           autocomplete="off"
           disabled={readOnly}
         />
-        <span class="euro" aria-hidden="true">{$t('currency.symbol')}</span>
+        <span class="euro" aria-hidden="true">{curSymbol}</span>
       </div>
     </div>
 

@@ -4978,5 +4978,12 @@
   "arcade.hud.action_aria": "Action",
   "arcade.fullscreen.enter": "Ecran kamel",
   "arcade.fullscreen.exit": "Okhrej mel ecran kamel",
-  "a11y.notifications": "Notifications"
+  "a11y.notifications": "Notifications",
+  "settings.currency.title": "El 3omla",
+  "settings.currency.sub": "Kifech el mablegh yodhhrou fel Finances.",
+  "settings.currency.saved": "El 3omla t3addlet — chouf fel Finances 💶",
+  "hub.today.more": "+{n} okhrin →",
+  "routes.hub.card.trabalhos.overdue": "M3attal",
+  "habitos.stats.no_streak_yet": "Mazel bla sequence — abda lyoum 💪",
+  "financas.categorias.erro.carregar": "Ma najjamtech nchargi el categories. 3awed."
 }

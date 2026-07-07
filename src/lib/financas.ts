@@ -40,6 +40,47 @@ function activeLocale(fallback = 'pt-PT'): string {
   return localStorage.getItem(LOCALE_STORAGE_KEY) || fallback;
 }
 
+// ── Moeda (V11) — escolhível em /definicoes; default EUR ────────────────────
+const CURRENCY_STORAGE_KEY = 'fat-pref-currency';
+
+/** Moedas suportadas na app (código ISO 4217 + rótulo amigável). */
+export const SUPPORTED_CURRENCIES = [
+  { code: 'EUR', label: 'Euro (€)' },
+  { code: 'USD', label: 'US Dollar ($)' },
+  { code: 'GBP', label: 'British Pound (£)' },
+  { code: 'BRL', label: 'Real (R$)' },
+  { code: 'TND', label: 'Dinar tunisino (DT)' }
+] as const;
+
+const CURRENCY_CODES = SUPPORTED_CURRENCIES.map((c) => c.code) as readonly string[];
+
+/** Moeda ativa (código ISO). Lida do localStorage; default EUR. */
+export function activeCurrency(fallback = 'EUR'): string {
+  if (typeof localStorage === 'undefined') return fallback;
+  const stored = localStorage.getItem(CURRENCY_STORAGE_KEY);
+  return stored && CURRENCY_CODES.includes(stored) ? stored : fallback;
+}
+
+/** Persistir a moeda escolhida (usado por /definicoes). */
+export function setCurrency(code: string): void {
+  if (typeof localStorage === 'undefined') return;
+  if (CURRENCY_CODES.includes(code)) localStorage.setItem(CURRENCY_STORAGE_KEY, code);
+}
+
+/** Símbolo curto da moeda ativa (€, $, £, R$, DT) para sufixos de inputs. */
+export function currencySymbol(loc = activeLocale(), currency = activeCurrency()): string {
+  try {
+    const parts = new Intl.NumberFormat(loc, {
+      style: 'currency',
+      currency,
+      currencyDisplay: 'narrowSymbol'
+    }).formatToParts(0);
+    return parts.find((p) => p.type === 'currency')?.value ?? currency;
+  } catch {
+    return currency;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Public types — re-exported so component code only imports from one place.
 // ---------------------------------------------------------------------------
@@ -60,6 +101,10 @@ export interface TransacaoRow extends TransacaoRowBase {
   /** Meses ('YYYY-MM') em que o utilizador apagou a cópia — impede que
    *  `ensureRecorrentes` a volte a criar (o template guarda esta lista). */
   recorrenteSkip?: string[];
+  /** Liga uma transação a uma meta de poupança (movimento gerado por um
+   *  depósito/levantamento na meta), para o saldo refletir o dinheiro posto
+   *  de lado. Não-indexado, aditivo. */
+  metaId?: number;
 }
 
 /** A saved transaction with the auto-incremented `id` resolved. */
@@ -780,15 +825,43 @@ export async function addDinheiroMeta(
   const delta = Number(valor);
   if (!Number.isFinite(delta) || delta === 0) throw new Error('meta_valor_invalido');
 
-  const updated: Meta = {
-    ...existing,
-    poupado: Math.max(0, Math.round((existing.poupado + delta) * 100) / 100)
-  };
+  // Clamp real: nunca poupar mais do que o saldo já poupado permite retirar.
+  const novoPoupado = Math.max(0, Math.round((existing.poupado + delta) * 100) / 100);
+  const movimento = Math.round((novoPoupado - existing.poupado) * 100) / 100;
+  const updated: Meta = { ...existing, poupado: novoPoupado };
   const reached = !existing.doneAt && updated.poupado >= updated.alvo;
   if (reached) updated.doneAt = Date.now();
   if (updated.poupado < updated.alvo) delete updated.doneAt;
 
   await db().metas.put(updated);
+
+  // Reconciliar com o ledger: pôr dinheiro de lado é uma saída do saldo
+  // gastável (despesa em 'poupança'); levantar é uma entrada (receita). Sem
+  // isto, o saldo e as metas contradiziam-se. Escrevemos direto (sem awardXP)
+  // para não duplicar XP com meta_progress/meta_reached.
+  if (movimento !== 0) {
+    try {
+      const n = new Date();
+      const hoje = `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}`;
+      const linked: TransacaoRow = {
+        tipo: movimento > 0 ? 'despesa' : 'receita',
+        valor: Math.abs(movimento),
+        categoria: 'poupanca',
+        descricao:
+          movimento > 0
+            ? `Poupança: ${existing.nome}`.slice(0, 120)
+            : `Levantamento: ${existing.nome}`.slice(0, 120),
+        data: hoje,
+        createdAt: Date.now(),
+        metaId: id
+      };
+      await db().transacoes.add(linked);
+    } catch (e) {
+      // Um falho na reconciliação nunca deve reverter o depósito na meta.
+      console.warn('[financas] linked meta transaction failed (non-fatal)', e);
+    }
+  }
+
   if (reached) await awardXP('meta_reached');
   else if (delta > 0) await awardXP('meta_progress');
   return { meta: updated, reached };
@@ -944,11 +1017,12 @@ export function formatData(data: string, loc = activeLocale()): string {
   return date.toLocaleDateString(loc, { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-/** Format a number as a EUR currency string in the active UI locale. */
-export function formatValor(v: number, loc = activeLocale()): string {
+/** Format a number as a currency string in the active UI locale + chosen
+ *  currency (default EUR). Currency is user-selectable in /definicoes. */
+export function formatValor(v: number, loc = activeLocale(), currency = activeCurrency()): string {
   return new Intl.NumberFormat(loc, {
     style: 'currency',
-    currency: 'EUR'
+    currency
   }).format(v);
 }
 
@@ -957,15 +1031,15 @@ export function formatValor(v: number, loc = activeLocale()): string {
  * 1500 → "1,5 mil €" (pt-PT) / "€1.5K" (en).  Falls back to the plain
  * formatter on very old engines without `notation: 'compact'`.
  */
-export function formatValorCompacto(v: number, loc = activeLocale()): string {
+export function formatValorCompacto(v: number, loc = activeLocale(), currency = activeCurrency()): string {
   try {
     return new Intl.NumberFormat(loc, {
       style: 'currency',
-      currency: 'EUR',
+      currency,
       notation: 'compact',
       maximumFractionDigits: 1
     }).format(v);
   } catch {
-    return formatValor(v, loc);
+    return formatValor(v, loc, currency);
   }
 }
