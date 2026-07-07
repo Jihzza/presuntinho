@@ -484,6 +484,8 @@
   "easterEggs.reward_locked": "Recompense : ████████ (verrouillee)",
   "easterEggs.status.locked": "🔒 MAZEL MA TLA9ACH",
   "easterEggs.status.unlocked": "🔓 TLA9A",
+  "conta.email_placeholder": "you@email.com",
+  "conta.name_placeholder": "Esmek",
   "eggs.mascot.fallback": "🧴 Tnajjem, Fatma! 💪",
   "eggs.toast.brutale": "🏍️ MV Agusta Brutale! El moteur yesma3 men houni.",
   "eggs.toast.clutch": "🎯 Clutch! Ace 1v5 — enti el MVP mta3 Presuntinho.",
@@ -4976,6 +4978,8 @@
   "arcade.games.pong.keys": "← → wala A/D lel base · P bech twa9ef",
   "arcade.hud.move_aria": "El 7arka",
   "arcade.hud.action_aria": "Action",
+  "arcade.mascot_runner.label": "L jeu mta3 el coureur — tap wala space bech tnazlez",
+  "arcade.mascot_runner.hint": "▶ TAP / SPACE",
   "arcade.fullscreen.enter": "Ecran kamel",
   "arcade.fullscreen.exit": "Okhrej mel ecran kamel",
   "a11y.notifications": "Notifications"

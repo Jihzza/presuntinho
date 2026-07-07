@@ -484,6 +484,8 @@
   "easterEggs.reward_locked": "Récompense : ████████ (verrouillée)",
   "easterEggs.status.locked": "🔒 À DÉCOUVRIR",
   "easterEggs.status.unlocked": "🔓 DÉCOUVERT",
+  "conta.email_placeholder": "vous@email.com",
+  "conta.name_placeholder": "Votre nom",
   "eggs.mascot.fallback": "🧴 Tu peux le faire, Fatma ! 💪",
   "eggs.toast.brutale": "🏍️ MV Agusta Brutale ! On entend le moteur d'ici.",
   "eggs.toast.clutch": "🎯 Clutch ! Ace en 1v5 — tu es la MVP du Presuntinho.",
@@ -4963,6 +4965,8 @@
   "arcade.games.pong.keys": "← → ou A/D pour la raquette · P pour pause",
   "arcade.hud.move_aria": "Déplacement",
   "arcade.hud.action_aria": "Action",
+  "arcade.mascot_runner.label": "Jeu du coureur — tape ou espace pour sauter",
+  "arcade.mascot_runner.hint": "▶ TAP / ESPACE",
   "arcade.fullscreen.enter": "Plein écran",
   "arcade.fullscreen.exit": "Quitter le plein écran",
   "a11y.notifications": "Notifications"

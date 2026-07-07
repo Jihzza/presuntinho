@@ -221,7 +221,7 @@
       </div>
       <label>
         <span>{$t('conta.email', { default: 'Email' })}</span>
-        <input type="email" autocomplete="email" bind:value={email} placeholder="tu@email.com" />
+        <input type="email" autocomplete="email" bind:value={email} placeholder={$t('conta.email_placeholder', { default: 'tu@email.com' })} />
       </label>
       <label>
         <span>{$t('conta.password', { default: 'Palavra-passe' })}</span>
@@ -262,7 +262,7 @@
       </p>
       <label>
         <span>{$t('conta.name', { default: 'Nome (opcional)' })}</span>
-        <input type="text" bind:value={displayName} maxlength="40" placeholder="O teu nome" />
+        <input type="text" bind:value={displayName} maxlength="40" placeholder={$t('conta.name_placeholder', { default: 'O teu nome' })} />
       </label>
       <button type="button" class="cta" onclick={doClaim} disabled={busy || handleState !== 'free'}>
         {$t('conta.claim.cta', { default: 'Reservar handle' })}

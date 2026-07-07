@@ -484,6 +484,8 @@
   "easterEggs.reward_locked": "المكافأة: ████████ (مقفلة)",
   "easterEggs.status.locked": "🔒 غير مكتشف",
   "easterEggs.status.unlocked": "🔓 مكتشف",
+  "conta.email_placeholder": "you@email.com",
+  "conta.name_placeholder": "اسمك",
   "eggs.mascot.fallback": "🧴 أنتِ قادرة يا فاطمة! 💪",
   "eggs.toast.brutale": "🏍️ إم في أغوستا بروتالي! صوت المحرك يُسمع من هنا.",
   "eggs.toast.clutch": "🎯 كلاتش! آيس 1 ضد 5 — أنتِ نجمة برسونتينيو.",
@@ -4963,6 +4965,8 @@
   "arcade.games.pong.keys": "← → أو A/D للمضرب · P للإيقاف",
   "arcade.hud.move_aria": "الحركة",
   "arcade.hud.action_aria": "إجراء",
+  "arcade.mascot_runner.label": "لعبة العدّاء — اضغط أو مسافة للقفز",
+  "arcade.mascot_runner.hint": "▶ TAP / SPACE",
   "arcade.fullscreen.enter": "ملء الشاشة",
   "arcade.fullscreen.exit": "الخروج من ملء الشاشة",
   "a11y.notifications": "الإشعارات"
