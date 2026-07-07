@@ -330,6 +330,25 @@
 
   onMount(() => {
     void refresh();
+    // Refrescar ao voltar à app e à meia-noite — senão o "✓ hoje" e os toggles
+    // de ontem persistiam no novo dia (PWA que fica aberta / retoma).
+    let dayKey = localDateKey();
+    const checkNewDay = () => {
+      const now = localDateKey();
+      if (now !== dayKey) {
+        dayKey = now;
+        void refresh();
+      }
+    };
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') checkNewDay();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    const midnightPoll = setInterval(checkNewDay, 60_000);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible);
+      clearInterval(midnightPoll);
+    };
   });
 
   function formatCreatedAt(ts: number): string {
@@ -390,22 +409,24 @@
       <div class="summary-card">
         <span class="summary-label">{$t('habitos.stats.best_streak', { default: 'Melhor streak' })}</span>
         <span class="summary-value">
-          {dashboardStats.bestStreak
+          {dashboardStats.bestStreak && dashboardStats.bestStreak.streak > 0
             ? `${dashboardStats.bestStreak.streak} 🔥`
             : '—'}
         </span>
-        {#if dashboardStats.bestStreak}
+        {#if dashboardStats.bestStreak && dashboardStats.bestStreak.streak > 0}
           <span class="summary-sub">{dashboardStats.bestStreak.name}</span>
+        {:else}
+          <span class="summary-sub">{$t('habitos.stats.no_streak_yet', { default: 'Ainda sem sequência — começa hoje 💪' })}</span>
         {/if}
       </div>
       <div class="summary-card">
         <span class="summary-label">{$t('habitos.stats.most_consistent', { default: 'Mais consistente (7d)' })}</span>
         <span class="summary-value">
-          {dashboardStats.mostConsistent
+          {dashboardStats.mostConsistent && dashboardStats.mostConsistent.percent7 > 0
             ? `${dashboardStats.mostConsistent.percent7}%`
             : '—'}
         </span>
-        {#if dashboardStats.mostConsistent}
+        {#if dashboardStats.mostConsistent && dashboardStats.mostConsistent.percent7 > 0}
           <span class="summary-sub">{dashboardStats.mostConsistent.name}</span>
         {/if}
       </div>
