@@ -11,6 +11,7 @@
 
 import type { ProfileId } from '$lib/auth/hash';
 import { getSession, setSession, clearSession, registerKnownMember } from '$lib/auth/session';
+import { resetStores } from '$lib/state/stores';
 import { getAuthSession, getMyAccount, signOut, accountsEnabled } from './auth';
 
 /** Map an account @handle to the app's local ProfileId. */
@@ -58,4 +59,7 @@ export async function signOutEverywhere(): Promise<void> {
   // Honour the name: always drop the local profile session too, otherwise the
   // app stays unlocked after "sign out" (a shared-device exposure).
   clearSession();
+  // Reset the in-memory singleton stores (XP/theme/easter-egg progress) so the
+  // previous user's state can't bleed into the next login on this device.
+  resetStores();
 }

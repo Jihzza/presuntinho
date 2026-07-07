@@ -19,7 +19,7 @@
 
   import { onMount, tick } from 'svelte';
   import { db, DEFAULT_SETTINGS, type ThemeChoice } from '$lib/state/db';
-  import { theme as themeStore, lang as langStore, funMode as funModeStore, xp as xpStore } from '$lib/state/stores';
+  import { theme as themeStore, lang as langStore, funMode as funModeStore, xp as xpStore, resetStores } from '$lib/state/stores';
   import { locale, waitLocale } from 'svelte-i18n';
   import { setLocale, LOCALES, LOCALE_META, type Locale } from '$lib/i18n';
   import { goto } from '$app/navigation';
@@ -588,6 +588,7 @@
   function handleLogout(): void {
     if (!confirm($t('settings.logout.confirm', { default: 'Terminar a sessão neste dispositivo?' }))) return;
     clearSession();
+    resetStores(); // drop in-memory XP/theme/etc. now, before we navigate away
     resetSoundPrefsCache();
     // Also end the real-account (Supabase) session, else the splash bridge would
     // silently log you straight back in.
