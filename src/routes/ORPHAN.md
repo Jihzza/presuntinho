@@ -1,42 +1,43 @@
-# Orphan Routes — Easter Eggs Preserved
+# Orphan Routes
 
-Status: **mantidas** como easter eggs escondidos (opção (c) do pacote CEO task-056).
+Routes that exist but are **not linked** from the bottom-nav or Hub. They are
+reachable only by direct URL (or, for `/secrets/`, via 7 clicks on the logo).
 
-## Rotas preservadas
+## Preserved easter eggs
 
 | Rota | Path | Conteúdo |
 |---|---|---|
-| `/course/` | `src/routes/course/+page.svelte` | Curso genérico (placeholder) |
-| `/dl/` | `src/routes/dl/+page.svelte` | Download hub (placeholder) |
 | `/write/` | `src/routes/write/+page.svelte` | Editor de notas rápidas |
 | `/walk/` | `src/routes/walk/+page.svelte` | Walkthrough / tour guiado |
 | `/secrets/` | `src/routes/secrets/+page.svelte` | Secret room (7 cliques no logo) |
 
-## Critério de preservação
+## Legacy Equivalenza case study (superseded)
 
-- **Não linkadas** na bottom-nav nem em cards do Hub.
-- **Acessiveis** via URL directa ou via "secret room" (`/secrets/`) acedida por 7 cliques no logo.
-- **HTTP 200** confirmado em todas (smoke tick 25 via `curl -s -o /dev/null -w "%{http_code}"`).
-- **Zero impacto funcional** no fluxo principal do CEO.
+| Rota | Path | Estado |
+|---|---|---|
+| `/case/` | `src/routes/case/+page.svelte` | Deep-dive da Equivalenza |
+| `/course/` | `src/routes/course/+page.svelte` | Teoria de frameworks (SWOT/TOWS/SCQA/persona) |
+| `/pt/` | `src/routes/pt/+page.svelte` | Aulas em português (versão V3) |
+| `/escola/walkthrough/[lessonSlug]/` | dynamic | Áudio-first das lições Equivalenza |
 
-## Porquê não apagar?
+Estas páginas foram **substituídas** pela Escola genérica multi-curso
+(`/escola/`, com o próprio curso `equivalenza` em `/escola/caminho/equivalenza/`).
+Continuam acessíveis por URL directo mas **já não são anunciadas** no
+`sitemap.xml` — deixaram de fazer sentido como páginas públicas indexáveis
+num lançamento multi-tenant.
 
-- Apagar remove URLs que podem estar em bookmarks externos / screenshots antigos do CEO.
-- Manter permite futura reactivação sem reescrever do zero.
-- Volume de código é mínimo (1 ficheiro cada, ~50 linhas).
+## Notas
+
+- `/dl/` (download hub) e `/legacy/` (iframe do site V3) foram **removidas**.
+- `/secrets/` foi retirada do `sitemap.xml` — uma "secret room" anunciada no
+  sitemap deixa de ser secreta.
+- Os exports mortos `v3Content` e `legacySubApp` (que renderizavam estas
+  páginas em cards do Hub) foram removidos de `src/lib/registry.ts`.
 
 ## Como desactivar no futuro
 
-Se CEO decidir apagar:
 ```bash
-git rm -r src/routes/course src/routes/dl src/routes/write src/routes/walk src/routes/secrets
+git rm -r src/routes/course src/routes/case src/routes/pt \
+         src/routes/escola/walkthrough
 npm run check && npm run build
 ```
-
-Se CEO decidir reactivar:
-- Adicionar entradas na bottom-nav em `src/routes/+layout.svelte` OU
-- Adicionar cards no Hub em `src/routes/+page.svelte`.
-
----
-
-Referência: `tasks.html` task-056 (decisão CEO pacote 47231).

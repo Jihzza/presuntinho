@@ -5,6 +5,9 @@ import type { RequestHandler } from './$types';
  *
  * Lists the public, indexable routes. Explicitly excludes:
  *   - /splash/                  auth gate, no SEO value
+ *   - /secrets/                 hidden easter-egg room; must not be advertised
+ *   - /case/ /course/ /walk/ /write/ /pt/  legacy Equivalenza V3 pages,
+ *                               superseded by the generic Escola; orphaned
  *   - /legacy/                  preserved V3 archive; robots.txt disallows
  *   - /biblioteca/item/[id]    per-user content, not canonical pages
  *   - /escola/quiz/[slug]       drill-down content; canonical is /escola
@@ -28,12 +31,6 @@ const SITE = 'https://presuntinho.netlify.app';
 /** Public, indexable routes — keep in sync with PRESERVATION.md. */
 const PUBLIC_ROUTES: string[] = [
   '/',
-  '/case/',
-  '/course/',
-  '/walk/',
-  '/write/',
-  '/pt/',
-  '/secrets/',
   '/escola/',
   '/trabalhos/',
   '/financas/',
