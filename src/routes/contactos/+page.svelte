@@ -85,7 +85,7 @@
       else showToast($t('contactos.already', { default: 'Já tens uma ligação com esta pessoa.' }), 2200);
       await refresh();
     } catch (e) {
-      showToast(e instanceof Error ? e.message : String(e), 3000);
+      showToast(e instanceof Error ? e.message : String(e), 3000, 'error');
     }
   }
 
@@ -95,7 +95,7 @@
       showToast($t('contactos.accepted', { values: { handle: c.handle }, default: '@{handle} é agora teu contacto! 🎉' }), 2400);
       await refresh();
     } catch (e) {
-      showToast(e instanceof Error ? e.message : String(e), 3000);
+      showToast(e instanceof Error ? e.message : String(e), 3000, 'error');
     }
   }
 
@@ -104,7 +104,7 @@
       await removeConnection(c.connectionId);
       await refresh();
     } catch (e) {
-      showToast(e instanceof Error ? e.message : String(e), 3000);
+      showToast(e instanceof Error ? e.message : String(e), 3000, 'error');
     }
   }
 </script>

@@ -75,7 +75,7 @@
       }
       password = '';
     } catch (e) {
-      showToast(authError(e), 3200);
+      showToast(authError(e), 3200, 'error');
     } finally {
       busy = false;
     }
@@ -87,7 +87,7 @@
     try {
       await signInWithGoogle(); // redirects away
     } catch (e) {
-      showToast(authError(e), 3200);
+      showToast(authError(e), 3200, 'error');
       busy = false;
     }
   }
@@ -102,7 +102,7 @@
       await signInWithMagicLink(email);
       showToast($t('conta.magic.sent', { default: 'Enviámos-te um link de entrada por email. ✨' }), 4000);
     } catch (e) {
-      showToast(authError(e), 3200);
+      showToast(authError(e), 3200, 'error');
     } finally {
       busy = false;
     }
@@ -117,7 +117,7 @@
       await sendPasswordReset(email);
       showToast($t('conta.reset.sent', { default: 'Enviámos um link para redefinir a palavra-passe. 📧' }), 4000);
     } catch (e) {
-      showToast(authError(e), 3200);
+      showToast(authError(e), 3200, 'error');
     }
   }
 
@@ -150,7 +150,7 @@
       await refreshAccount();
       showToast($t('conta.claim.ok', { values: { handle }, default: 'Bem-vindo, @{handle}! 🎉' }), 3000);
     } catch (e) {
-      showToast(authError(e), 3200);
+      showToast(authError(e), 3200, 'error');
     } finally {
       busy = false;
     }
@@ -165,7 +165,7 @@
       showToast($t('conta.signout.ok', { default: 'Sessão terminada.' }), 2000);
       await goto('/splash/');
     } catch (e) {
-      showToast(authError(e), 3000);
+      showToast(authError(e), 3000, 'error');
     }
   }
 
@@ -176,7 +176,7 @@
       showToast($t('conta.email.sent', { default: 'Confirma a alteração no email novo. 📧' }), 4000);
       newEmail = '';
     } catch (e) {
-      showToast(authError(e), 3200);
+      showToast(authError(e), 3200, 'error');
     }
   }
 
@@ -190,7 +190,7 @@
       showToast($t('conta.pw.ok', { default: 'Palavra-passe atualizada. ✅' }), 2600);
       newPassword = '';
     } catch (e) {
-      showToast(authError(e), 3200);
+      showToast(authError(e), 3200, 'error');
     }
   }
 

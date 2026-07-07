@@ -72,7 +72,7 @@
       await refresh();
       showToast($t('grupos.created', { values: { name }, default: 'Grupo «{name}» criado! 🎉' }), 2200);
     } catch (e) {
-      showToast(e instanceof Error ? e.message : String(e), 3000);
+      showToast(e instanceof Error ? e.message : String(e), 3000, 'error');
     } finally {
       busy = false;
     }
@@ -94,7 +94,7 @@
       if (active) activateAndReload(c.handle);
       else showToast($t('grupos.couple_proposed', { values: { handle: c.handle }, default: 'Pedido de casal enviado a @{handle} — falta ela aceitar 💌' }), 2800);
     } catch (e) {
-      showToast(e instanceof Error ? e.message : String(e), 3000);
+      showToast(e instanceof Error ? e.message : String(e), 3000, 'error');
     } finally {
       busy = false;
     }
@@ -109,7 +109,7 @@
       const other = otherMember(s, myId);
       if (active) activateAndReload(other?.handle ?? '');
     } catch (e) {
-      showToast(e instanceof Error ? e.message : String(e), 3000);
+      showToast(e instanceof Error ? e.message : String(e), 3000, 'error');
     } finally {
       busy = false;
     }
@@ -122,7 +122,7 @@
       await refresh();
       showToast($t('grupos.added', { values: { handle: c.handle }, default: '@{handle} adicionado ao grupo ✅' }), 2000);
     } catch (e) {
-      showToast(e instanceof Error ? e.message : String(e), 3000);
+      showToast(e instanceof Error ? e.message : String(e), 3000, 'error');
     }
   }
 
@@ -131,7 +131,7 @@
       await leaveSpace(s.id);
       await refresh();
     } catch (e) {
-      showToast(e instanceof Error ? e.message : String(e), 3000);
+      showToast(e instanceof Error ? e.message : String(e), 3000, 'error');
     }
   }
 

@@ -102,7 +102,7 @@
       invited = new Set([...invited, c.id]);
       showToast($t('versus.invited', { values: { handle: c.handle }, default: 'Convite enviado a @{handle} 🎮' }), 2000);
     } catch (e) {
-      showToast(e instanceof Error ? e.message : String(e), 2600);
+      showToast(e instanceof Error ? e.message : String(e), 2600, 'error');
     }
   }
 
