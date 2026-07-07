@@ -48,37 +48,83 @@
   let error = $state<string | null>(null);
 
   // Filter state — mirrored to URL params so filtered views are
-  // bookmarkable and the back button does the right thing.
-  let cursoFiltro = $state<string>('todos');
-  let statusFiltro = $state<AssignmentStatus | 'todos'>('todos');
-  // 'asc' = deadline soonest first (default, matches user mental model).
-  // 'desc' = deadline latest first.
-  let ordem = $state<'asc' | 'desc'>('asc');
-  const sortLocale = $derived($locale || 'pt-PT');
+    // bookmarkable and the back button does the right thing.
+    let cursoFiltro = $state<string>('todos');
+    let statusFiltro = $state<AssignmentStatus | 'todos'>('todos');
+    // 'asc' = deadline soonest first (default, matches user mental model).
+    // 'desc' = deadline latest first.
+    let ordem = $state<'asc' | 'desc'>('asc');
+    // Deadline urgency bucket. Buckets are computed against `now` at
+    // render-time (not at assignment-load time) so an assignment that
+    // moves from "this week" to "today" automatically shows up under
+    // the new bucket without a Dexie round-trip.
+    type UrgencyKey = 'todos' | 'overdue' | 'today' | 'week' | 'month' | 'next30';
+    let prazoFiltro = $state<UrgencyKey>('todos');
+    const sortLocale = $derived($locale || 'pt-PT');
 
-  const trabalhosApp = subApps.find((a) => a.id === 'trabalhos');
+    const trabalhosApp = subApps.find((a) => a.id === 'trabalhos');
 
-  // ---------------- Derived: filtered + sorted list ----------------
-  let visible = $derived.by<Assignment[]>(() => {
-    const filtered = assignments.filter((a) => {
-      if (cursoFiltro !== 'todos' && a.curso !== cursoFiltro) return false;
-      if (statusFiltro !== 'todos' && a.status !== statusFiltro) return false;
-      return true;
+    // ---------------- Derived: filtered + sorted list ----------------
+    let visible = $derived.by<Assignment[]>(() => {
+      const filtered = assignments.filter((a) => {
+        if (cursoFiltro !== 'todos' && a.curso !== cursoFiltro) return false;
+        if (statusFiltro !== 'todos' && a.status !== statusFiltro) return false;
+        if (prazoFiltro !== 'todos' && !urgencyMatches(bucketFor(a.deadline), prazoFiltro)) return false;
+        return true;
+      });
+      return [...filtered].sort((a, b) => {
+        const cmp = a.deadline - b.deadline;
+        return ordem === 'asc' ? cmp : -cmp;
+      });
     });
-    return [...filtered].sort((a, b) => {
-      const cmp = a.deadline - b.deadline;
-      return ordem === 'asc' ? cmp : -cmp;
-    });
-  });
 
-  // "All" status options (mirrors AssignmentRow['status']).
-  const STATUS_OPTIONS: Array<AssignmentStatus | 'todos'> = [
-    'todos',
-    'pending',
-    'in_progress',
-    'submitted',
-    'graded'
-  ];
+    // "All" status options (mirrors AssignmentRow['status']).
+    const STATUS_OPTIONS: Array<AssignmentStatus | 'todos'> = [
+      'todos',
+      'pending',
+      'in_progress',
+      'submitted',
+      'graded'
+    ];
+
+    // Deadline urgency buckets. Order matters — used by the <select>
+    // and by the bucket computation. Buckets are evaluated against
+    // midnight UTC of the current day so "this week" doesn't drift when
+    // the page is left open across midnight.
+    const URGENCY_OPTIONS: UrgencyKey[] = ['todos', 'overdue', 'today', 'week', 'month', 'next30'];
+
+    function startOfTodayUTC(now: number = Date.now()): number {
+      const d = new Date(now);
+      return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+    }
+
+    function bucketFor(deadlineMs: number, now: number = Date.now()): Exclude<UrgencyKey, 'todos'> {
+      const startToday = startOfTodayUTC(now);
+      // overdue: deadline strictly before today (00:00 UTC).
+      if (deadlineMs < startToday) return 'overdue';
+      const diffDays = Math.floor((deadlineMs - startToday) / 86_400_000);
+      if (diffDays <= 0) return 'today'; // covers today + anything still inside today
+      if (diffDays < 7) return 'week';
+      if (diffDays < 30) return 'month';
+      return 'next30';
+    }
+
+    function urgencyMatches(bucket: ReturnType<typeof bucketFor>, key: UrgencyKey): boolean {
+      if (key === 'todos') return true;
+      return bucket === key;
+    }
+
+    // Pretty label for each urgency bucket (i18n via trabalhos.filters.urgency.*).
+    function urgencyLabel(key: UrgencyKey): string {
+      switch (key) {
+        case 'todos':    return $t('trabalhos.filters.urgency.all', { default: 'Todos os prazos' });
+        case 'overdue':  return $t('trabalhos.filters.urgency.overdue', { default: 'Em atraso' });
+        case 'today':    return $t('trabalhos.filters.urgency.today', { default: 'Hoje' });
+        case 'week':     return $t('trabalhos.filters.urgency.week', { default: 'Esta semana' });
+        case 'month':    return $t('trabalhos.filters.urgency.month', { default: 'Este mês' });
+        case 'next30':   return $t('trabalhos.filters.urgency.next30', { default: 'Próximos 30 dias' });
+      }
+    }
 
   // Pretty label for each status (PT-only for the MVP — i18n lives
   // in task-005).
@@ -137,7 +183,11 @@
       statusFiltro = s as AssignmentStatus | 'todos';
     }
     const o = sp.get('ordem');
-    if (o === 'asc' || o === 'desc') ordem = o;
+        if (o === 'asc' || o === 'desc') ordem = o;
+        const p = sp.get('prazo');
+        if (p && URGENCY_OPTIONS.includes(p as UrgencyKey)) {
+          prazoFiltro = p as UrgencyKey;
+        }
 
     let sub: Subscription | null = null;
     void ensureAssignmentDefaults()
@@ -169,8 +219,9 @@
     if (typeof window === 'undefined') return;
     const sp = new URLSearchParams();
     if (cursoFiltro !== 'todos') sp.set('curso', cursoFiltro);
-    if (statusFiltro !== 'todos') sp.set('status', statusFiltro);
-    if (ordem !== 'asc') sp.set('ordem', ordem);
+        if (statusFiltro !== 'todos') sp.set('status', statusFiltro);
+        if (ordem !== 'asc') sp.set('ordem', ordem);
+        if (prazoFiltro !== 'todos') sp.set('prazo', prazoFiltro);
     const qs = sp.toString();
     const next = qs ? `?${qs}` : window.location.pathname;
     if (window.location.search !== (qs ? `?${qs}` : '')) {
@@ -179,14 +230,15 @@
   });
 
   function clearFilters(): void {
-    cursoFiltro = 'todos';
-    statusFiltro = 'todos';
-    ordem = 'asc';
-  }
+      cursoFiltro = 'todos';
+      statusFiltro = 'todos';
+      ordem = 'asc';
+      prazoFiltro = 'todos';
+    }
 
-  let temFiltroAtivo = $derived(
-    cursoFiltro !== 'todos' || statusFiltro !== 'todos' || ordem !== 'asc'
-  );
+    let temFiltroAtivo = $derived(
+      cursoFiltro !== 'todos' || statusFiltro !== 'todos' || ordem !== 'asc' || prazoFiltro !== 'todos'
+    );
 
   // XP totals for the visible rows (small motivational sub-headline).
   let xpTotalVisivel = $derived(visible.reduce((acc, a) => acc + a.xpReward, 0));
@@ -230,6 +282,14 @@
           <select bind:value={statusFiltro} aria-label={$t('trabalhos.filters.status.aria', { default: 'Filtrar por estado' })}>
             {#each STATUS_OPTIONS as s (s)}
               <option value={s}>{s === 'todos' ? $t('trabalhos.filters.all', { default: 'Todos' }) : statusLabel(s as AssignmentStatus)}</option>
+            {/each}
+          </select>
+        </label>
+        <label class="field">
+          <span class="field-label">{$t('trabalhos.filters.urgency', { default: 'Urgência' })}</span>
+          <select bind:value={prazoFiltro} aria-label={$t('trabalhos.filters.urgency.aria', { default: 'Filtrar por urgência do prazo' })}>
+            {#each URGENCY_OPTIONS as u (u)}
+              <option value={u}>{urgencyLabel(u)}</option>
             {/each}
           </select>
         </label>
