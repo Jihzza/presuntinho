@@ -10,8 +10,10 @@
   --txt: #ffffff;
   --txt2: #cbd5e1;
   --txt3: #94a3b8;
-  --accent: #ec4899;
-  --accent-hover: #db2777;
+  /* AA: white-on-accent buttons need >=4.5:1. #ec4899 was 3.53:1 (fail); the
+     deeper rose #db2777 is 4.60:1 and still on-brand. Hover goes a shade darker. */
+  --accent: #db2777;
+  --accent-hover: #be185d;
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;

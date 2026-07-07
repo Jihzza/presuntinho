@@ -376,27 +376,9 @@
       <p class="mood-note">{moodNote}</p>
     {/if}
     <div class="hero-chips" aria-label={$t('hub.hero.metrics.aria')}>
-      <a
-        href="/streaks/"
-        class="chip chip-streak"
-        class:chip-streak-active={streak?.activeToday}
-        title={streak?.activeToday
-          ? $t('hub.hero.streak.active_today', { default: 'Streak protegida hoje — já fizeste qualquer coisa. 🐷' })
-          : $t('hub.hero.streak.pending_today', { default: 'Uma pequena ação hoje mantém a chama acesa.' })}
-      >
-        <span aria-hidden="true">🔥</span>
-        {$t('hub.hero.streak.days', { values: { count: streak?.current ?? 0 }, default: '{count} dias' })}
-        {#if streak && streak.freezes > 0}
-          <small
-            class="freeze-mini"
-            title={$t('streak.popover.freezes.hint', {
-              default: 'Um congelamento protege a streak num dia falhado. Ganhas 1 a cada 7 dias.'
-            })}>❄️×{streak.freezes}</small>
-        {/if}
-        {#if streak && streak.best > streak.current}
-          <small>{$t('hub.hero.streak.best', { values: { count: streak.best }, default: 'melhor: {count}' })}</small>
-        {/if}
-      </a>
+      <!-- The streak lives in the dedicated .streak-strip below (with the week
+           circles), so the hero no longer repeats a 🔥 chip — it showed the
+           streak twice on the first screen. -->
       <span class="chip chip-level">
         <span aria-hidden="true">⭐</span>
         {$t('hub.hero.level', { values: { level }, default: 'Nível {level}' })}
@@ -880,13 +862,6 @@
   .chip small {
     color: var(--txt3);
     font-weight: 600;
-  }
-  .chip-streak-active {
-    border-color: color-mix(in srgb, var(--warning) 55%, var(--border));
-    background: color-mix(in srgb, var(--warning) 12%, var(--bg-elev));
-  }
-  .freeze-mini {
-    color: #93c5fd;
   }
   .level-progress {
     margin-top: var(--space-2);
