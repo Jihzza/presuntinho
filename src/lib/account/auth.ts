@@ -64,6 +64,38 @@ export async function signInWithGoogle(): Promise<void> {
   if (error) throw error;
 }
 
+/** Start the "Continuar com Saikan ID" OIDC flow. Full-page navigation to the
+ *  serverless bridge (netlify/functions/saikan-auth-start), which redirects to
+ *  id.saikan.io for login + consent and comes back to /splash/ with a one-time
+ *  Supabase token_hash in the URL fragment — completeSaikanSignIn() finishes
+ *  the job. The client secret and service role live ONLY in the functions. */
+export function signInWithSaikan(): void {
+  if (typeof window !== 'undefined') {
+    window.location.href = '/.netlify/functions/saikan-auth-start';
+  }
+}
+
+/**
+ * Complete a Saikan ID sign-in if the URL fragment carries the one-time
+ * token_hash minted by the callback function. Exchanges it for a real
+ * Supabase session (verifyOtp), scrubs the fragment, and returns true when a
+ * session was just established. Safe to call on every /splash/ mount.
+ */
+export async function completeSaikanSignIn(): Promise<boolean> {
+  if (typeof window === 'undefined' || !accountsEnabled()) return false;
+  const match = /(?:^#|&)saikan_token_hash=([^&]+)/.exec(window.location.hash);
+  if (!match) return false;
+  // Scrub the one-time token from the address bar/history immediately.
+  history.replaceState(null, '', window.location.pathname + window.location.search);
+  const tokenHash = decodeURIComponent(match[1]);
+  const { error } = await getSupabaseClient().auth.verifyOtp({
+    type: 'magiclink',
+    token_hash: tokenHash
+  });
+  if (error) throw error;
+  return true;
+}
+
 export async function sendPasswordReset(email: string): Promise<void> {
   const redirectTo = typeof window !== 'undefined' ? `${window.location.origin}/conta` : undefined;
   const { error } = await getSupabaseClient().auth.resetPasswordForEmail(email.trim(), { redirectTo });
