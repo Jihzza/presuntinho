@@ -357,6 +357,8 @@
         <strong>{profileState.displayName || accountState.account?.display_name || (activeProfile === 'fatma' || activeProfile === 'daniel' ? $t(person.nameKey) : $t('profile.generic.name', { default: 'O teu perfil' }))}</strong>
         {#if profileState.bio}
           <small>{profileState.bio}</small>
+        {:else if accountState.account?.handle}
+          <small>@{accountState.account.handle}</small>
         {:else}
           <small>{$t(person.handleKey)}</small>
         {/if}

@@ -4,15 +4,28 @@
   import { t } from 'svelte-i18n';
   import { getSession } from '$lib/auth/session';
   import { otherPerson, profileFor, type PersonProfile } from '$lib/profile/people';
+  import { getMember } from '$lib/space/registry-db';
   import { xp, initStores } from '$lib/state/stores';
   import { progressToNext } from '$lib/gamification/levels';
   import type { ChatProfile } from '$lib/chat/client';
 
-  const id = $derived((page.params.id === 'daniel' ? 'daniel' : 'fatma') as ChatProfile);
+  // Use the REAL route id — never collapse an onboarded member's uuid to Fatma
+  // (that leaked Fatma's name/@handle/bio to every tenant). profileFor() yields
+  // the neutral generic profile for a uuid, and the member's own registry row
+  // (loaded below) drives their real name/emoji/bio.
+  const id = $derived((page.params.id ?? 'fatma') as ChatProfile);
+  const isLegacy = $derived(id === 'fatma' || id === 'daniel');
   const session = $derived(getSession());
   const person = $derived<PersonProfile>(profileFor(id));
   const partner = $derived<PersonProfile>(otherPerson(id));
   const isOwn = $derived(session?.profile === id);
+
+  // A uuid member's real identity lives in their registry row.
+  let member = $state<{ displayName: string; emoji: string; bio?: string } | null>(null);
+  const displayName = $derived(member?.displayName || $t(person.nameKey));
+  const displayEmoji = $derived(member?.emoji || person.emoji);
+  const displayBio = $derived(member?.bio || $t(person.bioKey));
+  const postKey = $derived(isLegacy ? `profile.${id}.post.one` : 'profile.generic.post.one');
 
   // V10 — level stat (own profile only; XP is per-profile local data).
   let currentXp = $state(0);
@@ -21,19 +34,27 @@
   onMount(() => {
     const unsub = xp.subscribe((v) => (currentXp = v));
     void initStores();
+    const raw = page.params.id;
+    if (raw && raw !== 'fatma' && raw !== 'daniel') {
+      void getMember(raw)
+        .then((m) => {
+          if (m) member = { displayName: m.displayName, emoji: m.emoji, bio: m.bio };
+        })
+        .catch(() => {});
+    }
     return unsub;
   });
 </script>
 
 <svelte:head>
-  <title>{$t(person.nameKey)} — {$t('profile.page.title')}</title>
+  <title>{displayName} — {$t('profile.page.title')}</title>
 </svelte:head>
 
 <section class="social-profile" style={`--person-accent: ${person.accent}`}>
   <header class="cover-card">
-    <div class="cover" role="img" aria-label={$t('profile.cover.aria', { values: { name: $t(person.nameKey) } })}></div>
+    <div class="cover" role="img" aria-label={$t('profile.cover.aria', { values: { name: displayName } })}></div>
     <div class="identity-row">
-      <span class="avatar" aria-hidden="true">{person.emoji}</span>
+      <span class="avatar" aria-hidden="true">{displayEmoji}</span>
       <div class="actions">
         {#if isOwn}
           <a class="secondary" href="/definicoes/">{$t('profile.action.settings')}</a>
@@ -43,10 +64,10 @@
       </div>
     </div>
     <div class="intro">
-      <h1>{$t(person.nameKey)}</h1>
+      <h1>{displayName}</h1>
       <p class="handle">{$t(person.handleKey)}</p>
       <p class="role">{$t(person.roleKey)}</p>
-      <p class="bio">{$t(person.bioKey)}</p>
+      <p class="bio">{displayBio}</p>
       <div class="meta-line">
         <span>{$t(person.locationKey)}</span>
         <span>{$t(person.localeKey)}</span>
@@ -85,10 +106,10 @@
   <section id="memorias" class="card post-list">
     <h2>{$t('profile.tabs.memories')}</h2>
     <article class="post-card">
-      <span class="post-avatar" aria-hidden="true">{person.emoji}</span>
+      <span class="post-avatar" aria-hidden="true">{displayEmoji}</span>
       <div>
-        <strong>{$t(person.nameKey)}</strong>
-        <p>{$t(`profile.${person.id}.post.one`)}</p>
+        <strong>{displayName}</strong>
+        <p>{$t(postKey)}</p>
       </div>
     </article>
     <article class="post-card muted">
@@ -112,11 +133,13 @@
           <small>{$t(item.descKey)}</small>
         </a>
       {/each}
-      <a href={`/perfil/${partner.id}/`} class="shortcut">
-        <span aria-hidden="true">{partner.emoji}</span>
-        <strong>{$t('profile.page.view_partner', { values: { name: $t(partner.nameKey) } })}</strong>
-        <small>{$t('profile.shortcut.partner.desc')}</small>
-      </a>
+      {#if isLegacy}
+        <a href={`/perfil/${partner.id}/`} class="shortcut">
+          <span aria-hidden="true">{partner.emoji}</span>
+          <strong>{$t('profile.page.view_partner', { values: { name: $t(partner.nameKey) } })}</strong>
+          <small>{$t('profile.shortcut.partner.desc')}</small>
+        </a>
+      {/if}
     </div>
   </section>
 </section>
