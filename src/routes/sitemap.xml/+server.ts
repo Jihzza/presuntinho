@@ -33,7 +33,6 @@ const PUBLIC_ROUTES: string[] = [
   '/walk/',
   '/write/',
   '/pt/',
-  '/dl/',
   '/secrets/',
   '/escola/',
   '/trabalhos/',

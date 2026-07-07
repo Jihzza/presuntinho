@@ -177,16 +177,6 @@ export const v3Content: V3ContentEntry[] = [
     tagline: 'Teoria + mini-curso PT'
   },
   {
-    id: 'dl',
-    slug: 'dl',
-    title: 'Downloads',
-    icon: '📥',
-    accent: '#f59e0b',
-    description: 'PDF, DOCX, ZIP, áudio',
-    href: '/dl/',
-    tagline: 'Materiais para guardar'
-  },
-  {
     id: 'secrets',
     slug: 'secrets',
     title: 'Secrets',
