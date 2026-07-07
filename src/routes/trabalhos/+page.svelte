@@ -26,6 +26,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
   import { locale, t } from 'svelte-i18n';
   import { liveQuery, type Subscription } from 'dexie';
   import { db } from '$lib/state/db';
@@ -206,6 +207,9 @@
   <header class="hero">
     <h1>{$t('trabalhos.hero.title', { default: '📝 Trabalhos' })}</h1>
     <p class="sub">{$t('trabalhos.hero.sub', { default: 'Trabalhos e entregas com prazos — começa pelo que tem deadline mais próximo.' })}</p>
+    <a class="new-btn" href="/trabalhos/novo/">
+      <span aria-hidden="true">＋</span> {$t('trabalhos.novo.cta', { default: 'Novo trabalho' })}
+    </a>
   </header>
 
   <nav class="crumbs" aria-label={$t('trabalhos.crumbs.aria', { default: 'Caminho de navegação' })}>
@@ -272,6 +276,8 @@
         emoji="📭"
         title={$t('empty.trabalhos.title')}
         description={$t('empty.trabalhos.desc')}
+        ctaLabel={$t('trabalhos.novo.cta', { default: 'Novo trabalho' })}
+        onCta={() => goto('/trabalhos/novo/')}
       />
     {:else if visible.length === 0}
       <EmptyState
@@ -340,6 +346,33 @@
     color: var(--txt2);
     margin: 0;
     font-size: 1rem;
+  }
+  .new-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: var(--touch-target, 44px);
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-md, 0.5rem);
+    background: var(--accent, #ec4899);
+    color: var(--on-accent, #fff);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .new-btn span {
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+  .new-btn:hover,
+  .new-btn:focus-visible {
+    background: var(--accent-hover, #db2777);
+    outline: none;
+  }
+  .new-btn:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #ec4899) 40%, transparent);
   }
   .crumbs {
     display: flex;
