@@ -100,11 +100,8 @@
   import { getSession } from '$lib/auth/session';
   import { getChatToken, setChatToken, clearChatToken, type ChatProfile } from '$lib/chat/client';
   import { couple, refreshCoupleEnabled } from '$lib/couple/couple-store.svelte';
-  import {
-      verifyAgainstEffectiveHashes,
-      setPassword,
-      type ProfileId
-  } from '$lib/auth/hash';
+  import { verifyPassword, hashPassword, type ProfileId } from '$lib/auth/hash';
+  import { getMember, updateMember } from '$lib/space/registry-db';
   import { showToast } from '$lib/components/events';
   import { Button } from '$lib/components/ui';
   import {
@@ -657,13 +654,19 @@
     }
     resetBusy = true;
     try {
-      const verified = await verifyAgainstEffectiveHashes(cur);
-      if (!verified || verified.profile !== profile) {
+      // Multi-tenant: the password lives on the member's registry secret (PBKDF2
+      // salt+hash), not the retired world-readable hashes.json. Verify the
+      // current password against it, then persist a freshly-derived hash.
+      const member = await getMember(profile);
+      if (!member?.secret || !(await verifyPassword(cur, member.secret.salt, member.secret.hash))) {
         showToast($t('settings.reset_password.error.wrong_current'));
         resetBusy = false;
         return;
       }
-      await setPassword(profile, nxt);
+      const saltBytes = crypto.getRandomValues(new Uint8Array(16));
+      const salt = Array.from(saltBytes, (b) => b.toString(16).padStart(2, '0')).join('');
+      const hash = await hashPassword(nxt, salt);
+      await updateMember(profile, { secret: { salt, hash } });
       showToast($t('settings.reset_password.success'));
       // Close modal + clear inputs on success.
       resetOpen = false;

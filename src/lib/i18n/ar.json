@@ -3833,6 +3833,7 @@
   "splash.choose.subtitle": "من أنت؟",
   "splash.credit": "❤️ صُنع بحب",
   "splash.error.empty": "الرجاء إدخال كلمة المرور",
+  "splash.error.no_user": "أدخل اسم المستخدم.",
   "splash.error.generic": "خطأ: {msg}",
   "splash.error.wrong": "كلمة المرور خاطئة ({n}/3)",
   "splash.lockout": "🔒 محاولات كثيرة جداً. حاول مرة أخرى خلال {n} ثانية.",

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { verifyAgainstHashes, verifyPassword, type ProfileId } from '$lib/auth/hash';
+  import { verifyPassword, type ProfileId } from '$lib/auth/hash';
   import { setSession, isLockedOut, recordFailedAttempt, resetAttempts, getSession, registerKnownMember } from '$lib/auth/session';
   import { listMembers } from '$lib/space/registry-db';
   import type { Membership } from '$lib/space/types';
@@ -204,16 +204,6 @@
       };
     });
 
-  function inferProfileFromPassOrder(rawPassword: string): ProfileId | null {
-    const submitted = rawPassword.trim();
-
-    if (submitted === 'princesa') return 'daniel';
-    if (submitted === 'fofinho') return 'fatma';
-    if (submitted === 'I have the best boyfriend in the world') return 'fatma';
-
-    return null;
-  }
-
   async function handleSubmit(e: Event) {
     e.preventDefault();
     if (locked.locked || loading) return;
@@ -228,17 +218,13 @@
     error = '';
 
     // ── Lock-screen passphrase (opt-in, PBKDF2) — checked FIRST ──
-    // If the user configured an ACTIVE lock screen WITH a passphrase, that
-    // passphrase is an ADDITIONAL way to unlock. It is verified with PBKDF2
-    // (verifyLockPassphrase), never a plaintext compare, and opens the profile
-    // that CREATED the lock screen. When it doesn't match we fall straight
-    // through to the real-password path below — nothing there is weakened.
-    // Lockout is already enforced by the guard at the top of this function.
+    // An ACTIVE lock screen WITH a passphrase adds an extra way in, verified
+    // with PBKDF2, opening the profile that created it.
     if (activeLock && lockHasPassphrase) {
       try {
         if (await verifyLockPassphrase(activeLock.id, password)) {
           const profile: ProfileId = activeLock.ownerProfile ?? 'fatma';
-          setSession(profile, profile === 'daniel' ? 'daniel' : 'primary');
+          setSession(profile, 'primary');
           resetAttempts(profile);
           password = '';
           if (typeof location !== 'undefined') location.href = '/';
@@ -250,13 +236,10 @@
       }
     }
 
-    const inferredProfile = inferProfileFromPassOrder(password);
-
-    // Love Lock triggers are intentionally NOT pass-order passwords. They must
-    // be allowed through before the pass-order guard, otherwise phrases like
-    // "Sick" / "sad" / "love" are rejected as an invalid profile password
-    // before the mood lock code ever runs.
-    if (!inferredProfile) {
+    // ── Emotional phrase (mood / love-lock) — themes the app, NEVER grants a
+    //    session. Checked before member auth (and only with no username typed)
+    //    so "love"/"sad"/"sick" aren't treated as a failed password. ──
+    if (!username.trim()) {
       const loveKind = detectMoodTrigger(password);
       if (loveKind) {
         const newLock = await activateMood(loveKind);
@@ -265,92 +248,50 @@
         loading = false;
         return;
       }
-
-      // A wrong guess against an ACTIVE lock-screen passphrase burns a failed
-      // attempt (shared lockout) so the passphrase can't be brute-forced.
-      // Without an active lock passphrase this stays unchanged — arbitrary
-      // wrong strings still don't burn attempts.
-      if (activeLock && lockHasPassphrase) {
-        const r = recordFailedAttempt(activeLock.ownerProfile ?? selectedProfile);
-        if (r.locked) locked = { locked: true, remainingMs: r.remainingMs };
-      }
-
-      error = $t('splash.wrong_password', { default: 'pass-order invalida' });
-      password = '';
-      shake = true;
-      setTimeout(() => (shake = false), 500);
-      loading = false;
-      return;
     }
-    selectedProfile = inferredProfile;
 
-    // V10.1 — a filled-in username that contradicts the inferred profile is
-    // rejected with a distinct copy (no hint about which profile the
-    // password belongs to). Empty username keeps the legacy flow.
+    // ── Member login: username + password against the LOCAL registry (PBKDF2). ──
+    // This replaces the old hardcoded pass-order + world-readable hashes.json
+    // (which shipped two real people's reusable credentials to every visitor).
+    // Any onboarded member on this device signs in with their name + password.
     const typedUser = username.trim().toLowerCase();
-    if (typedUser && typedUser !== 'fatma' && typedUser !== 'daniel') {
-      error = $t('splash.wrong_user', { default: 'Utilizador desconhecido — tenta "fatma" ou "daniel".' });
+    if (!typedUser) {
+      error = $t('splash.error.no_user', { default: 'Escreve o teu nome de utilizador.' });
       shake = true;
       setTimeout(() => (shake = false), 500);
       loading = false;
       return;
     }
-    if (typedUser && typedUser !== inferredProfile) {
-      error = $t('splash.user_mismatch', { default: 'Esse utilizador e essa palavra-passe não combinam.' });
+    try {
+      const members = await listMembers();
+      const member = members.find(
+        (m) => m.status === 'active' && !!m.secret && m.displayName.trim().toLowerCase() === typedUser
+      );
+      if (member?.secret && (await verifyPassword(password, member.secret.salt, member.secret.hash))) {
+        registerKnownMember(member.id);
+        setSession(member.id as ProfileId, 'primary');
+        resetAttempts(member.id as ProfileId);
+        password = '';
+        if (typeof location !== 'undefined') location.href = '/';
+        else await goto('/');
+        return;
+      }
+      // Wrong username/password — burn a failed attempt (PBKDF2 already makes
+      // each guess expensive; this adds a lockout on top).
+      const bucket = (member?.id ?? typedUser) as ProfileId;
+      const r = recordFailedAttempt(bucket);
+      error = $t('splash.wrong_password', { default: 'Nome de utilizador ou palavra-passe errados.' });
       password = '';
       shake = true;
       setTimeout(() => (shake = false), 500);
+      if (r.locked) locked = { locked: true, remainingMs: r.remainingMs };
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      error = $t('splash.error.generic', { values: { msg } });
+    } finally {
       loading = false;
-      return;
     }
-
-        try {
-          // ── PBKDF2 check FIRST ──
-          // Critical ordering: if Fatma's real password happens to contain the
-          // words "love" or "sad" (e.g. "LoveFofinho2026!"), we must NOT intercept
-          // it as a love-lock trigger. Only if PBKDF2 rejects do we check the
-          // emotional phrase — at which point we know the user typed it on purpose
-          // and the real password isn't it.
-          const authResult = await verifyAgainstHashes(password);
-                    if (authResult && authResult.profile === selectedProfile) {
-                      setSession(authResult.profile, authResult.method);
-                      resetAttempts(authResult.profile);
-                      if (typeof location !== 'undefined') location.href = '/';
-                      else await goto('/');
-                      return;
-                    }
-
-          // ── Love Lock check SECOND ──
-          // Only fires when the password was wrong AND looks like an emotional
-          // declaration. "love" alone, "sad" alone, "i love you", "amo-te" — all
-          // trigger here. We DO NOT burn a failed-attempt counter (this is
-          // emotional, not adversarial).
-          const loveKind = detectMoodTrigger(password);
-                    if (loveKind) {
-                      const newLock = await activateMood(loveKind);
-                      if (newLock) loveLockState = newLock;
-                      password = '';
-                      loading = false;
-                      return;
-                    }
-
-          // Known pass-order but failed auth — record attempt, show a generic
-          // pass-order error without exposing which profile was expected.
-          const attemptResult = recordFailedAttempt(selectedProfile);
-          error = $t('splash.wrong_password', { default: 'pass-order invalida' });
-          password = '';
-          shake = true;
-          setTimeout(() => (shake = false), 500);
-          if (attemptResult.locked) {
-            locked = { locked: true, remainingMs: attemptResult.remainingMs };
-          }
-        } catch (e) {
-          const msg = e instanceof Error ? e.message : String(e);
-          error = $t('splash.error.generic', { values: { msg } });
-        } finally {
-          loading = false;
-        }
-      }
+  }
 
   async function handleLoveUnlock() {
       if (loveLockState) acknowledgeMoodIntro(loveLockState);

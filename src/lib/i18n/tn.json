@@ -3835,6 +3835,7 @@
   "splash.choose.subtitle": "Chkoun enti ?",
   "splash.credit": "❤️ Ma3moul bel 7ob",
   "splash.error.empty": "Tapez un mot de passe",
+  "splash.error.no_user": "Oktob esmek.",
   "splash.error.generic": "Mochkel: {msg}",
   "splash.error.wrong": "Mot de passe faux ({n}/3)",
   "splash.lockout": "🔒 Barcha attempts. 3awed jarreb ba3d {n}s.",

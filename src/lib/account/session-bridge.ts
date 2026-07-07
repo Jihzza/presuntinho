@@ -1,23 +1,20 @@
 // Session bridge — turns a real Supabase login (email/password, Google, later
 // Saikan ID) into the app's local profile session, so the rest of the app
-// (couple, chat, points, route guards) keeps working unchanged while identity
-// moves to real accounts.
+// (couple, chat, points, route guards) keeps working while identity lives on
+// real accounts.
 //
-// The couple app's internal identity is a ProfileId ('fatma' | 'daniel'). We map
-// the signed-in account's @handle to that profile: 'fatma' → fatma, anything
-// else → daniel. That covers the launch couple exactly; multi-couple onboarding
-// (arbitrary handles → per-couple profile slots) is the couple-space model's job
-// and is tracked separately.
+// MULTI-TENANT: each account opens its OWN local profile/IndexedDB, keyed by the
+// account id (uuid). The old code collapsed every non-'fatma' handle onto the
+// single shared 'daniel' profile, so any two real users read/wrote the same
+// local DB and collided on the couple backend — that made real accounts
+// meaningless. Now account.id is the ProfileId, exactly like the local
+// onboarding path (initStores(uuid)); couples are formed as uuid spaces, not by
+// sharing a profile slot.
 
 import type { ProfileId } from '$lib/auth/hash';
 import { getSession, setSession, clearSession, registerKnownMember } from '$lib/auth/session';
 import { resetStores } from '$lib/state/stores';
 import { getAuthSession, getMyAccount, signOut, accountsEnabled } from './auth';
-
-/** Map an account @handle to the app's local ProfileId. */
-function handleToProfile(handle: string): ProfileId {
-  return handle === 'fatma' ? 'fatma' : 'daniel';
-}
 
 /** True when a Supabase auth session exists (signed in via email/Google/etc.). */
 export async function hasSupabaseSession(): Promise<boolean> {
@@ -43,9 +40,11 @@ export async function bridgeSupabaseSession(): Promise<BridgeResult> {
   if (getSession()) return 'bridged';
   const account = await getMyAccount();
   if (!account?.handle) return 'needs-handle';
-  const profile = handleToProfile(account.handle);
+  // Each account = its own local profile (its uuid), so two real users never
+  // share a database.
+  const profile = account.id as ProfileId;
   registerKnownMember(profile);
-  setSession(profile, profile === 'fatma' ? 'primary' : 'daniel');
+  setSession(profile, 'primary');
   return 'bridged';
 }
 
