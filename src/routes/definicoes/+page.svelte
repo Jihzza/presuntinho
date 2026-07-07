@@ -48,6 +48,16 @@
     requestReminderPermission,
     notificationPermission
   } from '$lib/habitos/reminders';
+  import {
+    listLockScreens,
+    createLockScreen,
+    deleteLockScreen,
+    setActiveLockScreen,
+    getActiveLockScreenId,
+    LOCKSCREEN_EVENT,
+    type LockScreen
+  } from '$lib/lockscreen/lockscreen';
+  import Lock from 'lucide-svelte/icons/lock';
   import Key from 'lucide-svelte/icons/key-round';
   import Trash from 'lucide-svelte/icons/trash-2';
   import Download from 'lucide-svelte/icons/download';
@@ -466,6 +476,78 @@
     } else {
       showToast($t('settings.reminders.denied', { default: 'Precisas de permitir notificações no browser.' }));
     }
+  }
+
+  // ----- Lock screens (V11 — repurposed love-lock as a couple feature) -----
+  let lockScreens = $state<LockScreen[]>([]);
+  let activeLockId = $state<string | null>(null);
+  let lockCreating = $state(false);
+  let lockForm = $state({ title: '', message: '', emoji: '🔒', passphrase: '', targetHandle: '' });
+  let lockError = $state<string | null>(null);
+  let lockSaving = $state(false);
+  let confirmDeleteLock = $state<string | null>(null);
+
+  function refreshLocks(): void {
+    lockScreens = listLockScreens();
+    activeLockId = getActiveLockScreenId();
+  }
+  onMount(() => {
+    refreshLocks();
+    const onChange = () => refreshLocks();
+    window.addEventListener(LOCKSCREEN_EVENT, onChange);
+    return () => window.removeEventListener(LOCKSCREEN_EVENT, onChange);
+  });
+
+  async function submitLock(): Promise<void> {
+    lockError = null;
+    if (!lockForm.title.trim()) {
+      lockError = $t('settings.lockscreen.err_title', { default: 'Dá um título ao ecrã de bloqueio.' });
+      return;
+    }
+    lockSaving = true;
+    try {
+      await createLockScreen({
+        title: lockForm.title,
+        message: lockForm.message,
+        emoji: lockForm.emoji,
+        passphrase: lockForm.passphrase || undefined,
+        targetHandle: lockForm.targetHandle || undefined,
+        ownerProfile: getSession()?.profile
+      });
+      lockForm = { title: '', message: '', emoji: '🔒', passphrase: '', targetHandle: '' };
+      lockCreating = false;
+      refreshLocks();
+      showToast($t('settings.lockscreen.created', { default: 'Ecrã de bloqueio criado 🔒' }));
+    } catch (e) {
+      console.error('[definicoes] createLockScreen failed', e);
+      lockError = $t('settings.lockscreen.err_save', { default: 'Não consegui guardar. Tenta de novo.' });
+    } finally {
+      lockSaving = false;
+    }
+  }
+
+  function toggleActiveLock(id: string): void {
+    setActiveLockScreen(activeLockId === id ? null : id);
+    refreshLocks();
+    showToast(
+      activeLockId === id
+        ? $t('settings.lockscreen.activated', { default: 'Ecrã de bloqueio ativado.' })
+        : $t('settings.lockscreen.deactivated', { default: 'Ecrã de bloqueio desativado.' })
+    );
+  }
+
+  function removeLock(id: string): void {
+    if (confirmDeleteLock !== id) {
+      confirmDeleteLock = id;
+      setTimeout(() => {
+        if (confirmDeleteLock === id) confirmDeleteLock = null;
+      }, 4000);
+      return;
+    }
+    confirmDeleteLock = null;
+    deleteLockScreen(id);
+    refreshLocks();
+    showToast($t('settings.lockscreen.deleted', { default: 'Ecrã de bloqueio apagado.' }));
   }
 
   // ----- Fun mode (just a checkbox, persists via existing store) -----
@@ -1306,6 +1388,80 @@
         <p class="section-sub">{$t('settings.reminders.hint_denied', { default: 'As notificações estão bloqueadas nas definições do browser.' })}</p>
       {:else if remindersPerm === 'unsupported'}
         <p class="section-sub">{$t('settings.reminders.hint_unsupported', { default: 'Este browser não suporta notificações.' })}</p>
+      {/if}
+    </section>
+
+    <!-- ============ Lock screens (V11) ============ -->
+    <section class="card" aria-labelledby="lockscreen-h">
+      <div class="card-head">
+        <span class="icon-wrap"><Lock size={18} /></span>
+        <h2 id="lockscreen-h">{$t('settings.lockscreen.title', { default: 'Ecrãs de bloqueio' })}</h2>
+      </div>
+      <p class="section-sub">{$t('settings.lockscreen.sub', { default: 'Cria um ecrã de bloqueio com uma mensagem carinhosa. Se lhe deres uma palavra-passe, essa palavra-passe também abre a app — sem substituir a tua palavra-passe normal.' })}</p>
+
+      {#if lockScreens.length > 0}
+        <ul class="lock-list">
+          {#each lockScreens as ls (ls.id)}
+            <li class="lock-item" class:active={activeLockId === ls.id}>
+              <span class="lock-emoji" aria-hidden="true">{ls.emoji}</span>
+              <span class="lock-body">
+                <strong>{ls.title}</strong>
+                {#if ls.message}<small>{ls.message}</small>{/if}
+                <span class="lock-tags">
+                  {#if ls.passphraseHash}<span class="lock-tag">🔑 {$t('settings.lockscreen.has_pass', { default: 'com palavra-passe' })}</span>{/if}
+                  {#if ls.targetHandle}<span class="lock-tag">@{ls.targetHandle}</span>{/if}
+                  {#if activeLockId === ls.id}<span class="lock-tag on">{$t('settings.lockscreen.active', { default: 'ativo' })}</span>{/if}
+                </span>
+              </span>
+              <span class="lock-actions">
+                <Button variant="ghost" size="sm" onclick={() => toggleActiveLock(ls.id)}>
+                  {activeLockId === ls.id ? $t('settings.lockscreen.deactivate', { default: 'Desativar' }) : $t('settings.lockscreen.activate', { default: 'Ativar' })}
+                </Button>
+                <button type="button" class="lock-del" class:confirm={confirmDeleteLock === ls.id} onclick={() => removeLock(ls.id)} aria-label={$t('settings.lockscreen.delete', { default: 'Apagar ecrã de bloqueio' })}>
+                  {confirmDeleteLock === ls.id ? $t('settings.lockscreen.delete_confirm', { default: 'Confirmar?' }) : '🗑️'}
+                </button>
+              </span>
+            </li>
+          {/each}
+        </ul>
+      {/if}
+
+      {#if lockCreating}
+        <form class="lock-form" onsubmit={(e) => { e.preventDefault(); void submitLock(); }}>
+          <label>
+            <span>{$t('settings.lockscreen.f_emoji', { default: 'Emoji' })}</span>
+            <input type="text" bind:value={lockForm.emoji} maxlength="4" class="lock-emoji-input" />
+          </label>
+          <label>
+            <span>{$t('settings.lockscreen.f_title', { default: 'Título' })}</span>
+            <input type="text" bind:value={lockForm.title} maxlength="60" placeholder={$t('settings.lockscreen.f_title_ph', { default: 'Ex.: Para a minha pessoa favorita' })} />
+          </label>
+          <label>
+            <span>{$t('settings.lockscreen.f_message', { default: 'Mensagem' })}</span>
+            <input type="text" bind:value={lockForm.message} maxlength="140" placeholder={$t('settings.lockscreen.f_message_ph', { default: 'Uma frase fofa…' })} />
+          </label>
+          <label>
+            <span>{$t('settings.lockscreen.f_pass', { default: 'Palavra-passe (opcional)' })}</span>
+            <input type="password" bind:value={lockForm.passphrase} autocomplete="new-password" placeholder={$t('settings.lockscreen.f_pass_ph', { default: 'Deixa vazio para só personalizar' })} />
+          </label>
+          <label>
+            <span>{$t('settings.lockscreen.f_handle', { default: '@handle do parceiro (opcional)' })}</span>
+            <input type="text" bind:value={lockForm.targetHandle} maxlength="20" placeholder="@…" />
+          </label>
+          {#if lockError}<p class="form-error" role="alert">{lockError}</p>{/if}
+          <div class="lock-form-actions">
+            <Button type="submit" disabled={lockSaving}>
+              {lockSaving ? $t('common.saving', { default: 'A guardar…' }) : $t('settings.lockscreen.save', { default: 'Criar ecrã de bloqueio' })}
+            </Button>
+            <Button variant="ghost" onclick={() => { lockCreating = false; lockError = null; }}>
+              {$t('common.cancel', { default: 'Cancelar' })}
+            </Button>
+          </div>
+        </form>
+      {:else}
+        <Button variant="secondary" onclick={() => (lockCreating = true)}>
+          + {$t('settings.lockscreen.new', { default: 'Novo ecrã de bloqueio' })}
+        </Button>
       {/if}
     </section>
 
@@ -2158,6 +2314,27 @@
       max-width: 100%;
     }
     .seg-currency button.active .cur-label { color: var(--txt2); }
+
+    /* Lock screens (V11) */
+    .lock-list { list-style: none; margin: 0 0 0.75rem; padding: 0; display: grid; gap: 0.5rem; }
+    .lock-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.7rem; background: var(--card); border: 1px solid var(--border); border-radius: 0.7rem; }
+    .lock-item.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--card)); }
+    .lock-emoji { font-size: 1.6rem; line-height: 1; flex-shrink: 0; }
+    .lock-body { flex: 1; min-width: 0; display: grid; gap: 0.1rem; }
+    .lock-body strong { color: var(--txt); }
+    .lock-body small { color: var(--txt2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .lock-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.15rem; }
+    .lock-tag { font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 999px; background: color-mix(in srgb, var(--txt) 8%, transparent); color: var(--txt2); }
+    .lock-tag.on { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent); font-weight: 700; }
+    .lock-actions { display: flex; align-items: center; gap: 0.3rem; flex-shrink: 0; }
+    .lock-del { min-width: 44px; min-height: 44px; background: transparent; border: 0; cursor: pointer; border-radius: 0.5rem; color: var(--txt2); font-size: 1.05rem; }
+    .lock-del.confirm { background: color-mix(in srgb, var(--error) 18%, transparent); color: var(--error); font-size: 0.8rem; padding: 0 0.5rem; }
+    .lock-form { display: grid; gap: 0.6rem; margin-top: 0.5rem; }
+    .lock-form label { display: grid; gap: 0.25rem; }
+    .lock-form label > span { font-size: 0.82rem; color: var(--txt2); }
+    .lock-form input { width: 100%; padding: 0.55rem 0.65rem; box-sizing: border-box; background: var(--bg-elev); border: 1px solid var(--border-strong); border-radius: 0.5rem; color: var(--txt); font: inherit; }
+    .lock-emoji-input { max-width: 5rem; text-align: center; font-size: 1.3rem; }
+    .lock-form-actions { display: flex; gap: 0.5rem; margin-top: 0.25rem; }
   /* Action buttons now come from the shared $lib/components/ui Button
      primitive (token-driven, theme-aware). */
   .data-actions {

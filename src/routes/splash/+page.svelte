@@ -19,6 +19,14 @@
     isMoodIntroAcknowledged,
     type ActiveMood,
   } from '$lib/mood';
+  import {
+    getActiveLockScreen,
+    verifyLockPassphrase,
+    verifyHandleUnlock,
+    lockScreenHasPassphrase,
+    LOCKSCREEN_EVENT,
+    type LockScreen,
+  } from '$lib/lockscreen/lockscreen';
   // svelte-i18n 4 ships `$t` as the message-formatter store.  In a
   // <script lang="ts"> block we call it as `$t(...)` via Svelte's
   // store auto-subscription — `t(...)` would try to call the store
@@ -36,6 +44,21 @@
   let loading = $state(false);
   let googleBusy = $state(false);
   let selectedProfile = $state<ProfileId>('fatma');
+
+  // ── Lock screens (opt-in couple feature) ──
+  // When a lock screen is ACTIVE it personalizes this gate (its emoji/title/
+  // message replace the generic copy) and, if it has a passphrase, that
+  // passphrase becomes an ADDITIONAL way in — verified with PBKDF2. It never
+  // replaces or weakens the real password path below.
+  let activeLock = $state<LockScreen | null>(null);
+  const lockHasPassphrase = $derived(lockScreenHasPassphrase(activeLock));
+
+  // Login via a partner @handle + a lock-screen passphrase (couple "lock a
+  // connected account" flow). Local-only for now — see lockscreen.ts.
+  let tagHandle = $state('');
+  let tagPass = $state('');
+  let tagError = $state('');
+  let tagLoading = $state(false);
 
   /** Start "Continue with Google" (redirects to Google, returns to /splash/). */
   async function onGoogle(): Promise<void> {
@@ -124,6 +147,12 @@
       void listMembers()
         .then((ms) => (extraMembers = ms.filter((m) => !m.legacyProfileId && m.status === 'active' && !!m.secret)))
         .catch(() => undefined);
+      // Surface the ACTIVE lock screen (if any) so the gate renders its custom
+      // emoji/title/message and can accept its passphrase. Sync localStorage
+      // read; kept fresh if it changes in another tab.
+      activeLock = getActiveLockScreen();
+      const onLockChanged = () => (activeLock = getActiveLockScreen());
+      window.addEventListener(LOCKSCREEN_EVENT, onLockChanged);
       // Async love-lock fetch — onMount itself isn't async so we void the promise.
       void (async () => {
         // If a Love Lock is active (persisted from a previous tab or refresh),
@@ -169,6 +198,7 @@
       }
       return () => {
         unsubLocale();
+        window.removeEventListener(LOCKSCREEN_EVENT, onLockChanged);
         if (interval) clearInterval(interval);
         if (lovePoll) clearInterval(lovePoll);
       };
@@ -194,10 +224,33 @@
       return;
     }
 
-    const inferredProfile = inferProfileFromPassOrder(password);
-
     loading = true;
     error = '';
+
+    // ── Lock-screen passphrase (opt-in, PBKDF2) — checked FIRST ──
+    // If the user configured an ACTIVE lock screen WITH a passphrase, that
+    // passphrase is an ADDITIONAL way to unlock. It is verified with PBKDF2
+    // (verifyLockPassphrase), never a plaintext compare, and opens the profile
+    // that CREATED the lock screen. When it doesn't match we fall straight
+    // through to the real-password path below — nothing there is weakened.
+    // Lockout is already enforced by the guard at the top of this function.
+    if (activeLock && lockHasPassphrase) {
+      try {
+        if (await verifyLockPassphrase(activeLock.id, password)) {
+          const profile: ProfileId = activeLock.ownerProfile ?? 'fatma';
+          setSession(profile, profile === 'daniel' ? 'daniel' : 'primary');
+          resetAttempts(profile);
+          password = '';
+          if (typeof location !== 'undefined') location.href = '/';
+          else await goto('/');
+          return;
+        }
+      } catch {
+        /* fall through to the normal password flow */
+      }
+    }
+
+    const inferredProfile = inferProfileFromPassOrder(password);
 
     // Love Lock triggers are intentionally NOT pass-order passwords. They must
     // be allowed through before the pass-order guard, otherwise phrases like
@@ -211,6 +264,15 @@
         password = '';
         loading = false;
         return;
+      }
+
+      // A wrong guess against an ACTIVE lock-screen passphrase burns a failed
+      // attempt (shared lockout) so the passphrase can't be brute-forced.
+      // Without an active lock passphrase this stays unchanged — arbitrary
+      // wrong strings still don't burn attempts.
+      if (activeLock && lockHasPassphrase) {
+        const r = recordFailedAttempt(activeLock.ownerProfile ?? selectedProfile);
+        if (r.locked) locked = { locked: true, remainingMs: r.remainingMs };
       }
 
       error = $t('splash.wrong_password', { default: 'pass-order invalida' });
@@ -292,18 +354,54 @@
 
   async function handleLoveUnlock() {
       if (loveLockState) acknowledgeMoodIntro(loveLockState);
-      // Mood passwords are meant to adapt the whole app experience, not leave
-      // Fatma stuck on a half-authenticated Home. Grant the normal Fatma
-      // session when she accepts the mood intro so footer navigation, stores,
-      // and route guards keep working while the mood remains active.
-      if (!getSession()) {
-        setSession('fatma', 'secret');
-        resetAttempts('fatma');
-      }
       loveLockState = null;
-      // The intro screen is acknowledged, but the mood/vibe remains active in
-      // the app until she presses the recovery button in the mood chip.
-      void goto('/');
+      // SECURITY: acknowledging a mood must NOT grant a session. The old code
+      // called setSession('fatma','secret') here, so typing 'love'/'sad'/'sick'
+      // at the splash logged anyone straight in — exactly the hole this feature
+      // closes. The mood is still acknowledged and persists (it themes the app),
+      // but entry now requires the REAL password or a user-configured
+      // lock-screen passphrase. If a session already exists (mood set from
+      // inside the app), continue to Home; otherwise fall back to the splash
+      // gate so the user logs in properly.
+      if (getSession()) {
+        void goto('/');
+      }
+      // else: loveLockState = null reveals the password / lock gate below.
+    }
+
+  // Login via a partner @handle + a lock-screen passphrase. Matches an ACTIVE
+  // lock screen whose targetHandle + passphrase were configured on THIS device
+  // (local-only for now — cross-device delivery needs the Supabase couple sync,
+  // see lockscreen.ts). Kept behind the same lockout guard as the main gate.
+  async function handleTagUnlock(e: Event) {
+      e.preventDefault();
+      if (tagLoading || locked.locked) return;
+      if (!tagHandle.trim() || !tagPass.trim()) {
+        tagError = $t('splash.lockscreen.tag.empty', { default: 'Escreve o @handle e a palavra-passe.' });
+        return;
+      }
+      tagLoading = true;
+      tagError = '';
+      try {
+        const match = await verifyHandleUnlock(tagHandle, tagPass);
+        if (match) {
+          const profile: ProfileId = match.ownerProfile ?? 'fatma';
+          setSession(profile, profile === 'daniel' ? 'daniel' : 'primary');
+          resetAttempts(profile);
+          if (typeof location !== 'undefined') location.href = '/';
+          else await goto('/');
+          return;
+        }
+        // Wrong @handle/passphrase burns an attempt (shared lockout).
+        const r = recordFailedAttempt(activeLock?.ownerProfile ?? 'fatma');
+        if (r.locked) locked = { locked: true, remainingMs: r.remainingMs };
+        tagError = $t('splash.lockscreen.tag.wrong', { default: 'Não corresponde a nenhum ecrã de bloqueio ativo.' });
+        tagPass = '';
+      } catch {
+        tagError = $t('splash.lockscreen.tag.wrong', { default: 'Não corresponde a nenhum ecrã de bloqueio ativo.' });
+      } finally {
+        tagLoading = false;
+      }
     }
 
   function formatRemaining(ms: number): string {
@@ -325,10 +423,19 @@
     />
   {:else}
   <div class="card" class:shake>
-    <!-- Marca: no splash (pré-login) é sempre o Presuntinho a dar as boas-vindas. -->
-    <div class="mascot"><MascotAvatar mascot="porquinho" pose="wave" size={104} entrance eager /></div>
-        <h1>{$t('splash.title')}</h1>
-        <p class="sub">{$t('splash.subtitle')}</p>
+    {#if activeLock}
+      <!-- An ACTIVE lock screen personalizes the gate: its emoji/title/message
+           replace the generic Presuntinho welcome. The real password form stays
+           exactly as-is underneath — this only swaps the copy. -->
+      <div class="mascot" aria-hidden="true">{activeLock.emoji}</div>
+      <h1>{activeLock.title}</h1>
+      <p class="sub">{activeLock.message}</p>
+    {:else}
+      <!-- Marca: no splash (pré-login) é sempre o Presuntinho a dar as boas-vindas. -->
+      <div class="mascot"><MascotAvatar mascot="porquinho" pose="wave" size={104} entrance eager /></div>
+      <h1>{$t('splash.title')}</h1>
+      <p class="sub">{$t('splash.subtitle')}</p>
+    {/if}
 
         {#if locked.locked}
           <p class="lockout">{$t('splash.lockout', { values: { n: formatRemaining(locked.remainingMs) } })}</p>

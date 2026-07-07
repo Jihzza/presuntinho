@@ -2,7 +2,7 @@
   import '../app.css';
   import { page } from '$app/state';
   import { goto, afterNavigate } from '$app/navigation';
-  import { getSession, setSession } from '$lib/auth/session';
+  import { getSession } from '$lib/auth/session';
   import { initStores, markVisited } from '$lib/state/stores';
   import Confetti from '$lib/components/Confetti.svelte';
   import Toast from '$lib/components/Toast.svelte';
@@ -147,24 +147,18 @@
 
     async function refreshMood(): Promise<void> {
       const mood = await readActiveMood();
-      const acknowledgedMood = mood && isMoodIntroAcknowledged(mood) ? mood : null;
-      activeMood = acknowledgedMood;
-      if (acknowledgedMood && !getSession()) {
-        setSession('fatma', 'secret');
-        session = getSession();
-        if (session && !storesReady) {
-          await initStores(session.profile);
-          storesReady = true;
-        }
-      }
+      // SECURITY (lock-screen feature): a mood must NEVER create a session.
+      // The old code called setSession('fatma','secret') here, so typing a
+      // mood phrase ('love'/'sad'/'sick') at the splash silently logged you in
+      // — a real hole. The mood now only THEMES the app, and only once a real
+      // session already exists (the PBKDF2 password or a user-configured
+      // lock-screen passphrase). Mood activation itself is untouched.
+      activeMood = mood && isMoodIntroAcknowledged(mood) ? mood : null;
     }
     const onMoodChanged = (event: Event) => {
       const mood = event instanceof CustomEvent ? (event.detail as ActiveMood | null) : null;
+      // SECURITY: mood changes never grant a session either (see refreshMood).
       activeMood = mood && isMoodIntroAcknowledged(mood) ? mood : null;
-      if (activeMood && !getSession()) {
-        setSession('fatma', 'secret');
-        session = getSession();
-      }
       void refreshMood();
     };
     void refreshMood();
