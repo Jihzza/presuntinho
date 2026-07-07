@@ -2,4 +2,10 @@ User-agent: *
 Allow: /
 Disallow: /splash/
 Disallow: /legacy/
+Disallow: /secrets/
+Disallow: /case/
+Disallow: /course/
+Disallow: /walk/
+Disallow: /write/
+Disallow: /pt/
 Sitemap: https://presuntinho.netlify.app/sitemap.xml
