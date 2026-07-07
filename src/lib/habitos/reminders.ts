@@ -48,6 +48,34 @@ export async function requestReminderPermission(): Promise<NotificationPermissio
   }
 }
 
+/**
+ * Show a notification the way that actually works on the app's primary target.
+ * On installed Android/iOS PWAs the bare `new Notification()` constructor throws
+ * ("Illegal constructor") — they require ServiceWorkerRegistration.showNotification.
+ * So route through the SW registration when one exists, and only fall back to the
+ * constructor on desktop where there may be no controller. Returns whether it fired.
+ */
+export async function showAppNotification(title: string, opts: NotificationOptions): Promise<boolean> {
+  if (!notificationsSupported() || Notification.permission !== 'granted') return false;
+  try {
+    if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+      const reg = await navigator.serviceWorker.getRegistration();
+      if (reg) {
+        await reg.showNotification(title, opts);
+        return true;
+      }
+    }
+  } catch {
+    /* fall through to the constructor path (desktop) */
+  }
+  try {
+    new Notification(title, opts);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function todayKeyLocal(now: Date): string {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 }
@@ -130,16 +158,14 @@ export async function fireDueReminders(now: Date = new Date()): Promise<number> 
   for (const { habit } of due) {
     const key = `${habit.id}:${today}`;
     if (fired.has(key)) continue;
-    try {
-      new Notification(`${habit.icon} ${habit.name}`, {
-        body: 'Ainda não marcaste este hábito hoje 🐷',
-        tag: `habit-${habit.id}-${today}`,
-        icon: '/icons/icon-192.png'
-      });
+    const ok = await showAppNotification(`${habit.icon} ${habit.name}`, {
+      body: 'Ainda não marcaste este hábito hoje 🐷',
+      tag: `habit-${habit.id}-${today}`,
+      icon: '/icons/icon-192.png'
+    });
+    if (ok) {
       fired.add(key);
       count++;
-    } catch {
-      /* Notification constructor can throw on some engines — skip */
     }
   }
   saveFired(fired, today);

@@ -101,17 +101,17 @@
     text-align: center;
     gap: 0.5rem;
     padding: 1rem 0.75rem 0.85rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 0.75rem;
-    color: #fff;
+    color: var(--txt);
     min-height: 140px;
     overflow: hidden;
     transition: transform 0.15s, background 0.2s, border-color 0.2s;
   }
   .card.locked {
     opacity: 0.55;
-    background: rgba(255, 255, 255, 0.025);
+    background: var(--bg-elev);
   }
   .tier {
     position: absolute;
@@ -137,7 +137,7 @@
     color: #f4dd8b;
   }
   .card:not(.locked):hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--card-hover);
     transform: translateY(-2px);
   }
   .icon {
@@ -157,13 +157,13 @@
   .name {
     font-size: 0.95rem;
     margin: 0;
-    color: #fff;
+    color: var(--txt);
     font-weight: 600;
     line-height: 1.2;
   }
   .desc {
     font-size: 0.75rem;
-    color: #cbd5e1;
+    color: var(--txt2);
     margin: 0;
     line-height: 1.3;
   }
@@ -173,7 +173,7 @@
     justify-content: center;
     gap: 0.35rem;
     font-size: 0.7rem;
-    color: #94a3b8;
+    color: var(--txt3);
     margin-top: 0.25rem;
   }
   .status-dot {
@@ -183,11 +183,11 @@
     flex-shrink: 0;
   }
   .status-dot--on {
-    background: #10b981;
-    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    background: var(--success);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--success) 20%, transparent);
   }
   .status-dot--off {
-    background: #64748b;
+    background: var(--txt3);
   }
   .lock-overlay {
     position: absolute;

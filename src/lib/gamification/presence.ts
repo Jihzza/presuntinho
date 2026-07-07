@@ -12,6 +12,7 @@ import type { UpdateSpec } from 'dexie';
 import { db } from '$lib/state/db';
 import type { SettingsRow } from '$lib/state/db';
 import type { MascotEmotion } from './emotion';
+import { showAppNotification } from '$lib/habitos/reminders';
 
 type SettingsRowV10n = SettingsRow & { notifStreakEnabled?: boolean };
 
@@ -120,12 +121,9 @@ export async function setNotifStreakEnabled(value: boolean): Promise<void> {
 	}
 }
 
-/** Fire the streak-risk notification (caller handles once-per-day claiming). */
+/** Fire the streak-risk notification (caller handles once-per-day claiming).
+ *  Routed through the SW registration so it also fires on installed mobile PWAs,
+ *  where the bare `new Notification()` constructor throws. */
 export function showStreakRiskNotification(body: string): void {
-	if (!isNotifSupported() || Notification.permission !== 'granted') return;
-	try {
-		new Notification('Presuntinho 🔥', { body, tag: 'presuntinho-streak-risk' });
-	} catch (e) {
-		console.warn('[presence] notification failed', e);
-	}
+	void showAppNotification('Presuntinho 🔥', { body, tag: 'presuntinho-streak-risk' });
 }
