@@ -34,7 +34,7 @@
 
   import { db } from '$lib/state/db';
   import { xp, initStores } from '$lib/state/stores';
-  import { XP_CHANGED_EVENT, awardXP } from '$lib/state/xp-actions';
+  import { XP_CHANGED_EVENT } from '$lib/state/xp-actions';
   import { getSession } from '$lib/auth/session';
   import { getActivityStreak, getWeekActivity, type ActivityStreak, type WeekDayActivity } from '$lib/gamification/streak';
   import WeekCircles from '$lib/components/WeekCircles.svelte';
@@ -42,8 +42,8 @@
   import { hoursUntilMidnight, mascotEmotion, type MascotEmotion } from '$lib/gamification/emotion';
   import { minutesSinceLastAction, ACTION_PULSE_EVENT } from '$lib/gamification/gamification-events';
   import { DEFAULT_MASCOT_ID, getActiveMascot, MASCOT_CHANGED_EVENT } from '$lib/gamification/mascots';
-  import { setHabitLog } from '$lib/habitos';
-  import { showToast } from '$lib/components/events';
+  import { logHabit } from '$lib/habitos';
+  import { showToast, fireConfettiEvent } from '$lib/components/events';
   import { isMoodIntroAcknowledged, moodAffirmation, moodMicrocopy, readActiveMood, MOOD_META, type ActiveMood } from '$lib/mood';
   import {
     buildNotifications,
@@ -202,10 +202,19 @@
     if (!Number.isFinite(habitId) || markingHabitId) return;
     markingHabitId = item.id;
     try {
-      const { changed } = await setHabitLog(habitId, todayKey, true);
-      if (changed) {
-        await awardXP('habito_mark_done');
-        showToast(get(t)('hub.today.habit_done_toast', { default: 'Hábito marcado — boa! ✨' }), 2400);
+      // logHabit (não setHabitLog+awardXP manual) paga o +2 E os milestones de
+      // streak com badges — antes, marcar do hub nunca dava a recompensa dos
+      // marcos de sequência. É idempotente por dia (não farmável).
+      const result = await logHabit(habitId, todayKey);
+      if (result.logged) {
+        if (result.milestones.length > 0) {
+          const top = Math.max(...result.milestones);
+          fireConfettiEvent({ count: 140, origin: 'center' });
+          showToast(get(t)('habitos.toast.milestone', { values: { n: top }, default: `🔥 ${top} de streak! Estás imparável!` }));
+        } else {
+          fireConfettiEvent(45);
+          showToast(get(t)('hub.today.habit_done_toast', { default: 'Hábito marcado — boa! ✨' }), 2400);
+        }
       }
       await Promise.all([refreshAgenda(), refreshStreak()]);
     } catch (e) {

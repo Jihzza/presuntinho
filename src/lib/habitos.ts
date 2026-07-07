@@ -524,7 +524,11 @@ export async function logHabit(
     return { logged: false, streak: await getStreak(habitId), milestones: [] };
   }
 
-  const cadence = normalizeCadence((await db().habitos.get(habitId))?.cadence);
+  const habit = await db().habitos.get(habitId);
+  const cadence = normalizeCadence(habit?.cadence);
+  // Este dia já pagou XP alguma vez? (sobrevive a desmarcar/remarcar) — se sim,
+  // registamos a conclusão mas NÃO voltamos a pagar +2 nem a repetir milestones.
+  const alreadyPaid = (habit?.xpPaidDates ?? []).includes(date);
   // Streak before the insert — used for crossed-threshold detection.
   let prevStreak = 0;
   try {
@@ -545,17 +549,27 @@ export async function logHabit(
   // XP wiring in try/catch so a failure never breaks the core
   // "I just logged a habit" action.
   try {
-    const { awardXP } = await import('./state/xp-actions');
-    const { awardBadge } = await import('./state/stores');
-
-    // +2 XP for the new log
-    await awardXP('habito_mark_done');
-
     newStreak = await getStreak(habitId, cadence);
-    for (const m of crossedMilestones(prevStreak, newStreak)) {
-      await awardXP(m.reason);
-      if (m.badge) await awardBadge(m.badge);
-      crossed.push(m.threshold);
+    if (!alreadyPaid) {
+      const { awardXP } = await import('./state/xp-actions');
+      const { awardBadge } = await import('./state/stores');
+
+      // +2 XP for the new log
+      await awardXP('habito_mark_done');
+
+      for (const m of crossedMilestones(prevStreak, newStreak)) {
+        await awardXP(m.reason);
+        if (m.badge) await awardBadge(m.badge);
+        crossed.push(m.threshold);
+      }
+
+      // Marca o dia como pago (capado a 400 dias — chega para qualquer
+      // deteção de milestone e mantém a linha pequena).
+      if (habit && typeof habit.id === 'number') {
+        const paid = [...(habit.xpPaidDates ?? []), date].sort();
+        while (paid.length > 400) paid.shift();
+        await db().habitos.update(habit.id, { xpPaidDates: paid });
+      }
     }
   } catch (err) {
     console.warn('[habitos] XP/badge wiring failed (non-fatal):', err);

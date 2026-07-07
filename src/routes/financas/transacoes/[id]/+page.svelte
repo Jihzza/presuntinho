@@ -64,6 +64,17 @@
   // Categoria escolhida (objeto) para o preview de ícone/cor — igual a /nova.
   let categoriaAtual = $derived(categorias.find((c) => c.id === categoria));
 
+  // Ao trocar receita/despesa, se a categoria escolhida deixou de ser
+  // compatível, salta para a 1ª compatível — senão o utilizador podia
+  // gravar uma despesa numa categoria só-receita (e vice-versa). Espelha /nova.
+  $effect(() => {
+    const _ = tipo;
+    if (categoriasCompativeis.length === 0) return;
+    if (!categoria || !categoriasCompativeis.find((c) => c.id === categoria)) {
+      categoria = categoriasCompativeis[0].id;
+    }
+  });
+
   onMount(() => {
     void (async () => {
       try {

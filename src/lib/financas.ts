@@ -216,7 +216,14 @@ export async function deleteCategoria(id: string): Promise<{ ok: true } | { ok: 
   const txCount = await d.transacoes.where('categoria').equals(id).count();
   if (txCount > 0) refs.push(`transacoes (${txCount})`);
   const orcamentos = await d.orcamentos.toArray();
-  const orcCount = orcamentos.filter((o) => o.id === id || o.id.startsWith(`${id}_`)).length;
+  // O id do orçamento é `${categoriaId}_${YYYY-MM}`. Um startsWith(`${id}_`)
+  // ingénuo apanha categorias que só PARTILHAM prefixo (ex.: apagar `conta`
+  // ficava bloqueado por um orçamento de `conta_poupanca`). Exigir que o
+  // sufixo seja exactamente um mês garante que só contamos ESTA categoria.
+  const orcCount = orcamentos.filter((o) => {
+    if (!o.id.startsWith(`${id}_`)) return false;
+    return /^\d{4}-\d{2}$/.test(o.id.slice(id.length + 1));
+  }).length;
   if (orcCount > 0) refs.push(`orçamentos (${orcCount})`);
   if (refs.length > 0) return { ok: false, refs };
   await db().categorias.delete(id);

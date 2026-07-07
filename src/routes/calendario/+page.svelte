@@ -17,9 +17,8 @@
     type AgendaItem,
     type EventKind
   } from '$lib/vida/agenda';
-  import { listHabitos, localizedHabit, setHabitLog, type Habit } from '$lib/habitos';
+  import { listHabitos, localizedHabit, logHabit, unlogHabit, type Habit } from '$lib/habitos';
   import { weekdayShort } from '$lib/i18n/dates';
-  import { awardXP } from '$lib/state/xp-actions';
   import { fireConfettiEvent, showToast } from '$lib/components/events';
 
   const LAYERS_STORAGE_KEY = 'presuntinho:calendar:layers';
@@ -146,12 +145,20 @@
     if (!selectedDate || selectedIsFuture) return;
     const wasDone = selectedDoneHabits.has(habit.id);
     try {
-      const { changed } = await setHabitLog(habit.id, selectedDate, !wasDone);
-      if (!changed) return;
       if (!wasDone) {
-        await awardXP('habito_mark_done');
-        showToast($t('calendar.habit.marked_toast', { default: 'Hábito marcado ✓' }));
+        // logHabit paga +2 E os milestones de streak (com badges) — antes,
+        // marcar do calendário nunca dava a recompensa dos marcos.
+        const result = await logHabit(habit.id, selectedDate);
+        if (!result.logged) return;
+        if (result.milestones.length > 0) {
+          const top = Math.max(...result.milestones);
+          fireConfettiEvent({ count: 140, origin: 'center' });
+          showToast($t('habitos.toast.milestone', { values: { n: top }, default: `🔥 ${top} de streak! Estás imparável!` }));
+        } else {
+          showToast($t('calendar.habit.marked_toast', { default: 'Hábito marcado ✓' }));
+        }
       } else {
+        await unlogHabit(habit.id, selectedDate);
         showToast($t('calendar.habit.unmarked_toast', { default: 'Marcação removida.' }));
       }
       refreshToken++;

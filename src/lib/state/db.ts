@@ -218,6 +218,10 @@ export interface HabitoRow {
   createdAt: number;      // Date.now()
   meta?: string;          // task-040: target / unit string ("2L", "30 min")
   reminder?: HabitReminder; // structured { time, days? } or legacy string
+  /** Dates ('YYYY-MM-DD') that already paid XP for a completion. Prevents the
+   *  toggle done/undone/re-done XP + milestone farm. Non-indexed, capped in
+   *  logHabit; absent on legacy rows (treated as empty). Additive-only. */
+  xpPaidDates?: string[];
 }
 
 /**
