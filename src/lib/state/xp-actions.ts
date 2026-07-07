@@ -53,7 +53,9 @@ export const XP_TABLE: Readonly<Record<string, number>> = Object.freeze({
    transacao_add_despesa: 3,
    transacao_add_receita: 3,
    transacao_edit: 1,
-   transacao_delete: -1,
+   // 0 (era -1): apagar uma transação é limpeza legítima e não deve custar XP
+   // (não há undo — penalizar seria um dark pattern).
+   transacao_delete: 0,
    orcamento_define: 5,
    orcamento_remove: 0,
    // task-038 — first dashboard visit of the day (idempotent per day).
@@ -78,13 +80,15 @@ export const XP_TABLE: Readonly<Record<string, number>> = Object.freeze({
   // Pre-task-040 values were 20 / 75 / 100 / 250 / 1000 for 7/14/30/50/100/365.
   // We add new keys for the brief-aligned rewards and keep the
   // legacy keys untouched so older code paths (or tests) still work.
+  // Curva monótona crescente — antes o marco dos 50 dias (100) pagava MENOS
+  // que o dos 30 (200), o que parecia um bug ao utilizador.
   habito_streak_7: 30,
-  habito_streak_14: 40,
-  habito_streak_30: 200,
-  habito_streak_50: 100,
-  habito_streak_100: 250,
-  habito_streak_365: 1000,
-  habito_delete: -1,
+  habito_streak_14: 60,
+  habito_streak_30: 150,
+  habito_streak_50: 300,
+  habito_streak_100: 600,
+  habito_streak_365: 1500,
+  habito_delete: 0,
 
   // Escola
   lesson_complete: 8,

@@ -4604,7 +4604,7 @@
   "streaks.page.short": "السلاسل",
   "streaks.seo.description": "شعلتك ونقاطك وتقدمك اليومي",
   "streaks.back_home": "الرئيسية",
-  "streaks.hero.days": "{count} يوم متتالٍ",
+  "streaks.hero.days": "{count, plural, zero {بدون أيام} one {يوم واحد متتالٍ} two {يومان متتاليان} few {# أيام متتالية} many {# يومًا متتاليًا} other {# يوم متتالٍ}}",
   "streaks.hero.next_milestone": "باقٍ {days} أيام حتى معلم الـ{milestone} يومًا!",
   "streaks.hero.legend": "تجاوزتِ كل المعالم — أنتِ أسطورة. 👑",
   "streaks.freezes.count": "{count}/{max} تجميدات",

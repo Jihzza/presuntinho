@@ -4604,7 +4604,7 @@
   "streaks.page.short": "Streaks",
   "streaks.seo.description": "Your flame, XP and daily progress",
   "streaks.back_home": "Home",
-  "streaks.hero.days": "{count} days in a row",
+  "streaks.hero.days": "{count, plural, one {# day in a row} other {# days in a row}}",
   "streaks.hero.next_milestone": "{days} days to go until the {milestone}-day milestone!",
   "streaks.hero.legend": "You have passed every milestone — you are a legend. 👑",
   "streaks.freezes.count": "{count}/{max} freezes",

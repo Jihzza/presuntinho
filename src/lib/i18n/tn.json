@@ -4617,7 +4617,7 @@
   "streaks.page.short": "Streaks",
   "streaks.seo.description": "Echo3la mte3ek, el XP w el ta9addom el yawmi",
   "streaks.back_home": "El dar",
-  "streaks.hero.days": "{count} iyem wra b3adhhom",
+  "streaks.hero.days": "{count, plural, one {# nhar wra b3adhhom} other {# iyem wra b3adhhom}}",
   "streaks.hero.next_milestone": "Ba9i {days} iyem lel marco mta3 {milestone}!",
   "streaks.hero.legend": "Fitì el marcos lkol — enti ostoura. 👑",
   "streaks.freezes.count": "{count}/{max} freezes",

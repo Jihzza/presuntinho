@@ -4604,7 +4604,7 @@
   "streaks.page.short": "Streaks",
   "streaks.seo.description": "A tua chama, XP e progresso diário",
   "streaks.back_home": "Início",
-  "streaks.hero.days": "{count} dias seguidos",
+  "streaks.hero.days": "{count, plural, one {# dia seguido} other {# dias seguidos}}",
   "streaks.hero.next_milestone": "Faltam {days} dias para o marco dos {milestone}!",
   "streaks.hero.legend": "Já passaste todos os marcos — és uma lenda. 👑",
   "streaks.freezes.count": "{count}/{max} congelamentos",

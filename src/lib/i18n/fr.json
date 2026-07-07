@@ -4604,7 +4604,7 @@
   "streaks.page.short": "Séries",
   "streaks.seo.description": "Ta flamme, ton XP et tes progrès quotidiens",
   "streaks.back_home": "Accueil",
-  "streaks.hero.days": "{count} jours d'affilée",
+  "streaks.hero.days": "{count, plural, one {# jour d'affilée} other {# jours d'affilée}}",
   "streaks.hero.next_milestone": "Encore {days} jours avant le palier des {milestone} !",
   "streaks.hero.legend": "Tu as passé tous les paliers — tu es une légende. 👑",
   "streaks.freezes.count": "{count}/{max} gels",

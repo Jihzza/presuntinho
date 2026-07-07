@@ -426,7 +426,7 @@
     <span class="strip-flame" class:unlit={!streak?.activeToday} aria-hidden="true">🔥</span>
     <span class="strip-copy">
       <strong>
-        {$t('streaks.hero.days', { values: { count: streak?.current ?? 0 }, default: '{count} dias seguidos' })}
+        {$t('streaks.hero.days', { values: { count: streak?.current ?? 0 }, default: '{count, plural, one {# dia seguido} other {# dias seguidos}}' })}
       </strong>
       <small class:ok={streak?.activeToday}>
         {streak?.activeToday
