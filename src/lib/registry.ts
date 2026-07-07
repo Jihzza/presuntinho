@@ -62,6 +62,36 @@ export const subApps: SubApp[] = [
     route: '/biblioteca',
     enabled: true,
     order: 5
+  },
+  {
+    id: 'humor',
+    name: 'Humor',
+    icon: '🩷',
+    color: '#f472b6',
+    description: 'Diário de sentimentos, sem julgamentos',
+    route: '/humor',
+    enabled: true,
+    order: 6
+  },
+  {
+    id: 'memorias',
+    name: 'Memórias',
+    icon: '🕰️',
+    color: '#a855f7',
+    description: 'Momentos guardados com carinho',
+    route: '/memorias',
+    enabled: true,
+    order: 7
+  },
+  {
+    id: 'vida',
+    name: 'Vida',
+    icon: '🌿',
+    color: '#22c55e',
+    description: 'O teu cantinho: escola, hábitos, humor e memórias',
+    route: '/vida',
+    enabled: true,
+    order: 8
   }
 ];
 

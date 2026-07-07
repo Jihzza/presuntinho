@@ -272,7 +272,10 @@
     }, 60_000);
 
     try {
-      showOnboarding = localStorage.getItem('fat-onboarded') === null;
+      // Só mostrar o tour a quem já tem sessão — um visitante sem sessão está
+      // prestes a ser reencaminhado para /splash, e o modal a aparecer sobre o
+      // hub só para ser arrancado a meio da leitura parecia um glitch.
+      showOnboarding = Boolean(getSession()) && localStorage.getItem('fat-onboarded') === null;
     } catch {
       showOnboarding = false;
     }
@@ -497,6 +500,11 @@
           </li>
         {/each}
       </ul>
+      {#if todaysItems.length > 4}
+        <a class="today-more" href="/calendario/">
+          {$t('hub.today.more', { values: { n: todaysItems.length - 4 }, default: '+{n} mais →' })}
+        </a>
+      {/if}
       {#if todaysPending.length === 0}
         <p class="all-done-line">{$t('hub.today.all_done', { default: 'Tudo feito por hoje — orgulho total. 💖' })}</p>
       {/if}
@@ -1038,6 +1046,15 @@
     margin: 0;
     color: var(--txt3);
   }
+  .today-more {
+    display: inline-block;
+    margin: var(--space-2) 0 0;
+    color: var(--accent);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .today-more:hover { text-decoration: underline; }
   .quick-actions {
     display: flex;
     flex-wrap: wrap;
