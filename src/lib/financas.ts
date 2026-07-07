@@ -57,6 +57,9 @@ export type { OrcamentoRow, CategoriaRow, MetaRow };
 export interface TransacaoRow extends TransacaoRowBase {
   recorrente?: 'mensal';
   recorrenteDe?: number;
+  /** Meses ('YYYY-MM') em que o utilizador apagou a cópia — impede que
+   *  `ensureRecorrentes` a volte a criar (o template guarda esta lista). */
+  recorrenteSkip?: string[];
 }
 
 /** A saved transaction with the auto-incremented `id` resolved. */
@@ -319,7 +322,20 @@ export async function addTransacao(t: NovaTransacaoInput): Promise<number> {
 
 /** Delete a single transaction by id.  No-op if the id doesn't exist. */
 export async function deleteTransacao(id: number): Promise<void> {
-  await db().transacoes.delete(id);
+  const d = db();
+  const row = (await d.transacoes.get(id)) as TransacaoRow | undefined;
+  // Se for uma CÓPIA materializada de uma recorrência, registar o mês como
+  // ignorado no template — senão a próxima visita ao dashboard ressuscita-a.
+  if (row && typeof row.recorrenteDe === 'number') {
+    const mes = row.data.slice(0, 7);
+    const tpl = (await d.transacoes.get(row.recorrenteDe)) as TransacaoRow | undefined;
+    if (tpl) {
+      const skip = new Set(tpl.recorrenteSkip ?? []);
+      skip.add(mes);
+      await d.transacoes.update(row.recorrenteDe, { recorrenteSkip: [...skip] } as Partial<TransacaoRow>);
+    }
+  }
+  await d.transacoes.delete(id);
   // M0-S2: small XP penalty to discourage accidental deletes
   await awardXP('transacao_delete');
 }
@@ -566,6 +582,8 @@ export async function ensureRecorrentes(mes: string): Promise<number> {
   let created = 0;
   for (const tpl of templates) {
     if (tpl.data.startsWith(`${mes}-`)) continue;
+    // O utilizador apagou a cópia deste mês — respeitar e não recriar.
+    if ((tpl as TransacaoRow).recorrenteSkip?.includes(mes)) continue;
     const jaExiste = doMes.some((t) => (t as TransacaoRow).recorrenteDe === tpl.id);
     if (jaExiste) continue;
     const dia = Math.min(parseInt(tpl.data.slice(8, 10), 10) || 1, ultimoDia);
