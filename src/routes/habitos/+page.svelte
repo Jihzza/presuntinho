@@ -723,7 +723,8 @@
     align-items: stretch;
     background: var(--card);
     border: 1px solid var(--border);
-    border-left: 4px solid var(--accent);
+    /* Propriedade lógica → a faixa de acento fica no lado inicial também em RTL (ar). */
+    border-inline-start: 4px solid var(--accent);
     border-radius: var(--radius-lg, 0.75rem);
     overflow: hidden;
     transition: background var(--motion-base, 220ms);
@@ -737,7 +738,7 @@
     align-self: center;
     width: 44px;
     height: 44px;
-    margin-left: 0.75rem;
+    margin-inline-start: 0.75rem;
     border-radius: 50%;
     border: 2px solid var(--accent);
     background: transparent;
@@ -788,7 +789,7 @@
     background: transparent;
     border: 0;
     cursor: pointer;
-    text-align: left;
+    text-align: start;
     font-family: inherit;
   }
   .card-main:focus-visible {
@@ -851,7 +852,7 @@
     padding: 0 1rem;
     min-width: 44px;
     cursor: pointer;
-    border-left: 1px solid var(--border);
+    border-inline-start: 1px solid var(--border);
     transition: background var(--motion-fast, 120ms), color var(--motion-fast, 120ms);
   }
   .delete-btn:hover,
