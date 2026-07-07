@@ -863,8 +863,14 @@ export async function ensureDefaults(profile: ProfileId = activeProfile): Promis
   // so the dashboard is populated on first open.  Existing users who
   // already have rows from this legacy seed are NOT touched — the
   // seeder only runs when the table is empty.
+  // Multi-tenant (V11): the DEMO habits + their 14-day history are personal
+  // starter content for the original gift recipients only. A newly onboarded
+  // member (uuid profile) must start with a CLEAN slate — not someone else's
+  // habits pre-filled into their real tracker. Essential defaults (categories,
+  // state, settings) are still seeded for everyone above.
+  const isLegacyDemoProfile = profile === 'fatma' || profile === 'daniel';
   const existingHabitCount = await d.habitos.count();
-  if (existingHabitCount === 0) {
+  if (existingHabitCount === 0 && isLegacyDemoProfile) {
     // task-040: delegating to seedHabitosPro() replaces the prior
     // inline DEFAULT_HABITOS list.  This branch only fires on a brand
     // new database (no user rows to stomp).
@@ -878,8 +884,12 @@ export async function ensureDefaults(profile: ProfileId = activeProfile): Promis
   // without bloating `ensureDefaults`.  Only runs when the table is
   // empty, so users who have already added their own transactions will
   // never see their list stomped.
+  // Same rule as habits: the 20 example transactions are personal demo data
+  // for the original recipients, NOT for a stranger's real ledger. New members
+  // start with an empty ledger (the /financas empty state guides them to add
+  // their first transaction).
   const existingTransacaoCount = await d.transacoes.count();
-  if (existingTransacaoCount === 0) {
+  if (existingTransacaoCount === 0 && isLegacyDemoProfile) {
     await d.transacoes.bulkPut(buildSeedTransacoes(now));
   }
 }
