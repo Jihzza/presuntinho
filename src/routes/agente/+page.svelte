@@ -717,7 +717,7 @@
     justify-content: space-between;
     gap: 0.5rem;
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border);
   }
   .chat-header h1 {
     margin: 0;
@@ -741,7 +741,7 @@
   .head-btn {
     background: transparent;
     border: 0;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--txt2);
     cursor: pointer;
     min-width: 44px;
     min-height: 44px;
@@ -753,8 +753,8 @@
     text-decoration: none;
   }
   .head-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
+    background: color-mix(in srgb, var(--txt) 8%, transparent);
+    color: var(--txt);
   }
   .head-btn:focus-visible {
     outline: none;
@@ -802,13 +802,15 @@
   }
   .msg-user .bubble {
     background: var(--accent, #ec4899);
-    color: #fff;
+    color: var(--on-accent, #fff);
     border-bottom-right-radius: 4px;
   }
   .msg-assistant .bubble {
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    /* Tokens — antes era branco-sobre-branco no tema claro (respostas do
+       agente invisíveis). */
+    background: var(--card);
+    color: var(--txt);
+    border: 1px solid var(--border);
     border-bottom-left-radius: 4px;
   }
   .bubble.thinking {
@@ -821,7 +823,7 @@
     gap: 0.3rem;
     margin-bottom: 0.4rem;
     padding-bottom: 0.4rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid var(--border);
   }
   .attach img,
   .attach video {
@@ -997,7 +999,7 @@
   }
   .action-btn {
     background: var(--accent, #ec4899);
-    color: #fff;
+    color: var(--on-accent, #fff);
     border: 0;
     border-radius: 50%;
     cursor: pointer;
@@ -1020,7 +1022,7 @@
     transform: scale(0.94);
   }
   .action-btn.recording {
-    background: #ef4444;
+    background: var(--error, #ef4444);
     box-shadow: 0 8px 18px rgba(239, 68, 68, 0.35);
   }
   .action-btn:disabled {
