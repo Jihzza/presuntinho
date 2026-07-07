@@ -19,6 +19,7 @@
 -->
 <script lang="ts">
   import { untrack } from 'svelte';
+  import { page } from '$app/state';
   import { locale, t } from 'svelte-i18n';
   import {
     listItems,
@@ -37,7 +38,9 @@
   let loading = $state(true);
   let error = $state<string | null>(null);
   let query = $state('');
-  let activeTag = $state<string | null>(null);
+  // Honour a ?tag=<tag> deep-link (e.g. tapping a tag chip on a bookmark's
+  // detail page) so the list opens already filtered instead of full/unfiltered.
+  let activeTag = $state<string | null>(page.url.searchParams.get('tag'));
   let confirmingDelete = $state<number | null>(null);
   const dateLocale = $derived($locale || 'pt-PT');
 
