@@ -63,6 +63,17 @@ export interface Habit extends Omit<HabitoRow, 'id' | 'cadence' | 'reminder'> {
   id: number;
   cadence: HabitCadence;
   reminder?: string | HabitReminder;
+  /**
+   * Archive ledger — epoch ms when the habit was archived (paused).
+   * Absent / falsy = active.  A NON-destructive alternative to deleting:
+   * the habit row and its entire log history stay intact, it just leaves
+   * the active list / stats / quick-toggle until restored.
+   *
+   * Additive + non-indexed (the db.ts `HabitoRow` column set is unchanged,
+   * so NO Dexie version bump is needed).  We filter on it in JS via
+   * `listActiveHabitos` / `listArchivedHabitos`.
+   */
+  archivedAt?: number;
 }
 
 /** A single day's log, with the auto-incremented `id` resolved. */
@@ -207,6 +218,50 @@ function fromRow(row: HabitoRow): Habit | null {
 export async function listHabitos(): Promise<Habit[]> {
   const rows = await db().habitos.orderBy('createdAt').reverse().toArray();
   return rows.map(fromRow).filter((r): r is Habit => r !== null);
+}
+
+/**
+ * List only the ACTIVE (non-archived) habits, newest-first.
+ *
+ * This is the read-path the /habitos page uses so archived habits stay
+ * out of the active list, the dashboard stats and the quick-toggle.
+ * `listHabitos()` deliberately still returns EVERYTHING — the hub card,
+ * the Vida agenda, the calendar and the agent tools all read through it
+ * and already filter by cadence, so their behavior is unchanged.
+ */
+export async function listActiveHabitos(): Promise<Habit[]> {
+  const rows = await listHabitos();
+  return rows.filter((h) => !h.archivedAt);
+}
+
+/**
+ * List only the ARCHIVED habits, most-recently-archived first.  Feeds the
+ * "Arquivados" section on the /habitos page (restore / permanent delete).
+ */
+export async function listArchivedHabitos(): Promise<Habit[]> {
+  const rows = await listHabitos();
+  return rows
+    .filter((h) => Boolean(h.archivedAt))
+    .sort((a, b) => (b.archivedAt ?? 0) - (a.archivedAt ?? 0));
+}
+
+/**
+ * Archive (pause) a habit — the NON-destructive exit.  Stamps `archivedAt`
+ * so the habit leaves the active list/stats/quick-toggle, while its whole
+ * log history + streak ledger stay untouched (fully reversible via
+ * `unarchiveHabit`).  Additive, non-indexed write — see the `Habit` note.
+ */
+export async function archiveHabit(id: number): Promise<void> {
+  // `archivedAt` is not on the db.ts `HabitoRow` type (it's additive), so we
+  // cast the patch the same way `editHabito` does for its whitelisted fields.
+  const patch: Record<string, unknown> = { archivedAt: Date.now() };
+  await db().habitos.update(id, patch as Partial<HabitoRow>);
+}
+
+/** Restore an archived habit back into the active list (clears `archivedAt`). */
+export async function unarchiveHabit(id: number): Promise<void> {
+  const patch: Record<string, unknown> = { archivedAt: undefined };
+  await db().habitos.update(id, patch as Partial<HabitoRow>);
 }
 
 /** Fetch one habit by id (or null). */
@@ -855,7 +910,11 @@ export async function allDueHabitsDoneToday(): Promise<boolean> {
   const d = String(now.getDate()).padStart(2, '0');
   const todayKey = `${y}-${m}-${d}`;
 
-  const habits = await listHabitos();
+  // Active habits only — an archived (paused) habit that happens to be
+  // scheduled today must NOT block the "all habits done" victory, since it
+  // is hidden from the list and can't be completed.  (No-op for legacy data
+  // with nothing archived.)
+  const habits = await listActiveHabitos();
   const due = habits.filter((h) => isScheduledOnKey(h.cadence, todayKey));
   if (due.length === 0) return false;
 
