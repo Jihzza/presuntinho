@@ -195,12 +195,10 @@
         />
       </label>
       <p class="hint">{$t('onboarding.privacy.password_hint', { default: 'Protege a tua conta neste dispositivo.' })}</p>
-      {#if ob.kind !== 'solo'}
-        <label class="switch-row">
-          <input type="checkbox" bind:checked={ob.sharePrivateOnInvite} />
-          <span>{$t('onboarding.privacy.share_toggle', { default: 'Partilhar os meus dados privados ao convidar (podes mudar depois)' })}</span>
-        </label>
-      {/if}
+      <!-- The "share my private data on invite" toggle was removed: nothing in
+           the app ships private data on invite yet, so it was a privacy control
+           that did nothing (a broken promise). Everything stays private-first;
+           re-add a real, honoured control when a sharing path exists. -->
     </section>
   {:else if ob.step === 'invite'}
     <section class="step">
@@ -282,8 +280,6 @@
   .invite-box { display: grid; gap: 0.6rem; place-items: center; padding: 1.1rem; border-radius: 1.1rem; border: 1px solid var(--accent, #ec4899); background: color-mix(in srgb, var(--accent, #ec4899) 12%, transparent); }
   .invite-label { color: var(--txt2, #cbd5e1); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; }
   .invite-code { font-size: 1.8rem; font-weight: 900; letter-spacing: 0.28em; font-variant-numeric: tabular-nums; }
-  .switch-row { display: flex; align-items: flex-start; gap: 0.6rem; margin-top: 0.4rem; color: var(--txt2, #cbd5e1); font-size: 0.9rem; line-height: 1.4; }
-  .switch-row input { margin-top: 0.2rem; accent-color: var(--accent, #ec4899); width: 18px; height: 18px; }
   .done { display: grid; place-items: center; text-align: center; gap: 0.4rem; }
   .done-emoji { font-size: 3.4rem; margin: 0; }
   .error { color: #fca5a5; }

@@ -10,7 +10,7 @@
 // and is tracked separately.
 
 import type { ProfileId } from '$lib/auth/hash';
-import { getSession, setSession, registerKnownMember } from '$lib/auth/session';
+import { getSession, setSession, clearSession, registerKnownMember } from '$lib/auth/session';
 import { getAuthSession, getMyAccount, signOut, accountsEnabled } from './auth';
 
 /** Map an account @handle to the app's local ProfileId. */
@@ -55,4 +55,7 @@ export async function signOutEverywhere(): Promise<void> {
   } catch {
     /* best-effort — still clear the local session below */
   }
+  // Honour the name: always drop the local profile session too, otherwise the
+  // app stays unlocked after "sign out" (a shared-device exposure).
+  clearSession();
 }

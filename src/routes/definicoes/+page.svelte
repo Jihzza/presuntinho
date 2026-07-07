@@ -685,20 +685,11 @@
     clearing = true;
     try {
       const d = db();
-      await Promise.all([
-        d.transacoes.clear(),
-        d.orcamentos.clear(),
-        d.categorias.clear(),
-        d.habitos.clear(),
-        d.habit_logs.clear(),
-        d.biblioteca.clear(),
-        d.badges.clear(),
-        d.visited.clear(),
-        d.quizScores.clear(),
-        d.secrets.clear(),
-        d.state.clear(),
-        d.settings.clear()
-      ]);
+      // Clear EVERY Dexie table — the old hardcoded list missed 7 tables
+      // (notes, chat_messages, chat_conversations, assignments, mood_logs,
+      // events, metas), leaving an inconsistent half-wipe despite the
+      // "apagar tudo" copy. Dexie exposes `.tables`, so this never drifts.
+      await Promise.all(d.tables.map((tbl) => tbl.clear()));
       // Wipe localStorage too — prefs + theme + session.
       try {
         const ls = window.localStorage;

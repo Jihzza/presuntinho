@@ -15,7 +15,6 @@
     signInWithGoogle,
     signInWithMagicLink,
     sendPasswordReset,
-    signOut,
     claimAccount,
     isHandleAvailable,
     isValidHandle,
@@ -24,6 +23,8 @@
     updateEmail
   } from '$lib/account/auth';
   import { accountState, startAccountSync, refreshAccount } from '$lib/account/account-store.svelte';
+  import { signOutEverywhere } from '$lib/account/session-bridge';
+  import { goto } from '$app/navigation';
 
   let mode = $state<'signin' | 'signup'>('signin');
   let email = $state('');
@@ -157,8 +158,12 @@
 
   async function doSignOut(): Promise<void> {
     try {
-      await signOut();
+      // Full logout: clears BOTH the Supabase auth session and the local
+      // profile session, then returns to the lock screen — otherwise the app
+      // stayed unlocked after "Terminar sessão" (shared-device exposure).
+      await signOutEverywhere();
       showToast($t('conta.signout.ok', { default: 'Sessão terminada.' }), 2000);
+      await goto('/splash/');
     } catch (e) {
       showToast(authError(e), 3000);
     }
