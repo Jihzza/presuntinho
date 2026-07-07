@@ -42,7 +42,7 @@
  */
 
 import { browser } from '$app/environment';
-import { db, ensureDefaults } from '$lib/state/db';
+import { db, ensureDefaults, getActiveProfile } from '$lib/state/db';
 import type { ProfileId } from '$lib/auth/hash';
 import { VERSION } from '$lib/version';
 
@@ -180,7 +180,7 @@ export interface ImportReport {
 
 /** Read the row count of every table we know about, in parallel. */
 export async function getTableCounts(
-  profile: ProfileId = 'fatma'
+  profile: ProfileId = getActiveProfile()
 ): Promise<Record<string, number>> {
   if (!browser) return {};
   try {
@@ -221,7 +221,7 @@ function captureMeta(counts: Record<string, number>): BackupMeta {
  * The `meta.counts` block is filled in here so consumers can show
  * "X rows exported per table" without re-opening Dexie.
  */
-export async function exportAllData(profile: ProfileId = 'fatma'): Promise<BackupPayload> {
+export async function exportAllData(profile: ProfileId = getActiveProfile()): Promise<BackupPayload> {
   return exportData(profile);
 }
 
@@ -234,7 +234,7 @@ export async function exportAllData(profile: ProfileId = 'fatma'): Promise<Backu
  * Throws `BackupError` (`code: 'browser_only'`) outside the browser.
  */
 export async function downloadBackup(
-  profile: ProfileId = 'fatma'
+  profile: ProfileId = getActiveProfile()
 ): Promise<BackupPayload> {
   if (!browser) {
     throw new BackupError(
@@ -269,7 +269,7 @@ function triggerDownload(payload: BackupPayload, filename: string): void {
  * Alias kept for the existing /definicoes page.  Internally identical
  * to `exportAllData`.
  */
-export async function exportData(profile: ProfileId = 'fatma'): Promise<BackupPayload> {
+export async function exportData(profile: ProfileId = getActiveProfile()): Promise<BackupPayload> {
   const payload: BackupPayload = {
     version: BACKUP_VERSION,
     exportedAt: new Date().toISOString(),
@@ -524,7 +524,7 @@ export function validateSchema(input: unknown): ValidationResult {
 export async function importBackup(
   file: File,
   mode: 'merge' | 'replace' = 'replace',
-  profile: ProfileId = 'fatma'
+  profile: ProfileId = getActiveProfile()
 ): Promise<ImportReport> {
   if (!browser) {
     throw new BackupError('browser_only', 'importBackup() may only run in the browser');
@@ -751,7 +751,7 @@ function hasPrimaryKey(row: Record<string, unknown>, _table: string): boolean {
  */
 export async function importData(
   payload: BackupPayload,
-  profile: ProfileId = 'fatma'
+  profile: ProfileId = getActiveProfile()
 ): Promise<ImportReport> {
   if (!browser) {
     throw new BackupError('browser_only', 'importData() may only run in the browser');

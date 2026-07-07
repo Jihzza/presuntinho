@@ -713,6 +713,13 @@ export function setActiveProfile(profile: ProfileId): void {
   activeProfile = profile;
 }
 
+/** The profile whose IndexedDB `db()` currently opens. Backup/export/import must
+ *  default to THIS (not a hardcoded 'fatma') or a non-legacy member would
+ *  export/import the legacy couple's database instead of their own. */
+export function getActiveProfile(): ProfileId {
+  return activeProfile;
+}
+
 export function dbNameForProfile(profile: ProfileId): string {
   return profile === 'fatma' ? 'presuntinho' : `presuntinho-${profile}`;
 }

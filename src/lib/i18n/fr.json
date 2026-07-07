@@ -4368,6 +4368,7 @@
   "mensagens.empty": "Aucun message ici pour l’instant.",
   "mensagens.empty_hint": "Laisse une note, envoie une photo ou enregistre un audio quand tu veux.",
   "mensagens.no_session": "Ouvre d’abord ta session pour entrer dans le chat privé.",
+  "mensagens.solo_gate": "Les messages s’ouvriront quand tu connecteras ton compte à quelqu’un. Pour l’instant, cet espace t’attend. 🤍",
   "profile.page.title": "Profil",
   "profile.page.eyebrow": "Ton espace",
   "profile.no_session.title": "Enter the app first",
