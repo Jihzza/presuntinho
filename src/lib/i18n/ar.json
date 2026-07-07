@@ -1115,6 +1115,8 @@
   "install.toast.failed": "تعذّر فتح نافذة التثبيت.",
   "install.toast.installed": "تم تثبيت التطبيق — افتحيه من الشاشة الرئيسية.",
   "lesson.activity.aria": "بنية الدرس",
+  "lesson.exercise.label": "تمرين",
+  "lesson.exercise.reveal": "أظهر الإجابة",
   "lesson.activity.assignment.body": "نشاط مرتبط",
   "lesson.activity.assignment.title": "اختبار / واجب",
   "lesson.activity.quiz.none": "لا يوجد اختبار مرتبط",

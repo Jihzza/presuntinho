@@ -1115,6 +1115,8 @@
   "install.toast.failed": "Couldn't open the install prompt.",
   "install.toast.installed": "App installed — open it from your home screen.",
   "lesson.activity.aria": "Lesson structure",
+  "lesson.exercise.label": "Exercise",
+  "lesson.exercise.reveal": "Show answer",
   "lesson.activity.assignment.body": "Related activity",
   "lesson.activity.assignment.title": "Test / assignment",
   "lesson.activity.quiz.none": "No linked quiz",

@@ -1115,6 +1115,8 @@
   "install.toast.failed": "Não foi possível abrir o prompt de instalação.",
   "install.toast.installed": "App instalada — abre-a a partir do ecrã principal.",
   "lesson.activity.aria": "Estrutura da aula",
+  "lesson.exercise.label": "Exercício",
+  "lesson.exercise.reveal": "Ver resposta",
   "lesson.activity.assignment.body": "Actividade relacionada",
   "lesson.activity.assignment.title": "Teste / trabalho",
   "lesson.activity.quiz.none": "Sem quiz ligado",

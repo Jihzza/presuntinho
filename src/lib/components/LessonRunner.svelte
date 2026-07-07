@@ -9,12 +9,22 @@
 
   // ----- Types --------------------------------------------------------------
 
+  // Two authoring schemas coexist: the compact one (h2/h3/p/ul/callout.text) and
+  // the richer "walkthrough" one used by the Equivalenza case + some BA lessons
+  // (text/h2_intro/list/table + callout.content, plus ol/exercise). LessonRunner
+  // renders BOTH so no section type is ever silently dropped to a blank body.
   type Section =
     | { type: 'h2'; text: string }
+    | { type: 'h2_intro'; title: string; content?: string }
     | { type: 'h3'; text: string }
     | { type: 'p'; text: string }
+    | { type: 'text'; title?: string; content: string }
     | { type: 'ul'; items: string[] }
-    | { type: 'callout'; variant?: 'info' | 'warning' | 'success' | 'highlight'; text: string }
+    | { type: 'ol'; items: string[] }
+    | { type: 'list'; title?: string; items: string[] }
+    | { type: 'exercise'; question: string; answer: string }
+    | { type: 'callout'; variant?: 'info' | 'warning' | 'success' | 'highlight'; title?: string; text?: string; content?: string }
+    | { type: 'table'; title?: string; headers: string[]; rows: string[][] }
     | { type: 'img'; src: string; alt: string; caption?: string };
 
   interface Lesson {
@@ -57,7 +67,7 @@
     const out: Section[][] = [];
     let cur: Section[] = [];
     for (const s of sections) {
-      if (s.type === 'h2' && cur.length) {
+      if ((s.type === 'h2' || s.type === 'h2_intro') && cur.length) {
         out.push(cur);
         cur = [];
       }
@@ -238,18 +248,64 @@
         {#each steps[step] ?? [] as section, i (i)}
           {#if section.type === 'h2'}
             <h2>{section.text}</h2>
+          {:else if section.type === 'h2_intro'}
+            <h2>{section.title}</h2>
+            {#if section.content}<p>{section.content}</p>{/if}
           {:else if section.type === 'h3'}
             <h3>{section.text}</h3>
           {:else if section.type === 'p'}
             <p>{section.text}</p>
+          {:else if section.type === 'text'}
+            {#if section.title}<h3>{section.title}</h3>{/if}
+            <p>{section.content}</p>
           {:else if section.type === 'ul'}
             <ul>
               {#each section.items as item, j (j)}
                 <li>{item}</li>
               {/each}
             </ul>
+          {:else if section.type === 'ol'}
+            <ol>
+              {#each section.items as item, j (j)}
+                <li>{item}</li>
+              {/each}
+            </ol>
+          {:else if section.type === 'list'}
+            {#if section.title}<h3>{section.title}</h3>{/if}
+            <ul>
+              {#each section.items as item, j (j)}
+                <li>{item}</li>
+              {/each}
+            </ul>
+          {:else if section.type === 'exercise'}
+            <div class="exercise">
+              <p class="ex-q"><strong>{$t('lesson.exercise.label', { default: 'Exercício' })}</strong> {section.question}</p>
+              <details class="ex-a">
+                <summary>{$t('lesson.exercise.reveal', { default: 'Ver resposta' })}</summary>
+                <p>{section.answer}</p>
+              </details>
+            </div>
           {:else if section.type === 'callout'}
-            <aside class="callout callout-{section.variant ?? 'info'}">{section.text}</aside>
+            <aside class="callout callout-{section.variant ?? 'info'}">
+              {#if section.title}<strong class="callout-title">{section.title}</strong>{/if}
+              {section.content ?? section.text ?? ''}
+            </aside>
+          {:else if section.type === 'table'}
+            {#if section.title}<h3>{section.title}</h3>{/if}
+            <div class="table-wrap">
+              <table class="lesson-table">
+                {#if section.headers?.length}
+                  <thead>
+                    <tr>{#each section.headers as h, hi (hi)}<th>{h}</th>{/each}</tr>
+                  </thead>
+                {/if}
+                <tbody>
+                  {#each section.rows ?? [] as row, ri (ri)}
+                    <tr>{#each row as cell, ci (ci)}<td>{cell}</td>{/each}</tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
           {:else if section.type === 'img'}
             <figure class="lesson-figure">
               <img src={section.src} alt={section.alt} loading="lazy" />
@@ -499,6 +555,49 @@
     padding: 0;
   }
   .lesson-body ul li { margin: 0.3rem 0; }
+  .lesson-body ol {
+    color: var(--txt2);
+    margin: 0.5rem 0 0.5rem 1.25rem;
+    padding: 0;
+  }
+  .lesson-body ol li { margin: 0.3rem 0; }
+  /* Worked exercise: question + a reveal for the answer. */
+  .exercise {
+    margin: 1rem 0;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--accent) 7%, var(--card));
+  }
+  .exercise .ex-q { color: var(--txt); margin: 0; line-height: 1.55; }
+  .exercise .ex-a { margin-top: 0.6rem; }
+  .exercise .ex-a summary {
+    cursor: pointer;
+    color: var(--accent);
+    font-weight: 700;
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .exercise .ex-a p { color: var(--txt2); margin: 0.5rem 0 0; line-height: 1.6; }
+  /* Data table (walkthrough schema) — scrolls horizontally on narrow screens. */
+  .table-wrap { overflow-x: auto; margin: 1rem 0; }
+  .lesson-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    min-width: 22rem;
+  }
+  .lesson-table th,
+  .lesson-table td {
+    text-align: start;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    color: var(--txt2);
+  }
+  .lesson-table th { background: var(--bg-elev); color: var(--txt); font-weight: 800; }
+  .callout-title { display: block; margin-bottom: 0.25rem; color: var(--txt); }
   .lesson-figure {
     margin: 1rem 0;
     background: var(--card);

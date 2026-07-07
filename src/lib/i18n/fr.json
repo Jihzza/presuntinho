@@ -1115,6 +1115,8 @@
   "install.toast.failed": "Impossible d'ouvrir l'invite d'installation.",
   "install.toast.installed": "Application installée — ouvre-la depuis l'écran d'accueil.",
   "lesson.activity.aria": "Structure de la leçon",
+  "lesson.exercise.label": "Exercice",
+  "lesson.exercise.reveal": "Voir la réponse",
   "lesson.activity.assignment.body": "Activité liée",
   "lesson.activity.assignment.title": "Test / devoir",
   "lesson.activity.quiz.none": "Aucun quiz lié",
