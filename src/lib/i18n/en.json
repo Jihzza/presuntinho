@@ -5012,5 +5012,17 @@
   "profile.generic.focus.life": "Life",
   "profile.generic.focus.social": "Social",
   "eggs.toast.porquinho": "🔐 Porquinho! You found the hidden secret. 💛",
-  "quiz.toast.perfect_again": "🏆 {correct}/{total} — Perfect again!"
+  "quiz.toast.perfect_again": "🏆 {correct}/{total} — Perfect again!",
+  "conta.email_placeholder": "you@email.com",
+  "conta.name_placeholder": "Your name",
+  "trabalhos.filters.urgency": "Urgency",
+  "trabalhos.filters.urgency.aria": "Filter by deadline urgency",
+  "trabalhos.filters.urgency.all": "All deadlines",
+  "trabalhos.filters.urgency.today": "Today",
+  "trabalhos.filters.urgency.week": "This week",
+  "trabalhos.filters.urgency.month": "This month",
+  "trabalhos.filters.urgency.next30": "Next 30 days",
+  "trabalhos.filters.urgency.overdue": "Overdue",
+  "arcade.mascot_runner.label": "Runner game — tap or space to jump",
+  "arcade.mascot_runner.hint": "▶ TAP / SPACE"
 }

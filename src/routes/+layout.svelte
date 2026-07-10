@@ -573,7 +573,10 @@
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 0.75rem 1rem;
+    /* iOS PWA uses black-translucent status bar + viewport-fit=cover, so the
+       header must respect the top safe area (bottom nav already does this). */
+    padding: calc(0.75rem + env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 0.75rem
+      max(1rem, env(safe-area-inset-left));
     position: sticky;
     top: 0;
     z-index: 10;

@@ -74,16 +74,23 @@ function findLog() {
 
 const logPath = findLog();
 
-let stat = null;
-try {
-  if (logPath) stat = statSync(logPath);
-} catch {
-  stat = null;
+// Resolve rotated log siblings (e.g. agent.log.1, .2, .3) so quota counts
+// don't reset to ~zero when the active log rolls. Order: rotated (oldest first)
+// then active (newest). We dedupe by line content later.
+function findRotatedSiblings(active) {
+  if (!active) return [];
+  const out = [];
+  for (let i = 1; i <= 9; i++) {
+    const p = `${active}.${i}`;
+    if (existsSync(p)) out.push(p);
+  }
+  return out;
 }
-const MAX_BYTES = 4 * 1024 * 1024; // tail 4 MB
-const startByte = stat && stat.size > MAX_BYTES ? stat.size - MAX_BYTES : 0;
 
-if (!logPath || !stat) {
+const rotatedPaths = findRotatedSiblings(logPath);
+const allLogPaths = [...rotatedPaths, logPath].filter(Boolean);
+
+if (!logPath) {
   console.log(JSON.stringify({
     calls_today: 0,
     threshold,
@@ -96,20 +103,35 @@ if (!logPath || !stat) {
   process.exit(0);
 }
 
-// Read last N MB of log (good-enough tail). We stream-read the file and only
-// keep lines within the requested time window.
+// Read last N MB of each log (good-enough tail). When the active log rolls
+// (agent.log → agent.log.1 + new agent.log), counts must include the rotated
+// siblings to avoid a false "ok" right after rotation. Per-file MAX_BYTES
+// is tuned so the combined tail across all sibling logs stays under a few MB.
 const cutoffMs = Date.now() - hours * 60 * 60 * 1000;
+const MAX_BYTES_PER_FILE = 4 * 1024 * 1024; // 4 MB per log file
 
-let text = "";
-try {
-  const fd = openSync(logPath, "r");
+function tailText(p) {
+  let st = null;
+  try { st = statSync(p); } catch { return ""; }
+  if (!st || st.size === 0) return "";
+  const startByte = st.size > MAX_BYTES_PER_FILE ? st.size - MAX_BYTES_PER_FILE : 0;
+  const fd = openSync(p, "r");
   try {
-    const buf = Buffer.alloc(stat.size - startByte);
+    const buf = Buffer.alloc(st.size - startByte);
     readSync(fd, buf, 0, buf.length, startByte);
-    text = buf.toString("utf8");
+    return buf.toString("utf8");
   } finally {
     closeSync(fd);
   }
+}
+
+let text = "";
+try {
+  // Concatenate: oldest rotated (logPath.9 … logPath.1) first, then active.
+  // Within each file the tail is already roughly chronological.
+  const parts = [];
+  for (const p of allLogPaths) parts.push(tailText(p));
+  text = parts.join("\n");
 } catch (e) {
   console.log(JSON.stringify({
     calls_today: 0,

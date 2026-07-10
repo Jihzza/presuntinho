@@ -12,6 +12,7 @@
    * strip so they never fight the cabinet menu's ↑/↓/Enter navigation.
    */
   import { onMount, onDestroy } from 'svelte';
+  import { t } from 'svelte-i18n';
   import { mascotArt } from '$lib/gamification/mascots';
   import { prefersReducedMotion } from '$lib/components/events';
   import { playSfx, vibrate } from '$lib/gamification/sound';
@@ -374,7 +375,7 @@
   bind:this={host}
   role="button"
   tabindex="0"
-  aria-label="Jogo do corredor — toca ou espaço para saltar"
+  aria-label={$t('arcade.mascot_runner.label', { default: 'Jogo do corredor — toca ou espaço para saltar' })}
   onpointerdown={onPointerDown}
   onkeydown={onKey}
 >
@@ -385,7 +386,7 @@
     {:else if phase === 'crashed'}
       <span class="go">{score} · ◆ {best}</span>
     {:else}
-      <span class="hint">▶ TAP / SPACE</span>
+      <span class="hint">{$t('arcade.mascot_runner.hint', { default: '▶ TAP / SPACE' })}</span>
     {/if}
   </span>
 </div>

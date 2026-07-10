@@ -5012,5 +5012,17 @@
   "profile.generic.focus.life": "الحياة",
   "profile.generic.focus.social": "اجتماعي",
   "eggs.toast.porquinho": "🔐 Porquinho! وجدت السر المخفي. 💛",
-  "quiz.toast.perfect_again": "🏆 {correct}/{total} — ممتاز مرة أخرى!"
+  "quiz.toast.perfect_again": "🏆 {correct}/{total} — ممتاز مرة أخرى!",
+  "conta.email_placeholder": "you@email.com",
+  "conta.name_placeholder": "اسمك",
+  "trabalhos.filters.urgency": "الاستعجال",
+  "trabalhos.filters.urgency.aria": "تصفية حسب استعجال الموعد النهائي",
+  "trabalhos.filters.urgency.all": "كل المواعيد",
+  "trabalhos.filters.urgency.today": "اليوم",
+  "trabalhos.filters.urgency.week": "هذا الأسبوع",
+  "trabalhos.filters.urgency.month": "هذا الشهر",
+  "trabalhos.filters.urgency.next30": "الـ 30 يوماً القادمة",
+  "trabalhos.filters.urgency.overdue": "متأخر",
+  "arcade.mascot_runner.label": "لعبة العدّاء — اضغط أو مسافة للقفز",
+  "arcade.mascot_runner.hint": "▶ TAP / SPACE"
 }

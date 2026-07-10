@@ -5025,5 +5025,17 @@
   "profile.generic.focus.life": "7ayet",
   "profile.generic.focus.social": "Social",
   "eggs.toast.porquinho": "🔐 Porquinho! L9it el sirr el m5abbi. 💛",
-  "quiz.toast.perfect_again": "🏆 {correct}/{total} — Parfait marra o5ra!"
+  "quiz.toast.perfect_again": "🏆 {correct}/{total} — Parfait marra o5ra!",
+  "conta.email_placeholder": "you@email.com",
+  "conta.name_placeholder": "Esmek",
+  "trabalhos.filters.urgency": "L'ajrou7a",
+  "trabalhos.filters.urgency.aria": "Saffi bel ajrou7a tal deadline",
+  "trabalhos.filters.urgency.all": "Kol tal deadlines",
+  "trabalhos.filters.urgency.today": "Lyoum",
+  "trabalhos.filters.urgency.week": "Hadh el 3ou7da",
+  "trabalhos.filters.urgency.month": "Hadh el chaher",
+  "trabalhos.filters.urgency.next30": "Tal 30 youm jayin",
+  "trabalhos.filters.urgency.overdue": "Met2akher",
+  "arcade.mascot_runner.label": "L jeu mta3 el coureur — tap wala space bech tnazlez",
+  "arcade.mascot_runner.hint": "▶ TAP / SPACE"
 }

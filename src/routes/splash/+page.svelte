@@ -5,7 +5,7 @@
   import type { Membership } from '$lib/space/types';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
-  import { signInWithGoogle } from '$lib/account/auth';
+  import { signInWithGoogle, signInWithSaikan, completeSaikanSignIn, accountsEnabled } from '$lib/account/auth';
   import { bridgeSupabaseSession } from '$lib/account/session-bridge';
   import { t, waitLocale } from 'svelte-i18n';
   import { locale as localeStore } from '$lib/i18n';
@@ -42,6 +42,7 @@
   let locked = $state({ locked: false, remainingMs: 0 });
   let loading = $state(false);
   let googleBusy = $state(false);
+  let saikanBusy = $state(false);
 
   // ── Lockout plumbing ──
   // Failed attempts are bucketed per member id (or per typed username), so the
@@ -104,6 +105,29 @@
       googleBusy = false;
     }
   }
+
+  /** Start "Continuar com Saikan ID" (redirects to id.saikan.io, returns here). */
+  async function onSaikan(): Promise<void> {
+    if (saikanBusy) return;
+    saikanBusy = true;
+    error = '';
+    try {
+      await signInWithSaikan(); // navigates away on success
+    } catch (e) {
+      error = e instanceof Error ? e.message : String(e);
+      saikanBusy = false;
+    }
+  }
+
+  /** Human copy for the ?saikan_error=<code> the callback function can send. */
+  function saikanErrorMessage(code: string): string {
+    if (code === 'cancelled') {
+      return $t('splash.saikan.error.cancelled', { default: 'Login com Saikan ID cancelado.' });
+    }
+    return $t('splash.saikan.error.generic', {
+      default: 'Não foi possível entrar com Saikan ID. Tenta outra vez.'
+    });
+  }
   // Love Lock state — when non-null the splash card is replaced by the
   // LoveLock full-screen modal until the user clicks the confirmation.
   let loveLockState = $state<ActiveMood | null>(null);
@@ -163,10 +187,23 @@
         goto('/');
         return;
       }
-      // Real-account bridge: a Supabase session (email / Google / later Saikan
-      // ID) opens the app as the matching profile. This also catches the Google
-      // OAuth redirect that lands back here.
-      void bridgeSupabaseSession()
+      // Surface a Saikan callback error (?saikan_error=…) as normal login copy.
+      const saikanError = new URLSearchParams(location.search).get('saikan_error');
+      if (saikanError) {
+        error = saikanErrorMessage(saikanError);
+        history.replaceState(null, '', location.pathname);
+      }
+      // Real-account bridge: a Supabase session (email / Google / Saikan ID)
+      // opens the app as the matching profile. completeSaikanSignIn() first
+      // turns a Saikan callback's one-time #saikan_token_hash into a real
+      // Supabase session; the Google OAuth redirect is caught by
+      // detectSessionInUrl as before. Then the bridge maps account → profile.
+      void completeSaikanSignIn()
+        .catch(() => {
+          error = saikanErrorMessage('generic');
+          return false;
+        })
+        .then(() => bridgeSupabaseSession())
         .then((r) => {
           if (r === 'bridged') location.href = '/';
           else if (r === 'needs-handle') void goto('/conta/');
@@ -475,13 +512,22 @@
           <span class="google-g" aria-hidden="true">G</span>
           {googleBusy ? $t('splash.google.connecting', { default: 'A ligar…' }) : $t('splash.google.cta', { default: 'Continuar com Google' })}
         </button>
-        <button type="button" class="saikan-btn" disabled aria-describedby="saikan-hint">
-          <span class="saikan-s" aria-hidden="true">S</span>
-          {$t('splash.saikan.cta', { default: 'Continuar com Saikan ID' })}
-        </button>
-        <p id="saikan-hint" class="google-hint">
-          {$t('splash.saikan.hint', { default: 'Entrar com Saikan ID está a caminho.' })}
-        </p>
+        {#if accountsEnabled()}
+          <button type="button" class="saikan-btn" onclick={onSaikan} disabled={saikanBusy}>
+            <span class="saikan-s" aria-hidden="true">S</span>
+            {saikanBusy
+              ? $t('splash.google.connecting', { default: 'A ligar…' })
+              : $t('splash.saikan.cta', { default: 'Continuar com Saikan ID' })}
+          </button>
+        {:else}
+          <button type="button" class="saikan-btn" disabled aria-describedby="saikan-hint">
+            <span class="saikan-s" aria-hidden="true">S</span>
+            {$t('splash.saikan.cta', { default: 'Continuar com Saikan ID' })}
+          </button>
+          <p id="saikan-hint" class="google-hint">
+            {$t('splash.saikan.hint', { default: 'Entrar com Saikan ID está a caminho.' })}
+          </p>
+        {/if}
       </div>
 
       <a class="create-account" href="/onboarding/" data-sveltekit-preload-data>
@@ -654,9 +700,12 @@
     font-weight: 600;
     cursor: pointer;
   }
-  .google-btn:hover { background: #f3f4f6; }
-  .google-btn:disabled { cursor: progress; opacity: 0.7; }
-  .saikan-btn { cursor: not-allowed; opacity: 0.6; }
+  .google-btn:hover,
+  .saikan-btn:hover { background: #f3f4f6; }
+  .google-btn:disabled,
+  .saikan-btn:disabled { cursor: progress; opacity: 0.7; }
+  /* The [disabled] "coming soon" variant (accounts off) still reads as inert. */
+  .saikan-btn[disabled][aria-describedby] { cursor: not-allowed; opacity: 0.6; }
   .google-g,
   .saikan-s {
     display: grid;

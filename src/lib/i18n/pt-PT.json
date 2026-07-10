@@ -5012,5 +5012,17 @@
   "profile.generic.focus.life": "Vida",
   "profile.generic.focus.social": "Social",
   "eggs.toast.porquinho": "🔐 Porquinho! Encontraste o segredo escondido. 💛",
-  "quiz.toast.perfect_again": "🏆 {correct}/{total} — Perfeito outra vez!"
+  "quiz.toast.perfect_again": "🏆 {correct}/{total} — Perfeito outra vez!",
+  "conta.email_placeholder": "tu@email.com",
+  "conta.name_placeholder": "O teu nome",
+  "trabalhos.filters.urgency": "Urgência",
+  "trabalhos.filters.urgency.aria": "Filtrar por urgência do prazo",
+  "trabalhos.filters.urgency.all": "Todos os prazos",
+  "trabalhos.filters.urgency.today": "Hoje",
+  "trabalhos.filters.urgency.week": "Esta semana",
+  "trabalhos.filters.urgency.month": "Este mês",
+  "trabalhos.filters.urgency.next30": "Próximos 30 dias",
+  "trabalhos.filters.urgency.overdue": "Em atraso",
+  "arcade.mascot_runner.label": "Jogo do corredor — toca ou espaço para saltar",
+  "arcade.mascot_runner.hint": "▶ TAP / SPACE"
 }
