@@ -457,7 +457,7 @@
   "easterEggs.reward_locked": "Récompense : ████████ (verrouillée)",
   "easterEggs.status.locked": "🔒 À DÉCOUVRIR",
   "easterEggs.status.unlocked": "🔓 DÉCOUVERT",
-  "eggs.mascot.fallback": "🧴 Tu peux le faire, Fatma ! 💪",
+  "eggs.mascot.fallback": "🧴 Tu peux le faire ! 💪",
   "eggs.toast.brutale": "🏍️ MV Agusta Brutale ! On entend le moteur d'ici.",
   "eggs.toast.clutch": "🎯 Clutch ! Ace en 1v5 — tu es la MVP du Presuntinho.",
   "eggs.toast.harissa": "🌶️ Harissa ! Piquant comme la Tunisie — saha !",
@@ -1331,7 +1331,7 @@
   "onboarding.quests.title": "Missions quotidiennes",
   "onboarding.startCta": "On y va ! 🐷",
   "onboarding.subAppsTitle": "Tes coins",
-  "onboarding.welcome": "🐷 Bienvenue, Fatma ! Trouve les easter eggs 🥚",
+  "onboarding.welcome": "🐷 Bienvenue sur Presuntinho ! Trouve les easter eggs cachés 🥚",
   "onboarding.welcome.daniel": "🐷 Bienvenue, Daniel ! Trouve les easter eggs 🥚",
   "onboarding.welcome.fatma": "🐷 Bienvenue, Fatma ! Trouve les easter eggs 🥚",
   "placeholder": {

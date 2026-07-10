@@ -248,7 +248,7 @@ export async function mascotClick(): Promise<void> {
   const tips = await getMascotTips();
   const tip = tips.length
     ? tips[Math.floor(Math.random() * tips.length)]
-    : tr('eggs.mascot.fallback', '🧴 Tu consegues, Fatma! 💪');
+    : tr('eggs.mascot.fallback', '🧴 Tu consegues! 💪');
   showToast(tip);
   await awardXP('easteregg_mascot', 5);
 }

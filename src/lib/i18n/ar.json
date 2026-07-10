@@ -457,7 +457,7 @@
   "easterEggs.reward_locked": "المكافأة: ████████ (مقفلة)",
   "easterEggs.status.locked": "🔒 غير مكتشف",
   "easterEggs.status.unlocked": "🔓 مكتشف",
-  "eggs.mascot.fallback": "🧴 أنتِ قادرة يا فاطمة! 💪",
+  "eggs.mascot.fallback": "🧴 يمكنك ذلك! 💪",
   "eggs.toast.brutale": "🏍️ إم في أغوستا بروتالي! صوت المحرك يُسمع من هنا.",
   "eggs.toast.clutch": "🎯 كلاتش! آيس 1 ضد 5 — أنتِ نجمة برسونتينيو.",
   "eggs.toast.harissa": "🌶️ هريسة! حارة مثل تونس — صحة!",
@@ -1331,7 +1331,7 @@
   "onboarding.quests.title": "المهام اليومية",
   "onboarding.startCta": "🐷 لننطلق!",
   "onboarding.subAppsTitle": "زواياك",
-  "onboarding.welcome": "🐷 مرحباً بك يا فاطمة! ابحثي عن بيض عيد الفصح 🥚",
+  "onboarding.welcome": "🐷 مرحباً بك في Presuntinho! ابحث عن بيض الفصح المخفي 🥚",
   "onboarding.welcome.daniel": "🐷 مرحباً يا دانيال! ابحث عن بيض عيد الفصح 🥚",
   "onboarding.welcome.fatma": "🐷 مرحباً بك يا فاطمة! ابحثي عن بيض عيد الفصح 🥚",
   "placeholder": {
