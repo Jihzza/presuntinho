@@ -31,14 +31,15 @@ export interface MascotDef {
   minXp?: number;
   /** Unlocked badge count needed to unlock. */
   minBadges?: number;
-  /** The three personal "família" mascots (Fatma, Rafa, o gato Hamy). They are
+  /** The three "companion" mascots (Luna 🌙, Léo 🧔, Michi 🐈). They are
    *  always unlocked and get special treatment: a glowing aura + a gentle
    *  heartbeat idle, and a heart burst instead of the generic sparkle. */
   special?: boolean;
 }
 
 export const MASCOTS: readonly MascotDef[] = Object.freeze([
-  // ── Família (especiais) — sempre desbloqueadas, com brilho próprio. ──
+  // ── Companheiros (especiais) — sempre desbloqueados, com brilho próprio.
+  //    Os ids preservam os caminhos da arte em /static/mascotes/<id>/. ──
   { id: 'fatma', emoji: '🌙', special: true },
   { id: 'rafa', emoji: '🧔', special: true },
   { id: 'hamy', emoji: '🐈', special: true },

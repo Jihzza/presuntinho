@@ -482,7 +482,7 @@
   .rail-card.locked :global(.mavatar img) {
     filter: grayscale(1) brightness(0.55) opacity(0.55);
   }
-  /* Família (especiais) — moldura a brilhar + fundo quente, sempre destacadas. */
+  /* Companheiros (especiais) — moldura a brilhar + fundo quente, sempre destacados. */
   .rail-card.special {
     border-color: color-mix(in srgb, var(--accent) 45%, transparent);
     background:
