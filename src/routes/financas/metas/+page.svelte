@@ -386,8 +386,18 @@
                     {/if}
                   </span>
                 </div>
-                <span class="meta-percent" class:done={Boolean(m.doneAt)}>
-                  {Math.round(percentOf(m))}%
+                <span class="meta-ring" class:done={Boolean(m.doneAt)}>
+                  <svg viewBox="0 0 56 56" width="56" height="56" aria-hidden="true">
+                    <circle class="ring-track" cx="28" cy="28" r="24" />
+                    <circle
+                      class="ring-fill"
+                      cx="28"
+                      cy="28"
+                      r="24"
+                      style="stroke-dashoffset: {150.8 * (1 - Math.min(100, percentOf(m)) / 100)}"
+                    />
+                  </svg>
+                  <span class="ring-label">{Math.round(percentOf(m))}%</span>
                 </span>
               </header>
 
@@ -751,14 +761,43 @@
   .meta-meta .de {
     color: var(--txt3);
   }
-  .meta-percent {
-    font-weight: 700;
-    font-size: 1rem;
-    color: var(--accent);
-    font-variant-numeric: tabular-nums;
+  /* Anel de progresso (linguagem dos mockups: % dentro de um ring). */
+  .meta-ring {
+    position: relative;
+    width: 56px;
+    height: 56px;
     flex-shrink: 0;
   }
-  .meta-percent.done {
+  .meta-ring svg {
+    transform: rotate(-90deg);
+  }
+  .ring-track {
+    fill: none;
+    stroke: color-mix(in srgb, var(--accent) 14%, transparent);
+    stroke-width: 6;
+  }
+  .ring-fill {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-dasharray: 150.8;
+    transition: stroke-dashoffset 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .meta-ring.done .ring-fill {
+    stroke: var(--success);
+  }
+  .ring-label {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .meta-ring.done .ring-label {
     color: var(--success);
   }
   .bar-wrap {
