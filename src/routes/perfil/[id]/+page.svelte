@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { page } from '$app/state';
   import { t } from 'svelte-i18n';
-  import { getSession } from '$lib/auth/session';
+  import { getSession, isLegacyProfile } from '$lib/auth/session';
   import { otherPerson, profileFor, type PersonProfile } from '$lib/profile/people';
   import { getMember } from '$lib/space/registry-db';
   import { xp, initStores } from '$lib/state/stores';
@@ -14,7 +14,7 @@
   // the neutral generic profile for a uuid, and the member's own registry row
   // (loaded below) drives their real name/emoji/bio.
   const id = $derived((page.params.id ?? 'fatma') as ChatProfile);
-  const isLegacy = $derived(id === 'fatma' || id === 'daniel');
+  const isLegacy = $derived(isLegacyProfile(id));
   const session = $derived(getSession());
   const person = $derived<PersonProfile>(profileFor(id));
   const partner = $derived<PersonProfile>(otherPerson(id));
@@ -35,7 +35,7 @@
     const unsub = xp.subscribe((v) => (currentXp = v));
     void initStores();
     const raw = page.params.id;
-    if (raw && raw !== 'fatma' && raw !== 'daniel') {
+    if (raw && !isLegacyProfile(raw)) {
       void getMember(raw)
         .then((m) => {
           if (m) member = { displayName: m.displayName, emoji: m.emoji, bio: m.bio };

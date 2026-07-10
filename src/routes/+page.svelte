@@ -36,7 +36,7 @@
   import { db } from '$lib/state/db';
   import { xp, initStores } from '$lib/state/stores';
   import { XP_CHANGED_EVENT } from '$lib/state/xp-actions';
-  import { getSession } from '$lib/auth/session';
+  import { getSession, isLegacyProfile } from '$lib/auth/session';
   import { getActivityStreak, getWeekActivity, type ActivityStreak, type WeekDayActivity } from '$lib/gamification/streak';
   import WeekCircles from '$lib/components/WeekCircles.svelte';
   import { progressToNext } from '$lib/gamification/levels';
@@ -141,7 +141,7 @@
     // recorre aos nomes fixos legados (fatma/daniel) quando o perfil é um
     // deles; um membro onboarded (id uuid) ou visitante genérico é saudado
     // sem nome, em vez de "Bom dia, Fatma".
-    const legacy = activeProfile === 'fatma' || activeProfile === 'daniel'
+    const legacy = isLegacyProfile(activeProfile)
       ? ($t(`profile.${activeProfile}`, { default: '' }) as string)
       : '';
     const name = (profileState.displayName || accountState.account?.display_name || legacy || '').trim();
@@ -354,7 +354,7 @@
         {/if}
       </button>
       <div class="profile-id">
-        <strong>{profileState.displayName || accountState.account?.display_name || (activeProfile === 'fatma' || activeProfile === 'daniel' ? $t(person.nameKey) : $t('profile.generic.name', { default: 'O teu perfil' }))}</strong>
+        <strong>{profileState.displayName || accountState.account?.display_name || (isLegacyProfile(activeProfile) ? $t(person.nameKey) : $t('profile.generic.name', { default: 'O teu perfil' }))}</strong>
         {#if profileState.bio}
           <small>{profileState.bio}</small>
         {:else if accountState.account?.handle}

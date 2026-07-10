@@ -3,7 +3,7 @@
 // people.ts fallback, persists edits to the registry (IndexedDB), and fires a
 // window event so the home hero + anywhere else refresh without a reload.
 
-import { getSession } from '$lib/auth/session';
+import { getSession, isLegacyProfile } from '$lib/auth/session';
 import { getMember, updateMember } from '$lib/space/registry-db';
 import { seedLegacyRegistry } from '$lib/space/legacy-adapter';
 import { profileFor } from '$lib/profile/people';
@@ -47,7 +47,7 @@ export async function loadProfile(): Promise<void> {
   // bio come from their own registry row — never from Fatma's defaults. Passing
   // the real id (uuid included) to profileFor() yields the neutral 🐷 profile
   // carrying that id, so the hub hero can never show '@fatma'/🌙 to a new user.
-  const legacy = p === 'fatma' || p === 'daniel';
+  const legacy = isLegacyProfile(p);
   const id = p as ChatProfile | null;
   const person = profileFor(id);
   profileState.id = id;

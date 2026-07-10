@@ -34,8 +34,7 @@
     ensureAssignmentDefaults,
     localizedAssignment,
     type Assignment,
-    type AssignmentStatus
-  } from '$lib/trabalhos';
+    type AssignmentStatus, STATUS_LABELS, STATUS_OPTIONS } from '$lib/trabalhos';
   import Countdown from '$lib/components/Countdown.svelte';
   import EmptyState from '$lib/components/EmptyState.svelte';
   import Skeleton from '$lib/components/Skeleton.svelte';
@@ -72,24 +71,14 @@
     });
   });
 
-  // "All" status options (mirrors AssignmentRow['status']).
-  const STATUS_OPTIONS: Array<AssignmentStatus | 'todos'> = [
-    'todos',
-    'pending',
-    'in_progress',
-    'submitted',
-    'graded'
-  ];
+  // "All" + the canonical status list (single source in $lib/trabalhos).
+  const STATUS_FILTER_OPTIONS: Array<AssignmentStatus | 'todos'> = ['todos', ...STATUS_OPTIONS];
 
   // Pretty label for each status (PT-only for the MVP — i18n lives
   // in task-005).
   function statusLabel(s: AssignmentStatus): string {
-    switch (s) {
-      case 'pending':     return $t('trabalhos.status.pending', { default: 'Por começar' });
-      case 'in_progress': return $t('trabalhos.status.in_progress', { default: 'Em curso' });
-      case 'submitted':   return $t('trabalhos.status.submitted', { default: 'Entregue' });
-      case 'graded':      return $t('trabalhos.status.graded', { default: 'Avaliado' });
-    }
+    const { key, fallback } = STATUS_LABELS[s];
+    return $t(key, { default: fallback });
   }
 
   // Friendly curso name: replace dashes with spaces and title-case
@@ -134,7 +123,7 @@
     const c = sp.get('curso');
     if (c) cursoFiltro = c;
     const s = sp.get('status');
-    if (s && STATUS_OPTIONS.includes(s as AssignmentStatus | 'todos')) {
+    if (s && STATUS_FILTER_OPTIONS.includes(s as AssignmentStatus | 'todos')) {
       statusFiltro = s as AssignmentStatus | 'todos';
     }
     const o = sp.get('ordem');
@@ -232,7 +221,7 @@
         <label class="field">
           <span class="field-label">{$t('trabalhos.filters.status', { default: 'Estado' })}</span>
           <select bind:value={statusFiltro} aria-label={$t('trabalhos.filters.status.aria', { default: 'Filtrar por estado' })}>
-            {#each STATUS_OPTIONS as s (s)}
+            {#each STATUS_FILTER_OPTIONS as s (s)}
               <option value={s}>{s === 'todos' ? $t('trabalhos.filters.all', { default: 'Todos' }) : statusLabel(s as AssignmentStatus)}</option>
             {/each}
           </select>

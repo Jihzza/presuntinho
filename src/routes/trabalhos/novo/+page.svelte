@@ -25,8 +25,7 @@
     createAssignment,
     ensureAssignmentDefaults,
     listAssignmentCursos,
-    type AssignmentStatus
-  } from '$lib/trabalhos';
+    type AssignmentStatus, STATUS_LABELS, STATUS_OPTIONS, defaultDeadlineLocal } from '$lib/trabalhos';
   import { localizedSchoolCourses } from '$lib/escola/catalog';
   import { showToast } from '$lib/components/events';
 
@@ -47,7 +46,6 @@
   // Extra course slugs the user already used that aren't in the catalog.
   let extraCursos = $state<string[]>([]);
 
-  const STATUS_OPTIONS: AssignmentStatus[] = ['pending', 'in_progress', 'submitted', 'graded'];
 
   // ---------------- Derived ----------------
   // Course option groups, localized and reactive to the language.
@@ -68,22 +66,9 @@
   );
 
   // ---------------- Helpers ----------------
-  // Default deadline: 7 days from now at 23:59 local, as a datetime-local
-  // string ('YYYY-MM-DDTHH:mm').
-  function defaultDeadlineLocal(): string {
-    const d = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    d.setHours(23, 59, 0, 0);
-    const pad = (n: number) => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  }
-
   function statusLabel(s: AssignmentStatus): string {
-    switch (s) {
-      case 'pending':     return $t('trabalhos.status.pending', { default: 'Por começar' });
-      case 'in_progress': return $t('trabalhos.status.in_progress', { default: 'Em curso' });
-      case 'submitted':   return $t('trabalhos.status.submitted', { default: 'Entregue' });
-      case 'graded':      return $t('trabalhos.status.graded', { default: 'Avaliado' });
-    }
+    const { key, fallback } = STATUS_LABELS[s];
+    return $t(key, { default: fallback });
   }
 
   function prettySlug(slug: string): string {

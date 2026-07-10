@@ -28,8 +28,7 @@
     updateAssignment,
     deleteAssignment,
     type Assignment,
-    type AssignmentStatus
-  } from '$lib/trabalhos';
+    type AssignmentStatus, STATUS_LABELS, STATUS_OPTIONS, toDatetimeLocal } from '$lib/trabalhos';
   import Countdown from '$lib/components/Countdown.svelte';
   import { showToast } from '$lib/components/events';
   import { localizedSchoolMetaForSlug } from '$lib/escola/catalog';
@@ -43,12 +42,8 @@
 
   // Pretty label for the status enum (PT-only for the MVP).
   function statusLabel(s: AssignmentStatus): string {
-    switch (s) {
-      case 'pending':     return $t('trabalhos.status.pending', { default: 'Por começar' });
-      case 'in_progress': return $t('trabalhos.status.in_progress', { default: 'Em curso' });
-      case 'submitted':   return $t('trabalhos.status.submitted', { default: 'Entregue' });
-      case 'graded':      return $t('trabalhos.status.graded', { default: 'Avaliado' });
-    }
+    const { key, fallback } = STATUS_LABELS[s];
+    return $t(key, { default: fallback });
   }
 
   // Pretty label for the curso slug.
@@ -109,16 +104,6 @@
   let editDeadlineLocal = $state('');
   let editNotas = $state('');
   let editStatus = $state<AssignmentStatus>('pending');
-  const STATUS_OPTIONS: AssignmentStatus[] = ['pending', 'in_progress', 'submitted', 'graded'];
-
-  // Convert a timestamp to a 'YYYY-MM-DDTHH:mm' local string for the
-  // datetime-local input (empty string when the timestamp is invalid).
-  function toDatetimeLocal(ts: number): string {
-    const d = new Date(ts);
-    if (Number.isNaN(d.getTime())) return '';
-    const pad = (n: number) => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  }
 
   // Mutation handlers — Dexie liveQuery above reflects the saved row back
   // into local state, but we also assign the returned row so the page feels

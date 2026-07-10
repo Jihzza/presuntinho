@@ -28,7 +28,7 @@
 
 import Dexie, { type Table } from 'dexie';
 import type { ProfileId } from '../auth/hash';
-import { getSession } from '../auth/session';
+import { getSession, isLegacyProfile } from '../auth/session';
 import { buildSeedTransacoes } from './financas-seed';
 import { seedHabitosPro } from './habitos-seed';
 
@@ -893,7 +893,7 @@ export async function ensureDefaults(profile: ProfileId = activeProfile): Promis
   // member (uuid profile) must start with a CLEAN slate — not someone else's
   // habits pre-filled into their real tracker. Essential defaults (categories,
   // state, settings) are still seeded for everyone above.
-  const isLegacyDemoProfile = profile === 'fatma' || profile === 'daniel';
+  const isLegacyDemoProfile = isLegacyProfile(profile);
   const existingHabitCount = await d.habitos.count();
   if (existingHabitCount === 0 && isLegacyDemoProfile) {
     // task-040: delegating to seedHabitosPro() replaces the prior

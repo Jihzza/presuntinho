@@ -109,6 +109,37 @@ const STATUS_ORDER: Record<AssignmentStatus, number> = {
   graded: 3
 };
 
+/** Canonical status list, in lifecycle order — SINGLE source for dropdowns.
+ *  Derived from STATUS_ORDER so adding a status updates every consumer. */
+export const STATUS_OPTIONS: readonly AssignmentStatus[] = (
+  Object.keys(STATUS_ORDER) as AssignmentStatus[]
+).sort((a, b) => STATUS_ORDER[a] - STATUS_ORDER[b]);
+
+/** i18n key + pt-PT fallback per status — routes wrap this with $t so the
+ *  label mapping can't drift between the three pages that render it. */
+export const STATUS_LABELS: Record<AssignmentStatus, { key: string; fallback: string }> = {
+  pending: { key: 'trabalhos.status.pending', fallback: 'Por começar' },
+  in_progress: { key: 'trabalhos.status.in_progress', fallback: 'Em curso' },
+  submitted: { key: 'trabalhos.status.submitted', fallback: 'Entregue' },
+  graded: { key: 'trabalhos.status.graded', fallback: 'Avaliado' }
+};
+
+/** Timestamp → 'YYYY-MM-DDTHH:mm' local string for datetime-local inputs
+ *  ('' when invalid). Shared by the new-assignment and edit forms. */
+export function toDatetimeLocal(ts: number): string {
+  const d = new Date(ts);
+  if (Number.isNaN(d.getTime())) return '';
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+/** Default deadline for a NEW assignment: 7 days from now at 23:59 local. */
+export function defaultDeadlineLocal(): string {
+  const d = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  d.setHours(23, 59, 0, 0);
+  return toDatetimeLocal(d.getTime());
+}
+
 type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
 
 export function localizedAssignment(t: TranslateFn, assignment: Assignment): Assignment {

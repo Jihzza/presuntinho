@@ -23,7 +23,7 @@
   import { locale, waitLocale } from 'svelte-i18n';
   import { setLocale, LOCALES, LOCALE_META, type Locale } from '$lib/i18n';
   import { goto } from '$app/navigation';
-  import { clearSession } from '$lib/auth/session';
+  import { clearSession, isLegacyProfile } from '$lib/auth/session';
   import { resetSoundPrefsCache } from '$lib/gamification/sound';
   import LogOut from 'lucide-svelte/icons/log-out';
   import {
@@ -975,7 +975,7 @@
 
   onMount(() => {
     const p = getSession()?.profile;
-    coupleProfile = p === 'fatma' || p === 'daniel' ? p : null;
+    coupleProfile = p && isLegacyProfile(p) ? (p as 'fatma' | 'daniel') : null;
     coupleConnected = !!(coupleProfile && getChatToken(coupleProfile));
   });
 

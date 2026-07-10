@@ -12,7 +12,7 @@
 // fires incoming pings. Everything degrades to a no-op when there is no chat
 // token or the session profile isn't one of the two legacy partners.
 
-import { getSession } from '$lib/auth/session';
+import { getSession, isLegacyProfile } from '$lib/auth/session';
 import { isMultiplayerConfigured } from '$lib/multiplayer/config';
 import { COUPLE_CHANNEL, coupleRole } from '$lib/couple/couple-channel';
 import type { Room } from '$lib/multiplayer/realtime';
@@ -97,7 +97,7 @@ let supaPointsUnsub: (() => void) | null = null;
 
 function profile(): ChatProfile | null {
   const p = getSession()?.profile;
-  return p === 'fatma' || p === 'daniel' ? p : null;
+  return p && isLegacyProfile(p) ? (p as 'fatma' | 'daniel') : null;
 }
 
 function partnerName(me: ChatProfile): string {

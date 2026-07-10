@@ -92,13 +92,9 @@ export const STREAK_NOTIF_FALLBACKS: string[] = [
 	'🐷 O Presuntinho prometeu não dramatizar. O Presuntinho mentiu: A STREAK ESTÁ EM RISCO!'
 ];
 
-export function isNotifSupported(): boolean {
-	return typeof window !== 'undefined' && 'Notification' in window;
-}
-
-export function notifPermission(): NotificationPermission | 'unsupported' {
-	return isNotifSupported() ? Notification.permission : 'unsupported';
-}
+// Capability checks live in $lib/habitos/reminders (single home alongside
+// showAppNotification); re-exported here under the historical names.
+export { notificationsSupported as isNotifSupported, notificationPermission as notifPermission } from '$lib/habitos/reminders';
 
 export async function readNotifStreakEnabled(): Promise<boolean> {
 	if (typeof indexedDB === 'undefined') return false;

@@ -153,18 +153,35 @@ export async function ensureLessonDoneMigration(): Promise<void> {
  * All COMPLETED lessons, keyed in the SAME 'lesson:<unit>:<slug>' shape as
  * loadVisitedLessons so every call site can keep using lessonVisitedId(...).
  * Runs the one-time visited→done migration first.
+ *
+ * In-flight dedup: /escola's onMount fires schoolSummary(), resumeTarget()
+ * and allCourseProgress() concurrently, and each calls this — without the
+ * shared promise that meant 3 full `visited` table scans (and a 3×-raceable
+ * first-run migration) per page visit. Concurrent callers now share one scan;
+ * the promise is dropped on settle so fresh calls always reread the table.
  */
+let inflightCompleted: Promise<Map<string, number>> | null = null;
+
 export async function loadCompletedLessons(): Promise<Map<string, number>> {
-  const map = new Map<string, number>();
-  if (!hasIndexedDb()) return map;
-  await ensureLessonDoneMigration();
-  const rows = await db().visited.toArray();
-  for (const row of rows) {
-    if (typeof row.id === 'string' && row.id.startsWith('lesson-done:') && row.visited) {
-      map.set(`lesson:${row.id.slice('lesson-done:'.length)}`, row.visitedAt || 0);
+  if (!hasIndexedDb()) return new Map<string, number>();
+  if (inflightCompleted) return inflightCompleted;
+  const run = (async () => {
+    const map = new Map<string, number>();
+    await ensureLessonDoneMigration();
+    const rows = await db().visited.toArray();
+    for (const row of rows) {
+      if (typeof row.id === 'string' && row.id.startsWith('lesson-done:') && row.visited) {
+        map.set(`lesson:${row.id.slice('lesson-done:'.length)}`, row.visitedAt || 0);
+      }
     }
+    return map;
+  })();
+  inflightCompleted = run;
+  try {
+    return await run;
+  } finally {
+    inflightCompleted = null;
   }
-  return map;
 }
 
 /** Ids 'path-chest:<unit>' já recolhidos no mapa do curso (V10.3). */

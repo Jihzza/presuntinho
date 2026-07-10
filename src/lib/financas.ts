@@ -841,8 +841,7 @@ export async function addDinheiroMeta(
   // para não duplicar XP com meta_progress/meta_reached.
   if (movimento !== 0) {
     try {
-      const n = new Date();
-      const hoje = `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}`;
+      const hoje = getHojeISO();
       const linked: TransacaoRow = {
         tipo: movimento > 0 ? 'despesa' : 'receita',
         valor: Math.abs(movimento),

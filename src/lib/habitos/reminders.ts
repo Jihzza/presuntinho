@@ -121,8 +121,20 @@ export interface DueReminder {
  * reminder's own day-subset), reminder time is at/just-past `now` (within a
  * grace window so a minute-tick can't miss it), and not yet logged today.
  */
+// Early-exit cache: most opted-in users have ZERO habits with a reminder
+// configured, yet the layout tick calls this every 60s — a pointless
+// habits-table scan per minute. Remember the empty result briefly (short TTL
+// keeps a freshly-added reminder from being missed for long).
+let noRemindersUntil = 0;
+const NO_REMINDERS_TTL_MS = 5 * 60_000;
+
 export async function dueHabitReminders(now: Date = new Date(), graceMinutes = 90): Promise<DueReminder[]> {
+  if (Date.now() < noRemindersUntil) return [];
   const habits = await listActiveHabitos();
+  if (!habits.some((h) => parseReminder(h.reminder))) {
+    noRemindersUntil = Date.now() + NO_REMINDERS_TTL_MS;
+    return [];
+  }
   const nowMin = now.getHours() * 60 + now.getMinutes();
   const dow = now.getDay();
   const out: DueReminder[] = [];
