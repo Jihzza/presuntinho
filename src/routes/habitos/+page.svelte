@@ -497,6 +497,7 @@
     {:else if habits.length === 0}
       <EmptyState
         emoji="🌱"
+        art="/art/empty-habitos.webp"
         title={$t('empty.habitos.title')}
         description={$t('empty.habitos.desc')}
         ctaLabel={$t('actions.cta.addHabit')}

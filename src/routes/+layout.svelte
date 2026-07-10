@@ -506,7 +506,7 @@
                     <span class="nav-icon" aria-hidden="true">🗓️</span>
                     <span class="nav-label">{$t('nav.calendario', { default: 'Calendário' })}</span>
                   </a>
-                  <a href="/agente/" class="nav-btn" class:nav-btn-active={isActive('/agente/')} aria-current={isActive('/agente/') ? 'page' : undefined} class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Agente')} aria-label={$t('nav.agente.aria', { default: 'Agente — chat com IA' })} data-sveltekit-preload-data>
+                  <a href="/agente/" class="nav-btn nav-btn-center" class:nav-btn-active={isActive('/agente/')} aria-current={isActive('/agente/') ? 'page' : undefined} class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Agente')} aria-label={$t('nav.agente.aria', { default: 'Agente — chat com IA' })} data-sveltekit-preload-data>
                     <span class="nav-icon" aria-hidden="true">🤖</span>
                     <span class="nav-label">{$t('nav.agente', { default: 'Agente' })}</span>
                   </a>
@@ -809,13 +809,13 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      background: rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      background: color-mix(in srgb, var(--bg-elev, rgba(255, 255, 255, 0.92)) 86%, transparent);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
       padding: 0.4rem 0.25rem calc(0.4rem + env(safe-area-inset-bottom));
       z-index: 50;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
+      box-shadow: var(--shadow-md, 0 -4px 20px rgba(0, 0, 0, 0.15));
     }
     .nav-btn {
       flex: 1;
@@ -840,12 +840,40 @@
     }
     .nav-btn:hover,
     .nav-btn:focus-visible {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.06);
+      color: var(--txt);
+      background: color-mix(in srgb, var(--accent) 8%, transparent);
       outline: none;
     }
     .nav-btn:active {
       transform: scale(0.96);
+    }
+    /* Agente — the raised centre action (design mockups): a pink circle
+       floating above the bar with the icon inside; label stays below. */
+    .nav-btn-center .nav-icon {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      margin-top: -26px;
+      background: linear-gradient(150deg, var(--accent) 0%, var(--accent-hover, var(--accent)) 100%);
+      border: 3px solid var(--bg-elev, #fff);
+      border-radius: 999px;
+      box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 45%, transparent);
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+    .nav-btn-center.nav-btn-active {
+      background: transparent;
+    }
+    .nav-btn-center.nav-btn-active::before {
+      display: none;
+    }
+    .nav-btn-center:hover,
+    .nav-btn-center:focus-visible {
+      background: transparent;
+    }
+    .nav-btn-center:hover .nav-icon {
+      transform: translateY(-2px);
     }
     .nav-btn:focus-visible {
       box-shadow: 0 0 0 2px var(--accent);

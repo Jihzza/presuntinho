@@ -20,6 +20,8 @@
 		locked?: boolean;
 		/** 'column' = quadrado compacto (grelhas); 'row' = lista horizontal. */
 		layout?: 'column' | 'row';
+		/** 'tile' = mosaico gradiente colorido (Home, mockups); 'plain' = cartão neutro. */
+		variant?: 'plain' | 'tile';
 		badge?: string;
 		children?: Snippet;
 	}
@@ -34,6 +36,7 @@
 		progress,
 		locked = false,
 		layout = 'column',
+		variant = 'plain',
 		badge,
 		children
 	}: Props = $props();
@@ -92,7 +95,7 @@
 {#if isLink}
 	<a
 		{href}
-		class="app-card ac-{layout}"
+		class="app-card ac-{layout} ac-{variant}"
 		style={accent ? `--ac-accent: ${accent}` : undefined}
 		data-sveltekit-preload-data
 	>
@@ -100,7 +103,7 @@
 	</a>
 {:else}
 	<span
-		class="app-card ac-{layout}"
+		class="app-card ac-{layout} ac-{variant}"
 		class:ac-locked={locked}
 		style={accent ? `--ac-accent: ${accent}` : undefined}
 		aria-disabled="true"
@@ -161,6 +164,66 @@
 	.ac-locked {
 		opacity: 0.55;
 		cursor: not-allowed;
+	}
+
+	/* ── Tile: mosaico gradiente (linguagem dos mockups) ── */
+	.ac-tile {
+		background: linear-gradient(
+			150deg,
+			color-mix(in srgb, var(--ac-accent, var(--accent)) 82%, #ffffff) 0%,
+			var(--ac-accent, var(--accent)) 55%,
+			color-mix(in srgb, var(--ac-accent, var(--accent)) 78%, #1e1b4b) 100%
+		);
+		border: none;
+		color: #fff;
+		box-shadow: 0 10px 26px color-mix(in srgb, var(--ac-accent, var(--accent)) 32%, transparent);
+		border-radius: var(--radius-lg, 1.25rem);
+	}
+	.ac-tile .ac-title {
+		color: #fff;
+		font-weight: 800;
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+	}
+	.ac-tile .ac-desc {
+		color: rgba(255, 255, 255, 0.88);
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.14);
+	}
+	.ac-tile .ac-meta {
+		color: rgba(255, 255, 255, 0.78);
+	}
+	.ac-tile .ac-icon {
+		display: grid;
+		place-items: center;
+		width: 2.6rem;
+		height: 2.6rem;
+		font-size: 1.5rem;
+		background: rgba(255, 255, 255, 0.22);
+		border-radius: 0.9rem;
+		backdrop-filter: blur(2px);
+	}
+	.ac-tile .ac-badge {
+		background: rgba(255, 255, 255, 0.26);
+		color: #fff;
+	}
+	.ac-tile .ac-progress {
+		background: rgba(255, 255, 255, 0.28);
+	}
+	.ac-tile .ac-progress-bar {
+		background: #fff;
+	}
+	.ac-tile .ac-progress-label,
+	.ac-tile .ac-arrow {
+		color: rgba(255, 255, 255, 0.85);
+	}
+	a.ac-tile:hover,
+	a.ac-tile:focus-visible {
+		background: linear-gradient(
+			150deg,
+			color-mix(in srgb, var(--ac-accent, var(--accent)) 88%, #ffffff) 0%,
+			var(--ac-accent, var(--accent)) 50%,
+			color-mix(in srgb, var(--ac-accent, var(--accent)) 72%, #1e1b4b) 100%
+		);
+		transform: translateY(-2px);
 	}
 
 	.ac-icon {

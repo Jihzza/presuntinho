@@ -360,27 +360,7 @@
          last 6 months — with prior-month history we keep showing the
          chart/totals below instead of hiding everything. -->
     <section class="empty-hero" aria-label={$t('financas.empty.illustration_alt', { default: 'Ilustração' })}>
-      <svg class="empty-illustration" viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={$t('financas.empty.illustration_alt', { default: 'Ilustração de um cofre de moedas' })}>
-        <defs>
-          <linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#10b981" stop-opacity="0.18" />
-            <stop offset="100%" stop-color="#10b981" stop-opacity="0" />
-          </linearGradient>
-        </defs>
-        <rect x="0" y="0" width="240" height="160" fill="url(#bg-grad)" rx="12" />
-        <!-- Coin jar -->
-        <ellipse cx="120" cy="120" rx="60" ry="10" fill="rgba(255,255,255,0.05)" />
-        <rect x="70" y="60" width="100" height="60" rx="10" fill="#0f766e" stroke="#34d399" stroke-width="2" />
-        <rect x="78" y="48" width="84" height="16" rx="6" fill="#14b8a6" stroke="#34d399" stroke-width="2" />
-        <!-- Coins inside -->
-        <circle cx="95" cy="100" r="9" fill="#fbbf24" stroke="#f59e0b" stroke-width="1.5" />
-        <circle cx="120" cy="105" r="11" fill="#fbbf24" stroke="#f59e0b" stroke-width="1.5" />
-        <circle cx="145" cy="100" r="9" fill="#fbbf24" stroke="#f59e0b" stroke-width="1.5" />
-        <text x="120" y="109" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e">$</text>
-        <!-- Arrows up -->
-        <path d="M40 110 L40 70 L34 76 M40 70 L46 76" stroke="#34d399" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M200 120 L200 80 L194 86 M200 80 L206 86" stroke="#34d399" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
+      <img class="empty-illustration" src="/art/empty-financas.webp" alt="" aria-hidden="true" loading="lazy" width="220" height="220" />
       <h2 class="empty-title">{$t('financas.empty.title', { default: 'Ainda não há despesas registadas' })}</h2>
       <p class="empty-sub">{$t('financas.empty.sub', { default: 'Adiciona a tua primeira transação para começares a ver gráficos e orçamento.' })}</p>
       <a class="empty-cta" href="/financas/nova/">{$t('financas.empty.cta', { default: '➕ Adicionar transação' })}</a>
@@ -678,10 +658,10 @@
     margin-bottom: 1.5rem;
   }
   .empty-illustration {
-    width: 240px;
-    height: 160px;
+    width: clamp(160px, 44vw, 220px);
     max-width: 100%;
     height: auto;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.14));
   }
   .empty-tutorial {
     list-style: none;

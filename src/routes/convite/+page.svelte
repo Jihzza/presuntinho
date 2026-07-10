@@ -16,7 +16,6 @@
   import { accountsEnabled, searchAccounts, normalizeHandle, type Account } from '$lib/account/auth';
   import { accountState, startAccountSync } from '$lib/account/account-store.svelte';
   import { stashInviteFrom, requestCouple } from '$lib/account/couple-link';
-  import MascotAvatar from '$lib/components/MascotAvatar.svelte';
 
   type Phase = 'loading' | 'invalid' | 'new-user' | 'sending' | 'sent' | 'self' | 'error';
   let phase = $state<Phase>('loading');
@@ -76,7 +75,7 @@
 <div class="convite">
   <div class="card">
     <span class="art" aria-hidden="true">
-      <MascotAvatar mascot="coracao" pose="love" size={116} entrance eager />
+      <img src="/art/hero-wave.webp" alt="" width="150" height="167" loading="eager" />
     </span>
 
     {#if phase === 'loading' || phase === 'sending'}
@@ -127,6 +126,11 @@
     box-shadow: var(--shadow-lg, 0 12px 32px rgba(0, 0, 0, 0.4));
   }
   .art { line-height: 1; }
+  .art img {
+    width: clamp(120px, 36vw, 160px);
+    height: auto;
+    filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.18));
+  }
   h1 {
     margin: 0;
     font-size: var(--fs-xl, 1.4rem);

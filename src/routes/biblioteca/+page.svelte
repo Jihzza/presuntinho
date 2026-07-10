@@ -224,6 +224,7 @@
         {:else}
           <EmptyState
             emoji="🔖"
+            art="/art/empty-biblioteca.webp"
             title={$t('empty.biblioteca.empty.title')}
             description={$t('empty.biblioteca.empty.desc')}
             ctaLabel={$t('actions.cta.addBookmark')}

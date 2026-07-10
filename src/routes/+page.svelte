@@ -557,19 +557,19 @@
     <!-- V10.1 (tarefa C): a grelha de apps usa o AppCard unificado — o mesmo
          cartão quadrado da Vida e da Escola. -->
     <div class="map-grid v10-stagger">
-      <AppCard href="/escola/" icon="🎓" title={$t('hub.map.school')} desc={$t('hub.map.school.desc')} />
-      <AppCard href="/vida/" icon="🌿" title={$t('hub.map.vida', { default: 'Vida' })} desc={$t('hub.map.vida.desc', { default: 'rotinas, energia e equilíbrio' })} />
-      <AppCard href="/streaks/" icon="🔥" title={$t('streaks.page.short', { default: 'Streaks' })} desc={$t('vida.streaks.desc', { default: 'A tua chama, XP diário e marcos.' })} />
-      <AppCard href="/habitos/" icon="✅" title={$t('hub.map.habits', { default: 'Hábitos' })} desc={$t('hub.map.habits.desc', { default: 'streaks e progresso diário' })} />
-      <AppCard href="/financas/" icon="💸" title={$t('hub.map.finances', { default: 'Finanças' })} desc={$t('hub.map.finances.desc', { default: 'transações e metas' })} />
-      <AppCard href="/calendario/" icon="🗓️" title={$t('hub.map.calendar')} desc={$t('hub.map.calendar.desc')} />
-      <AppCard href="/agente/" icon="🤖" title={$t('hub.map.agent')} desc={$t('hub.map.agent.desc')} />
-      <AppCard href="/mensagens/" icon="💬" title={$t('nav.mensagens', { default: 'Mensagens' })} desc={$t('hub.map.messages.desc', { default: 'conversas com o Daniel' })} />
-      <AppCard href="/humor/" icon="💗" title={$t('hub.map.mood', { default: 'Humor' })} desc={$t('hub.map.mood.desc', { default: 'como te tens sentido' })} />
-      <AppCard href="/memorias/" icon="📸" title={$t('hub.map.memories', { default: 'Memórias' })} desc={$t('hub.map.memories.desc', { default: 'momentos guardados com carinho' })} />
+      <AppCard href="/escola/" variant="tile" accent="#db2777" icon="🎓" title={$t('hub.map.school')} desc={$t('hub.map.school.desc')} />
+      <AppCard href="/vida/" variant="tile" accent="#047857" icon="🌿" title={$t('hub.map.vida', { default: 'Vida' })} desc={$t('hub.map.vida.desc', { default: 'rotinas, energia e equilíbrio' })} />
+      <AppCard href="/streaks/" variant="tile" accent="#c2410c" icon="🔥" title={$t('streaks.page.short', { default: 'Streaks' })} desc={$t('vida.streaks.desc', { default: 'A tua chama, XP diário e marcos.' })} />
+      <AppCard href="/habitos/" variant="tile" accent="#0f766e" icon="✅" title={$t('hub.map.habits', { default: 'Hábitos' })} desc={$t('hub.map.habits.desc', { default: 'streaks e progresso diário' })} />
+      <AppCard href="/financas/" variant="tile" accent="#15803d" icon="💸" title={$t('hub.map.finances', { default: 'Finanças' })} desc={$t('hub.map.finances.desc', { default: 'transações e metas' })} />
+      <AppCard href="/calendario/" variant="tile" accent="#7c3aed" icon="🗓️" title={$t('hub.map.calendar')} desc={$t('hub.map.calendar.desc')} />
+      <AppCard href="/agente/" variant="tile" accent="#be185d" icon="🤖" title={$t('hub.map.agent')} desc={$t('hub.map.agent.desc')} />
+      <AppCard href="/mensagens/" variant="tile" accent="#2563eb" icon="💬" title={$t('nav.mensagens', { default: 'Mensagens' })} desc={$t('hub.map.messages.desc', { default: 'conversas com o Daniel' })} />
+      <AppCard href="/humor/" variant="tile" accent="#be123c" icon="💗" title={$t('hub.map.mood', { default: 'Humor' })} desc={$t('hub.map.mood.desc', { default: 'como te tens sentido' })} />
+      <AppCard href="/memorias/" variant="tile" accent="#9333ea" icon="📸" title={$t('hub.map.memories', { default: 'Memórias' })} desc={$t('hub.map.memories.desc', { default: 'momentos guardados com carinho' })} />
       <!-- V10.6: o cartão Mascotes saiu da Home — a seleção vive agora nas
            Definições (secção Mascote), com link para /mascotes/ lá dentro. -->
-      <AppCard href="/definicoes/" icon="⚙️" title={$t('a11y.settings', { default: 'Definições' })} desc={$t('hub.map.settings.desc', { default: 'temas, sons e conta' })} />
+      <AppCard href="/definicoes/" variant="tile" accent="#52525b" icon="⚙️" title={$t('a11y.settings', { default: 'Definições' })} desc={$t('hub.map.settings.desc', { default: 'temas, sons e conta' })} />
     </div>
   </section>
 
