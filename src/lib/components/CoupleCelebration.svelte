@@ -7,7 +7,6 @@
 	import { t } from 'svelte-i18n';
 	import { fireConfettiEvent } from '$lib/components/events';
 	import { playSfx, vibrate } from '$lib/gamification/sound';
-	import MascotAvatar from './MascotAvatar.svelte';
 
 	interface Props {
 		/** Partner display label — "@fatma" / display name. */
@@ -35,7 +34,7 @@
 <div class="couple-overlay" role="dialog" aria-modal="true" aria-labelledby="couple-celebration-title">
 	<div class="couple-card">
 		<span class="couple-art" aria-hidden="true">
-			<MascotAvatar mascot="coracao" pose="love" size={132} entrance eager />
+			<img src="/art/couple-hug.webp" alt="" width="180" height="162" loading="eager" />
 		</span>
 		<p class="eyebrow">{$t('couplelink.celebrate.eyebrow', { default: 'Modo casal ativado!' })}</p>
 		<h2 id="couple-celebration-title" class="title">
@@ -86,6 +85,11 @@
 	}
 	.couple-art {
 		line-height: 1;
+	}
+	.couple-art img {
+		width: clamp(150px, 42vw, 190px);
+		height: auto;
+		filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.18));
 	}
 	.eyebrow {
 		margin: 0;

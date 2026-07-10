@@ -23,6 +23,8 @@
   interface Props {
     /** Decorative emoji shown above the title (e.g. "📭"). */
     emoji: string;
+    /** Optional illustration URL — replaces the emoji when provided. */
+    art?: string;
     /** Short, sentence-case headline (e.g. "Ainda não tens transações"). */
     title: string;
     /** One-sentence explanation / hint. */
@@ -37,6 +39,7 @@
 
   let {
     emoji,
+    art,
     title,
     description,
     ctaLabel,
@@ -46,7 +49,11 @@
 </script>
 
 <div class="empty-state" role="status" aria-live="polite">
-  <div class="emoji" aria-hidden="true">{emoji}</div>
+  {#if art}
+    <img class="art" src={art} alt="" aria-hidden="true" loading="lazy" width="176" height="176" />
+  {:else}
+    <div class="emoji" aria-hidden="true">{emoji}</div>
+  {/if}
   <h3 class="title">{title}</h3>
   {#if description}
     <p class="desc">{description}</p>
@@ -124,4 +131,10 @@
   }
   /* Reduced motion: handled by the global kill-switch in app.css
      (animation/transition durations zeroed app-wide). */
+  .art {
+    width: clamp(128px, 38vw, 176px);
+    height: auto;
+    margin-bottom: 0.25rem;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.14));
+  }
 </style>
