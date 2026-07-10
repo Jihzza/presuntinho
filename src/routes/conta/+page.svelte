@@ -20,10 +20,17 @@
     isValidHandle,
     normalizeHandle,
     updatePassword,
-    updateEmail
+    updateEmail,
+    searchAccounts
   } from '$lib/account/auth';
   import { accountState, startAccountSync, refreshAccount } from '$lib/account/account-store.svelte';
   import { signOutEverywhere } from '$lib/account/session-bridge';
+  import {
+    coupleInviteUrl,
+    peekInviteFrom,
+    clearInviteFrom,
+    requestCouple
+  } from '$lib/account/couple-link';
   import { goto } from '$app/navigation';
 
   let mode = $state<'signin' | 'signup'>('signin');
@@ -43,8 +50,61 @@
 
   const enabled = accountsEnabled();
 
+  // ── Convite de casal (partilha + auto-pedido de quem chega via /convite) ──
+  let inviteCopied = $state(false);
+  const inviteLink = $derived(accountState.account ? coupleInviteUrl(accountState.account.handle) : '');
+  const canShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
+
+  async function copyInviteLink(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(inviteLink);
+      inviteCopied = true;
+      setTimeout(() => (inviteCopied = false), 2000);
+    } catch {
+      showToast($t('couplelink.share.copy_fail', { default: 'Não consegui copiar — seleciona o link manualmente.' }), 2600, 'warning');
+    }
+  }
+
+  async function shareInviteLink(): Promise<void> {
+    try {
+      await navigator.share({
+        title: 'Presuntinho 💞',
+        text: $t('couplelink.share.text', { default: 'Vem ser meu casal no Presuntinho! 💞' }),
+        url: inviteLink
+      });
+    } catch {
+      /* user dismissed the sheet — not an error */
+    }
+  }
+
+  /** Someone arrived via /convite/?de=<handle> and just got an account:
+   *  send the couple request to the inviter automatically. */
+  async function sendPendingCoupleInvite(): Promise<void> {
+    const from = peekInviteFrom();
+    if (!from || !accountState.account) return;
+    if (from === accountState.account.handle) {
+      clearInviteFrom();
+      return;
+    }
+    try {
+      const matches = await searchAccounts(from);
+      const inviter = matches.find((a) => a.handle.toLowerCase() === from.toLowerCase());
+      if (!inviter) return; // inviter handle vanished — leave stashed, harmless
+      const r = await requestCouple(inviter);
+      clearInviteFrom();
+      if (r === 'intent' || r === 'proposed') {
+        showToast(
+          $t('couplelink.auto_sent', { values: { handle: inviter.handle }, default: '💌 Pedido de casal enviado a @{handle} — falta só ela aceitar!' }),
+          3600
+        );
+      }
+    } catch {
+      /* offline — stays stashed; retried on the next visit to /conta */
+    }
+  }
+
   onMount(() => {
-    void startAccountSync();
+    void startAccountSync().then(() => void sendPendingCoupleInvite());
   });
 
   async function doAuth(): Promise<void> {
@@ -149,6 +209,8 @@
       await claimAccount({ handle, display_name: displayName.trim() || undefined });
       await refreshAccount();
       showToast($t('conta.claim.ok', { values: { handle }, default: 'Bem-vindo, @{handle}! 🎉' }), 3000);
+      // Chegou via /convite/?de=<handle>? O pedido de casal segue já.
+      void sendPendingCoupleInvite();
     } catch (e) {
       showToast(authError(e), 3200, 'error');
     } finally {
@@ -289,6 +351,20 @@
       </div>
     </div>
 
+    <!-- ── Convite de casal: partilha um link; quem o abre cria conta e o
+         pedido de casal chega-te sozinho. ── -->
+    <div class="card couple-card">
+      <h2>💞 {$t('couplelink.share.title', { default: 'Convida o teu casal' })}</h2>
+      <p class="couple-sub">{$t('couplelink.share.body', { default: 'Envia este link à tua pessoa. Quando criar conta, recebes o pedido de casal — aceita e ficam ligados.' })}</p>
+      <div class="inline">
+        <input type="text" readonly value={inviteLink} aria-label={$t('couplelink.share.link_aria', { default: 'Link de convite de casal' })} onfocus={(e) => (e.currentTarget as HTMLInputElement).select()} />
+        <button type="button" class="mini" onclick={copyInviteLink}>{inviteCopied ? '✓' : $t('couplelink.share.copy', { default: 'Copiar' })}</button>
+      </div>
+      {#if canShare}
+        <button type="button" class="cta" onclick={shareInviteLink}>📤 {$t('couplelink.share.share', { default: 'Partilhar convite' })}</button>
+      {/if}
+    </div>
+
     <div class="card">
       <h2>{$t('conta.security', { default: 'Segurança' })}</h2>
       <label>
@@ -349,6 +425,9 @@
   .links { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
   .linkcard { display: flex; align-items: center; justify-content: center; gap: .4rem; min-height: 48px; border-radius: var(--radius-md, .6rem); border: 1px solid var(--border); background: var(--bg-elev, rgba(255,255,255,.04)); color: var(--txt); text-decoration: none; font-weight: 700; font-size: .9rem; }
   .linkcard:hover { border-color: var(--accent); }
+  .couple-card { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+  .couple-sub { margin: 0; color: var(--txt2); font-size: .9rem; line-height: 1.45; }
+  .couple-card input[readonly] { color: var(--txt2); font-size: .85rem; }
   .inline { display: flex; gap: .4rem; }
   .inline input { flex: 1; }
   .mini { flex-shrink: 0; border: 1px solid var(--border); background: var(--bg-elev, transparent); color: var(--txt); font: inherit; font-weight: 700; border-radius: var(--radius-md, .6rem); padding: 0 .9rem; cursor: pointer; min-height: 44px; }

@@ -1,8 +1,10 @@
 <script lang="ts">
   /**
-   * /contactos — find people by @handle, send connect requests, accept incoming
-   * ones, and see your contacts. Phase 2 of the social layer. Requires a
-   * signed-in account.
+   * /contactos — find people by @handle and choose the RELATIONSHIP when you
+   * add them: 🤝 amigo (plain contact — no app changes) or 💞 casal (unlocks
+   * the couple features: surprise heart, shared points, love pings). Incoming
+   * couple invites surface here too, and accepting one celebrates on both
+   * sides. Requires a signed-in account.
    */
   import { onMount, onDestroy } from 'svelte';
   import { t } from 'svelte-i18n';
@@ -19,6 +21,16 @@
     subscribeConnections,
     type Contact
   } from '$lib/account/contacts';
+  import {
+    listSpaces,
+    isCoupleActive,
+    pendingCoupleInvites,
+    otherMember,
+    leaveSpace,
+    subscribeSpaces,
+    type Space
+  } from '$lib/account/spaces';
+  import { requestCouple, acceptCoupleInvite, hasCoupleIntent, pokeCoupleLink } from '$lib/account/couple-link';
 
   let query = $state('');
   let results = $state<Account[]>([]);
@@ -28,7 +40,23 @@
   let contacts = $state<Contact[]>([]);
   let incoming = $state<Contact[]>([]);
   let outgoing = $state<Contact[]>([]);
+  let spaces = $state<Space[]>([]);
   let unsub: (() => void) | null = null;
+  let unsubSp: (() => void) | null = null;
+
+  const meId = $derived(accountState.account?.id ?? '');
+  // Couple invites addressed to ME (they proposed, I'm pending).
+  const coupleInvites = $derived(pendingCoupleInvites(spaces, meId));
+  // Account ids I'm in ANY couple space with (active or pending) + the active set.
+  const coupleWith = $derived.by(() => {
+    const m = new Map<string, 'active' | 'pending'>();
+    for (const s of spaces) {
+      if (s.kind !== 'couple') continue;
+      const other = otherMember(s, meId);
+      if (other) m.set(other.id, isCoupleActive(s) ? 'active' : 'pending');
+    }
+    return m;
+  });
 
   // Map accountId → relationship, so search results show the right action.
   const rel = $derived.by(() => {
@@ -42,7 +70,12 @@
   async function refresh(): Promise<void> {
     if (!accountState.account) return;
     try {
-      [contacts, incoming, outgoing] = await Promise.all([listContacts(), listIncoming(), listOutgoing()]);
+      [contacts, incoming, outgoing, spaces] = await Promise.all([
+        listContacts(),
+        listIncoming(),
+        listOutgoing(),
+        listSpaces()
+      ]);
     } catch (e) {
       console.warn('[contactos] refresh failed', e);
     }
@@ -53,9 +86,13 @@
       await startAccountSync();
       await refresh();
       unsub = subscribeConnections(() => void refresh());
+      unsubSp = subscribeSpaces(() => void refresh());
     })();
   });
-  onDestroy(() => unsub?.());
+  onDestroy(() => {
+    unsub?.();
+    unsubSp?.();
+  });
 
   function onInput(): void {
     if (timer) clearTimeout(timer);
@@ -107,6 +144,42 @@
       showToast(e instanceof Error ? e.message : String(e), 3000, 'error');
     }
   }
+
+  // ── Pedido de casal (uma ação; o resto acontece sozinho) ──
+  async function onCoupleRequest(a: Account): Promise<void> {
+    try {
+      const r = await requestCouple(a);
+      if (r === 'proposed')
+        showToast($t('couplelink.proposed', { values: { handle: a.handle }, default: '💌 Pedido de casal enviado a @{handle}!' }), 2600);
+      else if (r === 'intent')
+        showToast($t('couplelink.intent', { values: { handle: a.handle }, default: '💌 Pedido enviado a @{handle} — quando aceitar, o pedido de casal segue sozinho.' }), 3200);
+      else if (r === 'active') pokeCoupleLink(); // they had proposed first → celebrate now
+      else if (r === 'already')
+        showToast($t('couplelink.already', { default: 'Já têm um pedido de casal entre vocês. 💞' }), 2400);
+      await refresh();
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : String(e), 3000, 'error');
+    }
+  }
+
+  async function onAcceptCouple(s: Space): Promise<void> {
+    try {
+      const active = await acceptCoupleInvite(s.id);
+      await refresh();
+      if (active) pokeCoupleLink(); // fires the full-screen celebration (once)
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : String(e), 3000, 'error');
+    }
+  }
+
+  async function onDeclineCouple(s: Space): Promise<void> {
+    try {
+      await leaveSpace(s.id);
+      await refresh();
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : String(e), 3000, 'error');
+    }
+  }
 </script>
 
 <svelte:head>
@@ -140,18 +213,44 @@
       <ul class="list">
         {#each results as a (a.id)}
           {@const r = rel.get(a.id)}
+          {@const cw = coupleWith.get(a.id)}
           <li>
             <span class="av">{a.emoji ?? '🙂'}</span>
             <span class="who"><strong>{a.display_name || `@${a.handle}`}</strong><small>@{a.handle}</small></span>
-            {#if r?.status === 'accepted'}
+            {#if cw === 'active'}
+              <span class="tag couple-tag">💞 {$t('couplelink.tag', { default: 'Casal' })}</span>
+            {:else if cw === 'pending' || hasCoupleIntent(a.id)}
+              <span class="tag">💌 {$t('couplelink.pending', { default: 'Casal pendente' })}</span>
+            {:else if r?.status === 'accepted'}
               <span class="tag">✓ {$t('contactos.contact', { default: 'Contacto' })}</span>
+              <button type="button" class="couple-btn" onclick={() => onCoupleRequest(a)}>💞 {$t('couplelink.request', { default: 'Casal' })}</button>
             {:else if r?.status === 'pending' && r.direction === 'in'}
               <button type="button" class="connect" onclick={() => onAccept(r)}>{$t('contactos.accept', { default: 'Aceitar' })}</button>
             {:else if r?.status === 'pending' && r.direction === 'out'}
               <span class="tag">{$t('contactos.pending', { default: 'Pendente' })}</span>
             {:else}
-              <button type="button" class="connect" onclick={() => onConnect(a)}>{$t('contactos.connect', { default: 'Ligar' })}</button>
+              <button type="button" class="connect" onclick={() => onConnect(a)}>🤝 {$t('contactos.connect', { default: 'Ligar' })}</button>
+              <button type="button" class="couple-btn" onclick={() => onCoupleRequest(a)}>💞 {$t('couplelink.request', { default: 'Casal' })}</button>
             {/if}
+          </li>
+        {/each}
+      </ul>
+      <p class="hint">{$t('couplelink.explainer', { default: '🤝 liga-vos como amigos. 💞 liga as vossas apps em modo casal — coração surpresa, pontos partilhados e pings de amor.' })}</p>
+    {/if}
+
+    {#if coupleInvites.length > 0}
+      <h2 class="section couple-section">💞 {$t('couplelink.invites', { default: 'Pedidos de casal' })} <span class="count">{coupleInvites.length}</span></h2>
+      <ul class="list">
+        {#each coupleInvites as s (s.id)}
+          {@const other = otherMember(s, meId)}
+          <li class="couple-invite">
+            <span class="av">{other?.emoji ?? '💞'}</span>
+            <span class="who">
+              <strong>{other?.display_name || (other ? `@${other.handle}` : '?')}</strong>
+              <small>{$t('couplelink.invite_sub', { default: 'quer ser teu casal 💘' })}</small>
+            </span>
+            <button type="button" class="couple-btn accept" onclick={() => onAcceptCouple(s)}>{$t('couplelink.accept', { default: 'Aceitar 💞' })}</button>
+            <button type="button" class="decline" onclick={() => onDeclineCouple(s)} aria-label={$t('contactos.decline', { default: 'Recusar' })}>✕</button>
           </li>
         {/each}
       </ul>
@@ -177,9 +276,17 @@
     {:else}
       <ul class="list">
         {#each contacts as c (c.connectionId)}
+          {@const cw = coupleWith.get(c.id)}
           <li>
             <span class="av">{c.emoji ?? '🙂'}</span>
             <span class="who"><strong>{c.display_name || `@${c.handle}`}</strong><small>@{c.handle}</small></span>
+            {#if cw === 'active'}
+              <span class="tag couple-tag">💞 {$t('couplelink.tag', { default: 'Casal' })}</span>
+            {:else if cw === 'pending' || hasCoupleIntent(c.id)}
+              <span class="tag">💌 {$t('couplelink.pending', { default: 'Casal pendente' })}</span>
+            {:else}
+              <button type="button" class="couple-btn" onclick={() => onCoupleRequest(c)}>💞 {$t('couplelink.request', { default: 'Casal' })}</button>
+            {/if}
             <button type="button" class="decline" onclick={() => onRemove(c)} aria-label={$t('contactos.remove', { default: 'Remover contacto' })}>✕</button>
           </li>
         {/each}
@@ -229,4 +336,10 @@
   .decline { flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; border: 0; background: transparent; color: var(--txt3); font-size: .95rem; cursor: pointer; }
   .decline:hover { color: var(--error, #ef4444); background: color-mix(in srgb, var(--error, #ef4444) 10%, transparent); }
   .tag { flex-shrink: 0; color: var(--txt3); font-size: .8rem; font-weight: 700; padding: .3rem .1rem; }
+  .couple-tag { color: var(--accent); }
+  .couple-btn { flex-shrink: 0; border: 1px solid color-mix(in srgb, var(--accent) 70%, transparent); background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); font: inherit; font-weight: 700; border-radius: 999px; padding: .45rem .85rem; min-height: 40px; cursor: pointer; }
+  .couple-btn:hover { background: color-mix(in srgb, var(--accent) 24%, transparent); }
+  .couple-btn.accept { background: var(--accent); color: var(--on-accent, #fff); border-color: var(--accent); }
+  .couple-section { color: var(--accent); }
+  .couple-invite { background: color-mix(in srgb, var(--accent) 7%, transparent); border-radius: var(--radius-md, .6rem); padding-inline: .5rem; }
 </style>

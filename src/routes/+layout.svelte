@@ -2,7 +2,8 @@
   import '../app.css';
   import { page } from '$app/state';
   import { goto, afterNavigate } from '$app/navigation';
-  import { getSession } from '$lib/auth/session';
+  import { getSession, isLegacyProfile } from '$lib/auth/session';
+  import CoupleCelebration from '$lib/components/CoupleCelebration.svelte';
   import { initStores, markVisited } from '$lib/state/stores';
   import Confetti from '$lib/components/Confetti.svelte';
   import Toast from '$lib/components/Toast.svelte';
@@ -46,6 +47,8 @@
   // type 'needRefresh' we surface a small banner with a reload action.
   let pwaUpdateReady = $state(false);
   let updateSW: ((reloadPage?: boolean) => Promise<void>) | null = null;
+  // Full-screen congrats when a couple link becomes ACTIVE (both accepted).
+  let coupleCelebration = $state<{ label: string } | null>(null);
 
   const moodAccent = $derived(activeMood ? MOOD_META[activeMood.kind].accent : null);
   const isMessagesRoute = $derived(isActive('/mensagens/'));
@@ -144,6 +147,7 @@
     let moodPoll: ReturnType<typeof setInterval> | null = null;
     let swPoll: ReturnType<typeof setInterval> | null = null;
     let seasonalTimer: ReturnType<typeof setTimeout> | null = null;
+    let unwatchCoupleLink: (() => void) | null = null;
 
     async function refreshMood(): Promise<void> {
       const mood = await readActiveMood();
@@ -173,6 +177,45 @@
       .then((m) => m.resolveCoupleId())
       .catch(() => {})
       .finally(() => startCouplePoller());
+
+    // Couple LINKING: watch for couple invites/activations for account users.
+    // When a couple becomes ACTIVE (both said yes), celebrate once per device
+    // (full-screen congrats + notification) and re-arm the couple features.
+    {
+      const sessionProfile = getSession()?.profile;
+      if (sessionProfile && !isLegacyProfile(sessionProfile)) {
+        void import('$lib/account/couple-link').then(({ watchCoupleLink }) => {
+          unwatchCoupleLink = watchCoupleLink(sessionProfile, {
+            onCoupleActive: (_space, partner) => {
+              const label = partner?.display_name || (partner ? `@${partner.handle}` : '💞');
+              coupleCelebration = { label };
+              void import('$lib/habitos/reminders')
+                .then(({ showAppNotification }) =>
+                  showAppNotification(get(t)('couplelink.notif.title', { default: '💞 Modo casal ativado!' }), {
+                    body: get(t)('couplelink.notif.body', {
+                      values: { name: label },
+                      default: `Tu e ${label} estão ligados. Abre o Presuntinho!`
+                    })
+                  })
+                )
+                .catch(() => undefined);
+              // Re-scope points/pings to the fresh couple space right away.
+              void import('$lib/couple/couple-supabase').then((m) => m.invalidateCoupleId()).catch(() => undefined);
+              void import('$lib/couple/couple-store.svelte').then((m) => m.refreshCoupleEnabled()).catch(() => undefined);
+            },
+            onIntentProposed: (c) => {
+              showToast(
+                get(t)('couplelink.intent_sent', {
+                  values: { handle: c.handle },
+                  default: `💌 @${c.handle} aceitou o teu contacto — pedido de casal enviado!`
+                }),
+                3200
+              );
+            }
+          });
+        }).catch(() => undefined);
+      }
+    }
 
     // Easter-egg boot hooks — used to live on the always-mounted HeartButton,
     // which the SurpriseHeart replaced. Warm the config cache and run the
@@ -306,7 +349,7 @@
             // Public routes a logged-out visitor is allowed to sit on: the login
             // splash, the new-account wizard, and an invite-redemption link.
             const p = page.url.pathname;
-            const isPublicRoute = p === '/splash/' || p.startsWith('/onboarding') || p.startsWith('/juntar') || p.startsWith('/conta') || p.startsWith('/contactos') || p.startsWith('/grupos');
+            const isPublicRoute = p === '/splash/' || p.startsWith('/onboarding') || p.startsWith('/juntar') || p.startsWith('/conta') || p.startsWith('/contactos') || p.startsWith('/grupos') || p.startsWith('/convite');
             if (!session && !isPublicRoute && !authRedirectTimer) {
               authRedirectTimer = setTimeout(() => {
                 authRedirectTimer = null;
@@ -325,6 +368,7 @@
       if (swPoll) clearInterval(swPoll);
       if (seasonalTimer) clearTimeout(seasonalTimer);
       stopCouplePoller();
+      unwatchCoupleLink?.();
       void import('$lib/state/progress-sync').then((m) => m.stopProgressSync()).catch(() => {});
     };
   });
@@ -498,6 +542,12 @@
                     <SurpriseHeart />
                   {/if}
                 </div>
+                {#if coupleCelebration}
+                  <CoupleCelebration
+                    partnerLabel={coupleCelebration.label}
+                    onclose={() => (coupleCelebration = null)}
+                  />
+                {/if}
                 {#if $arcadeHud}
                   <ArcadeTouchHud
                     left={$arcadeHud.left}

@@ -226,6 +226,9 @@
       <p class="done-emoji" aria-hidden="true">{ob.emoji}</p>
       <h1>{$t('onboarding.done.title', { default: 'Tudo pronto!' })}</h1>
       <p class="lead">{$t('onboarding.done.body', { default: 'O teu espaço está criado. Bem-vindo(a) ao Presuntinho.' })}</p>
+      <p class="lead couple-hint">
+        💞 {$t('onboarding.done.couple_hint', { default: 'Tens um amor? Cria a tua conta online e envia-lhe o convite de casal — a app liga-vos com coração surpresa, pontos partilhados e pings.' })}
+      </p>
       {#if errorMsg}<p class="error">{errorMsg}</p>{/if}
     </section>
   {/if}
@@ -289,4 +292,5 @@
   .cta:disabled { opacity: 0.5; cursor: not-allowed; }
   .ghost { min-height: 48px; padding: 0.7rem 1rem; border-radius: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.16); background: transparent; color: #fff; font-weight: 700; cursor: pointer; }
   .ghost:disabled { opacity: 0.5; }
+  .couple-hint { font-size: .92rem; color: var(--txt2); border-top: 1px solid var(--border); padding-top: .8rem; }
 </style>

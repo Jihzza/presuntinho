@@ -9,8 +9,15 @@
 //                        "play against her" without real-time netcode
 //
 // A single global poller (mounted once in +layout) keeps `couple` fresh and
-// fires incoming pings. Everything degrades to a no-op when there is no chat
-// token or the session profile isn't one of the two legacy partners.
+// fires incoming pings.
+//
+// WHO participates (v2 — account couples):
+//   • the two legacy partners (fatma/daniel) — full stack: Blobs snapshot,
+//     Supabase points, realtime pings;
+//   • ANY two accounts in an ACTIVE couple space — Supabase points + realtime
+//     pings, keyed by account id, channel scoped per couple space. The Blobs
+//     chat paths stay legacy-only.
+// Everything degrades to a no-op when neither identity resolves.
 
 import { getSession, isLegacyProfile } from '$lib/auth/session';
 import { isMultiplayerConfigured } from '$lib/multiplayer/config';
@@ -100,10 +107,51 @@ function profile(): ChatProfile | null {
   return p && isLegacyProfile(p) ? (p as 'fatma' | 'daniel') : null;
 }
 
-function partnerName(me: ChatProfile): string {
-  const other = otherProfile(me);
-  const fallback = other === 'fatma' ? 'Fatma' : 'Daniel';
-  return get(t)(`couple.name.${other}`, { default: fallback });
+// ── Identity: who am I in the couple, and who is the partner? ───────────────
+// Legacy pair → profile names; account couple → account uuids + the active
+// couple space (its id scopes the realtime channel; RLS already grants both
+// members access to couple_points keyed by that space).
+interface CoupleIdentity {
+  me: string;
+  other: string;
+  /** Partner display label for ping toasts. */
+  label: string;
+  legacy: boolean;
+  /** Realtime channel scope (legacy constant, or the couple space id). */
+  coupleId: string;
+}
+
+let identity: CoupleIdentity | null = null;
+
+async function resolveIdentity(): Promise<CoupleIdentity | null> {
+  const p = getSession()?.profile;
+  if (!p) return null;
+  if (isLegacyProfile(p)) {
+    const me = p as ChatProfile;
+    const other = otherProfile(me);
+    const fallback = other === 'fatma' ? 'Fatma' : 'Daniel';
+    const label = get(t)(`couple.name.${other}`, { default: fallback });
+    return { me, other, label, legacy: true, coupleId: COUPLE_CHANNEL };
+  }
+  // Account session (profile === account.id): couple features light up only
+  // with an ACTIVE couple space (mutual consent — see propose/accept_couple).
+  if (!isMultiplayerConfigured()) return null;
+  try {
+    const { listSpaces, isCoupleActive, otherMember } = await import('$lib/account/spaces');
+    const spaces = await listSpaces();
+    const space = spaces.find(isCoupleActive);
+    if (!space) return null;
+    const partner = otherMember(space, p);
+    if (!partner) return null;
+    const label = partner.display_name || `@${partner.handle}`;
+    return { me: p, other: partner.id, label, legacy: false, coupleId: space.id };
+  } catch {
+    return null; // offline / no Supabase session — try again on refresh
+  }
+}
+
+function partnerName(_me: string): string {
+  return identity?.label ?? get(t)('couple.name.partner', { default: 'O teu amor' });
 }
 
 /** Fold a fresh server snapshot into the reactive state (+ ping detection). */
@@ -135,7 +183,7 @@ function applySnapshot(me: ChatProfile, snap: CoupleSnapshot): void {
   }
 }
 
-function receivePing(me: ChatProfile, kind: 'love' | 'nudge'): void {
+function receivePing(me: string, kind: 'love' | 'nudge'): void {
   const name = partnerName(me);
   if (kind === 'love') {
     showToast(get(t)('couple.ping.love.received', { values: { name }, default: `💛 ${name} ama-te muito!` }), 4200);
@@ -151,23 +199,28 @@ function receivePing(me: ChatProfile, kind: 'love' | 'nudge'): void {
 // ── realtime broadcast fast-path (optional, Supabase-gated) ─────────────────
 
 /** Monotonic merge so a dropped/dup/stale broadcast can never lower the count. */
-function applyPartnerPoints(me: ChatProfile, from: ChatProfile, total: number): void {
+function applyPartnerPoints(me: string, from: string, total: number): void {
   if (from === me) return; // self:false already filters; belt-and-suspenders
   couple.partnerPoints = Math.max(couple.partnerPoints, total);
   couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
 }
 
-async function connectRealtime(me: ChatProfile): Promise<void> {
+async function connectRealtime(id: CoupleIdentity): Promise<void> {
   if (room || typeof window === 'undefined' || !isMultiplayerConfigured()) return;
   try {
     const { joinRoom } = await import('$lib/multiplayer/realtime');
-    const r = await joinRoom(COUPLE_CHANNEL, { role: coupleRole(me), name: me, mascot: '' });
+    const me = id.me;
+    // Legacy pair keeps its constant channel; account couples get a channel
+    // scoped by their couple-space id. Role just needs to differ per member.
+    const channel = id.legacy ? COUPLE_CHANNEL : `couple:${id.coupleId}`;
+    const role = id.legacy ? coupleRole(me as ChatProfile) : me < id.other ? 'host' : 'guest';
+    const r = await joinRoom(channel, { role, name: me, mascot: '' });
     room = r;
-    const other = otherProfile(me);
-    r.on('points', (p: { profile?: ChatProfile; total?: number }) => {
+    const other = id.other;
+    r.on('points', (p: { profile?: string; total?: number }) => {
       if (p?.profile && typeof p.total === 'number') applyPartnerPoints(me, p.profile, p.total);
     });
-    const onPing = (kind: 'love' | 'nudge') => (p: { profile?: ChatProfile; ts?: number }) => {
+    const onPing = (kind: 'love' | 'nudge') => (p: { profile?: string; ts?: number }) => {
       if (p?.profile !== other) return;
       const ts = p.ts ?? 0;
       // Before the first snapshot seeds lastPartnerPingTs, adopt without firing.
@@ -193,13 +246,12 @@ async function connectRealtime(me: ChatProfile): Promise<void> {
 /** Pull the authoritative point tallies from Supabase — used to seed and to
  *  reconcile after a dropped realtime event or a failed flush. */
 async function reconcileSupabasePoints(): Promise<void> {
-  const me = profile();
-  if (!supaActive || !supa || !me) return;
+  const id = identity;
+  if (!supaActive || !supa || !id) return;
   try {
     const points = await supa.fetchCouplePoints();
-    const other = otherProfile(me);
-    couple.myPoints = points[me] ?? 0;
-    couple.partnerPoints = points[other] ?? 0;
+    couple.myPoints = points[id.me] ?? 0;
+    couple.partnerPoints = points[id.other] ?? 0;
     couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
     couple.online = true;
   } catch {
@@ -209,11 +261,12 @@ async function reconcileSupabasePoints(): Promise<void> {
 
 /** Hydrate + live-subscribe the durable Supabase points counter. On any failure
  *  we clear supaActive so the Blobs counter transparently takes back over. */
-async function initSupabasePoints(me: ChatProfile): Promise<void> {
+async function initSupabasePoints(id: CoupleIdentity): Promise<void> {
   try {
     const mod = await import('$lib/couple/couple-supabase');
     supa = mod;
-    const other = otherProfile(me);
+    const me = id.me;
+    const other = id.other;
     // Pings arrive purely over the broadcast channel here (no Blobs snapshot to
     // seed from), so mark seeded → the first incoming ping actually fires.
     seededPing = true;
@@ -261,8 +314,10 @@ async function poll(): Promise<void> {
 
 async function flushPoints(): Promise<void> {
   flushTimer = null;
-  const me = profile();
-  if (!me || pendingTaps <= 0) return;
+  const id = identity;
+  if (!id || pendingTaps <= 0) return;
+  const me = id.me;
+  if (pendingTaps <= 0) return;
   const n = pendingTaps;
   pendingTaps = 0;
 
@@ -283,10 +338,12 @@ async function flushPoints(): Promise<void> {
     return;
   }
 
-  // Netlify-Blobs fallback (no Supabase configured).
+  // Netlify-Blobs fallback (no Supabase configured) — legacy pair only; the
+  // chat blob is keyed by the two legacy profiles.
+  if (!id.legacy) return;
   try {
-    const snap = await postCouplePoints(me, n);
-    applySnapshot(me, snap);
+    const snap = await postCouplePoints(me as ChatProfile, n);
+    applySnapshot(me as ChatProfile, snap);
     // Push the server-confirmed authoritative total so the partner sees it now.
     broadcast('points', { profile: me, total: couple.myPoints });
   } catch (e) {
@@ -304,8 +361,7 @@ async function flushPoints(): Promise<void> {
  * new displayed total so the caller can animate a "+1".
  */
 export function tapCouplePoint(): number {
-  const me = profile();
-  if (!me) return couple.points;
+  if (!identity) return couple.points;
   // Track the unflushed taps in pendingTaps ONLY (not myPoints — that is the
   // server-authoritative tally set on flush). Incrementing both double-counts an
   // unflushed tap whenever a recompute (partner event) runs before the flush.
@@ -316,16 +372,28 @@ export function tapCouplePoint(): number {
 }
 
 async function sendPing(kind: 'love' | 'nudge'): Promise<PingResult> {
-  const me = profile();
-  if (!me || !getChatToken(me)) return 'disabled';
+  const id = identity;
+  if (!id) return 'disabled';
+  const me = id.me;
+  // Legacy pair needs its chat token (durable Blobs ping); account couples
+  // ping over the realtime channel only, so they need the room instead.
+  if (id.legacy && !getChatToken(me as ChatProfile)) return 'disabled';
+  if (!id.legacy && !room) return 'offline';
   const now = Date.now();
   const lastAt = kind === 'love' ? lastLoveAt : lastNudgeAt;
   if (now - lastAt < PING_COOLDOWN_MS) return 'cooldown';
   if (kind === 'love') lastLoveAt = now;
   else lastNudgeAt = now;
+  if (!id.legacy) {
+    // Account couple: instant broadcast (ephemeral by design — like the
+    // surprise heart, a ping is a "right now" moment, not a mailbox).
+    broadcast(kind, { profile: me, ts: now });
+    return 'sent';
+  }
   try {
-    const snap = kind === 'love' ? await postCoupleLove(me) : await postCoupleNudge(me);
-    applySnapshot(me, snap);
+    const snap =
+      kind === 'love' ? await postCoupleLove(me as ChatProfile) : await postCoupleNudge(me as ChatProfile);
+    applySnapshot(me as ChatProfile, snap);
     // Instant delivery to the partner (idempotent — carries its own ts).
     broadcast(kind, { profile: me, ts: now });
     return 'sent';
@@ -373,17 +441,23 @@ export function partnerBest(gameId: string): number | null {
 export function startCouplePoller(): void {
   if (started || typeof window === 'undefined') return;
   started = true;
-  const me = profile();
-  couple.available = !!me;
-  couple.enabled = !!(me && getChatToken(me));
-  // Open the realtime fast-path when Supabase is configured (no-op otherwise).
-  if (me) void connectRealtime(me);
-  // Durable POINTS via Supabase when configured — set the flag synchronously so
-  // the Blobs poll below never overwrites the Supabase counter, then hydrate.
-  if (me && isMultiplayerConfigured()) {
-    supaActive = true;
-    void initSupabasePoints(me);
-  }
+  // Identity resolution is async for account couples (needs listSpaces). The
+  // legacy pair resolves on the fast path inside resolveIdentity().
+  void (async () => {
+    identity = await resolveIdentity();
+    const id = identity;
+    couple.available = !!id;
+    couple.enabled = !!id && (id.legacy ? !!getChatToken(id.me as ChatProfile) : true);
+    if (!id) return;
+    // Open the realtime fast-path when Supabase is configured (no-op otherwise).
+    void connectRealtime(id);
+    // Durable POINTS via Supabase when configured — set the flag synchronously
+    // so the Blobs poll never overwrites the Supabase counter, then hydrate.
+    if (isMultiplayerConfigured()) {
+      supaActive = true;
+      void initSupabasePoints(id);
+    }
+  })();
 
   const onVisible = () => {
     if (document.visibilityState === 'visible') {
@@ -418,17 +492,28 @@ export function startCouplePoller(): void {
  * realtime channel + do an immediate reconciliation poll.
  */
 export function refreshCoupleEnabled(): void {
-  const me = profile();
-  couple.available = !!me;
-  couple.enabled = !!(me && getChatToken(me));
-  if (me) {
-    void connectRealtime(me);
-    void poll();
-  } else {
-    void room?.leave();
-    room = null;
-    couple.partnerOnline = false;
-  }
+  void (async () => {
+    identity = await resolveIdentity();
+    const id = identity;
+    couple.available = !!id;
+    couple.enabled = !!id && (id.legacy ? !!getChatToken(id.me as ChatProfile) : true);
+    if (id) {
+      // The channel may have re-scoped (a couple just became active) — rejoin.
+      void room?.leave();
+      room = null;
+      void connectRealtime(id);
+      if (isMultiplayerConfigured() && !supaActive) {
+        supaActive = true;
+        void initSupabasePoints(id);
+      }
+      void poll();
+      void reconcileSupabasePoints();
+    } else {
+      void room?.leave();
+      room = null;
+      couple.partnerOnline = false;
+    }
+  })();
 }
 
 export function stopCouplePoller(): void {
@@ -446,5 +531,6 @@ export function stopCouplePoller(): void {
   supaPointsUnsub = null;
   supa = null;
   supaActive = false;
+  identity = null;
   couple.available = false;
 }
