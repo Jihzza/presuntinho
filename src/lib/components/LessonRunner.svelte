@@ -9,12 +9,22 @@
 
   // ----- Types --------------------------------------------------------------
 
+  // Two authoring schemas coexist: the compact one (h2/h3/p/ul/callout.text) and
+  // the richer "walkthrough" one used by the Equivalenza case + some BA lessons
+  // (text/h2_intro/list/table + callout.content, plus ol/exercise). LessonRunner
+  // renders BOTH so no section type is ever silently dropped to a blank body.
   type Section =
     | { type: 'h2'; text: string }
+    | { type: 'h2_intro'; title: string; content?: string }
     | { type: 'h3'; text: string }
     | { type: 'p'; text: string }
+    | { type: 'text'; title?: string; content: string }
     | { type: 'ul'; items: string[] }
-    | { type: 'callout'; variant?: 'info' | 'warning' | 'success' | 'highlight'; text: string }
+    | { type: 'ol'; items: string[] }
+    | { type: 'list'; title?: string; items: string[] }
+    | { type: 'exercise'; question: string; answer: string }
+    | { type: 'callout'; variant?: 'info' | 'warning' | 'success' | 'highlight'; title?: string; text?: string; content?: string }
+    | { type: 'table'; title?: string; headers: string[]; rows: string[][] }
     | { type: 'img'; src: string; alt: string; caption?: string };
 
   interface Lesson {
@@ -57,7 +67,7 @@
     const out: Section[][] = [];
     let cur: Section[] = [];
     for (const s of sections) {
-      if (s.type === 'h2' && cur.length) {
+      if ((s.type === 'h2' || s.type === 'h2_intro') && cur.length) {
         out.push(cur);
         cur = [];
       }
@@ -78,8 +88,10 @@
       }
     } else if (lesson?.quizSlug) {
       goQuiz();
-    } else if (typeof history !== 'undefined') {
-      history.back();
+    } else {
+      // Lição sem quiz: "Concluir" tem de MARCAR a conclusão (lesson-done + XP +
+      // festa) — antes fazia só history.back() e a lição nunca contava como feita.
+      void completeAndGo(`/escola/curso/${courseSlug}/`);
     }
   }
   function prevStep(): void {
@@ -236,18 +248,64 @@
         {#each steps[step] ?? [] as section, i (i)}
           {#if section.type === 'h2'}
             <h2>{section.text}</h2>
+          {:else if section.type === 'h2_intro'}
+            <h2>{section.title}</h2>
+            {#if section.content}<p>{section.content}</p>{/if}
           {:else if section.type === 'h3'}
             <h3>{section.text}</h3>
           {:else if section.type === 'p'}
             <p>{section.text}</p>
+          {:else if section.type === 'text'}
+            {#if section.title}<h3>{section.title}</h3>{/if}
+            <p>{section.content}</p>
           {:else if section.type === 'ul'}
             <ul>
               {#each section.items as item, j (j)}
                 <li>{item}</li>
               {/each}
             </ul>
+          {:else if section.type === 'ol'}
+            <ol>
+              {#each section.items as item, j (j)}
+                <li>{item}</li>
+              {/each}
+            </ol>
+          {:else if section.type === 'list'}
+            {#if section.title}<h3>{section.title}</h3>{/if}
+            <ul>
+              {#each section.items as item, j (j)}
+                <li>{item}</li>
+              {/each}
+            </ul>
+          {:else if section.type === 'exercise'}
+            <div class="exercise">
+              <p class="ex-q"><strong>{$t('lesson.exercise.label', { default: 'Exercício' })}</strong> {section.question}</p>
+              <details class="ex-a">
+                <summary>{$t('lesson.exercise.reveal', { default: 'Ver resposta' })}</summary>
+                <p>{section.answer}</p>
+              </details>
+            </div>
           {:else if section.type === 'callout'}
-            <aside class="callout callout-{section.variant ?? 'info'}">{section.text}</aside>
+            <aside class="callout callout-{section.variant ?? 'info'}">
+              {#if section.title}<strong class="callout-title">{section.title}</strong>{/if}
+              {section.content ?? section.text ?? ''}
+            </aside>
+          {:else if section.type === 'table'}
+            {#if section.title}<h3>{section.title}</h3>{/if}
+            <div class="table-wrap">
+              <table class="lesson-table">
+                {#if section.headers?.length}
+                  <thead>
+                    <tr>{#each section.headers as h, hi (hi)}<th>{h}</th>{/each}</tr>
+                  </thead>
+                {/if}
+                <tbody>
+                  {#each section.rows ?? [] as row, ri (ri)}
+                    <tr>{#each row as cell, ci (ci)}<td>{cell}</td>{/each}</tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
           {:else if section.type === 'img'}
             <figure class="lesson-figure">
               <img src={section.src} alt={section.alt} loading="lazy" />
@@ -330,13 +388,13 @@
 <style>
   .lesson { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
   .lesson-head { margin-bottom: 1rem; }
-  .lesson-head h1 { color: #fff; margin: 0.25rem 0 0.5rem; }
+  .lesson-head h1 { color: var(--txt); margin: 0.25rem 0 0.5rem; }
   .tag {
     display: inline-block;
     padding: 0.15rem 0.6rem;
-    background: rgba(59, 130, 246, 0.25);
-    border: 1px solid rgba(59, 130, 246, 0.5);
-    color: #bfdbfe;
+    background: color-mix(in srgb, var(--accent) 25%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+    color: var(--accent);
     border-radius: 999px;
     font-size: 0.72rem;
     text-transform: uppercase;
@@ -353,8 +411,8 @@
 
   /* Audio */
   .audio-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 0.75rem;
     padding: 0.75rem 1rem;
     margin-bottom: 1.5rem;
@@ -367,11 +425,11 @@
   }
   .audio-icon { font-size: 1.4rem; }
   .audio-meta { flex: 1; min-width: 200px; }
-  .audio-meta strong { color: #fff; font-size: 0.9rem; display: block; margin-bottom: 0.3rem; }
+  .audio-meta strong { color: var(--txt); font-size: 0.9rem; display: block; margin-bottom: 0.3rem; }
   .audio-bar {
     width: 100%;
     height: 4px;
-    background: rgba(255, 255, 255, 0.15);
+    background: var(--border-strong);
     border-radius: 2px;
     overflow: hidden;
   }
@@ -400,14 +458,14 @@
     min-height: 64px;
     padding: 0.75rem 0.85rem;
     border-radius: 0.85rem;
-    border: 1px solid rgba(255, 255, 255, 0.11);
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--txt);
     text-align: left;
     font: inherit;
   }
   button.activity-step { cursor: pointer; }
-  .activity-step.active { border-color: rgba(59, 130, 246, 0.35); background: rgba(59, 130, 246, 0.13); }
+  .activity-step.active { border-color: color-mix(in srgb, var(--accent) 35%, transparent); background: color-mix(in srgb, var(--accent) 13%, transparent); }
   .activity-step.muted { opacity: 0.82; }
   .activity-step.disabled { opacity: 0.45; cursor: not-allowed; }
   .activity-step span { grid-row: span 2; font-size: 1.35rem; }
@@ -433,7 +491,7 @@
   .step-progress {
     height: 8px;
     border-radius: 999px;
-    background: color-mix(in srgb, var(--accent, #3b82f6) 18%, rgba(255, 255, 255, 0.1));
+    background: color-mix(in srgb, var(--accent, #3b82f6) 18%, var(--border));
     overflow: hidden;
     margin-bottom: 0.4rem;
   }
@@ -457,8 +515,8 @@
     padding: 0 1.6rem;
     border: none;
     border-radius: 0.8rem;
-    background: linear-gradient(135deg, var(--accent, #3b82f6), #a78bfa);
-    color: #06121f;
+    background: var(--accent);
+    color: var(--on-accent);
     font: inherit;
     font-weight: 900;
     cursor: pointer;
@@ -478,15 +536,15 @@
   .lane-title {
     margin-top: 0 !important;
     padding-bottom: 0.45rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border);
   }
   .lesson-body h2 {
-    color: #fff;
+    color: var(--txt);
     font-size: 1.25rem;
     margin: 1.5rem 0 0.5rem;
   }
   .lesson-body h3 {
-    color: #fff;
+    color: var(--txt);
     font-size: 1.05rem;
     margin: 1.25rem 0 0.5rem;
   }
@@ -497,9 +555,52 @@
     padding: 0;
   }
   .lesson-body ul li { margin: 0.3rem 0; }
+  .lesson-body ol {
+    color: var(--txt2);
+    margin: 0.5rem 0 0.5rem 1.25rem;
+    padding: 0;
+  }
+  .lesson-body ol li { margin: 0.3rem 0; }
+  /* Worked exercise: question + a reveal for the answer. */
+  .exercise {
+    margin: 1rem 0;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--accent) 7%, var(--card));
+  }
+  .exercise .ex-q { color: var(--txt); margin: 0; line-height: 1.55; }
+  .exercise .ex-a { margin-top: 0.6rem; }
+  .exercise .ex-a summary {
+    cursor: pointer;
+    color: var(--accent);
+    font-weight: 700;
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .exercise .ex-a p { color: var(--txt2); margin: 0.5rem 0 0; line-height: 1.6; }
+  /* Data table (walkthrough schema) — scrolls horizontally on narrow screens. */
+  .table-wrap { overflow-x: auto; margin: 1rem 0; }
+  .lesson-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    min-width: 22rem;
+  }
+  .lesson-table th,
+  .lesson-table td {
+    text-align: start;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    color: var(--txt2);
+  }
+  .lesson-table th { background: var(--bg-elev); color: var(--txt); font-weight: 800; }
+  .callout-title { display: block; margin-bottom: 0.25rem; color: var(--txt); }
   .lesson-figure {
     margin: 1rem 0;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--card);
     border-radius: 0.5rem;
     padding: 0.5rem;
   }
@@ -519,20 +620,20 @@
     border-left: 4px solid;
     font-size: 0.95rem;
   }
-  .callout-info { background: rgba(59, 130, 246, 0.12); border-color: #3b82f6; color: #bfdbfe; }
-  .callout-warning { background: rgba(245, 158, 11, 0.12); border-color: #f59e0b; color: #fde68a; }
-  .callout-success { background: rgba(16, 185, 129, 0.12); border-color: #10b981; color: #a7f3d0; }
+  .callout-info { background: rgba(59, 130, 246, 0.12); border-color: #3b82f6; color: var(--txt); }
+  .callout-warning { background: rgba(245, 158, 11, 0.12); border-color: var(--warning); color: var(--txt); }
+  .callout-success { background: rgba(16, 185, 129, 0.12); border-color: var(--success); color: var(--txt); }
   .callout-highlight {
-    background: rgba(236, 72, 153, 0.12);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
     border-color: var(--accent);
-    color: #fbcfe8;
+    color: var(--txt);
     font-weight: 500;
   }
 
   /* Sidebar */
   .keypoints {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 0.75rem;
     padding: 1rem 1.25rem;
     align-self: start;
@@ -540,7 +641,7 @@
     top: 1rem;
   }
   .keypoints h2 {
-    color: #fff;
+    color: var(--txt);
     font-size: 1rem;
     margin: 0 0 0.5rem;
   }
@@ -556,7 +657,7 @@
     width: 100%;
     padding: 0.6rem 1rem;
     background: var(--accent);
-    color: #fff;
+    color: var(--on-accent);
     border: 0;
     border-radius: 0.5rem;
     font: inherit;
@@ -574,24 +675,25 @@
     gap: 1rem;
     margin-top: 2rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--border);
   }
   .nav-btn {
     padding: 0.6rem 1.25rem;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #fff;
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    color: var(--txt);
     border-radius: 0.5rem;
     cursor: pointer;
     font: inherit;
     font-weight: 500;
     text-decoration: none;
   }
-  .nav-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.12); }
+  .nav-btn:hover:not(:disabled) { background: var(--card-hover); }
   .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
   .nav-btn.primary {
     background: var(--accent);
     border-color: transparent;
+    color: var(--on-accent);
   }
   .nav-btn.primary:hover:not(:disabled) { background: var(--accent-hover, var(--accent)); }
 
@@ -600,10 +702,10 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--border-strong);
   }
   .dot.active { background: var(--accent); }
 
-  .loading, .error { color: rgba(255, 255, 255, 0.7); text-align: center; padding: 2rem 0; }
-  .error { color: #ff8888; }
+  .loading, .error { color: var(--txt2); text-align: center; padding: 2rem 0; }
+  .error { color: var(--error); }
 </style>

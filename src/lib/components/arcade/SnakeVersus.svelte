@@ -40,6 +40,15 @@
   let raf = 0;
   let cell = 18;
 
+  // Peer presence. If the other player drops we must NOT trap the user on a
+  // frozen board with no way out (the old bug: the only exit lived inside the
+  // game-over overlay, which never showed if the duel never finished). Give a
+  // short grace window for a reconnect — mobile sockets blip constantly — then
+  // surface a "left" overlay. Both states always offer an exit.
+  let waitingReconnect = $state(false);
+  let peerGone = $state(false);
+  let graceTimer: ReturnType<typeof setTimeout> | null = null;
+
   const localEmoji = $derived(mascotById(mascot)?.emoji ?? '🐷');
 
   function seed(): number {
@@ -184,11 +193,36 @@
     });
     net.onRematchRequest(() => net?.rematch(seed()));
     net.start(seed());
+    // Watch the other player's presence so a disconnect can never trap us.
+    const unsubPeer = room.onPeerChange((p) => {
+      if (p) {
+        // Present (or back within the grace window) — cancel any pending "left".
+        if (graceTimer) {
+          clearTimeout(graceTimer);
+          graceTimer = null;
+        }
+        waitingReconnect = false;
+        peerGone = false;
+      } else if (board?.result == null && !peerGone) {
+        // Dropped mid-duel. Wait a few seconds for a reconnect before declaring
+        // the duel over — but offer an exit the whole time.
+        waitingReconnect = true;
+        if (graceTimer) clearTimeout(graceTimer);
+        graceTimer = setTimeout(() => {
+          graceTimer = null;
+          waitingReconnect = false;
+          peerGone = true;
+          net?.stop(); // freeze the board — no more ticks, no hollow auto-win
+        }, 5000);
+      }
+    });
     raf = requestAnimationFrame(draw);
     return () => {
       cancelAnimationFrame(raf);
+      if (graceTimer) clearTimeout(graceTimer);
       window.removeEventListener('resize', resize);
       window.removeEventListener('keydown', onKey);
+      unsubPeer();
       net?.stop();
     };
   });
@@ -211,15 +245,30 @@
     </span>
     <span class="vs">VS</span>
     <span class="chip them" style="--c: {localP === 0 ? P1 : P0}">
-      <b>{theirScore}</b> {$t('versus.partner', { default: 'Parceir@' })}
+      <b>{theirScore}</b> {$t('versus.partner', { default: 'Rival' })}
     </span>
   </div>
 
   <div class="stage">
     <canvas bind:this={canvas} aria-label={$t('versus.canvas', { default: 'Campo de snake 1 contra 1' })}></canvas>
-    {#if finished}
+    {#if peerGone}
       <div class="ov">
-        <strong>{isDraw ? $t('versus.draw', { default: 'Empate! 🤝' }) : iWon ? $t('versus.win', { default: 'Ganhaste! 🏆' }) : $t('versus.lose', { default: 'Ela ganhou! 🔥' })}</strong>
+        <strong>{$t('versus.partner_left', { default: 'O outro jogador saiu 👋' })}</strong>
+        <p>{myScore} · {theirScore}</p>
+        <div class="ov-actions">
+          <button type="button" class="cta" onclick={() => onExit?.()}>{$t('versus.leave', { default: 'Sair' })}</button>
+        </div>
+      </div>
+    {:else if waitingReconnect}
+      <div class="ov">
+        <strong>{$t('versus.waiting_reconnect', { default: 'A aguardar reconexão…' })}</strong>
+        <div class="ov-actions">
+          <button type="button" class="ghost" onclick={() => onExit?.()}>{$t('versus.leave', { default: 'Sair' })}</button>
+        </div>
+      </div>
+    {:else if finished}
+      <div class="ov">
+        <strong>{isDraw ? $t('versus.draw', { default: 'Empate! 🤝' }) : iWon ? $t('versus.win', { default: 'Ganhaste! 🏆' }) : $t('versus.lose', { default: 'Perdeste! 🔥' })}</strong>
         <p>{myScore} · {theirScore}</p>
         <div class="ov-actions">
           <button type="button" class="cta" onclick={() => net?.rematch(seed())}>{$t('versus.rematch', { default: 'Revanche' })}</button>

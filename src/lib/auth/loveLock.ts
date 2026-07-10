@@ -55,7 +55,6 @@ export function detectLoveLock(rawPassword: string): LoveLockKind | null {
     cleaned.startsWith('i love you ') ||
     cleaned === 'i love him' ||
     cleaned === 'i love her' ||
-    cleaned === 'i love fofinho' ||
     cleaned === 'love you' ||
     cleaned === 'love' ||
     cleaned === 'amo-te' ||
@@ -154,22 +153,22 @@ export type LoveLockSlot = 'title' | 'body' | 'button' | 'stale';
 
 const LOVE_LOCK_FALLBACKS: Record<LoveLockKind, Record<LoveLockSlot, string>> = {
   sad: {
-    title: 'Estás bem, amor? 🥺',
-    body: 'Parece que estás zangada com o fofinho… mas o fofinho adora-te imenso. Faz as pazes com o fofinho para pores a estudar com calma. 📚💕',
-    button: 'Estou ótima com o fofinho. Adoro o fofinho!',
-    stale: 'Ainda aqui? O fofinho já começa a sentir falta do teu sorriso…',
+    title: 'Estás bem? 🥺',
+    body: 'Parece que o dia está pesado… mas o Presuntinho adora-te imenso. Respira, faz as pazes com o dia e volta a estudar com calma. 📚💕',
+    button: 'Já estou melhor 🫶',
+    stale: 'Ainda aqui? O Presuntinho já começa a sentir falta do teu sorriso…',
   },
   love: {
-    title: 'O fofinho tem muitas saudades tuas 🥺💕',
-    body: 'Vai dizer ao fofinho que o amas. Diz em voz alta, depois carrega no botão abaixo. Ele está à espera com um ronrom feliz. 🐷✨',
+    title: 'O Presuntinho tem muitas saudades tuas 🥺💕',
+    body: 'Diz a quem amas que o amas. Diz em voz alta, depois carrega no botão abaixo. O Presuntinho espera com um ronrom feliz. 🐷✨',
     button: 'Já disse e volto a dizer!',
-    stale: 'O fofinho continua à espera… ele tem imensas saudades tuas.',
+    stale: 'O Presuntinho continua à espera… com imensas saudades tuas.',
   },
   sick: {
-    title: 'As melhoras, minha guerreira 🤍',
-    body: 'O fofinho sabe que não te estás a sentir bem, por isso hoje a missão é pequenina e fofinha: beber água, descansar, comer algo leve, manter-te quentinha e fazer só uma coisa de cada vez. A app espera por ti — a tua saúde vem primeiro. 🫶',
+    title: 'As melhoras 🤍',
+    body: 'O Presuntinho sabe que não te estás a sentir bem, por isso hoje a missão é pequenina e fofinha: beber água, descansar, comer algo leve, manter-te quentinha e fazer só uma coisa de cada vez. A app espera por ti — a tua saúde vem primeiro. 🫶',
     button: 'Bebi água e vou descansar um bocadinho 🤍',
-    stale: 'Ainda aqui? Mantinha, água e uma pausa pequenina. O fofinho manda com carinho.',
+    stale: 'Ainda aqui? Mantinha, água e uma pausa pequenina. O Presuntinho manda com carinho.',
   },
 };
 

@@ -26,7 +26,7 @@
 		LEVEL_UP_EVENT,
 		STREAK_CHANGED_EVENT
 	} from '$lib/gamification/gamification-events';
-	import { DEFAULT_MASCOT_ID, getActiveMascot, MASCOT_CHANGED_EVENT } from '$lib/gamification/mascots';
+	import { DEFAULT_MASCOT_ID, getActiveMascot, MASCOT_CHANGED_EVENT, claimNewMascotUnlocks } from '$lib/gamification/mascots';
 	import { awardBadge } from '$lib/state/stores';
 	import { db } from '$lib/state/db';
 	import { claimHabitsFlowDay, claimStreakNotifDay } from '$lib/gamification/streak';
@@ -47,12 +47,14 @@
 	import LevelUpModal from './LevelUpModal.svelte';
 	import StreakMilestoneModal from './StreakMilestoneModal.svelte';
 	import BadgeUnlockModal from './BadgeUnlockModal.svelte';
+	import MascotUnlockModal from './MascotUnlockModal.svelte';
 	import VictoryFlow from './VictoryFlow.svelte';
 
 	type Celebration =
 		| { kind: 'levelup'; level: number; xpTotal: number }
 		| { kind: 'milestone'; milestone: number; earnedFreeze: boolean }
 		| { kind: 'badge'; badgeId: string }
+		| { kind: 'mascot'; id: string }
 		| { kind: 'flow'; context: 'habits' | 'trabalho'; amount: number };
 
 	let queue = $state<Celebration[]>([]);
@@ -176,10 +178,24 @@
 			if (reason === 'assignment_status_done') {
 				enqueue({ kind: 'flow', context: 'trabalho', amount: delta });
 			}
+			// Mascot collectibles unlocked by crossing an XP threshold — silent
+			// until now. Celebrate any that just crossed.
+			await checkMascotUnlocks();
 		} catch (err) {
 			console.warn('[gamification-layer] streak refresh failed', err);
 		} finally {
 			processing = false;
+		}
+	}
+
+	/** Enqueue a one-time celebration for each newly-unlocked mascot. */
+	async function checkMascotUnlocks(): Promise<void> {
+		if (!hydrated) return;
+		try {
+			const fresh = await claimNewMascotUnlocks();
+			for (const id of fresh) enqueue({ kind: 'mascot', id });
+		} catch {
+			/* non-fatal */
 		}
 	}
 
@@ -188,6 +204,8 @@
 		if (typeof id === 'string' && id) {
 			enqueue({ kind: 'badge', badgeId: id });
 		}
+		// A badge crossing can also unlock the badge-gated mascot (coração @10).
+		void checkMascotUnlocks();
 	}
 
 	// ── presence: favicon/título emocional + notificação de streak em risco ──
@@ -276,6 +294,8 @@
 	/>
 {:else if active?.kind === 'badge'}
 	<BadgeUnlockModal badgeId={active.badgeId} onclose={advance} />
+{:else if active?.kind === 'mascot'}
+	<MascotUnlockModal mascotId={active.id} onclose={advance} />
 {:else if active?.kind === 'flow'}
 	<VictoryFlow
 		context={active.context}

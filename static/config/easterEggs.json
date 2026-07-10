@@ -8,7 +8,7 @@
     {"id": "perfume", "icon": "🌸", "name": "Descoberta Olfativa", "hint": "Escreve a palavra 'perfume' em qualquer sítio.", "reward": "+50 XP + badge Scent Discovery + confetti", "badge": "b7", "trigger": "keybuf:perfume"},
     {"id": "behi", "icon": "🇹🇳", "name": "Segredo Tunisino", "hint": "Escreve a palavra tunisina 'behi'.", "reward": "+50 XP + badge Tunisian Secret + confetti", "badge": "b9", "trigger": "keybuf:behi"},
     {"id": "help", "icon": "💡", "name": "Pedir Ajuda", "hint": "Escreve 'help' em qualquer sítio.", "reward": "Toast com dicas de todos os segredos", "badge": null, "trigger": "keybuf:help"},
-    {"id": "fatma", "icon": "🔐", "name": "Para a Fatma", "hint": "Escreve o nome mais bonito que conheces.", "reward": "Badge Secret Keeper + confetti + uma mensagem só para ti", "badge": "b14", "trigger": "keybuf:fatma"},
+    {"id": "fatma", "icon": "🔐", "name": "O Nome Mágico", "hint": "Escreve o nome do animal mais fofo desta app.", "reward": "Badge Secret Keeper + confetti + uma mensagem só para ti", "badge": "b14", "trigger": "keybuf:porquinho"},
     {"id": "mascot", "icon": "🧴", "name": "Dicas da Mascote", "hint": "Clica na mascote 🧴 quando aparecer.", "reward": "Dicas de escrita aleatórias + 5 XP por clique", "badge": null, "trigger": "mascotClick"},
     {"id": "footer", "icon": "👣", "name": "Detetive do Rodapé", "hint": "Clica no texto do rodapé 5 vezes.", "reward": "Toast com dica + badge Footer Detective", "badge": "b15", "trigger": "footerClick:5"},
     {"id": "firstlesson", "icon": "📖", "name": "Primeira Lição", "hint": "Termina a tua primeira lição.", "reward": "+20 XP + badge Scholar", "badge": "b2", "trigger": "lessonComplete:1"},
@@ -67,14 +67,14 @@
   ],
   "mascotTips": [
     "🧴 Pro tip: varia o comprimento das frases!",
-    "🧴 Pro tip: cita números específicos do case!",
-    "🧴 Pro tip: SCQA > introdução genérica",
-    "🧴 Pro tip: TOWS sem ação = desperdício",
-    "🧴 Pro tip: 528 lojas é a tua maior força",
-    "🧴 Pro tip: NPS 17 vs Druni 56 é a tua maior fraqueza",
-    "🧴 Pro tip: Les Secrets pode ser a tua mina de ouro",
-    "🧴 Pro tip: o segmento dupe caiu 65% — pivota!",
-    "🧴 You've got this, Fatma! 💪",
-    "🧴 Don't give up — Marta (a persona) acredita em ti!"
+    "🧴 Pro tip: cita números específicos — convencem mais.",
+    "🧴 Pro tip: estrutura primeiro, escreve depois.",
+    "🧴 Pro tip: análise sem ação = desperdício.",
+    "🧴 Pro tip: 25 minutos de foco > 2 horas distraída.",
+    "🧴 Pro tip: rever no dia seguinte fixa o dobro.",
+    "🧴 Pro tip: explica em voz alta — se travares, ainda não sabes.",
+    "🧴 Pro tip: começa pelo exercício mais difícil.",
+    "🧴 Tu consegues! 💪",
+    "🧴 Não desistas — o teu eu de amanhã agradece!"
   ]
 }

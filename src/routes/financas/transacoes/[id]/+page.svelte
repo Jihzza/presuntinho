@@ -27,6 +27,7 @@
     updateTransacao,
     deleteTransacao,
     getHojeISO,
+    currencySymbol,
     type CategoriaRow,
     type Transacao
   } from '$lib/financas';
@@ -47,6 +48,7 @@
   let error = $state<string | null>(null);
   let confirmarEliminar = $state(false);
   const sortLocale = $derived($locale || 'pt-PT');
+  const curSymbol = $derived(currencySymbol($locale || 'pt-PT'));
 
   // V8 (mood): Sick/Soft ⇒ só leitura, com aviso explícito.
   const moodState = useMoodState();
@@ -63,6 +65,17 @@
 
   // Categoria escolhida (objeto) para o preview de ícone/cor — igual a /nova.
   let categoriaAtual = $derived(categorias.find((c) => c.id === categoria));
+
+  // Ao trocar receita/despesa, se a categoria escolhida deixou de ser
+  // compatível, salta para a 1ª compatível — senão o utilizador podia
+  // gravar uma despesa numa categoria só-receita (e vice-versa). Espelha /nova.
+  $effect(() => {
+    const _ = tipo;
+    if (categoriasCompativeis.length === 0) return;
+    if (!categoria || !categoriasCompativeis.find((c) => c.id === categoria)) {
+      categoria = categoriasCompativeis[0].id;
+    }
+  });
 
   onMount(() => {
     void (async () => {
@@ -251,7 +264,7 @@
             aria-invalid={error ? 'true' : undefined}
             disabled={readOnly}
           />
-          <span class="euro" aria-hidden="true">{$t('currency.symbol')}</span>
+          <span class="euro" aria-hidden="true">{curSymbol}</span>
         </div>
       </div>
 

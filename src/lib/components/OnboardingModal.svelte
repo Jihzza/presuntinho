@@ -29,15 +29,19 @@
   }
   let { open = false, onClose, profile = null }: Props = $props();
 
-  // Resolve the greeting key based on the active profile. Falls back to the
-  // Fatma variant if the profile is unknown / not yet hydrated, so the modal
-  // never shows a missing-key placeholder on first paint.
-  let greetingKey = $derived(`onboarding.welcome.${profile ?? 'fatma'}`);
-  let greetingFallback = $derived(
-    profile === 'daniel'
-      ? '🐷 Bem-vindo, Daniel! Find the easter eggs 🥚'
-      : '🐷 Bem-vinda, Fatma! Encontra os easter eggs 🥚'
-  );
+  // Resolve the greeting key based on the active profile. Only the two legacy
+  // profiles get a personalised, named welcome; every account user (and the
+  // unknown / not-yet-hydrated case) gets the generic name-free greeting, so
+  // a new user is never greeted as "Fatma".
+  // One derivation for both the i18n key and its fallback so the two can
+  // never drift apart (they previously branched on `profile` in parallel).
+  let greeting = $derived.by(() => {
+    if (profile === 'daniel')
+      return { key: 'onboarding.welcome.daniel', fallback: '🐷 Bem-vindo, Daniel! Encontra os easter eggs 🥚' };
+    if (profile === 'fatma')
+      return { key: 'onboarding.welcome.fatma', fallback: '🐷 Bem-vinda, Fatma! Encontra os easter eggs 🥚' };
+    return { key: 'onboarding.welcome', fallback: '🐷 Bem-vindo ao Presuntinho! Encontra os easter eggs escondidos 🥚' };
+  });
 
   // Refs for focus trap
   let dialogEl = $state<HTMLDivElement | null>(null);
@@ -152,7 +156,7 @@
         aria-label={$t('components.onboarding.close.aria', { default: 'Fechar' })}
       >×</button>
 
-      <h2 id="onboarding-title" class="title">{$t(greetingKey, { default: greetingFallback })}</h2>
+      <h2 id="onboarding-title" class="title">{$t(greeting.key, { default: greeting.fallback })}</h2>
       <p class="lead">{$_('onboarding.firstHint')}</p>
 
       <h3 class="section-title">{$t('onboarding.highlightsTitle', { default: 'O que há de novo' })}</h3>

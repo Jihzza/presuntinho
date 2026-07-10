@@ -3,7 +3,7 @@
 // people.ts fallback, persists edits to the registry (IndexedDB), and fires a
 // window event so the home hero + anywhere else refresh without a reload.
 
-import { getSession } from '$lib/auth/session';
+import { getSession, isLegacyProfile } from '$lib/auth/session';
 import { getMember, updateMember } from '$lib/space/registry-db';
 import { seedLegacyRegistry } from '$lib/space/legacy-adapter';
 import { profileFor } from '$lib/profile/people';
@@ -41,18 +41,27 @@ export const profileState = $state<{
 });
 
 export async function loadProfile(): Promise<void> {
-  const p = getSession()?.profile;
-  const id = p === 'fatma' || p === 'daniel' ? p : null;
+  const p = getSession()?.profile ?? null;
+  // Legacy couple (fatma/daniel) keep their static people.ts identity + cloud
+  // sync. Every OTHER (uuid) member is a generic tenant whose real name/emoji/
+  // bio come from their own registry row — never from Fatma's defaults. Passing
+  // the real id (uuid included) to profileFor() yields the neutral 🐷 profile
+  // carrying that id, so the hub hero can never show '@fatma'/🌙 to a new user.
+  const legacy = isLegacyProfile(p);
+  const id = p as ChatProfile | null;
   const person = profileFor(id);
   profileState.id = id;
   profileState.nameKey = person.nameKey;
   profileState.handleKey = person.handleKey;
+  profileState.displayName = '';
   profileState.emoji = person.emoji;
   profileState.accent = person.accent;
+  profileState.photo = '';
+  profileState.bio = '';
 
   if (id && typeof indexedDB !== 'undefined') {
     try {
-      await seedLegacyRegistry(); // idempotent; never overwrites edited rows
+      if (legacy) await seedLegacyRegistry(); // idempotent; legacy-only seed
       const m = await getMember(id);
       if (m) {
         profileState.displayName = m.displayName && m.displayName !== person.id ? m.displayName : '';
@@ -67,8 +76,9 @@ export async function loadProfile(): Promise<void> {
   }
   profileState.loaded = true;
 
-  // Cross-device: hydrate from Supabase (wins over the local copy) + live-sync.
-  if (id) void hydrateFromCloud(id);
+  // Cross-device Supabase profile sync is wired for the legacy pair only; a uuid
+  // member's profile lives in their own registry row (edited via saveProfile).
+  if (legacy) void hydrateFromCloud(id as 'fatma' | 'daniel');
 }
 
 /** Pull the cloud profile over the local one and subscribe for live updates so

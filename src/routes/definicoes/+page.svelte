@@ -19,11 +19,11 @@
 
   import { onMount, tick } from 'svelte';
   import { db, DEFAULT_SETTINGS, type ThemeChoice } from '$lib/state/db';
-  import { theme as themeStore, lang as langStore, funMode as funModeStore, xp as xpStore } from '$lib/state/stores';
+  import { theme as themeStore, lang as langStore, funMode as funModeStore, xp as xpStore, resetStores } from '$lib/state/stores';
   import { locale, waitLocale } from 'svelte-i18n';
   import { setLocale, LOCALES, LOCALE_META, type Locale } from '$lib/i18n';
   import { goto } from '$app/navigation';
-  import { clearSession } from '$lib/auth/session';
+  import { clearSession, isLegacyProfile } from '$lib/auth/session';
   import { resetSoundPrefsCache } from '$lib/gamification/sound';
   import LogOut from 'lucide-svelte/icons/log-out';
   import {
@@ -40,6 +40,24 @@
     type ImportReport
   } from '$lib/backup';
   import Languages from 'lucide-svelte/icons/languages';
+  import Coins from 'lucide-svelte/icons/coins';
+  import { SUPPORTED_CURRENCIES, activeCurrency, setCurrency } from '$lib/financas';
+  import {
+    remindersEnabled,
+    setRemindersEnabled,
+    requestReminderPermission,
+    notificationPermission
+  } from '$lib/habitos/reminders';
+  import {
+    listLockScreens,
+    createLockScreen,
+    deleteLockScreen,
+    setActiveLockScreen,
+    getActiveLockScreenId,
+    LOCKSCREEN_EVENT,
+    type LockScreen
+  } from '$lib/lockscreen/lockscreen';
+  import Lock from 'lucide-svelte/icons/lock';
   import Key from 'lucide-svelte/icons/key-round';
   import Trash from 'lucide-svelte/icons/trash-2';
   import Download from 'lucide-svelte/icons/download';
@@ -82,11 +100,8 @@
   import { getSession } from '$lib/auth/session';
   import { getChatToken, setChatToken, clearChatToken, type ChatProfile } from '$lib/chat/client';
   import { couple, refreshCoupleEnabled } from '$lib/couple/couple-store.svelte';
-  import {
-      verifyAgainstEffectiveHashes,
-      setPassword,
-      type ProfileId
-  } from '$lib/auth/hash';
+  import { verifyPassword, hashPassword, randomSaltHex, type ProfileId } from '$lib/auth/hash';
+  import { getMember, updateMember } from '$lib/space/registry-db';
   import { showToast } from '$lib/components/events';
   import { Button } from '$lib/components/ui';
   import {
@@ -422,6 +437,116 @@
     await waitLocale();      // ensure dictionary swap is settled
   }
 
+  // ----- Moeda (V11) — escolha guardada em localStorage via financas.ts -----
+  let currentCurrency = $state('EUR');
+  onMount(() => {
+    currentCurrency = activeCurrency();
+  });
+  function pickCurrency(code: string): void {
+    currentCurrency = code;
+    setCurrency(code);
+    showToast($t('settings.currency.saved', { default: 'Moeda atualizada — vê nas Finanças 💶' }));
+  }
+
+  // ----- Lembretes de hábitos (Notification API, best-effort in-app) -----
+  let remindersOn = $state(false);
+  let remindersPerm = $state<NotificationPermission | 'unsupported'>('default');
+  onMount(() => {
+    remindersOn = remindersEnabled();
+    remindersPerm = notificationPermission();
+  });
+  async function toggleReminders(): Promise<void> {
+    if (remindersOn) {
+      setRemindersEnabled(false);
+      remindersOn = false;
+      showToast($t('settings.reminders.off', { default: 'Lembretes desligados.' }));
+      return;
+    }
+    const perm = await requestReminderPermission();
+    remindersPerm = perm;
+    if (perm === 'granted') {
+      setRemindersEnabled(true);
+      remindersOn = true;
+      showToast($t('settings.reminders.on', { default: 'Lembretes ligados — aviso-te à hora certa 🐷' }));
+    } else if (perm === 'unsupported') {
+      showToast($t('settings.reminders.unsupported', { default: 'Este browser não suporta notificações.' }));
+    } else {
+      showToast($t('settings.reminders.denied', { default: 'Precisas de permitir notificações no browser.' }));
+    }
+  }
+
+  // ----- Lock screens (V11 — repurposed love-lock as a couple feature) -----
+  let lockScreens = $state<LockScreen[]>([]);
+  let activeLockId = $state<string | null>(null);
+  let lockCreating = $state(false);
+  let lockForm = $state({ title: '', message: '', emoji: '🔒', passphrase: '', targetHandle: '' });
+  let lockError = $state<string | null>(null);
+  let lockSaving = $state(false);
+  let confirmDeleteLock = $state<string | null>(null);
+
+  function refreshLocks(): void {
+    lockScreens = listLockScreens();
+    activeLockId = getActiveLockScreenId();
+  }
+  onMount(() => {
+    refreshLocks();
+    const onChange = () => refreshLocks();
+    window.addEventListener(LOCKSCREEN_EVENT, onChange);
+    return () => window.removeEventListener(LOCKSCREEN_EVENT, onChange);
+  });
+
+  async function submitLock(): Promise<void> {
+    lockError = null;
+    if (!lockForm.title.trim()) {
+      lockError = $t('settings.lockscreen.err_title', { default: 'Dá um título ao ecrã de bloqueio.' });
+      return;
+    }
+    lockSaving = true;
+    try {
+      await createLockScreen({
+        title: lockForm.title,
+        message: lockForm.message,
+        emoji: lockForm.emoji,
+        passphrase: lockForm.passphrase || undefined,
+        targetHandle: lockForm.targetHandle || undefined,
+        ownerProfile: getSession()?.profile
+      });
+      lockForm = { title: '', message: '', emoji: '🔒', passphrase: '', targetHandle: '' };
+      lockCreating = false;
+      refreshLocks();
+      showToast($t('settings.lockscreen.created', { default: 'Ecrã de bloqueio criado 🔒' }));
+    } catch (e) {
+      console.error('[definicoes] createLockScreen failed', e);
+      lockError = $t('settings.lockscreen.err_save', { default: 'Não consegui guardar. Tenta de novo.' });
+    } finally {
+      lockSaving = false;
+    }
+  }
+
+  function toggleActiveLock(id: string): void {
+    setActiveLockScreen(activeLockId === id ? null : id);
+    refreshLocks();
+    showToast(
+      activeLockId === id
+        ? $t('settings.lockscreen.activated', { default: 'Ecrã de bloqueio ativado.' })
+        : $t('settings.lockscreen.deactivated', { default: 'Ecrã de bloqueio desativado.' })
+    );
+  }
+
+  function removeLock(id: string): void {
+    if (confirmDeleteLock !== id) {
+      confirmDeleteLock = id;
+      setTimeout(() => {
+        if (confirmDeleteLock === id) confirmDeleteLock = null;
+      }, 4000);
+      return;
+    }
+    confirmDeleteLock = null;
+    deleteLockScreen(id);
+    refreshLocks();
+    showToast($t('settings.lockscreen.deleted', { default: 'Ecrã de bloqueio apagado.' }));
+  }
+
   // ----- Fun mode (just a checkbox, persists via existing store) -----
   let funMode: boolean = $state(true);
   onMount(() => {
@@ -460,6 +585,7 @@
   function handleLogout(): void {
     if (!confirm($t('settings.logout.confirm', { default: 'Terminar a sessão neste dispositivo?' }))) return;
     clearSession();
+    resetStores(); // drop in-memory XP/theme/etc. now, before we navigate away
     resetSoundPrefsCache();
     // Also end the real-account (Supabase) session, else the splash bridge would
     // silently log you straight back in.
@@ -512,10 +638,6 @@
     const cur = currentPw.trim();
     const nxt = newPw; // do NOT trim the new password; whitespace might be intentional
     const cf = confirmPw;
-    if (!cur) {
-      showToast($t('settings.reset_password.error.wrong_current'));
-      return;
-    }
     if (nxt.length === 0) {
       // Treat empty new password as a mismatch so the user gets a
       // meaningful toast instead of a silent no-op.
@@ -528,13 +650,31 @@
     }
     resetBusy = true;
     try {
-      const verified = await verifyAgainstEffectiveHashes(cur);
-      if (!verified || verified.profile !== profile) {
+      // Multi-tenant: the password lives on the member's registry secret (PBKDF2
+      // salt+hash), not the retired world-readable hashes.json. Verify the
+      // current password against it, then persist a freshly-derived hash.
+      //
+      // BOOTSTRAP: a member row WITHOUT a secret (the seeded legacy profiles,
+      // or any row created before passwords existed) has no current password
+      // to verify — the active session is the proof of identity, so setting a
+      // first password skips the current-password check. Without this there is
+      // no way to ever create the secret the splash login requires.
+      const member = await getMember(profile);
+      if (!member) {
         showToast($t('settings.reset_password.error.wrong_current'));
         resetBusy = false;
         return;
       }
-      await setPassword(profile, nxt);
+      if (member.secret) {
+        if (!cur || !(await verifyPassword(cur, member.secret.salt, member.secret.hash))) {
+          showToast($t('settings.reset_password.error.wrong_current'));
+          resetBusy = false;
+          return;
+        }
+      }
+      const salt = randomSaltHex();
+      const hash = await hashPassword(nxt, salt);
+      await updateMember(profile, { secret: { salt, hash } });
       showToast($t('settings.reset_password.success'));
       // Close modal + clear inputs on success.
       resetOpen = false;
@@ -557,20 +697,11 @@
     clearing = true;
     try {
       const d = db();
-      await Promise.all([
-        d.transacoes.clear(),
-        d.orcamentos.clear(),
-        d.categorias.clear(),
-        d.habitos.clear(),
-        d.habit_logs.clear(),
-        d.biblioteca.clear(),
-        d.badges.clear(),
-        d.visited.clear(),
-        d.quizScores.clear(),
-        d.secrets.clear(),
-        d.state.clear(),
-        d.settings.clear()
-      ]);
+      // Clear EVERY Dexie table — the old hardcoded list missed 7 tables
+      // (notes, chat_messages, chat_conversations, assignments, mood_logs,
+      // events, metas), leaving an inconsistent half-wipe despite the
+      // "apagar tudo" copy. Dexie exposes `.tables`, so this never drifts.
+      await Promise.all(d.tables.map((tbl) => tbl.clear()));
       // Wipe localStorage too — prefs + theme + session.
       try {
         const ls = window.localStorage;
@@ -844,7 +975,7 @@
 
   onMount(() => {
     const p = getSession()?.profile;
-    coupleProfile = p === 'fatma' || p === 'daniel' ? p : null;
+    coupleProfile = p && isLegacyProfile(p) ? (p as 'fatma' | 'daniel') : null;
     coupleConnected = !!(coupleProfile && getChatToken(coupleProfile));
   });
 
@@ -1208,6 +1339,135 @@
       </div>
     </section>
 
+    <!-- ============ Moeda (V11) ============ -->
+    <section class="card" aria-labelledby="currency-h">
+      <div class="card-head">
+        <span class="icon-wrap"><Coins size={18} /></span>
+        <h2 id="currency-h">{$t('settings.currency.title', { default: 'Moeda' })}</h2>
+      </div>
+      <p class="section-sub">{$t('settings.currency.sub', { default: 'Como os valores aparecem nas Finanças.' })}</p>
+      <div class="seg seg-currency" role="radiogroup" aria-label={$t('settings.currency.title', { default: 'Moeda' })}>
+        {#each SUPPORTED_CURRENCIES as cur (cur.code)}
+          <button
+            type="button"
+            role="radio"
+            aria-checked={currentCurrency === cur.code}
+            class:active={currentCurrency === cur.code}
+            onclick={() => pickCurrency(cur.code)}
+            title={cur.label}
+          >
+            <span class="cur-code">{cur.code}</span>
+            <span class="cur-label">{cur.label}</span>
+          </button>
+        {/each}
+      </div>
+    </section>
+
+    <!-- ============ Lembretes de hábitos (V11) ============ -->
+    <section class="card" aria-labelledby="reminders-h">
+      <div class="card-head">
+        <span class="icon-wrap"><Bell size={18} /></span>
+        <h2 id="reminders-h">{$t('settings.reminders.title', { default: 'Lembretes de hábitos' })}</h2>
+      </div>
+      <p class="section-sub">{$t('settings.reminders.sub', { default: 'Aviso-te à hora do hábito, enquanto a app estiver aberta.' })}</p>
+      <div class="switch-list">
+        <button
+          type="button"
+          class="switch-row"
+          role="switch"
+          aria-checked={remindersOn}
+          onclick={toggleReminders}
+        >
+          <span class="switch-copy">
+            <strong>{$t('settings.reminders.enable', { default: 'Ativar lembretes' })}</strong>
+            <small>{$t('settings.reminders.enable_desc', { default: 'Notifica-te quando um hábito passa da hora e ainda não o marcaste.' })}</small>
+          </span>
+          <span class="switch-track" class:on={remindersOn} aria-hidden="true">
+            <span class="switch-thumb"></span>
+          </span>
+        </button>
+      </div>
+      {#if remindersPerm === 'denied'}
+        <p class="section-sub">{$t('settings.reminders.hint_denied', { default: 'As notificações estão bloqueadas nas definições do browser.' })}</p>
+      {:else if remindersPerm === 'unsupported'}
+        <p class="section-sub">{$t('settings.reminders.hint_unsupported', { default: 'Este browser não suporta notificações.' })}</p>
+      {/if}
+    </section>
+
+    <!-- ============ Lock screens (V11) ============ -->
+    <section class="card" aria-labelledby="lockscreen-h">
+      <div class="card-head">
+        <span class="icon-wrap"><Lock size={18} /></span>
+        <h2 id="lockscreen-h">{$t('settings.lockscreen.title', { default: 'Ecrãs de bloqueio' })}</h2>
+      </div>
+      <p class="section-sub">{$t('settings.lockscreen.sub', { default: 'Cria um ecrã de bloqueio com uma mensagem carinhosa. Se lhe deres uma palavra-passe, essa palavra-passe também abre a app — sem substituir a tua palavra-passe normal.' })}</p>
+
+      {#if lockScreens.length > 0}
+        <ul class="lock-list">
+          {#each lockScreens as ls (ls.id)}
+            <li class="lock-item" class:active={activeLockId === ls.id}>
+              <span class="lock-emoji" aria-hidden="true">{ls.emoji}</span>
+              <span class="lock-body">
+                <strong>{ls.title}</strong>
+                {#if ls.message}<small>{ls.message}</small>{/if}
+                <span class="lock-tags">
+                  {#if ls.passphraseHash}<span class="lock-tag">🔑 {$t('settings.lockscreen.has_pass', { default: 'com palavra-passe' })}</span>{/if}
+                  {#if ls.targetHandle}<span class="lock-tag">@{ls.targetHandle}</span>{/if}
+                  {#if activeLockId === ls.id}<span class="lock-tag on">{$t('settings.lockscreen.active', { default: 'ativo' })}</span>{/if}
+                </span>
+              </span>
+              <span class="lock-actions">
+                <Button variant="ghost" size="sm" onclick={() => toggleActiveLock(ls.id)}>
+                  {activeLockId === ls.id ? $t('settings.lockscreen.deactivate', { default: 'Desativar' }) : $t('settings.lockscreen.activate', { default: 'Ativar' })}
+                </Button>
+                <button type="button" class="lock-del" class:confirm={confirmDeleteLock === ls.id} onclick={() => removeLock(ls.id)} aria-label={$t('settings.lockscreen.delete', { default: 'Apagar ecrã de bloqueio' })}>
+                  {confirmDeleteLock === ls.id ? $t('settings.lockscreen.delete_confirm', { default: 'Confirmar?' }) : '🗑️'}
+                </button>
+              </span>
+            </li>
+          {/each}
+        </ul>
+      {/if}
+
+      {#if lockCreating}
+        <form class="lock-form" onsubmit={(e) => { e.preventDefault(); void submitLock(); }}>
+          <label>
+            <span>{$t('settings.lockscreen.f_emoji', { default: 'Emoji' })}</span>
+            <input type="text" bind:value={lockForm.emoji} maxlength="4" class="lock-emoji-input" />
+          </label>
+          <label>
+            <span>{$t('settings.lockscreen.f_title', { default: 'Título' })}</span>
+            <input type="text" bind:value={lockForm.title} maxlength="60" placeholder={$t('settings.lockscreen.f_title_ph', { default: 'Ex.: Para a minha pessoa favorita' })} />
+          </label>
+          <label>
+            <span>{$t('settings.lockscreen.f_message', { default: 'Mensagem' })}</span>
+            <input type="text" bind:value={lockForm.message} maxlength="140" placeholder={$t('settings.lockscreen.f_message_ph', { default: 'Uma frase fofa…' })} />
+          </label>
+          <label>
+            <span>{$t('settings.lockscreen.f_pass', { default: 'Palavra-passe (opcional)' })}</span>
+            <input type="password" bind:value={lockForm.passphrase} autocomplete="new-password" placeholder={$t('settings.lockscreen.f_pass_ph', { default: 'Deixa vazio para só personalizar' })} />
+          </label>
+          <label>
+            <span>{$t('settings.lockscreen.f_handle', { default: '@handle do parceiro (opcional)' })}</span>
+            <input type="text" bind:value={lockForm.targetHandle} maxlength="20" placeholder="@…" />
+          </label>
+          {#if lockError}<p class="form-error" role="alert">{lockError}</p>{/if}
+          <div class="lock-form-actions">
+            <Button type="submit" disabled={lockSaving}>
+              {lockSaving ? $t('common.saving', { default: 'A guardar…' }) : $t('settings.lockscreen.save', { default: 'Criar ecrã de bloqueio' })}
+            </Button>
+            <Button variant="ghost" onclick={() => { lockCreating = false; lockError = null; }}>
+              {$t('common.cancel', { default: 'Cancelar' })}
+            </Button>
+          </div>
+        </form>
+      {:else}
+        <Button variant="secondary" onclick={() => (lockCreating = true)}>
+          + {$t('settings.lockscreen.new', { default: 'Novo ecrã de bloqueio' })}
+        </Button>
+      {/if}
+    </section>
+
   <!-- ============ Account / Password ============ -->
   <section class="card" aria-labelledby="acct-h">
     <div class="card-head">
@@ -1396,6 +1656,18 @@
         <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
           <Github size={14} aria-hidden="true" />
           {$t('settings.about.repo')}
+        </a>
+      </li>
+      <li>
+        <a href="/privacidade/">
+          <Lock size={14} aria-hidden="true" />
+          {$t('settings.about.privacy', { default: 'Privacidade' })}
+        </a>
+      </li>
+      <li>
+        <a href="/termos/">
+          <Info size={14} aria-hidden="true" />
+          {$t('settings.about.terms', { default: 'Termos' })}
         </a>
       </li>
     </ul>
@@ -2034,6 +2306,50 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    .section-sub {
+      margin: 0 0 0.75rem;
+      color: var(--txt2);
+      font-size: 0.9rem;
+    }
+    .seg-currency button {
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .cur-code {
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+    }
+    .cur-label {
+      font-size: 0.78rem;
+      color: var(--txt3);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+    .seg-currency button.active .cur-label { color: var(--txt2); }
+
+    /* Lock screens (V11) */
+    .lock-list { list-style: none; margin: 0 0 0.75rem; padding: 0; display: grid; gap: 0.5rem; }
+    .lock-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.7rem; background: var(--card); border: 1px solid var(--border); border-radius: 0.7rem; }
+    .lock-item.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--card)); }
+    .lock-emoji { font-size: 1.6rem; line-height: 1; flex-shrink: 0; }
+    .lock-body { flex: 1; min-width: 0; display: grid; gap: 0.1rem; }
+    .lock-body strong { color: var(--txt); }
+    .lock-body small { color: var(--txt2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .lock-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.15rem; }
+    .lock-tag { font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 999px; background: color-mix(in srgb, var(--txt) 8%, transparent); color: var(--txt2); }
+    .lock-tag.on { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent); font-weight: 700; }
+    .lock-actions { display: flex; align-items: center; gap: 0.3rem; flex-shrink: 0; }
+    .lock-del { min-width: 44px; min-height: 44px; background: transparent; border: 0; cursor: pointer; border-radius: 0.5rem; color: var(--txt2); font-size: 1.05rem; }
+    .lock-del.confirm { background: color-mix(in srgb, var(--error) 18%, transparent); color: var(--error); font-size: 0.8rem; padding: 0 0.5rem; }
+    .lock-form { display: grid; gap: 0.6rem; margin-top: 0.5rem; }
+    .lock-form label { display: grid; gap: 0.25rem; }
+    .lock-form label > span { font-size: 0.82rem; color: var(--txt2); }
+    .lock-form input { width: 100%; padding: 0.55rem 0.65rem; box-sizing: border-box; background: var(--bg-elev); border: 1px solid var(--border-strong); border-radius: 0.5rem; color: var(--txt); font: inherit; }
+    .lock-emoji-input { max-width: 5rem; text-align: center; font-size: 1.3rem; }
+    .lock-form-actions { display: flex; gap: 0.5rem; margin-top: 0.25rem; }
   /* Action buttons now come from the shared $lib/components/ui Button
      primitive (token-driven, theme-aware). */
   .data-actions {

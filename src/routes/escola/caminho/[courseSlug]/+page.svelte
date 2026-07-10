@@ -14,7 +14,7 @@
   import {
     courseProgress,
     nextLesson,
-    loadVisitedLessons,
+    loadCompletedLessons,
     loadPathChests,
     getQuizHistory,
     type CourseProgress,
@@ -38,19 +38,20 @@
   onMount(() => {
     void (async () => {
       try {
-        const [p, n, s, m, visited, chests] = await Promise.all([
+        const [p, n, s, m, completed, chests] = await Promise.all([
           courseProgress(courseSlug),
           nextLesson(courseSlug),
           getActivityStreak(),
           getActiveMascot(),
-          loadVisitedLessons(),
+          loadCompletedLessons(),
           loadPathChests()
         ]);
         progress = p;
         next = n;
         streak = s;
         mascotId = m.id;
-        visitedLessons = new Set(visited.keys());
+        // Nós do caminho ficam "feitos" ao CONCLUIR a lição, não ao abrir.
+        visitedLessons = new Set(completed.keys());
         claimedChests = chests;
 
         // Quizzes com pelo menos uma tentativa → nó de teste "feito".

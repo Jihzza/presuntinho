@@ -104,7 +104,8 @@ function hasIndexedDb(): boolean {
   return typeof indexedDB !== 'undefined';
 }
 
-/** All visited lesson ids ('lesson:*') mapped to their visitedAt stamp. */
+/** All visited lesson ids ('lesson:*') mapped to their visitedAt stamp.
+ *  "Visited" = OPENED. Used for resume / "continue where you left off". */
 export async function loadVisitedLessons(): Promise<Map<string, number>> {
   const map = new Map<string, number>();
   if (!hasIndexedDb()) return map;
@@ -115,6 +116,72 @@ export async function loadVisitedLessons(): Promise<Map<string, number>> {
     }
   }
   return map;
+}
+
+const LESSON_DONE_MIGRATION_ID = 'migrated:lesson-done-v1';
+
+/**
+ * One-time backfill. Before V11 a lesson counted as "done" the moment it was
+ * OPENED ('lesson:*'). We now count real COMPLETION ('lesson-done:*', written
+ * by completeLessonOnce). To avoid making existing progress appear to drop,
+ * every already-opened lesson is marked completed once; after that, only
+ * finishing a lesson marks it done. Idempotent (guarded by a flag row).
+ */
+export async function ensureLessonDoneMigration(): Promise<void> {
+  if (!hasIndexedDb()) return;
+  const d = db();
+  const flag = await d.visited.get(LESSON_DONE_MIGRATION_ID);
+  if (flag?.visited) return;
+  const rows = await d.visited.toArray();
+  const doneIds = new Set(
+    rows
+      .filter((r) => typeof r.id === 'string' && r.id.startsWith('lesson-done:') && r.visited)
+      .map((r) => r.id as string)
+  );
+  const toWrite: { id: string; visited: boolean; visitedAt: number }[] = [];
+  for (const row of rows) {
+    if (typeof row.id === 'string' && row.id.startsWith('lesson:') && row.visited) {
+      const doneId = `lesson-done:${row.id.slice('lesson:'.length)}`;
+      if (!doneIds.has(doneId)) toWrite.push({ id: doneId, visited: true, visitedAt: row.visitedAt || Date.now() });
+    }
+  }
+  if (toWrite.length) await d.visited.bulkPut(toWrite);
+  await d.visited.put({ id: LESSON_DONE_MIGRATION_ID, visited: true, visitedAt: Date.now() });
+}
+
+/**
+ * All COMPLETED lessons, keyed in the SAME 'lesson:<unit>:<slug>' shape as
+ * loadVisitedLessons so every call site can keep using lessonVisitedId(...).
+ * Runs the one-time visited→done migration first.
+ *
+ * In-flight dedup: /escola's onMount fires schoolSummary(), resumeTarget()
+ * and allCourseProgress() concurrently, and each calls this — without the
+ * shared promise that meant 3 full `visited` table scans (and a 3×-raceable
+ * first-run migration) per page visit. Concurrent callers now share one scan;
+ * the promise is dropped on settle so fresh calls always reread the table.
+ */
+let inflightCompleted: Promise<Map<string, number>> | null = null;
+
+export async function loadCompletedLessons(): Promise<Map<string, number>> {
+  if (!hasIndexedDb()) return new Map<string, number>();
+  if (inflightCompleted) return inflightCompleted;
+  const run = (async () => {
+    const map = new Map<string, number>();
+    await ensureLessonDoneMigration();
+    const rows = await db().visited.toArray();
+    for (const row of rows) {
+      if (typeof row.id === 'string' && row.id.startsWith('lesson-done:') && row.visited) {
+        map.set(`lesson:${row.id.slice('lesson-done:'.length)}`, row.visitedAt || 0);
+      }
+    }
+    return map;
+  })();
+  inflightCompleted = run;
+  try {
+    return await run;
+  } finally {
+    inflightCompleted = null;
+  }
 }
 
 /** Ids 'path-chest:<unit>' já recolhidos no mapa do curso (V10.3). */
@@ -136,6 +203,17 @@ export async function visitedLessonsForUnit(unitSlug: string): Promise<Set<strin
   const set = new Set<string>();
   const prefix = `lesson:${unitSlug}:`;
   for (const id of visited.keys()) {
+    if (id.startsWith(prefix)) set.add(id.slice(prefix.length));
+  }
+  return set;
+}
+
+/** Set of lesson slugs of a single unit that have been COMPLETED. */
+export async function completedLessonsForUnit(unitSlug: string): Promise<Set<string>> {
+  const completed = await loadCompletedLessons();
+  const set = new Set<string>();
+  const prefix = `lesson:${unitSlug}:`;
+  for (const id of completed.keys()) {
     if (id.startsWith(prefix)) set.add(id.slice(prefix.length));
   }
   return set;
@@ -181,18 +259,18 @@ function courseProgressFromVisited(course: SchoolCourse, visited: Map<string, nu
   };
 }
 
-/** Progress for one catalog course (by course slug). */
+/** Progress for one catalog course (by course slug). Counts COMPLETED lessons. */
 export async function courseProgress(courseSlug: string): Promise<CourseProgress | null> {
   const course = schoolCourses.find((c) => c.slug === courseSlug);
   if (!course) return null;
-  const visited = await loadVisitedLessons();
-  return courseProgressFromVisited(course, visited);
+  const completed = await loadCompletedLessons();
+  return courseProgressFromVisited(course, completed);
 }
 
-/** Progress for every catalog course (one Dexie read). */
+/** Progress for every catalog course (one Dexie read). Counts COMPLETED lessons. */
 export async function allCourseProgress(): Promise<CourseProgress[]> {
-  const visited = await loadVisitedLessons();
-  return schoolCourses.map((course) => courseProgressFromVisited(course, visited));
+  const completed = await loadCompletedLessons();
+  return schoolCourses.map((course) => courseProgressFromVisited(course, completed));
 }
 
 // ---------------------------------------------------------------------------
@@ -222,31 +300,33 @@ function nextLessonFromVisited(course: SchoolCourse, visited: Map<string, number
   return null;
 }
 
-/** First not-yet-opened lesson of a course, in catalog order. */
+/** First not-yet-COMPLETED lesson of a course, in catalog order. */
 export async function nextLesson(courseSlug: string): Promise<NextLessonTarget | null> {
   const course = schoolCourses.find((c) => c.slug === courseSlug);
   if (!course) return null;
-  const visited = await loadVisitedLessons();
-  return nextLessonFromVisited(course, visited);
+  const completed = await loadCompletedLessons();
+  return nextLessonFromVisited(course, completed);
 }
 
 /**
- * "Continue where you left off": looks at the most recently opened
- * lesson, then suggests the next unopened lesson in that unit (then in
- * that course).  Falls back to the first unopened lesson anywhere.
- * Returns null only when every catalog lesson has been opened.
+ * "Continue where you left off": looks at the most recently COMPLETED lesson,
+ * then suggests the next not-yet-completed lesson in that unit (then in that
+ * course). Falls back to the first uncompleted lesson anywhere. Uses COMPLETED
+ * (not merely opened) so a lesson you opened but never finished is the very
+ * lesson resume points you back to — instead of being skipped.
+ * Returns null only when every catalog lesson has been completed.
  */
 export async function resumeTarget(): Promise<NextLessonTarget | null> {
-  const visited = await loadVisitedLessons();
+  const completed = await loadCompletedLessons();
 
-  // Find the most recent catalog lesson visit.
+  // Find the most recent catalog lesson completion.
   let lastUnit: SchoolUnit | null = null;
   let lastCourse: SchoolCourse | null = null;
   let lastAt = -1;
   for (const course of schoolCourses) {
     for (const unit of allUnits(course)) {
       for (const lesson of unit.lessons) {
-        const at = visited.get(lessonVisitedId(unit.slug, lesson.slug));
+        const at = completed.get(lessonVisitedId(unit.slug, lesson.slug));
         if (at !== undefined && at > lastAt) {
           lastAt = at;
           lastUnit = unit;
@@ -258,16 +338,16 @@ export async function resumeTarget(): Promise<NextLessonTarget | null> {
 
   if (lastUnit && lastCourse) {
     for (const lesson of lastUnit.lessons) {
-      if (!visited.has(lessonVisitedId(lastUnit.slug, lesson.slug))) {
+      if (!completed.has(lessonVisitedId(lastUnit.slug, lesson.slug))) {
         return targetFor(lastCourse, lastUnit, lesson.slug, lesson.title);
       }
     }
-    const inCourse = nextLessonFromVisited(lastCourse, visited);
+    const inCourse = nextLessonFromVisited(lastCourse, completed);
     if (inCourse) return inCourse;
   }
 
   for (const course of schoolCourses) {
-    const target = nextLessonFromVisited(course, visited);
+    const target = nextLessonFromVisited(course, completed);
     if (target) return target;
   }
   return null;
@@ -383,12 +463,12 @@ export async function schoolSummary(): Promise<SchoolSummary> {
   if (!hasIndexedDb()) {
     return { lessonsDone: 0, lessonsTotal: catalogLessonTotal(), quizzesTaken: 0, quizzesPerfect: 0 };
   }
-  const [visited, quizzes] = await Promise.all([loadVisitedLessons(), quizHistoryMap()]);
+  const [completed, quizzes] = await Promise.all([loadCompletedLessons(), quizHistoryMap()]);
   let lessonsDone = 0;
   for (const course of schoolCourses) {
     for (const unit of allUnits(course)) {
       for (const lesson of unit.lessons) {
-        if (visited.has(lessonVisitedId(unit.slug, lesson.slug))) lessonsDone++;
+        if (completed.has(lessonVisitedId(unit.slug, lesson.slug))) lessonsDone++;
       }
     }
   }

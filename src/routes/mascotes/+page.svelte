@@ -267,7 +267,10 @@
 
 <style>
   .mascotes {
-    max-width: 860px;
+    /* min(…, 100%) — a flex-item pode resolver para max-content e furar o
+       viewport em ecrãs estreitos; o cap a 100% prende-a sempre à largura real. */
+    max-width: min(860px, 100%);
+    width: 100%;
     margin: 0 auto;
     padding: 1.25rem 1rem 8rem;
   }
@@ -479,7 +482,7 @@
   .rail-card.locked :global(.mavatar img) {
     filter: grayscale(1) brightness(0.55) opacity(0.55);
   }
-  /* Família (especiais) — moldura a brilhar + fundo quente, sempre destacadas. */
+  /* Companheiros (especiais) — moldura a brilhar + fundo quente, sempre destacados. */
   .rail-card.special {
     border-color: color-mix(in srgb, var(--accent) 45%, transparent);
     background:

@@ -151,7 +151,7 @@
       <h1>
         {$t('streaks.hero.days', {
           values: { count: streak?.current ?? 0 },
-          default: '{count} dias seguidos'
+          default: '{count, plural, one {# dia seguido} other {# dias seguidos}}'
         })}
       </h1>
       <p class="hero-status" class:ok={streak?.activeToday}>

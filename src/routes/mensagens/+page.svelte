@@ -29,6 +29,7 @@
   import { isMultiplayerConfigured } from '$lib/multiplayer/config';
   import { ChatStore, type LocalChatMessage } from '$lib/chat/store.svelte';
   import { profileFor } from '$lib/profile/people';
+  import { couple } from '$lib/couple/couple-store.svelte';
 
   type ConversationPreset = {
     id: string;
@@ -115,6 +116,11 @@
   const meProfile = $derived(profileFor(profile));
   const otherPerson = $derived(profileFor(other));
   const syncBlocked = $derived(Boolean(secureSetupNeeded || store?.authError));
+  // The 1:1 chat backend is scoped to the legacy couple (fatma/daniel). For any
+  // other (solo / onboarded uuid) session, otherProfile() would fall back to
+  // 'fatma' and leak her name/@handle/💞 as their "partner" — so gate the whole
+  // couple surface and show a neutral state instead.
+  const canCouple = $derived(couple.available);
   const selectedConversation = $derived(CONVERSATIONS.find((c) => c.id === selectedConversationId) ?? CONVERSATIONS[0]);
   const fileMessages = $derived((store?.messages ?? []).filter((m) => Boolean(m.mediaType || m.mediaKey || m.localDataUrl)));
 
@@ -446,7 +452,7 @@
     </a>
   </header>
 
-  {#if !noSession}
+  {#if !noSession && canCouple}
     {#if view === 'list'}
       <!-- WhatsApp-style conversation list: the couple chat is pinned + special,
            the topic threads follow. Tapping a row opens its thread. -->
@@ -527,7 +533,7 @@
     {/if}
   {/if}
 
-  {#if store?.offline && !syncBlocked}
+  {#if store?.offline && !syncBlocked && canCouple}
     <div class="offline-banner" role="status">
       {$t('mensagens.offline', {
         default: 'Sem ligação — as mensagens ficam guardadas e seguem quando houver rede.'
@@ -566,6 +572,11 @@
     <div class="gate card">
       <span class="gate-emoji" aria-hidden="true">🔐</span>
       <p>{$t('mensagens.no_session', { default: 'Abre primeiro a tua sessão no ecrã inicial para entrares no chat privado.' })}</p>
+    </div>
+  {:else if !canCouple}
+    <div class="gate card">
+      <span class="gate-emoji" aria-hidden="true">💬</span>
+      <p>{$t('mensagens.solo_gate', { default: 'As mensagens abrem quando ligares a tua conta a alguém. Por agora, este espaço fica à tua espera. 🤍' })}</p>
     </div>
   {:else if store && view === 'thread'}
     <div class="chat-scroll" bind:this={scrollEl} onscroll={onListScroll}>

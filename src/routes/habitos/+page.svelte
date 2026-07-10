@@ -20,7 +20,10 @@
   import { onMount } from 'svelte';
   import { locale, t } from 'svelte-i18n';
   import {
-    listHabitos,
+    listActiveHabitos,
+    listArchivedHabitos,
+    archiveHabit,
+    unarchiveHabit,
     deleteHabito,
     editHabito,
     getStreak,
@@ -53,6 +56,8 @@
   import { showToast, fireConfettiEvent } from '$lib/components/events';
 
   let habits = $state<Habit[]>([]);
+  let archivedHabits = $state<Habit[]>([]);
+  let showArchived = $state(false);
   let loading = $state(true);
   let error = $state<string | null>(null);
   let confirmingDelete = $state<number | null>(null);
@@ -82,8 +87,9 @@
     loading = true;
     error = null;
     try {
-      const fresh = await listHabitos();
+      const [fresh, archived] = await Promise.all([listActiveHabitos(), listArchivedHabitos()]);
       habits = fresh.map((h) => localizedHabit($t, h));
+      archivedHabits = archived.map((h) => localizedHabit($t, h));
       // Resolve streak + today status + dashboard stats in parallel.
       const rows = await Promise.all(
         fresh.map((h) => Promise.all([getStreak(h.id, h.cadence), isLoggedToday(h.id)]))
@@ -106,7 +112,7 @@
       // Keep detail extras in sync when a habit is open.
       if (editingHabit) void loadDetailExtras(editingHabit);
     } catch (e) {
-      console.error('[habitos] listHabitos failed', e);
+      console.error('[habitos] refresh (listActiveHabitos) failed', e);
       error = e instanceof Error ? e.message : ($t('habitos.error.load', { default: 'Erro a carregar hábitos' }) as string);
     } finally {
       loading = false;
@@ -145,6 +151,40 @@
     } catch (e) {
       console.error('[habitos] delete failed', e);
       showToast($t('habitos.toast.delete_failed', { default: 'Erro a remover hábito' }));
+    }
+  }
+
+  /**
+   * Archive (pause) a habit — the primary, NON-destructive exit.  Reversible,
+   * so no confirm dialog (unlike delete): the habit + its history survive and
+   * it reappears under "Arquivados" with a Restore action.
+   */
+  async function archiveCurrent(id: number): Promise<void> {
+    confirmingDelete = null;
+    try {
+      await archiveHabit(id);
+      if (editingHabit?.id === id) {
+        editingHabit = null;
+        showEditForm = false;
+      }
+      await refresh();
+      showToast($t('habitos.toast.archived', { default: 'Hábito arquivado' }));
+    } catch (e) {
+      console.error('[habitos] archive failed', e);
+      showToast($t('habitos.toast.archive_failed', { default: 'Erro a arquivar hábito' }));
+    }
+  }
+
+  /** Restore an archived habit back into the active list. */
+  async function restoreHabit(id: number): Promise<void> {
+    confirmingDelete = null;
+    try {
+      await unarchiveHabit(id);
+      await refresh();
+      showToast($t('habitos.toast.restored', { default: 'Hábito restaurado' }));
+    } catch (e) {
+      console.error('[habitos] restore failed', e);
+      showToast($t('habitos.toast.restore_failed', { default: 'Erro a restaurar hábito' }));
     }
   }
 
@@ -255,7 +295,7 @@
   /** Lighter refresh — streaks + stats without the loading skeleton. */
   async function refreshStatsOnly(): Promise<void> {
     try {
-      const fresh = await listHabitos();
+      const fresh = await listActiveHabitos();
       const rows = await Promise.all(fresh.map((h) => getStreak(h.id, h.cadence)));
       const nextStreaks = new Map<number, number>();
       fresh.forEach((h, i) => nextStreaks.set(h.id, rows[i]));
@@ -330,6 +370,25 @@
 
   onMount(() => {
     void refresh();
+    // Refrescar ao voltar à app e à meia-noite — senão o "✓ hoje" e os toggles
+    // de ontem persistiam no novo dia (PWA que fica aberta / retoma).
+    let dayKey = localDateKey();
+    const checkNewDay = () => {
+      const now = localDateKey();
+      if (now !== dayKey) {
+        dayKey = now;
+        void refresh();
+      }
+    };
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') checkNewDay();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    const midnightPoll = setInterval(checkNewDay, 60_000);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible);
+      clearInterval(midnightPoll);
+    };
   });
 
   function formatCreatedAt(ts: number): string {
@@ -352,6 +411,15 @@
         .join(' · ');
     }
     return $t('habitos.cadence.daily', { default: 'diário' }) as string;
+  }
+
+  /** Streak com a unidade certa: hábitos semanais contam SEMANAS, não dias. */
+  function streakLabel(h: Habit): string {
+    const n = streaks.get(h.id) ?? 0;
+    if (h.cadence === 'weekly') {
+      return $t('habitos.list.streak_weeks', { values: { n }, default: '🔥 {n, plural, one {# semana} other {# semanas}}' }) as string;
+    }
+    return $t('habitos.list.streak', { values: { n }, default: '🔥 {n, plural, one {# dia} other {# dias}}' }) as string;
   }
 
   function scheduledToday(h: Habit): boolean {
@@ -390,22 +458,24 @@
       <div class="summary-card">
         <span class="summary-label">{$t('habitos.stats.best_streak', { default: 'Melhor streak' })}</span>
         <span class="summary-value">
-          {dashboardStats.bestStreak
+          {dashboardStats.bestStreak && dashboardStats.bestStreak.streak > 0
             ? `${dashboardStats.bestStreak.streak} 🔥`
             : '—'}
         </span>
-        {#if dashboardStats.bestStreak}
+        {#if dashboardStats.bestStreak && dashboardStats.bestStreak.streak > 0}
           <span class="summary-sub">{dashboardStats.bestStreak.name}</span>
+        {:else}
+          <span class="summary-sub">{$t('habitos.stats.no_streak_yet', { default: 'Ainda sem sequência — começa hoje 💪' })}</span>
         {/if}
       </div>
       <div class="summary-card">
         <span class="summary-label">{$t('habitos.stats.most_consistent', { default: 'Mais consistente (7d)' })}</span>
         <span class="summary-value">
-          {dashboardStats.mostConsistent
+          {dashboardStats.mostConsistent && dashboardStats.mostConsistent.percent7 > 0
             ? `${dashboardStats.mostConsistent.percent7}%`
             : '—'}
         </span>
-        {#if dashboardStats.mostConsistent}
+        {#if dashboardStats.mostConsistent && dashboardStats.mostConsistent.percent7 > 0}
           <span class="summary-sub">{dashboardStats.mostConsistent.name}</span>
         {/if}
       </div>
@@ -470,7 +540,7 @@
                     · {cadenceLabel(h.cadence)}
                   </span>
                   <span class="status">
-                    <span class="streak">{$t('habitos.list.streak', { default: '🔥 {n} dias', values: { n: streaks.get(h.id) ?? 0 } })}</span>
+                    <span class="streak">{streakLabel(h)}</span>
                     <span class="today" data-done={logged.get(h.id) ? 'true' : 'false'}>
                       {#if logged.get(h.id)}
                         {$t('habitos.list.today_done', { default: '✓ hoje' })}
@@ -486,12 +556,12 @@
               </button>
               <button
                 type="button"
-                class="delete-btn"
-                onclick={() => confirmDelete(h.id)}
-                aria-label={confirmingDelete === h.id ? $t('habitos.delete.confirm', { default: 'Confirmar remoção' }) : $t('habitos.delete.aria', { default: 'Remover hábito' })}
-                data-confirming={confirmingDelete === h.id}
+                class="archive-btn"
+                onclick={() => archiveCurrent(h.id)}
+                title={$t('habitos.archive.action', { default: 'Arquivar' })}
+                aria-label={$t('habitos.archive.aria', { values: { name: h.name }, default: `Arquivar ${h.name}` })}
               >
-                {confirmingDelete === h.id ? $t('habitos.delete.confirm_short', { default: 'Confirmar?' }) : '🗑️'}
+                📦
               </button>
             </article>
             {#if editingHabit?.id === h.id}
@@ -532,6 +602,19 @@
                     <button type="button" class="btn-secondary" onclick={() => (showEditForm = true)}>
                       ✏️ {$t('habitos.detail.edit', { default: 'Editar hábito' })}
                     </button>
+                    <button
+                      type="button"
+                      class="btn-danger"
+                      onclick={() => confirmDelete(h.id)}
+                      data-confirming={confirmingDelete === h.id}
+                      aria-label={confirmingDelete === h.id
+                        ? $t('habitos.delete.confirm', { default: 'Confirmar remoção' })
+                        : $t('habitos.delete.aria', { default: 'Remover hábito' })}
+                    >
+                      {confirmingDelete === h.id
+                        ? $t('habitos.delete.confirm_long', { default: '🗑️ Confirmar remoção permanente?' })
+                        : $t('habitos.detail.delete', { default: '🗑️ Eliminar (apaga o histórico)' })}
+                    </button>
                   {:else}
                     <HabitForm
                       habit={h}
@@ -547,6 +630,57 @@
       </ul>
     {/if}
   </section>
+
+  {#if !loading && archivedHabits.length > 0}
+    <section class="archived" aria-label={$t('habitos.archived.aria', { default: 'Hábitos arquivados' })}>
+      <button
+        type="button"
+        class="archived-toggle"
+        onclick={() => (showArchived = !showArchived)}
+        aria-expanded={showArchived}
+      >
+        <span class="archived-title">
+          📦 {$t('habitos.archived.heading', { values: { n: archivedHabits.length }, default: 'Arquivados ({n})' })}
+        </span>
+        <span class="archived-caret" aria-hidden="true">{showArchived ? '▾' : '▸'}</span>
+      </button>
+
+      {#if showArchived}
+        <p class="archived-hint">{$t('habitos.archived.hint', { default: 'Pausados — sem streaks nem estatísticas. Restaura quando quiseres.' })}</p>
+        <ul class="cards archived-list">
+          {#each archivedHabits as h (h.id)}
+            <li>
+              <article class="card archived-card" style="--accent: {h.color}">
+                <span class="icon" aria-hidden="true">{h.icon}</span>
+                <span class="content">
+                  <span class="name">{h.name}</span>
+                  <span class="meta">
+                    {#if h.archivedAt}{$t('habitos.archived.at', { default: 'Arquivado a' })} {formatCreatedAt(h.archivedAt)} · {/if}{cadenceLabel(h.cadence)}
+                  </span>
+                </span>
+                <button
+                  type="button"
+                  class="restore-btn"
+                  onclick={() => restoreHabit(h.id)}
+                >
+                  ↩️ {$t('habitos.archived.restore', { default: 'Restaurar' })}
+                </button>
+                <button
+                  type="button"
+                  class="delete-btn"
+                  onclick={() => confirmDelete(h.id)}
+                  aria-label={confirmingDelete === h.id ? $t('habitos.delete.confirm', { default: 'Confirmar remoção' }) : $t('habitos.delete.aria', { default: 'Remover hábito' })}
+                  data-confirming={confirmingDelete === h.id}
+                >
+                  {confirmingDelete === h.id ? $t('habitos.delete.confirm_short', { default: 'Confirmar?' }) : '🗑️'}
+                </button>
+              </article>
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    </section>
+  {/if}
 
   {#if habitosApp}
     <footer class="page-footer" aria-hidden="true">
@@ -702,7 +836,8 @@
     align-items: stretch;
     background: var(--card);
     border: 1px solid var(--border);
-    border-left: 4px solid var(--accent);
+    /* Propriedade lógica → a faixa de acento fica no lado inicial também em RTL (ar). */
+    border-inline-start: 4px solid var(--accent);
     border-radius: var(--radius-lg, 0.75rem);
     overflow: hidden;
     transition: background var(--motion-base, 220ms);
@@ -716,7 +851,7 @@
     align-self: center;
     width: 44px;
     height: 44px;
-    margin-left: 0.75rem;
+    margin-inline-start: 0.75rem;
     border-radius: 50%;
     border: 2px solid var(--accent);
     background: transparent;
@@ -767,7 +902,7 @@
     background: transparent;
     border: 0;
     cursor: pointer;
-    text-align: left;
+    text-align: start;
     font-family: inherit;
   }
   .card-main:focus-visible {
@@ -830,7 +965,7 @@
     padding: 0 1rem;
     min-width: 44px;
     cursor: pointer;
-    border-left: 1px solid var(--border);
+    border-inline-start: 1px solid var(--border);
     transition: background var(--motion-fast, 120ms), color var(--motion-fast, 120ms);
   }
   .delete-btn:hover,
@@ -847,6 +982,133 @@
     color: var(--on-accent, #fff);
     font-weight: 600;
     font-size: var(--fs-sm, 0.875rem);
+  }
+  /* Arquivar — trailing quick action on each active card. The PRIMARY,
+     non-destructive exit (reversible, so no confirm). Mirrors the old
+     delete-btn geometry (44px target, logical inline-start divider). */
+  .archive-btn {
+    border: 0;
+    background: transparent;
+    color: var(--txt3);
+    font-size: 1.125rem;
+    padding: 0 1rem;
+    min-width: 44px;
+    cursor: pointer;
+    border-inline-start: 1px solid var(--border);
+    transition: background var(--motion-fast, 120ms), color var(--motion-fast, 120ms);
+  }
+  .archive-btn:hover,
+  .archive-btn:focus-visible {
+    color: var(--accent);
+    background: var(--card-hover, var(--card));
+    outline: none;
+  }
+  .archive-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+  /* Secondary destructive action, inside the expanded detail only. Escalates
+     to a solid error fill on the confirm step (existing 2-step confirm). */
+  .btn-danger {
+    background: var(--card);
+    color: var(--error);
+    border: 1px solid var(--error);
+    padding: 0.625rem 1rem;
+    border-radius: var(--radius-sm, 0.5rem);
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    min-height: 44px;
+    transition: background var(--motion-fast, 120ms), color var(--motion-fast, 120ms);
+  }
+  .btn-danger:hover {
+    background: color-mix(in srgb, var(--error) 12%, transparent);
+  }
+  .btn-danger:focus-visible {
+    outline: 2px solid var(--error);
+    outline-offset: 2px;
+  }
+  .btn-danger[data-confirming='true'] {
+    background: var(--error);
+    color: var(--on-accent, #fff);
+    border-color: var(--error);
+  }
+  /* Arquivados section — collapsible list of paused habits. */
+  .archived {
+    margin-top: 1.5rem;
+  }
+  .archived-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg, 0.75rem);
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+    color: var(--txt);
+    font-family: inherit;
+    font-size: var(--fs-md, 1rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--motion-fast, 120ms);
+  }
+  .archived-toggle:hover {
+    background: var(--card-hover, var(--card));
+  }
+  .archived-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .archived-caret {
+    color: var(--txt3);
+    font-size: 0.875rem;
+  }
+  .archived-hint {
+    color: var(--txt3);
+    font-size: var(--fs-sm, 0.8125rem);
+    margin: 0.625rem 0.25rem 0.25rem;
+  }
+  .archived-list {
+    margin-top: 0.5rem;
+  }
+  .archived-card {
+    align-items: center;
+    opacity: 0.85;
+  }
+  .archived-card .icon {
+    margin-inline-start: 1rem;
+  }
+  .archived-card .content {
+    padding: 0.75rem 0.5rem;
+  }
+  .restore-btn {
+    flex-shrink: 0;
+    align-self: center;
+    margin-inline-end: 0.5rem;
+    background: var(--card);
+    color: var(--txt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm, 0.5rem);
+    padding: 0.5rem 0.75rem;
+    min-height: 44px;
+    font-family: inherit;
+    font-size: var(--fs-sm, 0.875rem);
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--motion-fast, 120ms), color var(--motion-fast, 120ms);
+  }
+  .restore-btn:hover {
+    background: var(--card-hover, var(--card));
+    color: var(--accent);
+  }
+  .restore-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
   .detail {
     background: var(--card);

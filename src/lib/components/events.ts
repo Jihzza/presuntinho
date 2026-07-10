@@ -4,6 +4,15 @@
 export const CONFETTI_EVENT = 'presuntinho:confetti';
 export const TOAST_EVENT = 'presuntinho:toast';
 
+/** Visual tone of a toast — drives colour + icon in Toast.svelte. */
+export type ToastType = 'info' | 'success' | 'error' | 'warning';
+
+export interface ToastDetail {
+  msg: string;
+  duration?: number;
+  type?: ToastType;
+}
+
 export interface ConfettiBurst {
   count: number;
   intensity?: number;
@@ -33,8 +42,9 @@ export function fireConfettiEvent(count: number | ConfettiBurst = 60): void {
   window.dispatchEvent(new CustomEvent(CONFETTI_EVENT, { detail: count }));
 }
 
-/** Show a toast notification. */
-export function showToast(msg: string, duration?: number): void {
+/** Show a toast notification. Toasts queue rather than overwrite each other. */
+export function showToast(msg: string, duration?: number, type: ToastType = 'info'): void {
   if (typeof window === 'undefined') return;
-  window.dispatchEvent(new CustomEvent(TOAST_EVENT, { detail: { msg, duration } }));
+  const detail: ToastDetail = { msg, duration, type };
+  window.dispatchEvent(new CustomEvent(TOAST_EVENT, { detail }));
 }

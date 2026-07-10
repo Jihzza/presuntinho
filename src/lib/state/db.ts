@@ -28,6 +28,7 @@
 
 import Dexie, { type Table } from 'dexie';
 import type { ProfileId } from '../auth/hash';
+import { getSession, isLegacyProfile } from '../auth/session';
 import { buildSeedTransacoes } from './financas-seed';
 import { seedHabitosPro } from './habitos-seed';
 
@@ -218,6 +219,10 @@ export interface HabitoRow {
   createdAt: number;      // Date.now()
   meta?: string;          // task-040: target / unit string ("2L", "30 min")
   reminder?: HabitReminder; // structured { time, days? } or legacy string
+  /** Dates ('YYYY-MM-DD') that already paid XP for a completion. Prevents the
+   *  toggle done/undone/re-done XP + milestone farm. Non-indexed, capped in
+   *  logHabit; absent on legacy rows (treated as empty). Additive-only. */
+  xpPaidDates?: string[];
 }
 
 /**
@@ -407,6 +412,11 @@ export interface EventRow {
   notes?: string;
   /** Repeat every year on the same day (birthdays, anniversaries). */
   yearly?: boolean;
+  /** True for spontaneous love notes stored as kind 'special'. They appear in
+   *  the Memórias timeline but must NOT be treated as anniversaries by the
+   *  seasonal-egg check (you just wrote it — no "today is special" surprise).
+   *  Additive, non-indexed. */
+  loveNote?: boolean;
   createdAt: number;
 }
 
@@ -698,10 +708,29 @@ class PresuntinhoDB extends Dexie {
 // IndexedDB connection.  This is important for SSR (SvelteKit prerender)
 // where `indexedDB` is undefined and any attempt to open Dexie throws.
 let activeProfile: ProfileId = 'fatma';
+let profileInitialized = false;
 const _dbCache = new Map<ProfileId, PresuntinhoDB>();
 
 export function setActiveProfile(profile: ProfileId): void {
   activeProfile = profile;
+  profileInitialized = true;
+}
+
+/** The profile whose IndexedDB `db()` currently opens. Backup/export/import must
+ *  default to THIS (not a hardcoded 'fatma') or a non-legacy member would
+ *  export/import the legacy couple's database instead of their own.
+ *
+ *  Before the layout's initStores() has run (a child page's onMount fires
+ *  BEFORE the parent layout's on a hard load), fall back to the unlocked
+ *  session's profile instead of the module boot default — otherwise an early
+ *  caller (e.g. the backup preview on /definicoes/) would open the legacy
+ *  'fatma' DB for a uuid member. */
+export function getActiveProfile(): ProfileId {
+  if (!profileInitialized) {
+    const sessionProfile = getSession()?.profile;
+    if (sessionProfile) return sessionProfile;
+  }
+  return activeProfile;
 }
 
 export function dbNameForProfile(profile: ProfileId): string {
@@ -859,8 +888,14 @@ export async function ensureDefaults(profile: ProfileId = activeProfile): Promis
   // so the dashboard is populated on first open.  Existing users who
   // already have rows from this legacy seed are NOT touched — the
   // seeder only runs when the table is empty.
+  // Multi-tenant (V11): the DEMO habits + their 14-day history are personal
+  // starter content for the original gift recipients only. A newly onboarded
+  // member (uuid profile) must start with a CLEAN slate — not someone else's
+  // habits pre-filled into their real tracker. Essential defaults (categories,
+  // state, settings) are still seeded for everyone above.
+  const isLegacyDemoProfile = isLegacyProfile(profile);
   const existingHabitCount = await d.habitos.count();
-  if (existingHabitCount === 0) {
+  if (existingHabitCount === 0 && isLegacyDemoProfile) {
     // task-040: delegating to seedHabitosPro() replaces the prior
     // inline DEFAULT_HABITOS list.  This branch only fires on a brand
     // new database (no user rows to stomp).
@@ -874,8 +909,12 @@ export async function ensureDefaults(profile: ProfileId = activeProfile): Promis
   // without bloating `ensureDefaults`.  Only runs when the table is
   // empty, so users who have already added their own transactions will
   // never see their list stomped.
+  // Same rule as habits: the 20 example transactions are personal demo data
+  // for the original recipients, NOT for a stranger's real ledger. New members
+  // start with an empty ledger (the /financas empty state guides them to add
+  // their first transaction).
   const existingTransacaoCount = await d.transacoes.count();
-  if (existingTransacaoCount === 0) {
+  if (existingTransacaoCount === 0 && isLegacyDemoProfile) {
     await d.transacoes.bulkPut(buildSeedTransacoes(now));
   }
 }

@@ -17,7 +17,7 @@
 // async helpers from onMount / behind a browser check.
 
 import type { UpdateSpec } from 'dexie';
-import { db } from '$lib/state/db';
+import { db, getActiveProfile } from '$lib/state/db';
 import type { SettingsRow } from '$lib/state/db';
 
 // ---------------------------------------------------------------------------
@@ -31,14 +31,15 @@ export interface MascotDef {
   minXp?: number;
   /** Unlocked badge count needed to unlock. */
   minBadges?: number;
-  /** The three personal "família" mascots (Fatma, Rafa, o gato Hamy). They are
+  /** The three "companion" mascots (Luna 🌙, Léo 🧔, Michi 🐈). They are
    *  always unlocked and get special treatment: a glowing aura + a gentle
    *  heartbeat idle, and a heart burst instead of the generic sparkle. */
   special?: boolean;
 }
 
 export const MASCOTS: readonly MascotDef[] = Object.freeze([
-  // ── Família (especiais) — sempre desbloqueadas, com brilho próprio. ──
+  // ── Companheiros (especiais) — sempre desbloqueados, com brilho próprio.
+  //    Os ids preservam os caminhos da arte em /static/mascotes/<id>/. ──
   { id: 'fatma', emoji: '🌙', special: true },
   { id: 'rafa', emoji: '🧔', special: true },
   { id: 'hamy', emoji: '🐈', special: true },
@@ -193,4 +194,70 @@ export async function mascotStatuses(): Promise<{
     ctx,
     activeId: active.id
   };
+}
+
+/**
+ * Mascots newly unlocked since the last check — drives a one-time unlock
+ * celebration (mascot unlocks were previously completely silent). Persists a
+ * per-profile marker in the `visited` table so each mascot celebrates exactly
+ * once. On the FIRST call it silently adopts whatever's already unlocked, so
+ * existing users aren't flooded with celebrations for mascots earned long ago;
+ * only genuine crossings fire afterwards. Excludes the always-unlocked special
+ * "família" mascots.
+ */
+// Serialization + memory cache for claimNewMascotUnlocks():
+//  - `claimChain` runs claims one at a time. XP_CHANGED and BADGE_UNLOCKED can
+//    fire in the same wave (awardBadge is dispatched from inside the XP
+//    handler), and the marker check is a non-transactional get-then-put — two
+//    overlapping claims would both see the marker missing and celebrate the
+//    same mascot twice.
+//  - `celebratedCache` remembers the already-celebrated set after the first
+//    read, so the steady-state call (nothing new unlocked — the overwhelmingly
+//    common case) costs zero marker reads instead of one IDB get per mascot.
+let claimChain: Promise<string[]> = Promise.resolve([]);
+let celebratedCache: Set<string> | null = null;
+let celebratedCacheProfile: string | null = null;
+
+export async function claimNewMascotUnlocks(): Promise<string[]> {
+  if (!hasIndexedDb()) return [];
+  const run = async (): Promise<string[]> => {
+    const d = db();
+    // The cache is per-profile (markers live in the profile's own DB) — drop
+    // it when the active profile changes (logout → another member).
+    const profile = getActiveProfile();
+    if (celebratedCacheProfile !== profile) {
+      celebratedCache = null;
+      celebratedCacheProfile = profile;
+    }
+    const { statuses } = await mascotStatuses();
+    const unlocked = statuses.filter((s) => s.unlocked && !s.special).map((s) => s.id);
+    const now = Date.now();
+    if (!celebratedCache) {
+      const ids = unlocked.map((id) => `mascot-celebrated:${id}`);
+      ids.push('mascot-celebrated:__seeded__');
+      const rows = await d.visited.bulkGet(ids);
+      celebratedCache = new Set(
+        rows.filter((r) => r?.visited).map((r) => String(r!.id).slice('mascot-celebrated:'.length))
+      );
+    }
+    if (!celebratedCache.has('__seeded__')) {
+      const rows = unlocked.map((id) => ({ id: `mascot-celebrated:${id}`, visited: true, visitedAt: now }));
+      rows.push({ id: 'mascot-celebrated:__seeded__', visited: true, visitedAt: now });
+      await d.visited.bulkPut(rows);
+      celebratedCache = new Set([...unlocked, '__seeded__']);
+      return [];
+    }
+    const fresh = unlocked.filter((id) => !celebratedCache!.has(id));
+    if (fresh.length > 0) {
+      await d.visited.bulkPut(
+        fresh.map((id) => ({ id: `mascot-celebrated:${id}`, visited: true, visitedAt: now }))
+      );
+      for (const id of fresh) celebratedCache.add(id);
+    }
+    return fresh;
+  };
+  // Chain (never reject the chain itself so one failure doesn't wedge it).
+  const next = claimChain.then(run, run);
+  claimChain = next.catch(() => []);
+  return next;
 }

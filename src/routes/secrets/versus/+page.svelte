@@ -90,7 +90,7 @@
   }
 
   function shareCode(): void {
-    const text = $t('versus.invite_text', { values: { code }, default: `Anda jogar 1v1 comigo na arcada! Código: ${code}` });
+    const text = $t('versus.invite_text', { values: { code }, default: `Anda jogar 1 contra 1 comigo na arcada! Código: ${code}` });
     if (navigator.share) void navigator.share({ text }).catch(() => undefined);
     else void navigator.clipboard?.writeText(code).catch(() => undefined);
   }
@@ -102,7 +102,7 @@
       invited = new Set([...invited, c.id]);
       showToast($t('versus.invited', { values: { handle: c.handle }, default: 'Convite enviado a @{handle} 🎮' }), 2000);
     } catch (e) {
-      showToast(e instanceof Error ? e.message : String(e), 2600);
+      showToast(e instanceof Error ? e.message : String(e), 2600, 'error');
     }
   }
 
@@ -134,7 +134,7 @@
       <h1>{$t('versus.title', { default: '1 contra 1' })} 🐍</h1>
 
       {#if phase === 'menu'}
-        <p class="muted">{$t('versus.tagline', { default: 'Convida a tua parceira para um duelo de snake — duas serpentes, o mesmo campo, e quem apanhar a cauda da outra rouba um ponto.' })}</p>
+        <p class="muted">{$t('versus.tagline', { default: 'Desafia alguém para um duelo de snake — duas serpentes, o mesmo campo, e quem morder a cauda da outra rouba um ponto.' })}</p>
         <button type="button" class="cta" onclick={createRoom}>{$t('versus.create', { default: 'Criar sala' })}</button>
         <div class="or">{$t('versus.or', { default: 'ou' })}</div>
         <div class="join">
@@ -151,7 +151,7 @@
       {:else if phase === 'creating' || phase === 'joining'}
         <p class="muted">{$t('versus.connecting', { default: 'A ligar…' })}</p>
       {:else if phase === 'waiting'}
-        <p class="muted">{$t('versus.waiting', { default: 'À espera da tua parceira…' })}</p>
+        <p class="muted">{$t('versus.waiting', { default: 'À espera do outro jogador…' })}</p>
         {#if code}
           <div class="code" onclick={shareCode} role="button" tabindex="0" onkeydown={(e) => e.key === 'Enter' && shareCode()}>
             <span>{code}</span>

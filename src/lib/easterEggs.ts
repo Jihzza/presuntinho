@@ -13,7 +13,7 @@
 //   - Logo click: 3 = confetti+30 XP, 4 = hint toast, 5–10 = Secret Room
 //     opens + b14 + 100 XP + toast.
 //   - Konami: ↑↑↓↓←→←→BA → b8 + confetti + 100 XP.
-//   - Keywords: perfume/behi/fatma/help → respective rewards.
+//   - Keywords: perfume/behi/porquinho/help → respective rewards.
 //   - Footer: 5 clicks → b15 + hint toast about perfume/behi.
 //   - Mascot: random pro-tip + 5 XP.
 //
@@ -248,7 +248,7 @@ export async function mascotClick(): Promise<void> {
   const tips = await getMascotTips();
   const tip = tips.length
     ? tips[Math.floor(Math.random() * tips.length)]
-    : tr('eggs.mascot.fallback', '🧴 Tu consegues, Fatma! 💪');
+    : tr('eggs.mascot.fallback', '🧴 Tu consegues! 💪');
   showToast(tip);
   await awardXP('easteregg_mascot', 5);
 }
@@ -292,7 +292,7 @@ export async function handleKonamiKey(key: string, keyCode: number): Promise<voi
 
 // ============================================================================
 // KEYWORD DETECTOR
-// (perfume, behi, help, fatma + V8: visca, clutch, nyaa, brutale, harissa)
+// (perfume, behi, help, porquinho + V8: visca, clutch, nyaa, brutale, harissa)
 // ============================================================================
 //
 // V3 (easter-eggs.js lines 280-300): rolling 20-char buffer; matches ANY of
@@ -302,7 +302,7 @@ export async function handleKonamiKey(key: string, keyCode: number): Promise<voi
 //   perfume → b7 (Scent Discovery), +50 XP, confetti
 //   behi    → b9 (Tunisian Secret), +50 XP, confetti
 //   help    → hint toast + 'help' secret (no badge)
-//   fatma   → b14 (Secret Keeper), confetti
+//   porquinho → b14 (Secret Keeper), confetti (secret id 'fatma' preserved)
 //   visca / clutch / nyaa / brutale / harissa → +50 XP via the existing
 //   easteregg_keyword reason + confetti + secret discovery (no badge).
 
@@ -338,11 +338,11 @@ export async function handleKeywordKey(key: string): Promise<void> {
     );
     await discoverSecret('help');
     keyBuf.set('');
-  } else if (buf.includes('fatma')) {
-    showToast('🔐 Para Fatma, com amor.', 5000);
+  } else if (buf.includes('porquinho')) {
+    showToast(tr('eggs.toast.porquinho', '🔐 Porquinho! Encontraste o segredo escondido. 💛'), 5000);
     await awardBadge('b14');
     fireConfettiEvent(70);
-    await discoverSecret('fatma');
+    await discoverSecret('fatma'); // id preservado — continuidade do progresso 8/8
     keyBuf.set('');
   } else if (buf.includes('visca')) {
     showToast(tr('eggs.toast.visca', '⚽ Visca el Barça! Més que un club — golo de XP para ti.'));
@@ -463,6 +463,9 @@ export async function checkSeasonalEggs(): Promise<void> {
     const match = rows.find(
       (r) =>
         typeof r.date === 'string' &&
+        // Notas de amor são guardadas como kind 'special' mas NÃO são datas
+        // especiais — nunca celebrar a própria nota como aniversário.
+        r.loveNote !== true &&
         (r.date === today || (r.yearly === true && r.date.slice(5) === todayMd))
     );
     if (match && !alreadyCelebrated('specialday', today)) {

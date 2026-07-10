@@ -13,7 +13,7 @@
 // assignments + today's habits + the next 30 days of events).
 // `loadAgendaItemsForRange()` is the calendar-grade loader.
 
-import { listHabitos, getAllLogsInRange, localizedHabit, type Habit } from '../habitos';
+import { listHabitos, getAllLogsInRange, localizedHabit, isScheduledOnKey, type Habit } from '../habitos';
 import { ensureAssignmentDefaults, listAssignments, localizedAssignment, type Assignment } from '../trabalhos';
 import { db, type EventRow } from '../state/db';
 import { awardXP } from '../state/xp-actions';
@@ -255,6 +255,10 @@ function habitItemsForRange(
   if (todayKey >= sinceKey && todayKey <= untilKey) {
     for (const habit of byId.values()) {
       if (seen.has(`${habit.id}:${todayKey}`)) continue;
+      // Só mostrar como pendente se HOJE for um dia agendado — hábitos de dias
+      // específicos (ex.: ginásio 2ª/4ª/6ª) não aparecem como "por fazer" num
+      // dia de descanso.
+      if (!isScheduledOnKey(habit.cadence, todayKey)) continue;
       items.push({
         id: `habit:${habit.id}:${todayKey}`,
         title: `${habit.icon} ${habit.name}`,
@@ -473,6 +477,12 @@ function sortAgendaItems(items: AgendaItem[]): AgendaItem[] {
     if (a.date !== b.date) return a.date.localeCompare(b.date);
     if (a.tone === 'danger' && b.tone !== 'danger') return -1;
     if (b.tone === 'danger' && a.tone !== 'danger') return 1;
+    // Pendentes antes de concluídos no mesmo dia — senão hábitos já feitos
+    // (ordenados por título) podiam ocupar os poucos lugares visíveis do
+    // cockpit "Hoje" e esconder o que ainda falta fazer.
+    const aDone = a.status === 'done';
+    const bDone = b.status === 'done';
+    if (aDone !== bDone) return aDone ? 1 : -1;
     const loc = get(locale) || 'pt-PT';
     return a.title.localeCompare(b.title, loc);
   });
@@ -535,7 +545,11 @@ export async function loadAgendaItems(): Promise<AgendaItem[]> {
   const assignmentItems = assignments.map(assignmentToItem);
   const doneToday = new Set(logs.filter((l) => l.done).map((l) => l.habitId));
   const translate = get(t);
-  const habitItems: AgendaItem[] = habits.map((raw) => {
+  const habitItems: AgendaItem[] = habits
+    // Hábitos de dias específicos só entram na agenda de hoje se hoje for um
+    // dia agendado (ou se já foram feitos hoje — aí mostra-se o ✓).
+    .filter((raw) => isScheduledOnKey(raw.cadence, todayKey) || doneToday.has(raw.id))
+    .map((raw) => {
     const habit = localizedHabit(translate, raw);
     const done = doneToday.has(habit.id);
     return {

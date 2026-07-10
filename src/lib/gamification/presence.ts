@@ -12,6 +12,7 @@ import type { UpdateSpec } from 'dexie';
 import { db } from '$lib/state/db';
 import type { SettingsRow } from '$lib/state/db';
 import type { MascotEmotion } from './emotion';
+import { showAppNotification } from '$lib/habitos/reminders';
 
 type SettingsRowV10n = SettingsRow & { notifStreakEnabled?: boolean };
 
@@ -91,13 +92,9 @@ export const STREAK_NOTIF_FALLBACKS: string[] = [
 	'🐷 O Presuntinho prometeu não dramatizar. O Presuntinho mentiu: A STREAK ESTÁ EM RISCO!'
 ];
 
-export function isNotifSupported(): boolean {
-	return typeof window !== 'undefined' && 'Notification' in window;
-}
-
-export function notifPermission(): NotificationPermission | 'unsupported' {
-	return isNotifSupported() ? Notification.permission : 'unsupported';
-}
+// Capability checks live in $lib/habitos/reminders (single home alongside
+// showAppNotification); re-exported here under the historical names.
+export { notificationsSupported as isNotifSupported, notificationPermission as notifPermission } from '$lib/habitos/reminders';
 
 export async function readNotifStreakEnabled(): Promise<boolean> {
 	if (typeof indexedDB === 'undefined') return false;
@@ -120,12 +117,9 @@ export async function setNotifStreakEnabled(value: boolean): Promise<void> {
 	}
 }
 
-/** Fire the streak-risk notification (caller handles once-per-day claiming). */
+/** Fire the streak-risk notification (caller handles once-per-day claiming).
+ *  Routed through the SW registration so it also fires on installed mobile PWAs,
+ *  where the bare `new Notification()` constructor throws. */
 export function showStreakRiskNotification(body: string): void {
-	if (!isNotifSupported() || Notification.permission !== 'granted') return;
-	try {
-		new Notification('Presuntinho 🔥', { body, tag: 'presuntinho-streak-risk' });
-	} catch (e) {
-		console.warn('[presence] notification failed', e);
-	}
+	void showAppNotification('Presuntinho 🔥', { body, tag: 'presuntinho-streak-risk' });
 }

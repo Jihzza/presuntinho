@@ -1,45 +1,56 @@
 <script lang="ts">
   /**
-   * PageLoader — transient top progress bar for SvelteKit navigations.
-   *
-   * It watches $app/state's page URL. Whenever the route changes, it shows a
-   * thin violet bar for at least 500ms so taps on bottom-nav links have
-   * immediate visual feedback even when the next page is lightweight.
+   * PageLoader — top progress bar that shows WHILE a SvelteKit navigation is
+   * in flight (not after it lands). Driven by `navigating` from $app/state:
+   *   - a ~120ms delay avoids flashing on instant same-bundle navigations;
+   *   - once shown it stays for a ~350ms minimum so it never strobes;
+   *   - it hides when navigation settles.
+   * This gives real feedback on slow route/chunk loads (cold PWA start, 3G),
+   * which the old page.url-watcher could not — page.url only changes AFTER a
+   * navigation has already completed.
    */
-  import { page } from '$app/state';
+  import { navigating } from '$app/state';
   import { onDestroy } from 'svelte';
   import { t } from 'svelte-i18n';
 
-  let visible = $state(false);
-  let currentUrl = $state('');
-  let timer: ReturnType<typeof setTimeout> | null = null;
+  const SHOW_DELAY = 120;
+  const MIN_VISIBLE = 350;
 
-  function pulse(): void {
-    visible = true;
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => {
-      visible = false;
-      timer = null;
-    }, 500);
+  let visible = $state(false);
+  let showTimer: ReturnType<typeof setTimeout> | null = null;
+  let hideTimer: ReturnType<typeof setTimeout> | null = null;
+  let shownAt = 0;
+
+  function clearTimers(): void {
+    if (showTimer) { clearTimeout(showTimer); showTimer = null; }
+    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
   }
 
   $effect(() => {
-    const nextUrl = `${page.url.pathname}${page.url.search}`;
-
-    if (!currentUrl) {
-      currentUrl = nextUrl;
-      return;
-    }
-
-    if (currentUrl !== nextUrl) {
-      currentUrl = nextUrl;
-      pulse();
+    const busy = Boolean(navigating.to);
+    if (busy) {
+      if (visible || showTimer) return;
+      if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+      showTimer = setTimeout(() => {
+        showTimer = null;
+        visible = true;
+        shownAt = performance.now();
+      }, SHOW_DELAY);
+    } else {
+      // Navigation settled: cancel a pending show, or keep the bar for the
+      // remainder of its minimum visible window before hiding.
+      if (showTimer) { clearTimeout(showTimer); showTimer = null; }
+      if (!visible || hideTimer) return;
+      const elapsed = performance.now() - shownAt;
+      const wait = Math.max(0, MIN_VISIBLE - elapsed);
+      hideTimer = setTimeout(() => {
+        hideTimer = null;
+        visible = false;
+      }, wait);
     }
   });
 
-  onDestroy(() => {
-    if (timer) clearTimeout(timer);
-  });
+  onDestroy(clearTimers);
 </script>
 
 {#if visible}
@@ -56,7 +67,7 @@
     z-index: 10001;
     pointer-events: none;
     overflow: hidden;
-    background: rgba(139, 92, 246, 0.18);
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
   }
 
   .page-loader::before {
@@ -65,9 +76,9 @@
     width: 45%;
     height: 100%;
     border-radius: 999px;
-    background: #8b5cf6;
-    box-shadow: 0 0 12px rgba(139, 92, 246, 0.65);
-    animation: page-loader-slide 500ms ease-in-out both;
+    background: var(--accent);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 65%, transparent);
+    animation: page-loader-slide 1100ms ease-in-out infinite;
   }
 
   @keyframes page-loader-slide {

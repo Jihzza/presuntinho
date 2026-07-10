@@ -28,21 +28,23 @@
   import MascotAvatar from '$lib/components/MascotAvatar.svelte';
   import { profileFor } from '$lib/profile/people';
   import { profileState, loadProfile } from '$lib/profile/profile-store.svelte';
+  import { accountState } from '$lib/account/account-store.svelte';
   import ProfileEditor from '$lib/profile/ProfileEditor.svelte';
   import { resumeTarget, type NextLessonTarget } from '$lib/escola/progress';
+  import { weekdayShort } from '$lib/i18n/dates';
 
   import { db } from '$lib/state/db';
   import { xp, initStores } from '$lib/state/stores';
-  import { XP_CHANGED_EVENT, awardXP } from '$lib/state/xp-actions';
-  import { getSession } from '$lib/auth/session';
+  import { XP_CHANGED_EVENT } from '$lib/state/xp-actions';
+  import { getSession, isLegacyProfile } from '$lib/auth/session';
   import { getActivityStreak, getWeekActivity, type ActivityStreak, type WeekDayActivity } from '$lib/gamification/streak';
   import WeekCircles from '$lib/components/WeekCircles.svelte';
   import { progressToNext } from '$lib/gamification/levels';
   import { hoursUntilMidnight, mascotEmotion, type MascotEmotion } from '$lib/gamification/emotion';
   import { minutesSinceLastAction, ACTION_PULSE_EVENT } from '$lib/gamification/gamification-events';
   import { DEFAULT_MASCOT_ID, getActiveMascot, MASCOT_CHANGED_EVENT } from '$lib/gamification/mascots';
-  import { setHabitLog } from '$lib/habitos';
-  import { showToast } from '$lib/components/events';
+  import { logHabit } from '$lib/habitos';
+  import { showToast, fireConfettiEvent } from '$lib/components/events';
   import { isMoodIntroAcknowledged, moodAffirmation, moodMicrocopy, readActiveMood, MOOD_META, type ActiveMood } from '$lib/mood';
   import {
     buildNotifications,
@@ -135,10 +137,23 @@
   });
 
   const greeting = $derived.by(() => {
-    const name = $t(`profile.${activeProfile ?? 'fatma'}`, { default: 'Fatma' });
-    if (daySlot === 'morning') return $t('hub.hero.greeting.morning', { values: { name }, default: 'Bom dia, {name} 🌤️' });
-    if (daySlot === 'afternoon') return $t('hub.hero.greeting.afternoon', { values: { name }, default: 'Boa tarde, {name} ☀️' });
-    return $t('hub.hero.greeting.evening', { values: { name }, default: 'Boa noite, {name} 🌙' });
+    // Nome vindo do UTILIZADOR (perfil editável → conta), não hardcoded. Só
+    // recorre aos nomes fixos legados (fatma/daniel) quando o perfil é um
+    // deles; um membro onboarded (id uuid) ou visitante genérico é saudado
+    // sem nome, em vez de "Bom dia, Fatma".
+    const legacy = isLegacyProfile(activeProfile)
+      ? ($t(`profile.${activeProfile}`, { default: '' }) as string)
+      : '';
+    const name = (profileState.displayName || accountState.account?.display_name || legacy || '').trim();
+    if (name) {
+      if (daySlot === 'morning') return $t('hub.hero.greeting.morning', { values: { name }, default: 'Bom dia, {name} 🌤️' });
+      if (daySlot === 'afternoon') return $t('hub.hero.greeting.afternoon', { values: { name }, default: 'Boa tarde, {name} ☀️' });
+      return $t('hub.hero.greeting.evening', { values: { name }, default: 'Boa noite, {name} 🌙' });
+    }
+    // Sem nome — saudação genérica e acolhedora.
+    if (daySlot === 'morning') return $t('hub.hero.greeting.morning_generic', { default: 'Bom dia 🌤️' });
+    if (daySlot === 'afternoon') return $t('hub.hero.greeting.afternoon_generic', { default: 'Boa tarde ☀️' });
+    return $t('hub.hero.greeting.evening_generic', { default: 'Boa noite 🌙' });
   });
 
   function itemsForDate(date: Date): AgendaItem[] {
@@ -201,10 +216,19 @@
     if (!Number.isFinite(habitId) || markingHabitId) return;
     markingHabitId = item.id;
     try {
-      const { changed } = await setHabitLog(habitId, todayKey, true);
-      if (changed) {
-        await awardXP('habito_mark_done');
-        showToast(get(t)('hub.today.habit_done_toast', { default: 'Hábito marcado — boa! ✨' }), 2400);
+      // logHabit (não setHabitLog+awardXP manual) paga o +2 E os milestones de
+      // streak com badges — antes, marcar do hub nunca dava a recompensa dos
+      // marcos de sequência. É idempotente por dia (não farmável).
+      const result = await logHabit(habitId, todayKey);
+      if (result.logged) {
+        if (result.milestones.length > 0) {
+          const top = Math.max(...result.milestones);
+          fireConfettiEvent({ count: 140, origin: 'center' });
+          showToast(get(t)('habitos.toast.milestone', { values: { n: top }, default: `🔥 ${top} de streak! Estás imparável!` }));
+        } else {
+          fireConfettiEvent(45);
+          showToast(get(t)('hub.today.habit_done_toast', { default: 'Hábito marcado — boa! ✨' }), 2400);
+        }
       }
       await Promise.all([refreshAgenda(), refreshStreak()]);
     } catch (e) {
@@ -262,7 +286,10 @@
     }, 60_000);
 
     try {
-      showOnboarding = localStorage.getItem('fat-onboarded') === null;
+      // Só mostrar o tour a quem já tem sessão — um visitante sem sessão está
+      // prestes a ser reencaminhado para /splash, e o modal a aparecer sobre o
+      // hub só para ser arrancado a meio da leitura parecia um glitch.
+      showOnboarding = Boolean(getSession()) && localStorage.getItem('fat-onboarded') === null;
     } catch {
       showOnboarding = false;
     }
@@ -327,9 +354,11 @@
         {/if}
       </button>
       <div class="profile-id">
-        <strong>{profileState.displayName || $t(person.nameKey)}</strong>
+        <strong>{profileState.displayName || accountState.account?.display_name || (isLegacyProfile(activeProfile) ? $t(person.nameKey) : $t('profile.generic.name', { default: 'O teu perfil' }))}</strong>
         {#if profileState.bio}
           <small>{profileState.bio}</small>
+        {:else if accountState.account?.handle}
+          <small>@{accountState.account.handle}</small>
         {:else}
           <small>{$t(person.handleKey)}</small>
         {/if}
@@ -347,27 +376,9 @@
       <p class="mood-note">{moodNote}</p>
     {/if}
     <div class="hero-chips" aria-label={$t('hub.hero.metrics.aria')}>
-      <a
-        href="/streaks/"
-        class="chip chip-streak"
-        class:chip-streak-active={streak?.activeToday}
-        title={streak?.activeToday
-          ? $t('hub.hero.streak.active_today', { default: 'Streak protegida hoje — já fizeste qualquer coisa. 🐷' })
-          : $t('hub.hero.streak.pending_today', { default: 'Uma pequena ação hoje mantém a chama acesa.' })}
-      >
-        <span aria-hidden="true">🔥</span>
-        {$t('hub.hero.streak.days', { values: { count: streak?.current ?? 0 }, default: '{count} dias' })}
-        {#if streak && streak.freezes > 0}
-          <small
-            class="freeze-mini"
-            title={$t('streak.popover.freezes.hint', {
-              default: 'Um congelamento protege a streak num dia falhado. Ganhas 1 a cada 7 dias.'
-            })}>❄️×{streak.freezes}</small>
-        {/if}
-        {#if streak && streak.best > streak.current}
-          <small>{$t('hub.hero.streak.best', { values: { count: streak.best }, default: 'melhor: {count}' })}</small>
-        {/if}
-      </a>
+      <!-- The streak lives in the dedicated .streak-strip below (with the week
+           circles), so the hero no longer repeats a 🔥 chip — it showed the
+           streak twice on the first screen. -->
       <span class="chip chip-level">
         <span aria-hidden="true">⭐</span>
         {$t('hub.hero.level', { values: { level }, default: 'Nível {level}' })}
@@ -413,7 +424,7 @@
     <span class="strip-flame" class:unlit={!streak?.activeToday} aria-hidden="true">🔥</span>
     <span class="strip-copy">
       <strong>
-        {$t('streaks.hero.days', { values: { count: streak?.current ?? 0 }, default: '{count} dias seguidos' })}
+        {$t('streaks.hero.days', { values: { count: streak?.current ?? 0 }, default: '{count, plural, one {# dia seguido} other {# dias seguidos}}' })}
       </strong>
       <small class:ok={streak?.activeToday}>
         {streak?.activeToday
@@ -487,6 +498,11 @@
           </li>
         {/each}
       </ul>
+      {#if todaysItems.length > 4}
+        <a class="today-more" href="/calendario/">
+          {$t('hub.today.more', { values: { n: todaysItems.length - 4 }, default: '+{n} mais →' })}
+        </a>
+      {/if}
       {#if todaysPending.length === 0}
         <p class="all-done-line">{$t('hub.today.all_done', { default: 'Tudo feito por hoje — orgulho total. 💖' })}</p>
       {/if}
@@ -522,7 +538,7 @@
           href="/calendario/"
           aria-label={$t('hub.calendar.day_aria', { values: { day: formatDayLabel(localDateKey(day), dateLocale), count: itemsForDate(day).length } })}
         >
-          <span>{day.toLocaleDateString(dateLocale, { weekday: 'short' })}</span>
+          <span>{weekdayShort(day, dateLocale)}</span>
           <strong>{day.getDate()}</strong>
           {#if itemsForDate(day).length > 0}
             <small>{itemsForDate(day).length}</small>
@@ -847,13 +863,6 @@
     color: var(--txt3);
     font-weight: 600;
   }
-  .chip-streak-active {
-    border-color: color-mix(in srgb, var(--warning) 55%, var(--border));
-    background: color-mix(in srgb, var(--warning) 12%, var(--bg-elev));
-  }
-  .freeze-mini {
-    color: #93c5fd;
-  }
   .level-progress {
     margin-top: var(--space-2);
     display: flex;
@@ -1028,6 +1037,15 @@
     margin: 0;
     color: var(--txt3);
   }
+  .today-more {
+    display: inline-block;
+    margin: var(--space-2) 0 0;
+    color: var(--accent);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .today-more:hover { text-decoration: underline; }
   .quick-actions {
     display: flex;
     flex-wrap: wrap;

@@ -15,6 +15,9 @@
     q: string;
     opts: string[];
     a: number;
+    /** Alternate schema used by some content JSONs (aiq/goq/gqq/lcq). */
+    correct?: number;
+    explanation?: string;
   }
   interface Quiz {
     id: string;
@@ -43,6 +46,8 @@
   // V9 — full-screen celebration overlay shown right after submit. The
   // inline results card stays rendered beneath it for review.
   let victoryOpen = $state(false);
+  // Whether THIS submission actually paid XP (anti-farm: quiz XP pays once).
+  let xpAwarded = $state(false);
   // Course/unit context (if this quiz belongs to a catalog course) —
   // powers the 'Próxima lição' CTA inside QuizVictory.
   let quizContext = $derived(schoolQuizContextForSlug(quizId));
@@ -54,18 +59,37 @@
       } catch (e) {
         console.error('[quiz] history read failed', e);
       }
-      if (quiz) return; // already have inline data
+      if (quiz) {
+        quiz = normalizeQuiz(quiz); // inline data also gets schema-normalized
+        return;
+      }
       if (!jsonPath) return;
       try {
         const res = await fetch(jsonPath);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: Quiz = await res.json();
-        quiz = data;
+        quiz = normalizeQuiz(data);
       } catch (e) {
         loadError = e instanceof Error ? e.message : String(e);
       }
     })();
   });
+
+  /** Alguns JSONs de conteúdo usam `correct` em vez de `a` para o índice da
+   *  resposta certa — sem normalizar, `item.a` fica undefined e o quiz é
+   *  impossível de ganhar. Também filtra perguntas malformadas para o runner
+   *  nunca rebentar com conteúdo inválido (e sinaliza quiz vazio como erro). */
+  function normalizeQuiz(data: Quiz): Quiz {
+    const questions = (Array.isArray(data?.questions) ? data.questions : [])
+      .filter((raw) => raw && typeof raw.q === 'string' && Array.isArray(raw.opts) && raw.opts.length > 0)
+      .map((raw) => ({ ...raw, a: typeof raw.a === 'number' ? raw.a : (raw.correct ?? 0) }))
+      .filter((q) => q.a >= 0 && q.a < q.opts.length);
+    if (questions.length === 0) {
+      loadError = 'empty quiz';
+      return { ...data, questions: [] };
+    }
+    return { ...data, questions };
+  }
 
   // ── V10.1 (tarefa H): fluxo Duolingo — UMA pergunta por ecrã ──────────
   // Escolher uma opção é um compromisso: feedback imediato (cor + som +
@@ -119,6 +143,26 @@
 
     scoreInfo = { score, correct, total, perfect, pt };
 
+    // Anti-farm (paridade com hábitos xpPaidDates / trabalhos xpPaidStatuses):
+    // o XP de quiz paga UMA vez — quiz_complete na primeira submissão,
+    // quiz_perfect_score na primeira vez que chega aos 100%. Repetir continua
+    // a atualizar histórico/best, só não volta a pagar.
+    let hadPriorAttempt = false;
+    let hadPriorPerfect = false;
+    try {
+      const prevRow = (await db().quizScores.get(quizId)) as
+        | { score: number; best?: number; total?: number }
+        | undefined;
+      if (prevRow) {
+        hadPriorAttempt = true;
+        const pBest = typeof prevRow.best === 'number' ? prevRow.best : prevRow.score;
+        const pTotal = typeof prevRow.total === 'number' ? prevRow.total : total;
+        hadPriorPerfect = pTotal > 0 && pBest >= pTotal;
+      }
+    } catch {
+      /* leitura falhou — trata como primeira tentativa (nunca pior que antes) */
+    }
+
     // Single write path: persists score + answered (V3 shape) AND the V8
     // history fields (total, best, attempts) in one Dexie put.
     try {
@@ -144,13 +188,20 @@
     // from ONE place with ONE toast (the old recordQuizSubmission +50 path
     // plus a second +25 award here has been retired).
     if (perfect) {
-      void awardXP('quiz_perfect_score');
+      // Só a PRIMEIRA nota perfeita paga XP; badges são idempotentes.
+      xpAwarded = !hadPriorPerfect;
+      if (xpAwarded) void awardXP('quiz_perfect_score');
       void awardBadge('b3');
       showToast(
-        $t('quiz.toast.perfect', {
-          values: { correct, total, xp: boostedXp(XP_TABLE.quiz_perfect_score) },
-          default: '🏆 {correct}/{total} — Perfeito! +{xp} XP'
-        }),
+        xpAwarded
+          ? $t('quiz.toast.perfect', {
+              values: { correct, total, xp: boostedXp(XP_TABLE.quiz_perfect_score) },
+              default: '🏆 {correct}/{total} — Perfeito! +{xp} XP'
+            })
+          : $t('quiz.toast.perfect_again', {
+              values: { correct, total },
+              default: '🏆 {correct}/{total} — Perfeito outra vez!'
+            }),
         3500
       );
       if (pt) {
@@ -159,6 +210,11 @@
       // NOTE (V9): the perfect-score confetti now fires inside
       // QuizVictory on mount (single fire point, no double burst).
     } else {
+      // Reward completion/accuracy too — rewarding only 100% felt punishing and
+      // is off-genre (Duolingo pays for finishing + getting some right)…
+      // but only on the FIRST submission of this quiz (anti-farm).
+      xpAwarded = !hadPriorAttempt;
+      if (xpAwarded) void awardXP('quiz_complete');
       showToast(
         $t('quiz.toast.score', {
           values: { correct, total, score },
@@ -192,6 +248,7 @@
     scoreInfo = null;
     reviewOpen = false;
     victoryOpen = false;
+    xpAwarded = false;
   }
 
   // Questions the user got wrong on this attempt — powers the review view.
@@ -305,6 +362,9 @@
                   })}
                 </span>
               {/if}
+              {#if item.explanation}
+                <span class="sheet-why">💡 {item.explanation}</span>
+              {/if}
             </div>
           </div>
           <button class="sheet-cta" onclick={continueQuiz}>
@@ -370,6 +430,9 @@
                     <p class="review-yours">✗ {$t('quiz.review.yours', { default: 'A tua resposta:' })} {entry.question.opts[entry.chosen]}</p>
                   {/if}
                   <p class="review-correct">✓ {$t('quiz.review.correct', { default: 'Resposta certa:' })} {entry.question.opts[entry.question.a]}</p>
+                  {#if entry.question.explanation}
+                    <p class="review-why">💡 {entry.question.explanation}</p>
+                  {/if}
                 </li>
               {/each}
             </ol>
@@ -402,14 +465,21 @@
       total={scoreInfo.total}
       celebrate={scoreInfo.perfect}
       confettiCount={scoreInfo.pt ? 80 : 60}
-      xpEntries={scoreInfo.perfect
-        ? [
-            {
-              label: $t('victoryflow.entry.quiz_perfect', { default: 'Quiz perfeito' }),
-              amount: boostedXp(XP_TABLE.quiz_perfect_score)
-            }
-          ]
-        : []}
+      xpEntries={!xpAwarded
+        ? []
+        : scoreInfo.perfect
+          ? [
+              {
+                label: $t('victoryflow.entry.quiz_perfect', { default: 'Quiz perfeito' }),
+                amount: boostedXp(XP_TABLE.quiz_perfect_score)
+              }
+            ]
+          : [
+              {
+                label: $t('victoryflow.entry.quiz_complete', { default: 'Quiz concluído' }),
+                amount: boostedXp(XP_TABLE.quiz_complete)
+              }
+            ]}
       courseSlug={quizContext?.courseSlug}
       wrongCount={wrongAnswers.length}
       onclose={() => {
@@ -462,8 +532,8 @@
   .opt:hover:not(:disabled) { background: var(--card-hover, rgba(255, 255, 255, 0.08)); }
   .opt:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .opt.chosen { border-color: var(--accent); }
-  .opt.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--success, #10b981); }
-  .opt.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--error, #ef4444); }
+  .opt.correct { background: color-mix(in srgb, var(--success) 20%, transparent); border-color: var(--success, #10b981); }
+  .opt.wrong { background: color-mix(in srgb, var(--error) 20%, transparent); border-color: var(--error, #ef4444); }
   .opt:disabled { cursor: default; }
 
   /* V10.1 — fluxo one-question-at-a-time */
@@ -564,6 +634,14 @@
   }
   .sheet-answer {
     font-size: 0.9rem;
+  }
+  /* Explanation on the feedback sheet — a calm dark tone so it stays readable
+     on both the green (correct) and pink (wrong) sheets. */
+  .sheet-why {
+    color: #33404a;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    margin-top: 0.15rem;
   }
   .sheet-cta {
     width: 100%;
@@ -676,4 +754,5 @@
   .review-q { color: var(--txt, #fff); font-weight: 600; margin: 0 0 0.3rem; }
   .review-yours { color: var(--error, #f87171); margin: 0 0 0.15rem; font-size: var(--fs-sm, 0.9rem); }
   .review-correct { color: var(--success, #34d399); margin: 0; font-size: var(--fs-sm, 0.9rem); }
+  .review-why { color: var(--txt2); margin: 0.35rem 0 0; font-size: var(--fs-sm, 0.9rem); line-height: 1.45; }
 </style>

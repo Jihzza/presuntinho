@@ -13,6 +13,16 @@ const LOCKOUT_DURATION_MS = 30_000;
 const MAX_ATTEMPTS = 3;
 const LEGACY_PROFILES: ProfileId[] = ['fatma', 'daniel'];
 
+/**
+ * Is this id one of the two grandfathered single-tenant profiles?
+ * SINGLE HOME for the check — call this instead of inlining
+ * `id === 'fatma' || id === 'daniel'` so a future legacy→uuid migration
+ * (or a third grandfathered id) is a one-line change.
+ */
+export function isLegacyProfile(id: string | null | undefined): boolean {
+  return !!id && (LEGACY_PROFILES as string[]).includes(id);
+}
+
 /** Legacy profiles PLUS any onboarded member ids (deduped). Never throws. */
 function knownProfiles(): ProfileId[] {
   if (typeof localStorage === 'undefined') return [...LEGACY_PROFILES];

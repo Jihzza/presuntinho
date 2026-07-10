@@ -16,10 +16,16 @@
   }
 
   function courseQuizCount(course: SchoolCourse): number {
-    return course.units.reduce(
-      (total, unit) => total + unit.lessons.filter((lesson) => Boolean(lesson.quizSlug)).length,
-      0
-    );
+    // Contar quizzes DISTINTOS — várias lições partilham o mesmo quizSlug
+    // (ex.: 'goq' aparece em 4 lições), por isso contar lições-com-quiz
+    // inflacionava o número no cartão (ex.: 34 em vez de ~10).
+    const slugs = new Set<string>();
+    for (const unit of course.units) {
+      for (const lesson of unit.lessons) {
+        if (lesson.quizSlug) slugs.add(lesson.quizSlug);
+      }
+    }
+    return slugs.size;
   }
 
   let courses = $derived(localizedMainSchoolCourses($t));

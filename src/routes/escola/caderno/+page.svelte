@@ -20,8 +20,23 @@
     body: string;
     category: 'escola' | 'habitos' | 'financas' | 'geral';
     createdAt: number;
+    /** Additive (non-indexed): set the first time a text note is edited. */
+    updatedAt?: number;
     blob?: Blob;
   }
+
+  /** Shape persisted to localStorage while the user is composing a note. */
+  interface Draft {
+    title: string;
+    body: string;
+    category: Note['category'];
+  }
+
+  // Namespaced key so the in-progress composer survives a mid-typing
+  // navigation away (SvelteKit unmounts the page → onDestroy flushes it,
+  // onMount restores it). Kept in localStorage, not Dexie, because it is
+  // ephemeral scratch state, not a saved note.
+  const DRAFT_KEY = 'presuntinho:caderno-draft';
 
   let notes = $state<Note[]>([]);
   let selectedCategory = $state<'all' | Note['category']>('all');
@@ -31,9 +46,90 @@
   let newCategory = $state<Note['category']>('escola');
   let isRecording = $state(false);
   let mediaRecorder: MediaRecorder | null = null;
+  let mediaStream: MediaStream | null = null;
   let audioChunks: Blob[] = [];
   let recordingStart = 0;
   const dateLocale = $derived($locale || 'pt-PT');
+
+  // ── Draft autosave (new text-note composer) ──────────────────────────
+  let draftSaved = $state(false); // true when a non-empty draft is persisted
+  let draftLoaded = $state(false); // gate: don't persist before the restore
+
+  // ── Inline edit (existing text notes only) ───────────────────────────
+  let editingId = $state<number | null>(null);
+  let editTitle = $state('');
+  let editBody = $state('');
+  let savingEdit = $state(false);
+
+  /** Low-level write — no reactive state, safe to call from onDestroy. */
+  function writeDraft(d: Draft): void {
+    if (!browser) return;
+    try {
+      if (d.title.trim() || d.body.trim()) {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
+      } else {
+        localStorage.removeItem(DRAFT_KEY);
+      }
+    } catch {
+      /* private mode / quota exceeded — draft autosave is best-effort */
+    }
+  }
+
+  /** Debounced writer that also drives the "rascunho guardado" affordance. */
+  function persistDraft(d: Draft): void {
+    writeDraft(d);
+    draftSaved = Boolean(d.title.trim() || d.body.trim());
+  }
+
+  function clearDraft(): void {
+    if (browser) {
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch {
+        /* ignore */
+      }
+    }
+    draftSaved = false;
+  }
+
+  function restoreDraft(): void {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (raw) {
+        const d = JSON.parse(raw) as Partial<Draft>;
+        if (typeof d.title === 'string') newTitle = d.title;
+        if (typeof d.body === 'string') newBody = d.body;
+        if (
+          d.category === 'escola' ||
+          d.category === 'habitos' ||
+          d.category === 'financas' ||
+          d.category === 'geral'
+        ) {
+          newCategory = d.category;
+        }
+        draftSaved = Boolean(newTitle.trim() || newBody.trim());
+      }
+    } catch {
+      /* malformed JSON / private mode — start with an empty composer */
+    }
+    draftLoaded = true;
+  }
+
+  function discardDraft(): void {
+    newTitle = '';
+    newBody = '';
+    clearDraft();
+  }
+
+  // Debounced autosave: any change to title / body / category schedules a
+  // write ~400ms later; a fresh change cancels the pending one. Gated by
+  // draftLoaded so the initial restore isn't clobbered by an empty write.
+  $effect(() => {
+    const snapshot: Draft = { title: newTitle, body: newBody, category: newCategory };
+    if (!draftLoaded) return;
+    const id = setTimeout(() => persistDraft(snapshot), 400);
+    return () => clearTimeout(id);
+  });
 
   const CATEGORIES = $derived<{ key: Note['category']; label: string; icon: string }[]>([
     { key: 'escola', label: $t('caderno.filter.escola', { default: 'Escola' }), icon: '📚' },
@@ -43,7 +139,10 @@
   ]);
 
   onMount(async () => {
-    if (browser) await refresh();
+    if (browser) {
+      restoreDraft();
+      await refresh();
+    }
   });
 
   async function refresh() {
@@ -61,8 +160,48 @@
     });
     newTitle = '';
     newBody = '';
+    clearDraft(); // note committed — the composer draft is no longer needed
     void awardBadge('b5'); // Wordsmith — first note ever (idempotent)
     await refresh();
+  }
+
+  function startEdit(note: Note): void {
+    // Only text notes are editable — audio/image/file blobs stay immutable.
+    if (note.kind !== 'text' || note.id === undefined) return;
+    editingId = note.id;
+    editTitle = note.title;
+    editBody = note.body;
+  }
+
+  function cancelEdit(): void {
+    editingId = null;
+    editTitle = '';
+    editBody = '';
+  }
+
+  async function saveEdit(): Promise<void> {
+    if (editingId === null) return;
+    const title = editTitle.trim();
+    const body = editBody.trim();
+    if (!title && !body) return; // keep at least a title or a body
+    savingEdit = true;
+    try {
+      // `changes` is a declared variable (not an object literal) so the
+      // additive, non-indexed `updatedAt` field passes Dexie's UpdateSpec
+      // typing. createdAt is intentionally left untouched.
+      const changes: Partial<Note> = {
+        title: title || get(t)('caderno.note.default_title', { default: 'Nota' }),
+        body,
+        updatedAt: Date.now()
+      };
+      await db().notes.update(editingId, changes);
+      editingId = null;
+      editTitle = '';
+      editBody = '';
+      await refresh();
+    } finally {
+      savingEdit = false;
+    }
   }
 
   async function addImageNote(event: Event) {
@@ -103,6 +242,7 @@
     if (!browser || isRecording) return;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStream = stream;
       mediaRecorder = new MediaRecorder(stream);
       audioChunks = [];
       mediaRecorder.ondataavailable = (e) => {
@@ -120,6 +260,7 @@
           blob
         });
         stream.getTracks().forEach((t) => t.stop());
+        mediaStream = null;
         void awardBadge('b5');
         await refresh();
       };
@@ -171,8 +312,21 @@
   }
 
   onDestroy(() => {
+    // Flush the in-progress draft synchronously: the debounced effect's
+    // pending timer is cancelled on unmount, so a navigation within ~400ms
+    // of the last keystroke would otherwise lose those characters.
+    writeDraft({ title: newTitle, body: newBody, category: newCategory });
     for (const url of objectUrls.values()) URL.revokeObjectURL(url);
     objectUrls.clear();
+    // Se sair a meio de uma gravação, o onstop nunca corre — largar o
+    // microfone à mão para não ficar o indicador vermelho ligado.
+    if (mediaRecorder && isRecording) {
+      try { mediaRecorder.stop(); } catch { /* ignore */ }
+    }
+    if (mediaStream) {
+      mediaStream.getTracks().forEach((track) => track.stop());
+      mediaStream = null;
+    }
   });
 
   function formatDate(ts: number): string {
@@ -258,6 +412,17 @@
         </label>
       </div>
     </div>
+
+    {#if draftSaved}
+      <div class="draft-status" aria-live="polite">
+        <span class="draft-note">
+          {$t('caderno.draft.saved', { default: '✓ Rascunho guardado automaticamente' })}
+        </span>
+        <button type="button" class="draft-discard" onclick={discardDraft}>
+          {$t('caderno.draft.discard', { default: 'Descartar rascunho' })}
+        </button>
+      </div>
+    {/if}
   </section>
 
   <section class="filters" aria-label={$t('caderno.filters.aria', { default: 'Filtros' })}>
@@ -298,7 +463,7 @@
       </p>
     {:else}
       {#each filtered as note (note.id)}
-        <article class="note">
+        <article class="note" class:note-editing={note.id === editingId}>
           <header class="note-head">
             <span class="note-icon" aria-hidden="true">
               {#if note.kind === 'text'}📝
@@ -312,15 +477,50 @@
             <time class="note-date" datetime={new Date(note.createdAt).toISOString()}>
               {formatDate(note.createdAt)}
             </time>
-            <button
-              type="button"
-              class="note-delete"
-              onclick={() => note.id !== undefined && deleteNote(note.id)}
-              aria-label={$t('caderno.note.delete_aria', { default: 'Apagar nota' })}
-            >🗑</button>
+            {#if note.id !== editingId}
+              {#if note.kind === 'text'}
+                <button
+                  type="button"
+                  class="note-edit"
+                  onclick={() => startEdit(note)}
+                  aria-label={$t('caderno.note.edit_aria', { default: 'Editar nota' })}
+                >✏️</button>
+              {/if}
+              <button
+                type="button"
+                class="note-delete"
+                onclick={() => note.id !== undefined && deleteNote(note.id)}
+                aria-label={$t('caderno.note.delete_aria', { default: 'Apagar nota' })}
+              >🗑</button>
+            {/if}
           </header>
 
-          {#if note.kind === 'text' && note.body}
+          {#if note.id === editingId}
+            <div class="note-editor">
+              <input
+                type="text"
+                class="title-input"
+                placeholder={$t('caderno.placeholder.title', { default: 'Título (opcional)' })}
+                bind:value={editTitle}
+              />
+              <textarea
+                class="body-input"
+                placeholder={$t('caderno.placeholder.body', { default: 'Escreve aqui a tua nota…' })}
+                rows="3"
+                bind:value={editBody}
+              ></textarea>
+              <div class="editor-actions">
+                <button type="button" class="btn btn-primary" onclick={saveEdit} disabled={savingEdit}>
+                  {savingEdit
+                    ? $t('caderno.edit.saving', { default: 'A guardar…' })
+                    : $t('caderno.edit.save', { default: '✔ Guardar alterações' })}
+                </button>
+                <button type="button" class="btn btn-ghost" onclick={cancelEdit} disabled={savingEdit}>
+                  {$t('caderno.edit.cancel', { default: 'Cancelar' })}
+                </button>
+              </div>
+            </div>
+          {:else if note.kind === 'text' && note.body}
             <p class="note-body">{note.body}</p>
           {:else if note.kind === 'audio' && note.blob}
             <audio controls preload="metadata" src={objectUrlFor(note) ?? ''}></audio>
@@ -330,6 +530,12 @@
             <a class="note-file" href={objectUrlFor(note) ?? ''} download={note.title}>
               {$t('caderno.note.download', { default: '📥 Descarregar' })} {note.title}
             </a>
+          {/if}
+
+          {#if note.updatedAt && note.id !== editingId}
+            <span class="note-edited">
+              {$t('caderno.note.edited', { default: 'editado' })} · {formatDate(note.updatedAt)}
+            </span>
           {/if}
         </article>
       {/each}
@@ -516,4 +722,93 @@
     font-size: 0.9rem;
   }
   .note-file:hover { background: rgba(139, 92, 246, 0.25); }
+
+  /* ── Draft autosave affordance ─────────────────────────────────── */
+  .draft-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.1rem;
+  }
+  .draft-note {
+    color: var(--txt3);
+    font-size: 0.78rem;
+  }
+  .draft-discard {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--txt2);
+    border-radius: var(--radius-sm);
+    padding: 0.3rem 0.8rem;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.78rem;
+    min-height: var(--touch-target);
+  }
+  .draft-discard:hover,
+  .draft-discard:focus-visible {
+    border-color: var(--accent);
+    color: var(--txt);
+    outline: none;
+  }
+
+  /* ── Edit existing text notes ──────────────────────────────────── */
+  .note-editing {
+    border-color: var(--accent);
+  }
+  .note-edit {
+    background: transparent;
+    border: 0;
+    color: var(--txt3);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: var(--radius-sm);
+    /* Matches the sibling .note-delete tap area for a consistent header row. */
+    min-height: 32px;
+    min-width: 32px;
+  }
+  .note-edit:hover,
+  .note-edit:focus-visible {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    outline: none;
+  }
+  .note-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .editor-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .editor-actions .btn {
+    min-height: var(--touch-target);
+  }
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--txt2);
+  }
+  .btn-ghost:hover,
+  .btn-ghost:focus-visible {
+    background: var(--card-hover);
+    color: var(--txt);
+  }
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+  .note-edited {
+    display: inline-block;
+    margin-top: 0.4rem;
+    color: var(--txt3);
+    font-size: 0.72rem;
+    font-style: italic;
+  }
 </style>

@@ -51,10 +51,29 @@ export async function initStores(profile?: ProfileId): Promise<void> {
 }
 
 export function resetStores(): void {
+  // Flip the init flag FIRST so the value resets below can't persist to the DB
+  // (both store factories guard their write subscription on `_initialized`).
   _initialized = false;
   _initializedProfile = null;
   _initPromise = null;
   resetDbCache();
+  // Drop the previous profile's in-memory values so a logout / profile switch
+  // can't bleed one user's XP/theme/easter-egg progress into the next — and so
+  // a failed re-hydrate on the next login shows neutral defaults, never the
+  // prior user's data.
+  xp.set(DEFAULT_STATE.xp);
+  heartClicks.set(DEFAULT_STATE.heartClicks);
+  heartMaxClicks.set(DEFAULT_STATE.heartMaxClicks);
+  logoClicks.set(DEFAULT_STATE.logoClicks);
+  logoTimer.set(DEFAULT_STATE.logoTimer);
+  konamiProg.set(DEFAULT_STATE.konamiProg);
+  keyBuf.set(DEFAULT_STATE.keyBuf);
+  footerClicks.set(DEFAULT_STATE.footerClicks);
+  mascotShown.set(DEFAULT_STATE.mascotShown);
+  sroomOpened.set(DEFAULT_STATE.sroomOpened);
+  theme.set(DEFAULT_SETTINGS.theme);
+  lang.set(DEFAULT_SETTINGS.lang);
+  funMode.set(DEFAULT_SETTINGS.funMode);
 }
 
 /**

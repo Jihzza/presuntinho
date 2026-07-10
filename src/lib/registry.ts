@@ -62,27 +62,44 @@ export const subApps: SubApp[] = [
     route: '/biblioteca',
     enabled: true,
     order: 5
+  },
+  {
+    id: 'humor',
+    name: 'Humor',
+    icon: '🩷',
+    color: '#f472b6',
+    description: 'Diário de sentimentos, sem julgamentos',
+    route: '/humor',
+    enabled: true,
+    order: 6
+  },
+  {
+    id: 'memorias',
+    name: 'Memórias',
+    icon: '🕰️',
+    color: '#a855f7',
+    description: 'Momentos guardados com carinho',
+    route: '/memorias',
+    enabled: true,
+    order: 7
+  },
+  {
+    id: 'vida',
+    name: 'Vida',
+    icon: '🌿',
+    color: '#22c55e',
+    description: 'O teu cantinho: escola, hábitos, humor e memórias',
+    route: '/vida',
+    enabled: true,
+    order: 8
   }
 ];
 
-// Legacy V3 site is preserved at /legacy (iframe). Hub exposes it as a card
-// so users always have a way back to the original site during the migration.
-export const legacySubApp: SubApp = {
-  id: 'legacy',
-  name: 'Site V3',
-  icon: '🐷',
-  color: '#94a3b8',
-  description: 'O site original (preservado)',
-  route: '/legacy',
-  enabled: true,
-  order: 99
-};
-
 // -------------------------------------------------------------------
-// V3 content routes — native SvelteKit ports of the 7 missing V3 pages.
-// Each entry is rendered on the Hub via HubCard (with an optional `tagline`).
-// Phase 12: these replace the iframe shell for case / course / walk / write /
-// pt / dl / secrets. The legacy HTML stays at /legacy/ for archival.
+// V3 content entry shape — still consumed as a type by HubCard for the
+// optional tagline layout. The legacy Equivalenza case-study pages
+// (/case, /course, /walk, /write, /pt) it once described are superseded by
+// the generic multi-course Escola and are no longer surfaced on the Hub.
 // -------------------------------------------------------------------
 export interface V3ContentEntry {
   id: string;
@@ -94,79 +111,6 @@ export interface V3ContentEntry {
   href: string;
   tagline: string;
 }
-
-export const v3Content: V3ContentEntry[] = [
-  {
-    id: 'case',
-    slug: 'case',
-    title: 'Case',
-    icon: '📊',
-    accent: '#3b82f6',
-    description: 'Deep dive da Equivalenza',
-    href: '/case/',
-    tagline: 'Empresa, declínio, concorrente, persona'
-  },
-  {
-    id: 'course',
-    slug: 'course',
-    title: 'Course',
-    icon: '🎓',
-    accent: '#8b5cf6',
-    description: 'SWOT, TOWS, SCQA, Persona',
-    href: '/course/',
-    tagline: 'Teoria da aula'
-  },
-  {
-    id: 'walk',
-    slug: 'walk',
-    title: 'Walkthrough',
-    icon: '🎙️',
-    accent: '#ec4899',
-    description: '5 passos do trabalho',
-    href: '/walk/',
-    tagline: 'Com áudio guiado'
-  },
-  {
-    id: 'write',
-    slug: 'write',
-    title: 'Writing',
-    icon: '✍️',
-    accent: '#10b981',
-    description: 'Tips anti-AI detection',
-    href: '/write/',
-    tagline: 'Variação, voz, exemplos'
-  },
-  {
-    id: 'pt',
-    slug: 'pt',
-    title: 'PT 🇵🇹',
-    icon: '🇵🇹',
-    accent: '#ef4444',
-    description: 'Aulas em português',
-    href: '/pt/',
-    tagline: 'Teoria + mini-curso PT'
-  },
-  {
-    id: 'dl',
-    slug: 'dl',
-    title: 'Downloads',
-    icon: '📥',
-    accent: '#f59e0b',
-    description: 'PDF, DOCX, ZIP, áudio',
-    href: '/dl/',
-    tagline: 'Materiais para guardar'
-  },
-  {
-    id: 'secrets',
-    slug: 'secrets',
-    title: 'Secrets',
-    icon: '🔐',
-    accent: '#a855f7',
-    description: '8 segredos para descobrir',
-    href: '/secrets/',
-    tagline: 'Easter eggs + badges'
-  }
-];
 
 // ---------------------------------------------------------------------------
 // Agent (V7+) — in-app assistant that knows the user's state.

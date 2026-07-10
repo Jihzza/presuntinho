@@ -108,7 +108,7 @@
   }
   .head { margin-bottom: 1.5rem; }
   .head h1 {
-    color: #fff;
+    color: var(--txt);
     margin: 0.25rem 0;
     font-size: 1.75rem;
   }

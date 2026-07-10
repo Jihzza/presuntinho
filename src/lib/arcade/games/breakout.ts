@@ -41,6 +41,11 @@ export function createBreakout(): ArcadeEngine {
   let paddleX = 0;
   let ball = { x: 0, y: 0, vx: 0, vy: 0 };
   let launched = false;
+  // Seconds the ball has been sitting on the paddle. Auto-launches after a beat
+  // so mobile players (who position with ◀/▶ or by dragging, never firing the
+  // action input) can't get stuck riding the paddle forever.
+  let sinceServe = 0;
+  const AUTO_LAUNCH_AFTER = 1.6;
   let lives = 3;
   let points = 0;
   let bricks: Brick[] = [];
@@ -57,6 +62,7 @@ export function createBreakout(): ArcadeEngine {
     paddleX = FIELD_W / 2;
     ball = { x: FIELD_W / 2, y: paddleY - BALL_R - 2, vx: 0, vy: 0 };
     launched = false;
+    sinceServe = 0;
   }
 
   function reset(): void {
@@ -96,7 +102,8 @@ export function createBreakout(): ArcadeEngine {
 
     if (!launched) {
       ball.x = paddleX;
-      if (input.action) launch();
+      sinceServe += dt;
+      if (input.action || sinceServe >= AUTO_LAUNCH_AFTER) launch();
       return {};
     }
 

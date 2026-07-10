@@ -18,6 +18,7 @@ import {
   MOOD_EVENT,
   moodPressure,
   readActiveMood,
+  isMoodIntroAcknowledged,
   type ActiveMood,
   type MoodKind,
   type MoodPressure
@@ -77,24 +78,31 @@ export function useMoodState(): MoodStateRunes {
     return () => window.removeEventListener(MOOD_EVENT, handler);
   });
 
+  // Um mood só é "efetivo" (bloqueia inputs, baixa pressão, etc.) DEPOIS de o
+  // utilizador reconhecer o intro — que é exatamente quando o +layout mostra a
+  // MoodLayer com o botão de saída. Sem isto, um mood ativado mas não
+  // reconhecido bloqueava as Finanças em read-only sem UI de saída visível.
+  const effective = (): ActiveMood | null =>
+    mood && isMoodIntroAcknowledged(mood) ? mood : null;
+
   return {
     get mood() {
-      return mood;
+      return effective();
     },
     get isSick() {
-      return mood?.kind === 'sick';
+      return effective()?.kind === 'sick';
     },
     get isSoft() {
-      return mood?.kind === 'sad';
+      return effective()?.kind === 'sad';
     },
     get isLove() {
-      return mood?.kind === 'love';
+      return effective()?.kind === 'love';
     },
     get hasMood() {
-      return Boolean(mood) && initialised;
+      return Boolean(effective()) && initialised;
     },
     get pressure() {
-      return moodPressure(mood?.kind ?? null);
+      return moodPressure(effective()?.kind ?? null);
     }
   };
 }

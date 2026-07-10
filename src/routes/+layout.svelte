@@ -2,7 +2,8 @@
   import '../app.css';
   import { page } from '$app/state';
   import { goto, afterNavigate } from '$app/navigation';
-  import { getSession, setSession } from '$lib/auth/session';
+  import { getSession, isLegacyProfile } from '$lib/auth/session';
+  import CoupleCelebration from '$lib/components/CoupleCelebration.svelte';
   import { initStores, markVisited } from '$lib/state/stores';
   import Confetti from '$lib/components/Confetti.svelte';
   import Toast from '$lib/components/Toast.svelte';
@@ -19,10 +20,11 @@
   import MoodLayer from '$lib/components/MoodLayer.svelte';
   import GamificationLayer from '$lib/components/GamificationLayer.svelte';
   import GameInviteListener from '$lib/components/GameInviteListener.svelte';
+  import HabitReminders from '$lib/components/habitos/HabitReminders.svelte';
   import ArcadeTouchHud from '$lib/components/arcade/ArcadeTouchHud.svelte';
   import { arcadeHud } from '$lib/arcade/hud-state';
   import { arcadeImmersive } from '$lib/arcade/immersive-state';
-  import { startCouplePoller, stopCouplePoller } from '$lib/couple/couple-store.svelte';
+  import { couple, startCouplePoller, stopCouplePoller } from '$lib/couple/couple-store.svelte';
   import { applyAppLogo, getAppLogo } from '$lib/app-logo';
   import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, MOOD_META, type ActiveMood } from '$lib/mood';
 
@@ -45,9 +47,12 @@
   // type 'needRefresh' we surface a small banner with a reload action.
   let pwaUpdateReady = $state(false);
   let updateSW: ((reloadPage?: boolean) => Promise<void>) | null = null;
+  // Full-screen congrats when a couple link becomes ACTIVE (both accepted).
+  let coupleCelebration = $state<{ label: string } | null>(null);
 
   const moodAccent = $derived(activeMood ? MOOD_META[activeMood.kind].accent : null);
   const isMessagesRoute = $derived(isActive('/mensagens/'));
+  const isComposerRoute = $derived(isActive('/mensagens/') || isActive('/agente/'));
 
   // Pages with a fixed bottom composer (chat input) need the floating
   // elements (fab-stack, mascot, mood chip, PWA banner) lifted above it.
@@ -79,6 +84,24 @@
   afterNavigate((nav) => {
     const pathname = nav.to?.url.pathname ?? page.url.pathname;
     void trackVisit(pathname);
+    // A sessão é lida uma vez no arranque; /login e /splash escrevem-na e
+    // navegam SPA para "/" sem reload — sem re-ler aqui, a bottom-nav ficava
+    // presa em "inicia sessão primeiro" até um refresh manual.
+    if (!session) {
+      const fresh = getSession();
+      if (fresh) {
+        session = fresh;
+        if (authRedirectTimer) {
+          clearTimeout(authRedirectTimer);
+          authRedirectTimer = null;
+        }
+        // initStores é idempotente e sensível ao perfil — chamamos sempre,
+        // porque o boot marca storesReady=true mesmo sem sessão (defaults).
+        void initStores(fresh.profile)
+          .then(() => (storesReady = true))
+          .catch((e) => console.error('[presuntinho] initStores failed:', e));
+      }
+    }
     // Keep the header bell fresh as you move around (throttled inside).
     if (session && storesReady) void refreshNotifBadge();
   });
@@ -124,27 +147,22 @@
     let moodPoll: ReturnType<typeof setInterval> | null = null;
     let swPoll: ReturnType<typeof setInterval> | null = null;
     let seasonalTimer: ReturnType<typeof setTimeout> | null = null;
+    let unwatchCoupleLink: (() => void) | null = null;
 
     async function refreshMood(): Promise<void> {
       const mood = await readActiveMood();
-      const acknowledgedMood = mood && isMoodIntroAcknowledged(mood) ? mood : null;
-      activeMood = acknowledgedMood;
-      if (acknowledgedMood && !getSession()) {
-        setSession('fatma', 'secret');
-        session = getSession();
-        if (session && !storesReady) {
-          await initStores(session.profile);
-          storesReady = true;
-        }
-      }
+      // SECURITY (lock-screen feature): a mood must NEVER create a session.
+      // The old code called setSession('fatma','secret') here, so typing a
+      // mood phrase ('love'/'sad'/'sick') at the splash silently logged you in
+      // — a real hole. The mood now only THEMES the app, and only once a real
+      // session already exists (the PBKDF2 password or a user-configured
+      // lock-screen passphrase). Mood activation itself is untouched.
+      activeMood = mood && isMoodIntroAcknowledged(mood) ? mood : null;
     }
     const onMoodChanged = (event: Event) => {
       const mood = event instanceof CustomEvent ? (event.detail as ActiveMood | null) : null;
+      // SECURITY: mood changes never grant a session either (see refreshMood).
       activeMood = mood && isMoodIntroAcknowledged(mood) ? mood : null;
-      if (activeMood && !getSession()) {
-        setSession('fatma', 'secret');
-        session = getSession();
-      }
       void refreshMood();
     };
     void refreshMood();
@@ -159,6 +177,45 @@
       .then((m) => m.resolveCoupleId())
       .catch(() => {})
       .finally(() => startCouplePoller());
+
+    // Couple LINKING: watch for couple invites/activations for account users.
+    // When a couple becomes ACTIVE (both said yes), celebrate once per device
+    // (full-screen congrats + notification) and re-arm the couple features.
+    {
+      const sessionProfile = getSession()?.profile;
+      if (sessionProfile && !isLegacyProfile(sessionProfile)) {
+        void import('$lib/account/couple-link').then(({ watchCoupleLink }) => {
+          unwatchCoupleLink = watchCoupleLink(sessionProfile, {
+            onCoupleActive: (_space, partner) => {
+              const label = partner?.display_name || (partner ? `@${partner.handle}` : '💞');
+              coupleCelebration = { label };
+              void import('$lib/habitos/reminders')
+                .then(({ showAppNotification }) =>
+                  showAppNotification(get(t)('couplelink.notif.title', { default: '💞 Modo casal ativado!' }), {
+                    body: get(t)('couplelink.notif.body', {
+                      values: { name: label },
+                      default: `Tu e ${label} estão ligados. Abre o Presuntinho!`
+                    })
+                  })
+                )
+                .catch(() => undefined);
+              // Re-scope points/pings to the fresh couple space right away.
+              void import('$lib/couple/couple-supabase').then((m) => m.invalidateCoupleId()).catch(() => undefined);
+              void import('$lib/couple/couple-store.svelte').then((m) => m.refreshCoupleEnabled()).catch(() => undefined);
+            },
+            onIntentProposed: (c) => {
+              showToast(
+                get(t)('couplelink.intent_sent', {
+                  values: { handle: c.handle },
+                  default: `💌 @${c.handle} aceitou o teu contacto — pedido de casal enviado!`
+                }),
+                3200
+              );
+            }
+          });
+        }).catch(() => undefined);
+      }
+    }
 
     // Easter-egg boot hooks — used to live on the always-mounted HeartButton,
     // which the SurpriseHeart replaced. Warm the config cache and run the
@@ -292,7 +349,7 @@
             // Public routes a logged-out visitor is allowed to sit on: the login
             // splash, the new-account wizard, and an invite-redemption link.
             const p = page.url.pathname;
-            const isPublicRoute = p === '/splash/' || p.startsWith('/onboarding') || p.startsWith('/juntar') || p.startsWith('/conta') || p.startsWith('/contactos') || p.startsWith('/grupos');
+            const isPublicRoute = p === '/splash/' || p.startsWith('/onboarding') || p.startsWith('/juntar') || p.startsWith('/conta') || p.startsWith('/contactos') || p.startsWith('/grupos') || p.startsWith('/convite');
             if (!session && !isPublicRoute && !authRedirectTimer) {
               authRedirectTimer = setTimeout(() => {
                 authRedirectTimer = null;
@@ -311,6 +368,7 @@
       if (swPoll) clearInterval(swPoll);
       if (seasonalTimer) clearTimeout(seasonalTimer);
       stopCouplePoller();
+      unwatchCoupleLink?.();
       void import('$lib/state/progress-sync').then((m) => m.stopProgressSync()).catch(() => {});
     };
   });
@@ -351,12 +409,13 @@
   <XpToast />
   <GamificationLayer />
   <GameInviteListener />
+  <HabitReminders />
   <SecretModal bind:open={secretRoomOpen} />
   <!-- Phase 15: offline status banner (listens to online/offline events). -->
   <OfflineIndicator />
   <a class="skip-link" href="#main-content">{$t('a11y.skipToContent')}</a>
   <div
-    class={`app ${isMessagesRoute ? 'app-messages' : ''} ${activeMood ? `app-mood app-mood-${activeMood.kind}` : ''} ${$arcadeHud || $arcadeImmersive ? 'arcade-immersive' : ''}`}
+    class={`app ${isMessagesRoute ? 'app-messages' : ''} ${isComposerRoute ? 'app-composer' : ''} ${activeMood ? `app-mood app-mood-${activeMood.kind}` : ''} ${$arcadeHud || $arcadeImmersive ? 'arcade-immersive' : ''}`}
     style={`--page-bottom-inset: ${pageBottomInset};${moodAccent ? ` --mood-accent: ${moodAccent};` : ''}`}
   >
     {#if activeMood}
@@ -476,8 +535,19 @@
                      top of it at random moments (couple points). -->
                 <div class="mascot-corner" class:game-hidden={$arcadeHud || $arcadeImmersive} aria-hidden={$arcadeHud || $arcadeImmersive ? 'true' : undefined}>
                   <Mascot interactive />
-                  <SurpriseHeart />
+                  <!-- The surprise heart only makes sense when this session can
+                       actually contribute couple points — hide the inert affordance
+                       for solo / onboarded (non-couple) users. -->
+                  {#if couple.available}
+                    <SurpriseHeart />
+                  {/if}
                 </div>
+                {#if coupleCelebration}
+                  <CoupleCelebration
+                    partnerLabel={coupleCelebration.label}
+                    onclose={() => (coupleCelebration = null)}
+                  />
+                {/if}
                 {#if $arcadeHud}
                   <ArcadeTouchHud
                     left={$arcadeHud.left}
@@ -679,16 +749,18 @@
     height: 44px;
     border-radius: var(--radius-md);
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #fff;
+    /* Tokens, não brancos fixos — nos temas claros um #fff fica invisível
+       (antes era "salvo" por uma regra global de <a> que já não se sobrepõe). */
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
+    color: var(--txt, #fff);
     cursor: pointer;
     text-decoration: none;
     transition: background 0.2s, border-color 0.2s;
   }
   .icon-btn:hover,
   .icon-btn:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: color-mix(in srgb, var(--txt, #fff) 8%, transparent);
+    border-color: var(--border-strong, rgba(255, 255, 255, 0.3));
     outline: none;
   }
   .icon-btn:focus-visible {
@@ -754,7 +826,8 @@
       gap: 2px;
       background: transparent;
       border: 0;
-      color: rgba(255, 255, 255, 0.78);
+      /* Token em vez de branco fixo — legível em temas claros e escuros. */
+      color: color-mix(in srgb, var(--txt, #fff) 78%, transparent);
       text-decoration: none;
       font: inherit;
       cursor: pointer;
@@ -966,11 +1039,11 @@
         right: max(1.25rem, env(safe-area-inset-right));
       }
     }
-    /* /mensagens/ has its own fixed composer. On small screens the mascot
-       competes with the chat input; keep it visible on desktop but remove the
-       mobile overlap entirely. */
+    /* /mensagens/ and /agente/ have their own fixed composer. On small
+       screens the mascot competes with the chat input + suggestion chips;
+       keep it visible on desktop but remove the mobile overlap entirely. */
     @media (max-width: 767px) {
-      .app-messages .mascot-corner {
+      .app-composer .mascot-corner {
         display: none;
       }
     }

@@ -39,6 +39,7 @@
     streamHermesChat
   } from '$lib/agent/hermes';
   import { buildContextSummary } from '$lib/agent/context';
+  import { renderMarkdown } from '$lib/agent/markdown';
   import {
     listChatMessages,
     appendChatMessage,
@@ -562,7 +563,13 @@
               <span class="file-name">{m.attachment.name}</span>
             </div>
           {/if}
-          <div class="text">{m.content}</div>
+          {#if m.role === 'assistant'}
+            <!-- Model replies in Markdown; renderMarkdown escapes all HTML first,
+                 so this {@html} only ever emits a safe whitelisted tag subset. -->
+            <div class="text md">{@html renderMarkdown(m.content)}</div>
+          {:else}
+            <div class="text">{m.content}</div>
+          {/if}
         </div>
       </div>
     {/each}
@@ -717,7 +724,7 @@
     justify-content: space-between;
     gap: 0.5rem;
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border);
   }
   .chat-header h1 {
     margin: 0;
@@ -741,7 +748,7 @@
   .head-btn {
     background: transparent;
     border: 0;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--txt2);
     cursor: pointer;
     min-width: 44px;
     min-height: 44px;
@@ -753,8 +760,8 @@
     text-decoration: none;
   }
   .head-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
+    background: color-mix(in srgb, var(--txt) 8%, transparent);
+    color: var(--txt);
   }
   .head-btn:focus-visible {
     outline: none;
@@ -802,14 +809,52 @@
   }
   .msg-user .bubble {
     background: var(--accent, #ec4899);
-    color: #fff;
+    color: var(--on-accent, #fff);
     border-bottom-right-radius: 4px;
   }
   .msg-assistant .bubble {
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    /* Tokens — antes era branco-sobre-branco no tema claro (respostas do
+       agente invisíveis). */
+    background: var(--card);
+    color: var(--txt);
+    border: 1px solid var(--border);
     border-bottom-left-radius: 4px;
+  }
+  /* Rendered-markdown assistant content — block layout governs spacing (the
+     bubble's pre-wrap would otherwise turn the inter-block newlines into gaps).
+     :global() because the HTML is injected via {@html} and misses Svelte's
+     scope class. */
+  .md { white-space: normal; }
+  .md :global(p) { margin: 0 0 0.5rem; }
+  .md :global(> :last-child) { margin-bottom: 0; }
+  .md :global(ul),
+  .md :global(ol) { margin: 0.3rem 0 0.5rem; padding-inline-start: 1.2rem; }
+  .md :global(li) { margin: 0.12rem 0; }
+  .md :global(h3),
+  .md :global(h4),
+  .md :global(h5),
+  .md :global(h6) { margin: 0.5rem 0 0.3rem; font-size: 1em; font-weight: 800; }
+  .md :global(strong) { font-weight: 800; }
+  .md :global(a) { color: var(--accent); text-decoration: underline; }
+  .md :global(code) {
+    background: color-mix(in srgb, var(--txt) 12%, transparent);
+    padding: 0.05rem 0.3rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .md :global(pre) {
+    background: color-mix(in srgb, var(--txt) 10%, transparent);
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 0.4rem 0;
+  }
+  .md :global(pre code) { background: none; padding: 0; }
+  .md :global(blockquote) {
+    margin: 0.4rem 0;
+    padding-inline-start: 0.7rem;
+    border-inline-start: 3px solid var(--border-strong);
+    color: var(--txt2);
   }
   .bubble.thinking {
     opacity: 0.6;
@@ -821,7 +866,7 @@
     gap: 0.3rem;
     margin-bottom: 0.4rem;
     padding-bottom: 0.4rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid var(--border);
   }
   .attach img,
   .attach video {
@@ -997,7 +1042,7 @@
   }
   .action-btn {
     background: var(--accent, #ec4899);
-    color: #fff;
+    color: var(--on-accent, #fff);
     border: 0;
     border-radius: 50%;
     cursor: pointer;
@@ -1020,7 +1065,7 @@
     transform: scale(0.94);
   }
   .action-btn.recording {
-    background: #ef4444;
+    background: var(--error, #ef4444);
     box-shadow: 0 8px 18px rgba(239, 68, 68, 0.35);
   }
   .action-btn:disabled {

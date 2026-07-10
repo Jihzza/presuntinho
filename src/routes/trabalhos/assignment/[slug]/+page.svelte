@@ -18,15 +18,17 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
   import { locale, t } from 'svelte-i18n';
   import { liveQuery, type Subscription } from 'dexie';
   import { db } from '$lib/state/db';
   import {
     localizedAssignment,
     setAssignmentStatus,
+    updateAssignment,
+    deleteAssignment,
     type Assignment,
-    type AssignmentStatus
-  } from '$lib/trabalhos';
+    type AssignmentStatus, STATUS_LABELS, STATUS_OPTIONS, toDatetimeLocal } from '$lib/trabalhos';
   import Countdown from '$lib/components/Countdown.svelte';
   import { showToast } from '$lib/components/events';
   import { localizedSchoolMetaForSlug } from '$lib/escola/catalog';
@@ -40,12 +42,8 @@
 
   // Pretty label for the status enum (PT-only for the MVP).
   function statusLabel(s: AssignmentStatus): string {
-    switch (s) {
-      case 'pending':     return $t('trabalhos.status.pending', { default: 'Por começar' });
-      case 'in_progress': return $t('trabalhos.status.in_progress', { default: 'Em curso' });
-      case 'submitted':   return $t('trabalhos.status.submitted', { default: 'Entregue' });
-      case 'graded':      return $t('trabalhos.status.graded', { default: 'Avaliado' });
-    }
+    const { key, fallback } = STATUS_LABELS[s];
+    return $t(key, { default: fallback });
   }
 
   // Pretty label for the curso slug.
@@ -100,39 +98,87 @@
     return () => sub.unsubscribe();
   });
 
-  // Mutation handlers — Dexie liveQuery above reflects the saved row
-  // back into local state, but we also assign the returned row so the
-  // page feels instant on slow IndexedDB writes.
-  async function markInProgress(): Promise<void> {
+  // ---- Edit / delete UI state ----
+  let editing = $state(false);
+  let confirmingDelete = $state(false);
+  let editDeadlineLocal = $state('');
+  let editNotas = $state('');
+  let editStatus = $state<AssignmentStatus>('pending');
+
+  // Mutation handlers — Dexie liveQuery above reflects the saved row back
+  // into local state, but we also assign the returned row so the page feels
+  // instant on slow IndexedDB writes.  Every status change is routed through
+  // setAssignmentStatus (which delegates to updateAssignment) so the XP
+  // milestone guard lives in one place — undoing a submit never re-pays and
+  // 'graded' pays nothing.
+  async function changeStatus(target: AssignmentStatus, toastMsg: string): Promise<void> {
     if (!assignment || busy) return;
     busy = true;
     try {
-      const updated = await setAssignmentStatus(assignment.id, 'in_progress');
+      const updated = await setAssignmentStatus(assignment.id, target);
       if (updated) {
         assignment = updated;
-        showToast($t('trabalhos.toast.in_progress', { default: 'Marcado como em curso' }));
+        showToast(toastMsg);
       }
     } catch (e) {
-      console.error('[trabalhos] setAssignmentStatus failed', e);
+      console.error('[trabalhos] changeStatus failed', e);
       showToast($t('trabalhos.toast.update_error', { default: 'Erro a atualizar estado' }));
     } finally {
       busy = false;
     }
   }
 
-  async function submitAssignment(): Promise<void> {
+  function startEdit(): void {
+    if (!assignment) return;
+    editDeadlineLocal = toDatetimeLocal(assignment.deadline);
+    editNotas = assignment.description ?? '';
+    editStatus = assignment.status;
+    confirmingDelete = false;
+    editing = true;
+  }
+
+  function cancelEdit(): void {
+    editing = false;
+  }
+
+  async function saveEdit(e: Event): Promise<void> {
+    e.preventDefault();
+    if (!assignment || busy) return;
+    const ms = editDeadlineLocal ? new Date(editDeadlineLocal).getTime() : NaN;
+    if (!Number.isFinite(ms)) {
+      showToast($t('trabalhos.edit.erro.prazo', { default: 'Indica um prazo válido.' }));
+      return;
+    }
+    busy = true;
+    try {
+      const updated = await updateAssignment(assignment.id, {
+        deadline: ms,
+        description: editNotas.trim(),
+        status: editStatus
+      });
+      if (updated) {
+        assignment = updated;
+        editing = false;
+        showToast($t('trabalhos.edit.toast.saved', { default: 'Alterações guardadas ✓' }));
+      }
+    } catch (err) {
+      console.error('[trabalhos] updateAssignment failed', err);
+      showToast($t('trabalhos.toast.update_error', { default: 'Erro a atualizar estado' }));
+    } finally {
+      busy = false;
+    }
+  }
+
+  async function confirmDelete(): Promise<void> {
     if (!assignment || busy) return;
     busy = true;
     try {
-      const updated = await setAssignmentStatus(assignment.id, 'submitted');
-      if (updated) {
-        assignment = updated;
-        showToast($t('trabalhos.toast.submitted', { default: 'Trabalho entregue ✓' }));
-      }
+      await deleteAssignment(assignment.id);
+      showToast($t('trabalhos.delete.toast', { default: 'Trabalho apagado' }));
+      await goto('/trabalhos/');
     } catch (e) {
-      console.error('[trabalhos] setAssignmentStatus failed', e);
-      showToast($t('trabalhos.toast.submit_error', { default: 'Erro a entregar trabalho' }));
-    } finally {
+      console.error('[trabalhos] deleteAssignment failed', e);
+      showToast($t('trabalhos.toast.update_error', { default: 'Erro a atualizar estado' }));
       busy = false;
     }
   }
@@ -213,37 +259,94 @@
 
       <section class="actions-block" aria-label={$t('a11y.aria.acoes', { default: 'Ações' })}>
         <h2 class="block-title">{$t('a11y.aria.acoes', { default: 'Ações' })}</h2>
-        <div class="actions">
-          {#if assignment.status === 'pending'}
-            <button
-              type="button"
-              class="btn btn-primary"
-              onclick={markInProgress}
-              disabled={busy}
-            >
-              {$t('trabalhos.assignment.mark_in_progress', { default: '▶ Marcar como em curso' })}
+
+        {#if !editing}
+          <!-- Quick status transitions (forward + undo) -->
+          <div class="actions">
+            {#if assignment.status === 'pending'}
+              <button type="button" class="btn btn-primary" onclick={() => changeStatus('in_progress', $t('trabalhos.toast.in_progress', { default: 'Marcado como em curso' }))} disabled={busy}>
+                {$t('trabalhos.assignment.mark_in_progress', { default: '▶ Marcar como em curso' })}
+              </button>
+              <button type="button" class="btn btn-secondary" onclick={() => changeStatus('submitted', $t('trabalhos.toast.submitted', { default: 'Trabalho entregue ✓' }))} disabled={busy}>
+                {$t('trabalhos.assignment.submit', { default: '✓ Entregar' })}
+              </button>
+            {:else if assignment.status === 'in_progress'}
+              <button type="button" class="btn btn-primary" onclick={() => changeStatus('submitted', $t('trabalhos.toast.submitted', { default: 'Trabalho entregue ✓' }))} disabled={busy}>
+                {$t('trabalhos.assignment.submit', { default: '✓ Entregar' })}
+              </button>
+              <button type="button" class="btn btn-ghost" onclick={() => changeStatus('pending', $t('trabalhos.toast.reverted', { default: 'Estado revertido' }))} disabled={busy}>
+                {$t('trabalhos.assignment.undo_to_pending', { default: '↩ Voltar a por começar' })}
+              </button>
+            {:else if assignment.status === 'submitted'}
+              <span class="hint">{$t('trabalhos.assignment.already_submitted', { default: 'Trabalho entregue.' })}</span>
+              <button type="button" class="btn btn-primary" onclick={() => changeStatus('graded', $t('trabalhos.toast.graded', { default: 'Marcado como avaliado' }))} disabled={busy}>
+                {$t('trabalhos.assignment.mark_graded', { default: '★ Marcar como avaliado' })}
+              </button>
+              <button type="button" class="btn btn-ghost" onclick={() => changeStatus('in_progress', $t('trabalhos.toast.unsubmitted', { default: 'Entrega revertida' }))} disabled={busy}>
+                {$t('trabalhos.assignment.undo_submit', { default: '↩ Reverter entrega' })}
+              </button>
+            {:else if assignment.status === 'graded'}
+              <span class="hint">{$t('trabalhos.assignment.already_graded', { default: 'Trabalho já avaliado.' })}</span>
+              <button type="button" class="btn btn-ghost" onclick={() => changeStatus('submitted', $t('trabalhos.toast.reverted', { default: 'Estado revertido' }))} disabled={busy}>
+                {$t('trabalhos.assignment.undo_graded', { default: '↩ Voltar a entregue' })}
+              </button>
+            {/if}
+          </div>
+
+          <!-- Manage: edit / delete -->
+          <div class="manage">
+            <button type="button" class="btn btn-secondary" onclick={startEdit} disabled={busy}>
+              {$t('trabalhos.edit.cta', { default: '✎ Editar' })}
             </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              onclick={submitAssignment}
-              disabled={busy}
-            >
-              {$t('trabalhos.assignment.submit', { default: '✓ Entregar' })}
-            </button>
-          {:else if assignment.status === 'in_progress'}
-            <button
-              type="button"
-              class="btn btn-primary"
-              onclick={submitAssignment}
-              disabled={busy}
-            >
-              {$t('trabalhos.assignment.submit', { default: '✓ Entregar' })}
-            </button>
-          {:else if assignment.status === 'submitted' || assignment.status === 'graded'}
-            <p class="hint">{$t(assignment.status === 'graded' ? 'trabalhos.assignment.already_graded' : 'trabalhos.assignment.already_submitted', { default: assignment.status === 'graded' ? 'Trabalho já avaliado.' : 'Trabalho entregue.' })}</p>
+            {#if !confirmingDelete}
+              <button type="button" class="btn btn-danger" onclick={() => (confirmingDelete = true)} disabled={busy}>
+                {$t('trabalhos.delete.cta', { default: '🗑 Apagar' })}
+              </button>
+            {/if}
+          </div>
+
+          {#if confirmingDelete}
+            <div class="confirm" role="alertdialog" aria-label={$t('trabalhos.delete.confirm.aria', { default: 'Confirmar remoção' })}>
+              <p>{$t('trabalhos.delete.confirm.q', { default: 'Apagar este trabalho? Esta ação não pode ser anulada.' })}</p>
+              <div class="confirm-actions">
+                <button type="button" class="btn btn-ghost" onclick={() => (confirmingDelete = false)} disabled={busy}>
+                  {$t('financas.nova.cancel', { default: 'Cancelar' })}
+                </button>
+                <button type="button" class="btn btn-danger" onclick={confirmDelete} disabled={busy}>
+                  {$t('trabalhos.delete.confirm.yes', { default: 'Sim, apagar' })}
+                </button>
+              </div>
+            </div>
           {/if}
-        </div>
+        {:else}
+          <!-- Edit form: deadline + notes + status (incl. 'graded') -->
+          <form class="edit-form" onsubmit={saveEdit} novalidate>
+            <div class="efield">
+              <label for="edit-deadline">{$t('trabalhos.assignment.prazo', { default: 'Prazo' })}</label>
+              <input id="edit-deadline" type="datetime-local" bind:value={editDeadlineLocal} disabled={busy} required />
+            </div>
+            <div class="efield">
+              <label for="edit-status">{$t('trabalhos.filters.status', { default: 'Estado' })}</label>
+              <select id="edit-status" bind:value={editStatus} disabled={busy}>
+                {#each STATUS_OPTIONS as s (s)}
+                  <option value={s}>{statusLabel(s)}</option>
+                {/each}
+              </select>
+            </div>
+            <div class="efield">
+              <label for="edit-notas">{$t('trabalhos.novo.notas', { default: 'Notas' })}</label>
+              <textarea id="edit-notas" bind:value={editNotas} maxlength="500" rows="4" disabled={busy}></textarea>
+            </div>
+            <div class="edit-actions">
+              <button type="button" class="btn btn-ghost" onclick={cancelEdit} disabled={busy}>
+                {$t('financas.nova.cancel', { default: 'Cancelar' })}
+              </button>
+              <button type="submit" class="btn btn-primary" disabled={busy}>
+                {busy ? $t('common.loading', { default: 'A guardar…' }) : $t('trabalhos.edit.save', { default: 'Guardar alterações' })}
+              </button>
+            </div>
+          </form>
+        {/if}
       </section>
 
       <footer class="footer-row">
@@ -455,11 +558,11 @@
   }
   .btn-primary {
     background: var(--accent);
-    color: #fff;
+    color: var(--on-accent, #fff); /* AA: bright accents need a dark foreground */
   }
   .btn-primary:hover:not(:disabled),
   .btn-primary:focus-visible:not(:disabled) {
-    background: #d63384;
+    background: var(--accent-hover, #d63384);
     outline: none;
   }
   .btn-primary:focus-visible {
@@ -483,6 +586,99 @@
     font-size: 0.875rem;
     margin: 0;
     flex-basis: 100%;
+  }
+  .manage {
+    display: flex;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    margin-top: 0.875rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--txt2, #cbd5e1);
+    border: 1px solid var(--border-strong, rgba(255, 255, 255, 0.2));
+  }
+  .btn-ghost:hover:not(:disabled),
+  .btn-ghost:focus-visible:not(:disabled) {
+    background: var(--card-hover, rgba(255, 255, 255, 0.12));
+    color: var(--txt, #fff);
+    outline: none;
+  }
+  .btn-danger {
+    background: transparent;
+    color: var(--error, #ef4444);
+    border: 1px solid color-mix(in srgb, var(--error, #ef4444) 55%, transparent);
+  }
+  .btn-danger:hover:not(:disabled),
+  .btn-danger:focus-visible:not(:disabled) {
+    background: color-mix(in srgb, var(--error, #ef4444) 15%, transparent);
+    outline: none;
+  }
+  .btn-danger:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--error, #ef4444) 35%, transparent);
+  }
+  .confirm {
+    margin-top: 0.875rem;
+    padding: 0.875rem 1rem;
+    border: 1px solid color-mix(in srgb, var(--error, #ef4444) 45%, transparent);
+    background: color-mix(in srgb, var(--error, #ef4444) 8%, transparent);
+    border-radius: var(--radius-md, 0.5rem);
+  }
+  .confirm p {
+    margin: 0 0 0.75rem 0;
+    color: var(--txt, #fff);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+  .confirm-actions,
+  .edit-actions {
+    display: flex;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+  .efield {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .efield label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--txt2, #cbd5e1);
+  }
+  .efield input,
+  .efield select,
+  .efield textarea {
+    width: 100%;
+    padding: 0.6rem 0.7rem;
+    min-height: var(--touch-target, 44px);
+    background: var(--bg-elev, #2d4373);
+    border: 1px solid var(--border-strong, rgba(255, 255, 255, 0.2));
+    border-radius: var(--radius-md, 0.5rem);
+    color: var(--txt, #fff);
+    font-family: inherit;
+    font-size: 1rem;
+    color-scheme: light dark;
+  }
+  .efield textarea {
+    resize: vertical;
+    line-height: 1.5;
+    min-height: 5rem;
+  }
+  .efield input:focus-visible,
+  .efield select:focus-visible,
+  .efield textarea:focus-visible {
+    outline: none;
+    border-color: var(--accent, #ec4899);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #ec4899) 40%, transparent);
   }
   .footer-row {
     display: flex;

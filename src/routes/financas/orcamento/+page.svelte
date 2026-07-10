@@ -118,6 +118,12 @@
       return;
     }
 
+    // Só gravar quando o valor MUDOU de facto — o onblur dispara em cada
+    // saída de foco; sem esta guarda, tabular pelos campos criava linhas
+    // fantasma de limite 0, farmava XP e disparava toasts a cada blur.
+    const atual = orcamentosMes[categoriaId] ?? 0;
+    if (num === atual) return;
+
     orcamentosMes = { ...orcamentosMes, [categoriaId]: num };
     try {
       saving = categoriaId;

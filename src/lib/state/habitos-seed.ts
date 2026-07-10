@@ -224,8 +224,13 @@ export function buildSeedHabitLogs(
       // of habits gives the user a believable "haven't done it yet
       // today" badge on first open without making the data look
       // obviously fake.
-      const seed = (habitId * 31 + offset * 17) % 1000;
-      const prob = (seed + 0.5) / 1000;
+      // Hash bem distribuído em [0,1). O anterior — (habitId*31+offset*17)%1000
+      // — ficava sempre em valores baixos para ids pequenos, pelo que TODOS os
+      // 14 dias passavam o limiar e a história saía 14/14 perfeita (nada
+      // orgânica). Este mistura os bits e espalha uniformemente.
+      let h = (habitId * 374761393 + (offset + 1) * 668265263) >>> 0;
+      h = Math.imul(h ^ (h >>> 13), 1274126177) >>> 0;
+      const prob = h / 4294967296;
       // For offset=0 we dial back probability a little so the user
       // gets at least one "pending" card on first open.
       const threshold = offset === 0 ? Math.min(rate, 0.55) : rate;

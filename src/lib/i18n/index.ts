@@ -62,6 +62,33 @@ addMessages('ar', ar);
 // render in the user's browser already has the right locale.  In SSR
 // (or any non-browser context) localStorage is undefined; the explicit
 // guard keeps this module SSR-safe.
+/**
+ * Best UI locale for a first-time visitor with no saved preference: match the
+ * browser's language list against our locales (exact, then primary-subtag).
+ * 'tn' has no BCP-47 code browsers report, so Tunisian users land on ar/fr and
+ * can switch manually. SSR-safe. Returns null when nothing matches.
+ */
+function matchNavigatorLocale(): Locale | null {
+  if (typeof navigator === 'undefined') return null;
+  const prefs =
+    navigator.languages && navigator.languages.length
+      ? navigator.languages
+      : navigator.language
+        ? [navigator.language]
+        : [];
+  for (const raw of prefs) {
+    const lc = raw.toLowerCase();
+    const exact = LOCALES.find((l) => l.toLowerCase() === lc);
+    if (exact) return exact;
+    const primary = lc.split('-')[0];
+    if (primary === 'pt') return 'pt-PT';
+    if (primary === 'en') return 'en';
+    if (primary === 'fr') return 'fr';
+    if (primary === 'ar') return 'ar';
+  }
+  return null;
+}
+
 function detectInitialLocale(): Locale {
   if (typeof localStorage !== 'undefined') {
     const stored = localStorage.getItem('fat-pref-lang');
@@ -69,7 +96,8 @@ function detectInitialLocale(): Locale {
       return stored as Locale;
     }
   }
-  return DEFAULT_LOCALE;
+  // No saved choice yet — follow the browser's language before defaulting to PT.
+  return matchNavigatorLocale() ?? DEFAULT_LOCALE;
 }
 
 const initial = detectInitialLocale();

@@ -154,7 +154,7 @@
   .hero h1 {
     font-size: 2rem;
     margin: 0 0 0.5rem;
-    color: #fff;
+    color: var(--txt);
   }
   .sub {
     color: var(--txt2, #cbd5e1);
@@ -166,8 +166,8 @@
     text-align: center;
     padding: 3rem 1rem;
     color: var(--txt2, #cbd5e1);
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px dashed rgba(255, 255, 255, 0.15);
+    background: var(--card);
+    border: 1px dashed var(--border);
     border-radius: 0.75rem;
   }
   .empty-icon {
@@ -197,7 +197,7 @@
   }
   .course-meta h2 {
     margin: 0;
-    color: #fff;
+    color: var(--txt);
     font-size: 1.1rem;
     line-height: 1.2;
   }
@@ -233,17 +233,17 @@
   .card {
     display: block;
     padding: 1rem 1.1rem;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-left: 3px solid var(--course-color, #ec4899);
     border-radius: 0.625rem;
-    color: #fff;
+    color: var(--txt);
     text-decoration: none;
     transition: background 0.15s, transform 0.15s;
   }
   .card:hover,
   .card:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--card-hover);
     transform: translateY(-1px);
     outline: none;
   }
@@ -271,14 +271,14 @@
     width: 22px;
     height: 22px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
     font-size: 0.85rem;
     line-height: 1;
   }
   .card h3 {
     margin: 0 0 0.35rem;
-    color: #fff;
+    color: var(--txt);
     font-size: 1rem;
     line-height: 1.3;
   }
@@ -297,7 +297,7 @@
     justify-content: space-between;
     gap: 0.5rem;
     padding-top: 0.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--border);
     color: var(--txt3, #94a3b8);
     font-size: 0.78rem;
   }
