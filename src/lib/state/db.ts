@@ -773,7 +773,7 @@ export const DEFAULT_STATE: StateRow = {
 
 export const DEFAULT_SETTINGS: SettingsRow = {
   id: 'main',
-  theme: 'auto',
+  theme: 'light', // rosa (mockup look) — the first-run brand theme
   lang: 'pt-PT',
   funMode: true,
   updatedAt: 0

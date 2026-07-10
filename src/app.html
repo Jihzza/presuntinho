@@ -20,7 +20,7 @@
     <script>
       (function () {
         try {
-          var t = localStorage.getItem('fat-theme') || 'auto';
+          var t = localStorage.getItem('fat-theme') || 'light'; // rosa (mockup look) is the first-run default
           var root = document.documentElement;
           if (t === 'auto') {
             t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
