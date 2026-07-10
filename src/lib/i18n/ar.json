@@ -3656,8 +3656,8 @@
   "secrets.egg.brutale.name": "قلب المحرك",
   "secrets.egg.clutch.hint": "اكتبي ما تفعلينه في 1 ضد 5 في فالورانت.",
   "secrets.egg.clutch.name": "بطلة الكلاتش",
-  "secrets.egg.fatma.hint": "اكتبي أجمل اسم تعرفينه.",
-  "secrets.egg.fatma.name": "من أجل فاطمة",
+  "secrets.egg.fatma.hint": "اكتب اسم أظرف حيوان في التطبيق.",
+  "secrets.egg.fatma.name": "الاسم السحري",
   "secrets.egg.firstlesson.hint": "أكملي درسك الأول.",
   "secrets.egg.firstlesson.name": "الدرس الأول",
   "secrets.egg.footer.hint": "اضغطي على نص أسفل الصفحة خمس مرات.",
@@ -4597,8 +4597,6 @@
   "splash.username.placeholder": "اسم المستخدم",
   "splash.username.label": "اسم المستخدم",
   "splash.password.placeholder": "كلمة المرور",
-  "splash.wrong_user": "مستخدم غير معروف — جربي \"fatma\" أو \"daniel\".",
-  "splash.user_mismatch": "هذا المستخدم وكلمة المرور لا يتطابقان.",
   "splash.providers.or": "أو",
   "splash.google.cta": "المتابعة مع Google",
   "splash.google.hint": "تسجيل الدخول بحساب Google في الطريق — حاليًا ادخلي بكلمة المرور.",
@@ -4673,8 +4671,6 @@
       "empty": "اكتب اسمك وكلمة مرورك."
     },
     "wrong_password": "كلمة المرور غير صحيحة. حاول مرة أخرى.",
-    "wrong_user": "هذا الاسم غير موجود — جرّب اسمًا آخر.",
-    "user_mismatch": "هذا الاسم وكلمة المرور لا يتطابقان.",
     "lockout": "حاول مرة أخرى بعد {n}.",
     "providers": {
       "or": "أو"
@@ -4748,8 +4744,6 @@
   "mascots.coracao.name": "قُليب",
   "mascots.coracao.desc": "قلب وردي متلألئ — حب خالص.",
   "mascots.coracao.line": "صُنع بحب، من أجلك!",
-  "mascots.family.title": "الرفاق",
-  "mascots.family.subtitle": "الماسكوتس الخاصة — مفتوحة دائماً وتلمع. ✨",
   "mascots.fatma.name": "لونا",
   "mascots.fatma.desc": "لونا — رفيقتك المميزة، مفتوحة دائماً. 💜",
   "mascots.fatma.line": "أنا هنا معك، في أي جهاز 💜",
@@ -5016,5 +5010,7 @@
   "profile.generic.location": "—",
   "profile.generic.focus.study": "الدراسة",
   "profile.generic.focus.life": "الحياة",
-  "profile.generic.focus.social": "اجتماعي"
+  "profile.generic.focus.social": "اجتماعي",
+  "eggs.toast.porquinho": "🔐 Porquinho! وجدت السر المخفي. 💛",
+  "quiz.toast.perfect_again": "🏆 {correct}/{total} — ممتاز مرة أخرى!"
 }

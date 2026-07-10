@@ -19,7 +19,7 @@
   const ICONS: Record<ToastType, string> = {
     info: 'ℹ️',
     success: '✅',
-    error: '⚠️',
+    error: '❌',
     warning: '⚠️'
   };
 
@@ -117,9 +117,11 @@
     animation: toast-in 0.2s ease-out;
   }
   .toast-success {
-    border-color: var(--success, #22c55e);
+    border-color: var(--success, #10b981);
   }
-  .toast-error,
+  .toast-error {
+    border-color: var(--error, #ef4444);
+  }
   .toast-warning {
     border-color: var(--warning, #f59e0b);
   }

@@ -573,11 +573,11 @@
   }
   .btn-primary {
     background: var(--accent);
-    color: #fff;
+    color: var(--on-accent, #fff); /* AA: bright accents need a dark foreground */
   }
   .btn-primary:hover:not(:disabled),
   .btn-primary:focus-visible:not(:disabled) {
-    background: #d63384;
+    background: var(--accent-hover, #d63384);
     outline: none;
   }
   .btn-primary:focus-visible {

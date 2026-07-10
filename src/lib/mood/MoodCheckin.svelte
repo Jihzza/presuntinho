@@ -14,7 +14,7 @@
   import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
   import { fireConfettiEvent, showToast } from '$lib/components/events';
-  import { activateMood, readActiveMood, MOOD_EVENT, MOOD_META, type MoodKind } from '$lib/mood';
+  import { activateMood, acknowledgeMoodIntro, readActiveMood, MOOD_EVENT, MOOD_META, type MoodKind } from '$lib/mood';
   import {
     CHECKIN_EMOJI,
     CHECKIN_KINDS,
@@ -79,7 +79,13 @@
   });
 
   async function activateVibe(kind: MoodKind): Promise<void> {
-    await activateMood(kind, 'manual');
+    // activateMood() clears the intro-acknowledgment key, and the layout only
+    // applies ACKNOWLEDGED moods — so a manual "ligar vibe" must acknowledge
+    // immediately (same pattern as definicoes' pickMoodChoice), otherwise the
+    // button toasts success while visibly doing nothing and the stray
+    // un-acked mood resurfaces the LoveLock intro at /splash.
+    const mood = await activateMood(kind, 'manual');
+    if (mood) acknowledgeMoodIntro(mood);
     activeVibe = kind;
     showToast($t('mood.checkin.vibe_on', { values: { vibe: MOOD_META[kind].label }, default: `${MOOD_META[kind].label} ligada 🤍` }));
   }

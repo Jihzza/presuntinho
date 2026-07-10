@@ -3658,8 +3658,8 @@
   "secrets.egg.brutale.name": "9alb el moteur",
   "secrets.egg.clutch.hint": "ekteb chnowa ta3mel fi 1v5 fi Valorant.",
   "secrets.egg.clutch.name": "as el clutch",
-  "secrets.egg.fatma.hint": "ekteb a7la esm ta3rfou.",
-  "secrets.egg.fatma.name": "l Fatma",
+  "secrets.egg.fatma.hint": "Ekteb esm el 7ayawen el a7la fil app.",
+  "secrets.egg.fatma.name": "El Esm el S7ri",
   "secrets.egg.firstlesson.hint": "kammel awel ders mte3ek.",
   "secrets.egg.firstlesson.name": "awel ders",
   "secrets.egg.footer.hint": "enzel 3al texte eli lta7t 5 marrat.",
@@ -4610,8 +4610,6 @@
   "splash.username.placeholder": "Esm el utilisateur",
   "splash.username.label": "Esm el utilisateur",
   "splash.password.placeholder": "Kelmet es-sir",
-  "splash.wrong_user": "Utilisateur mch ma3rouf — jarreb \"fatma\" wala \"daniel\".",
-  "splash.user_mismatch": "El utilisateur hedha w kelmet es-sir ma yitmatchawch.",
   "splash.providers.or": "wala",
   "splash.google.cta": "Kammel b Google",
   "splash.google.hint": "El connexion b Google fi thnaya — tawa odkhli b kelmet es-sir mte3ek.",
@@ -4686,8 +4684,6 @@
       "empty": "Ekteb esmek w el password."
     },
     "wrong_password": "Password ghalta. Erjaa jarreb.",
-    "wrong_user": "Esmha mech hna — jarreb wahed okher.",
-    "user_mismatch": "Esmha w el password makomch yemchiw maa baadh.",
     "lockout": "Jarreb okhra fi {n}.",
     "providers": {
       "or": "walla"
@@ -4761,8 +4757,6 @@
   "mascots.coracao.name": "9albi",
   "mascots.coracao.desc": "9alb ward yebre9 — 7ob safi.",
   "mascots.coracao.line": "Ma3moul bel 7ob, lik enti!",
-  "mascots.family.title": "Compagnons",
-  "mascots.family.subtitle": "Les mascotes spéciales — dima m7alloulin w yel3ew. ✨",
   "mascots.fatma.name": "Luna",
   "mascots.fatma.desc": "Luna — rfi9tek el spéciale, dima m7alloula. 💜",
   "mascots.fatma.line": "Ana hna m3ak, fi ay 7aja 💜",
@@ -5029,5 +5023,7 @@
   "profile.generic.location": "—",
   "profile.generic.focus.study": "Qraya",
   "profile.generic.focus.life": "7ayet",
-  "profile.generic.focus.social": "Social"
+  "profile.generic.focus.social": "Social",
+  "eggs.toast.porquinho": "🔐 Porquinho! L9it el sirr el m5abbi. 💛",
+  "quiz.toast.perfect_again": "🏆 {correct}/{total} — Parfait marra o5ra!"
 }

@@ -17,7 +17,7 @@
 // and the single active id under 'fat-lockscreen-active'. Every access is
 // guarded (SSR / private-mode / quota) so it can never throw.
 
-import { hashPassword, verifyPassword, type ProfileId } from '$lib/auth/hash';
+import { hashPassword, verifyPassword, randomSaltHex, type ProfileId } from '$lib/auth/hash';
 
 const STORE_KEY = 'fat-lockscreens';
 const ACTIVE_KEY = 'fat-lockscreen-active';
@@ -118,16 +118,10 @@ function newId(): string {
 
 function randomSalt(): string {
   try {
-    if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
-      const bytes = new Uint8Array(16);
-      crypto.getRandomValues(bytes);
-      const hex = Array.from(bytes)
-        .map((b) => b.toString(16).padStart(2, '0'))
-        .join('');
-      return `lockscreen-${hex}`;
-    }
+    // Salt bytes come from the shared auth helper — one home for salt policy.
+    return `lockscreen-${randomSaltHex()}`;
   } catch {
-    /* fall through */
+    /* crypto unavailable — fall through to the weak fallback */
   }
   return `lockscreen-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 }

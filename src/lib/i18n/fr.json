@@ -3656,8 +3656,8 @@
   "secrets.egg.brutale.name": "Cœur de Moteur",
   "secrets.egg.clutch.hint": "Écris ce que tu fais dans un 1v5 sur Valorant.",
   "secrets.egg.clutch.name": "As du Clutch",
-  "secrets.egg.fatma.hint": "Écris le plus beau prénom que tu connais.",
-  "secrets.egg.fatma.name": "Pour Fatma",
+  "secrets.egg.fatma.hint": "Écris le nom de l'animal le plus mignon de l'app.",
+  "secrets.egg.fatma.name": "Le Nom Magique",
   "secrets.egg.firstlesson.hint": "Termine ta première leçon.",
   "secrets.egg.firstlesson.name": "Première Leçon",
   "secrets.egg.footer.hint": "Clique 5 fois sur le texte du pied de page.",
@@ -4597,8 +4597,6 @@
   "splash.username.placeholder": "Nom d'utilisateur",
   "splash.username.label": "Nom d'utilisateur",
   "splash.password.placeholder": "Mot de passe",
-  "splash.wrong_user": "Utilisateur inconnu — essaie « fatma » ou « daniel ».",
-  "splash.user_mismatch": "Cet utilisateur et ce mot de passe ne correspondent pas.",
   "splash.providers.or": "ou",
   "splash.google.cta": "Continuer avec Google",
   "splash.google.hint": "La connexion Google arrive — pour le moment, entre avec ton mot de passe.",
@@ -4673,8 +4671,6 @@
       "empty": "Écris ton nom et ton mot de passe."
     },
     "wrong_password": "Mot de passe incorrect. Réessaie.",
-    "wrong_user": "Ce nom n'est pas là — essaie un autre.",
-    "user_mismatch": "Ce nom et ce mot de passe ne vont pas ensemble.",
     "lockout": "Réessaie dans {n}.",
     "providers": {
       "or": "ou"
@@ -4727,8 +4723,6 @@
   "mascots.unlock.xp": "Se débloque à {xp} XP",
   "mascots.unlock.badges": "Se débloque avec {n} médailles",
   "mascots.seo.description": "Ta collection de mascottes adorables",
-  "mascots.family.title": "Compagnons",
-  "mascots.family.subtitle": "Les mascottes spéciales — toujours débloquées, et elles brillent. ✨",
   "mascots.fatma.name": "Luna",
   "mascots.fatma.desc": "Luna — ta compagnie spéciale, toujours débloquée. 💜",
   "mascots.fatma.line": "Je suis avec toi, sur tous tes appareils 💜",
@@ -5016,5 +5010,7 @@
   "profile.generic.location": "—",
   "profile.generic.focus.study": "Études",
   "profile.generic.focus.life": "Vie",
-  "profile.generic.focus.social": "Social"
+  "profile.generic.focus.social": "Social",
+  "eggs.toast.porquinho": "🔐 Porquinho ! Tu as trouvé le secret caché. 💛",
+  "quiz.toast.perfect_again": "🏆 {correct}/{total} — Encore parfait !"
 }

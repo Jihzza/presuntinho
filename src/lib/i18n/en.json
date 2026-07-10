@@ -3656,8 +3656,8 @@
   "secrets.egg.brutale.name": "Engine Heart",
   "secrets.egg.clutch.hint": "Type what you do in a 1v5 in Valorant.",
   "secrets.egg.clutch.name": "Clutch Ace",
-  "secrets.egg.fatma.hint": "Type the most beautiful name you know.",
-  "secrets.egg.fatma.name": "For Fatma",
+  "secrets.egg.fatma.hint": "Type the name of this app's cutest animal.",
+  "secrets.egg.fatma.name": "The Magic Name",
   "secrets.egg.firstlesson.hint": "Finish your first lesson.",
   "secrets.egg.firstlesson.name": "First Lesson",
   "secrets.egg.footer.hint": "Click the footer text 5 times.",
@@ -4597,8 +4597,6 @@
   "splash.username.placeholder": "Username",
   "splash.username.label": "Username",
   "splash.password.placeholder": "Password",
-  "splash.wrong_user": "Unknown user — try \"fatma\" or \"daniel\".",
-  "splash.user_mismatch": "That user and that password don't match.",
   "splash.providers.or": "or",
   "splash.google.cta": "Continue with Google",
   "splash.google.hint": "Google sign-in is on its way — for now, log in with your password.",
@@ -4673,8 +4671,6 @@
       "empty": "Type your name and password."
     },
     "wrong_password": "Wrong password. Try again.",
-    "wrong_user": "That name isn't here — try another.",
-    "user_mismatch": "That name and password don't match.",
     "lockout": "Try again in {n}.",
     "providers": {
       "or": "or"
@@ -4727,8 +4723,6 @@
   "mascots.unlock.xp": "Unlocks at {xp} XP",
   "mascots.unlock.badges": "Unlocks with {n} badges",
   "mascots.seo.description": "Your collection of cute mascots",
-  "mascots.family.title": "Companions",
-  "mascots.family.subtitle": "The special mascots — always unlocked, and they glow. ✨",
   "mascots.fatma.name": "Luna",
   "mascots.fatma.desc": "Luna — your special companion, always unlocked. 💜",
   "mascots.fatma.line": "I'm with you, on every device 💜",
@@ -5016,5 +5010,7 @@
   "profile.generic.location": "—",
   "profile.generic.focus.study": "Study",
   "profile.generic.focus.life": "Life",
-  "profile.generic.focus.social": "Social"
+  "profile.generic.focus.social": "Social",
+  "eggs.toast.porquinho": "🔐 Porquinho! You found the hidden secret. 💛",
+  "quiz.toast.perfect_again": "🏆 {correct}/{total} — Perfect again!"
 }

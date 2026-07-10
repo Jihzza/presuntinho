@@ -628,7 +628,7 @@
     min-height: 44px;
     padding: 0.75rem 1.4rem;
     background: var(--accent);
-    color: #fff;
+    color: var(--on-accent, #fff); /* AA: bright accents need a dark foreground */
     text-decoration: none;
     font-weight: 600;
     border-radius: 0.5rem;

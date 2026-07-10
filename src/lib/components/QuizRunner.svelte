@@ -46,6 +46,8 @@
   // V9 — full-screen celebration overlay shown right after submit. The
   // inline results card stays rendered beneath it for review.
   let victoryOpen = $state(false);
+  // Whether THIS submission actually paid XP (anti-farm: quiz XP pays once).
+  let xpAwarded = $state(false);
   // Course/unit context (if this quiz belongs to a catalog course) —
   // powers the 'Próxima lição' CTA inside QuizVictory.
   let quizContext = $derived(schoolQuizContextForSlug(quizId));
@@ -141,6 +143,26 @@
 
     scoreInfo = { score, correct, total, perfect, pt };
 
+    // Anti-farm (paridade com hábitos xpPaidDates / trabalhos xpPaidStatuses):
+    // o XP de quiz paga UMA vez — quiz_complete na primeira submissão,
+    // quiz_perfect_score na primeira vez que chega aos 100%. Repetir continua
+    // a atualizar histórico/best, só não volta a pagar.
+    let hadPriorAttempt = false;
+    let hadPriorPerfect = false;
+    try {
+      const prevRow = (await db().quizScores.get(quizId)) as
+        | { score: number; best?: number; total?: number }
+        | undefined;
+      if (prevRow) {
+        hadPriorAttempt = true;
+        const pBest = typeof prevRow.best === 'number' ? prevRow.best : prevRow.score;
+        const pTotal = typeof prevRow.total === 'number' ? prevRow.total : total;
+        hadPriorPerfect = pTotal > 0 && pBest >= pTotal;
+      }
+    } catch {
+      /* leitura falhou — trata como primeira tentativa (nunca pior que antes) */
+    }
+
     // Single write path: persists score + answered (V3 shape) AND the V8
     // history fields (total, best, attempts) in one Dexie put.
     try {
@@ -166,13 +188,20 @@
     // from ONE place with ONE toast (the old recordQuizSubmission +50 path
     // plus a second +25 award here has been retired).
     if (perfect) {
-      void awardXP('quiz_perfect_score');
+      // Só a PRIMEIRA nota perfeita paga XP; badges são idempotentes.
+      xpAwarded = !hadPriorPerfect;
+      if (xpAwarded) void awardXP('quiz_perfect_score');
       void awardBadge('b3');
       showToast(
-        $t('quiz.toast.perfect', {
-          values: { correct, total, xp: boostedXp(XP_TABLE.quiz_perfect_score) },
-          default: '🏆 {correct}/{total} — Perfeito! +{xp} XP'
-        }),
+        xpAwarded
+          ? $t('quiz.toast.perfect', {
+              values: { correct, total, xp: boostedXp(XP_TABLE.quiz_perfect_score) },
+              default: '🏆 {correct}/{total} — Perfeito! +{xp} XP'
+            })
+          : $t('quiz.toast.perfect_again', {
+              values: { correct, total },
+              default: '🏆 {correct}/{total} — Perfeito outra vez!'
+            }),
         3500
       );
       if (pt) {
@@ -182,8 +211,10 @@
       // QuizVictory on mount (single fire point, no double burst).
     } else {
       // Reward completion/accuracy too — rewarding only 100% felt punishing and
-      // is off-genre (Duolingo pays for finishing + getting some right).
-      void awardXP('quiz_complete');
+      // is off-genre (Duolingo pays for finishing + getting some right)…
+      // but only on the FIRST submission of this quiz (anti-farm).
+      xpAwarded = !hadPriorAttempt;
+      if (xpAwarded) void awardXP('quiz_complete');
       showToast(
         $t('quiz.toast.score', {
           values: { correct, total, score },
@@ -217,6 +248,7 @@
     scoreInfo = null;
     reviewOpen = false;
     victoryOpen = false;
+    xpAwarded = false;
   }
 
   // Questions the user got wrong on this attempt — powers the review view.
@@ -433,19 +465,21 @@
       total={scoreInfo.total}
       celebrate={scoreInfo.perfect}
       confettiCount={scoreInfo.pt ? 80 : 60}
-      xpEntries={scoreInfo.perfect
-        ? [
-            {
-              label: $t('victoryflow.entry.quiz_perfect', { default: 'Quiz perfeito' }),
-              amount: boostedXp(XP_TABLE.quiz_perfect_score)
-            }
-          ]
-        : [
-            {
-              label: $t('victoryflow.entry.quiz_complete', { default: 'Quiz concluído' }),
-              amount: boostedXp(XP_TABLE.quiz_complete)
-            }
-          ]}
+      xpEntries={!xpAwarded
+        ? []
+        : scoreInfo.perfect
+          ? [
+              {
+                label: $t('victoryflow.entry.quiz_perfect', { default: 'Quiz perfeito' }),
+                amount: boostedXp(XP_TABLE.quiz_perfect_score)
+              }
+            ]
+          : [
+              {
+                label: $t('victoryflow.entry.quiz_complete', { default: 'Quiz concluído' }),
+                amount: boostedXp(XP_TABLE.quiz_complete)
+              }
+            ]}
       courseSlug={quizContext?.courseSlug}
       wrongCount={wrongAnswers.length}
       onclose={() => {

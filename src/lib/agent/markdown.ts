@@ -37,9 +37,29 @@ function applyInline(s: string): string {
     );
 }
 
+// Memo: the chat page reloads the whole message list from Dexie on every send
+// (fresh object identities), so each bubble would re-run the full pipeline for
+// unchanged content. Rendering is pure (content → html), so a small
+// insertion-ordered cache makes repeat renders free.
+const MEMO_MAX = 400;
+const memo = new Map<string, string>();
+
 // Render a Markdown string to a safe HTML subset.
 export function renderMarkdown(src: string): string {
   if (!src) return '';
+  const hit = memo.get(src);
+  if (hit !== undefined) return hit;
+  const html = renderMarkdownUncached(src);
+  if (memo.size >= MEMO_MAX) {
+    // Drop the oldest entry (Map preserves insertion order).
+    const oldest = memo.keys().next().value;
+    if (oldest !== undefined) memo.delete(oldest);
+  }
+  memo.set(src, html);
+  return html;
+}
+
+function renderMarkdownUncached(src: string): string {
 
   // 1) Extract fenced code blocks first so nothing transforms inside them.
   const codeBlocks: string[] = [];
@@ -123,7 +143,9 @@ export function renderMarkdown(src: string): string {
       out.push('<li>' + applyInline(ol[1]) + '</li>');
       continue;
     }
-    const bq = /^>\s?(.*)$/.exec(line);
+    // NB: by this point the text is already HTML-escaped, so a markdown
+    // quote line starts with '&gt;', not a literal '>'.
+    const bq = /^&gt;\s?(.*)$/.exec(line);
     if (bq) {
       flushPara();
       closeList();

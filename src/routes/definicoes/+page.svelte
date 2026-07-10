@@ -100,7 +100,7 @@
   import { getSession } from '$lib/auth/session';
   import { getChatToken, setChatToken, clearChatToken, type ChatProfile } from '$lib/chat/client';
   import { couple, refreshCoupleEnabled } from '$lib/couple/couple-store.svelte';
-  import { verifyPassword, hashPassword, type ProfileId } from '$lib/auth/hash';
+  import { verifyPassword, hashPassword, randomSaltHex, type ProfileId } from '$lib/auth/hash';
   import { getMember, updateMember } from '$lib/space/registry-db';
   import { showToast } from '$lib/components/events';
   import { Button } from '$lib/components/ui';
@@ -638,10 +638,6 @@
     const cur = currentPw.trim();
     const nxt = newPw; // do NOT trim the new password; whitespace might be intentional
     const cf = confirmPw;
-    if (!cur) {
-      showToast($t('settings.reset_password.error.wrong_current'));
-      return;
-    }
     if (nxt.length === 0) {
       // Treat empty new password as a mismatch so the user gets a
       // meaningful toast instead of a silent no-op.
@@ -657,14 +653,26 @@
       // Multi-tenant: the password lives on the member's registry secret (PBKDF2
       // salt+hash), not the retired world-readable hashes.json. Verify the
       // current password against it, then persist a freshly-derived hash.
+      //
+      // BOOTSTRAP: a member row WITHOUT a secret (the seeded legacy profiles,
+      // or any row created before passwords existed) has no current password
+      // to verify — the active session is the proof of identity, so setting a
+      // first password skips the current-password check. Without this there is
+      // no way to ever create the secret the splash login requires.
       const member = await getMember(profile);
-      if (!member?.secret || !(await verifyPassword(cur, member.secret.salt, member.secret.hash))) {
+      if (!member) {
         showToast($t('settings.reset_password.error.wrong_current'));
         resetBusy = false;
         return;
       }
-      const saltBytes = crypto.getRandomValues(new Uint8Array(16));
-      const salt = Array.from(saltBytes, (b) => b.toString(16).padStart(2, '0')).join('');
+      if (member.secret) {
+        if (!cur || !(await verifyPassword(cur, member.secret.salt, member.secret.hash))) {
+          showToast($t('settings.reset_password.error.wrong_current'));
+          resetBusy = false;
+          return;
+        }
+      }
+      const salt = randomSaltHex();
       const hash = await hashPassword(nxt, salt);
       await updateMember(profile, { secret: { salt, hash } });
       showToast($t('settings.reset_password.success'));

@@ -42,6 +42,13 @@ describe('renderMarkdown', () => {
     expect(html).toContain('&lt;script&gt;');
   });
 
+  it('renders blockquotes (post-escape "&gt;" lines)', () => {
+    const html = renderMarkdown('> Nota: revê a lição.\n\nTexto normal.');
+    expect(html).toContain('<blockquote>Nota: revê a lição.</blockquote>');
+    expect(html).toContain('<p>Texto normal.</p>');
+    expect(html).not.toContain('&gt; Nota');
+  });
+
   it('returns empty string for empty input', () => {
     expect(renderMarkdown('')).toBe('');
   });

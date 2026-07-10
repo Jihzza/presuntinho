@@ -43,6 +43,17 @@ function bufToHex(buf: ArrayBuffer): string {
 }
 
 /**
+ * Cryptographically-random hex salt (default 16 bytes → 32 hex chars).
+ * Single home for salt generation — call sites (member secrets, lock-screen
+ * passphrases, onboarding) must not roll their own, so a future hardening
+ * (longer salts, versioned KDF params) lands everywhere at once.
+ */
+export function randomSaltHex(bytes = 16): string {
+  const raw = crypto.getRandomValues(new Uint8Array(bytes));
+  return bufToHex(raw.buffer);
+}
+
+/**
  * Derive a PBKDF2-SHA256 hash of `password` with `salt`, hex-encoded.
  *
  * Mirrors the derivation inside `verifyPassword` exactly (same 600k

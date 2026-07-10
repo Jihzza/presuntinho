@@ -28,6 +28,7 @@
 
 import Dexie, { type Table } from 'dexie';
 import type { ProfileId } from '../auth/hash';
+import { getSession } from '../auth/session';
 import { buildSeedTransacoes } from './financas-seed';
 import { seedHabitosPro } from './habitos-seed';
 
@@ -707,16 +708,28 @@ class PresuntinhoDB extends Dexie {
 // IndexedDB connection.  This is important for SSR (SvelteKit prerender)
 // where `indexedDB` is undefined and any attempt to open Dexie throws.
 let activeProfile: ProfileId = 'fatma';
+let profileInitialized = false;
 const _dbCache = new Map<ProfileId, PresuntinhoDB>();
 
 export function setActiveProfile(profile: ProfileId): void {
   activeProfile = profile;
+  profileInitialized = true;
 }
 
 /** The profile whose IndexedDB `db()` currently opens. Backup/export/import must
  *  default to THIS (not a hardcoded 'fatma') or a non-legacy member would
- *  export/import the legacy couple's database instead of their own. */
+ *  export/import the legacy couple's database instead of their own.
+ *
+ *  Before the layout's initStores() has run (a child page's onMount fires
+ *  BEFORE the parent layout's on a hard load), fall back to the unlocked
+ *  session's profile instead of the module boot default — otherwise an early
+ *  caller (e.g. the backup preview on /definicoes/) would open the legacy
+ *  'fatma' DB for a uuid member. */
 export function getActiveProfile(): ProfileId {
+  if (!profileInitialized) {
+    const sessionProfile = getSession()?.profile;
+    if (sessionProfile) return sessionProfile;
+  }
   return activeProfile;
 }
 
