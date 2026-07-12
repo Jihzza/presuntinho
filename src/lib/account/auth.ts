@@ -248,6 +248,19 @@ export async function updateMyAccount(patch: Partial<Omit<Account, 'id'>>): Prom
   if (error) throw error;
 }
 
+/** Exact @handle lookup (public profile pages). Case-insensitive (citext). */
+export async function getAccountByHandle(handle: string): Promise<Account | null> {
+  const h = normalizeHandle(handle);
+  if (!isValidHandle(h)) return null;
+  const { data, error } = await getSupabaseClient()
+    .from('accounts')
+    .select(ACCOUNT_COLS)
+    .eq('handle', h)
+    .maybeSingle();
+  if (error) throw error;
+  return (data as Account) ?? null;
+}
+
 /** Search accounts by @handle prefix (for the contacts page). */
 export async function searchAccounts(query: string, limit = 20): Promise<Account[]> {
   const q = normalizeHandle(query);

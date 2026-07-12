@@ -14,6 +14,7 @@ interface ConnectionRow {
   requester: string;
   addressee: string;
   status: ConnStatus;
+  wants_couple: boolean;
 }
 
 /** A resolved contact/request: the OTHER account + the connection metadata. */
@@ -22,6 +23,8 @@ export interface Contact extends Account {
   status: ConnStatus;
   /** 'in' = they requested me, 'out' = I requested them. */
   direction: 'in' | 'out';
+  /** The request carries a couple intent — accepting it activates couple mode. */
+  wantsCouple: boolean;
 }
 
 const sb = () => getSupabaseClient();
@@ -45,7 +48,7 @@ async function myConnections(): Promise<{ me: string; rows: ConnectionRow[] }> {
   if (!user) throw new Error('not signed in');
   const { data, error } = await sb()
     .from('connections')
-    .select('id, requester, addressee, status')
+    .select('id, requester, addressee, status, wants_couple')
     .or(`requester.eq.${user.id},addressee.eq.${user.id}`);
   if (error) throw error;
   return { me: user.id, rows: (data as ConnectionRow[]) ?? [] };
@@ -57,7 +60,13 @@ function toContacts(me: string, rows: ConnectionRow[], accounts: Map<string, Acc
     const otherId = r.requester === me ? r.addressee : r.requester;
     const acc = accounts.get(otherId);
     if (!acc) continue;
-    out.push({ ...acc, connectionId: r.id, status: r.status, direction: r.requester === me ? 'out' : 'in' });
+    out.push({
+      ...acc,
+      connectionId: r.id,
+      status: r.status,
+      direction: r.requester === me ? 'out' : 'in',
+      wantsCouple: Boolean(r.wants_couple)
+    });
   }
   return out;
 }
@@ -87,11 +96,18 @@ export async function listOutgoing(): Promise<Contact[]> {
 }
 
 /** My relationship to a given account, if any. */
-export async function statusWith(accountId: string): Promise<{ status: ConnStatus; direction: 'in' | 'out'; connectionId: string } | null> {
+export async function statusWith(
+  accountId: string
+): Promise<{ status: ConnStatus; direction: 'in' | 'out'; connectionId: string; wantsCouple: boolean } | null> {
   const { me, rows } = await myConnections();
   const r = rows.find((c) => c.requester === accountId || c.addressee === accountId);
   if (!r) return null;
-  return { status: r.status, direction: r.requester === me ? 'out' : 'in', connectionId: r.id };
+  return {
+    status: r.status,
+    direction: r.requester === me ? 'out' : 'in',
+    connectionId: r.id,
+    wantsCouple: Boolean(r.wants_couple)
+  };
 }
 
 export type SendResult = 'sent' | 'accepted' | 'already' | 'self';
@@ -121,12 +137,21 @@ export async function sendConnect(addresseeId: string): Promise<SendResult> {
   return 'sent';
 }
 
-export async function acceptConnect(connectionId: string): Promise<void> {
-  const { error } = await sb()
-    .from('connections')
-    .update({ status: 'accepted', updated_at: new Date().toISOString() })
-    .eq('id', connectionId);
+/** Accept a friend OR couple request. A couple request activates the couple
+ *  atomically on this single accept (see 0013's accept_connection RPC).
+ *  coupleBlocked: the friendship landed but one side already has an active
+ *  couple, so the couple half was refused (one active couple per person). */
+export async function acceptConnect(
+  connectionId: string
+): Promise<{ coupleSpace: string | null; coupleActive: boolean; coupleBlocked: boolean }> {
+  const { data, error } = await sb().rpc('accept_connection', { p_connection: connectionId });
   if (error) throw error;
+  const row = Array.isArray(data) ? data[0] : data;
+  return {
+    coupleSpace: (row?.couple_space as string | null) ?? null,
+    coupleActive: Boolean(row?.couple_active),
+    coupleBlocked: Boolean(row?.couple_blocked)
+  };
 }
 
 /** Decline an incoming request, cancel an outgoing one, or remove a contact. */
@@ -135,13 +160,18 @@ export async function removeConnection(connectionId: string): Promise<void> {
   if (error) throw error;
 }
 
+let connSubSeq = 0;
+
 /** Live-subscribe to changes in my connections (new requests / accepts). */
 export function subscribeConnections(onChange: () => void): () => void {
   // Sem Supabase configurado não há canal a abrir — devolve um unsubscribe
   // inerte em vez de rebentar o onMount das páginas com uma rejeição solta.
   if (!isMultiplayerConfigured()) return () => {};
+  // Nome único por subscrição: o layout e as páginas subscrevem em paralelo, e
+  // reutilizar o MESMO tópico faria o supabase-js rejeitar o segundo callback
+  // ("cannot add postgres_changes callbacks after subscribe").
   const channel = sb()
-    .channel('my-connections')
+    .channel(`my-connections-${++connSubSeq}`)
     .on('postgres_changes', { event: '*', schema: 'public', table: 'connections' }, () => onChange())
     .subscribe();
   return () => void sb().removeChannel(channel);

@@ -92,7 +92,7 @@
       if (!inviter) return; // inviter handle vanished — leave stashed, harmless
       const r = await requestCouple(inviter);
       clearInviteFrom();
-      if (r === 'intent' || r === 'proposed') {
+      if (r === 'sent' || r === 'proposed') {
         showToast(
           $t('couplelink.auto_sent', { values: { handle: inviter.handle }, default: '💌 Pedido de casal enviado a @{handle} — falta só ela aceitar!' }),
           3600
@@ -347,6 +347,7 @@
       </div>
       <div class="links">
         <a class="linkcard" href="/contactos/">👥 {$t('conta.contacts', { default: 'Contactos' })}</a>
+        <a class="linkcard" href={`/u/?h=${accountState.account.handle}`}>🪪 {$t('conta.public_profile', { default: 'O meu perfil' })}</a>
         <a class="linkcard" href="/grupos/">💞 {$t('conta.spaces', { default: 'Casal e grupos' })}</a>
       </div>
     </div>

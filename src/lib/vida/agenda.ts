@@ -81,10 +81,19 @@ export interface NotificationItem {
   section: NotificationSection;
 }
 
+/** A pending friend/couple request surfaced in the notification inbox. */
+export interface SocialRequestNotif {
+  id: string;
+  kind: 'friend' | 'couple';
+  name: string;
+  href: string;
+}
+
 /** Optional non-agenda sources merged into the notification inbox. */
 export interface NotificationExtras {
   orcamentos?: OrcamentoStatus[];
   quests?: DailyQuestsResult;
+  social?: SocialRequestNotif[];
 }
 
 /** Which sources to include when loading a range. All default to true. */
@@ -586,8 +595,45 @@ export async function loadAgendaItems(): Promise<AgendaItem[]> {
  * result of a SINGLE call per refresh; never call it in a loop or on an
  * interval.
  */
+/** Pending friend/couple requests for the inbox (account sessions only). */
+async function loadSocialRequests(): Promise<SocialRequestNotif[]> {
+  try {
+    const { getSession, isLegacyProfile } = await import('$lib/auth/session');
+    const me = getSession()?.profile;
+    if (!me || isLegacyProfile(me)) return [];
+    const { isMultiplayerConfigured } = await import('$lib/multiplayer/config');
+    if (!isMultiplayerConfigured()) return [];
+    const [{ listIncoming }, { listSpaces, pendingCoupleInvites, otherMember }] = await Promise.all([
+      import('$lib/account/contacts'),
+      import('$lib/account/spaces')
+    ]);
+    const out: SocialRequestNotif[] = [];
+    for (const c of await listIncoming().catch(() => [])) {
+      out.push({
+        id: `social:conn:${c.connectionId}`,
+        kind: c.wantsCouple ? 'couple' : 'friend',
+        name: c.display_name || `@${c.handle}`,
+        href: c.wantsCouple ? `/casal/pedido/?conn=${c.connectionId}` : '/contactos/'
+      });
+    }
+    const spaces = await listSpaces().catch(() => [] as Awaited<ReturnType<typeof listSpaces>>);
+    for (const s of pendingCoupleInvites(spaces, me)) {
+      const other = otherMember(s, me);
+      out.push({
+        id: `social:space:${s.id}`,
+        kind: 'couple',
+        name: other?.display_name || (other ? `@${other.handle}` : '💞'),
+        href: `/casal/pedido/?space=${s.id}`
+      });
+    }
+    return out;
+  } catch {
+    return []; // signed-out / offline — the inbox simply has no social rows
+  }
+}
+
 export async function loadNotificationExtras(): Promise<NotificationExtras> {
-  const [orcamentos, quests] = await Promise.all([
+  const [orcamentos, quests, social] = await Promise.all([
     getOrcamentoStatus(getMesAtual()).catch((err) => {
       console.warn('[agenda] budget status unavailable (non-fatal)', err);
       return [] as OrcamentoStatus[];
@@ -595,9 +641,10 @@ export async function loadNotificationExtras(): Promise<NotificationExtras> {
     getDailyQuests().catch((err) => {
       console.warn('[agenda] daily quests unavailable (non-fatal)', err);
       return undefined;
-    })
+    }),
+    loadSocialRequests()
   ]);
-  return { orcamentos, quests };
+  return { orcamentos, quests, social };
 }
 
 export function buildNotifications(items: AgendaItem[], extras: NotificationExtras = {}): NotificationItem[] {
@@ -614,6 +661,29 @@ export function buildNotifications(items: AgendaItem[], extras: NotificationExtr
     list.length > 0 ? list.reduce((min, i) => (i.date < min ? i.date : min), list[0].date) : undefined;
 
   const notifications: NotificationItem[] = [];
+
+  // People first: pending friend/couple requests answer in one tap.
+  for (const s of extras.social ?? []) {
+    notifications.push({
+      id: s.id,
+      title:
+        s.kind === 'couple'
+          ? tr('agenda.notifications.social.couple_title', '{name} quer ser teu casal! 💞', { name: s.name })
+          : tr('agenda.notifications.social.friend_title', '{name} quer ligar-se contigo', { name: s.name }),
+      body:
+        s.kind === 'couple'
+          ? tr('agenda.notifications.social.couple_body', 'Toca para responder ao pedido.')
+          : tr('agenda.notifications.social.friend_body', 'Toca para aceitar em Contactos.'),
+      href: s.href,
+      tone: 'life',
+      priority: 1,
+      type: 'love',
+      icon: s.kind === 'couple' ? '💞' : '👋',
+      date: today,
+      section: 'today'
+    });
+  }
+
   if (overdue.length > 0) {
     notifications.push({
       id: 'overdue-assignments',

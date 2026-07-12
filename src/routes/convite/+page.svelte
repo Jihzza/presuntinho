@@ -15,7 +15,7 @@
   import { goto } from '$app/navigation';
   import { accountsEnabled, searchAccounts, normalizeHandle, type Account } from '$lib/account/auth';
   import { accountState, startAccountSync } from '$lib/account/account-store.svelte';
-  import { stashInviteFrom, requestCouple } from '$lib/account/couple-link';
+  import { stashInviteFrom } from '$lib/account/couple-link';
 
   type Phase = 'loading' | 'invalid' | 'new-user' | 'sending' | 'sent' | 'self' | 'error';
   let phase = $state<Phase>('loading');
@@ -55,13 +55,9 @@
         phase = 'error';
         return;
       }
-      phase = 'sending';
-      try {
-        await requestCouple(inviter);
-        phase = 'sent';
-      } catch {
-        phase = 'error';
-      }
+      // Signed-in visitor → their public profile has the explicit 💞 action;
+      // no silent auto-send (the old opaque flow confused everyone).
+      void goto(`/u/?h=${inviter.handle}`);
     })();
   });
 

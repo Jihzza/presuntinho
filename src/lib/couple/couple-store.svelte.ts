@@ -184,6 +184,13 @@ function applySnapshot(me: ChatProfile, snap: CoupleSnapshot): void {
 }
 
 function receivePing(me: string, kind: 'love' | 'nudge'): void {
+  // Device preference from the couple onboarding — pings can be silenced.
+  try {
+    const raw = localStorage.getItem('presuntinho-couple-prefs');
+    if (raw && (JSON.parse(raw) as { pings?: boolean }).pings === false) return;
+  } catch {
+    /* unreadable prefs — default is on */
+  }
   const name = partnerName(me);
   if (kind === 'love') {
     showToast(get(t)('couple.ping.love.received', { values: { name }, default: `💛 ${name} ama-te muito!` }), 4200);

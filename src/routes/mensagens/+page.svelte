@@ -21,15 +21,21 @@
    */
   import { onMount, tick } from 'svelte';
   import { t, locale } from 'svelte-i18n';
-  import { getSession } from '$lib/auth/session';
+  import { page } from '$app/state';
+  import { goto } from '$app/navigation';
+  import { getSession, isLegacyProfile } from '$lib/auth/session';
   import { showToast } from '$lib/components/events';
   import { playSfx } from '$lib/gamification/sound';
   import { ChatApiError, getChatToken, setChatToken, otherProfile, type ChatProfile } from '$lib/chat/client';
   import { CoupleChatStore } from '$lib/couple/couple-chat-store.svelte';
   import { isMultiplayerConfigured } from '$lib/multiplayer/config';
   import { ChatStore, type LocalChatMessage } from '$lib/chat/store.svelte';
+  import { DmChatStore } from '$lib/chat/dm-store.svelte';
   import { profileFor } from '$lib/profile/people';
   import { couple } from '$lib/couple/couple-store.svelte';
+  import { accountState, startAccountSync } from '$lib/account/account-store.svelte';
+  import { listContacts, listIncoming, subscribeConnections, type Contact } from '$lib/account/contacts';
+  import { listSpaces, isCoupleActive, otherMember } from '$lib/account/spaces';
 
   type ConversationPreset = {
     id: string;
@@ -56,12 +62,24 @@
   let setupKeyInput = $state('');
   let setupOpen = $state(false);
   const supabaseChat = isMultiplayerConfigured();
-  let store = $state<ChatStore | CoupleChatStore | null>(null);
+  let store = $state<ChatStore | CoupleChatStore | DmChatStore | null>(null);
   let selectedConversationId = $state('main');
   // WhatsApp-style two-pane flow on one screen: the conversation LIST, then the
   // open THREAD. Always start on the list so it reads like a messenger home.
   let view = $state<'list' | 'thread'>('list');
   let panelMode = $state<PanelMode>('none');
+  // Social v2 — the list also carries friend DMs (text-only threads) and
+  // pending requests. threadKind picks which store the open thread runs on.
+  let threadKind = $state<'couple' | 'dm'>('couple');
+  let dmOther = $state<Contact | null>(null);
+  let dmContacts = $state<Contact[]>([]);
+  let incomingReqs = $state<Contact[]>([]);
+  // Couple partner shown on the couple row/header: legacy persona OR the
+  // account partner from the active couple space (fixes the fatma/daniel
+  // fallback leaking into account couples).
+  let acctPartner = $state<{ label: string; emoji: string; handle: string } | null>(null);
+  let legacy = $state(true);
+  let unsubConn: (() => void) | null = null;
 
   let input = $state('');
   let recording = $state(false);
@@ -115,12 +133,15 @@
   const other = $derived(profile ? otherProfile(profile) : 'daniel');
   const meProfile = $derived(profileFor(profile));
   const otherPerson = $derived(profileFor(other));
-  const syncBlocked = $derived(Boolean(secureSetupNeeded || store?.authError));
-  // The 1:1 chat backend is scoped to the legacy couple (fatma/daniel). For any
-  // other (solo / onboarded uuid) session, otherProfile() would fall back to
-  // 'fatma' and leak her name/@handle/💞 as their "partner" — so gate the whole
-  // couple surface and show a neutral state instead.
+  const syncBlocked = $derived(Boolean(threadKind === 'couple' && (secureSetupNeeded || store?.authError)));
+  // Couple surface lights up for the legacy pair AND active account couples.
   const canCouple = $derived(couple.available);
+  // Partner identity for the couple thread, by session kind.
+  const partnerName = $derived(legacy ? $t(otherPerson.nameKey) : (acctPartner?.label ?? '💞'));
+  const partnerEmoji = $derived(legacy ? otherPerson.emoji : (acctPartner?.emoji ?? '💞'));
+  const partnerHref = $derived(legacy ? `/perfil/${other}/` : acctPartner ? `/u/?h=${acctPartner.handle}` : '/contactos/');
+  const meEmoji = $derived(legacy ? meProfile.emoji : (accountState.account?.emoji ?? '🙂'));
+  const meHref = $derived(legacy ? '/perfil/' : '/conta/');
   const selectedConversation = $derived(CONVERSATIONS.find((c) => c.id === selectedConversationId) ?? CONVERSATIONS[0]);
   const fileMessages = $derived((store?.messages ?? []).filter((m) => Boolean(m.mediaType || m.mediaKey || m.localDataUrl)));
 
@@ -171,6 +192,8 @@
   function startChat() {
     if (!profile) return;
     store?.stop();
+    threadKind = 'couple';
+    dmOther = null;
     // Supabase-backed couple chat when configured (durable + realtime, no token);
     // otherwise the Netlify-Blobs ChatStore. Both share the same shape.
     store = supabaseChat
@@ -178,6 +201,38 @@
       : new ChatStore(profile, selectedConversationId);
     secureSetupNeeded = !supabaseChat && !getChatToken(profile);
     store.start();
+  }
+
+  /** Open a friend DM thread (text-only, keyed dm:<a>:<b> in Supabase). */
+  function openDm(c: Contact): void {
+    if (!accountState.account) return;
+    store?.stop();
+    threadKind = 'dm';
+    dmOther = c;
+    secureSetupNeeded = false;
+    panelMode = 'none';
+    view = 'thread';
+    store = new DmChatStore(accountState.account.id, c.id);
+    store.start();
+    void scrollToBottom();
+  }
+
+  /** Contacts, requests and the couple partner for the list view. */
+  async function refreshSocial(): Promise<void> {
+    if (!accountState.account) return;
+    try {
+      const [cs, inc, spaces] = await Promise.all([listContacts(), listIncoming(), listSpaces()]);
+      incomingReqs = inc;
+      const active = spaces.find(isCoupleActive);
+      const partner = active ? otherMember(active, accountState.account.id) : null;
+      acctPartner = partner
+        ? { label: partner.display_name || `@${partner.handle}`, emoji: partner.emoji ?? '💞', handle: partner.handle }
+        : null;
+      // The couple partner lives on the pinned couple thread — not as a DM row.
+      dmContacts = partner ? cs.filter((c) => c.id !== partner.id) : cs;
+    } catch (e) {
+      console.warn('[mensagens] social refresh failed', e);
+    }
   }
 
   function selectConversation(id: string): void {
@@ -193,6 +248,9 @@
   function backToList(): void {
     panelMode = 'none';
     view = 'list';
+    // Leaving a DM restores the couple store, so the couple rows' previews on
+    // the list read from the right thread again.
+    if (threadKind === 'dm') startChat();
   }
 
   /** Timestamp of the last message in a conversation (0 when unknown/empty). */
@@ -236,11 +294,30 @@
       return;
     }
     profile = session.profile as ChatProfile;
+    legacy = isLegacyProfile(session.profile);
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem(SELECTED_CONVERSATION_KEY);
       if (saved && CONVERSATIONS.some((c) => c.id === saved)) selectedConversationId = saved;
     }
     startChat();
+
+    // Account sessions also carry friends (DM rows) + pending requests, and a
+    // ?dm=<handle> deep link (profile page's "Mensagem" button) opens straight
+    // into that thread.
+    if (!legacy) {
+      void (async () => {
+        await startAccountSync();
+        if (!accountState.account) return;
+        await refreshSocial();
+        unsubConn = subscribeConnections(() => void refreshSocial());
+        const dmHandle = page.url.searchParams.get('dm');
+        if (dmHandle) {
+          const target = dmContacts.find((c) => c.handle.toLowerCase() === dmHandle.toLowerCase());
+          if (target) openDm(target);
+          else void goto(`/u/?h=${encodeURIComponent(dmHandle)}`);
+        }
+      })();
+    }
 
     syncKeyboardInset();
     syncActive();
@@ -256,6 +333,7 @@
       window.removeEventListener('blur', syncActive);
       document.removeEventListener('visibilitychange', syncActive);
       if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+      unsubConn?.();
       store?.stop();
     };
   });
@@ -429,11 +507,25 @@
       {#if view === 'list'}
         <span class="chat-kicker">{$t('mensagens.header.kicker', { default: 'Chat privado' })}</span>
         <h1>{$t('nav.mensagens', { default: 'Mensagens' })}</h1>
+      {:else if threadKind === 'dm' && dmOther}
+        <span class="chat-kicker">@{dmOther.handle}</span>
+        <h1>
+          <a class="person-link" href={`/u/?h=${dmOther.handle}`} aria-label={$t('mensagens.aria.open_partner_profile', { default: 'Abrir perfil de {name}', values: { name: dmOther.display_name || `@${dmOther.handle}` } })}>
+            {dmOther.emoji ?? '🙂'} {dmOther.display_name || `@${dmOther.handle}`}
+          </a>
+        </h1>
+        <p class="subtitle">
+          {#if store?.offline}
+            {$t('mensagens.status.offline', { default: 'Offline — guardado no dispositivo.' })}
+          {:else}
+            {$t('mensagens.status.dm', { default: 'Conversa privada entre amigos.' })}
+          {/if}
+        </p>
       {:else}
         <span class="chat-kicker">{selectedConversation.icon} {$t(selectedConversation.titleKey)}</span>
         <h1>
-          <a class="person-link" href={`/perfil/${other}/`} aria-label={$t('mensagens.aria.open_partner_profile', { default: 'Abrir perfil de {name}', values: { name: $t(otherPerson.nameKey) } })}>
-            {otherPerson.emoji} {$t(otherPerson.nameKey)}
+          <a class="person-link" href={partnerHref} aria-label={$t('mensagens.aria.open_partner_profile', { default: 'Abrir perfil de {name}', values: { name: partnerName } })}>
+            {partnerEmoji} {partnerName}
           </a>
         </h1>
         <p class="subtitle">
@@ -447,40 +539,71 @@
         </p>
       {/if}
     </div>
-    <a class="profile-link" href="/perfil/" aria-label={$t('mensagens.aria.open_own_profile', { default: 'Abrir o meu perfil' })} title={$t('mensagens.aria.open_own_profile', { default: 'Abrir o meu perfil' })}>
-      {meProfile.emoji}
+    <a class="profile-link" href={meHref} aria-label={$t('mensagens.aria.open_own_profile', { default: 'Abrir o meu perfil' })} title={$t('mensagens.aria.open_own_profile', { default: 'Abrir o meu perfil' })}>
+      {meEmoji}
     </a>
   </header>
 
-  {#if !noSession && canCouple}
+  {#if !noSession}
     {#if view === 'list'}
       <!-- WhatsApp-style conversation list: the couple chat is pinned + special,
-           the topic threads follow. Tapping a row opens its thread. -->
+           friend DMs follow, topic threads after. Tapping a row opens it. -->
       <div class="chat-list" role="group" aria-label={$t('mensagens.conversations.title', { default: 'Conversas' })}>
-        <button type="button" class="chat-row couple" onclick={() => selectConversation('main')}>
-          <span class="row-av couple-av" aria-hidden="true">{otherPerson.emoji}</span>
-          <span class="row-body">
-            <span class="row-top">
-              <strong>{$t(otherPerson.nameKey)} <span class="couple-heart" aria-hidden="true">💞</span></strong>
-              {#if conversationLastTs('main')}<time>{fmtTime(conversationLastTs('main'))}</time>{/if}
-            </span>
-            <small>{conversationPreview('main')}</small>
-          </span>
-        </button>
-        {#each CONVERSATIONS.filter((c) => c.id !== 'main') as c (c.id)}
-          <button type="button" class="chat-row" onclick={() => selectConversation(c.id)}>
-            <span class="row-av" aria-hidden="true">{c.icon}</span>
+        {#if !legacy && incomingReqs.length > 0}
+          <a class="req-banner" href="/contactos/">
+            👋 {$t('mensagens.requests_banner', { values: { n: incomingReqs.length }, default: '{n} pedidos à tua espera — responder' })} →
+          </a>
+        {/if}
+        {#if canCouple}
+          <button type="button" class="chat-row couple" onclick={() => selectConversation('main')}>
+            <span class="row-av couple-av" aria-hidden="true">{partnerEmoji}</span>
             <span class="row-body">
               <span class="row-top">
-                <strong>{$t(c.titleKey)}</strong>
-                {#if conversationLastTs(c.id)}<time>{fmtTime(conversationLastTs(c.id))}</time>{/if}
+                <strong>{partnerName} <span class="couple-heart" aria-hidden="true">💞</span></strong>
+                {#if conversationLastTs('main')}<time>{fmtTime(conversationLastTs('main'))}</time>{/if}
               </span>
-              <small>{conversationPreview(c.id)}</small>
+              <small>{conversationPreview('main')}</small>
             </span>
           </button>
-        {/each}
+          {#each CONVERSATIONS.filter((c) => c.id !== 'main') as c (c.id)}
+            <button type="button" class="chat-row" onclick={() => selectConversation(c.id)}>
+              <span class="row-av" aria-hidden="true">{c.icon}</span>
+              <span class="row-body">
+                <span class="row-top">
+                  <strong>{$t(c.titleKey)}</strong>
+                  {#if conversationLastTs(c.id)}<time>{fmtTime(conversationLastTs(c.id))}</time>{/if}
+                </span>
+                <small>{conversationPreview(c.id)}</small>
+              </span>
+            </button>
+          {/each}
+        {/if}
+        {#if !legacy && accountState.account}
+          <h2 class="list-section">{$t('mensagens.friends_section', { default: 'Amigos' })}</h2>
+          {#each dmContacts as c (c.id)}
+            <button type="button" class="chat-row" onclick={() => openDm(c)}>
+              <span class="row-av" aria-hidden="true">{c.emoji ?? '🙂'}</span>
+              <span class="row-body">
+                <span class="row-top">
+                  <strong>{c.display_name || `@${c.handle}`}</strong>
+                </span>
+                <small>@{c.handle}</small>
+              </span>
+            </button>
+          {/each}
+          {#if dmContacts.length === 0}
+            <p class="list-hint">{$t('mensagens.no_friends_hint', { default: 'Quando adicionares amigos, as conversas aparecem aqui.' })}</p>
+          {/if}
+          <a class="find-row" href="/contactos/">🔍 {$t('mensagens.find_people', { default: 'Procurar pessoas' })}</a>
+        {:else if !canCouple}
+          <div class="gate card">
+            <span class="gate-emoji" aria-hidden="true">💬</span>
+            <p>{$t('mensagens.solo_gate', { default: 'As mensagens abrem quando ligares a tua conta a alguém. Por agora, este espaço fica à tua espera. 🤍' })}</p>
+            <a class="gate-cta" href="/conta/">{$t('mensagens.solo_cta', { default: 'Criar a minha conta' })} →</a>
+          </div>
+        {/if}
       </div>
-    {:else}
+    {:else if threadKind === 'couple'}
     <nav class="chat-tools" aria-label={$t('mensagens.tools.aria', { default: 'Ferramentas da conversa' })}>
       <button type="button" class:active={panelMode === 'conversations'} onclick={() => (panelMode = panelMode === 'conversations' ? 'none' : 'conversations')}>
         💬 {$t('mensagens.tools.conversations', { default: 'Conversas' })}
@@ -488,7 +611,7 @@
       <button type="button" class:active={panelMode === 'files'} onclick={() => (panelMode = panelMode === 'files' ? 'none' : 'files')}>
         📎 {$t('mensagens.tools.files', { default: 'Ficheiros' })}
       </button>
-      <a href={`/perfil/${other}/`}>{$t('mensagens.tools.partner_profile', { default: 'Perfil de {name}', values: { name: $t(otherPerson.nameKey) } })}</a>
+      <a href={partnerHref}>{$t('mensagens.tools.partner_profile', { default: 'Perfil de {name}', values: { name: partnerName } })}</a>
     </nav>
 
     {#if panelMode === 'conversations'}
@@ -533,7 +656,7 @@
     {/if}
   {/if}
 
-  {#if store?.offline && !syncBlocked && canCouple}
+  {#if store?.offline && !syncBlocked && view === 'thread'}
     <div class="offline-banner" role="status">
       {$t('mensagens.offline', {
         default: 'Sem ligação — as mensagens ficam guardadas e seguem quando houver rede.'
@@ -568,23 +691,17 @@
     </div>
   {/if}
 
-  {#if noSession}
-    <div class="gate card">
-      <span class="gate-emoji" aria-hidden="true">🔐</span>
-      <p>{$t('mensagens.no_session', { default: 'Abre primeiro a tua sessão no ecrã inicial para entrares no chat privado.' })}</p>
-    </div>
-  {:else if !canCouple}
-    <div class="gate card">
-      <span class="gate-emoji" aria-hidden="true">💬</span>
-      <p>{$t('mensagens.solo_gate', { default: 'As mensagens abrem quando ligares a tua conta a alguém. Por agora, este espaço fica à tua espera. 🤍' })}</p>
-    </div>
-  {:else if store && view === 'thread'}
+  {#if store && view === 'thread'}
     <div class="chat-scroll" bind:this={scrollEl} onscroll={onListScroll}>
       {#if store.ready && store.messages.length === 0}
         <div class="empty">
           <span class="empty-heart" aria-hidden="true">💌</span>
           <p class="empty-title">{$t('mensagens.empty', { default: 'Ainda não há mensagens aqui.' })}</p>
-          <p class="empty-hint">{$t('mensagens.empty_hint', { default: 'Deixa uma nota, envia uma foto ou grava um áudio quando quiseres.' })}</p>
+          <p class="empty-hint">
+            {threadKind === 'dm'
+              ? $t('mensagens.empty_hint_dm', { default: 'Diz olá! 👋' })
+              : $t('mensagens.empty_hint', { default: 'Deixa uma nota, envia uma foto ou grava um áudio quando quiseres.' })}
+          </p>
         </div>
       {/if}
 
@@ -673,15 +790,17 @@
       <div class="composer">
         <input type="file" bind:this={fileInput} onchange={onFileChosen} hidden accept="image/*,audio/*" />
         <div class="input-shell">
-          <button
-            type="button"
-            class="attach-btn"
-            onclick={() => fileInput?.click()}
-            aria-label={$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}
-            title={$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}
-          >
-            📎
-          </button>
+          {#if threadKind === 'couple'}
+            <button
+              type="button"
+              class="attach-btn"
+              onclick={() => fileInput?.click()}
+              aria-label={$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}
+              title={$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}
+            >
+              📎
+            </button>
+          {/if}
           <textarea
             bind:this={inputEl}
             bind:value={input}
@@ -691,27 +810,45 @@
             rows="1"
           ></textarea>
         </div>
-        <button
-          type="button"
-          class="action-btn"
-          class:recording
-          onclick={() => (input.trim() ? void send() : void toggleRecording())}
-          aria-label={input.trim()
-            ? $t('a11y.aria.enviar', { default: 'Enviar' })
-            : recording
-              ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
-              : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
-          title={input.trim()
-            ? $t('a11y.aria.enviar', { default: 'Enviar' })
-            : recording
-              ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
-              : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
-        >
-          {#if input.trim()}➤{:else if recording}⏹️{:else}🎤{/if}
-        </button>
+        {#if threadKind === 'dm'}
+          <button
+            type="button"
+            class="action-btn"
+            disabled={!input.trim()}
+            onclick={() => void send()}
+            aria-label={$t('a11y.aria.enviar', { default: 'Enviar' })}
+            title={$t('a11y.aria.enviar', { default: 'Enviar' })}
+          >
+            ➤
+          </button>
+        {:else}
+          <button
+            type="button"
+            class="action-btn"
+            class:recording
+            onclick={() => (input.trim() ? void send() : void toggleRecording())}
+            aria-label={input.trim()
+              ? $t('a11y.aria.enviar', { default: 'Enviar' })
+              : recording
+                ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
+                : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
+            title={input.trim()
+              ? $t('a11y.aria.enviar', { default: 'Enviar' })
+              : recording
+                ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
+                : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
+          >
+            {#if input.trim()}➤{:else if recording}⏹️{:else}🎤{/if}
+          </button>
+        {/if}
       </div>
     </div>
     {/if}
+  {:else}
+    <div class="gate card">
+      <span class="gate-emoji" aria-hidden="true">🔐</span>
+      <p>{$t('mensagens.no_session', { default: 'Abre primeiro a tua sessão no ecrã inicial para entrares no chat privado.' })}</p>
+    </div>
   {/if}
 </div>
 
@@ -828,6 +965,51 @@
   }
   .chat-row.couple { background: color-mix(in srgb, var(--accent) 6%, transparent); }
   .couple-heart { font-size: 0.9em; }
+  .req-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    margin: var(--space-2) var(--space-4) 0;
+    padding: var(--space-2) var(--space-3);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    color: var(--accent);
+    font-size: var(--fs-sm);
+    font-weight: 800;
+    text-decoration: none;
+  }
+  .req-banner:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+  .list-section {
+    margin: var(--space-3) var(--space-4) 0;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--txt3);
+  }
+  .list-hint {
+    margin: var(--space-2) var(--space-4);
+    color: var(--txt3);
+    font-size: var(--fs-sm);
+    line-height: 1.4;
+  }
+  .find-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    margin: var(--space-3) var(--space-4);
+    padding: var(--space-3);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+    color: var(--txt2);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .find-row:hover { border-color: var(--accent); color: var(--accent); }
+  .gate-cta { color: var(--accent); font-weight: 800; text-decoration: none; }
   .chat-header h1 {
     margin: 0;
     font-size: var(--fs-lg);

@@ -64,6 +64,12 @@ export async function leaveSpace(spaceId: string): Promise<void> {
   if (error) throw error;
 }
 
+/** Name/emoji for a space I'm an ACCEPTED member of (couple onboarding). */
+export async function setSpaceMeta(spaceId: string, name: string, emoji: string): Promise<void> {
+  const { error } = await sb().rpc('set_space_meta', { p_space: spaceId, p_name: name, p_emoji: emoji });
+  if (error) throw error;
+}
+
 // ── reads ────────────────────────────────────────────────────────────────────
 
 /** All spaces I'm a member of, with their members resolved. */
@@ -129,12 +135,16 @@ export function otherMember(space: Space, meId: string): SpaceMember | null {
   return space.members.find((m) => m.id !== meId) ?? null;
 }
 
+let spaceSubSeq = 0;
+
 export function subscribeSpaces(onChange: () => void): () => void {
   // Sem Supabase configurado não há canal a abrir — unsubscribe inerte
   // em vez de uma rejeição solta no onMount de /grupos.
   if (!isMultiplayerConfigured()) return () => {};
+  // Nome único por subscrição (layout + páginas em paralelo) — ver o comentário
+  // em subscribeConnections.
   const channel = sb()
-    .channel('my-spaces')
+    .channel(`my-spaces-${++spaceSubSeq}`)
     .on('postgres_changes', { event: '*', schema: 'public', table: 'space_members' }, () => onChange())
     .subscribe();
   return () => void sb().removeChannel(channel);
