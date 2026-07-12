@@ -5188,5 +5188,11 @@
   "push.prompt_aria": "Activi les notifications",
   "push.prompt_title": "Tousslek el pings fel telifoun",
   "push.prompt_body": "El \"n7ebbek\", el \"twa7achtek\" w les messages yousslou 7atta ki l’app msakkra.",
-  "push.prompt_cta": "Activi"
+  "push.prompt_cta": "Activi",
+  "push.test": "📲 Ab3ath notification test",
+  "push.testing": "Yeb3ath el test…",
+  "push.test_title": "🔔 Test mte3 Presuntinho",
+  "push.test_body": "Ken 9a3ed ta9ra hedhi fel telifoun, el kol ykhdem! 🐷",
+  "push.test_sent": "El test tb3ath l {n} appareil(s) — lezm youssel tawa! 📲",
+  "push.test_failed": "El test ma mchech — thabbet fel connexion w 3awed jarrab."
 }

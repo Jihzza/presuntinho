@@ -76,6 +76,23 @@ export async function enablePush(): Promise<PushState> {
   if (permission !== 'granted') return permission === 'denied' ? 'denied' : 'off';
 
   const reg = await navigator.serviceWorker.ready;
+  // Se houver um SW novo à ESPERA (update em prompt-mode), ativa-o já — quem
+  // pede notificações precisa do worker com os handlers de push mais recentes.
+  try {
+    if (reg.waiting) {
+      reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+      await new Promise<void>((resolve) => {
+        const done = () => {
+          navigator.serviceWorker.removeEventListener('controllerchange', done);
+          resolve();
+        };
+        navigator.serviceWorker.addEventListener('controllerchange', done);
+        setTimeout(done, 2500); // best-effort — não bloquear o fluxo
+      });
+    }
+  } catch {
+    /* best-effort */
+  }
   const sub =
     (await reg.pushManager.getSubscription()) ??
     (await reg.pushManager.subscribe({
@@ -136,6 +153,25 @@ export async function sendPushNotify(
 /** Compat: ping para o parceiro do casal. */
 export async function sendPingPush(kind: 'love' | 'nudge', title: string, body: string): Promise<void> {
   return sendPushNotify(kind, { title, body });
+}
+
+/** Auto-teste: pede ao servidor um push para OS MEUS dispositivos e devolve o
+ *  resultado ({sent, of}) para diagnóstico visível no ecrã. */
+export async function sendTestPush(title: string, body: string): Promise<{ sent: number; of: number } | null> {
+  try {
+    const session = await getAuthSession();
+    if (!session) return null;
+    const res = await fetch('/.netlify/functions/push-ping', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${session.access_token}` },
+      body: JSON.stringify({ kind: 'test', title, body })
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { sent?: number; of?: number };
+    return { sent: data.sent ?? 0, of: data.of ?? 0 };
+  } catch {
+    return null;
+  }
 }
 
 // Throttle simples por conversa para os pushes de mensagens — uma rajada de
