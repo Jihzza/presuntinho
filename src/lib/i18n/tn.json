@@ -5194,5 +5194,9 @@
   "push.test_title": "🔔 Test mte3 Presuntinho",
   "push.test_body": "Ken 9a3ed ta9ra hedhi fel telifoun, el kol ykhdem! 🐷",
   "push.test_sent": "El test tb3ath l {n} appareil(s) — lezm youssel tawa! 📲",
-  "push.test_failed": "El test ma mchech — thabbet fel connexion w 3awed jarrab."
+  "push.test_failed": "El test ma mchech — thabbet fel connexion w 3awed jarrab.",
+  "settings.invite.title": "A3red as7abek lel app",
+  "settings.invite.sub": "partagi el link mte3ek — elli yodkhol ynajem yet3alla9 bik",
+  "settings.invite.text": "Arwa7 m3aya lel Presuntinho! 🐷",
+  "settings.invite.copied": "Link tnasakh! Ab3athou l elli t7eb 📋"
 }

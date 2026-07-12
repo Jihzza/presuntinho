@@ -669,6 +669,18 @@
     flex-direction: column;
     transition: background 220ms ease;
   }
+  /* Rotas de chat (mensagens/agente): altura EXATA ao viewport e documento
+     travado. Com min-height, qualquer estimativa interna que passasse uns px
+     do viewport fazia o documento scrollar — o footer sticky "subia" e dava
+     para arrastar a página por trás. height + overflow hidden tornam isso
+     estruturalmente impossível; o único scroller é a lista interna do chat. */
+  .app-composer {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
   .app-mood {
     background:
       radial-gradient(circle at 12% 4%, color-mix(in srgb, var(--mood-accent) 22%, transparent) 0, transparent 34rem),

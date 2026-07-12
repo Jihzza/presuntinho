@@ -5181,5 +5181,9 @@
   "push.test_title": "🔔 اختبار Presuntinho",
   "push.test_body": "إذا كنت تقرأ هذا على هاتفك، فكل شيء يعمل! 🐷",
   "push.test_sent": "أُرسل الاختبار إلى {n} جهازًا — سيصل حالًا! 📲",
-  "push.test_failed": "لم يُرسل الاختبار — تحقق من الاتصال وحاول مجددًا."
+  "push.test_failed": "لم يُرسل الاختبار — تحقق من الاتصال وحاول مجددًا.",
+  "settings.invite.title": "ادعُ أصدقاءك إلى التطبيق",
+  "settings.invite.sub": "شارك رابطك — من ينضم يمكنه التواصل معك",
+  "settings.invite.text": "انضم إليّ في Presuntinho! 🐷",
+  "settings.invite.copied": "نُسخ الرابط! أرسله لمن تشاء 📋"
 }

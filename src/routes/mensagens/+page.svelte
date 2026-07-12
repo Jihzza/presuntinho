@@ -880,10 +880,14 @@
        SEMPRE visível ao entrar, sem scroll manual. */
     display: flex;
     flex-direction: column;
-    /* Header sticky (medido ≈69px) + bottom-nav (~4.75rem, JÁ inclui o
-       safe-area-inset-bottom no seu padding) — não voltar a subtrair o inset
-       aqui (contá-lo duas vezes fazia o footer sticky deslizar no telemóvel). */
-    height: calc(100dvh - 69px - 4.75rem);
+    /* Preenche o espaço REAL que main/.route-transition entregam por flex
+       (100dvh − header sticky − footer sticky) em vez de estimar alturas —
+       os números mágicos antigos (69px + 4.75rem) variavam por dispositivo e
+       criavam ora uma banda morta ora overflow que fazia o footer deslizar.
+       Mesmo padrão do /agente. */
+    flex: 1;
+    min-height: 0;
+    width: 100%;
     overflow: hidden;
     max-width: 800px;
     margin: 0 auto;

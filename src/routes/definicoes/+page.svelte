@@ -346,6 +346,31 @@
     }
   }
 
+  /** Convida amigos: partilha o link do perfil público (ou o site). */
+  async function shareApp(): Promise<void> {
+    const url = accountState.account
+      ? `${location.origin}/u/?h=${accountState.account.handle}`
+      : location.origin;
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          url,
+          title: 'Presuntinho 🐷',
+          text: $t('settings.invite.text', { default: 'Vem para o Presuntinho comigo! 🐷' })
+        });
+        return;
+      }
+    } catch {
+      return; // partilha cancelada — não cair no clipboard
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      showToast($t('settings.invite.copied', { default: 'Link copiado! Envia a quem quiseres 📋' }), 2400);
+    } catch {
+      showToast(url, 4000);
+    }
+  }
+
   function pickTheme(t: ThemeChoice): void {
     if (!isThemeUnlocked(t)) return;
     currentTheme = t;
@@ -1031,6 +1056,17 @@
       </span>
       <span class="account-arrow" aria-hidden="true">→</span>
     </a>
+
+    <!-- Convite de amigos: partilha o link do teu perfil (quem entrar pode
+         ligar-se a ti logo) — ou o site, se ainda não houver conta. -->
+    <button type="button" class="account-row invite-row" onclick={() => void shareApp()}>
+      <span class="account-emoji" aria-hidden="true">🎁</span>
+      <span class="account-copy">
+        <strong>{$t('settings.invite.title', { default: 'Convida amigos para a app' })}</strong>
+        <small>{$t('settings.invite.sub', { default: 'partilha o teu link — quem entrar pode ligar-se a ti' })}</small>
+      </span>
+      <span class="account-arrow" aria-hidden="true">📤</span>
+    </button>
   {/if}
 
   <!-- ============ Theme (expansível — muitos temas) ============ -->
@@ -1203,11 +1239,9 @@
   </CollapsibleCard>
 
   <!-- ============ Mood / Vibe ============ -->
-  <section class="card" aria-labelledby="mood-h">
-    <div class="card-head">
-      <span class="icon-wrap"><Heart size={18} /></span>
-      <h2 id="mood-h">{$t('settings.mood')}</h2>
-    </div>
+  <CollapsibleCard id="mood-h" title={$t('settings.mood')}>
+    {#snippet icon()}<Heart size={18} />{/snippet}
+    <div class="ccard-content">
     <p class="theme-intro">{$t('settings.mood.intro')}</p>
     <div class="mood-grid" role="radiogroup" aria-label={$t('settings.mood')}>
       {#each MOOD_OPTIONS as option (option.id)}
@@ -1228,14 +1262,13 @@
         </button>
       {/each}
     </div>
-  </section>
+      </div>
+  </CollapsibleCard>
 
   <!-- ============ V10: Sons & Vibração ============ -->
-  <section class="card" aria-labelledby="sound-h">
-    <div class="card-head">
-      <span class="icon-wrap"><Volume2 size={18} /></span>
-      <h2 id="sound-h">{$t('settings.sound', { default: 'Sons e vibração' })}</h2>
-    </div>
+  <CollapsibleCard id="sound-h" title={$t('settings.sound', { default: 'Sons e vibração' })}>
+    {#snippet icon()}<Volume2 size={18} />{/snippet}
+    <div class="ccard-content">
     <p class="theme-intro">
       {$t('settings.sound.intro', {
         default: 'Feedback sonoro e háptico nas vitórias, streaks e missões.'
@@ -1277,14 +1310,13 @@
         </span>
       </button>
     </div>
-  </section>
+      </div>
+  </CollapsibleCard>
 
   <!-- ============ V10: Notificações ============ -->
-  <section class="card" aria-labelledby="notif-h">
-    <div class="card-head">
-      <span class="icon-wrap"><Bell size={18} /></span>
-      <h2 id="notif-h">{$t('settings.notif', { default: 'Notificações' })}</h2>
-    </div>
+  <CollapsibleCard id="notif-h" title={$t('settings.notif', { default: 'Notificações' })}>
+    {#snippet icon()}<Bell size={18} />{/snippet}
+    <div class="ccard-content">
     <p class="theme-intro">
       {$t('settings.notif.intro', {
         default: 'O Presuntinho avisa-te à noite quando a streak está em risco (só com a app aberta).'
@@ -1315,14 +1347,13 @@
         </button>
       </div>
     {/if}
-  </section>
+      </div>
+  </CollapsibleCard>
 
   <!-- ============ Language ============ -->
-    <section class="card" aria-labelledby="lang-h">
-      <div class="card-head">
-        <span class="icon-wrap"><Languages size={18} /></span>
-        <h2 id="lang-h">{$t('settings.lang')}</h2>
-      </div>
+    <CollapsibleCard id="lang-h" title={$t('settings.lang')}>
+      {#snippet icon()}<Languages size={18} />{/snippet}
+      <div class="ccard-content">
       <div class="seg seg-lang" role="radiogroup" aria-label={$t('settings.lang')}>
         {#each LOCALES as loc (loc)}
           <button
@@ -1338,14 +1369,13 @@
           </button>
         {/each}
       </div>
-    </section>
+          </div>
+    </CollapsibleCard>
 
     <!-- ============ Moeda (V11) ============ -->
-    <section class="card" aria-labelledby="currency-h">
-      <div class="card-head">
-        <span class="icon-wrap"><Coins size={18} /></span>
-        <h2 id="currency-h">{$t('settings.currency.title', { default: 'Moeda' })}</h2>
-      </div>
+    <CollapsibleCard id="currency-h" title={$t('settings.currency.title', { default: 'Moeda' })}>
+      {#snippet icon()}<Coins size={18} />{/snippet}
+      <div class="ccard-content">
       <p class="section-sub">{$t('settings.currency.sub', { default: 'Como os valores aparecem nas Finanças.' })}</p>
       <div class="seg seg-currency" role="radiogroup" aria-label={$t('settings.currency.title', { default: 'Moeda' })}>
         {#each SUPPORTED_CURRENCIES as cur (cur.code)}
@@ -1362,14 +1392,13 @@
           </button>
         {/each}
       </div>
-    </section>
+          </div>
+    </CollapsibleCard>
 
     <!-- ============ Lembretes de hábitos (V11) ============ -->
-    <section class="card" aria-labelledby="reminders-h">
-      <div class="card-head">
-        <span class="icon-wrap"><Bell size={18} /></span>
-        <h2 id="reminders-h">{$t('settings.reminders.title', { default: 'Lembretes de hábitos' })}</h2>
-      </div>
+    <CollapsibleCard id="reminders-h" title={$t('settings.reminders.title', { default: 'Lembretes de hábitos' })}>
+      {#snippet icon()}<Bell size={18} />{/snippet}
+      <div class="ccard-content">
       <p class="section-sub">{$t('settings.reminders.sub', { default: 'Aviso-te à hora do hábito, enquanto a app estiver aberta.' })}</p>
       <div class="switch-list">
         <button
@@ -1393,14 +1422,13 @@
       {:else if remindersPerm === 'unsupported'}
         <p class="section-sub">{$t('settings.reminders.hint_unsupported', { default: 'Este browser não suporta notificações.' })}</p>
       {/if}
-    </section>
+          </div>
+    </CollapsibleCard>
 
     <!-- ============ Lock screens (V11) ============ -->
-    <section class="card" aria-labelledby="lockscreen-h">
-      <div class="card-head">
-        <span class="icon-wrap"><Lock size={18} /></span>
-        <h2 id="lockscreen-h">{$t('settings.lockscreen.title', { default: 'Ecrãs de bloqueio' })}</h2>
-      </div>
+    <CollapsibleCard id="lockscreen-h" title={$t('settings.lockscreen.title', { default: 'Ecrãs de bloqueio' })}>
+      {#snippet icon()}<Lock size={18} />{/snippet}
+      <div class="ccard-content">
       <p class="section-sub">{$t('settings.lockscreen.sub', { default: 'Cria um ecrã de bloqueio com uma mensagem carinhosa. Se lhe deres uma palavra-passe, essa palavra-passe também abre a app — sem substituir a tua palavra-passe normal.' })}</p>
 
       {#if lockScreens.length > 0}
@@ -1467,14 +1495,13 @@
           + {$t('settings.lockscreen.new', { default: 'Novo ecrã de bloqueio' })}
         </Button>
       {/if}
-    </section>
+          </div>
+    </CollapsibleCard>
 
   <!-- ============ Account / Password ============ -->
-  <section class="card" aria-labelledby="acct-h">
-    <div class="card-head">
-      <span class="icon-wrap"><Key size={18} /></span>
-      <h2 id="acct-h">{$t('settings.reset_password')}</h2>
-    </div>
+  <CollapsibleCard id="acct-h" title={$t('settings.reset_password')}>
+    {#snippet icon()}<Key size={18} />{/snippet}
+    <div class="ccard-content">
     <Button
       onclick={openResetModal}
       aria-haspopup="dialog"
@@ -1489,14 +1516,13 @@
         {$t('settings.logout.button', { default: 'Terminar sessão' })}
       </Button>
     </div>
-  </section>
+      </div>
+  </CollapsibleCard>
 
   <!-- ============ Hermes agent ============ -->
-  <section class="card" aria-labelledby="hermes-h">
-    <div class="card-head">
-      <span class="icon-wrap"><Bot size={18} /></span>
-      <h2 id="hermes-h">{$t('settings.hermes.title')}</h2>
-    </div>
+  <CollapsibleCard id="hermes-h" title={$t('settings.hermes.title')}>
+    {#snippet icon()}<Bot size={18} />{/snippet}
+    <div class="ccard-content">
     <p class="muted">{$t('settings.hermes.hint')}</p>
     <form
       class="hermes-form"
@@ -1533,27 +1559,25 @@
     {:else if hermesStatus === 'fail'}
       <p class="hint err">{$t('settings.hermes.test_fail')}</p>
     {/if}
-  </section>
+      </div>
+  </CollapsibleCard>
 
   <!-- ============ Push dos pings de casal (contas) ============ -->
   {#if couple.available && !coupleProfile}
-    <section class="card" aria-labelledby="push-h">
-      <div class="card-head">
-        <span class="icon-wrap"><Heart size={18} /></span>
-        <h2 id="push-h">{$t('settings.push.title', { default: 'Pings no telemóvel' })}</h2>
-      </div>
+    <CollapsibleCard id="push-h" title={$t('settings.push.title', { default: 'Pings no telemóvel' })}>
+      {#snippet icon()}<Heart size={18} />{/snippet}
+      <div class="ccard-content">
       <p class="muted">{$t('settings.push.hint', { default: 'Recebe os "amo-te muito" e as "saudades" como notificação no telemóvel, com vibração própria — mesmo com a app fechada.' })}</p>
       <PushToggle />
-    </section>
+          </div>
+    </CollapsibleCard>
   {/if}
 
   <!-- ============ Couple connection ============ -->
   {#if coupleProfile}
-    <section class="card" aria-labelledby="couple-h">
-      <div class="card-head">
-        <span class="icon-wrap"><Heart size={18} /></span>
-        <h2 id="couple-h">{$t('settings.couple.title', { default: 'Conta do casal' })}</h2>
-      </div>
+    <CollapsibleCard id="couple-h" title={$t('settings.couple.title', { default: 'Conta do casal' })}>
+      {#snippet icon()}<Heart size={18} />{/snippet}
+      <div class="ccard-content">
       <p class="muted">{$t('settings.couple.hint', { default: 'Liga a chave partilhada para sincronizar pontos, amor e saudades entre os dois telemóveis.' })}</p>
       {#if coupleConnected}
         <p class="hint ok">
@@ -1577,15 +1601,14 @@
         </form>
       {/if}
       <p class="hint">{$t('settings.couple.note', { default: 'A mesma chave tem de ser usada nos dois telemóveis. Também podes geri-la nas Mensagens.' })}</p>
-    </section>
+          </div>
+    </CollapsibleCard>
   {/if}
 
   <!-- ============ Data ============ -->
-  <section class="card" aria-labelledby="data-h">
-    <div class="card-head">
-      <span class="icon-wrap"><Database size={18} /></span>
-      <h2 id="data-h">{$t('settings.data')}</h2>
-    </div>
+  <CollapsibleCard id="data-h" title={$t('settings.data')}>
+    {#snippet icon()}<Database size={18} />{/snippet}
+    <div class="ccard-content">
 
     <div class="data-actions">
       <Button variant="secondary" onclick={doExport} disabled={exporting}>
@@ -1633,14 +1656,13 @@
         {importMessage.text}
       </p>
     {/if}
-  </section>
+      </div>
+  </CollapsibleCard>
 
   <!-- ============ About ============ -->
-  <section class="card" aria-labelledby="about-h">
-    <div class="card-head">
-      <span class="icon-wrap"><Info size={18} /></span>
-      <h2 id="about-h">{$t('settings.about')}</h2>
-    </div>
+  <CollapsibleCard id="about-h" title={$t('settings.about')}>
+    {#snippet icon()}<Info size={18} />{/snippet}
+    <div class="ccard-content">
     <p class="muted">
       <Heart size={14} aria-hidden="true" fill="currentColor" />
       {$t('splash.credit').replace('❤️ ', '')}
@@ -1684,7 +1706,8 @@
         </a>
       </li>
     </ul>
-  </section>
+      </div>
+  </CollapsibleCard>
 </div>
 
 <!-- ============ Import confirmation modal ============ -->
@@ -1900,6 +1923,13 @@
       var(--card);
     transition: transform 0.12s ease, border-color 0.12s ease;
   }
+  /* O convite é um <button> — herda o visual do account-row e repõe o resto. */
+  .invite-row {
+    width: 100%;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
   .account-row:hover,
   .account-row:focus-visible {
     transform: translateY(-1px);
@@ -1927,17 +1957,6 @@
     margin-top: 0.75rem;
     padding-top: 0.75rem;
     border-top: 1px solid var(--border);
-  }
-  .card-head {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
-  .card-head h2 {
-    margin: 0;
-    font-size: 1.05rem;
-    color: var(--txt);
   }
   .icon-wrap {
     display: inline-flex;

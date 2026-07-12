@@ -5181,5 +5181,9 @@
   "push.test_title": "🔔 Teste do Presuntinho",
   "push.test_body": "Se estás a ler isto no telemóvel, está tudo a funcionar! 🐷",
   "push.test_sent": "Teste enviado a {n} dispositivo(s) — deve chegar já! 📲",
-  "push.test_failed": "O teste não seguiu — verifica a ligação e tenta de novo."
+  "push.test_failed": "O teste não seguiu — verifica a ligação e tenta de novo.",
+  "settings.invite.title": "Convida amigos para a app",
+  "settings.invite.sub": "partilha o teu link — quem entrar pode ligar-se a ti",
+  "settings.invite.text": "Vem para o Presuntinho comigo! 🐷",
+  "settings.invite.copied": "Link copiado! Envia a quem quiseres 📋"
 }
