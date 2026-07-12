@@ -55,6 +55,52 @@
   const socialCount = $derived(socialBadge + socialInvites);
   // Per-device couple prefs (chosen in /casal/bemvindos) gate the heart.
   let couplePrefs = $state({ heart: true, pings: true });
+  // Convite one-time para ativar o push quando o casal está ativo mas este
+  // dispositivo ainda não tem subscrição (sem ela, pings/mensagens não chegam
+  // ao telemóvel — foi exatamente o que aconteceu no primeiro teste real).
+  let pushPrompt = $state<'hidden' | 'ask' | 'ios'>('hidden');
+  let pushPromptChecked = false;
+  const PUSH_PROMPTED_KEY = 'presuntinho-push-prompted';
+
+  $effect(() => {
+    if (!couple.available || pushPromptChecked) return;
+    pushPromptChecked = true;
+    void (async () => {
+      try {
+        if (localStorage.getItem(PUSH_PROMPTED_KEY)) return;
+        const { getPushState } = await import('$lib/push');
+        const s = await getPushState();
+        if (s === 'off') pushPrompt = 'ask';
+        else if (s === 'ios-needs-install') pushPrompt = 'ios';
+      } catch {
+        /* push indisponível — sem prompt */
+      }
+    })();
+  });
+
+  function dismissPushPrompt(): void {
+    pushPrompt = 'hidden';
+    try {
+      localStorage.setItem(PUSH_PROMPTED_KEY, '1');
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async function acceptPushPrompt(): Promise<void> {
+    try {
+      const { enablePush } = await import('$lib/push');
+      const s = await enablePush();
+      if (s === 'on') {
+        showToast(get(t)('push.enabled', { default: '🔔 Notificações ativas! Os pings chegam mesmo com a app fechada.' }), 3000);
+      } else if (s === 'denied') {
+        showToast(get(t)('push.denied', { default: 'O browser bloqueou as notificações — ativa-as nas definições do site.' }), 3800, 'error');
+      }
+    } catch {
+      /* best-effort */
+    }
+    dismissPushPrompt();
+  }
 
   const moodAccent = $derived(activeMood ? MOOD_META[activeMood.kind].accent : null);
   const isMessagesRoute = $derived(isActive('/mensagens/'));
@@ -577,6 +623,23 @@
                     onclose={() => (coupleCelebration = null)}
                   />
                 {/if}
+                {#if pushPrompt !== 'hidden'}
+                  <div class="push-prompt" role="dialog" aria-label={$t('push.prompt_aria', { default: 'Ativar notificações' })}>
+                    <span class="pp-icon" aria-hidden="true">🔔</span>
+                    <div class="pp-body">
+                      <strong>{$t('push.prompt_title', { default: 'Recebe os pings no telemóvel' })}</strong>
+                      {#if pushPrompt === 'ios'}
+                        <small>{$t('push.ios_hint', { default: 'No iPhone: abre no Safari → Partilhar → "Adicionar ao ecrã principal", e ativa as notificações dentro da app instalada.' })}</small>
+                      {:else}
+                        <small>{$t('push.prompt_body', { default: 'Os "amo-te", as "saudades" e as mensagens chegam mesmo com a app fechada.' })}</small>
+                      {/if}
+                    </div>
+                    {#if pushPrompt === 'ask'}
+                      <button type="button" class="pp-cta" onclick={() => void acceptPushPrompt()}>{$t('push.prompt_cta', { default: 'Ativar' })}</button>
+                    {/if}
+                    <button type="button" class="pp-close" onclick={dismissPushPrompt} aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}>✕</button>
+                  </div>
+                {/if}
                 {#if $arcadeHud}
                   <ArcadeTouchHud
                     left={$arcadeHud.left}
@@ -982,6 +1045,56 @@
       white-space: nowrap;
       border: 0;
     }
+    .push-prompt {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(5.4rem + env(safe-area-inset-bottom));
+      width: min(430px, calc(100vw - 1.2rem));
+      z-index: 80;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.7rem 0.8rem;
+      background: var(--card);
+      border: 1.5px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+      border-radius: var(--radius-lg, 1rem);
+      box-shadow: var(--shadow-lg, 0 12px 32px rgba(0, 0, 0, 0.35));
+      animation: jump-in-prompt 260ms ease;
+    }
+    @keyframes jump-in-prompt {
+      from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    .pp-icon { font-size: 1.5rem; line-height: 1; }
+    .pp-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+    .pp-body strong { font-size: 0.9rem; color: var(--txt); }
+    .pp-body small { font-size: 0.76rem; color: var(--txt3); line-height: 1.35; }
+    .pp-cta {
+      flex-shrink: 0;
+      min-height: 40px;
+      padding: 0 1rem;
+      border: 0;
+      border-radius: 999px;
+      background: var(--accent);
+      color: var(--on-accent, #fff);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .pp-cta:hover { filter: brightness(1.06); }
+    .pp-close {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--txt3);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .pp-close:hover { color: var(--txt); background: color-mix(in srgb, var(--txt3) 14%, transparent); }
     @media (prefers-reduced-motion: reduce) {
       .nav-btn {
         transition: none;

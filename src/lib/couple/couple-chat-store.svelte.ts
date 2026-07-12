@@ -228,11 +228,37 @@ export class CoupleChatStore {
         .single();
       if (error) throw error;
       this.messages = this.messages.map((m) => (m.id === localId ? this.#rowToMsg(data as Row) : m));
+      this.#pushAfterSend(text);
       return 'sent';
     } catch (e) {
       this.messages = this.messages.map((m) => (m.id === localId ? { ...m, pending: false, failed: true } : m));
       return 'failed';
     }
+  }
+
+  /** Push no telemóvel do parceiro (só casais de CONTA — o par legado não tem
+   *  sessão Supabase; fire-and-forget com throttle por conversa). O servidor
+   *  resolve o destinatário via couple_partner(). */
+  #pushAfterSend(preview: string): void {
+    if (!UUID_RE.test(COUPLE_ID)) return;
+    void (async () => {
+      try {
+        const [{ sendPushNotify, shouldPushMessage }, { accountState }] = await Promise.all([
+          import('$lib/push'),
+          import('$lib/account/account-store.svelte')
+        ]);
+        if (!shouldPushMessage(`couple:${COUPLE_ID}:${this.conversationId}`)) return;
+        const me = accountState.account;
+        const name = me?.display_name || (me ? `@${me.handle}` : '💞');
+        await sendPushNotify('message', {
+          title: `💬 ${name}`,
+          body: preview.slice(0, 120),
+          url: '/mensagens/'
+        });
+      } catch {
+        /* best-effort */
+      }
+    })();
   }
 
   async sendMediaMessage(file: Blob, name: string): Promise<'sent' | 'queued' | 'failed'> {
@@ -271,6 +297,7 @@ export class CoupleChatStore {
       const finalMsg = this.#rowToMsg(data as Row);
       finalMsg.localDataUrl = previewUrl;
       this.messages = this.messages.map((m) => (m.id === localId ? finalMsg : m));
+      this.#pushAfterSend(isAudio ? '🎧 Mensagem de voz' : '📷 Fotografia');
       return 'sent';
     } catch (e) {
       console.warn('[couple-chat] media send failed', e);

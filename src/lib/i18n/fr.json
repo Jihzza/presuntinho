@@ -5163,5 +5163,17 @@
   "casal.bemvindos.f_push_sub": "Reçois les « je t’aime » et « tu me manques » même app fermée, avec une vibration dédiée.",
   "settings.push.title": "Pings sur le téléphone",
   "settings.push.hint": "Reçois les « je t’aime très fort » et « tu me manques » en notification avec une vibration dédiée — même app fermée.",
-  "couple.ping.push_body": "Touche pour ouvrir Presuntinho 🐷"
+  "couple.ping.push_body": "Touche pour ouvrir Presuntinho 🐷",
+  "agenda.notifications.ping.love": "💛 {name} t’a envoyé de l’amour",
+  "agenda.notifications.ping.love_many": "💛 {name} t’a envoyé de l’amour ×{n}",
+  "agenda.notifications.ping.nudge": "👀 Tu as manqué à {name}",
+  "agenda.notifications.ping.nudge_many": "👀 Tu as manqué à {name} ×{n}",
+  "agenda.notifications.ping.body": "Du cœur à ton écran. 💌",
+  "agenda.notifications.msgs.one": "💬 Nouveau message de {name}",
+  "agenda.notifications.msgs.many": "💬 {n} nouveaux messages de {name}",
+  "agenda.notifications.msgs.body": "Touche pour ouvrir la conversation.",
+  "push.prompt_aria": "Activer les notifications",
+  "push.prompt_title": "Reçois les pings sur ton téléphone",
+  "push.prompt_body": "Les « je t’aime », « tu me manques » et les messages arrivent même app fermée.",
+  "push.prompt_cta": "Activer"
 }

@@ -113,18 +113,40 @@ export async function disablePush(): Promise<void> {
   }
 }
 
-/** Entrega um ping como push nos dispositivos do parceiro (fire-and-forget).
+/** Entrega uma notificação push (fire-and-forget). Pings vão para o parceiro
+ *  do casal (resolvido no servidor); mensagens levam o destinatário explícito.
  *  title/body chegam já localizados de quem envia. */
-export async function sendPingPush(kind: 'love' | 'nudge', title: string, body: string): Promise<void> {
+export async function sendPushNotify(
+  kind: 'love' | 'nudge' | 'message',
+  opts: { title: string; body?: string; to?: string; url?: string }
+): Promise<void> {
   try {
     const session = await getAuthSession();
     if (!session) return;
     await fetch('/.netlify/functions/push-ping', {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: `Bearer ${session.access_token}` },
-      body: JSON.stringify({ kind, title, body })
+      body: JSON.stringify({ kind, title: opts.title, body: opts.body ?? '', to: opts.to, url: opts.url })
     });
   } catch {
-    /* o broadcast realtime continua a ser o caminho rápido — push é bónus */
+    /* o realtime continua a ser o caminho rápido — push é bónus */
   }
+}
+
+/** Compat: ping para o parceiro do casal. */
+export async function sendPingPush(kind: 'love' | 'nudge', title: string, body: string): Promise<void> {
+  return sendPushNotify(kind, { title, body });
+}
+
+// Throttle simples por conversa para os pushes de mensagens — uma rajada de
+// mensagens gera UM push (o realtime/badge cobre o resto).
+const MSG_PUSH_GAP_MS = 15_000;
+const lastMsgPushAt = new Map<string, number>();
+
+export function shouldPushMessage(threadKey: string): boolean {
+  const now = Date.now();
+  const last = lastMsgPushAt.get(threadKey) ?? 0;
+  if (now - last < MSG_PUSH_GAP_MS) return false;
+  lastMsgPushAt.set(threadKey, now);
+  return true;
 }

@@ -5163,5 +5163,17 @@
   "casal.bemvindos.f_push_sub": "Recebe os \"amo-te\" e as \"saudades\" mesmo com a app fechada, com vibração própria.",
   "settings.push.title": "Pings no telemóvel",
   "settings.push.hint": "Recebe os \"amo-te muito\" e as \"saudades\" como notificação no telemóvel, com vibração própria — mesmo com a app fechada.",
-  "couple.ping.push_body": "Toca para abrir o Presuntinho 🐷"
+  "couple.ping.push_body": "Toca para abrir o Presuntinho 🐷",
+  "agenda.notifications.ping.love": "💛 {name} mandou-te amor",
+  "agenda.notifications.ping.love_many": "💛 {name} mandou-te amor ×{n}",
+  "agenda.notifications.ping.nudge": "👀 {name} teve saudades tuas",
+  "agenda.notifications.ping.nudge_many": "👀 {name} teve saudades tuas ×{n}",
+  "agenda.notifications.ping.body": "Do coração para o teu ecrã. 💌",
+  "agenda.notifications.msgs.one": "💬 Mensagem nova de {name}",
+  "agenda.notifications.msgs.many": "💬 {n} mensagens novas de {name}",
+  "agenda.notifications.msgs.body": "Toca para abrir a conversa.",
+  "push.prompt_aria": "Ativar notificações",
+  "push.prompt_title": "Recebe os pings no telemóvel",
+  "push.prompt_body": "Os \"amo-te\", as \"saudades\" e as mensagens chegam mesmo com a app fechada.",
+  "push.prompt_cta": "Ativar"
 }

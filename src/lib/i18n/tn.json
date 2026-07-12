@@ -5176,5 +5176,17 @@
   "casal.bemvindos.f_push_sub": "Tousslek \"n7ebbek\" w \"twa7achtek\" 7atta ki l’app msakkra, b vibration khassa.",
   "settings.push.title": "Pings fel telifoun",
   "settings.push.hint": "Tousslek \"n7ebbek barcha\" w \"twa7achtek\" ka notification fel telifoun b vibration khassa — 7atta ki l’app msakkra.",
-  "couple.ping.push_body": "Enzel bech t7ell Presuntinho 🐷"
+  "couple.ping.push_body": "Enzel bech t7ell Presuntinho 🐷",
+  "agenda.notifications.ping.love": "💛 {name} ba3athlek 7ob",
+  "agenda.notifications.ping.love_many": "💛 {name} ba3athlek 7ob ×{n}",
+  "agenda.notifications.ping.nudge": "👀 {name} twa7achek",
+  "agenda.notifications.ping.nudge_many": "👀 {name} twa7achek ×{n}",
+  "agenda.notifications.ping.body": "Mel 9alb l ecranek. 💌",
+  "agenda.notifications.msgs.one": "💬 Message jdid men {name}",
+  "agenda.notifications.msgs.many": "💬 {n} messages jdod men {name}",
+  "agenda.notifications.msgs.body": "Enzel bech t7ell el conversation.",
+  "push.prompt_aria": "Activi les notifications",
+  "push.prompt_title": "Tousslek el pings fel telifoun",
+  "push.prompt_body": "El \"n7ebbek\", el \"twa7achtek\" w les messages yousslou 7atta ki l’app msakkra.",
+  "push.prompt_cta": "Activi"
 }
