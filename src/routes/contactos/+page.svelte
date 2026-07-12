@@ -29,6 +29,7 @@
     type Space
   } from '$lib/account/spaces';
   import { requestCouple, pokeCoupleLink } from '$lib/account/couple-link';
+  import Avatar from '$lib/components/Avatar.svelte';
 
   let query = $state('');
   let results = $state<Account[]>([]);
@@ -197,7 +198,7 @@
           {@const tag = stateTag(a)}
           <li>
             <a class="row-link" href={`/u/?h=${a.handle}`}>
-              <span class="av">{a.emoji ?? '🙂'}</span>
+              <span class="av"><Avatar emoji={a.emoji} url={a.avatar_url} size={38} alt="" /></span>
               <span class="who"><strong>{a.display_name || `@${a.handle}`}</strong><small>@{a.handle}</small></span>
               {#if tag}
                 <span class="tag" class:couple-tag={tag.couple}>{tag.label}</span>
@@ -243,7 +244,7 @@
         {#each incomingFriends as c (c.connectionId)}
           <li>
             <a class="row-link grow" href={`/u/?h=${c.handle}`}>
-              <span class="av">{c.emoji ?? '🙂'}</span>
+              <span class="av"><Avatar emoji={c.emoji} url={c.avatar_url} size={38} alt="" /></span>
               <span class="who"><strong>{c.display_name || `@${c.handle}`}</strong><small>@{c.handle}</small></span>
             </a>
             <button type="button" class="connect" onclick={() => onAccept(c)}>{$t('contactos.accept', { default: 'Aceitar' })}</button>
@@ -262,7 +263,7 @@
           {@const cw = coupleWith.get(c.id)}
           <li>
             <a class="row-link grow" href={`/u/?h=${c.handle}`}>
-              <span class="av">{c.emoji ?? '🙂'}</span>
+              <span class="av"><Avatar emoji={c.emoji} url={c.avatar_url} size={38} alt="" /></span>
               <span class="who"><strong>{c.display_name || `@${c.handle}`}</strong><small>@{c.handle}</small></span>
             </a>
             {#if cw === 'active'}
@@ -284,7 +285,7 @@
         {#each outgoing as c (c.connectionId)}
           <li>
             <a class="row-link grow" href={`/u/?h=${c.handle}`}>
-              <span class="av">{c.emoji ?? '🙂'}</span>
+              <span class="av"><Avatar emoji={c.emoji} url={c.avatar_url} size={38} alt="" /></span>
               <span class="who"><strong>{c.display_name || `@${c.handle}`}</strong><small>@{c.handle}</small></span>
             </a>
             <span class="tag">{c.wantsCouple ? `💌 ${$t('couplelink.pending', { default: 'Casal pendente' })}` : $t('contactos.pending', { default: 'Pendente' })}</span>
@@ -318,7 +319,7 @@
   .row-link:hover, .row-link:focus-visible { background: color-mix(in srgb, var(--accent) 8%, transparent); outline: none; }
   .row-link.grow { flex: 1; }
   .chev { color: var(--txt3); font-size: 1.2rem; font-weight: 700; }
-  .av { font-size: 1.8rem; line-height: 1; width: 2.4rem; text-align: center; flex-shrink: 0; }
+  .av { width: 2.4rem; display: inline-flex; justify-content: center; flex-shrink: 0; }
   .who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
   .who strong { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .who small { color: var(--txt3); font-size: .8rem; }

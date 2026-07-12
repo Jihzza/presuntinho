@@ -21,6 +21,18 @@
   } from '$lib/account/contacts';
   import { listSpaces, isCoupleActive, otherMember, subscribeSpaces, type Space } from '$lib/account/spaces';
   import { requestCouple, profileUrl, pokeCoupleLink } from '$lib/account/couple-link';
+  import Avatar from '$lib/components/Avatar.svelte';
+  import {
+    listPosts,
+    createPost,
+    deletePost,
+    toggleLike,
+    listComments,
+    addComment,
+    timeAgo,
+    type Post,
+    type PostComment
+  } from '$lib/social/posts';
 
   type Phase = 'loading' | 'notfound' | 'ready';
   let phase = $state<Phase>('loading');
@@ -33,12 +45,102 @@
 
   const meId = $derived(accountState.account?.id ?? '');
   const isSelf = $derived(Boolean(person && meId && person.id === meId));
+
+  // ── Posts (estilo Twitter) — visíveis para o próprio + amigos aceites ──
+  let posts = $state<Post[]>([]);
+  let postsLoaded = $state(false);
+  let composer = $state('');
+  let publishing = $state(false);
+  let openComments = $state<Record<string, PostComment[]>>({});
+  let commentDraft = $state<Record<string, string>>({});
+  let commentBusy = $state<Record<string, boolean>>({});
+
+  async function refreshPosts(): Promise<void> {
+    if (!person || !accountState.account) return;
+    try {
+      posts = await listPosts(person.id);
+    } catch (e) {
+      console.warn('[u] posts load failed', e);
+    } finally {
+      postsLoaded = true;
+    }
+  }
+
+  async function publish(): Promise<void> {
+    if (publishing || !composer.trim()) return;
+    publishing = true;
+    try {
+      await createPost(composer);
+      composer = '';
+      await refreshPosts();
+      showToast($t('posts.published', { default: 'Publicado! 📣' }), 2200);
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : String(e), 3000, 'error');
+    } finally {
+      publishing = false;
+    }
+  }
+
+  async function onLike(p: Post): Promise<void> {
+    // otimista — reverte no erro
+    const was = p.likedByMe;
+    p.likedByMe = !was;
+    p.likeCount += was ? -1 : 1;
+    posts = [...posts];
+    try {
+      await toggleLike(p.id, was);
+    } catch {
+      p.likedByMe = was;
+      p.likeCount += was ? 1 : -1;
+      posts = [...posts];
+    }
+  }
+
+  async function onToggleComments(p: Post): Promise<void> {
+    if (openComments[p.id]) {
+      const { [p.id]: _gone, ...rest } = openComments;
+      openComments = rest;
+      return;
+    }
+    try {
+      openComments = { ...openComments, [p.id]: await listComments(p.id) };
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : String(e), 2600, 'error');
+    }
+  }
+
+  async function onComment(p: Post): Promise<void> {
+    const text = (commentDraft[p.id] ?? '').trim();
+    if (!text || commentBusy[p.id]) return;
+    commentBusy = { ...commentBusy, [p.id]: true };
+    try {
+      await addComment(p.id, text);
+      commentDraft = { ...commentDraft, [p.id]: '' };
+      openComments = { ...openComments, [p.id]: await listComments(p.id) };
+      p.commentCount += 1;
+      posts = [...posts];
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : String(e), 2600, 'error');
+    } finally {
+      commentBusy = { ...commentBusy, [p.id]: false };
+    }
+  }
+
+  async function onDeletePost(p: Post): Promise<void> {
+    try {
+      await deletePost(p.id);
+      posts = posts.filter((x) => x.id !== p.id);
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : String(e), 2600, 'error');
+    }
+  }
   const coupleState = $derived.by<'none' | 'active' | 'pending-in' | 'pending-out'>(() => {
     if (!coupleSpace || !meId) return 'none';
     if (isCoupleActive(coupleSpace)) return 'active';
     const mine = coupleSpace.members.find((m) => m.id === meId);
     return mine?.status === 'pending' ? 'pending-in' : 'pending-out';
   });
+  const canSeePosts = $derived(isSelf || conn?.status === 'accepted' || coupleState === 'active');
 
   async function refreshRelation(): Promise<void> {
     if (!person || !accountState.account || person.id === accountState.account.id) return;
@@ -72,6 +174,7 @@
       }
       await refreshRelation();
       phase = 'ready';
+      void refreshPosts();
       unsubC = subscribeConnections(() => void refreshRelation());
       unsubS = subscribeSpaces(() => void refreshRelation());
     })();
@@ -190,7 +293,9 @@
     </div>
   {:else if person}
     <div class="card profile">
-      <span class="avatar" aria-hidden="true">{person.emoji ?? '🙂'}</span>
+      <span class="avatar-ring" aria-hidden="true">
+        <Avatar emoji={person.emoji} url={person.avatar_url} size={92} alt="" />
+      </span>
       <h2 class="name">{displayName}</h2>
       <p class="handle">@{person.handle}</p>
       {#if person.bio}<p class="bio">{person.bio}</p>{/if}
@@ -263,6 +368,88 @@
     <button type="button" class="share-row" onclick={shareProfile}>
       🔗 {$t('uprofile.share_link', { default: 'Partilhar o link deste perfil' })}
     </button>
+
+    <!-- ── Posts ── -->
+    <section class="posts" aria-label={$t('posts.section', { default: 'Publicações' })}>
+      <h3 class="posts-title">📣 {$t('posts.section', { default: 'Publicações' })}</h3>
+
+      {#if isSelf}
+        <div class="composer card-lite">
+          <textarea
+            bind:value={composer}
+            maxlength="500"
+            rows="3"
+            placeholder={$t('posts.placeholder', { default: 'O que estás a pensar? 🐷' })}
+          ></textarea>
+          <div class="composer-row">
+            <small class="count">{composer.length}/500</small>
+            <button type="button" class="publish" disabled={publishing || !composer.trim()} onclick={() => void publish()}>
+              {publishing ? $t('posts.publishing', { default: 'A publicar…' }) : $t('posts.publish', { default: 'Publicar' })}
+            </button>
+          </div>
+        </div>
+      {/if}
+
+      {#if !accountState.account}
+        <p class="posts-hint">{$t('posts.visitor', { default: 'Cria a tua conta para veres as publicações.' })}</p>
+      {:else if !canSeePosts}
+        <p class="posts-hint">🔒 {$t('posts.locked', { default: 'As publicações são para amigos — envia um pedido de amizade para as veres.' })}</p>
+      {:else if postsLoaded && posts.length === 0}
+        <p class="posts-hint">{isSelf ? $t('posts.empty_own', { default: 'Ainda não publicaste nada. Diz olá ao mundo! 👋' }) : $t('posts.empty', { default: 'Ainda não há publicações por aqui.' })}</p>
+      {:else}
+        <ul class="post-list">
+          {#each posts as p (p.id)}
+            <li class="post card-lite">
+              <div class="post-head">
+                <Avatar emoji={person.emoji} url={person.avatar_url} size={36} alt="" />
+                <div class="post-who">
+                  <strong>{displayName}</strong>
+                  <small>@{person.handle} · {timeAgo(p.created_at)}</small>
+                </div>
+                {#if isSelf}
+                  <button type="button" class="post-del" onclick={() => void onDeletePost(p)} aria-label={$t('posts.delete', { default: 'Apagar publicação' })}>🗑</button>
+                {/if}
+              </div>
+              <p class="post-body">{p.body}</p>
+              <div class="post-actions">
+                <button type="button" class="pa" class:liked={p.likedByMe} onclick={() => void onLike(p)} aria-pressed={p.likedByMe}>
+                  {p.likedByMe ? '❤️' : '🤍'} {p.likeCount}
+                </button>
+                <button type="button" class="pa" onclick={() => void onToggleComments(p)} aria-expanded={Boolean(openComments[p.id])}>
+                  💬 {p.commentCount}
+                </button>
+              </div>
+              {#if openComments[p.id]}
+                <div class="comments">
+                  {#each openComments[p.id] as c (c.id)}
+                    <div class="comment">
+                      <Avatar emoji={c.account?.emoji} url={c.account?.avatar_url} size={26} alt="" />
+                      <div class="comment-body">
+                        <strong>{c.account?.display_name || (c.account ? `@${c.account.handle}` : '?')}</strong>
+                        <span>{c.body}</span>
+                        <small>{timeAgo(c.created_at)}</small>
+                      </div>
+                    </div>
+                  {/each}
+                  <div class="comment-composer">
+                    <input
+                      type="text"
+                      maxlength="300"
+                      placeholder={$t('posts.comment_ph', { default: 'Escreve um comentário…' })}
+                      bind:value={commentDraft[p.id]}
+                      onkeydown={(e) => {
+                        if (e.key === 'Enter') void onComment(p);
+                      }}
+                    />
+                    <button type="button" class="publish small" disabled={commentBusy[p.id] || !(commentDraft[p.id] ?? '').trim()} onclick={() => void onComment(p)}>➤</button>
+                  </div>
+                </div>
+              {/if}
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    </section>
   {/if}
 </div>
 
@@ -281,12 +468,6 @@
     border-radius: var(--radius-xl, 1.25rem); box-shadow: var(--shadow-md);
   }
   .big { font-size: 2.6rem; }
-  .avatar {
-    width: 96px; height: 96px; display: grid; place-items: center; font-size: 3rem;
-    border-radius: 999px; background: color-mix(in srgb, var(--accent) 14%, var(--bg-elev));
-    border: 3px solid color-mix(in srgb, var(--accent) 45%, var(--border));
-    box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 10%, transparent);
-  }
   .name { margin: .6rem 0 0; font-size: 1.35rem; font-weight: 800; }
   .handle { margin: 0; color: var(--txt3); font-weight: 700; }
   .bio { margin: .4rem 0 0; color: var(--txt2); font-size: .92rem; line-height: 1.5; max-width: 34ch; }
@@ -328,4 +509,38 @@
     color: var(--txt2); font: inherit; font-weight: 700; cursor: pointer;
   }
   .share-row:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── Posts ── */
+  .avatar-ring { display: inline-flex; border-radius: 999px; box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 10%, transparent); border: 3px solid color-mix(in srgb, var(--accent) 45%, var(--border)); }
+  .posts { margin-top: 1.2rem; display: flex; flex-direction: column; gap: .7rem; }
+  .posts-title { margin: 0; font-size: .82rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--txt3); }
+  .card-lite { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg, 1rem); padding: .85rem; box-shadow: var(--shadow-sm, none); }
+  .composer textarea { width: 100%; font: inherit; color: var(--txt); background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-md, .75rem); padding: .65rem .8rem; resize: vertical; }
+  .composer textarea:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent); }
+  .composer-row { display: flex; align-items: center; justify-content: space-between; margin-top: .45rem; }
+  .count { color: var(--txt3); font-size: .75rem; }
+  .publish { border: 0; border-radius: 999px; min-height: 40px; padding: 0 1.2rem; background: var(--accent); color: var(--on-accent, #fff); font: inherit; font-weight: 800; cursor: pointer; }
+  .publish:disabled { opacity: .55; cursor: not-allowed; }
+  .publish.small { min-height: 38px; min-width: 44px; padding: 0 .7rem; }
+  .posts-hint { margin: 0; color: var(--txt3); font-size: .88rem; text-align: center; padding: .8rem .5rem; line-height: 1.5; }
+  .post-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .7rem; }
+  .post-head { display: flex; align-items: center; gap: .6rem; }
+  .post-who { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .post-who strong { font-size: .92rem; }
+  .post-who small { color: var(--txt3); font-size: .75rem; }
+  .post-del { border: 0; background: transparent; color: var(--txt3); cursor: pointer; font-size: .95rem; padding: .3rem; border-radius: 999px; }
+  .post-del:hover { color: var(--error, #ef4444); }
+  .post-body { margin: .55rem 0 .2rem; color: var(--txt); line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .post-actions { display: flex; gap: .5rem; margin-top: .35rem; }
+  .pa { border: 1px solid var(--border); background: var(--bg-elev); color: var(--txt2); border-radius: 999px; min-height: 36px; padding: 0 .8rem; font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; }
+  .pa:hover { border-color: var(--accent); }
+  .pa.liked { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 55%, transparent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  .comments { margin-top: .6rem; border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent); padding-top: .6rem; display: flex; flex-direction: column; gap: .5rem; }
+  .comment { display: flex; gap: .5rem; align-items: flex-start; }
+  .comment-body { flex: 1; min-width: 0; font-size: .88rem; line-height: 1.4; }
+  .comment-body strong { margin-inline-end: .35rem; }
+  .comment-body small { display: block; color: var(--txt3); font-size: .72rem; margin-top: .1rem; }
+  .comment-composer { display: flex; gap: .45rem; }
+  .comment-composer input { flex: 1; font: inherit; color: var(--txt); background: var(--bg-elev); border: 1px solid var(--border); border-radius: 999px; padding: .5rem .9rem; min-height: 40px; }
+  .comment-composer input:focus-visible { outline: none; border-color: var(--accent); }
 </style>

@@ -21,8 +21,11 @@
     normalizeHandle,
     updatePassword,
     updateEmail,
+    updateMyAccount,
     searchAccounts
   } from '$lib/account/auth';
+  import { uploadAvatar } from '$lib/account/avatar';
+  import Avatar from '$lib/components/Avatar.svelte';
   import { accountState, startAccountSync, refreshAccount } from '$lib/account/account-store.svelte';
   import { signOutEverywhere } from '$lib/account/session-bridge';
   import {
@@ -47,6 +50,66 @@
   // account management
   let newEmail = $state('');
   let newPassword = $state('');
+
+  // ── Editor do perfil (nome, emoji, bio, foto) ──
+  let profName = $state('');
+  let profEmoji = $state('');
+  let profBio = $state('');
+  let profSaving = $state(false);
+  let profSeeded = false;
+  let avatarInput: HTMLInputElement | null = $state(null);
+  let pendingAvatar = $state<File | null>(null);
+  let avatarPreview = $state<string | null>(null);
+  const EMOJI_PICKS = ['🙂', '🐷', '🌸', '🦊', '🐱', '🌙', '⭐', '❤️', '⚽', '🎮', '🎧', '📚'];
+
+  // Semeia o formulário quando a conta carrega (uma vez — edições não são pisadas).
+  $effect(() => {
+    const a = accountState.account;
+    if (!a || profSeeded) return;
+    profSeeded = true;
+    profName = a.display_name ?? '';
+    profEmoji = a.emoji ?? '';
+    profBio = a.bio ?? '';
+  });
+
+  function onAvatarChosen(e: Event): void {
+    const file = (e.target as HTMLInputElement).files?.[0] ?? null;
+    if (avatarInput) avatarInput.value = '';
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showToast($t('conta.profile.not_image', { default: 'Escolhe uma imagem (jpg, png, webp…).' }), 2600, 'error');
+      return;
+    }
+    pendingAvatar = file;
+    if (avatarPreview) URL.revokeObjectURL(avatarPreview);
+    avatarPreview = URL.createObjectURL(file);
+  }
+
+  async function saveProfile(): Promise<void> {
+    if (profSaving || !accountState.account) return;
+    profSaving = true;
+    try {
+      let avatar_url: string | undefined;
+      if (pendingAvatar) avatar_url = await uploadAvatar(pendingAvatar);
+      await updateMyAccount({
+        display_name: profName.trim() || null,
+        emoji: profEmoji.trim() || null,
+        bio: profBio.trim() || null,
+        ...(avatar_url ? { avatar_url } : {})
+      });
+      await refreshAccount();
+      pendingAvatar = null;
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
+        avatarPreview = null;
+      }
+      showToast($t('conta.profile.saved', { default: 'Perfil guardado! ✅' }), 2400);
+    } catch (e) {
+      showToast(authError(e), 3400, 'error');
+    } finally {
+      profSaving = false;
+    }
+  }
 
   const enabled = accountsEnabled();
 
@@ -339,7 +402,7 @@
     <!-- ── signed in with account: manage ── -->
     <div class="card">
       <div class="me">
-        <span class="me-emoji">{accountState.account.emoji ?? '🙂'}</span>
+        <Avatar emoji={accountState.account.emoji} url={accountState.account.avatar_url} size={52} alt="" />
         <div>
           <strong>{accountState.account.display_name || `@${accountState.account.handle}`}</strong>
           <small>@{accountState.account.handle} · {accountState.user.email}</small>
@@ -350,6 +413,42 @@
         <a class="linkcard" href={`/u/?h=${accountState.account.handle}`}>🪪 {$t('conta.public_profile', { default: 'O meu perfil' })}</a>
         <a class="linkcard" href="/grupos/">💞 {$t('conta.spaces', { default: 'Casal e grupos' })}</a>
       </div>
+    </div>
+
+    <!-- ── Editor do perfil público ── -->
+    <div class="card">
+      <h2>{$t('conta.profile.title', { default: 'O meu perfil' })}</h2>
+      <p class="sub-note">{$t('conta.profile.sub', { default: 'É isto que os teus amigos veem no teu perfil.' })}</p>
+      <div class="avatar-row">
+        {#if avatarPreview}
+          <img class="avatar-preview" src={avatarPreview} alt="" />
+        {:else}
+          <Avatar emoji={profEmoji || accountState.account.emoji} url={accountState.account.avatar_url} size={72} alt="" />
+        {/if}
+        <input type="file" bind:this={avatarInput} accept="image/*" hidden onchange={onAvatarChosen} />
+        <button type="button" class="mini" onclick={() => avatarInput?.click()}>
+          📷 {$t('conta.profile.change_photo', { default: 'Mudar foto' })}
+        </button>
+      </div>
+      <label>
+        <span>{$t('conta.profile.name', { default: 'Nome' })}</span>
+        <input type="text" bind:value={profName} maxlength="40" placeholder={$t('conta.name_placeholder', { default: 'O teu nome' })} />
+      </label>
+      <label>
+        <span>{$t('conta.profile.emoji', { default: 'Emoji (usado sem foto)' })}</span>
+        <div class="emoji-row">
+          {#each EMOJI_PICKS as e (e)}
+            <button type="button" class="emoji-opt" class:sel={profEmoji === e} onclick={() => (profEmoji = e)}>{e}</button>
+          {/each}
+        </div>
+      </label>
+      <label>
+        <span>{$t('conta.profile.bio', { default: 'Bio' })}</span>
+        <textarea bind:value={profBio} maxlength="160" rows="2" placeholder={$t('conta.profile.bio_ph', { default: 'Uma frase sobre ti…' })}></textarea>
+      </label>
+      <button type="button" class="cta" onclick={() => void saveProfile()} disabled={profSaving}>
+        {profSaving ? $t('common.saving', { default: 'A guardar…' }) : $t('conta.profile.save', { default: 'Guardar perfil' })}
+      </button>
     </div>
 
     <!-- ── Convite de casal: partilha um link; quem o abre cria conta e o
@@ -404,8 +503,15 @@
   .seg button.on { background: var(--accent); color: var(--on-accent, #fff); }
   label { display: flex; flex-direction: column; gap: .3rem; font-size: .85rem; }
   label > span { color: var(--txt2); font-weight: 600; }
-  input { font: inherit; padding: .7rem .85rem; border-radius: var(--radius-md, .6rem); border: 1px solid var(--border); background: var(--bg-elev, rgba(255,255,255,.04)); color: var(--txt); min-height: 44px; width: 100%; }
-  input:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent); }
+  input, textarea { font: inherit; padding: .7rem .85rem; border-radius: var(--radius-md, .6rem); border: 1px solid var(--border); background: var(--bg-elev, rgba(255,255,255,.04)); color: var(--txt); min-height: 44px; width: 100%; }
+  textarea { resize: vertical; }
+  input:focus-visible, textarea:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent); }
+  .sub-note { margin: -.35rem 0 .1rem; color: var(--txt3); font-size: .82rem; }
+  .avatar-row { display: flex; align-items: center; gap: .9rem; }
+  .avatar-preview { width: 72px; height: 72px; border-radius: 999px; object-fit: cover; border: 2px solid var(--accent); }
+  .emoji-row { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .emoji-opt { width: 42px; height: 42px; font-size: 1.25rem; line-height: 1; display: grid; place-items: center; cursor: pointer; background: var(--bg-elev); border: 1.5px solid var(--border); border-radius: 999px; }
+  .emoji-opt.sel { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); }
   .handle-row { display: flex; align-items: center; gap: .3rem; }
   .handle-row .at { color: var(--txt3); font-weight: 800; font-size: 1.1rem; }
   .handle-hint { margin: -.4rem 0 0; font-size: .8rem; min-height: 1.1rem; color: var(--txt3); }
@@ -420,7 +526,6 @@
   .link { background: transparent; border: 0; color: var(--accent); font: inherit; font-size: .85rem; cursor: pointer; padding: .5rem .1rem; }
   .link:hover { text-decoration: underline; }
   .me { display: flex; align-items: center; gap: .75rem; }
-  .me-emoji { font-size: 2.2rem; line-height: 1; }
   .me strong { display: block; font-size: 1.05rem; }
   .me small { display: block; color: var(--txt3); font-size: .8rem; }
   .links { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
