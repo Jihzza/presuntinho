@@ -166,7 +166,7 @@ export class CoupleChatStore {
         const st = String(this.#channel?.state ?? '');
         if (st === 'closed' || st === 'errored') this.#openChannel();
         void this.#load();
-      }, 10_000);
+      }, 6_000);
     })();
     if (typeof document !== 'undefined') {
       this.#onVis = () => {
