@@ -49,6 +49,12 @@
   let updateSW: ((reloadPage?: boolean) => Promise<void>) | null = null;
   // Full-screen congrats when a couple link becomes ACTIVE (both accepted).
   let coupleCelebration = $state<{ label: string } | null>(null);
+  // Incoming friend/couple requests + couple space invites (nav badge).
+  let socialBadge = $state(0);
+  let socialInvites = $state(0);
+  const socialCount = $derived(socialBadge + socialInvites);
+  // Per-device couple prefs (chosen in /casal/bemvindos) gate the heart.
+  let couplePrefs = $state({ heart: true, pings: true });
 
   const moodAccent = $derived(activeMood ? MOOD_META[activeMood.kind].accent : null);
   const isMessagesRoute = $derived(isActive('/mensagens/'));
@@ -203,19 +209,40 @@
               void import('$lib/couple/couple-supabase').then((m) => m.invalidateCoupleId()).catch(() => undefined);
               void import('$lib/couple/couple-store.svelte').then((m) => m.refreshCoupleEnabled()).catch(() => undefined);
             },
-            onIntentProposed: (c) => {
-              showToast(
-                get(t)('couplelink.intent_sent', {
-                  values: { handle: c.handle },
-                  default: `💌 @${c.handle} aceitou o teu contacto — pedido de casal enviado!`
-                }),
-                3200
-              );
+            onRequestsChanged: (reqs) => {
+              socialBadge = reqs.friends.length + reqs.couples.length;
+            },
+            onInvitesChanged: (invites) => {
+              socialInvites = invites.length;
+            },
+            onNewRequest: (req) => {
+              const name = req.from.display_name || `@${req.from.handle}`;
+              const title =
+                req.kind === 'couple'
+                  ? get(t)('social.notif.couple_title', { default: '💞 Pedido de casal!' })
+                  : get(t)('social.notif.friend_title', { default: '👋 Pedido de amizade' });
+              const body =
+                req.kind === 'couple'
+                  ? get(t)('social.notif.couple_body', { values: { name }, default: `${name} quer ser teu casal. Toca para responder!` })
+                  : get(t)('social.notif.friend_body', { values: { name }, default: `${name} quer ligar-se contigo.` });
+              showToast(`${title} ${body}`, 4200);
+              void import('$lib/habitos/reminders')
+                .then(({ showAppNotification }) => showAppNotification(title, { body }))
+                .catch(() => undefined);
             }
           });
         }).catch(() => undefined);
       }
     }
+
+    // Couple prefs (heart/pings) — read at boot + live-update from the wizard.
+    const syncCouplePrefs = () => {
+      void import('$lib/couple/couple-prefs')
+        .then((m) => (couplePrefs = m.readCouplePrefs()))
+        .catch(() => undefined);
+    };
+    syncCouplePrefs();
+    window.addEventListener('presuntinho-couple-prefs-changed', syncCouplePrefs);
 
     // Easter-egg boot hooks — used to live on the always-mounted HeartButton,
     // which the SurpriseHeart replaced. Warm the config cache and run the
@@ -349,7 +376,7 @@
             // Public routes a logged-out visitor is allowed to sit on: the login
             // splash, the new-account wizard, and an invite-redemption link.
             const p = page.url.pathname;
-            const isPublicRoute = p === '/splash/' || p.startsWith('/onboarding') || p.startsWith('/juntar') || p.startsWith('/conta') || p.startsWith('/contactos') || p.startsWith('/grupos') || p.startsWith('/convite');
+            const isPublicRoute = p === '/splash/' || p.startsWith('/onboarding') || p.startsWith('/juntar') || p.startsWith('/conta') || p.startsWith('/contactos') || p.startsWith('/grupos') || p.startsWith('/convite') || p.startsWith('/u');
             if (!session && !isPublicRoute && !authRedirectTimer) {
               authRedirectTimer = setTimeout(() => {
                 authRedirectTimer = null;
@@ -369,6 +396,7 @@
       if (seasonalTimer) clearTimeout(seasonalTimer);
       stopCouplePoller();
       unwatchCoupleLink?.();
+      window.removeEventListener('presuntinho-couple-prefs-changed', syncCouplePrefs);
       void import('$lib/state/progress-sync').then((m) => m.stopProgressSync()).catch(() => {});
     };
   });
@@ -515,8 +543,9 @@
                     <span class="nav-label">{$t('nav.vida', { default: 'Vida' })}</span>
                   </a>
                   <a href="/mensagens/" class="nav-btn" class:nav-btn-active={isActive('/mensagens/')} aria-current={isActive('/mensagens/') ? 'page' : undefined} class:nav-btn-disabled={!storesReady || !session} aria-disabled={!storesReady || !session} onclick={(event) => handleNavClick(event, 'Mensagens')} aria-label={$t('nav.mensagens.aria', { default: 'Mensagens — conversas com o Daniel' })} data-sveltekit-preload-data>
-                    <span class="nav-icon" aria-hidden="true">💬</span>
+                    <span class="nav-icon" aria-hidden="true">💬{#if socialCount > 0}<span class="nav-badge" aria-hidden="true">{socialCount > 9 ? '9+' : socialCount}</span>{/if}</span>
                     <span class="nav-label">{$t('nav.mensagens', { default: 'Mensagens' })}</span>
+                    {#if socialCount > 0}<span class="sr-only">{$t('social.badge_aria', { values: { n: socialCount }, default: '{n} pedidos pendentes' })}</span>{/if}
                   </a>
                 </nav>
 
@@ -538,7 +567,7 @@
                   <!-- The surprise heart only makes sense when this session can
                        actually contribute couple points — hide the inert affordance
                        for solo / onboarded (non-couple) users. -->
-                  {#if couple.available}
+                  {#if couple.available && couplePrefs.heart}
                     <SurpriseHeart />
                   {/if}
                 </div>
@@ -922,6 +951,36 @@
       font-size: 0.62rem;
       font-weight: 500;
       letter-spacing: 0.01em;
+    }
+    .nav-icon { position: relative; }
+    .nav-badge {
+      position: absolute;
+      top: -4px;
+      inset-inline-end: -10px;
+      min-width: 17px;
+      height: 17px;
+      padding: 0 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--error, #ef4444);
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 800;
+      line-height: 1;
+      box-shadow: 0 0 0 2px var(--bg-elev, #fff);
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
     }
     @media (prefers-reduced-motion: reduce) {
       .nav-btn {
