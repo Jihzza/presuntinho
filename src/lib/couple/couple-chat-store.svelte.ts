@@ -78,6 +78,8 @@ export class CoupleChatStore {
   #readKey: string;
   #onVis: (() => void) | null = null;
   #stopped = false; // guards the async start() from leaking a channel after stop()
+  #pollTimer: ReturnType<typeof setInterval> | null = null;
+  static #chanSeq = 0; // nome de canal único por (re)subscrição
 
   constructor(profile: ChatProfile, conversationId = 'main') {
     this.profile = profile;
@@ -155,35 +157,56 @@ export class CoupleChatStore {
       if (this.#stopped) return; // stopped mid-resolve — don't create a leaked channel
       await this.#load();
       if (this.#stopped) return;
-      this.#channel = this.#sb
-        .channel(`couple_msg:${COUPLE_ID}:${this.conversationId}`)
-        .on(
-          'postgres_changes',
-          { event: 'INSERT', schema: 'public', table: 'couple_messages', filter: `couple_id=eq.${COUPLE_ID}` },
-          (payload) => void this.#ingest(payload.new as Row)
-        )
-        .subscribe((status) => {
-          // A dropped/rejoined socket can miss inserts — re-load on (re)subscribe
-          // and on any terminal status so no message is permanently lost.
-          if (status === 'SUBSCRIBED' || status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-            void this.#load();
-          }
-        });
+      this.#openChannel();
+      // Rede de segurança: o iOS suspende o websocket em background e nem
+      // sempre o devolve vivo — um poll suave com a página visível garante
+      // que nenhuma mensagem fica presa, e ressuscita canais mortos.
+      this.#pollTimer = setInterval(() => {
+        if (this.#stopped || typeof document === 'undefined' || document.visibilityState !== 'visible') return;
+        const st = String(this.#channel?.state ?? '');
+        if (st === 'closed' || st === 'errored') this.#openChannel();
+        void this.#load();
+      }, 10_000);
     })();
     if (typeof document !== 'undefined') {
       this.#onVis = () => {
-        if (document.visibilityState === 'visible') void this.#load();
+        if (document.visibilityState !== 'visible') return;
+        const st = String(this.#channel?.state ?? '');
+        if (st === 'closed' || st === 'errored') this.#openChannel();
+        void this.#load();
       };
       document.addEventListener('visibilitychange', this.#onVis);
+      window.addEventListener('focus', this.#onVis);
     }
+  }
+
+  #openChannel(): void {
+    if (this.#channel) void this.#sb.removeChannel(this.#channel);
+    this.#channel = this.#sb
+      .channel(`couple_msg:${COUPLE_ID}:${this.conversationId}:${++CoupleChatStore.#chanSeq}`)
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'couple_messages', filter: `couple_id=eq.${COUPLE_ID}` },
+        (payload) => void this.#ingest(payload.new as Row)
+      )
+      .subscribe((status) => {
+        // A dropped/rejoined socket can miss inserts — re-load on (re)subscribe
+        // and on any terminal status so no message is permanently lost.
+        if (status === 'SUBSCRIBED' || status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          void this.#load();
+        }
+      });
   }
 
   stop(): void {
     this.#stopped = true;
     if (this.#channel) void this.#sb.removeChannel(this.#channel);
     this.#channel = null;
+    if (this.#pollTimer) clearInterval(this.#pollTimer);
+    this.#pollTimer = null;
     if (this.#onVis && typeof document !== 'undefined') {
       document.removeEventListener('visibilitychange', this.#onVis);
+      window.removeEventListener('focus', this.#onVis);
       this.#onVis = null;
     }
   }

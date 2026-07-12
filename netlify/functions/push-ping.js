@@ -23,7 +23,8 @@
 
 import webpush from 'web-push';
 
-const KINDS = new Set(['love', 'nudge', 'message']);
+// 'test' entrega ao PRÓPRIO remetente (auto-diagnóstico do botão de teste).
+const KINDS = new Set(['love', 'nudge', 'message', 'test']);
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const json = (statusCode, body) => ({
@@ -69,12 +70,14 @@ export const handler = async (event) => {
       headers: { apikey: ANON, authorization: auth, 'content-type': 'application/json', ...(init.headers || {}) }
     });
 
-  // 1) o token é válido?
+  // 1) o token é válido? (guarda o id — o modo teste entrega a si próprio)
   const userRes = await sb('/auth/v1/user');
   if (!userRes.ok) return json(401, { error: 'bad token' });
+  const user = await userRes.json().catch(() => null);
 
-  // 2) destinatário: explícito (mensagens) ou o parceiro do casal ativo (pings)
-  let target = explicitTo;
+  // 2) destinatário: explícito (mensagens), o próprio (teste) ou o parceiro
+  //    do casal ativo (pings)
+  let target = kind === 'test' ? user?.id : explicitTo;
   if (!target) {
     const partnerRes = await sb('/rest/v1/rpc/couple_partner', { method: 'POST', body: '{}' });
     if (!partnerRes.ok) return json(502, { error: 'partner lookup failed' });
@@ -94,8 +97,16 @@ export const handler = async (event) => {
   const message = JSON.stringify({ kind, title, body, url });
 
   let sent = 0;
+  const results = [];
   await Promise.all(
     subs.map(async (s) => {
+      const host = (() => {
+        try {
+          return new URL(s.endpoint).host;
+        } catch {
+          return '?';
+        }
+      })();
       try {
         await webpush.sendNotification(
           { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
@@ -103,13 +114,17 @@ export const handler = async (event) => {
           { TTL: 60 * 60, urgency: 'high' }
         );
         sent++;
+        results.push({ host, ok: true });
+        console.log('[push-ping] delivered', kind, '→', host);
       } catch (e) {
         // 404/410 = subscrição morta (limpa quando o dono reativar); resto é
         // best-effort — o broadcast realtime continua a ser o caminho rápido.
-        console.warn('[push-ping] send failed', e?.statusCode || e?.message);
+        const status = e?.statusCode || 0;
+        results.push({ host, ok: false, status });
+        console.warn('[push-ping] send FAILED', kind, '→', host, 'status', status, e?.body || e?.message || '');
       }
     })
   );
 
-  return json(200, { sent });
+  return json(200, { sent, of: subs.length, results });
 };

@@ -5175,5 +5175,11 @@
   "push.prompt_aria": "Enable notifications",
   "push.prompt_title": "Get the pings on your phone",
   "push.prompt_body": "The \"love you\", \"miss you\" and messages arrive even with the app closed.",
-  "push.prompt_cta": "Enable"
+  "push.prompt_cta": "Enable",
+  "push.test": "📲 Send a test notification",
+  "push.testing": "Sending test…",
+  "push.test_title": "🔔 Presuntinho test",
+  "push.test_body": "If you're reading this on your phone, everything works! 🐷",
+  "push.test_sent": "Test sent to {n} device(s) — it should arrive right away! 📲",
+  "push.test_failed": "The test didn't go through — check your connection and try again."
 }

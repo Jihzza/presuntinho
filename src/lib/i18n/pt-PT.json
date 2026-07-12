@@ -5175,5 +5175,11 @@
   "push.prompt_aria": "Ativar notificações",
   "push.prompt_title": "Recebe os pings no telemóvel",
   "push.prompt_body": "Os \"amo-te\", as \"saudades\" e as mensagens chegam mesmo com a app fechada.",
-  "push.prompt_cta": "Ativar"
+  "push.prompt_cta": "Ativar",
+  "push.test": "📲 Enviar notificação de teste",
+  "push.testing": "A enviar teste…",
+  "push.test_title": "🔔 Teste do Presuntinho",
+  "push.test_body": "Se estás a ler isto no telemóvel, está tudo a funcionar! 🐷",
+  "push.test_sent": "Teste enviado a {n} dispositivo(s) — deve chegar já! 📲",
+  "push.test_failed": "O teste não seguiu — verifica a ligação e tenta de novo."
 }
