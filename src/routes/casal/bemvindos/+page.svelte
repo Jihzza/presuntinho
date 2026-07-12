@@ -16,6 +16,7 @@
   import { accountState, startAccountSync } from '$lib/account/account-store.svelte';
   import { listSpaces, otherMember, setSpaceMeta, isCoupleActive, type Space, type SpaceMember } from '$lib/account/spaces';
   import { readCouplePrefs, writeCouplePrefs } from '$lib/couple/couple-prefs';
+  import PushToggle from '$lib/components/PushToggle.svelte';
 
   let step = $state<0 | 1 | 2>(0);
   let space = $state<Space | null>(null);
@@ -174,7 +175,15 @@
             </span>
             <span class="f-on">✓</span>
           </li>
+          <li class="f-push">
+            <span class="f-icon" aria-hidden="true">🔔</span>
+            <span class="f-body">
+              <strong>{$t('casal.bemvindos.f_push', { default: 'Pings no telemóvel' })}</strong>
+              <small>{$t('casal.bemvindos.f_push_sub', { default: 'Recebe os "amo-te" e as "saudades" mesmo com a app fechada, com vibração própria.' })}</small>
+            </span>
+          </li>
         </ul>
+        <PushToggle />
         <button type="button" class="btn primary" onclick={finish}>
           {$t('casal.bemvindos.finish', { default: 'Começar 💞' })}
         </button>

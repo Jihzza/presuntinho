@@ -75,6 +75,7 @@
   import Globe from 'lucide-svelte/icons/globe';
   import Database from 'lucide-svelte/icons/database';
   import Heart from 'lucide-svelte/icons/heart';
+  import PushToggle from '$lib/components/PushToggle.svelte';
   import Github from 'lucide-svelte/icons/github';
   import ExternalLink from 'lucide-svelte/icons/external-link';
   import Bot from 'lucide-svelte/icons/bot';
@@ -1533,6 +1534,18 @@
       <p class="hint err">{$t('settings.hermes.test_fail')}</p>
     {/if}
   </section>
+
+  <!-- ============ Push dos pings de casal (contas) ============ -->
+  {#if couple.available && !coupleProfile}
+    <section class="card" aria-labelledby="push-h">
+      <div class="card-head">
+        <span class="icon-wrap"><Heart size={18} /></span>
+        <h2 id="push-h">{$t('settings.push.title', { default: 'Pings no telemóvel' })}</h2>
+      </div>
+      <p class="muted">{$t('settings.push.hint', { default: 'Recebe os "amo-te muito" e as "saudades" como notificação no telemóvel, com vibração própria — mesmo com a app fechada.' })}</p>
+      <PushToggle />
+    </section>
+  {/if}
 
   <!-- ============ Couple connection ============ -->
   {#if coupleProfile}

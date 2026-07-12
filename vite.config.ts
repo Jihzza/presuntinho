@@ -74,6 +74,10 @@ export default defineConfig({
       workbox: {
         // Prefix cache name with unique build ID to force cache invalidation on deploy
         cacheId: CACHE_NAME,
+        // Web Push dos pings de casal: handlers de push/notificationclick vivem
+        // em static/push-sw.js e são importados pelo worker gerado — mantém a
+        // estratégia generateSW (batalha-testada acima) intacta.
+        importScripts: ['push-sw.js'],
         // @vite-pwa/sveltekit generates the worker during the SSR build, then
         // adapter-static copies client output to build/. Ensure the client dir
         // exists before Workbox writes here (Windows/Node 24 can otherwise race).
