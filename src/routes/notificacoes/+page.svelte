@@ -149,7 +149,7 @@
 </div>
 
 <style>
-  .notifications-page { max-width: 640px; margin: 0 auto; padding: 1rem 1rem 8rem; color: var(--txt); }
+  .notifications-page { width: 100%; max-width: 640px; margin: 0 auto; padding: 1rem 1rem calc(6rem + env(safe-area-inset-bottom)); color: var(--txt); }
   /* Compact header row (Mensagens-style): back · title · quiet action. */
   .topbar { display: flex; align-items: center; gap: .75rem; padding: .25rem 0 .5rem; }
   .back { color: var(--txt); text-decoration: none; font-size: 1.4rem; line-height: 1; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; }
