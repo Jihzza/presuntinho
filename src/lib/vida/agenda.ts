@@ -89,11 +89,22 @@ export interface SocialRequestNotif {
   href: string;
 }
 
+/** Atividade do casal/amigos para o inbox: pings recentes e mensagens por ler. */
+export interface CoupleActivityNotif {
+  id: string;
+  kind: 'ping-love' | 'ping-nudge' | 'messages';
+  /** Quem enviou (nome de exibição). */
+  name: string;
+  count: number;
+  href: string;
+}
+
 /** Optional non-agenda sources merged into the notification inbox. */
 export interface NotificationExtras {
   orcamentos?: OrcamentoStatus[];
   quests?: DailyQuestsResult;
   social?: SocialRequestNotif[];
+  coupleActivity?: CoupleActivityNotif[];
 }
 
 /** Which sources to include when loading a range. All default to true. */
@@ -632,8 +643,122 @@ async function loadSocialRequests(): Promise<SocialRequestNotif[]> {
   }
 }
 
+/** Pings recentes (48h) do parceiro + mensagens por ler (couple + DMs),
+ *  medidos contra os cursores de leitura locais dos chats. */
+async function loadCoupleActivity(): Promise<CoupleActivityNotif[]> {
+  try {
+    const { getSession, isLegacyProfile } = await import('$lib/auth/session');
+    const me = getSession()?.profile;
+    if (!me || isLegacyProfile(me)) return [];
+    const { isMultiplayerConfigured } = await import('$lib/multiplayer/config');
+    if (!isMultiplayerConfigured()) return [];
+    const [{ getSupabaseClient }, { listContacts }, { listSpaces, isCoupleActive, otherMember }, { dmConversationId }] =
+      await Promise.all([
+        import('$lib/multiplayer/client'),
+        import('$lib/account/contacts'),
+        import('$lib/account/spaces'),
+        import('$lib/chat/dm-id')
+      ]);
+    const sb = getSupabaseClient();
+    const out: CoupleActivityNotif[] = [];
+
+    const spaces = await listSpaces().catch(() => [] as Awaited<ReturnType<typeof listSpaces>>);
+    const active = spaces.find(isCoupleActive);
+    const partner = active ? otherMember(active, me) : null;
+    const partnerName = partner?.display_name || (partner ? `@${partner.handle}` : '');
+
+    const cursor = (key: string): number => {
+      try {
+        return Number(localStorage.getItem(key)) || 0;
+      } catch {
+        return 0;
+      }
+    };
+
+    // Pings do parceiro nas últimas 48h — id inclui a row mais recente, para
+    // um ping novo voltar a contar como "por ler" no inbox.
+    if (active && partner) {
+      const since = new Date(Date.now() - 48 * 3600_000).toISOString();
+      const { data } = await sb
+        .from('couple_pings')
+        .select('id, kind, created_at')
+        .eq('couple_id', active.id)
+        .eq('sender', partner.id)
+        .gt('created_at', since)
+        .order('created_at', { ascending: false })
+        .limit(50);
+      const rows = (data ?? []) as { id: string; kind: 'love' | 'nudge' }[];
+      for (const kind of ['love', 'nudge'] as const) {
+        const ofKind = rows.filter((r) => r.kind === kind);
+        if (!ofKind.length) continue;
+        out.push({
+          id: `ping:${kind}:${ofKind[0].id}`,
+          kind: kind === 'love' ? 'ping-love' : 'ping-nudge',
+          name: partnerName,
+          count: ofKind.length,
+          href: '/mensagens/'
+        });
+      }
+    }
+
+    // Mensagens por ler (couple 'main' + DMs), numa só query consolidada.
+    const contacts = (await listContacts().catch(() => [])).filter((c) => c.id !== partner?.id).slice(0, 15);
+    const threads: { key: string; couple: boolean; name: string; href: string; cursorKey: string }[] = [];
+    if (active && partner) {
+      threads.push({
+        key: active.id,
+        couple: true,
+        name: partnerName,
+        href: '/mensagens/',
+        cursorKey: 'presuntinho-couple-chat-read-main'
+      });
+    }
+    for (const c of contacts) {
+      threads.push({
+        key: dmConversationId(me, c.id),
+        couple: false,
+        name: c.display_name || `@${c.handle}`,
+        href: `/mensagens/?dm=${c.handle}`,
+        cursorKey: `presuntinho-dm-read-${dmConversationId(me, c.id)}`
+      });
+    }
+    if (threads.length) {
+      const since = new Date(Date.now() - 72 * 3600_000).toISOString();
+      const { data } = await sb
+        .from('couple_messages')
+        .select('couple_id, conversation_id, sender, created_at')
+        .in('couple_id', threads.map((t) => t.key))
+        .neq('sender', me)
+        .gt('created_at', since)
+        .order('created_at', { ascending: false })
+        .limit(300);
+      const rows = (data ?? []) as { couple_id: string; conversation_id: string; sender: string; created_at: string }[];
+      for (const t of threads) {
+        const cur = cursor(t.cursorKey);
+        const unread = rows.filter(
+          (r) =>
+            r.couple_id === t.key &&
+            (!t.couple || r.conversation_id === 'main') &&
+            new Date(r.created_at).getTime() > cur
+        );
+        if (!unread.length) continue;
+        out.push({
+          id: `msgs:${t.key}:${new Date(unread[0].created_at).getTime()}`,
+          kind: 'messages',
+          name: t.name,
+          count: unread.length,
+          href: t.href
+        });
+      }
+    }
+    return out;
+  } catch {
+    return []; // signed-out / offline — inbox sem atividade de casal
+  }
+}
+
 export async function loadNotificationExtras(): Promise<NotificationExtras> {
-  const [orcamentos, quests, social] = await Promise.all([
+  const [orcamentos, quests, social, coupleActivity] = await Promise.all([
     getOrcamentoStatus(getMesAtual()).catch((err) => {
       console.warn('[agenda] budget status unavailable (non-fatal)', err);
       return [] as OrcamentoStatus[];
@@ -642,9 +767,10 @@ export async function loadNotificationExtras(): Promise<NotificationExtras> {
       console.warn('[agenda] daily quests unavailable (non-fatal)', err);
       return undefined;
     }),
-    loadSocialRequests()
+    loadSocialRequests(),
+    loadCoupleActivity()
   ]);
-  return { orcamentos, quests, social };
+  return { orcamentos, quests, social, coupleActivity };
 }
 
 export function buildNotifications(items: AgendaItem[], extras: NotificationExtras = {}): NotificationItem[] {
@@ -661,6 +787,37 @@ export function buildNotifications(items: AgendaItem[], extras: NotificationExtr
     list.length > 0 ? list.reduce((min, i) => (i.date < min ? i.date : min), list[0].date) : undefined;
 
   const notifications: NotificationItem[] = [];
+
+  // Coração primeiro: pings do parceiro e mensagens por ler.
+  for (const a of extras.coupleActivity ?? []) {
+    const title =
+      a.kind === 'ping-love'
+        ? a.count > 1
+          ? tr('agenda.notifications.ping.love_many', '💛 {name} mandou-te amor ×{n}', { name: a.name, n: a.count })
+          : tr('agenda.notifications.ping.love', '💛 {name} mandou-te amor', { name: a.name })
+        : a.kind === 'ping-nudge'
+          ? a.count > 1
+            ? tr('agenda.notifications.ping.nudge_many', '👀 {name} teve saudades tuas ×{n}', { name: a.name, n: a.count })
+            : tr('agenda.notifications.ping.nudge', '👀 {name} teve saudades tuas', { name: a.name })
+          : a.count > 1
+            ? tr('agenda.notifications.msgs.many', '💬 {n} mensagens novas de {name}', { name: a.name, n: a.count })
+            : tr('agenda.notifications.msgs.one', '💬 Mensagem nova de {name}', { name: a.name });
+    notifications.push({
+      id: a.id,
+      title,
+      body:
+        a.kind === 'messages'
+          ? tr('agenda.notifications.msgs.body', 'Toca para abrir a conversa.')
+          : tr('agenda.notifications.ping.body', 'Do coração para o teu ecrã. 💌'),
+      href: a.href,
+      tone: 'life',
+      priority: 1,
+      type: 'love',
+      icon: a.kind === 'ping-love' ? '💛' : a.kind === 'ping-nudge' ? '👀' : '💬',
+      date: today,
+      section: 'today'
+    });
+  }
 
   // People first: pending friend/couple requests answer in one tap.
   for (const s of extras.social ?? []) {

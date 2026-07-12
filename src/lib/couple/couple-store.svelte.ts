@@ -184,6 +184,10 @@ function applySnapshot(me: ChatProfile, snap: CoupleSnapshot): void {
 }
 
 function receivePing(me: string, kind: 'love' | 'nudge'): void {
+  // O mesmo ping pode chegar por broadcast E por postgres_changes (row) com
+  // milissegundos de diferença — o gate temporal engole o duplicado (o
+  // cooldown de envio garante que pings distintos nunca caem na janela).
+  if (!pingToastGate()) return;
   // Device preference from the couple onboarding — pings can be silenced.
   try {
     const raw = localStorage.getItem('presuntinho-couple-prefs');
@@ -285,6 +289,7 @@ async function initSupabasePoints(id: CoupleIdentity): Promise<void> {
       else if (prof === other) couple.partnerPoints = Math.max(couple.partnerPoints, pts);
       couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
     });
+    subscribePersistedPings(id);
     await reconcileSupabasePoints();
     couple.ready = true;
   } catch (e) {
@@ -294,6 +299,48 @@ async function initSupabasePoints(id: CoupleIdentity): Promise<void> {
     supaPointsUnsub?.();
     supaPointsUnsub = null;
   }
+}
+
+// ── pings persistidos (couple_pings) ────────────────────────────────────────
+// O broadcast (room) exige as DUAS apps abertas e ligadas ao mesmo tempo; as
+// rows em couple_pings chegam por postgres_changes a qualquer app aberta e
+// alimentam a página de notificações. Dedupe temporal: se o broadcast já
+// mostrou o toast, o evento da row (que chega logo a seguir) é ignorado.
+let pingsChannelUnsub: (() => void) | null = null;
+let lastPingToastAt = 0;
+
+function pingToastGate(): boolean {
+  const now = Date.now();
+  if (now - lastPingToastAt < 4000) return false;
+  lastPingToastAt = now;
+  return true;
+}
+
+function subscribePersistedPings(id: CoupleIdentity): void {
+  if (id.legacy) return; // par legado: pings continuam via Blobs snapshot
+  void (async () => {
+    try {
+      const { getSupabaseClient } = await import('$lib/multiplayer/client');
+      const startedAt = new Date().toISOString();
+      pingsChannelUnsub?.();
+      const channel = getSupabaseClient()
+        .channel(`couple_pings:${id.coupleId}`)
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'couple_pings', filter: `couple_id=eq.${id.coupleId}` },
+          (payload) => {
+            const row = payload.new as { sender?: string; kind?: 'love' | 'nudge'; created_at?: string };
+            if (row.sender !== id.other) return; // os meus próprios não tocam
+            if (row.created_at && row.created_at < startedAt) return; // histórico
+            receivePing(id.me, row.kind === 'nudge' ? 'nudge' : 'love');
+          }
+        )
+        .subscribe();
+      pingsChannelUnsub = () => void getSupabaseClient().removeChannel(channel);
+    } catch {
+      /* realtime é enhancement — o push e o broadcast continuam */
+    }
+  })();
 }
 
 /** Fire-and-forget a channel message; a dead channel is fine (poll reconciles). */
@@ -396,6 +443,16 @@ async function sendPing(kind: 'love' | 'nudge'): Promise<PingResult> {
     // surprise heart, a ping is a "right now" moment, not a mailbox) + Web
     // Push real nos dispositivos do parceiro, com o MEU nome no título.
     if (room) broadcast(kind, { profile: me, ts: now });
+    // Persistência (couple_pings): alimenta a página de notificações e entrega
+    // o toast via postgres_changes quando a sala broadcast não está ligada.
+    void (async () => {
+      try {
+        const { getSupabaseClient } = await import('$lib/multiplayer/client');
+        await getSupabaseClient().from('couple_pings').insert({ couple_id: id.coupleId, sender: me, kind });
+      } catch {
+        /* best-effort */
+      }
+    })();
     void (async () => {
       const [{ sendPingPush }, { accountState }] = await Promise.all([
         import('$lib/push'),
@@ -552,6 +609,8 @@ export function stopCouplePoller(): void {
   couple.partnerOnline = false;
   supaPointsUnsub?.();
   supaPointsUnsub = null;
+  pingsChannelUnsub?.();
+  pingsChannelUnsub = null;
   supa = null;
   supaActive = false;
   identity = null;

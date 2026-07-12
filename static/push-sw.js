@@ -9,6 +9,8 @@
 const LOVE_VIBRATION = [90, 50, 90, 300, 90, 50, 90];
 // 👀 saudades: três toques rápidos + um longo (insistente, tipo "anda cá")
 const NUDGE_VIBRATION = [60, 70, 60, 70, 60, 260, 200];
+// 💬 mensagem: toque duplo curto (discreto)
+const MESSAGE_VIBRATION = [70, 60, 70];
 
 self.addEventListener('push', (event) => {
   let data = {};
@@ -17,17 +19,20 @@ self.addEventListener('push', (event) => {
   } catch {
     data = { body: event.data ? event.data.text() : '' };
   }
-  const kind = data.kind === 'nudge' ? 'nudge' : 'love';
+  const kind = data.kind === 'nudge' ? 'nudge' : data.kind === 'message' ? 'message' : 'love';
   const title = data.title || 'Presuntinho 💞';
+  const url = data.url || '/';
   event.waitUntil(
     self.registration.showNotification(title, {
       body: data.body || '',
       icon: '/icons/icon-192.png',
       badge: '/icons/icon-192.png',
-      tag: `presuntinho-ping-${kind}`,
+      // Mensagens coalescem por conversa (o url identifica a thread); pings
+      // coalescem por tipo — a última substitui a anterior, com re-aviso.
+      tag: kind === 'message' ? `presuntinho-msg-${url}` : `presuntinho-ping-${kind}`,
       renotify: true,
-      vibrate: kind === 'nudge' ? NUDGE_VIBRATION : LOVE_VIBRATION,
-      data: { url: data.url || '/' }
+      vibrate: kind === 'nudge' ? NUDGE_VIBRATION : kind === 'message' ? MESSAGE_VIBRATION : LOVE_VIBRATION,
+      data: { url }
     })
   );
 });

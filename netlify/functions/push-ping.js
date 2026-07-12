@@ -15,11 +15,16 @@
 // ENV: VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT,
 //      VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY (as mesmas do build).
 //
-// POST { kind: 'love'|'nudge', title?, body? } → { sent: n }
+// POST { kind: 'love'|'nudge'|'message', to?, title?, body?, url? } → { sent: n }
+//   • love/nudge → destinatário = parceiro do casal ativo (couple_partner)
+//   • message    → destinatário = `to`; a RLS só devolve subscrições de
+//                  contactos ligados/casal, por isso não há como notificar
+//                  estranhos — a query volta vazia.
 
 import webpush from 'web-push';
 
-const KINDS = new Set(['love', 'nudge']);
+const KINDS = new Set(['love', 'nudge', 'message']);
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const json = (statusCode, body) => ({
   statusCode,
@@ -48,9 +53,15 @@ export const handler = async (event) => {
   }
   const kind = KINDS.has(payload.kind) ? payload.kind : null;
   if (!kind) return json(400, { error: 'bad kind' });
-  // Texto vem do cliente (já localizado); só limitamos o tamanho.
-  const title = String(payload.title || (kind === 'love' ? '💛 Amo-te muito!' : '👀 Saudades tuas!')).slice(0, 80);
+  // Texto vem do cliente (já localizado); só limitamos o tamanho. O url tem
+  // de ser um path interno (a notificação abre a própria app).
+  const title = String(payload.title || (kind === 'love' ? '💛 Amo-te muito!' : kind === 'nudge' ? '👀 Saudades tuas!' : '💬 Nova mensagem')).slice(0, 80);
   const body = String(payload.body || '').slice(0, 160);
+  const rawUrl = String(payload.url || '/');
+  const url = rawUrl.startsWith('/') && !rawUrl.startsWith('//') ? rawUrl.slice(0, 120) : '/';
+  // `to` explícito para DMs; sem `to`, o destinatário é o parceiro do casal
+  // (pings e mensagens do chat do casal).
+  const explicitTo = typeof payload.to === 'string' && UUID_RE.test(payload.to) ? payload.to : null;
 
   const sb = (path, init = {}) =>
     fetch(`${SUPABASE_URL}${path}`, {
@@ -62,20 +73,25 @@ export const handler = async (event) => {
   const userRes = await sb('/auth/v1/user');
   if (!userRes.ok) return json(401, { error: 'bad token' });
 
-  // 2) parceiro do casal ativo (null → nada a entregar)
-  const partnerRes = await sb('/rest/v1/rpc/couple_partner', { method: 'POST', body: '{}' });
-  if (!partnerRes.ok) return json(502, { error: 'partner lookup failed' });
-  const partner = await partnerRes.json();
-  if (!partner) return json(200, { sent: 0, reason: 'no active couple' });
+  // 2) destinatário: explícito (mensagens) ou o parceiro do casal ativo (pings)
+  let target = explicitTo;
+  if (!target) {
+    const partnerRes = await sb('/rest/v1/rpc/couple_partner', { method: 'POST', body: '{}' });
+    if (!partnerRes.ok) return json(502, { error: 'partner lookup failed' });
+    const partner = await partnerRes.json();
+    if (!partner) return json(200, { sent: 0, reason: 'no active couple' });
+    target = partner;
+  }
 
-  // 3) subscrições do parceiro (RLS: só o casal as vê)
-  const subsRes = await sb(`/rest/v1/push_subscriptions?account=eq.${partner}&select=endpoint,p256dh,auth`);
+  // 3) subscrições do destinatário (RLS: só contactos ligados/casal as veem —
+  //    para um estranho a query volta simplesmente vazia)
+  const subsRes = await sb(`/rest/v1/push_subscriptions?account=eq.${target}&select=endpoint,p256dh,auth`);
   if (!subsRes.ok) return json(502, { error: 'subscriptions lookup failed' });
   const subs = await subsRes.json();
   if (!Array.isArray(subs) || subs.length === 0) return json(200, { sent: 0, reason: 'no subscriptions' });
 
   webpush.setVapidDetails(SUBJECT, PUB, PRIV);
-  const message = JSON.stringify({ kind, title, body, url: '/' });
+  const message = JSON.stringify({ kind, title, body, url });
 
   let sent = 0;
   await Promise.all(

@@ -5163,5 +5163,17 @@
   "casal.bemvindos.f_push_sub": "استقبل «أحبك» و«اشتقت إليك» حتى والتطبيق مغلق، باهتزاز خاص.",
   "settings.push.title": "نبضات على الهاتف",
   "settings.push.hint": "استقبل «أحبك كثيرًا» و«اشتقت إليك» كإشعار على الهاتف باهتزاز خاص — حتى والتطبيق مغلق.",
-  "couple.ping.push_body": "المس لفتح Presuntinho 🐷"
+  "couple.ping.push_body": "المس لفتح Presuntinho 🐷",
+  "agenda.notifications.ping.love": "💛 {name} أرسل لك حبًا",
+  "agenda.notifications.ping.love_many": "💛 {name} أرسل لك حبًا ×{n}",
+  "agenda.notifications.ping.nudge": "👀 {name} اشتاق إليك",
+  "agenda.notifications.ping.nudge_many": "👀 {name} اشتاق إليك ×{n}",
+  "agenda.notifications.ping.body": "من القلب إلى شاشتك. 💌",
+  "agenda.notifications.msgs.one": "💬 رسالة جديدة من {name}",
+  "agenda.notifications.msgs.many": "💬 {n} رسائل جديدة من {name}",
+  "agenda.notifications.msgs.body": "المس لفتح المحادثة.",
+  "push.prompt_aria": "تفعيل الإشعارات",
+  "push.prompt_title": "استقبل النبضات على هاتفك",
+  "push.prompt_body": "«أحبك» و«اشتقت إليك» والرسائل تصل حتى والتطبيق مغلق.",
+  "push.prompt_cta": "تفعيل"
 }

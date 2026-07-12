@@ -155,11 +155,35 @@ export class DmChatStore {
         .single();
       if (error) throw error;
       this.messages = this.messages.map((m) => (m.id === localId ? this.#rowToMsg(data as Row) : m));
+      this.#pushAfterSend(text);
       return 'sent';
     } catch {
       this.messages = this.messages.map((m) => (m.id === localId ? { ...m, pending: false, failed: true } : m));
       return 'failed';
     }
+  }
+
+  /** Push no telemóvel do amigo (fire-and-forget, com throttle por thread). */
+  #pushAfterSend(preview: string): void {
+    void (async () => {
+      try {
+        const [{ sendPushNotify, shouldPushMessage }, { accountState }] = await Promise.all([
+          import('$lib/push'),
+          import('$lib/account/account-store.svelte')
+        ]);
+        if (!shouldPushMessage(this.dmId)) return;
+        const me = accountState.account;
+        if (!me) return;
+        await sendPushNotify('message', {
+          to: this.otherId,
+          title: `💬 ${me.display_name || `@${me.handle}`}`,
+          body: preview.slice(0, 120),
+          url: `/mensagens/?dm=${me.handle}`
+        });
+      } catch {
+        /* best-effort */
+      }
+    })();
   }
 
   // DMs are text-only in v1 (the composer hides media controls).

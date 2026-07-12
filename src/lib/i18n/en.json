@@ -5163,5 +5163,17 @@
   "casal.bemvindos.f_push_sub": "Get the \"love you\" and \"miss you\" even with the app closed, with its own vibration.",
   "settings.push.title": "Pings on your phone",
   "settings.push.hint": "Get the \"love you so much\" and \"miss you\" as a phone notification with its own vibration — even with the app closed.",
-  "couple.ping.push_body": "Tap to open Presuntinho 🐷"
+  "couple.ping.push_body": "Tap to open Presuntinho 🐷",
+  "agenda.notifications.ping.love": "💛 {name} sent you love",
+  "agenda.notifications.ping.love_many": "💛 {name} sent you love ×{n}",
+  "agenda.notifications.ping.nudge": "👀 {name} missed you",
+  "agenda.notifications.ping.nudge_many": "👀 {name} missed you ×{n}",
+  "agenda.notifications.ping.body": "From the heart to your screen. 💌",
+  "agenda.notifications.msgs.one": "💬 New message from {name}",
+  "agenda.notifications.msgs.many": "💬 {n} new messages from {name}",
+  "agenda.notifications.msgs.body": "Tap to open the chat.",
+  "push.prompt_aria": "Enable notifications",
+  "push.prompt_title": "Get the pings on your phone",
+  "push.prompt_body": "The \"love you\", \"miss you\" and messages arrive even with the app closed.",
+  "push.prompt_cta": "Enable"
 }
