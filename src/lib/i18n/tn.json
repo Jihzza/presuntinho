@@ -4635,7 +4635,7 @@
   "vida.streaks.desc": "Echo3la mte3ek, el XP el yawmi w el marcos.",
   "appcard.progress.aria": "Ta9addom: {done} men {total}",
   "hub.profile.open_aria": "7ell el profil mte3ek",
-  "hub.profile.view": "Chouf el profil →",
+  "hub.profile.view": "Chouf el profil",
   "hub.resume.aria": "Kammel mnin w9aft",
   "hub.resume.eyebrow": "Kammel mnin w9aft",
   "hub.resume.cta": "Kammel →",
@@ -5220,5 +5220,9 @@
   "posts.empty": "Mazel ma famech publications hné.",
   "posts.empty_own": "Mazelt ma publiit chay. 9oul ahla lel 3alam! 👋",
   "posts.delete": "Fasakh el publication",
-  "posts.comment_ph": "Ekteb commentaire…"
+  "posts.comment_ph": "Ekteb commentaire…",
+  "uprofile.edit_profile": "Baddel el profil",
+  "uprofile.stats_aria": "Statistiques mte3 el profil",
+  "hub.profile.open": "7ell el profil mte3ek",
+  "a11y.my_profile": "Profil mte3i"
 }

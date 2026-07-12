@@ -28,32 +28,39 @@ export interface PostComment {
 
 const sb = () => getSupabaseClient();
 
-/** Posts de um autor, mais recentes primeiro (com contagens + o meu like). */
+/** Posts de um autor, mais recentes primeiro (com contagens + o meu like).
+ *  Três queries PLANAS de propósito — nada de embeds/agregados do PostgREST,
+ *  cuja disponibilidade varia com a configuração e falhava em silêncio
+ *  (o perfil mostrava "sem publicações" com posts visíveis pela RLS). */
 export async function listPosts(authorId: string, limit = 50): Promise<Post[]> {
   const me = await getAuthUser();
   const { data, error } = await sb()
     .from('posts')
-    .select('id, author, body, created_at, post_likes(account), post_comments(count)')
+    .select('id, author, body, created_at')
     .eq('author', authorId)
     .order('created_at', { ascending: false })
     .limit(limit);
   if (error) throw error;
-  type Row = {
-    id: string;
-    author: string;
-    body: string;
-    created_at: string;
-    post_likes: { account: string }[];
-    post_comments: { count: number }[];
-  };
-  return ((data as Row[]) ?? []).map((r) => ({
+  type Row = { id: string; author: string; body: string; created_at: string };
+  const rows = (data as Row[]) ?? [];
+  if (!rows.length) return [];
+
+  const ids = rows.map((r) => r.id);
+  const [likesRes, commentsRes] = await Promise.all([
+    sb().from('post_likes').select('post_id, account').in('post_id', ids),
+    sb().from('post_comments').select('post_id').in('post_id', ids)
+  ]);
+  const likes = (likesRes.data as { post_id: string; account: string }[] | null) ?? [];
+  const comments = (commentsRes.data as { post_id: string }[] | null) ?? [];
+
+  return rows.map((r) => ({
     id: r.id,
     author: r.author,
     body: r.body,
     created_at: r.created_at,
-    likeCount: r.post_likes?.length ?? 0,
-    commentCount: r.post_comments?.[0]?.count ?? 0,
-    likedByMe: Boolean(me && r.post_likes?.some((l) => l.account === me.id))
+    likeCount: likes.filter((l) => l.post_id === r.id).length,
+    commentCount: comments.filter((c) => c.post_id === r.id).length,
+    likedByMe: Boolean(me && likes.some((l) => l.post_id === r.id && l.account === me.id))
   }));
 }
 

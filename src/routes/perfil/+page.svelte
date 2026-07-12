@@ -2,17 +2,31 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { t } from 'svelte-i18n';
-  import { getSession } from '$lib/auth/session';
+  import { getSession, isLegacyProfile } from '$lib/auth/session';
+  import { accountState, startAccountSync } from '$lib/account/account-store.svelte';
 
   let noSession = $state(false);
 
   onMount(() => {
-    const session = getSession();
-    if (!session) {
-      noSession = true;
-      return;
-    }
-    void goto(`/perfil/${session.profile}/`, { replaceState: true });
+    void (async () => {
+      const session = getSession();
+      if (!session) {
+        noSession = true;
+        return;
+      }
+      // Contas: UM só perfil — o público (/u), onde vivem a foto, a bio e as
+      // publicações. O /perfil/[id] legado fica para os perfis locais antigos.
+      if (!isLegacyProfile(session.profile)) {
+        await startAccountSync();
+        if (accountState.account) {
+          void goto(`/u/?h=${accountState.account.handle}`, { replaceState: true });
+          return;
+        }
+        void goto('/conta/', { replaceState: true });
+        return;
+      }
+      void goto(`/perfil/${session.profile}/`, { replaceState: true });
+    })();
   });
 </script>
 

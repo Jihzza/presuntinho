@@ -4,6 +4,7 @@
   import { goto, afterNavigate } from '$app/navigation';
   import { getSession, isLegacyProfile } from '$lib/auth/session';
   import CoupleCelebration from '$lib/components/CoupleCelebration.svelte';
+  import { accountState } from '$lib/account/account-store.svelte';
   import { initStores, markVisited } from '$lib/state/stores';
   import Confetti from '$lib/components/Confetti.svelte';
   import Toast from '$lib/components/Toast.svelte';
@@ -55,6 +56,9 @@
   const socialCount = $derived(socialBadge + socialInvites);
   // Per-device couple prefs (chosen in /casal/bemvindos) gate the heart.
   let couplePrefs = $state({ heart: true, pings: true });
+  // Conta para o avatar do header (fonte única de identidade) — o $state do
+  // account-store é reativo entre módulos, basta derivar.
+  const headerAccount = $derived(accountState.account);
   // Convite one-time para ativar o push quando o casal está ativo mas este
   // dispositivo ainda não tem subscrição (sem ela, pings/mensagens não chegam
   // ao telemóvel — foi exatamente o que aconteceu no primeiro teste real).
@@ -515,6 +519,22 @@
                   <a href="/" class="logo-text" aria-label={$t('a11y.logo.brand', { default: 'Presuntinho — voltar ao hub' })}>Presuntinho</a>
                 </div>
                 <div class="nav-actions">
+                  <!-- O teu perfil, sempre à mão: avatar da CONTA em todas as
+                       páginas → abre o perfil público (/u). -->
+                  {#if headerAccount}
+                    <a
+                      href={`/u/?h=${headerAccount.handle}`}
+                      class="icon-btn avatar-btn"
+                      aria-label={$t('a11y.my_profile', { default: 'O meu perfil' })}
+                      title={$t('a11y.my_profile', { default: 'O meu perfil' })}
+                    >
+                      {#if headerAccount.avatar_url}
+                        <img class="avatar-btn-img" src={headerAccount.avatar_url} alt="" />
+                      {:else}
+                        <span class="avatar-btn-emoji" aria-hidden="true">{headerAccount.emoji ?? '🙂'}</span>
+                      {/if}
+                    </a>
+                  {/if}
                   <!-- Global notifications bell with an unread badge — reachable
                        from every screen, not just the Home hero chip. -->
                   <a
@@ -845,6 +865,9 @@
       font-size: 0.85rem;
     }
   }
+  .avatar-btn { overflow: hidden; padding: 0; }
+  .avatar-btn-img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+  .avatar-btn-emoji { font-size: 1.25rem; line-height: 1; }
   .icon-btn {
     display: inline-flex;
     align-items: center;

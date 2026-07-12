@@ -4622,7 +4622,7 @@
   "vida.streaks.desc": "Ta flamme, ton XP quotidien et tes paliers.",
   "appcard.progress.aria": "Progression : {done} sur {total}",
   "hub.profile.open_aria": "Ouvrir ton profil",
-  "hub.profile.view": "Voir le profil →",
+  "hub.profile.view": "Voir le profil",
   "hub.resume.aria": "Reprends où tu en étais",
   "hub.resume.eyebrow": "Reprends où tu en étais",
   "hub.resume.cta": "Continuer →",
@@ -5207,5 +5207,9 @@
   "posts.empty": "Pas encore de publications ici.",
   "posts.empty_own": "Tu n’as encore rien publié. Dis bonjour au monde ! 👋",
   "posts.delete": "Supprimer la publication",
-  "posts.comment_ph": "Écris un commentaire…"
+  "posts.comment_ph": "Écris un commentaire…",
+  "uprofile.edit_profile": "Modifier le profil",
+  "uprofile.stats_aria": "Statistiques du profil",
+  "hub.profile.open": "Ouvrir ton profil",
+  "a11y.my_profile": "Mon profil"
 }

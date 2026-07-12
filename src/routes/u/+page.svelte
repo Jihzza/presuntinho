@@ -293,18 +293,37 @@
     </div>
   {:else if person}
     <div class="card profile">
+      <div class="cover" aria-hidden="true"></div>
       <span class="avatar-ring" aria-hidden="true">
-        <Avatar emoji={person.emoji} url={person.avatar_url} size={92} alt="" />
+        <Avatar emoji={person.emoji} url={person.avatar_url} size={96} alt="" />
       </span>
       <h2 class="name">{displayName}</h2>
       <p class="handle">@{person.handle}</p>
       {#if person.bio}<p class="bio">{person.bio}</p>{/if}
 
+      <div class="stats" aria-label={$t('uprofile.stats_aria', { default: 'Estatísticas do perfil' })}>
+        <div class="stat">
+          <strong>{postsLoaded ? posts.length : '–'}</strong>
+          <span>{$t('posts.section', { default: 'Publicações' })}</span>
+        </div>
+        {#if coupleState === 'active'}
+          <div class="stat">
+            <strong>💞</strong>
+            <span>{$t('couplelink.tag', { default: 'Casal' })}</span>
+          </div>
+        {:else if conn?.status === 'accepted'}
+          <div class="stat">
+            <strong>✓</strong>
+            <span>{$t('uprofile.state_friends', { default: 'Amigos' })}</span>
+          </div>
+        {/if}
+      </div>
+
       {#if isSelf}
         <p class="state-tag self-tag">{$t('uprofile.self', { default: 'Este perfil és tu 😄' })}</p>
         <div class="actions">
-          <button type="button" class="btn primary" onclick={shareProfile}>📤 {$t('uprofile.share', { default: 'Partilhar perfil' })}</button>
-          <a class="btn" href="/conta/">{$t('uprofile.edit', { default: 'Editar conta' })}</a>
+          <a class="btn primary" href="/conta/">✏️ {$t('uprofile.edit_profile', { default: 'Editar perfil' })}</a>
+          <button type="button" class="btn" onclick={shareProfile}>📤 {$t('uprofile.share', { default: 'Partilhar' })}</button>
         </div>
       {:else if !accountState.account}
         <p class="sub">{$t('uprofile.visitor_hint', { default: 'Cria a tua conta para adicionares esta pessoa.' })}</p>
@@ -392,7 +411,7 @@
 
       {#if !accountState.account}
         <p class="posts-hint">{$t('posts.visitor', { default: 'Cria a tua conta para veres as publicações.' })}</p>
-      {:else if !canSeePosts}
+      {:else if !canSeePosts && posts.length === 0}
         <p class="posts-hint">🔒 {$t('posts.locked', { default: 'As publicações são para amigos — envia um pedido de amizade para as veres.' })}</p>
       {:else if postsLoaded && posts.length === 0}
         <p class="posts-hint">{isSelf ? $t('posts.empty_own', { default: 'Ainda não publicaste nada. Diz olá ao mundo! 👋' }) : $t('posts.empty', { default: 'Ainda não há publicações por aqui.' })}</p>
@@ -467,6 +486,27 @@
     background: var(--card); border: 1px solid var(--border);
     border-radius: var(--radius-xl, 1.25rem); box-shadow: var(--shadow-md);
   }
+  /* Perfil com capa: o card abre com um gradiente rosa full-bleed e o avatar
+     fica a cavalo entre a capa e o conteúdo (look Twitter/Instagram). */
+  .card.profile { padding: 0 1.4rem 1.6rem; overflow: hidden; }
+  .cover {
+    width: calc(100% + 2.8rem);
+    margin: 0 -1.4rem;
+    height: clamp(96px, 26vw, 140px);
+    background:
+      radial-gradient(circle at 16% 30%, color-mix(in srgb, var(--accent) 45%, transparent), transparent 42%),
+      radial-gradient(circle at 84% 12%, color-mix(in srgb, #a78bfa 40%, transparent), transparent 40%),
+      linear-gradient(135deg, color-mix(in srgb, var(--accent) 30%, var(--bg-elev)), var(--card));
+  }
+  .avatar-ring { margin-top: -48px; background: var(--card); }
+  .stats {
+    display: flex; justify-content: center; gap: 2rem;
+    margin-top: .9rem; padding-top: .8rem; width: 100%;
+    border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  }
+  .stat { display: grid; gap: .1rem; justify-items: center; }
+  .stat strong { font-size: 1.2rem; line-height: 1; }
+  .stat span { color: var(--txt3); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
   .big { font-size: 2.6rem; }
   .name { margin: .6rem 0 0; font-size: 1.35rem; font-weight: 800; }
   .handle { margin: 0; color: var(--txt3); font-weight: 700; }
