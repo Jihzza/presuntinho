@@ -36,6 +36,7 @@
   import { accountState, startAccountSync } from '$lib/account/account-store.svelte';
   import { listContacts, listIncoming, subscribeConnections, type Contact } from '$lib/account/contacts';
   import { listSpaces, isCoupleActive, otherMember } from '$lib/account/spaces';
+  import Avatar from '$lib/components/Avatar.svelte';
 
   type ConversationPreset = {
     id: string;
@@ -511,7 +512,7 @@
         <span class="chat-kicker">@{dmOther.handle}</span>
         <h1>
           <a class="person-link" href={`/u/?h=${dmOther.handle}`} aria-label={$t('mensagens.aria.open_partner_profile', { default: 'Abrir perfil de {name}', values: { name: dmOther.display_name || `@${dmOther.handle}` } })}>
-            {dmOther.emoji ?? '🙂'} {dmOther.display_name || `@${dmOther.handle}`}
+            {dmOther.display_name || `@${dmOther.handle}`}
           </a>
         </h1>
         <p class="subtitle">
@@ -582,7 +583,7 @@
           <h2 class="list-section">{$t('mensagens.friends_section', { default: 'Amigos' })}</h2>
           {#each dmContacts as c (c.id)}
             <button type="button" class="chat-row" onclick={() => openDm(c)}>
-              <span class="row-av" aria-hidden="true">{c.emoji ?? '🙂'}</span>
+              <Avatar emoji={c.emoji} url={c.avatar_url} size={52} alt="" />
               <span class="row-body">
                 <span class="row-top">
                   <strong>{c.display_name || `@${c.handle}`}</strong>
