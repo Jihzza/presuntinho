@@ -4622,7 +4622,7 @@
   "vida.streaks.desc": "Your flame, daily XP and milestones.",
   "appcard.progress.aria": "Progress: {done} of {total}",
   "hub.profile.open_aria": "Open your profile",
-  "hub.profile.view": "View profile →",
+  "hub.profile.view": "View profile",
   "hub.resume.aria": "Pick up where you left off",
   "hub.resume.eyebrow": "Pick up where you left off",
   "hub.resume.cta": "Continue →",
@@ -5207,5 +5207,9 @@
   "posts.empty": "No posts here yet.",
   "posts.empty_own": "You haven't posted anything yet. Say hi to the world! 👋",
   "posts.delete": "Delete post",
-  "posts.comment_ph": "Write a comment…"
+  "posts.comment_ph": "Write a comment…",
+  "uprofile.edit_profile": "Edit profile",
+  "uprofile.stats_aria": "Profile stats",
+  "hub.profile.open": "Open your profile",
+  "a11y.my_profile": "My profile"
 }

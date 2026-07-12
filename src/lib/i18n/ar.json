@@ -4622,7 +4622,7 @@
   "vida.streaks.desc": "شعلتك ونقاطك اليومية ومعالمك.",
   "appcard.progress.aria": "التقدم: {done} من {total}",
   "hub.profile.open_aria": "افتحي ملفك الشخصي",
-  "hub.profile.view": "عرض الملف ←",
+  "hub.profile.view": "عرض الملف",
   "hub.resume.aria": "أكملي من حيث توقفتِ",
   "hub.resume.eyebrow": "أكملي من حيث توقفتِ",
   "hub.resume.cta": "متابعة ←",
@@ -5207,5 +5207,9 @@
   "posts.empty": "لا منشورات هنا بعد.",
   "posts.empty_own": "لم تنشر شيئًا بعد. قل مرحبًا للعالم! 👋",
   "posts.delete": "حذف المنشور",
-  "posts.comment_ph": "اكتب تعليقًا…"
+  "posts.comment_ph": "اكتب تعليقًا…",
+  "uprofile.edit_profile": "تعديل الملف",
+  "uprofile.stats_aria": "إحصاءات الملف",
+  "hub.profile.open": "افتح ملفك",
+  "a11y.my_profile": "ملفي الشخصي"
 }

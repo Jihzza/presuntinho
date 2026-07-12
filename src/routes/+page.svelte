@@ -15,6 +15,7 @@
    * Live refresh: 'presuntinho:xp-changed' + visibilitychange.
    */
   import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
   import { get } from 'svelte/store';
   import { tweened } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
@@ -144,7 +145,8 @@
     const legacy = isLegacyProfile(activeProfile)
       ? ($t(`profile.${activeProfile}`, { default: '' }) as string)
       : '';
-    const name = (profileState.displayName || accountState.account?.display_name || legacy || '').trim();
+    // A conta (fonte única de identidade) tem precedência sobre o perfil local.
+    const name = (accountState.account?.display_name || profileState.displayName || legacy || '').trim();
     if (name) {
       if (daySlot === 'morning') return $t('hub.hero.greeting.morning', { values: { name }, default: 'Bom dia, {name} 🌤️' });
       if (daySlot === 'afternoon') return $t('hub.hero.greeting.afternoon', { values: { name }, default: 'Boa tarde, {name} ☀️' });
@@ -339,33 +341,55 @@
 <div class="hub">
   <!-- 1 · Hero compacto mood-aware -->
   <header class="card hub-hero" class:hero-in={heroIn} class:mooded={Boolean(activeMood)}>
-    <!-- V10.1 (tarefa A): perfil vivo — avatar clicável + nome + handle. -->
+    <!-- Perfil vivo — para contas, a CONTA é a fonte única (o mesmo perfil de
+         /u e das Definições); o avatar abre o perfil público. Sem conta, o
+         editor local antigo continua a servir. -->
     <div class="profile-row">
-      <button
-        type="button"
-        class="profile-avatar"
-        onclick={() => (profileEditorOpen = true)}
-        aria-label={$t('hub.profile.edit', { default: 'Editar o teu perfil' })}
-      >
-        {#if profileState.photo}
-          <img src={profileState.photo} alt="" />
-        {:else}
-          <span aria-hidden="true">{profileState.emoji || person.emoji}</span>
-        {/if}
-      </button>
-      <div class="profile-id">
-        <strong>{profileState.displayName || accountState.account?.display_name || (isLegacyProfile(activeProfile) ? $t(person.nameKey) : $t('profile.generic.name', { default: 'O teu perfil' }))}</strong>
-        {#if profileState.bio}
-          <small>{profileState.bio}</small>
-        {:else if accountState.account?.handle}
-          <small>@{accountState.account.handle}</small>
-        {:else}
-          <small>{$t(person.handleKey)}</small>
-        {/if}
-      </div>
-      <button type="button" class="profile-link" onclick={() => (profileEditorOpen = true)}>
-        {$t('hub.profile.edit', { default: 'Editar' })}
-      </button>
+      {#if accountState.account}
+        <button
+          type="button"
+          class="profile-avatar"
+          onclick={() => void goto(`/u/?h=${accountState.account?.handle}`)}
+          aria-label={$t('hub.profile.open', { default: 'Abrir o teu perfil' })}
+        >
+          {#if accountState.account.avatar_url}
+            <img src={accountState.account.avatar_url} alt="" />
+          {:else}
+            <span aria-hidden="true">{accountState.account.emoji || '🙂'}</span>
+          {/if}
+        </button>
+        <div class="profile-id">
+          <strong>{accountState.account.display_name || `@${accountState.account.handle}`}</strong>
+          <small>@{accountState.account.handle}{accountState.account.bio ? ` · ${accountState.account.bio}` : ''}</small>
+        </div>
+        <a class="profile-link" href={`/u/?h=${accountState.account.handle}`}>
+          {$t('hub.profile.view', { default: 'Ver perfil' })}
+        </a>
+      {:else}
+        <button
+          type="button"
+          class="profile-avatar"
+          onclick={() => (profileEditorOpen = true)}
+          aria-label={$t('hub.profile.edit', { default: 'Editar o teu perfil' })}
+        >
+          {#if profileState.photo}
+            <img src={profileState.photo} alt="" />
+          {:else}
+            <span aria-hidden="true">{profileState.emoji || person.emoji}</span>
+          {/if}
+        </button>
+        <div class="profile-id">
+          <strong>{profileState.displayName || (isLegacyProfile(activeProfile) ? $t(person.nameKey) : $t('profile.generic.name', { default: 'O teu perfil' }))}</strong>
+          {#if profileState.bio}
+            <small>{profileState.bio}</small>
+          {:else}
+            <small>{$t(person.handleKey)}</small>
+          {/if}
+        </div>
+        <button type="button" class="profile-link" onclick={() => (profileEditorOpen = true)}>
+          {$t('hub.profile.edit', { default: 'Editar' })}
+        </button>
+      {/if}
     </div>
     <span class="eyebrow">
       {activeMood ? `${moodMeta?.emoji} ${moodMeta?.label}` : $t('hub.hero.eyebrow')}

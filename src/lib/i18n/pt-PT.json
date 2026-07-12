@@ -4622,7 +4622,7 @@
   "vida.streaks.desc": "A tua chama, XP diário e marcos.",
   "appcard.progress.aria": "Progresso: {done} de {total}",
   "hub.profile.open_aria": "Abrir o teu perfil",
-  "hub.profile.view": "Ver perfil →",
+  "hub.profile.view": "Ver perfil",
   "hub.resume.aria": "Continua de onde paraste",
   "hub.resume.eyebrow": "Continua de onde paraste",
   "hub.resume.cta": "Continuar →",
@@ -5207,5 +5207,9 @@
   "posts.empty": "Ainda não há publicações por aqui.",
   "posts.empty_own": "Ainda não publicaste nada. Diz olá ao mundo! 👋",
   "posts.delete": "Apagar publicação",
-  "posts.comment_ph": "Escreve um comentário…"
+  "posts.comment_ph": "Escreve um comentário…",
+  "uprofile.edit_profile": "Editar perfil",
+  "uprofile.stats_aria": "Estatísticas do perfil",
+  "hub.profile.open": "Abrir o teu perfil",
+  "a11y.my_profile": "O meu perfil"
 }
