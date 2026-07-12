@@ -5163,5 +5163,18 @@
   "agenda.notifications.social.friend_body": "Enzel bech ta9bel fel Contacts.",
   "conta.public_profile": "Profil mte3i",
   "couplelink.taken": "Wa7ed minkom 3andou couple actif deja — wa7ed barka kol marra. 💔",
-  "casal.pedido.blocked": "Walitou as7ab, ama wa7ed minkom 3andou couple actif deja — wa7ed barka kol marra. 💔"
+  "casal.pedido.blocked": "Walitou as7ab, ama wa7ed minkom 3andou couple actif deja — wa7ed barka kol marra. 💔",
+  "push.enable": "Activi les notifications fel telifoun",
+  "push.on": "Notifications ykhdmou",
+  "push.enabled": "🔔 Notifications ykhdmou! El pings yousslou 7atta ki l’app msakkra.",
+  "push.disabled": "Notifications t3attlou fel appareil hedha.",
+  "push.denied": "El browser bloqua les notifications — activihom f les paramètres mte3 el site.",
+  "push.denied_hint": "Mbloukin mel browser — esma7 bel notifications lel site hedha w 3awed jarrab.",
+  "push.ios_hint": "Fel iPhone: 7ell f Safari → Partager → \"Ajouter à l’écran d’accueil\", w ba3d activi les notifications f l’app el minstallée.",
+  "push.unsupported": "El browser hedha ma ysupportich les notifications push.",
+  "casal.bemvindos.f_push": "Pings fel telifoun",
+  "casal.bemvindos.f_push_sub": "Tousslek \"n7ebbek\" w \"twa7achtek\" 7atta ki l’app msakkra, b vibration khassa.",
+  "settings.push.title": "Pings fel telifoun",
+  "settings.push.hint": "Tousslek \"n7ebbek barcha\" w \"twa7achtek\" ka notification fel telifoun b vibration khassa — 7atta ki l’app msakkra.",
+  "couple.ping.push_body": "Enzel bech t7ell Presuntinho 🐷"
 }

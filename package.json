@@ -43,6 +43,7 @@
     "dexie": "^4.0.0",
     "jose": "^5.10.0",
     "lucide-svelte": "^0.400.0",
-    "svelte-i18n": "^4.0.0"
+    "svelte-i18n": "^4.0.0",
+    "web-push": "^3.6.7"
   }
 }

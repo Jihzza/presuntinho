@@ -5150,5 +5150,18 @@
   "agenda.notifications.social.friend_body": "Toca para aceitar em Contactos.",
   "conta.public_profile": "O meu perfil",
   "couplelink.taken": "Um de vocês já tem um casal ativo — só há um de cada vez. 💔",
-  "casal.pedido.blocked": "Ficaram amigos, mas um de vocês já tem um casal ativo — só há um de cada vez. 💔"
+  "casal.pedido.blocked": "Ficaram amigos, mas um de vocês já tem um casal ativo — só há um de cada vez. 💔",
+  "push.enable": "Ativar notificações no telemóvel",
+  "push.on": "Notificações ativas",
+  "push.enabled": "🔔 Notificações ativas! Os pings chegam mesmo com a app fechada.",
+  "push.disabled": "Notificações desativadas neste dispositivo.",
+  "push.denied": "O browser bloqueou as notificações — ativa-as nas definições do site.",
+  "push.denied_hint": "Bloqueadas pelo browser — permite notificações nas definições deste site e tenta de novo.",
+  "push.ios_hint": "No iPhone: abre no Safari → Partilhar → \"Adicionar ao ecrã principal\", e ativa as notificações dentro da app instalada.",
+  "push.unsupported": "Este browser não suporta notificações push.",
+  "casal.bemvindos.f_push": "Pings no telemóvel",
+  "casal.bemvindos.f_push_sub": "Recebe os \"amo-te\" e as \"saudades\" mesmo com a app fechada, com vibração própria.",
+  "settings.push.title": "Pings no telemóvel",
+  "settings.push.hint": "Recebe os \"amo-te muito\" e as \"saudades\" como notificação no telemóvel, com vibração própria — mesmo com a app fechada.",
+  "couple.ping.push_body": "Toca para abrir o Presuntinho 🐷"
 }

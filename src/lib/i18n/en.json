@@ -5150,5 +5150,18 @@
   "agenda.notifications.social.friend_body": "Tap to accept in Contacts.",
   "conta.public_profile": "My profile",
   "couplelink.taken": "One of you already has an active couple — there can only be one at a time. 💔",
-  "casal.pedido.blocked": "You became friends, but one of you already has an active couple — there can only be one at a time. 💔"
+  "casal.pedido.blocked": "You became friends, but one of you already has an active couple — there can only be one at a time. 💔",
+  "push.enable": "Enable phone notifications",
+  "push.on": "Notifications on",
+  "push.enabled": "🔔 Notifications on! Pings arrive even with the app closed.",
+  "push.disabled": "Notifications disabled on this device.",
+  "push.denied": "The browser blocked notifications — enable them in the site settings.",
+  "push.denied_hint": "Blocked by the browser — allow notifications for this site and try again.",
+  "push.ios_hint": "On iPhone: open in Safari → Share → \"Add to Home Screen\", then enable notifications inside the installed app.",
+  "push.unsupported": "This browser doesn't support push notifications.",
+  "casal.bemvindos.f_push": "Pings on your phone",
+  "casal.bemvindos.f_push_sub": "Get the \"love you\" and \"miss you\" even with the app closed, with its own vibration.",
+  "settings.push.title": "Pings on your phone",
+  "settings.push.hint": "Get the \"love you so much\" and \"miss you\" as a phone notification with its own vibration — even with the app closed.",
+  "couple.ping.push_body": "Tap to open Presuntinho 🐷"
 }

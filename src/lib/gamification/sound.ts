@@ -136,15 +136,29 @@ export function vibrate(kind: HapticKind): void {
 	}
 }
 
-// A deliberately attention-grabbing buzz for a partner "nudge" (saudades) —
-// stronger than any of the ambient HapticKind patterns. Still gated on the
-// user's haptics preference.
-const NUDGE_PATTERN: number[] = [90, 50, 90, 50, 140];
+// Assinaturas hápticas dos pings de casal — os MESMOS padrões que o service
+// worker usa nas notificações push (static/push-sw.js), para o toque ser
+// reconhecível venha o ping por onde vier. Gated na preferência de haptics.
+// 👀 saudades: três toques rápidos + um longo (insistente, tipo "anda cá")
+const NUDGE_PATTERN: number[] = [60, 70, 60, 70, 60, 260, 200];
+// 💛 amor: dois batimentos de coração (da-dum … da-dum)
+const LOVE_PATTERN: number[] = [90, 50, 90, 300, 90, 50, 90];
+
 export function vibrateNudge(): void {
 	if (typeof navigator === 'undefined') return;
 	if (!isHapticsEnabled()) return;
 	try {
 		navigator.vibrate?.(NUDGE_PATTERN);
+	} catch {
+		// Vibration unsupported — silently ignore.
+	}
+}
+
+export function vibrateLove(): void {
+	if (typeof navigator === 'undefined') return;
+	if (!isHapticsEnabled()) return;
+	try {
+		navigator.vibrate?.(LOVE_PATTERN);
 	} catch {
 		// Vibration unsupported — silently ignore.
 	}

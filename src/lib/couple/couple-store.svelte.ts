@@ -24,7 +24,7 @@ import { isMultiplayerConfigured } from '$lib/multiplayer/config';
 import { COUPLE_CHANNEL, coupleRole } from '$lib/couple/couple-channel';
 import type { Room } from '$lib/multiplayer/realtime';
 import { showToast } from '$lib/components/events';
-import { playSfx, vibrate, vibrateNudge } from '$lib/gamification/sound';
+import { playSfx, vibrateLove, vibrateNudge } from '$lib/gamification/sound';
 import { get } from 'svelte/store';
 import { t } from 'svelte-i18n';
 import {
@@ -194,7 +194,7 @@ function receivePing(me: string, kind: 'love' | 'nudge'): void {
   const name = partnerName(me);
   if (kind === 'love') {
     showToast(get(t)('couple.ping.love.received', { values: { name }, default: `💛 ${name} ama-te muito!` }), 4200);
-    vibrate('success');
+    vibrateLove();
     playSfx('ding');
   } else {
     showToast(get(t)('couple.ping.nudge.received', { values: { name }, default: `👀 ${name} tem saudades tuas!` }), 4200);
@@ -383,9 +383,9 @@ async function sendPing(kind: 'love' | 'nudge'): Promise<PingResult> {
   if (!id) return 'disabled';
   const me = id.me;
   // Legacy pair needs its chat token (durable Blobs ping); account couples
-  // ping over the realtime channel only, so they need the room instead.
+  // deliver via broadcast (app aberta) E via Web Push (app fechada), por isso
+  // já não exigem o room.
   if (id.legacy && !getChatToken(me as ChatProfile)) return 'disabled';
-  if (!id.legacy && !room) return 'offline';
   const now = Date.now();
   const lastAt = kind === 'love' ? lastLoveAt : lastNudgeAt;
   if (now - lastAt < PING_COOLDOWN_MS) return 'cooldown';
@@ -393,8 +393,24 @@ async function sendPing(kind: 'love' | 'nudge'): Promise<PingResult> {
   else lastNudgeAt = now;
   if (!id.legacy) {
     // Account couple: instant broadcast (ephemeral by design — like the
-    // surprise heart, a ping is a "right now" moment, not a mailbox).
-    broadcast(kind, { profile: me, ts: now });
+    // surprise heart, a ping is a "right now" moment, not a mailbox) + Web
+    // Push real nos dispositivos do parceiro, com o MEU nome no título.
+    if (room) broadcast(kind, { profile: me, ts: now });
+    void (async () => {
+      const [{ sendPingPush }, { accountState }] = await Promise.all([
+        import('$lib/push'),
+        import('$lib/account/account-store.svelte')
+      ]);
+      const myName =
+        accountState.account?.display_name ||
+        (accountState.account ? `@${accountState.account.handle}` : '💞');
+      const title =
+        kind === 'love'
+          ? get(t)('couple.ping.love.received', { values: { name: myName }, default: `💛 ${myName} ama-te muito!` })
+          : get(t)('couple.ping.nudge.received', { values: { name: myName }, default: `👀 ${myName} tem saudades tuas!` });
+      const body = get(t)('couple.ping.push_body', { default: 'Toca para abrir o Presuntinho 🐷' });
+      await sendPingPush(kind, title, body);
+    })();
     return 'sent';
   }
   try {
