@@ -12,7 +12,12 @@
     <!-- iOS/standalone PWA polish -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <!-- 'default' (não 'black-translucent'): o iOS pinta a barra de estado
+         ACIMA da app — em vários iOS a env(safe-area-inset-top) vem 0 em PWA
+         instalada e o header ficava tapado (inclicável) pelo relógio/bateria.
+         Com 'default' a barra adota a cor de fundo da página: nativo e à prova
+         de bala em qualquer iPhone. Android ignora esta meta. -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Presuntinho" />
     <!-- Apply the saved theme BEFORE first paint so a reload never flashes
          back to the default dark theme (theme choice mirrors to
@@ -27,6 +32,10 @@
           }
           root.classList.add('theme-' + t);
           root.setAttribute('data-theme', t);
+          // Barra de estado (iOS default / Android toolbar) na cor do tema —
+          // aproximação de 2 tons: rosa para o tema claro, azul para o resto.
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', t === 'light' ? '#fff1f7' : '#1f2e4a');
         } catch (e) {
           /* localStorage unavailable — keep default theme */
         }
