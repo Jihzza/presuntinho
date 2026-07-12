@@ -35,6 +35,19 @@ export function getSupabaseClient(): SupabaseClient {
       },
       realtime: { params: { eventsPerSecond: 20 } }
     });
+    // CRÍTICO para o chat em tempo real: as tabelas têm RLS, e o Realtime só
+    // entrega postgres_changes se o SOCKET estiver autenticado com o token do
+    // utilizador. Depois de um reload, a sessão é restaurada da storage sem
+    // garantir o re-auth do socket — que fica como anon, a RLS filtra tudo, e
+    // os eventos simplesmente não chegam (sem erro nenhum). Autenticamos o
+    // socket explicitamente no arranque e em CADA mudança de sessão.
+    const c = client;
+    void c.auth.getSession().then(({ data }) => {
+      if (data.session?.access_token) c.realtime.setAuth(data.session.access_token);
+    });
+    c.auth.onAuthStateChange((_event, session) => {
+      c.realtime.setAuth(session?.access_token ?? SUPABASE_ANON_KEY);
+    });
   }
   return client;
 }
