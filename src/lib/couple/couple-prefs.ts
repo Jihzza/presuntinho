@@ -1,10 +1,10 @@
 // Per-device preferences for the couple features, chosen during the couple
-// onboarding (/casal/bemvindos) and editable later in /definicoes. Local on
-// purpose: whether the surprise heart pops on THIS phone is a device choice,
-// not shared state.
+// onboarding (/casal/bemvindos). Love/nudge presentation remains a local
+// device choice. The heart itself is now mandatory for an active account
+// couple because its server window must match on both phones.
 
 export interface CouplePrefs {
-  /** Surprise heart button appears at random moments. */
+  /** Legacy persisted field; active account couples always use the shared heart. */
   heart: boolean;
   /** Love/nudge pings from the partner buzz this device. */
   pings: boolean;

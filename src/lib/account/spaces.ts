@@ -27,7 +27,15 @@ const sb = () => getSupabaseClient();
 
 /** A couple space is ACTIVE only when both members have accepted. */
 export function isCoupleActive(s: Space): boolean {
-  return s.kind === 'couple' && s.members.length >= 2 && s.members.every((m) => m.status === 'accepted');
+  return s.kind === 'couple' && s.members.length === 2 && s.members.every((m) => m.status === 'accepted');
+}
+
+/** Return the one unambiguous active couple, or fail closed.  Picking the
+ *  first row could scope chat/push to the wrong partner if legacy/corrupt data
+ *  ever contains two active couple spaces for the same account. */
+export function singleActiveCouple(spaces: Space[]): Space | null {
+  const active = spaces.filter(isCoupleActive);
+  return active.length === 1 ? active[0] : null;
 }
 
 // ── writes (RPCs) ────────────────────────────────────────────────────────────
@@ -119,7 +127,7 @@ export async function listSpaces(): Promise<Space[]> {
  *  couple data — a pending proposal never counts, so consent is enforced. */
 export async function getActiveCoupleSpaceId(): Promise<string | null> {
   const spaces = await listSpaces();
-  const active = spaces.find(isCoupleActive);
+  const active = singleActiveCouple(spaces);
   return active?.id ?? null;
 }
 

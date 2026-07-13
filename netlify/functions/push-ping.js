@@ -15,41 +15,47 @@
 // ENV: VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT,
 //      VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY (as mesmas do build).
 //
-// POST { kind: 'love'|'nudge'|'message', to?, title?, body?, url? } → { sent: n }
+// POST { eventId?, kind: 'love'|'nudge'|'message'|'test', to?, title?, body?, url? }
+//   → { sent: n }
 //   • love/nudge → destinatário = parceiro do casal ativo (couple_partner)
 //   • message    → destinatário = `to`; a RLS só devolve subscrições de
 //                  contactos ligados/casal, por isso não há como notificar
 //                  estranhos — a query volta vazia.
 
 import webpush from 'web-push';
+import { randomUUID } from 'node:crypto';
 
 // 'test' entrega ao PRÓPRIO remetente (auto-diagnóstico do botão de teste).
 const KINDS = new Set(['love', 'nudge', 'message', 'test']);
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const PUSH_EVENT_TYPE = 'presuntinho:push-event';
 
-const json = (statusCode, body) => ({
-  statusCode,
-  headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
-  body: JSON.stringify(body)
-});
+const json = (status, body) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }
+  });
 
-export const handler = async (event) => {
-  if (event.httpMethod !== 'POST') return json(405, { error: 'method' });
+export default async (req) => {
+  if (req.method !== 'POST') return json(405, { error: 'method' });
 
-  const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
-  const ANON = process.env.VITE_SUPABASE_ANON_KEY;
-  const PUB = process.env.VAPID_PUBLIC_KEY;
-  const PRIV = process.env.VAPID_PRIVATE_KEY;
-  const SUBJECT = process.env.VAPID_SUBJECT || 'mailto:noreply@presuntinho.love';
+  const SUPABASE_URL = Netlify.env.get('VITE_SUPABASE_URL');
+  const ANON = Netlify.env.get('VITE_SUPABASE_ANON_KEY');
+  const PUB = Netlify.env.get('VAPID_PUBLIC_KEY');
+  const PRIV = Netlify.env.get('VAPID_PRIVATE_KEY');
+  const SUBJECT = Netlify.env.get('VAPID_SUBJECT') || 'mailto:noreply@presuntinho.love';
   if (!SUPABASE_URL || !ANON || !PUB || !PRIV) return json(503, { error: 'not configured' });
 
-  const auth = event.headers.authorization || event.headers.Authorization || '';
+  const auth = req.headers.get('authorization') || '';
   if (!auth.startsWith('Bearer ')) return json(401, { error: 'no token' });
 
   let payload;
   try {
-    payload = JSON.parse(event.body || '{}');
+    payload = await req.json();
   } catch {
+    return json(400, { error: 'bad json' });
+  }
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
     return json(400, { error: 'bad json' });
   }
   const kind = KINDS.has(payload.kind) ? payload.kind : null;
@@ -60,9 +66,11 @@ export const handler = async (event) => {
   const body = String(payload.body || '').slice(0, 160);
   const rawUrl = String(payload.url || '/');
   const url = rawUrl.startsWith('/') && !rawUrl.startsWith('//') ? rawUrl.slice(0, 120) : '/';
-  // `to` explícito para DMs; sem `to`, o destinatário é o parceiro do casal
-  // (pings e mensagens do chat do casal).
-  const explicitTo = typeof payload.to === 'string' && UUID_RE.test(payload.to) ? payload.to : null;
+  const eventId = typeof payload.eventId === 'string' && UUID_RE.test(payload.eventId) ? payload.eventId : randomUUID();
+  // Destinatário explícito é exclusivo de mensagens/DMs. Love/nudge ignoram
+  // qualquer `to` fornecido pelo cliente e resolvem sempre o parceiro no servidor.
+  const explicitTo =
+    kind === 'message' && typeof payload.to === 'string' && UUID_RE.test(payload.to) ? payload.to : null;
 
   const sb = (path, init = {}) =>
     fetch(`${SUPABASE_URL}${path}`, {
@@ -74,10 +82,12 @@ export const handler = async (event) => {
   const userRes = await sb('/auth/v1/user');
   if (!userRes.ok) return json(401, { error: 'bad token' });
   const user = await userRes.json().catch(() => null);
+  const senderId = typeof user?.id === 'string' && UUID_RE.test(user.id) ? user.id : null;
+  if (!senderId) return json(401, { error: 'bad token' });
 
   // 2) destinatário: explícito (mensagens), o próprio (teste) ou o parceiro
   //    do casal ativo (pings)
-  let target = kind === 'test' ? user?.id : explicitTo;
+  let target = kind === 'test' ? senderId : explicitTo;
   if (!target) {
     const partnerRes = await sb('/rest/v1/rpc/couple_partner', { method: 'POST', body: '{}' });
     if (!partnerRes.ok) return json(502, { error: 'partner lookup failed' });
@@ -94,7 +104,15 @@ export const handler = async (event) => {
   if (!Array.isArray(subs) || subs.length === 0) return json(200, { sent: 0, reason: 'no subscriptions' });
 
   webpush.setVapidDetails(SUBJECT, PUB, PRIV);
-  const message = JSON.stringify({ kind, title, body, url });
+  const message = JSON.stringify({
+    type: PUSH_EVENT_TYPE,
+    eventId,
+    kind,
+    title,
+    body,
+    url,
+    senderId
+  });
 
   let sent = 0;
   const results = [];
@@ -127,4 +145,4 @@ export const handler = async (event) => {
   );
 
   return json(200, { sent, of: subs.length, results });
-};
+}

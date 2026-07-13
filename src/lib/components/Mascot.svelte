@@ -15,8 +15,9 @@
   import { goto } from '$app/navigation';
   import { db } from '$lib/state/db';
   import { sendLove, sendNudge, type PingResult } from '$lib/couple/couple-store.svelte';
+  import { COUPLE_MOMENT_EVENT, type CoupleMoment } from '$lib/couple/couple-moments';
   import { playSfx, vibrate } from '$lib/gamification/sound';
-  import { prefersReducedMotion, showToast } from './events';
+  import { fireConfettiEvent, prefersReducedMotion, showToast } from './events';
   import {
     DEFAULT_MASCOT_ID,
     MASCOT_CHANGED_EVENT,
@@ -44,8 +45,11 @@
   let visible = $state(false);
   let reduced = $state(false);
   // Gesture burst overlay: 'love' (hold) or 'nudge' (multi-tap) or none.
-  let burst = $state<'none' | 'love' | 'nudge'>('none');
-  let particles = $state<{ id: number; a: number }[]>([]);
+  let burst = $state<'none' | 'tap' | 'love' | 'nudge' | 'message'>('none');
+  let particles = $state<{ id: number; a: number; glyph: string; distance: number; size: number }[]>([]);
+  let holdCharging = $state(false);
+  let tapIntensity = $state(0);
+  let mascotEl = $state<HTMLButtonElement | null>(null);
   // V10.4 — the FAB renders the ACTIVE mascot's ART (picked on /mascotes/).
   let mascotId = $state(DEFAULT_MASCOT_ID);
   // V10 — Duolingo-style emotional state (happy/neutral/worried/sad/euphoric).
@@ -95,27 +99,80 @@
   // ── gesture disambiguation ─────────────────────────────────────────────
   //   1 tap  → agent · 2 taps → couple chat · ≥4 taps → nudge (saudades)
   //   hold   → send love (💛) with an "explode" burst
-  const HOLD_MS = 550;
-  const TAP_WINDOW = 320;
+  const HOLD_MS = 900;
+  const TAP_WINDOW = 500;
   let tapCount = 0;
   let holdFired = false;
   let holdTimer: ReturnType<typeof setTimeout> | null = null;
   let tapTimer: ReturnType<typeof setTimeout> | null = null;
   let particleTimer: ReturnType<typeof setTimeout> | null = null;
+  const holdPulseTimers = new Set<ReturnType<typeof setTimeout>>();
   let pseq = 0;
 
-  function fireParticles(kind: 'love' | 'nudge'): void {
+  function fireParticles(kind: 'tap' | 'love' | 'nudge' | 'message', amount?: number): void {
     burst = kind;
     if (!reduced) {
-      const n = 12;
-      particles = Array.from({ length: n }, (_, i) => ({ id: ++pseq, a: Math.round((360 / n) * i) }));
+      const n = amount ?? (kind === 'love' ? 32 : kind === 'nudge' ? 24 : kind === 'message' ? 18 : 3);
+      const glyph = kind === 'love' ? (special ? '❤️' : '💛') : kind === 'message' ? '💌' : '💭';
+      const batch = Array.from({ length: n }, (_, i) => ({
+        id: ++pseq,
+        a: Math.round((360 / n) * i + (Math.random() - 0.5) * 14),
+        glyph,
+        distance: kind === 'tap' ? 34 + tapIntensity * 3 : kind === 'love' ? 104 : 86,
+        size: kind === 'tap' ? 0.75 + tapIntensity * 0.06 : 1.15 + Math.random() * 0.45
+      }));
+      particles = [...particles, ...batch].slice(-42);
     }
     if (particleTimer) clearTimeout(particleTimer);
     particleTimer = setTimeout(() => {
       particleTimer = null;
       burst = 'none';
       particles = [];
-    }, 900);
+    }, kind === 'tap' ? 650 : 1200);
+  }
+
+  function shakeScreen(): void {
+    if (typeof window !== 'undefined' && !reduced) {
+      window.dispatchEvent(new CustomEvent('presuntinho:screen-shake'));
+    }
+  }
+
+  function clearHoldPulses(): void {
+    for (const timer of holdPulseTimers) clearTimeout(timer);
+    holdPulseTimers.clear();
+  }
+
+  function beginHoldFeedback(): void {
+    holdCharging = true;
+    clearHoldPulses();
+    for (const [delay, kind] of [[230, 'tap'], [500, 'success'], [740, 'warning']] as const) {
+      const timer = setTimeout(() => {
+        holdPulseTimers.delete(timer);
+        if (!holdCharging) return;
+        playSfx('pop');
+        vibrate(kind);
+      }, delay);
+      holdPulseTimers.add(timer);
+    }
+  }
+
+  function tapFeedback(level: number): void {
+    tapIntensity = Math.min(10, level);
+    playSfx('pop');
+    vibrate(level < 3 ? 'tap' : level < 5 ? 'success' : 'warning');
+    fireParticles('tap', Math.min(7, 2 + Math.floor(level / 2)));
+    if (!mascotEl || reduced) return;
+    const amp = Math.min(13, 3 + level * 1.6);
+    const scale = Math.min(1.58, 1.04 + level * 0.075);
+    mascotEl.animate(
+      [
+        { transform: 'translateX(0) rotate(0) scale(1)' },
+        { transform: `translateX(-${amp}px) rotate(-${Math.min(18, 4 + level * 2)}deg) scale(${scale})` },
+        { transform: `translateX(${amp}px) rotate(${Math.min(18, 4 + level * 2)}deg) scale(${scale * 0.92})` },
+        { transform: 'translateX(0) rotate(0) scale(1)' }
+      ],
+      { duration: Math.max(150, 260 - level * 14), easing: 'cubic-bezier(.2,.9,.3,1)' }
+    );
   }
 
   // Clear every gesture timer — called from the onMount cleanup so a pending
@@ -125,6 +182,9 @@
     if (tapTimer) clearTimeout(tapTimer);
     if (particleTimer) clearTimeout(particleTimer);
     holdTimer = tapTimer = particleTimer = null;
+    holdCharging = false;
+    tapIntensity = 0;
+    clearHoldPulses();
   }
 
   function toastForResult(res: PingResult): void {
@@ -135,8 +195,10 @@
 
   async function doLove(): Promise<void> {
     fireParticles('love');
-    playSfx('milestone');
-    vibrate('success');
+    fireConfettiEvent({ origin: 'heart', count: 110, intensity: 5, palette: ['#ff4f9a', '#ff8fbd', '#ffd1e3', '#fff'] });
+    shakeScreen();
+    playSfx('levelup');
+    vibrate('warning');
     const res = await sendLove();
     if (res === 'sent') showToast($t('couple.love.sent', { default: '💌 Amor enviado 💛' }), 2200);
     else toastForResult(res);
@@ -144,6 +206,8 @@
 
   async function doNudge(): Promise<void> {
     fireParticles('nudge');
+    fireConfettiEvent({ origin: 'heart', count: 82, intensity: 4, palette: ['#f472b6', '#a78bfa', '#fef3c7'] });
+    shakeScreen();
     playSfx('whoosh');
     vibrate('warning');
     const res = await sendNudge();
@@ -154,6 +218,7 @@
   function resolveTaps(): void {
     const n = tapCount;
     tapCount = 0;
+    tapIntensity = 0;
     if (n >= 4) void doNudge();
     else if (n >= 2) void goto('/mensagens');
     else void goto('/agente');
@@ -162,10 +227,13 @@
   function onPointerDown(): void {
     if (!interactive) return;
     holdFired = false;
+    beginHoldFeedback();
     if (holdTimer) clearTimeout(holdTimer);
     holdTimer = setTimeout(() => {
       holdTimer = null;
       holdFired = true;
+      holdCharging = false;
+      clearHoldPulses();
       tapCount = 0;
       if (tapTimer) {
         clearTimeout(tapTimer);
@@ -179,6 +247,10 @@
     if (holdTimer) {
       clearTimeout(holdTimer);
       holdTimer = null;
+    }
+    if (!holdFired) {
+      holdCharging = false;
+      clearHoldPulses();
     }
   }
 
@@ -195,6 +267,7 @@
       return;
     }
     tapCount += 1;
+    tapFeedback(tapCount);
     if (tapTimer) clearTimeout(tapTimer);
     tapTimer = setTimeout(() => {
       tapTimer = null;
@@ -219,6 +292,16 @@
     }
   }
 
+  // The global layer owns sound/haptics.  The floating mascot only mirrors the
+  // received moment visually, avoiding duplicate buzzes while still making the
+  // companion react wherever the person currently is in the app.
+  function onCoupleMoment(event: Event): void {
+    const moment = (event as CustomEvent<CoupleMoment>).detail;
+    if (moment?.kind === 'love') fireParticles('love', 34);
+    else if (moment?.kind === 'nudge') fireParticles('nudge', 28);
+    else if (moment?.kind === 'message') fireParticles('message', 20);
+  }
+
   onMount(() => {
     reduced = prefersReducedMotion();
     void refresh();
@@ -233,6 +316,7 @@
     };
     document.addEventListener('visibilitychange', onVis);
     window.addEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
+    window.addEventListener(COUPLE_MOMENT_EVENT, onCoupleMoment);
     const onPulse = () => void refreshEmotion();
     window.addEventListener(ACTION_PULSE_EVENT, onPulse);
     window.addEventListener(STREAK_CHANGED_EVENT, onPulse);
@@ -241,6 +325,7 @@
     return () => {
       document.removeEventListener('visibilitychange', onVis);
       window.removeEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
+      window.removeEventListener(COUPLE_MOMENT_EVENT, onCoupleMoment);
       window.removeEventListener(ACTION_PULSE_EVENT, onPulse);
       window.removeEventListener(STREAK_CHANGED_EVENT, onPulse);
       clearInterval(emotionTimer);
@@ -251,6 +336,7 @@
 
 {#if visible}
   <button
+    bind:this={mascotEl}
     type="button"
     class="mascot-fab"
     class:reduced
@@ -260,6 +346,9 @@
     class:euphoric={emotion === 'euphoric'}
     class:loving={burst === 'love'}
     class:nudging={burst === 'nudge'}
+    class:receiving={burst === 'message'}
+    class:charging-love={holdCharging}
+    style={`--hold-ms:${HOLD_MS}ms; --tap-intensity:${tapIntensity}`}
     onpointerdown={onPointerDown}
     onpointerup={onPointerEnd}
     onpointercancel={onPointerEnd}
@@ -270,9 +359,18 @@
     title={emotionLine}
   >
     <!-- V10.4 — a mascote ESCOLHIDA (arte real) com a emoção do dia. -->
-    <MascotAvatar mascot={mascotId} {emotion} size={64} animate={!reduced} />
+    <MascotAvatar
+      mascot={mascotId}
+      {emotion}
+      pose={holdCharging || burst === 'love' ? 'love' : burst === 'nudge' ? 'jump' : burst === 'message' ? 'wave' : null}
+      size={64}
+      animate={!reduced && !holdCharging && burst === 'none'}
+    />
     {#each particles as p (p.id)}
-      <span class="particle" style={`--a:${p.a}deg`} aria-hidden="true">{burst === 'love' ? (special ? '❤️' : '💛') : '💭'}</span>
+      <span
+        class="particle"
+        style={`--a:${p.a}deg; --distance:-${p.distance}px; --particle-size:${p.size}`}
+        aria-hidden="true">{p.glyph}</span>
     {/each}
   </button>
 {/if}
@@ -352,38 +450,74 @@
     0%, 100% { opacity: 0.45; transform: scale(0.94); }
     40% { opacity: 0.85; transform: scale(1.12); }
   }
-  /* Gesture bursts — love (hold) pulses HARD, nudge (multi-tap) shakes wildly. */
+  /* The hold visibly charges: slow at first, then exponentially swells until
+     the threshold, where the final love animation "pops" it into hearts. */
+  .mascot-fab.charging-love {
+    opacity: 1;
+    z-index: 4;
+    animation: mascot-love-charge var(--hold-ms, 900ms) cubic-bezier(.18,.78,.16,1) forwards;
+    filter: drop-shadow(0 0 18px rgba(255, 79, 154, 0.82))
+      drop-shadow(0 0 34px rgba(244, 114, 182, 0.45));
+  }
+  /* Gesture bursts — deliberately emphatic final beats. */
   .mascot-fab.loving {
-    animation: mascot-love 0.72s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity: 1;
+    z-index: 4;
+    animation: mascot-love 1.05s cubic-bezier(0.2, 1.35, 0.35, 1);
   }
   .mascot-fab.nudging {
-    animation: mascot-shake 0.6s ease;
+    opacity: 1;
+    animation: mascot-shake 0.9s cubic-bezier(.36,.07,.19,.97);
+  }
+  .mascot-fab.receiving {
+    opacity: 1;
+    animation: mascot-message 0.9s cubic-bezier(.2,1.3,.35,1);
+  }
+  @keyframes mascot-love-charge {
+    0% { transform: scale(1) rotate(0); }
+    35% { transform: scale(1.08) rotate(-1deg); }
+    62% { transform: scale(1.24) rotate(2deg); }
+    80% { transform: scale(1.48) rotate(-3deg); }
+    92% { transform: scale(1.76) rotate(4deg); }
+    100% { transform: scale(2.08) rotate(-4deg); }
   }
   @keyframes mascot-love {
-    0% { transform: scale(1) rotate(0); }
-    30% { transform: scale(1.5) rotate(-6deg); }
-    55% { transform: scale(1.32) rotate(6deg); }
-    75% { transform: scale(1.42) rotate(-3deg); }
-    100% { transform: scale(1) rotate(0); }
+    0% { transform: scale(2.08) rotate(-4deg); filter: brightness(1.35); }
+    12% { transform: scale(2.28) rotate(7deg); filter: brightness(1.7); }
+    22% { transform: scale(0.28) rotate(-14deg); opacity: 0.2; }
+    38% { transform: scale(1.5) rotate(9deg); opacity: 1; }
+    55% { transform: scale(0.82) rotate(-7deg); }
+    72% { transform: scale(1.28) rotate(4deg); }
+    86% { transform: scale(0.94) rotate(-2deg); }
+    100% { transform: scale(1) rotate(0); filter: brightness(1); }
   }
   @keyframes mascot-shake {
     0%, 100% { transform: translateX(0) rotate(0); }
-    15% { transform: translateX(-9px) rotate(-13deg); }
-    30% { transform: translateX(9px) rotate(13deg); }
-    45% { transform: translateX(-7px) rotate(-10deg); }
-    60% { transform: translateX(7px) rotate(10deg); }
-    80% { transform: translateX(-4px) rotate(-5deg); }
+    10% { transform: translateX(-15px) rotate(-19deg) scale(1.28); }
+    20% { transform: translateX(16px) rotate(20deg) scale(1.38); }
+    32% { transform: translateX(-14px) rotate(-17deg) scale(1.48); }
+    44% { transform: translateX(14px) rotate(16deg) scale(1.55); }
+    57% { transform: translateX(-11px) rotate(-13deg) scale(1.42); }
+    70% { transform: translateX(10px) rotate(11deg) scale(1.3); }
+    84% { transform: translateX(-5px) rotate(-6deg) scale(1.14); }
+  }
+  @keyframes mascot-message {
+    0%, 100% { transform: translateY(0) rotate(0) scale(1); }
+    28% { transform: translateY(-22px) rotate(-8deg) scale(1.35); }
+    48% { transform: translateY(2px) rotate(7deg) scale(.9); }
+    68% { transform: translateY(-12px) rotate(-4deg) scale(1.2); }
+    84% { transform: translateY(0) rotate(2deg) scale(1.04); }
   }
   /* Radial particle burst flung from the mascot's centre — bigger + further. */
   .particle {
     position: absolute;
     left: 50%;
     top: 50%;
-    font-size: 1.35rem;
+    font-size: calc(1rem * var(--particle-size, 1.2));
     line-height: 1;
     pointer-events: none;
     z-index: 5;
-    animation: particle-fly 0.95s ease-out forwards;
+    animation: particle-fly 1.15s cubic-bezier(.15,.75,.25,1) forwards;
   }
   @keyframes particle-fly {
     from {
@@ -392,7 +526,7 @@
     }
     to {
       opacity: 0;
-      transform: translate(-50%, -50%) rotate(var(--a, 0deg)) translateY(-68px) scale(1.3);
+      transform: translate(-50%, -50%) rotate(var(--a, 0deg)) translateY(var(--distance, -68px)) scale(1.5);
     }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -401,6 +535,8 @@
     .mascot-fab:active,
     .mascot-fab.loving,
     .mascot-fab.nudging,
+    .mascot-fab.receiving,
+    .mascot-fab.charging-love,
     .mascot-fab.special {
       transform: none;
       transition: none;

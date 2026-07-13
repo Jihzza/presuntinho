@@ -16,6 +16,25 @@ export const VAPID_PUBLIC_KEY =
   'BKK2RHFTXc4rpyXnN2Y4y1bwb9IuZjtG-mw-flND2OxOWqfvP02wXO888EWmxQ6WFDTvoYHHYZbwk1AgkPfoKQg';
 
 export type PushState = 'unsupported' | 'ios-needs-install' | 'denied' | 'off' | 'on';
+export type PushKind = 'love' | 'nudge' | 'message';
+export type ForegroundPushKind = PushKind | 'test';
+export const PUSH_FOREGROUND_EVENT_TYPE = 'presuntinho:push-event' as const;
+
+/** Canonical payload posted by push-sw.js when the app is already foregrounded. */
+export interface ForegroundPushEvent {
+  type: typeof PUSH_FOREGROUND_EVENT_TYPE;
+  eventId: string;
+  kind: ForegroundPushKind;
+  title: string;
+  body: string;
+  url: string;
+  /** Authenticated sender, filled by the Netlify function (never trusted from the browser). */
+  senderId: string;
+}
+
+function newPushEventId(): string {
+  return crypto.randomUUID();
+}
 
 function urlBase64ToUint8Array(base64: string): Uint8Array<ArrayBuffer> {
   const padding = '='.repeat((4 - (base64.length % 4)) % 4);
@@ -134,16 +153,25 @@ export async function disablePush(): Promise<void> {
  *  do casal (resolvido no servidor); mensagens levam o destinatário explícito.
  *  title/body chegam já localizados de quem envia. */
 export async function sendPushNotify(
-  kind: 'love' | 'nudge' | 'message',
-  opts: { title: string; body?: string; to?: string; url?: string }
+  kind: PushKind,
+  opts: { title: string; body?: string; to?: string; url?: string; eventId?: string }
 ): Promise<void> {
   try {
     const session = await getAuthSession();
     if (!session) return;
+    const eventId = opts.eventId ?? newPushEventId();
     await fetch('/.netlify/functions/push-ping', {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: `Bearer ${session.access_token}` },
-      body: JSON.stringify({ kind, title: opts.title, body: opts.body ?? '', to: opts.to, url: opts.url })
+      body: JSON.stringify({
+        eventId,
+        kind,
+        title: opts.title,
+        body: opts.body ?? '',
+        // The server only honours an explicit recipient for `message`.
+        to: kind === 'message' ? opts.to : undefined,
+        url: opts.url
+      })
     });
   } catch {
     /* o realtime continua a ser o caminho rápido — push é bónus */
@@ -151,8 +179,13 @@ export async function sendPushNotify(
 }
 
 /** Compat: ping para o parceiro do casal. */
-export async function sendPingPush(kind: 'love' | 'nudge', title: string, body: string): Promise<void> {
-  return sendPushNotify(kind, { title, body });
+export async function sendPingPush(
+  kind: 'love' | 'nudge',
+  title: string,
+  body: string,
+  eventId?: string
+): Promise<void> {
+  return sendPushNotify(kind, { title, body, eventId });
 }
 
 /** Auto-teste: pede ao servidor um push para OS MEUS dispositivos e devolve o
@@ -164,7 +197,7 @@ export async function sendTestPush(title: string, body: string): Promise<{ sent:
     const res = await fetch('/.netlify/functions/push-ping', {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: `Bearer ${session.access_token}` },
-      body: JSON.stringify({ kind: 'test', title, body })
+      body: JSON.stringify({ eventId: newPushEventId(), kind: 'test', title, body })
     });
     if (!res.ok) return null;
     const data = (await res.json()) as { sent?: number; of?: number };

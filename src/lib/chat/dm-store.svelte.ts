@@ -177,7 +177,7 @@ export class DmChatStore {
         .single();
       if (error) throw error;
       this.messages = this.messages.map((m) => (m.id === localId ? this.#rowToMsg(data as Row) : m));
-      this.#pushAfterSend(text);
+      this.#pushAfterSend(text, (data as Row).id);
       return 'sent';
     } catch {
       this.messages = this.messages.map((m) => (m.id === localId ? { ...m, pending: false, failed: true } : m));
@@ -186,7 +186,7 @@ export class DmChatStore {
   }
 
   /** Push no telemóvel do amigo (fire-and-forget, com throttle por thread). */
-  #pushAfterSend(preview: string): void {
+  #pushAfterSend(preview: string, eventId: string): void {
     void (async () => {
       try {
         const [{ sendPushNotify, shouldPushMessage }, { accountState }] = await Promise.all([
@@ -200,7 +200,8 @@ export class DmChatStore {
           to: this.otherId,
           title: `💬 ${me.display_name || `@${me.handle}`}`,
           body: preview.slice(0, 120),
-          url: `/mensagens/?dm=${me.handle}`
+          url: `/mensagens/?dm=${me.handle}`,
+          eventId
         });
       } catch {
         /* best-effort */

@@ -20,6 +20,7 @@
   import InstallButton from '$lib/components/InstallButton.svelte';
   import MoodLayer from '$lib/components/MoodLayer.svelte';
   import GamificationLayer from '$lib/components/GamificationLayer.svelte';
+  import CoupleMomentLayer from '$lib/components/CoupleMomentLayer.svelte';
   import GameInviteListener from '$lib/components/GameInviteListener.svelte';
   import HabitReminders from '$lib/components/habitos/HabitReminders.svelte';
   import ArcadeTouchHud from '$lib/components/arcade/ArcadeTouchHud.svelte';
@@ -42,6 +43,8 @@
   let secretRoomOpen = $state(false);
   let activeMood = $state<ActiveMood | null>(null);
   let authRedirectTimer: ReturnType<typeof setTimeout> | null = null;
+  let stopForegroundMessages: (() => void) | null = null;
+  let foregroundMessagesProfile: string | null = null;
 
   // PWA prompt-mode update flow: the SW registration below hands us an
   // `updateSW` callback; when 'presuntinho:pwa-update' fires with
@@ -54,8 +57,6 @@
   let socialBadge = $state(0);
   let socialInvites = $state(0);
   const socialCount = $derived(socialBadge + socialInvites);
-  // Per-device couple prefs (chosen in /casal/bemvindos) gate the heart.
-  let couplePrefs = $state({ heart: true, pings: true });
   // Conta para o avatar do header (fonte única de identidade) — o $state do
   // account-store é reativo entre módulos, basta derivar.
   const headerAccount = $derived(accountState.account);
@@ -166,6 +167,44 @@
   // NOTIF_CHANGED + tab focus. No timer — getDailyQuests() must not be polled.
   $effect(() => {
     if (session && storesReady) void refreshNotifBadge();
+  });
+
+  // One account-wide message listener keeps cute foreground delivery working
+  // even outside /mensagens/.  Legacy local profiles have no authenticated
+  // account/DM identity, so they deliberately do not open this global channel.
+  $effect(() => {
+    const profile = session?.profile ?? null;
+    if (!profile || isLegacyProfile(profile)) {
+      stopForegroundMessages?.();
+      stopForegroundMessages = null;
+      foregroundMessagesProfile = null;
+      return;
+    }
+    if (foregroundMessagesProfile === profile) return;
+
+    stopForegroundMessages?.();
+    stopForegroundMessages = null;
+    foregroundMessagesProfile = profile;
+    let cancelled = false;
+
+    void import('$lib/couple/foreground-messages')
+      .then(({ subscribeForegroundMessages }) => {
+        if (cancelled || getSession()?.profile !== profile) return;
+        stopForegroundMessages = subscribeForegroundMessages(profile, () =>
+          couple.accountCouple && couple.coupleId ? couple.coupleId : null
+        );
+      })
+      .catch((error) => {
+        if (!cancelled) console.warn('[presuntinho] foreground messages unavailable', error);
+      });
+
+    return () => {
+      cancelled = true;
+      if (foregroundMessagesProfile !== profile) return;
+      stopForegroundMessages?.();
+      stopForegroundMessages = null;
+      foregroundMessagesProfile = null;
+    };
   });
   onMount(() => {
     const unbind = bindNotifBadge();
@@ -284,15 +323,6 @@
         }).catch(() => undefined);
       }
     }
-
-    // Couple prefs (heart/pings) — read at boot + live-update from the wizard.
-    const syncCouplePrefs = () => {
-      void import('$lib/couple/couple-prefs')
-        .then((m) => (couplePrefs = m.readCouplePrefs()))
-        .catch(() => undefined);
-    };
-    syncCouplePrefs();
-    window.addEventListener('presuntinho-couple-prefs-changed', syncCouplePrefs);
 
     // Easter-egg boot hooks — used to live on the always-mounted HeartButton,
     // which the SurpriseHeart replaced. Warm the config cache and run the
@@ -445,8 +475,10 @@
       if (swPoll) clearInterval(swPoll);
       if (seasonalTimer) clearTimeout(seasonalTimer);
       stopCouplePoller();
+      stopForegroundMessages?.();
+      stopForegroundMessages = null;
+      foregroundMessagesProfile = null;
       unwatchCoupleLink?.();
-      window.removeEventListener('presuntinho-couple-prefs-changed', syncCouplePrefs);
       void import('$lib/state/progress-sync').then((m) => m.stopProgressSync()).catch(() => {});
     };
   });
@@ -486,6 +518,7 @@
   <Toast />
   <XpToast />
   <GamificationLayer />
+  <CoupleMomentLayer />
   <GameInviteListener />
   <HabitReminders />
   <SecretModal bind:open={secretRoomOpen} />
@@ -626,14 +659,14 @@
                   <XpPill />
                   <InstallButton />
                 </div>
-                <!-- Mascot lives bottom-RIGHT now; the surprise heart pops on
-                     top of it at random moments (couple points). -->
-                <div class="mascot-corner" class:game-hidden={$arcadeHud || $arcadeImmersive} aria-hidden={$arcadeHud || $arcadeImmersive ? 'true' : undefined}>
+                <!-- Mascot lives bottom-RIGHT; the server-synchronised couple
+                     heart appears wholly above it on both devices. -->
+                <div class="mascot-corner" class:game-hidden={$arcadeHud || $arcadeImmersive}>
                   <Mascot interactive />
                   <!-- The surprise heart only makes sense when this session can
                        actually contribute couple points — hide the inert affordance
                        for solo / onboarded (non-couple) users. -->
-                  {#if couple.available && couplePrefs.heart}
+                  {#if couple.accountCouple}
                     <SurpriseHeart />
                   {/if}
                 </div>
@@ -1172,9 +1205,12 @@
       left: 0;
       bottom: 4.05rem;
     }
-    /* Arcade game mode: mascot + heart FABs step aside for the touch HUD. */
-    .fab-stack.game-hidden,
-    .mascot-corner.game-hidden {
+    /* Arcade game mode keeps controls clear, but the shared heart must still
+       honour the same server window on both phones. Hide only the mascot. */
+    .fab-stack.game-hidden {
+      display: none;
+    }
+    .mascot-corner.game-hidden > :global(.mascot-fab) {
       display: none;
     }
     /* Immersive play: hide the app chrome so the game gets the whole screen.
@@ -1259,6 +1295,8 @@
       position: fixed;
       right: max(0.85rem, env(safe-area-inset-right));
       bottom: calc(env(safe-area-inset-bottom) + 5.55rem + var(--page-bottom-inset, 0px));
+      width: 78px;
+      height: 78px;
       z-index: 60;
       pointer-events: none;
     }
@@ -1275,10 +1313,10 @@
       }
     }
     /* /mensagens/ and /agente/ have their own fixed composer. On small
-       screens the mascot competes with the chat input + suggestion chips;
-       keep it visible on desktop but remove the mobile overlap entirely. */
+       screens hide only the mascot itself: the synchronized heart must still
+       appear on both partners' phones regardless of which route is open. */
     @media (max-width: 767px) {
-      .app-composer .mascot-corner {
+      .app-composer .mascot-corner > :global(.mascot-fab) {
         display: none;
       }
     }

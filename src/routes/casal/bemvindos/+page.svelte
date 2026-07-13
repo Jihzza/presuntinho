@@ -4,7 +4,7 @@
    * A short, warm sequence:
    *   1. congrats — confetti + plush hug + both names
    *   2. identity — name & emoji for the couple space (shared)
-   *   3. features — what just unlocked + per-device toggles
+   *   3. features — what just unlocked + optional ping preference
    * Ends on the hub with couple mode live.
    */
   import { onMount } from 'svelte';
@@ -78,7 +78,9 @@
   }
 
   function finish(): void {
-    writeCouplePrefs(prefs);
+    // The shared heart is part of active couple mode and must be visible on
+    // both phones together.  Only incoming pings remain a per-device choice.
+    writeCouplePrefs({ ...prefs, heart: true });
     showToast($t('casal.bemvindos.done_toast', { default: 'Modo casal ativo! 💞' }), 2600);
     fireConfettiEvent(80);
     void goto('/');
@@ -147,9 +149,9 @@
             <span class="f-icon" aria-hidden="true">💗</span>
             <span class="f-body">
               <strong>{$t('casal.bemvindos.f_heart', { default: 'Coração surpresa' })}</strong>
-              <small>{$t('casal.bemvindos.f_heart_sub', { default: 'Aparece em momentos aleatórios — toca para dar pontos ao casal.' })}</small>
+              <small>{$t('casal.bemvindos.f_heart_sub', { default: 'Aparece nos dois telemóveis ao mesmo tempo — toca para somar pontos do casal.' })}</small>
             </span>
-            <input type="checkbox" class="switch" bind:checked={prefs.heart} aria-label={$t('casal.bemvindos.f_heart', { default: 'Coração surpresa' })} />
+            <span class="always-on" aria-label={$t('casal.bemvindos.f_heart', { default: 'Coração sincronizado' })}>✓</span>
           </li>
           <li>
             <span class="f-icon" aria-hidden="true">📳</span>
@@ -279,4 +281,16 @@
   .switch:checked::after { transform: translateX(19px); }
   .switch:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
   :global([dir='rtl']) .switch:checked::after { transform: translateX(-19px); }
+  .always-on {
+    flex: 0 0 42px;
+    height: 26px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--accent) 24%, var(--card));
+    color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+    font-weight: 900;
+  }
 </style>
