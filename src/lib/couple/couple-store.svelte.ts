@@ -23,14 +23,12 @@ import { getSession, isLegacyProfile } from '$lib/auth/session';
 import { isMultiplayerConfigured } from '$lib/multiplayer/config';
 import { COUPLE_CHANNEL, coupleRole } from '$lib/couple/couple-channel';
 import type { Room } from '$lib/multiplayer/realtime';
-import { showToast } from '$lib/components/events';
-import { playSfx, vibrateLove, vibrateNudge } from '$lib/gamification/sound';
+import { presentCoupleMoment, type CoupleMomentSource } from '$lib/couple/couple-moments';
 import { get } from 'svelte/store';
 import { t } from 'svelte-i18n';
 import {
   getChatToken,
   fetchCoupleSnapshot,
-  postCouplePoints,
   postCoupleLove,
   postCoupleNudge,
   postCoupleScore,
@@ -47,6 +45,12 @@ interface CoupleUiState {
    *  When false the surprise heart / couple points are inert — so the UI must
    *  hide them rather than show a fake affordance to a solo/onboarded user. */
   available: boolean;
+  /** True only for a real two-account couple space with mutual consent. */
+  accountCouple: boolean;
+  /** Explicit active ids used by the synchronized heart and foreground events. */
+  coupleId: string | null;
+  me: string | null;
+  partnerId: string | null;
   /** A partner profile + a chat token are present — sync can happen. */
   enabled: boolean;
   /** At least one snapshot has synced from the server. */
@@ -65,6 +69,10 @@ interface CoupleUiState {
 
 export const couple: CoupleUiState = $state({
   available: false,
+  accountCouple: false,
+  coupleId: null,
+  me: null,
+  partnerId: null,
   enabled: false,
   ready: false,
   online: false,
@@ -76,12 +84,9 @@ export const couple: CoupleUiState = $state({
 });
 
 const POLL_MS = 5000;
-const POINT_FLUSH_MS = 1200;
 const PING_COOLDOWN_MS = 12_000;
 
 let pollTimer: ReturnType<typeof setInterval> | null = null;
-let flushTimer: ReturnType<typeof setTimeout> | null = null;
-let pendingTaps = 0;
 let lastLoveAt = 0;
 let lastNudgeAt = 0;
 // The partner ping ts we've already reacted to. Initialised on first sync so a
@@ -123,6 +128,15 @@ interface CoupleIdentity {
 
 let identity: CoupleIdentity | null = null;
 
+function publishIdentity(id: CoupleIdentity | null): void {
+  couple.available = !!id;
+  couple.accountCouple = !!id && !id.legacy;
+  couple.coupleId = id && !id.legacy ? id.coupleId : null;
+  couple.me = id?.me ?? null;
+  couple.partnerId = id?.other ?? null;
+  couple.enabled = !!id && (id.legacy ? !!getChatToken(id.me as ChatProfile) : true);
+}
+
 async function resolveIdentity(): Promise<CoupleIdentity | null> {
   const p = getSession()?.profile;
   if (!p) return null;
@@ -137,9 +151,9 @@ async function resolveIdentity(): Promise<CoupleIdentity | null> {
   // with an ACTIVE couple space (mutual consent — see propose/accept_couple).
   if (!isMultiplayerConfigured()) return null;
   try {
-    const { listSpaces, isCoupleActive, otherMember } = await import('$lib/account/spaces');
+    const { listSpaces, singleActiveCouple, otherMember } = await import('$lib/account/spaces');
     const spaces = await listSpaces();
-    const space = spaces.find(isCoupleActive);
+    const space = singleActiveCouple(spaces);
     if (!space) return null;
     const partner = otherMember(space, p);
     if (!partner) return null;
@@ -162,8 +176,7 @@ function applySnapshot(me: ChatProfile, snap: CoupleSnapshot): void {
   if (!supaActive) {
     couple.myPoints = snap.couple.points[me] ?? 0;
     couple.partnerPoints = snap.couple.points[other] ?? 0;
-    // Keep any not-yet-flushed optimistic taps on top of the authoritative total.
-    couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+    couple.points = couple.myPoints + couple.partnerPoints;
   }
   couple.scores = snap.couple.scores ?? {};
   couple.online = true;
@@ -179,32 +192,30 @@ function applySnapshot(me: ChatProfile, snap: CoupleSnapshot): void {
   }
   if (ping && ts > lastPartnerPingTs) {
     lastPartnerPingTs = ts;
-    receivePing(me, ping.kind);
+    receivePing(me, ping.kind, `${ping.kind}:${other}:${ts}`, 'poll');
   }
 }
 
-function receivePing(me: string, kind: 'love' | 'nudge'): void {
-  // O mesmo ping pode chegar por broadcast E por postgres_changes (row) com
-  // milissegundos de diferença — o gate temporal engole o duplicado (o
-  // cooldown de envio garante que pings distintos nunca caem na janela).
-  if (!pingToastGate()) return;
-  // Device preference from the couple onboarding — pings can be silenced.
-  try {
-    const raw = localStorage.getItem('presuntinho-couple-prefs');
-    if (raw && (JSON.parse(raw) as { pings?: boolean }).pings === false) return;
-  } catch {
-    /* unreadable prefs — default is on */
-  }
+function receivePing(
+  me: string,
+  kind: 'love' | 'nudge',
+  eventId: string,
+  source: CoupleMomentSource
+): void {
   const name = partnerName(me);
-  if (kind === 'love') {
-    showToast(get(t)('couple.ping.love.received', { values: { name }, default: `💛 ${name} ama-te muito!` }), 4200);
-    vibrateLove();
-    playSfx('ding');
-  } else {
-    showToast(get(t)('couple.ping.nudge.received', { values: { name }, default: `👀 ${name} tem saudades tuas!` }), 4200);
-    vibrateNudge();
-    playSfx('milestone');
-  }
+  presentCoupleMoment({
+    id: eventId,
+    kind,
+    senderId: identity?.other ?? '',
+    senderName: name,
+    body:
+      kind === 'love'
+        ? get(t)('couple.ping.love.received', { values: { name }, default: `💛 ${name} ama-te muito!` })
+        : get(t)('couple.ping.nudge.received', { values: { name }, default: `👀 ${name} tem saudades tuas!` }),
+    href: '/',
+    createdAt: Date.now(),
+    source
+  });
 }
 
 // ── realtime broadcast fast-path (optional, Supabase-gated) ─────────────────
@@ -213,7 +224,7 @@ function receivePing(me: string, kind: 'love' | 'nudge'): void {
 function applyPartnerPoints(me: string, from: string, total: number): void {
   if (from === me) return; // self:false already filters; belt-and-suspenders
   couple.partnerPoints = Math.max(couple.partnerPoints, total);
-  couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+  couple.points = couple.myPoints + couple.partnerPoints;
 }
 
 async function connectRealtime(id: CoupleIdentity): Promise<void> {
@@ -231,8 +242,15 @@ async function connectRealtime(id: CoupleIdentity): Promise<void> {
     r.on('points', (p: { profile?: string; total?: number }) => {
       if (p?.profile && typeof p.total === 'number') applyPartnerPoints(me, p.profile, p.total);
     });
-    const onPing = (kind: 'love' | 'nudge') => (p: { profile?: string; ts?: number }) => {
+    const onPing = (kind: 'love' | 'nudge') => (p: { id?: string; profile?: string; ts?: number }) => {
       if (p?.profile !== other) return;
+      // Account pings carry the same UUID through broadcast, postgres_changes
+      // and Web Push.  Let the exact-id deduper merge those transports instead
+      // of dropping legitimate events based on device clocks.
+      if (!id.legacy && p.id) {
+        receivePing(me, kind, p.id, 'broadcast');
+        return;
+      }
       const ts = p.ts ?? 0;
       // Before the first snapshot seeds lastPartnerPingTs, adopt without firing.
       if (!seededPing) {
@@ -241,7 +259,7 @@ async function connectRealtime(id: CoupleIdentity): Promise<void> {
       }
       if (ts > lastPartnerPingTs) {
         lastPartnerPingTs = ts;
-        receivePing(me, kind);
+        receivePing(me, kind, p.id ?? `${kind}:${p.profile}:${ts}`, 'broadcast');
       }
     };
     r.on('love', onPing('love'));
@@ -260,10 +278,10 @@ async function reconcileSupabasePoints(): Promise<void> {
   const id = identity;
   if (!supaActive || !supa || !id) return;
   try {
-    const points = await supa.fetchCouplePoints();
+    const points = await supa.fetchCouplePoints(id.coupleId);
     couple.myPoints = points[id.me] ?? 0;
     couple.partnerPoints = points[id.other] ?? 0;
-    couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+    couple.points = couple.myPoints + couple.partnerPoints;
     couple.online = true;
   } catch {
     /* keep the current display */
@@ -283,11 +301,11 @@ async function initSupabasePoints(id: CoupleIdentity): Promise<void> {
     seededPing = true;
     // Subscribe FIRST so no change is missed in the gap before the initial fetch.
     supaPointsUnsub?.();
-    supaPointsUnsub = mod.subscribeCouplePoints((prof, pts) => {
+    supaPointsUnsub = mod.subscribeCouplePoints(id.coupleId, (prof, pts) => {
       // Monotonic: never let an out-of-order event lower the count.
       if (prof === me) couple.myPoints = Math.max(couple.myPoints, pts);
       else if (prof === other) couple.partnerPoints = Math.max(couple.partnerPoints, pts);
-      couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
+      couple.points = couple.myPoints + couple.partnerPoints;
     });
     subscribePersistedPings(id);
     await reconcileSupabasePoints();
@@ -304,24 +322,15 @@ async function initSupabasePoints(id: CoupleIdentity): Promise<void> {
 // ── pings persistidos (couple_pings) ────────────────────────────────────────
 // O broadcast (room) exige as DUAS apps abertas e ligadas ao mesmo tempo; as
 // rows em couple_pings chegam por postgres_changes a qualquer app aberta e
-// alimentam a página de notificações. Dedupe temporal: se o broadcast já
-// mostrou o toast, o evento da row (que chega logo a seguir) é ignorado.
+// alimentam a página de notificações. Todos os transportes carregam o mesmo
+// UUID; CoupleMomentLayer apresenta cada evento exatamente uma vez.
 let pingsChannelUnsub: (() => void) | null = null;
-let lastPingToastAt = 0;
-
-function pingToastGate(): boolean {
-  const now = Date.now();
-  if (now - lastPingToastAt < 4000) return false;
-  lastPingToastAt = now;
-  return true;
-}
-
 function subscribePersistedPings(id: CoupleIdentity): void {
   if (id.legacy) return; // par legado: pings continuam via Blobs snapshot
   void (async () => {
     try {
       const { getSupabaseClient } = await import('$lib/multiplayer/client');
-      const startedAt = new Date().toISOString();
+      const startedAt = Date.now();
       pingsChannelUnsub?.();
       const channel = getSupabaseClient()
         .channel(`couple_pings:${id.coupleId}`)
@@ -329,10 +338,11 @@ function subscribePersistedPings(id: CoupleIdentity): void {
           'postgres_changes',
           { event: 'INSERT', schema: 'public', table: 'couple_pings', filter: `couple_id=eq.${id.coupleId}` },
           (payload) => {
-            const row = payload.new as { sender?: string; kind?: 'love' | 'nudge'; created_at?: string };
+            const row = payload.new as { id?: string; sender?: string; kind?: 'love' | 'nudge'; created_at?: string };
             if (row.sender !== id.other) return; // os meus próprios não tocam
-            if (row.created_at && row.created_at < startedAt) return; // histórico
-            receivePing(id.me, row.kind === 'nudge' ? 'nudge' : 'love');
+            if (row.created_at && Date.parse(row.created_at) < startedAt) return; // histórico
+            const kind = row.kind === 'nudge' ? 'nudge' : 'love';
+            receivePing(id.me, kind, row.id ?? `${kind}:${row.sender}:${row.created_at ?? Date.now()}`, 'postgres');
           }
         )
         .subscribe();
@@ -366,65 +376,6 @@ async function poll(): Promise<void> {
   }
 }
 
-async function flushPoints(): Promise<void> {
-  flushTimer = null;
-  const id = identity;
-  if (!id || pendingTaps <= 0) return;
-  const me = id.me;
-  if (pendingTaps <= 0) return;
-  const n = pendingTaps;
-  pendingTaps = 0;
-
-  // Supabase mode: persist to the couple_points table (durable + realtime).
-  if (supaActive && supa) {
-    try {
-      const total = await supa.bumpCouplePoints(me, n);
-      couple.myPoints = total;
-      couple.points = couple.myPoints + couple.partnerPoints + pendingTaps;
-      couple.online = true;
-    } catch (e) {
-      // At-most-once on failure: the bump is NOT idempotent, so re-queuing after
-      // a possibly-committed write would inflate the server total. Drop the n
-      // taps and let the periodic reconcile pull the authoritative count instead.
-      couple.online = false;
-      void reconcileSupabasePoints();
-    }
-    return;
-  }
-
-  // Netlify-Blobs fallback (no Supabase configured) — legacy pair only; the
-  // chat blob is keyed by the two legacy profiles.
-  if (!id.legacy) return;
-  try {
-    const snap = await postCouplePoints(me as ChatProfile, n);
-    applySnapshot(me as ChatProfile, snap);
-    // Push the server-confirmed authoritative total so the partner sees it now.
-    broadcast('points', { profile: me, total: couple.myPoints });
-  } catch (e) {
-    // Roll the taps back into the pending bucket so a later flush retries them,
-    // but drop the optimistic display back in step so it doesn't drift upward.
-    if (isNetworkError(e)) {
-      pendingTaps += n;
-      couple.online = false;
-    }
-  }
-}
-
-/**
- * Optimistically add one shared point and schedule a batched flush. Returns the
- * new displayed total so the caller can animate a "+1".
- */
-export function tapCouplePoint(): number {
-  if (!identity) return couple.points;
-  // Track the unflushed taps in pendingTaps ONLY (not myPoints — that is the
-  // server-authoritative tally set on flush). Incrementing both double-counts an
-  // unflushed tap whenever a recompute (partner event) runs before the flush.
-  pendingTaps += 1;
-  couple.points += 1;
-  if (!flushTimer) flushTimer = setTimeout(() => void flushPoints(), POINT_FLUSH_MS);
-  return couple.points;
-}
-
 async function sendPing(kind: 'love' | 'nudge'): Promise<PingResult> {
   const id = identity;
   if (!id) return 'disabled';
@@ -439,16 +390,19 @@ async function sendPing(kind: 'love' | 'nudge'): Promise<PingResult> {
   if (kind === 'love') lastLoveAt = now;
   else lastNudgeAt = now;
   if (!id.legacy) {
+    const eventId = crypto.randomUUID();
     // Account couple: instant broadcast (ephemeral by design — like the
     // surprise heart, a ping is a "right now" moment, not a mailbox) + Web
     // Push real nos dispositivos do parceiro, com o MEU nome no título.
-    if (room) broadcast(kind, { profile: me, ts: now });
+    if (room) broadcast(kind, { id: eventId, profile: me, ts: now });
     // Persistência (couple_pings): alimenta a página de notificações e entrega
     // o toast via postgres_changes quando a sala broadcast não está ligada.
     void (async () => {
       try {
         const { getSupabaseClient } = await import('$lib/multiplayer/client');
-        await getSupabaseClient().from('couple_pings').insert({ couple_id: id.coupleId, sender: me, kind });
+        await getSupabaseClient()
+          .from('couple_pings')
+          .insert({ id: eventId, couple_id: id.coupleId, sender: me, kind });
       } catch {
         /* best-effort */
       }
@@ -466,7 +420,7 @@ async function sendPing(kind: 'love' | 'nudge'): Promise<PingResult> {
           ? get(t)('couple.ping.love.received', { values: { name: myName }, default: `💛 ${myName} ama-te muito!` })
           : get(t)('couple.ping.nudge.received', { values: { name: myName }, default: `👀 ${myName} tem saudades tuas!` });
       const body = get(t)('couple.ping.push_body', { default: 'Toca para abrir o Presuntinho 🐷' });
-      await sendPingPush(kind, title, body);
+      await sendPingPush(kind, title, body, eventId);
     })();
     return 'sent';
   }
@@ -474,8 +428,10 @@ async function sendPing(kind: 'love' | 'nudge'): Promise<PingResult> {
     const snap =
       kind === 'love' ? await postCoupleLove(me as ChatProfile) : await postCoupleNudge(me as ChatProfile);
     applySnapshot(me as ChatProfile, snap);
-    // Instant delivery to the partner (idempotent — carries its own ts).
-    broadcast(kind, { profile: me, ts: now });
+    // Use the timestamp committed by the server so the Realtime fast-path and
+    // the subsequent poll share one event id. Falling back only protects old
+    // server responses that predate the ping snapshot field.
+    broadcast(kind, { profile: me, ts: snap.couple.pings[me as ChatProfile]?.ts ?? now });
     return 'sent';
   } catch (e) {
     // Let the user retry immediately after a network failure.
@@ -526,14 +482,13 @@ export function startCouplePoller(): void {
   void (async () => {
     identity = await resolveIdentity();
     const id = identity;
-    couple.available = !!id;
-    couple.enabled = !!id && (id.legacy ? !!getChatToken(id.me as ChatProfile) : true);
+    publishIdentity(id);
     if (!id) return;
     // Open the realtime fast-path when Supabase is configured (no-op otherwise).
     void connectRealtime(id);
     // Durable POINTS via Supabase when configured — set the flag synchronously
     // so the Blobs poll never overwrites the Supabase counter, then hydrate.
-    if (isMultiplayerConfigured()) {
+    if (isMultiplayerConfigured() && !id.legacy) {
       supaActive = true;
       void initSupabasePoints(id);
     }
@@ -545,12 +500,7 @@ export function startCouplePoller(): void {
       void reconcileSupabasePoints(); // catch up on anything realtime missed
     }
   };
-  const onHide = () => {
-    // Best-effort flush of queued taps before the tab is frozen/closed.
-    if (pendingTaps > 0) void flushPoints();
-  };
   document.addEventListener('visibilitychange', onVisible);
-  window.addEventListener('pagehide', onHide);
 
   void poll();
   pollTimer = setInterval(() => {
@@ -562,7 +512,6 @@ export function startCouplePoller(): void {
 
   cleanupListeners = () => {
     document.removeEventListener('visibilitychange', onVisible);
-    window.removeEventListener('pagehide', onHide);
   };
 }
 
@@ -573,16 +522,31 @@ export function startCouplePoller(): void {
  */
 export function refreshCoupleEnabled(): void {
   void (async () => {
-    identity = await resolveIdentity();
-    const id = identity;
-    couple.available = !!id;
-    couple.enabled = !!id && (id.legacy ? !!getChatToken(id.me as ChatProfile) : true);
+    const next = await resolveIdentity();
+    const previous = identity;
+    identity = next;
+    const id = next;
+    publishIdentity(id);
+
+    // A freshly accepted/changed couple must never keep the prior points/ping
+    // subscriptions alive.  This also fixes the no-reload activation race.
+    if (previous?.coupleId !== id?.coupleId || previous?.me !== id?.me) {
+      supaPointsUnsub?.();
+      supaPointsUnsub = null;
+      pingsChannelUnsub?.();
+      pingsChannelUnsub = null;
+      supa = null;
+      supaActive = false;
+      couple.myPoints = 0;
+      couple.partnerPoints = 0;
+      couple.points = 0;
+    }
     if (id) {
       // The channel may have re-scoped (a couple just became active) — rejoin.
       void room?.leave();
       room = null;
       void connectRealtime(id);
-      if (isMultiplayerConfigured() && !supaActive) {
+      if (isMultiplayerConfigured() && !id.legacy && !supaActive) {
         supaActive = true;
         void initSupabasePoints(id);
       }
@@ -592,15 +556,19 @@ export function refreshCoupleEnabled(): void {
       void room?.leave();
       room = null;
       couple.partnerOnline = false;
+      supaPointsUnsub?.();
+      supaPointsUnsub = null;
+      pingsChannelUnsub?.();
+      pingsChannelUnsub = null;
+      supa = null;
+      supaActive = false;
     }
   })();
 }
 
 export function stopCouplePoller(): void {
   if (pollTimer) clearInterval(pollTimer);
-  if (flushTimer) clearTimeout(flushTimer);
   pollTimer = null;
-  flushTimer = null;
   started = false;
   cleanupListeners?.();
   cleanupListeners = null;
@@ -614,5 +582,5 @@ export function stopCouplePoller(): void {
   supa = null;
   supaActive = false;
   identity = null;
-  couple.available = false;
+  publishIdentity(null);
 }

@@ -6,7 +6,7 @@
 
 import { type SupabaseClient, type RealtimeChannel } from '@supabase/supabase-js';
 import { getSupabaseClient } from '$lib/multiplayer/client';
-import { COUPLE_ID, resolveCoupleId } from '$lib/couple/couple-supabase';
+import { COUPLE_ID } from '$lib/couple/couple-supabase';
 import type { ChatProfile } from '$lib/chat/client';
 import type { LocalChatMessage } from '$lib/chat/store.svelte';
 
@@ -64,9 +64,10 @@ function blobToDataUrl(blob: Blob): Promise<string> {
 }
 
 export class CoupleChatStore {
-  readonly profile: ChatProfile;
-  readonly other: ChatProfile;
+  readonly profile: string;
+  readonly other: string;
   readonly conversationId: string;
+  readonly coupleId: string;
 
   messages = $state<LocalChatMessage[]>([]);
   ready = $state(false);
@@ -81,11 +82,14 @@ export class CoupleChatStore {
   #pollTimer: ReturnType<typeof setInterval> | null = null;
   static #chanSeq = 0; // nome de canal único por (re)subscrição
 
-  constructor(profile: ChatProfile, conversationId = 'main') {
+  constructor(profile: string, other: string, conversationId = 'main', coupleId = COUPLE_ID) {
     this.profile = profile;
-    this.other = profile === 'fatma' ? 'daniel' : 'fatma';
+    this.other = other;
     this.conversationId = conversationId;
-    this.#readKey = `${READ_KEY_PREFIX}-${conversationId}`;
+    this.coupleId = coupleId;
+    // Account/couple scoped: switching accounts on one phone can no longer
+    // inherit another person's local read cursor.
+    this.#readKey = `${READ_KEY_PREFIX}-${coupleId}-${profile}-${other}-${conversationId}`;
     this.#sb = getSupabaseClient();
   }
 
@@ -149,12 +153,8 @@ export class CoupleChatStore {
   }
 
   start(): void {
-    // Resolve the couple space id BEFORE building the channel / loading, so an
-    // account-couple's chat is scoped to its own space (Phase 3b).
     this.#stopped = false;
     void (async () => {
-      await resolveCoupleId();
-      if (this.#stopped) return; // stopped mid-resolve — don't create a leaked channel
       await this.#load();
       if (this.#stopped) return;
       this.#openChannel();
@@ -183,10 +183,10 @@ export class CoupleChatStore {
   #openChannel(): void {
     if (this.#channel) void this.#sb.removeChannel(this.#channel);
     this.#channel = this.#sb
-      .channel(`couple_msg:${COUPLE_ID}:${this.conversationId}:${++CoupleChatStore.#chanSeq}`)
+      .channel(`couple_msg:${this.coupleId}:${this.conversationId}:${++CoupleChatStore.#chanSeq}`)
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'couple_messages', filter: `couple_id=eq.${COUPLE_ID}` },
+        { event: 'INSERT', schema: 'public', table: 'couple_messages', filter: `couple_id=eq.${this.coupleId}` },
         (payload) => void this.#ingest(payload.new as Row)
       )
       .subscribe((status) => {
@@ -220,7 +220,7 @@ export class CoupleChatStore {
       const { data, error } = await this.#sb
         .from('couple_messages')
         .select('*')
-        .eq('couple_id', COUPLE_ID)
+        .eq('couple_id', this.coupleId)
         .eq('conversation_id', this.conversationId)
         .order('created_at', { ascending: false })
         .limit(500);
@@ -240,18 +240,18 @@ export class CoupleChatStore {
   async sendTextMessage(text: string): Promise<'sent' | 'queued' | 'failed'> {
     const localId = `local-${crypto.randomUUID()}`;
     const optimistic: LocalChatMessage = {
-      id: localId, from: this.profile, text, conversationId: this.conversationId, ts: Date.now(), pending: true
+      id: localId, from: this.profile as ChatProfile, text, conversationId: this.conversationId, ts: Date.now(), pending: true
     };
     this.#sortMerge([...this.messages, optimistic]);
     try {
       const { data, error } = await this.#sb
         .from('couple_messages')
-        .insert({ couple_id: COUPLE_ID, conversation_id: this.conversationId, sender: this.profile, kind: 'text', body: text })
+        .insert({ couple_id: this.coupleId, conversation_id: this.conversationId, sender: this.profile, kind: 'text', body: text })
         .select()
         .single();
       if (error) throw error;
       this.messages = this.messages.map((m) => (m.id === localId ? this.#rowToMsg(data as Row) : m));
-      this.#pushAfterSend(text);
+      this.#pushAfterSend(text, (data as Row).id);
       return 'sent';
     } catch (e) {
       this.messages = this.messages.map((m) => (m.id === localId ? { ...m, pending: false, failed: true } : m));
@@ -262,21 +262,22 @@ export class CoupleChatStore {
   /** Push no telemóvel do parceiro (só casais de CONTA — o par legado não tem
    *  sessão Supabase; fire-and-forget com throttle por conversa). O servidor
    *  resolve o destinatário via couple_partner(). */
-  #pushAfterSend(preview: string): void {
-    if (!UUID_RE.test(COUPLE_ID)) return;
+  #pushAfterSend(preview: string, eventId: string): void {
+    if (!UUID_RE.test(this.coupleId)) return;
     void (async () => {
       try {
         const [{ sendPushNotify, shouldPushMessage }, { accountState }] = await Promise.all([
           import('$lib/push'),
           import('$lib/account/account-store.svelte')
         ]);
-        if (!shouldPushMessage(`couple:${COUPLE_ID}:${this.conversationId}`)) return;
+        if (!shouldPushMessage(`couple:${this.coupleId}:${this.conversationId}`)) return;
         const me = accountState.account;
         const name = me?.display_name || (me ? `@${me.handle}` : '💞');
         await sendPushNotify('message', {
           title: `💬 ${name}`,
           body: preview.slice(0, 120),
-          url: '/mensagens/'
+          url: '/mensagens/',
+          eventId
         });
       } catch {
         /* best-effort */
@@ -290,18 +291,18 @@ export class CoupleChatStore {
     const localId = `local-${crypto.randomUUID()}`;
     const previewUrl = await blobToDataUrl(file).catch(() => undefined);
     const optimistic: LocalChatMessage = {
-      id: localId, from: this.profile, mediaType: file.type || `${kind}/*`, localDataUrl: previewUrl,
+      id: localId, from: this.profile as ChatProfile, mediaType: file.type || `${kind}/*`, localDataUrl: previewUrl,
       name, conversationId: this.conversationId, ts: Date.now(), pending: true
     };
     this.#sortMerge([...this.messages, optimistic]);
     try {
       const upload = isAudio ? file : await shrinkImage(file);
       const ext = isAudio ? (name.split('.').pop() || 'webm') : 'webp';
-      const path = `${COUPLE_ID}/${this.conversationId}/${crypto.randomUUID()}.${ext}`;
+      const path = `${this.coupleId}/${this.conversationId}/${crypto.randomUUID()}.${ext}`;
       // Account couples (uuid id) → the PRIVATE bucket, store the object path
       // (signed on load). The legacy pair → the PUBLIC bucket, store the public
       // URL, exactly as before (the private bucket rejects non-uuid folders).
-      const account = UUID_RE.test(COUPLE_ID);
+      const account = UUID_RE.test(this.coupleId);
       const bucket = account ? CHAT_BUCKET : LEGACY_BUCKET;
       const { error: upErr } = await this.#sb.storage.from(bucket).upload(path, upload, {
         contentType: isAudio ? file.type || 'audio/webm' : 'image/webp',
@@ -311,7 +312,7 @@ export class CoupleChatStore {
       const mediaValue = account ? path : this.#sb.storage.from(bucket).getPublicUrl(path).data.publicUrl;
       const { data, error } = await this.#sb
         .from('couple_messages')
-        .insert({ couple_id: COUPLE_ID, conversation_id: this.conversationId, sender: this.profile, kind, media_url: mediaValue })
+        .insert({ couple_id: this.coupleId, conversation_id: this.conversationId, sender: this.profile, kind, media_url: mediaValue })
         .select()
         .single();
       if (error) throw error;
@@ -320,7 +321,7 @@ export class CoupleChatStore {
       const finalMsg = this.#rowToMsg(data as Row);
       finalMsg.localDataUrl = previewUrl;
       this.messages = this.messages.map((m) => (m.id === localId ? finalMsg : m));
-      this.#pushAfterSend(isAudio ? '🎧 Mensagem de voz' : '📷 Fotografia');
+      this.#pushAfterSend(isAudio ? '🎧 Mensagem de voz' : '📷 Fotografia', (data as Row).id);
       return 'sent';
     } catch (e) {
       console.warn('[couple-chat] media send failed', e);

@@ -1,165 +1,448 @@
 <script lang="ts">
   /**
-   * SurpriseHeart — a couple-points heart that only appears at random moments
-   * for a short window, floating ON TOP of the mascot (bottom-right). Tapping it
-   * adds a SHARED point synced across both partners' devices (couple-store).
-   *
-   * It replaces the always-on HeartButton: love is a surprise, not furniture.
-   * Decorative-but-interactive; fully removed from the DOM while hidden so it
-   * never blocks the mascot's own gestures underneath it.
+   * SurpriseHeart projects the database-owned heart window.  There is no
+   * device-local schedule: both partners receive the same session/timestamps
+   * and taps are awarded atomically by the authenticated RPC.
    */
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
-  import { couple, tapCouplePoint } from '$lib/couple/couple-store.svelte';
+  import { couple } from '$lib/couple/couple-store.svelte';
+  import {
+    fetchCoupleHeartState,
+    heartWindowDelays,
+    subscribeCoupleHeart,
+    tapCoupleHeart,
+    type CoupleHeartSessionChange,
+    type CoupleHeartState,
+    type CoupleHeartWindow
+  } from '$lib/couple/couple-heart';
   import { playSfx, vibrate } from '$lib/gamification/sound';
-  import { prefersReducedMotion, fireConfettiEvent } from './events';
+  import { fireConfettiEvent, prefersReducedMotion } from './events';
 
-  // Timing (ms). First appearance is soon-ish so it's discoverable; later gaps
-  // are longer so it stays a treat. Each visit lasts a short, limited window.
-  const FIRST_MIN = 12_000;
-  const FIRST_MAX = 28_000;
-  const GAP_MIN = 45_000;
-  const GAP_MAX = 120_000;
-  const SHOW_MIN = 7_000;
-  const SHOW_MAX = 11_000;
-
-  // Feedback escalation — the FASTER you tap, the more (and wilder) the reaction
-  // grows, exponentially, but capped so a frantic tapper can never lag the app.
-  const RATE_WINDOW = 1300; // ms sliding window used to measure tap speed
-  const MAX_LEVEL = 12; // hard ceiling on intensity (the "upper limit")
-  const MAX_POPS = 28; // hard ceiling on concurrent floating particles
+  const RATE_WINDOW = 1300;
+  const MAX_LEVEL = 12;
+  const MAX_POPS = 28;
+  const BOUNDARY_GRACE_MS = 220;
+  const RETRY_DELAYS_MS = [1500, 3000, 6000, 12_000, 30_000] as const;
+  const POP_SPREAD = [-38, 28, -18, 44, -50, 12, 35, -30] as const;
+  const POP_ROTATIONS = [-42, 31, -18, 48, -34, 16, 39, -27] as const;
 
   let visible = $state(false);
   let reduced = $state(false);
+  let currentSessionId = $state<string | null>(null);
   let pops = $state<
     { id: number; dx: number; dy: number; rot: number; scale: number; big: boolean }[]
   >([]);
+  let heartEl = $state<HTMLButtonElement | null>(null);
+  let mounted = false;
+
   let popSeq = 0;
   let tapTimes: number[] = [];
-  let heartEl = $state<HTMLButtonElement | null>(null);
-
-  let showTimer: ReturnType<typeof setTimeout> | null = null;
-  let hideTimer: ReturnType<typeof setTimeout> | null = null;
-  // Track the short "+1" pop timers so none survive an unmount mid-animation.
+  let lastSeenTapSeq = 0;
+  let requestAuthoritativeRefresh: (() => void) | null = null;
   const popTimers = new Set<ReturnType<typeof setTimeout>>();
+  const feedbackTimers = new Set<ReturnType<typeof setTimeout>>();
 
-  function rand(min: number, max: number): number {
-    return min + Math.random() * (max - min);
-  }
-
-  function scheduleAppearance(first = false): void {
-    if (showTimer) clearTimeout(showTimer);
-    const delay = first ? rand(FIRST_MIN, FIRST_MAX) : rand(GAP_MIN, GAP_MAX);
-    showTimer = setTimeout(appear, delay);
-  }
-
-  function appear(): void {
-    if (document.hidden) {
-      // Don't burn the window while the tab is backgrounded — try again soon.
-      scheduleAppearance();
-      return;
-    }
-    visible = true;
-    if (hideTimer) clearTimeout(hideTimer);
-    hideTimer = setTimeout(vanish, rand(SHOW_MIN, SHOW_MAX));
-  }
-
-  function vanish(): void {
-    visible = false;
+  function clearPops(): void {
+    for (const timer of popTimers) clearTimeout(timer);
+    popTimers.clear();
     pops = [];
-    scheduleAppearance();
   }
 
-  /** A short, level-scaled shake of the heart via the Web Animations API
-   *  (retriggerable + capped). Skipped under reduced motion. */
-  function shake(level: number): void {
+  function clearFeedbackTimers(): void {
+    for (const timer of feedbackTimers) clearTimeout(timer);
+    feedbackTimers.clear();
+  }
+
+  /** Both phones project the same server-owned beat instead of reacting at
+   *  their different network-response times. A late device fires immediately. */
+  function atSharedBeat(feedbackAtMs: number, serverOffsetMs: number, feedback: () => void): void {
+    const delay = Math.max(0, feedbackAtMs - (Date.now() + serverOffsetMs));
+    const timer = setTimeout(() => {
+      feedbackTimers.delete(timer);
+      feedback();
+    }, delay);
+    feedbackTimers.add(timer);
+  }
+
+  function addPops(level: number, remote = false): void {
+    if (reduced) return;
+    const count = Math.min(6, 1 + Math.floor(level / 2) + (remote ? 1 : 0));
+    const batch = Array.from({ length: count }, (_, offset) => {
+      const id = ++popSeq;
+      const pattern = (id + offset + level) % POP_SPREAD.length;
+      return {
+        id,
+        dx: POP_SPREAD[pattern] + (remote ? (offset % 2 === 0 ? -5 : 5) : 0),
+        dy: -(30 + level * 5 + (offset % 3) * 7),
+        rot: POP_ROTATIONS[pattern],
+        scale: Math.min(2.1, 1 + level * 0.08),
+        big: remote || level >= 7
+      };
+    });
+    pops = [...pops, ...batch].slice(-MAX_POPS);
+    const ids = new Set(batch.map((pop) => pop.id));
+    const timer = setTimeout(() => {
+      popTimers.delete(timer);
+      pops = pops.filter((pop) => !ids.has(pop.id));
+    }, 850);
+    popTimers.add(timer);
+  }
+
+  function shake(level: number, remote = false): void {
     if (!heartEl || reduced) return;
-    const amp = Math.min(16, 2 + level); // px, capped
-    const rot = Math.min(14, level); // deg, capped
-    const s = 1 + Math.min(0.24, level * 0.02);
+    const amplitude = Math.min(18, 3 + level + (remote ? 3 : 0));
+    const rotation = Math.min(16, 3 + level);
+    const scale = 1 + Math.min(0.3, level * 0.022 + (remote ? 0.05 : 0));
     heartEl.animate(
       [
         { transform: 'translateX(-50%) rotate(0) scale(1)' },
-        { transform: `translateX(calc(-50% - ${amp}px)) rotate(-${rot}deg) scale(${s})` },
-        { transform: `translateX(calc(-50% + ${amp}px)) rotate(${rot}deg) scale(${s})` },
+        {
+          transform: `translateX(calc(-50% - ${amplitude}px)) rotate(-${rotation}deg) scale(${scale})`
+        },
+        {
+          transform: `translateX(calc(-50% + ${amplitude}px)) rotate(${rotation}deg) scale(${scale})`
+        },
         { transform: 'translateX(-50%) rotate(0) scale(1)' }
       ],
-      { duration: Math.max(120, 260 - level * 10), easing: 'ease-in-out' }
+      {
+        duration: Math.max(130, 300 - level * 9),
+        easing: 'cubic-bezier(.2,.9,.3,1)'
+      }
     );
   }
 
-  function onTap(): void {
-    tapCouplePoint();
-
-    // Measure tap speed over a sliding window → an intensity level, capped.
+  function localTapFeedback(): void {
     const now = performance.now();
-    tapTimes = tapTimes.filter((ts) => now - ts < RATE_WINDOW);
+    tapTimes = tapTimes.filter((timestamp) => now - timestamp < RATE_WINDOW);
     tapTimes.push(now);
     const level = Math.min(MAX_LEVEL, tapTimes.length);
 
-    // Sound + haptics escalate with level.
     playSfx('pop');
     if (level >= 6 && level % 3 === 0) playSfx('milestone');
     vibrate(level < 4 ? 'tap' : level < 8 ? 'success' : 'warning');
-
     if (!reduced) {
-      // Confetti — Confetti.svelte keeps its OWN decaying heat/tier, so rapid
-      // taps ramp the burst size, glow and screen-flash exponentially; we scale
-      // the base burst with the local tap rate too. Both sides are hard-capped.
       fireConfettiEvent({
         origin: 'heart',
         count: Math.min(10 + level * 6, 90),
         intensity: 1 + level * 0.35
       });
-
-      // More floating hearts/points per tap the faster you go (capped), flung
-      // wider and bigger as it heats up.
-      const n = Math.min(6, 1 + Math.floor(level / 2));
-      const batch = Array.from({ length: n }, () => ({
-        id: ++popSeq,
-        dx: Math.round(rand(-12 - level * 3, 12 + level * 3)),
-        dy: -(24 + level * 5),
-        rot: Math.round(rand(-50, 50)),
-        scale: Math.min(2, 1 + level * 0.08),
-        big: level >= 7
-      }));
-      pops = [...pops, ...batch].slice(-MAX_POPS);
-      const ids = new Set(batch.map((b) => b.id));
-      const timer = setTimeout(() => {
-        popTimers.delete(timer);
-        pops = pops.filter((p) => !ids.has(p.id));
-      }, 800);
-      popTimers.add(timer);
-
+      addPops(level);
       shake(level);
     }
-    // Reward a keen tapper by keeping the heart a touch longer, capped so it
-    // still disappears promptly.
-    if (hideTimer) {
-      clearTimeout(hideTimer);
-      hideTimer = setTimeout(vanish, 2600);
+  }
+
+  /** A committed partner tap arrives through Postgres Realtime. */
+  function remoteTapFeedback(delta: number): void {
+    const level = Math.min(MAX_LEVEL, Math.max(2, delta + 2));
+    playSfx('pop');
+    vibrate(delta > 1 ? 'success' : 'tap');
+    if (!reduced) {
+      fireConfettiEvent({
+        origin: 'heart',
+        count: Math.min(18 + delta * 5, 48),
+        intensity: Math.min(2.5, 1.25 + delta * 0.18)
+      });
+      addPops(level, true);
+      shake(level, true);
+    }
+  }
+
+  function noteTapSequence(
+    tapSeq: number,
+    lastTapper: string | null,
+    myId: string,
+    partnerId: string,
+    feedbackAtMs: number | null,
+    serverOffsetMs: number
+  ): void {
+    if (tapSeq <= lastSeenTapSeq) return;
+    const delta = tapSeq - lastSeenTapSeq;
+    lastSeenTapSeq = tapSeq;
+    if (lastTapper === partnerId && lastTapper !== myId) {
+      if (feedbackAtMs === null) remoteTapFeedback(delta);
+      else atSharedBeat(feedbackAtMs, serverOffsetMs, () => remoteTapFeedback(delta));
+    }
+  }
+
+  /**
+   * The component is normally mounted only for an account couple, but it also
+   * validates all four identity fields itself so a stale layout can never show
+   * an inert or cross-couple heart.
+   */
+  function startHeartSync(coupleId: string, myId: string, partnerId: string): () => void {
+    let disposed = false;
+    let initialized = false;
+    let refreshing = false;
+    let refreshQueued = false;
+    let serverOffsetMs: number | null = null;
+    let retryAttempt = 0;
+    let queuedChange: CoupleHeartSessionChange | null = null;
+    let showTimer: ReturnType<typeof setTimeout> | null = null;
+    let hideTimer: ReturnType<typeof setTimeout> | null = null;
+    let refreshTimer: ReturnType<typeof setTimeout> | null = null;
+    let retryTimer: ReturnType<typeof setTimeout> | null = null;
+
+    function clearWindowTimers(): void {
+      if (showTimer) clearTimeout(showTimer);
+      if (hideTimer) clearTimeout(hideTimer);
+      if (refreshTimer) clearTimeout(refreshTimer);
+      showTimer = null;
+      hideTimer = null;
+      refreshTimer = null;
+    }
+
+    function clearRetry(): void {
+      if (retryTimer) clearTimeout(retryTimer);
+      retryTimer = null;
+    }
+
+    function failClosed(): void {
+      clearWindowTimers();
+      visible = false;
+      currentSessionId = null;
+      tapTimes = [];
+      clearPops();
+    }
+
+    function scheduleRetry(): void {
+      if (disposed || retryTimer) return;
+      failClosed();
+      const delay = RETRY_DELAYS_MS[Math.min(retryAttempt, RETRY_DELAYS_MS.length - 1)];
+      retryAttempt += 1;
+      retryTimer = setTimeout(() => {
+        retryTimer = null;
+        void refreshState();
+      }, delay);
+    }
+
+    function scheduleWindow(window: CoupleHeartWindow): void {
+      if (disposed || serverOffsetMs === null) return;
+      clearWindowTimers();
+      clearRetry();
+
+      const projectedServerNow = Date.now() + serverOffsetMs;
+      const delays = heartWindowDelays({
+        visibleFromMs: window.visibleFromMs,
+        visibleUntilMs: window.visibleUntilMs,
+        serverNowMs: projectedServerNow
+      });
+
+      if (delays.phase === 'expired') {
+        visible = false;
+        refreshTimer = setTimeout(() => void refreshState(), BOUNDARY_GRACE_MS);
+        return;
+      }
+
+      if (delays.phase === 'scheduled') {
+        visible = false;
+        showTimer = setTimeout(() => {
+          if (disposed || currentSessionId !== window.sessionId) return;
+          visible = document.visibilityState === 'visible';
+        }, delays.showInMs);
+      } else {
+        visible = document.visibilityState === 'visible';
+      }
+
+      hideTimer = setTimeout(() => {
+        if (currentSessionId === window.sessionId) visible = false;
+      }, delays.hideInMs);
+      refreshTimer = setTimeout(
+        () => void refreshState(),
+        delays.refreshInMs + BOUNDARY_GRACE_MS
+      );
+    }
+
+    function applyWindow(window: CoupleHeartWindow, baseline = false): void {
+      const offset = serverOffsetMs;
+      if (offset === null) return;
+      const changedSession = currentSessionId !== window.sessionId;
+      if (changedSession) {
+        currentSessionId = window.sessionId;
+        lastSeenTapSeq = window.tapSeq;
+        tapTimes = [];
+        clearPops();
+      } else if (baseline) {
+        lastSeenTapSeq = Math.max(lastSeenTapSeq, window.tapSeq);
+      } else {
+        noteTapSequence(
+          window.tapSeq,
+          window.lastTapper,
+          myId,
+          partnerId,
+          window.feedbackAtMs,
+          offset
+        );
+      }
+      scheduleWindow(window);
+    }
+
+    async function refreshState(): Promise<void> {
+      if (disposed) return;
+      if (refreshing) {
+        refreshQueued = true;
+        return;
+      }
+      refreshing = true;
+      const wasInitialized = initialized;
+      try {
+        const state: CoupleHeartState = await fetchCoupleHeartState(coupleId);
+        if (disposed) return;
+        serverOffsetMs = state.serverOffsetMs;
+        retryAttempt = 0;
+        clearRetry();
+        applyWindow(state, !wasInitialized);
+        initialized = true;
+
+        // A Realtime row can arrive while the initial RPC is in flight. Apply
+        // it after the RPC establishes the server clock; sequence checks make
+        // stale/duplicate payloads harmless.
+        if (queuedChange) {
+          const change = queuedChange;
+          queuedChange = null;
+          applyWindow(change);
+        }
+      } catch {
+        if (!disposed) scheduleRetry();
+      } finally {
+        refreshing = false;
+        if (!disposed && refreshQueued) {
+          refreshQueued = false;
+          queueMicrotask(() => void refreshState());
+        }
+      }
+    }
+
+    let unsubscribe = () => {};
+    try {
+      unsubscribe = subscribeCoupleHeart(
+        coupleId,
+        (change) => {
+          if (disposed) return;
+          if (!initialized || serverOffsetMs === null) {
+            if (!queuedChange || change.updatedAtMs >= queuedChange.updatedAtMs) queuedChange = change;
+            return;
+          }
+          applyWindow(change);
+        },
+        {
+          // Fetch again once the channel is live. This closes the small gap
+          // between the first RPC response and Realtime subscription readiness.
+          onStatus: (status) => {
+            if (status === 'SUBSCRIBED') void refreshState();
+          },
+          onError: () => scheduleRetry()
+        }
+      );
+    } catch {
+      scheduleRetry();
+    }
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        visible = false;
+      } else {
+        void refreshState();
+      }
+    };
+    const onOnline = () => void refreshState();
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    window.addEventListener('online', onOnline);
+    const requestRefresh = () => void refreshState();
+    requestAuthoritativeRefresh = requestRefresh;
+
+    // Subscribe first, then fetch; the SUBSCRIBED refresh heals the readiness
+    // gap and the RPC remains the authority if Realtime is unavailable.
+    void refreshState();
+
+    return () => {
+      disposed = true;
+      unsubscribe();
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      window.removeEventListener('online', onOnline);
+      clearWindowTimers();
+      clearRetry();
+      clearFeedbackTimers();
+      failClosed();
+      if (requestAuthoritativeRefresh === requestRefresh) requestAuthoritativeRefresh = null;
+    };
+  }
+
+  async function onTap(): Promise<void> {
+    const coupleId = couple.accountCouple ? couple.coupleId : null;
+    const sessionId = currentSessionId;
+    if (!visible || !coupleId || !sessionId || !couple.me || !couple.partnerId) return;
+
+    try {
+      const result = await tapCoupleHeart(coupleId, sessionId);
+      // The response can arrive after this component re-scopes to another
+      // couple/session. The point was committed, but must not animate here.
+      if (!mounted || couple.coupleId !== coupleId) return;
+
+      couple.myPoints = Math.max(couple.myPoints, result.memberPoints);
+      couple.partnerPoints = Math.max(
+        couple.partnerPoints,
+        Math.max(0, result.totalPoints - result.memberPoints)
+      );
+      couple.points = Math.max(
+        couple.points,
+        result.totalPoints,
+        couple.myPoints + couple.partnerPoints
+      );
+      couple.online = true;
+      lastSeenTapSeq = Math.max(lastSeenTapSeq, result.tapSeq);
+      if (currentSessionId === sessionId) {
+        atSharedBeat(result.feedbackAtMs, result.serverOffsetMs, () => {
+          if (mounted && couple.coupleId === coupleId) localTapFeedback();
+        });
+      }
+    } catch {
+      // Expired/mismatched sessions and transport failures both fail closed;
+      // the authoritative state fetch decides whether/when it can reappear.
+      visible = false;
+      currentSessionId = null;
+      requestAuthoritativeRefresh?.();
     }
   }
 
   onMount(() => {
-    reduced = prefersReducedMotion();
-    scheduleAppearance(true);
+    mounted = true;
+    const media = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    const updateReduced = () => {
+      reduced = media?.matches ?? prefersReducedMotion();
+      if (reduced) clearPops();
+    };
+    updateReduced();
+    media?.addEventListener?.('change', updateReduced);
+    return () => {
+      mounted = false;
+      media?.removeEventListener?.('change', updateReduced);
+      clearPops();
+      clearFeedbackTimers();
+    };
   });
-  onDestroy(() => {
-    if (showTimer) clearTimeout(showTimer);
-    if (hideTimer) clearTimeout(hideTimer);
-    for (const t of popTimers) clearTimeout(t);
-    popTimers.clear();
+
+  $effect(() => {
+    const enabled = couple.accountCouple;
+    const coupleId = couple.coupleId;
+    const myId = couple.me;
+    const partnerId = couple.partnerId;
+    if (!enabled || !coupleId || !myId || !partnerId) {
+      visible = false;
+      currentSessionId = null;
+      return;
+    }
+    return startHeartSync(coupleId, myId, partnerId);
   });
 </script>
 
-{#if visible}
+{#if visible && couple.accountCouple && currentSessionId}
   <button
     bind:this={heartEl}
     type="button"
     class="surprise-heart"
     class:reduced
-    onclick={onTap}
+    onclick={() => void onTap()}
     aria-label={$t('couple.heart.aria', { default: 'Coração do casal — toca para somar pontos' })}
     title={$t('couple.heart.aria', { default: 'Coração do casal — toca para somar pontos' })}
   >
@@ -168,12 +451,13 @@
     {#if couple.points > 0}
       <span class="count" aria-hidden="true">{couple.points}</span>
     {/if}
-    {#each pops as p (p.id)}
+    {#each pops as pop (pop.id)}
       <span
         class="plus"
-        class:big={p.big}
-        style={`--dx:${p.dx}px; --dy:${p.dy}px; --rot:${p.rot}deg; --scale:${p.scale}`}
-        aria-hidden="true">{p.big ? '💗' : '+1'}</span>
+        class:big={pop.big}
+        style={`--dx:${pop.dx}px; --dy:${pop.dy}px; --rot:${pop.rot}deg; --scale:${pop.scale}`}
+        aria-hidden="true">{pop.big ? '💗' : '+1'}</span
+      >
     {/each}
   </button>
 {/if}
@@ -182,13 +466,14 @@
   .surprise-heart {
     position: absolute;
     left: 50%;
-    bottom: 2.4rem; /* sit ON TOP of the ~3rem mascot below it */
+    /* Entirely above the 78px mascot instead of overlapping its face/body. */
+    bottom: calc(100% + 0.65rem);
     transform: translateX(-50%);
     width: 52px;
     height: 52px;
     border-radius: 50%;
     border: 1px solid color-mix(in srgb, var(--accent, #f472b6) 55%, transparent);
-    background: color-mix(in srgb, var(--accent, #f472b6) 20%, rgba(10, 16, 30, 0.35));
+    background: color-mix(in srgb, var(--accent, #f472b6) 20%, rgba(10, 16, 30, 0.82));
     color: #fff;
     cursor: pointer;
     display: inline-flex;
@@ -198,21 +483,29 @@
     isolation: isolate;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-    box-shadow: 0 6px 20px color-mix(in srgb, var(--accent, #f472b6) 45%, transparent);
-    z-index: 3;
+    box-shadow: 0 7px 22px color-mix(in srgb, var(--accent, #f472b6) 48%, transparent);
+    z-index: 4;
     animation: heart-in 260ms cubic-bezier(0.2, 1.4, 0.5, 1) both;
   }
   .surprise-heart.reduced {
     animation: none;
   }
+  .surprise-heart:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--accent, #f472b6) 52%, #fff);
+    outline-offset: 3px;
+  }
   .surprise-heart:active .emoji {
-    transform: scale(0.9);
+    transform: scale(0.88);
   }
   .glow {
     position: absolute;
     inset: -0.5rem;
     border-radius: 999px;
-    background: radial-gradient(circle, color-mix(in srgb, var(--accent, #f472b6) 34%, transparent), transparent 60%);
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent, #f472b6) 34%, transparent),
+      transparent 60%
+    );
     z-index: 0;
     animation: glow-pulse 1.5s ease-in-out infinite;
   }
@@ -252,8 +545,8 @@
     font-size: 0.85rem;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
     pointer-events: none;
-    z-index: 4;
-    animation: plus-float 0.8s ease-out forwards;
+    z-index: 5;
+    animation: plus-float 0.85s ease-out forwards;
   }
   .plus.big {
     font-size: 1.15rem;
@@ -296,6 +589,9 @@
     .glow,
     .plus {
       animation: none;
+    }
+    .emoji {
+      transition: none;
     }
   }
 </style>

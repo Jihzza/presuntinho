@@ -35,7 +35,7 @@
   import { couple } from '$lib/couple/couple-store.svelte';
   import { accountState, startAccountSync } from '$lib/account/account-store.svelte';
   import { listContacts, listIncoming, subscribeConnections, type Contact } from '$lib/account/contacts';
-  import { listSpaces, isCoupleActive, otherMember } from '$lib/account/spaces';
+  import { listSpaces, singleActiveCouple, otherMember } from '$lib/account/spaces';
   import Avatar from '$lib/components/Avatar.svelte';
 
   type ConversationPreset = {
@@ -78,7 +78,8 @@
   // Couple partner shown on the couple row/header: legacy persona OR the
   // account partner from the active couple space (fixes the fatma/daniel
   // fallback leaking into account couples).
-  let acctPartner = $state<{ label: string; emoji: string; handle: string } | null>(null);
+  let acctPartner = $state<{ id: string; label: string; emoji: string; handle: string } | null>(null);
+  let acctCoupleId = $state<string | null>(null);
   let legacy = $state(true);
   let unsubConn: (() => void) | null = null;
 
@@ -197,8 +198,18 @@
     dmOther = null;
     // Supabase-backed couple chat when configured (durable + realtime, no token);
     // otherwise the Netlify-Blobs ChatStore. Both share the same shape.
+    const partnerId = legacy ? otherProfile(profile) : (acctPartner?.id ?? couple.partnerId);
+    const activeCoupleId = legacy ? undefined : (acctCoupleId ?? couple.coupleId);
+    // Account chat must never guess a Fatma/Daniel partner while the active
+    // couple is still resolving. refreshSocial() supplies both UUIDs from the
+    // same spaces snapshot, avoiding a race with the global couple store.
+    if (supabaseChat && (!partnerId || (!legacy && !activeCoupleId))) {
+      store = null;
+      secureSetupNeeded = false;
+      return;
+    }
     store = supabaseChat
-      ? new CoupleChatStore(profile, selectedConversationId)
+      ? new CoupleChatStore(profile, partnerId!, selectedConversationId, activeCoupleId ?? undefined)
       : new ChatStore(profile, selectedConversationId);
     secureSetupNeeded = !supabaseChat && !getChatToken(profile);
     store.start();
@@ -224,10 +235,11 @@
     try {
       const [cs, inc, spaces] = await Promise.all([listContacts(), listIncoming(), listSpaces()]);
       incomingReqs = inc;
-      const active = spaces.find(isCoupleActive);
+      const active = singleActiveCouple(spaces);
       const partner = active ? otherMember(active, accountState.account.id) : null;
+      acctCoupleId = active?.id ?? null;
       acctPartner = partner
-        ? { label: partner.display_name || `@${partner.handle}`, emoji: partner.emoji ?? '💞', handle: partner.handle }
+        ? { id: partner.id, label: partner.display_name || `@${partner.handle}`, emoji: partner.emoji ?? '💞', handle: partner.handle }
         : null;
       // The couple partner lives on the pinned couple thread — not as a DM row.
       dmContacts = partner ? cs.filter((c) => c.id !== partner.id) : cs;
@@ -310,6 +322,7 @@
         await startAccountSync();
         if (!accountState.account) return;
         await refreshSocial();
+        if (threadKind === 'couple') startChat();
         unsubConn = subscribeConnections(() => void refreshSocial());
         const dmHandle = page.url.searchParams.get('dm');
         if (dmHandle) {

@@ -213,8 +213,8 @@ export function watchCoupleLink(meId: string, handlers: CoupleLinkHandlers): () 
           handlers.onNewRequest({ kind: 'couple', from: other, href: `/casal/pedido/?space=${s.id}` });
         }
       }
-      for (const s of spaces) {
-        if (!isCoupleActive(s)) continue;
+      const activeCouples = spaces.filter(isCoupleActive);
+      for (const s of activeCouples.length === 1 ? activeCouples : []) {
         if (await alreadyCelebrated(s.id)) continue;
         await markCelebrated(s.id);
         handlers.onCoupleActive?.(s, otherMember(s, meId));

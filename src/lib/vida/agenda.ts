@@ -652,7 +652,7 @@ async function loadCoupleActivity(): Promise<CoupleActivityNotif[]> {
     if (!me || isLegacyProfile(me)) return [];
     const { isMultiplayerConfigured } = await import('$lib/multiplayer/config');
     if (!isMultiplayerConfigured()) return [];
-    const [{ getSupabaseClient }, { listContacts }, { listSpaces, isCoupleActive, otherMember }, { dmConversationId }] =
+    const [{ getSupabaseClient }, { listContacts }, { listSpaces, singleActiveCouple, otherMember }, { dmConversationId }] =
       await Promise.all([
         import('$lib/multiplayer/client'),
         import('$lib/account/contacts'),
@@ -663,7 +663,7 @@ async function loadCoupleActivity(): Promise<CoupleActivityNotif[]> {
     const out: CoupleActivityNotif[] = [];
 
     const spaces = await listSpaces().catch(() => [] as Awaited<ReturnType<typeof listSpaces>>);
-    const active = spaces.find(isCoupleActive);
+    const active = singleActiveCouple(spaces);
     const partner = active ? otherMember(active, me) : null;
     const partnerName = partner?.display_name || (partner ? `@${partner.handle}` : '');
 
