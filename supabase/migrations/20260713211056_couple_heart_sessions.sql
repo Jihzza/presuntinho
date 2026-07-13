@@ -1,4 +1,5 @@
 -- One authoritative surprise-heart window per active couple.
+-- Remote migration version: 20260713211056.
 --
 -- The previous implementation rolled random timers independently in each
 -- browser, so the two partners almost never saw the heart together.  This row
