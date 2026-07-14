@@ -456,7 +456,7 @@
             // Public routes a logged-out visitor is allowed to sit on: the login
             // splash, the new-account wizard, and an invite-redemption link.
             const p = page.url.pathname;
-            const isPublicRoute = p === '/splash/' || p.startsWith('/onboarding') || p.startsWith('/juntar') || p.startsWith('/conta') || p.startsWith('/contactos') || p.startsWith('/grupos') || p.startsWith('/convite') || p.startsWith('/u');
+            const isPublicRoute = p === '/splash/' || p.startsWith('/onboarding') || p.startsWith('/juntar') || p.startsWith('/conta') || p.startsWith('/contactos') || p.startsWith('/grupos') || p.startsWith('/convite') || p.startsWith('/u') || p.startsWith('/secrets/versus');
             if (!session && !isPublicRoute && !authRedirectTimer) {
               authRedirectTimer = setTimeout(() => {
                 authRedirectTimer = null;

@@ -1,66 +1,169 @@
-// Game invites — Phase 4 client layer. Invite a contact to a game room and
-// receive incoming invites live. Built on the game_invites table (RLS scopes
-// rows to the two parties; only contacts can be invited).
+// Durable game invites. Rows stay pending until accepted/declined and are
+// loaded on app start, so the recipient does not need the app open at send time.
 
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import { getSupabaseClient } from '$lib/multiplayer/client';
 import { isMultiplayerConfigured } from '$lib/multiplayer/config';
+import { isValidRoomCode, normalizeRoomCode } from '$lib/multiplayer/room-code';
 import { getAuthUser, type Account } from './auth';
+import { isFreshGameInvite, normalizeGameInviteRow, type GameInviteRow } from './game-invite-model';
 
 export interface GameInvite {
   id: string;
-  from: Account; // resolved inviter account (for the "@X invited you" prompt)
+  from: Account;
   roomCode: string;
   game: string;
+  createdAt: string;
+  expiresAt: string;
 }
 
 const sb = () => getSupabaseClient();
 
-/** Invite a contact to a game room. */
+/** Invite a contact. Repeated taps replace the previous pending invite. */
 export async function inviteToGame(toAccountId: string, roomCode: string, game = 'versus'): Promise<void> {
+  const normalized = normalizeRoomCode(roomCode);
+  if (!isValidRoomCode(normalized)) throw new Error('invalid room code');
+
   const user = await getAuthUser();
   if (!user) throw new Error('not signed in');
-  const { error } = await sb()
-    .from('game_invites')
-    .insert({ from_account: user.id, to_account: toAccountId, room_code: roomCode, game });
+
+  const { error } = await sb().rpc('send_game_invite', {
+    p_to_account: toAccountId,
+    p_room_code: normalized,
+    p_game: game
+  });
   if (error) throw error;
 }
 
 export async function dismissInvite(id: string): Promise<void> {
-  await sb().from('game_invites').delete().eq('id', id);
+  const { error } = await sb().from('game_invites').delete().eq('id', id);
+  if (error) throw error;
 }
 
-async function resolveAccount(id: string): Promise<Account | null> {
-  const { data } = await sb()
+/** Cancel any still-pending invites sent for a room when its host leaves or a
+ * player arrives. RLS limits the deletion to rows involving this account. */
+export async function cancelGameInvitesForRoom(roomCode: string): Promise<void> {
+  const normalized = normalizeRoomCode(roomCode);
+  if (!isValidRoomCode(normalized)) return;
+  if (!(await getAuthUser())) return;
+  const { error } = await sb().rpc('cancel_game_invites', {
+    p_room_code: normalized,
+    p_game: 'versus'
+  });
+  if (error) throw error;
+}
+
+async function resolveAccounts(ids: string[]): Promise<Map<string, Account>> {
+  const accounts = new Map<string, Account>();
+  const unique = [...new Set(ids)];
+  if (!unique.length) return accounts;
+
+  const { data, error } = await sb()
     .from('accounts')
     .select('id, handle, display_name, emoji, avatar_url, bio')
-    .eq('id', id)
-    .maybeSingle();
-  return (data as Account) ?? null;
+    .in('id', unique);
+  if (error) throw error;
+  for (const account of (data as Account[]) ?? []) accounts.set(account.id, account);
+  return accounts;
 }
 
-/** Subscribe to invites addressed to me (live). Resolves the inviter's account
- *  before firing so the prompt can show their @handle. Returns an unsubscribe. */
-export function subscribeIncomingInvites(onInvite: (invite: GameInvite) => void): () => void {
-  // Sem Supabase configurado não há canal a abrir — unsubscribe inerte.
+function toInvite(row: GameInviteRow, accounts: Map<string, Account>): GameInvite | null {
+  const normalized = normalizeGameInviteRow(row);
+  if (!isFreshGameInvite(normalized)) return null;
+  const from = accounts.get(normalized.from_account);
+  if (!from) return null;
+  return {
+    id: normalized.id,
+    from,
+    roomCode: normalized.room_code,
+    game: normalized.game,
+    createdAt: normalized.created_at,
+    expiresAt: normalized.expires_at
+  };
+}
+
+/** Pending, non-expired invites addressed to the signed-in account. */
+export async function listIncomingGameInvites(): Promise<GameInvite[]> {
+  if (!isMultiplayerConfigured()) return [];
+  const user = await getAuthUser();
+  if (!user) return [];
+
+  const now = new Date().toISOString();
+  // Recipient deletion is allowed by RLS. Cleanup is best-effort; loading fresh
+  // rows must continue even if cleanup is temporarily unavailable.
+  void (async () => {
+    await sb().from('game_invites').delete().eq('to_account', user.id).lte('expires_at', now);
+  })().catch(() => undefined);
+
+  const { data, error } = await sb()
+    .from('game_invites')
+    .select('id, from_account, room_code, game, created_at, expires_at, cancelled_at')
+    .eq('to_account', user.id)
+    .gt('expires_at', now)
+    .is('cancelled_at', null)
+    .order('created_at', { ascending: false })
+    .limit(20);
+  if (error) throw error;
+
+  const rows = ((data as GameInviteRow[]) ?? []).filter((row) => isFreshGameInvite(row));
+  const accounts = await resolveAccounts(rows.map((row) => row.from_account));
+  return rows.map((row) => toInvite(row, accounts)).filter((invite): invite is GameInvite => invite !== null);
+}
+
+let inviteSubSeq = 0;
+
+/** Listen for newly created or replaced invites. Initial pending rows are loaded
+ * separately by listIncomingGameInvites(); callers should deduplicate by id. */
+export function subscribeIncomingInvites(
+  onInvite: (invite: GameInvite) => void,
+  onReady?: () => void,
+  onRemove?: (id: string, cancelledAt: string) => void
+): () => void {
   if (!isMultiplayerConfigured()) return () => {};
-  let userId: string | null = null;
-  const channel = sb().channel('game-invites');
+
+  let active = true;
+  let channel: RealtimeChannel | null = null;
+
+  const handleRow = (raw: unknown) => {
+    const row = raw as GameInviteRow;
+    if (!active) return;
+    if (row.cancelled_at !== null) {
+      onRemove?.(row.id, row.cancelled_at);
+      return;
+    }
+    if (!isFreshGameInvite(row)) return;
+    void resolveAccounts([row.from_account])
+      .then((accounts) => {
+        if (!active) return;
+        const invite = toInvite(row, accounts);
+        if (invite) onInvite(invite);
+      })
+      .catch(() => undefined);
+  };
+
   void (async () => {
     const user = await getAuthUser();
-    userId = user?.id ?? null;
-    if (!userId) return;
-    channel
+    if (!active || !user) return;
+
+    channel = sb()
+      .channel(`game-invites-${user.id}-${++inviteSubSeq}`)
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'game_invites', filter: `to_account=eq.${userId}` },
-        (payload) => {
-          const row = payload.new as { id: string; from_account: string; room_code: string; game: string };
-          void resolveAccount(row.from_account).then((from) => {
-            if (from) onInvite({ id: row.id, from, roomCode: row.room_code, game: row.game });
-          });
-        }
+        { event: 'INSERT', schema: 'public', table: 'game_invites', filter: `to_account=eq.${user.id}` },
+        (payload) => handleRow(payload.new)
       )
-      .subscribe();
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'game_invites', filter: `to_account=eq.${user.id}` },
+        (payload) => handleRow(payload.new)
+      )
+      .subscribe((status) => {
+        if (active && status === 'SUBSCRIBED') onReady?.();
+      });
   })();
-  return () => void sb().removeChannel(channel);
+
+  return () => {
+    active = false;
+    if (channel) void sb().removeChannel(channel);
+  };
 }
