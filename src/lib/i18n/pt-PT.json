@@ -17,6 +17,7 @@
   "a11y.aria.data_inicial": "Data inicial",
   "a11y.aria.descricao_do_trabalho": "Descrição do trabalho",
   "a11y.aria.dialogo": "Diálogo",
+  "a11y.aria.dismiss_notification": "Dispensar notificação: {msg}",
   "a11y.aria.downloads": "Transferências",
   "a11y.aria.duracao_estimada": "Duração estimada",
   "a11y.aria.editar_marcador": "Editar marcador",

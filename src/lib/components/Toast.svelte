@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { t } from 'svelte-i18n';
   import { TOAST_EVENT, type ToastDetail, type ToastType } from './events';
 
   interface QueuedToast {
@@ -69,12 +70,12 @@
 </script>
 
 {#if visible.length > 0}
-  <div class="toast-stack" role="status" aria-live="polite" aria-label="Notificações">
+  <div class="toast-stack" role="status" aria-live="polite" aria-label={$t('a11y.notifications', { default: 'Notificações' })}>
     {#each visible as toast (toast.id)}
       <button
         type="button"
         class="toast toast-{toast.type}"
-        aria-label="Dispensar notificação"
+        aria-label={$t('a11y.aria.dismiss_notification', { values: { msg: toast.msg }, default: 'Dispensar notificação' })}
         onclick={() => dismiss(toast.id)}
       >
         <span class="toast-icon" aria-hidden="true">{ICONS[toast.type]}</span>

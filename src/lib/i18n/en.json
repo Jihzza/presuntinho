@@ -17,6 +17,7 @@
   "a11y.aria.data_inicial": "Start date",
   "a11y.aria.descricao_do_trabalho": "Assignment description",
   "a11y.aria.dialogo": "Dialog",
+  "a11y.aria.dismiss_notification": "Dismiss notification: {msg}",
   "a11y.aria.downloads": "Downloads",
   "a11y.aria.duracao_estimada": "Estimated duration",
   "a11y.aria.editar_marcador": "Edit bookmark",

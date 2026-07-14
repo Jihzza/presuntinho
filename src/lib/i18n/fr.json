@@ -17,6 +17,7 @@
   "a11y.aria.data_inicial": "Date de début",
   "a11y.aria.descricao_do_trabalho": "Description du devoir",
   "a11y.aria.dialogo": "Dialogue",
+  "a11y.aria.dismiss_notification": "Ignorer la notification : {msg}",
   "a11y.aria.downloads": "Téléchargements",
   "a11y.aria.duracao_estimada": "Durée estimée",
   "a11y.aria.editar_marcador": "Modifier le marqueur",

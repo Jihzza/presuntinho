@@ -17,6 +17,7 @@
   "a11y.aria.data_inicial": "تاريخ البداية",
   "a11y.aria.descricao_do_trabalho": "وصف الواجب",
   "a11y.aria.dialogo": "حوار",
+  "a11y.aria.dismiss_notification": "تجاهل الإشعار: {msg}",
   "a11y.aria.downloads": "التنزيلات",
   "a11y.aria.duracao_estimada": "المدة المقدرة",
   "a11y.aria.editar_marcador": "تعديل الإشارة",
