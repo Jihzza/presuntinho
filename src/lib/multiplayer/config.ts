@@ -4,8 +4,8 @@
 //
 // Setup: create a free Supabase project and expose its URL + anon key to the
 // build as VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY (Netlify → Site settings →
-// Environment variables). Realtime "broadcast" needs no tables and no RLS —
-// game state is ephemeral and never touches the database. See
+// Environment variables). Match state stays ephemeral in Realtime broadcast;
+// durable friend requests use the RLS-protected game_invites table. See
 // docs/MULTIPLAYER_SETUP.md.
 
 export const SUPABASE_URL: string | undefined = import.meta.env.VITE_SUPABASE_URL;

@@ -5,10 +5,12 @@ broadcast**. It is entirely optional: when the two env vars below are missing,
 `isMultiplayerConfigured()` returns `false`, the "JOGAR 1v1" button never
 appears, and the single-player arcade is completely unaffected.
 
-Nothing about the game is stored in a database. Realtime *broadcast* is a
+The match itself is not stored in the database. Realtime *broadcast* is a
 fire-and-forget fan-out between the two connected phones — the host runs the
 simulation and broadcasts the board each tick, the guest sends its turns back.
-So there are **no tables, no rows, and no RLS policies to write**.
+Direct friend requests use the small `game_invites` table, however, so a request
+is still visible when the recipient opens the app later. These rows expire after
+15 minutes and are protected by RLS.
 
 ## 1. Create a free Supabase project
 
@@ -44,15 +46,18 @@ VITE_SUPABASE_ANON_KEY=<your-anon-public-key>
 
 ## 3. Enable Realtime
 
-Realtime broadcast is on by default for new projects — no extra configuration
-is required because we never subscribe to Postgres changes, only to a named
-broadcast channel (`arcade:<ROOM-CODE>`).
+Realtime broadcast is on by default for new projects. Apply the repository
+migrations as well: `game_invites` is added to the Realtime publication so the
+global request card appears immediately when both people are online.
 
 ## 4. Play
 
-1. One player opens the arcade → **JOGAR 1v1** → **Criar sala** and shares the
-   6-character code.
-2. The other opens **JOGAR 1v1** → types the code → **Entrar**.
+1. One player opens the arcade → **JOGAR 1v1** and either taps an accepted friend
+   once or chooses **Partilhar link** / **Copiar link**. The room is created
+   automatically.
+2. The friend taps **Aceitar e jogar** inside the app, or opens the shared link
+   to enter the room directly. Manual code entry remains under **Já tenho um
+   código** as a fallback.
 3. When both are connected the duel starts automatically. Two snakes, one
    board, one fruit; bite the other snake's tail to steal a point. A crash ends
    the round for the survivor — then **Revanche** for another.
