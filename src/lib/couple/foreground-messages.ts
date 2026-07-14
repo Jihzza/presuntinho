@@ -8,6 +8,8 @@
  */
 
 import type { RealtimeChannel } from '@supabase/supabase-js';
+import { get } from 'svelte/store';
+import { t } from 'svelte-i18n';
 import { dmConversationId } from '$lib/chat/dm-id';
 import { presentCoupleMoment } from '$lib/couple/couple-moments';
 import { getSupabaseClient } from '$lib/multiplayer/client';
@@ -70,9 +72,25 @@ function isCanonicalDmFor(coupleId: string, me: string): boolean {
 }
 
 function previewFor(row: CoupleMessageRow): string {
-	if (row.kind === 'image') return '📷 Enviou-te uma fotografia';
-	if (row.kind === 'audio') return '🎙️ Enviou-te uma mensagem de voz';
-	return row.body ?? 'Enviou-te uma mensagem';
+	// Resolve at delivery time so changing language does not leave this global
+	// listener frozen in the locale that was active when it subscribed.
+	const translate = get(t);
+	if (row.kind === 'image') {
+		return translate('couple.moment.message.preview.image', {
+			default: '📷 Enviou-te uma fotografia'
+		});
+	}
+	if (row.kind === 'audio') {
+		return translate('couple.moment.message.preview.audio', {
+			default: '🎙️ Enviou-te uma mensagem de voz'
+		});
+	}
+	return (
+		row.body ??
+		translate('couple.moment.message.preview.generic', {
+			default: 'Enviou-te uma mensagem'
+		})
+	);
 }
 
 /**
