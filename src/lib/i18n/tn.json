@@ -5344,6 +5344,8 @@
   "settings.push.title": "Appels w notifications",
   "settings.push.hint": "Tousslek appels, messages w pings 7atta ki l’app msakkra. El son w vibration yetba3ou réglages mta3 telifoun; fel iPhone, sabbet l’app fel écran principal 9bal.",
   "couple.ping.push_body": "Enzel bech t7ell Presuntinho 🐷",
+  "couple.ping.push_body_love": "{name} ba3thelek 💛",
+  "couple.ping.push_body_nudge": "{name} mechte9lek 👀",
   "agenda.notifications.ping.love": "💛 {name} ba3athlek 7ob",
   "agenda.notifications.ping.love_many": "💛 {name} ba3athlek 7ob ×{n}",
   "agenda.notifications.ping.nudge": "👀 {name} twa7achek",

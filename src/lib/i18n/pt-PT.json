@@ -5331,6 +5331,8 @@
   "settings.push.title": "Chamadas e notificações",
   "settings.push.hint": "Recebe chamadas, mensagens e pings mesmo com a app fechada. O som e a vibração dependem das definições do telemóvel; no iPhone instala primeiro a app no ecrã principal.",
   "couple.ping.push_body": "Toca para abrir o Presuntinho 🐷",
+  "couple.ping.push_body_love": "{name} enviou-te um 💛",
+  "couple.ping.push_body_nudge": "{name} tem saudades tuas 👀",
   "agenda.notifications.ping.love": "💛 {name} mandou-te amor",
   "agenda.notifications.ping.love_many": "💛 {name} mandou-te amor ×{n}",
   "agenda.notifications.ping.nudge": "👀 {name} teve saudades tuas",

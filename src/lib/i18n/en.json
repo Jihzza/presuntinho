@@ -5331,6 +5331,8 @@
   "settings.push.title": "Calls and notifications",
   "settings.push.hint": "Receive calls, messages and pings even when the app is closed. Sound and vibration depend on your phone settings; on iPhone, install the app on the Home Screen first.",
   "couple.ping.push_body": "Tap to open Presuntinho 🐷",
+  "couple.ping.push_body_love": "{name} sent you a 💛",
+  "couple.ping.push_body_nudge": "{name} misses you 👀",
   "agenda.notifications.ping.love": "💛 {name} sent you love",
   "agenda.notifications.ping.love_many": "💛 {name} sent you love ×{n}",
   "agenda.notifications.ping.nudge": "👀 {name} missed you",

@@ -416,7 +416,20 @@ async function sendPing(kind: 'love' | 'nudge'): Promise<PingResult> {
         kind === 'love'
           ? get(t)('couple.ping.love.received', { values: { name: myName }, default: `💛 ${myName} ama-te muito!` })
           : get(t)('couple.ping.nudge.received', { values: { name: myName }, default: `👀 ${myName} tem saudades tuas!` });
-      const body = get(t)('couple.ping.push_body', { default: 'Toca para abrir o Presuntinho 🐷' });
+      // O body repete o nome do remetente (não só no title) porque iOS/Android
+      // truncam o title a ~30-50 chars; sem o nome aqui, o parceiro só vê
+      // "Toca para abrir o Presuntinho" e não sabe QUEM enviou. (ADV-RED-PUSH-BODY,
+      // adversarial review PR #33.)
+      const body =
+        kind === 'love'
+          ? get(t)('couple.ping.push_body_love', {
+              values: { name: myName },
+              default: `${myName} enviou-te um 💛`
+            })
+          : get(t)('couple.ping.push_body_nudge', {
+              values: { name: myName },
+              default: `${myName} tem saudades tuas 👀`
+            });
       await sendPingPush(kind, title, body, eventId);
       return 'sent';
     } catch (e) {

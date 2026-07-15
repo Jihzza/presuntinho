@@ -5331,6 +5331,8 @@
   "settings.push.title": "المكالمات والإشعارات",
   "settings.push.hint": "استقبل المكالمات والرسائل والنبضات حتى عندما يكون التطبيق مغلقًا. يعتمد الصوت والاهتزاز على إعدادات الهاتف؛ وعلى iPhone ثبّت التطبيق أولًا على الشاشة الرئيسية.",
   "couple.ping.push_body": "المس لفتح Presuntinho 🐷",
+  "couple.ping.push_body_love": "{name} أرسلك 💛",
+  "couple.ping.push_body_nudge": "{name} يشتاق إليك 👀",
   "agenda.notifications.ping.love": "💛 {name} أرسل لك حبًا",
   "agenda.notifications.ping.love_many": "💛 {name} أرسل لك حبًا ×{n}",
   "agenda.notifications.ping.nudge": "👀 {name} اشتاق إليك",
