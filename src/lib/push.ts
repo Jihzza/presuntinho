@@ -1,6 +1,7 @@
 // Web Push — subscrição deste dispositivo para receber os pings de casal
 // mesmo com a app fechada. A subscrição fica em push_subscriptions (RLS:
-// dono + parceiro de casal); o envio é feito pela função Netlify push-ping.
+// apenas o dono); o envio é feito pela função Netlify push-ping, que valida o
+// evento e lê os endpoints com credenciais de servidor.
 //
 // iPhone: o Web Push só funciona com a app INSTALADA no ecrã principal
 // (iOS 16.4+), e o padrão de vibração é sempre o do sistema. Android: padrão
@@ -16,7 +17,7 @@ export const VAPID_PUBLIC_KEY =
   'BKK2RHFTXc4rpyXnN2Y4y1bwb9IuZjtG-mw-flND2OxOWqfvP02wXO888EWmxQ6WFDTvoYHHYZbwk1AgkPfoKQg';
 
 export type PushState = 'unsupported' | 'ios-needs-install' | 'denied' | 'off' | 'on';
-export type PushKind = 'love' | 'nudge' | 'message';
+export type PushKind = 'love' | 'nudge' | 'message' | 'call';
 export type ForegroundPushKind = PushKind | 'test';
 export const PUSH_FOREGROUND_EVENT_TYPE = 'presuntinho:push-event' as const;
 
@@ -30,6 +31,8 @@ export interface ForegroundPushEvent {
   url: string;
   /** Authenticated sender, filled by the Netlify function (never trusted from the browser). */
   senderId: string;
+  /** Present for call notifications; validated against call_sessions by the server. */
+  callId?: string;
 }
 
 function newPushEventId(): string {
@@ -152,14 +155,33 @@ export async function disablePush(): Promise<void> {
 /** Entrega uma notificação push (fire-and-forget). Pings vão para o parceiro
  *  do casal (resolvido no servidor); mensagens levam o destinatário explícito.
  *  title/body chegam já localizados de quem envia. */
+type PushNotifyOptions = {
+  title?: string;
+  body?: string;
+  to?: string;
+  url?: string;
+  eventId?: string;
+  callId?: string;
+};
+
+export function sendPushNotify(
+  kind: 'love' | 'nudge',
+  opts: PushNotifyOptions & { eventId: string }
+): Promise<void>;
+export function sendPushNotify(kind: 'message' | 'call', opts: PushNotifyOptions): Promise<void>;
 export async function sendPushNotify(
   kind: PushKind,
-  opts: { title: string; body?: string; to?: string; url?: string; eventId?: string }
+  opts: PushNotifyOptions
 ): Promise<void> {
   try {
     const session = await getAuthSession();
     if (!session) return;
-    const eventId = opts.eventId ?? newPushEventId();
+    // Couple pings must reference the durable couple_pings row created by the
+    // caller. Never mint a replacement id here: the server consumes that row
+    // as its one-shot delivery authorisation.
+    const eventId =
+      kind === 'love' || kind === 'nudge' ? opts.eventId : (opts.eventId ?? newPushEventId());
+    if (!eventId) return;
     await fetch('/.netlify/functions/push-ping', {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: `Bearer ${session.access_token}` },
@@ -170,7 +192,9 @@ export async function sendPushNotify(
         body: opts.body ?? '',
         // The server only honours an explicit recipient for `message`.
         to: kind === 'message' ? opts.to : undefined,
-        url: opts.url
+        url: opts.url,
+        // For calls, the server validates the row and derives both users.
+        callId: kind === 'call' ? opts.callId : undefined
       })
     });
   } catch {
@@ -183,14 +207,14 @@ export async function sendPingPush(
   kind: 'love' | 'nudge',
   title: string,
   body: string,
-  eventId?: string
+  eventId: string
 ): Promise<void> {
   return sendPushNotify(kind, { title, body, eventId });
 }
 
 /** Auto-teste: pede ao servidor um push para OS MEUS dispositivos e devolve o
- *  resultado ({sent, of}) para diagnóstico visível no ecrã. */
-export async function sendTestPush(title: string, body: string): Promise<{ sent: number; of: number } | null> {
+ *  número realmente enviado para diagnóstico visível no ecrã. */
+export async function sendTestPush(title: string, body: string): Promise<{ sent: number } | null> {
   try {
     const session = await getAuthSession();
     if (!session) return null;
@@ -200,8 +224,8 @@ export async function sendTestPush(title: string, body: string): Promise<{ sent:
       body: JSON.stringify({ eventId: newPushEventId(), kind: 'test', title, body })
     });
     if (!res.ok) return null;
-    const data = (await res.json()) as { sent?: number; of?: number };
-    return { sent: data.sent ?? 0, of: data.of ?? 0 };
+    const data = (await res.json()) as { sent?: number };
+    return { sent: data.sent ?? 0 };
   } catch {
     return null;
   }

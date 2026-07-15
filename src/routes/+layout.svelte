@@ -22,6 +22,7 @@
   import GamificationLayer from '$lib/components/GamificationLayer.svelte';
   import CoupleMomentLayer from '$lib/components/CoupleMomentLayer.svelte';
   import GameInviteListener from '$lib/components/GameInviteListener.svelte';
+  import CallLayer from '$lib/calls/CallLayer.svelte';
   import HabitReminders from '$lib/components/habitos/HabitReminders.svelte';
   import ArcadeTouchHud from '$lib/components/arcade/ArcadeTouchHud.svelte';
   import { arcadeHud } from '$lib/arcade/hud-state';
@@ -520,6 +521,7 @@
   <GamificationLayer />
   <CoupleMomentLayer />
   <GameInviteListener />
+  <CallLayer />
   <HabitReminders />
   <SecretModal bind:open={secretRoomOpen} />
   <!-- Phase 15: offline status banner (listens to online/offline events). -->
