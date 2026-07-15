@@ -328,6 +328,28 @@ describe('push service worker call delivery', () => {
 		expect(worker.shown).toHaveLength(0);
 	});
 
+	it('never presents a personal reminder after this installation switches accounts', async () => {
+		const worker = createWorkerHarness();
+		await worker.message({
+			type: 'presuntinho:push-account-binding',
+			accountId: OTHER_ACCOUNT_ID
+		});
+		await worker.push({
+			type: 'presuntinho:push-event',
+			eventId: '99999999-9999-4999-8999-999999999996',
+			kind: 'reminder',
+			title: 'Lembrete do Presuntinho',
+			body: 'Guardaste uma mensagem para rever agora.',
+			url: '/mensagens/?conversation=66666666-6666-4666-8666-666666666666&message=22222222-bbbb-4222-8222-222222222222',
+			recipientId: RECIPIENT_ID,
+			expiresAt: new Date(Date.now() + 60_000).toISOString()
+		});
+
+		expect(worker.shown).toHaveLength(0);
+		expect(worker.notifications.size).toBe(0);
+		expect(worker.messages).toHaveLength(0);
+	});
+
 	it('shows a visible foreground notification, ACKs only observable stages and strips the token', async () => {
 		const handlers = new Map<string, (event: any) => void>();
 		const notifications: Array<{ title: string; options: any }> = [];
