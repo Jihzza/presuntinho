@@ -27,6 +27,7 @@ class FakePeerConnection {
 		this.addedCandidates.push(candidate);
 	});
 	close = vi.fn();
+	constructor(readonly configuration?: RTCConfiguration) {}
 }
 
 const originalPeerConnection = globalThis.RTCPeerConnection;
@@ -112,5 +113,24 @@ describe('CallPeer signalling', () => {
 		pc.connectionState = 'connected';
 		pc.onconnectionstatechange?.();
 		expect(onConnected).toHaveBeenCalledTimes(1);
+	});
+
+	it('uses relay-only transport only when the caller explicitly requests it', () => {
+		Object.defineProperty(globalThis, 'RTCPeerConnection', { configurable: true, value: FakePeerConnection });
+		const common = {
+			kind: 'audio' as const,
+			caller: true,
+			iceServers: [{ urls: 'turn:relay.example.test', username: 'u', credential: 'c' }],
+			localStream: streamStub(),
+			sendSignal: async () => undefined,
+			onRemoteStream: vi.fn(),
+			onConnected: vi.fn(),
+			onDisconnected: vi.fn(),
+			onError: vi.fn()
+		};
+		const direct = new CallPeer(common);
+		const relayed = new CallPeer({ ...common, iceTransportPolicy: 'relay' });
+		expect((direct.pc as unknown as FakePeerConnection).configuration?.iceTransportPolicy).toBe('all');
+		expect((relayed.pc as unknown as FakePeerConnection).configuration?.iceTransportPolicy).toBe('relay');
 	});
 });

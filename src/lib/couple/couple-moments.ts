@@ -26,6 +26,10 @@ export interface CoupleMoment {
 	title?: string;
 	/** Optional message preview or transport-provided copy. */
 	body?: string;
+	/** Present visually without app-owned sound, vibration or celebration. */
+	silent?: boolean;
+	/** False disables app-owned vibration while keeping sound/visual feedback. */
+	vibration?: boolean;
 	/** Number of foreground messages coalesced into this one visible card. */
 	count?: number;
 	/** Internal app destination opened when the moment is tapped. */
@@ -190,6 +194,8 @@ export function parseCoupleMoment(value: unknown, fallbackSource: CoupleMomentSo
 		senderName: optionalText(raw.senderName),
 		title: optionalText(raw.title),
 		body: optionalText(raw.body),
+		silent: raw.silent === true,
+		vibration: typeof raw.vibration === 'boolean' ? raw.vibration : undefined,
 		count:
 			typeof raw.count === 'number' && Number.isInteger(raw.count) && raw.count > 1
 				? Math.min(99, raw.count)
@@ -265,6 +271,8 @@ export function bindForegroundPushMoments(): () => void {
 						senderName: envelope.senderName,
 						title: envelope.title,
 						body: envelope.body,
+						silent: envelope.silent,
+						vibration: envelope.vibration,
 						href: envelope.url,
 						createdAt: envelope.createdAt,
 						source: 'push'

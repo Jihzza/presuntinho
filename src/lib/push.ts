@@ -58,6 +58,10 @@ export interface ForegroundPushEvent {
   senderId: string;
   /** Recipient account used by the worker to suppress stale shared-device push. */
   recipientId?: string;
+  /** Quiet-hours decision made by the receiving installation. */
+  silent?: boolean;
+  /** Whether this installation allows app-owned haptics. */
+  vibration?: boolean;
   callId?: string;
   /** Opaque delivery id is useful for diagnostics; no ACK token reaches the page. */
   deliveryId?: string;

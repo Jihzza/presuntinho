@@ -4,6 +4,7 @@ export interface CallPeerOptions {
 	kind: CallKind;
 	caller: boolean;
 	iceServers: RTCIceServer[];
+	iceTransportPolicy?: RTCIceTransportPolicy;
 	localStream: MediaStream;
 	sendSignal: (signal: CallSignal) => Promise<void>;
 	onRemoteStream: (stream: MediaStream) => void;
@@ -61,7 +62,11 @@ export class CallPeer {
 	constructor(options: CallPeerOptions) {
 		this.#options = options;
 		this.localStream = options.localStream;
-		this.pc = new RTCPeerConnection({ iceServers: options.iceServers, bundlePolicy: 'max-bundle' });
+		this.pc = new RTCPeerConnection({
+			iceServers: options.iceServers,
+			iceTransportPolicy: options.iceTransportPolicy ?? 'all',
+			bundlePolicy: 'max-bundle'
+		});
 		for (const track of options.localStream.getTracks()) this.pc.addTrack(track, options.localStream);
 		this.pc.onicecandidate = (event) => {
 			void options

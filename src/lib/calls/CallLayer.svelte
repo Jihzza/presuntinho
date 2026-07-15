@@ -280,6 +280,7 @@
 			case 'call_peer_busy': return $t('calls.error.busy', { default: `${label} já está noutra chamada.` });
 			case 'call_rate_limited': return $t('calls.error.rate_limited', { default: 'Espera alguns segundos antes de voltar a ligar.' });
 			case 'call_conversation_inactive': return $t('calls.error.conversation_inactive', { default: 'Esta conversa já não permite chamadas.' });
+			case 'call_relay_required_unavailable': return $t('calls.error.relay_unavailable', { default: 'Pediste uma chamada apenas por relay, mas este serviço não está disponível agora. Desativa “Apenas relay” nas definições ou tenta mais tarde.' });
 			default: return $t('calls.error.generic', { default: 'Não foi possível fazer a chamada. Podes tentar novamente.' });
 		}
 	}
@@ -455,6 +456,9 @@
 				{#if callStore.realtimeHealth === 'degraded' || callStore.realtimeHealth === 'offline'}
 					<span class="network-pill" role="status">{callStore.realtimeHealth === 'offline' ? $t('calls.network.offline', { default: 'Sem rede' }) : $t('calls.network.unstable', { default: 'Rede instável' })}</span>
 				{/if}
+				{#if callStore.relayOnlyActive && callStore.relayAvailable === true}
+					<span class="privacy-pill" role="status">🛡 {$t('calls.relay.active', { default: 'Apenas relay' })}</span>
+				{/if}
 				{#if canMinimize}
 					<button type="button" class="minimize-call" onclick={() => callStore.minimize()} aria-label={$t('calls.mini.minimize', { default: 'Minimizar chamada' })}>
 						<span aria-hidden="true">—</span> {$t('calls.mini.minimize_short', { default: 'Minimizar' })}
@@ -564,6 +568,9 @@
 
 			{#if callStore.phase === 'incoming'}
 				<p class="incoming-hint">{$t('calls.incoming_hint', { default: 'O Presuntinho está a chamar-te 💗' })}</p>
+				{#if callStore.attentionPreferenceReason === 'dnd'}
+					<p class="preference-hint" role="status">🔕 {$t('calls.dnd.silenced', { default: 'Toque e vibração silenciados pelas tuas horas tranquilas. Podes ligar o som só para esta chamada.' })}</p>
+				{/if}
 				<div class="incoming-actions">
 					<button type="button" class="round decline" data-call-action="decline" disabled={callStore.accepting} onclick={() => void callStore.decline()} aria-label={$t('calls.decline', { default: 'Recusar' })}>
 						<span aria-hidden="true">☎</span><small>{callStore.responseAction === 'decline' ? $t('calls.declining', { default: 'A recusar…' }) : $t('calls.decline', { default: 'Recusar' })}</small>
@@ -706,9 +713,10 @@
 	.call-panel { width: min(94vw, 34rem); min-height: min(730px, calc(100dvh - 2rem)); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: .5rem; }
 	.video-call .call-panel { justify-content: flex-end; min-height: calc(100dvh - max(2rem, env(safe-area-inset-top) + env(safe-area-inset-bottom))); padding-bottom: clamp(.5rem, 3vh, 2rem); text-shadow: 0 2px 10px rgba(0,0,0,.8); }
 	.call-meta { display: flex; align-items: center; justify-content: center; gap: .5rem; min-height: 30px; margin-bottom: .5rem; }
-	.kind-pill, .network-pill, .minimize-call { padding: .32rem .68rem; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; background: rgba(255,255,255,.11); color: #fff; font: inherit; font-size: .78rem; font-weight: 800; letter-spacing: .02em; backdrop-filter: blur(12px); }
+	.kind-pill, .network-pill, .privacy-pill, .minimize-call { padding: .32rem .68rem; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; background: rgba(255,255,255,.11); color: #fff; font: inherit; font-size: .78rem; font-weight: 800; letter-spacing: .02em; backdrop-filter: blur(12px); }
 	.minimize-call { position: fixed; z-index: 3; top: max(.75rem, env(safe-area-inset-top)); inset-inline-start: max(.75rem, env(safe-area-inset-left)); min-height: 42px; cursor: pointer; }
 	.network-pill { color: #fde68a; background: rgba(146,64,14,.28); }
+	.privacy-pill { color: #bbf7d0; background: rgba(20,83,45,.35); border-color: rgba(74,222,128,.32); }
 	.avatar-stage { position: relative; width: clamp(126px, 35vw, 178px); aspect-ratio: 1; display: grid; place-items: center; margin: .35rem; }
 	.call-avatar { position: relative; z-index: 2; width: 86%; aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; background: linear-gradient(145deg, rgba(244,114,182,.58), rgba(96,165,250,.32)); border: 2px solid rgba(255,255,255,.72); box-shadow: 0 22px 55px rgba(0,0,0,.4), 0 0 50px rgba(244,114,182,.28); animation: call-pulse 1.8s ease-in-out infinite; overflow: hidden; }
 	.signal-rings, .signal-rings i { position: absolute; inset: 0; border-radius: 50%; }
@@ -733,6 +741,7 @@
 	.call-timeline li.done > span { background: #ec4899; border-color: #f9a8d4; }
 	.call-timeline li.current > span { background: #fff; color: #17233a; border-color: #fff; box-shadow: 0 0 0 6px rgba(244,114,182,.17); animation: step-pulse 1.4s ease-in-out infinite; }
 	.incoming-hint { margin: .1rem 0 .45rem; color: #fbcfe8; font-weight: 780; }
+	.preference-hint { max-width: 29rem; margin: -.1rem 0 .25rem; padding: .55rem .72rem; border: 1px solid rgba(251,191,36,.28); border-radius: .8rem; background: rgba(120,53,15,.26); color: #fef3c7; font-size: .73rem; line-height: 1.4; }
 	.incoming-actions { display: flex; gap: clamp(3.2rem, 18vw, 7rem); margin-top: .5rem; }
 	.round { min-width: 88px; min-height: 106px; display: flex; flex-direction: column; align-items: center; gap: .58rem; border: 0; background: transparent; color: #fff; font: inherit; cursor: pointer; }
 	.round:disabled { opacity: .52; cursor: wait; }

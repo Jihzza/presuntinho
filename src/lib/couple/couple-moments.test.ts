@@ -57,12 +57,14 @@ describe('cross-tab moment claim', () => {
 
 describe('parseCoupleMoment', () => {
 	it('normalises service-worker payloads without trusting invalid kinds', () => {
-		expect(parseCoupleMoment({ id: 'row-1', kind: 'message', count: 140, createdAt: '2026-07-13T20:00:00Z' }, 'push')).toMatchObject({
+		expect(parseCoupleMoment({ id: 'row-1', kind: 'message', count: 140, createdAt: '2026-07-13T20:00:00Z', silent: true, vibration: false }, 'push')).toMatchObject({
 			id: 'row-1',
 			kind: 'message',
 			count: 99,
-		source: 'push'
-	});
+			silent: true,
+			vibration: false,
+			source: 'push'
+		});
 		expect(parseCoupleMoment({ id: 'row-2', kind: 'unknown' }, 'push')).toBeNull();
 	});
 });

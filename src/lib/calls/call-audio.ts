@@ -1,4 +1,13 @@
+import type { CallRingtone } from './call-preferences';
+
 export type CallAttentionMode = 'idle' | 'ringback' | 'incoming';
+
+export interface CallAudioPreferences {
+	ringtone: CallRingtone;
+	ringtoneVolume: number;
+	ringbackVolume: number;
+	vibration: boolean;
+}
 
 interface AudioDependencies {
 	createContext?: () => AudioContext | null;
@@ -29,6 +38,13 @@ export class CallAudioManager {
 	#generation = 0;
 	#nodes = new Set<OscillatorNode>();
 	#incomingHapticStarted = false;
+	#incomingAudioScheduled = false;
+	#preferences: CallAudioPreferences = {
+		ringtone: 'classic',
+		ringtoneVolume: 0.8,
+		ringbackVolume: 0.55,
+		vibration: true
+	};
 	#createContext: () => AudioContext | null;
 	#setTimer: (callback: () => void, delay: number) => ReturnType<typeof setTimeout>;
 	#clearTimer: (timer: ReturnType<typeof setTimeout>) => void;
@@ -74,6 +90,33 @@ export class CallAudioManager {
 		if (reduced) this.#vibrate(0);
 	}
 
+	configure(preferences: Partial<CallAudioPreferences>): void {
+		const ringtone = preferences.ringtone;
+		if (ringtone === 'classic' || ringtone === 'soft' || ringtone === 'pulse') {
+			this.#preferences.ringtone = ringtone;
+		}
+		if (typeof preferences.ringtoneVolume === 'number' && Number.isFinite(preferences.ringtoneVolume)) {
+			this.#preferences.ringtoneVolume = Math.min(1, Math.max(0, preferences.ringtoneVolume));
+		}
+		if (typeof preferences.ringbackVolume === 'number' && Number.isFinite(preferences.ringbackVolume)) {
+			this.#preferences.ringbackVolume = Math.min(1, Math.max(0, preferences.ringbackVolume));
+		}
+		if (typeof preferences.vibration === 'boolean') {
+			this.#preferences.vibration = preferences.vibration;
+			if (!preferences.vibration) {
+				this.#incomingHapticStarted = false;
+				this.#vibrate(0);
+			}
+		}
+		// Apply a changed tone/volume immediately without leaving overlapping
+		// oscillator nodes behind. The active call attention mode is restored.
+		const mode = this.mode;
+		if (mode !== 'idle') {
+			this.stop();
+			this.#start(mode);
+		}
+	}
+
 	startRingback(): void {
 		this.#start('ringback');
 	}
@@ -92,6 +135,7 @@ export class CallAudioManager {
 	async confirmIncomingFeedback(): Promise<boolean> {
 		if (this.mode !== 'incoming' || this.muted) return false;
 		if (this.#incomingHapticStarted) return true;
+		if (!this.#incomingAudioScheduled) return false;
 		const context = this.#ensureContext();
 		if (!context) return false;
 		if (context.state === 'running') {
@@ -117,6 +161,7 @@ export class CallAudioManager {
 		this.#generation += 1;
 		this.mode = 'idle';
 		this.#incomingHapticStarted = false;
+		this.#incomingAudioScheduled = false;
 		if (this.#timer) this.#clearTimer(this.#timer);
 		this.#timer = null;
 		for (const node of this.#nodes) {
@@ -135,21 +180,45 @@ export class CallAudioManager {
 		const repeat = () => {
 			if (generation !== this.#generation || this.mode !== mode || this.muted) return;
 			if (mode === 'incoming') {
-				this.#tone(659, 0, 0.16, 0.09);
-				this.#tone(784, 0.19, 0.16, 0.09);
-				this.#tone(988, 0.42, 0.34, 0.1);
-				if (!this.reducedMotion) {
+				this.#incomingAudioScheduled = this.#scheduleIncomingTone() || this.#incomingAudioScheduled;
+				if (!this.reducedMotion && this.#preferences.vibration) {
 					this.#incomingHapticStarted = this.#vibrate([180, 90, 180, 500, 220]) === true;
 				}
 			} else {
-				this.#tone(440, 0, 0.42, 0.055);
-				this.#tone(480, 0, 0.42, 0.045);
-				this.#tone(440, 0.58, 0.42, 0.055);
-				this.#tone(480, 0.58, 0.42, 0.045);
+				const volume = this.#preferences.ringbackVolume;
+				this.#tone(440, 0, 0.42, 0.055 * volume);
+				this.#tone(480, 0, 0.42, 0.045 * volume);
+				this.#tone(440, 0.58, 0.42, 0.055 * volume);
+				this.#tone(480, 0.58, 0.42, 0.045 * volume);
 			}
 			this.#timer = this.#setTimer(repeat, mode === 'incoming' ? 2350 : 3300);
 		};
 		repeat();
+	}
+
+	#scheduleIncomingTone(): boolean {
+		const volume = this.#preferences.ringtoneVolume;
+		switch (this.#preferences.ringtone) {
+			case 'soft':
+				return [
+					this.#tone(523, 0, 0.28, 0.055 * volume, 'sine'),
+					this.#tone(659, 0.34, 0.34, 0.065 * volume, 'sine'),
+					this.#tone(784, 0.76, 0.42, 0.06 * volume, 'sine')
+				].some(Boolean);
+			case 'pulse':
+				return [
+					this.#tone(740, 0, 0.1, 0.085 * volume, 'triangle'),
+					this.#tone(880, 0.15, 0.1, 0.09 * volume, 'triangle'),
+					this.#tone(740, 0.3, 0.1, 0.085 * volume, 'triangle'),
+					this.#tone(988, 0.48, 0.22, 0.08 * volume, 'triangle')
+				].some(Boolean);
+			default:
+				return [
+					this.#tone(659, 0, 0.16, 0.09 * volume),
+					this.#tone(784, 0.19, 0.16, 0.09 * volume),
+					this.#tone(988, 0.42, 0.34, 0.1 * volume)
+				].some(Boolean);
+		}
 	}
 
 	#ensureContext(): AudioContext | null {
@@ -162,15 +231,22 @@ export class CallAudioManager {
 		return this.#context;
 	}
 
-	#tone(frequency: number, offset: number, duration: number, volume: number): void {
+	#tone(
+		frequency: number,
+		offset: number,
+		duration: number,
+		volume: number,
+		waveform: OscillatorType = 'sine'
+	): boolean {
+		if (volume <= 0) return false;
 		const context = this.#ensureContext();
-		if (!context) return;
+		if (!context) return false;
 		void context.resume().then(() => { this.unlocked = context.state === 'running'; }).catch(() => undefined);
 		try {
 			const start = context.currentTime + offset;
 			const oscillator = context.createOscillator();
 			const gain = context.createGain();
-			oscillator.type = 'sine';
+			oscillator.type = waveform;
 			oscillator.frequency.setValueAtTime(frequency, start);
 			gain.gain.setValueAtTime(0.0001, start);
 			gain.gain.exponentialRampToValueAtTime(volume, start + 0.025);
@@ -184,8 +260,10 @@ export class CallAudioManager {
 			};
 			oscillator.start(start);
 			oscillator.stop(start + duration + 0.01);
+			return true;
 		} catch {
 			/* Call UI still works when the platform blocks synthetic audio. */
+			return false;
 		}
 	}
 }

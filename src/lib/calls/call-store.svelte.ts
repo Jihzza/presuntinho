@@ -1,5 +1,6 @@
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { getAuthSession } from '$lib/account/auth';
+import { listContacts } from '$lib/account/contacts';
 import { getSupabaseClient } from '$lib/multiplayer/client';
 import { getPushInstallationId, sendPushNotify } from '$lib/push';
 import {
@@ -10,6 +11,19 @@ import {
 	type CallPhase
 } from './call-machine';
 import { callAudio } from './call-audio';
+import {
+	CALL_PREFERENCES_EVENT,
+	defaultCallPreferences,
+	evaluateIncomingCallPreferences,
+	isCallIgnoredLocally,
+	isCallPreferencesStorageKey,
+	loadCallPreferences,
+	parseCallPreferences,
+	readCallPreferencesSync,
+	rememberLocallyIgnoredCall,
+	updateKnownCallContacts,
+	type CallPreferences
+} from './call-preferences';
 import { startCallReliably } from './call-start';
 import {
 	ConnectionQualityMonitor,
@@ -131,6 +145,9 @@ export class CallStore {
 	connectedAt = $state<number | null>(null);
 	relayAvailable = $state<boolean | null>(null);
 	iceSource = $state<CallIceSource | null>(null);
+	relayOnlyActive = $state(false);
+	callPreferences = $state.raw<CallPreferences | null>(null);
+	attentionPreferenceReason = $state<'dnd' | null>(null);
 	accepting = $state(false);
 	responseAction = $state<'accept' | 'decline' | null>(null);
 	attentionMuted = $state(false);
@@ -207,6 +224,9 @@ export class CallStore {
 	#pushListener: ((event: MessageEvent<unknown>) => void) | null = null;
 	#resumeListener: (() => void) | null = null;
 	#audioUnlockListener: (() => void) | null = null;
+	#preferencesListener: ((event: Event) => void) | null = null;
+	#preferencesStorageListener: ((event: StorageEvent) => void) | null = null;
+	#attentionOverridden = false;
 	#lastStart: { conversationId: string; kind: CallKind; requestId: string } | null = null;
 	#followupClientIds = new Map<string, string>();
 	#installationHeartbeatTimer: ReturnType<typeof setInterval> | null = null;
@@ -273,6 +293,7 @@ export class CallStore {
 		this.#incomingLeader?.dispose();
 		this.#incomingLeader = null;
 		this.#userId = next;
+		this.callPreferences = null;
 		this.#installationRegistered = false;
 		if (!next || typeof window === 'undefined') {
 			this.readiness = 'unbound';
@@ -282,6 +303,14 @@ export class CallStore {
 		this.realtimeHealth = navigator.onLine ? 'connecting' : 'offline';
 		this.#installationId = getPushInstallationId() ?? crypto.randomUUID();
 		this.#deviceId = deviceId(this.#installationId);
+		this.#applyCallPreferences(readCallPreferencesSync(next));
+		const preferencesGeneration = this.#globalGeneration;
+		void loadCallPreferences(next).then((preferences) => {
+			if (preferencesGeneration === this.#globalGeneration && this.#userId === next) {
+				this.#applyCallPreferences(preferences);
+			}
+		}).catch(() => undefined);
+		void this.#refreshKnownContacts(next, preferencesGeneration);
 		this.#openGlobalChannel(next, this.#globalGeneration);
 		this.#installLifecycleListeners();
 		this.#startInstallationHeartbeat();
@@ -868,6 +897,8 @@ export class CallStore {
 
 	toggleAttentionMuted(): void {
 		this.attentionMuted = !this.attentionMuted;
+		this.#attentionOverridden = true;
+		this.attentionPreferenceReason = null;
 		callAudio.setMuted(this.attentionMuted);
 		if (!this.attentionMuted) {
 			if (this.phase === 'incoming' && this.session && this.#incomingLeader?.isLeader(this.session.id)) {
@@ -1341,6 +1372,10 @@ export class CallStore {
 			return;
 		}
 		if (!this.#userId || !this.#installationId || call.callee !== this.#userId) return;
+		if (isCallIgnoredLocally(this.#userId, call.id)) {
+			this.#closeCallNotification(call.id);
+			return;
+		}
 		this.#pendingIncoming = call;
 		// A hidden tab must not acquire the installation-wide Web Lock before the
 		// tab the user is actually looking at. Background delivery is owned by the
@@ -1404,6 +1439,22 @@ export class CallStore {
 			this.#releaseIncomingLeadership(callId);
 			return;
 		}
+		const preferenceDecision = evaluateIncomingCallPreferences(
+			this.callPreferences ?? defaultCallPreferences(this.#userId),
+			call.caller
+		);
+		if (!preferenceDecision.allowed) {
+			// Preferences are installation-local. Suppress only this phone/browser;
+			// another signed-in callee device must remain free to ring and answer.
+			rememberLocallyIgnoredCall(this.#userId, call.id, call.expiresAt);
+			this.#closeCallNotification(call.id);
+			this.#releaseIncomingLeadership(call.id);
+			return;
+		}
+		this.#attentionOverridden = false;
+		this.attentionPreferenceReason = preferenceDecision.reason === 'dnd' ? 'dnd' : null;
+		this.attentionMuted = preferenceDecision.silent;
+		callAudio.setMuted(preferenceDecision.silent);
 		if (this.#resetTimer) clearTimeout(this.#resetTimer);
 		this.#resetTimer = null;
 		this.followupAction = null;
@@ -1916,12 +1967,19 @@ export class CallStore {
 			) return;
 			this.relayAvailable = ice.relayAvailable;
 			this.iceSource = ice.source;
+			const relayOnly = this.callPreferences?.relayOnly === true;
+			if (relayOnly && !ice.relayAvailable) {
+				this.relayOnlyActive = false;
+				throw new Error('call_relay_required_unavailable');
+			}
+			this.relayOnlyActive = relayOnly && ice.relayAvailable;
 
 			let peer!: CallPeer;
 			peer = new CallPeer({
 				kind: active.kind,
 				caller: active.caller === this.#userId,
 				iceServers: ice.iceServers,
+				iceTransportPolicy: this.relayOnlyActive ? 'relay' : 'all',
 				localStream,
 				sendSignal: (signal) => this.#sendSignal(signal),
 				onRemoteStream: (stream) => {
@@ -2345,6 +2403,7 @@ export class CallStore {
 		this.connectedAt = null;
 		this.relayAvailable = null;
 		this.iceSource = null;
+		this.relayOnlyActive = false;
 		this.#pendingSignals = [];
 		this.#remoteDevice = null;
 		this.#otherPresent = false;
@@ -2402,6 +2461,8 @@ export class CallStore {
 		this.#activeHandoffId = null;
 		this.#locallyTransferredCallId = null;
 		this.attentionMuted = false;
+		this.attentionPreferenceReason = null;
+		this.#attentionOverridden = false;
 		callAudio.setMuted(false);
 	}
 
@@ -2544,6 +2605,19 @@ export class CallStore {
 		};
 		window.addEventListener('pointerdown', this.#audioUnlockListener, { capture: true, passive: true });
 		window.addEventListener('keydown', this.#audioUnlockListener, { capture: true });
+		this.#preferencesListener = (event: Event) => {
+			const value = event instanceof CustomEvent ? event.detail : null;
+			if (!this.#userId) return;
+			const preferences = parseCallPreferences(value, this.#userId);
+			if (preferences) this.#applyCallPreferences(preferences);
+		};
+		window.addEventListener(CALL_PREFERENCES_EVENT, this.#preferencesListener);
+		this.#preferencesStorageListener = (event: StorageEvent) => {
+			if (this.#userId && isCallPreferencesStorageKey(event.key, this.#userId)) {
+				this.#applyCallPreferences(readCallPreferencesSync(this.#userId));
+			}
+		};
+		window.addEventListener('storage', this.#preferencesStorageListener);
 		callAudio.setReducedMotion(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
 		if ('serviceWorker' in navigator) {
 			this.#pushListener = (event: MessageEvent<unknown>) => {
@@ -2569,13 +2643,64 @@ export class CallStore {
 			window.removeEventListener('pointerdown', this.#audioUnlockListener, true);
 			window.removeEventListener('keydown', this.#audioUnlockListener, true);
 		}
+		if (this.#preferencesListener && typeof window !== 'undefined') {
+			window.removeEventListener(CALL_PREFERENCES_EVENT, this.#preferencesListener);
+		}
+		if (this.#preferencesStorageListener && typeof window !== 'undefined') {
+			window.removeEventListener('storage', this.#preferencesStorageListener);
+		}
 		this.#resumeListener = null;
 		this.#pushListener = null;
 		this.#audioUnlockListener = null;
+		this.#preferencesListener = null;
+		this.#preferencesStorageListener = null;
 		if (this.#installationHeartbeatTimer) clearInterval(this.#installationHeartbeatTimer);
 		this.#installationHeartbeatTimer = null;
 		if (this.#handoffPollTimer) clearTimeout(this.#handoffPollTimer);
 		this.#handoffPollTimer = null;
+	}
+
+	#applyCallPreferences(preferences: CallPreferences): void {
+		if (!this.#userId || preferences.accountId !== this.#userId.toLowerCase()) return;
+		this.callPreferences = preferences;
+		callAudio.configure({
+			ringtone: preferences.ringtone,
+			ringtoneVolume: preferences.ringtoneVolume,
+			ringbackVolume: preferences.ringbackVolume,
+			vibration: preferences.vibration
+		});
+		const call = this.session;
+		if (!call || this.phase !== 'incoming' || call.callee !== this.#userId) return;
+		const decision = evaluateIncomingCallPreferences(preferences, call.caller);
+		if (!decision.allowed) {
+			rememberLocallyIgnoredCall(this.#userId, call.id, call.expiresAt);
+			this.#closeCallNotification(call.id);
+			this.#yieldIncomingLeadership(call.id);
+			this.#releaseIncomingLeadership(call.id);
+			return;
+		}
+		if (this.#attentionOverridden) return;
+		this.attentionPreferenceReason = decision.reason === 'dnd' ? 'dnd' : null;
+		this.attentionMuted = decision.silent;
+		callAudio.setMuted(decision.silent);
+		if (!decision.silent && this.#incomingLeader?.isLeader(call.id)) {
+			callAudio.startIncoming();
+			void this.#ackIncomingPresentation(call);
+		}
+	}
+
+	async #refreshKnownContacts(userId: string, generation: number): Promise<void> {
+		try {
+			const contacts = await listContacts();
+			if (generation !== this.#globalGeneration || this.#userId !== userId) return;
+			const preferences = await updateKnownCallContacts(userId, contacts.map((contact) => contact.id));
+			if (generation === this.#globalGeneration && this.#userId === userId) {
+				this.#applyCallPreferences(preferences);
+			}
+		} catch {
+			// Offline start keeps the last durable snapshot; server conversation
+			// authorization remains the fallback until a refresh succeeds.
+		}
 	}
 
 	#startInstallationHeartbeat(): void {

@@ -33,7 +33,8 @@ const harness = vi.hoisted(() => ({
 		confirmIncomingFeedback: vi.fn(),
 		stop: vi.fn(),
 		setMuted: vi.fn(),
-		setReducedMotion: vi.fn()
+		setReducedMotion: vi.fn(),
+		configure: vi.fn()
 	}
 }));
 
@@ -96,6 +97,11 @@ vi.mock('./webrtc', () => ({
 }));
 
 import { CallStore } from './call-store.svelte';
+import {
+	clearLocallyIgnoredCalls,
+	defaultCallPreferences,
+	saveCallPreferences
+} from './call-preferences';
 import { parseCallSession, type CallSession } from './types';
 
 class Deferred<T> {
@@ -342,7 +348,7 @@ function bind(store: CallStore, userId: string): void {
 	store.bindUser(userId);
 }
 
-beforeEach(() => {
+beforeEach(async () => {
 	vi.clearAllMocks();
 	harness.rpcHandlers.clear();
 	harness.peerOptions.length = 0;
@@ -415,6 +421,16 @@ beforeEach(() => {
 	// dedicated shared BroadcastChannel harness below.
 	vi.stubGlobal('BroadcastChannel', undefined);
 	vi.stubGlobal('localStorage', undefined);
+	clearLocallyIgnoredCalls(CALLER, null);
+	clearLocallyIgnoredCalls(CALLEE, null);
+	for (const accountId of [CALLER, CALLEE]) {
+		await saveCallPreferences(accountId, defaultCallPreferences(accountId), {
+			storage: null,
+			caches: null,
+			postToWorker: () => undefined,
+			dispatch: () => undefined
+		});
+	}
 
 	harness.rpcHandlers.set('upsert_account_installation', () => ({ data: true, error: null }));
 	harness.rpcHandlers.set('heartbeat_account_installation', () => ({ data: true, error: null }));
@@ -428,6 +444,131 @@ afterEach(() => {
 });
 
 describe('CallStore deterministic experience matrix', () => {
+	it('silences an incoming call during local DND but still presents controls factually', async () => {
+		await saveCallPreferences(CALLEE, {
+			dndEnabled: true,
+			dndStartMinutes: 0,
+			dndEndMinutes: 0
+		}, { storage: null, caches: null, postToWorker: () => undefined, dispatch: () => undefined });
+		const store = new CallStore();
+		bind(store, CALLEE);
+		await settle();
+		harness.supabase!.latest('call_sessions:').emitPostgres('call_sessions', callRow());
+		await eventually(() => expect(store.phase).toBe('incoming'));
+		expect(store.attentionMuted).toBe(true);
+		expect(store.attentionPreferenceReason).toBe('dnd');
+		expect(harness.audio.startIncoming).not.toHaveBeenCalled();
+		expect(harness.audio.setMuted).toHaveBeenCalledWith(true);
+		expect(harness.supabase!.rpcCalls.filter(({ name }) => name === 'respond_to_call')).toHaveLength(0);
+		store.bindUser(null);
+	});
+
+	it('suppresses blocked calls on one installation without declining them for another device', async () => {
+		await saveCallPreferences(CALLEE, { whoMayCall: 'nobody' }, {
+			storage: null, caches: null, postToWorker: () => undefined, dispatch: () => undefined
+		});
+		const blockedInstallation = new CallStore();
+		bind(blockedInstallation, CALLEE);
+		await settle();
+		harness.supabase!.latest('call_sessions:').emitPostgres('call_sessions', callRow());
+		await settle(10);
+		expect(blockedInstallation.phase).toBe('idle');
+		expect(blockedInstallation.session).toBeNull();
+		expect(harness.audio.startIncoming).not.toHaveBeenCalled();
+		expect(harness.supabase!.rpcCalls.filter(({ name }) => name === 'respond_to_call')).toHaveLength(0);
+		blockedInstallation.bindUser(null);
+
+		// A separate physical installation has its own preference/ignored-call
+		// storage. Model that boundary by clearing only the local test registry.
+		clearLocallyIgnoredCalls(CALLEE, null);
+		await saveCallPreferences(CALLEE, { whoMayCall: 'direct-chats' }, {
+			storage: null, caches: null, postToWorker: () => undefined, dispatch: () => undefined
+		});
+		const allowedInstallation = new CallStore();
+		bind(allowedInstallation, CALLEE);
+		await settle();
+		harness.supabase!.latest('call_sessions:').emitPostgres('call_sessions', callRow());
+		await eventually(() => expect(allowedInstallation.phase).toBe('incoming'));
+		expect(harness.audio.startIncoming).toHaveBeenCalledTimes(1);
+		expect(harness.supabase!.rpcCalls.filter(({ name }) => name === 'respond_to_call')).toHaveLength(0);
+		allowedInstallation.bindUser(null);
+	});
+
+	it('fails relay-only explicitly without TURN and uses relay policy only with validated TURN', async () => {
+		await saveCallPreferences(CALLEE, { relayOnly: true }, {
+			storage: null, caches: null, postToWorker: () => undefined, dispatch: () => undefined
+		});
+		const unavailable = new CallStore();
+		bind(unavailable, CALLEE);
+		await settle();
+		harness.supabase!.latest('call_sessions:').emitPostgres('call_sessions', callRow());
+		const firstMedia = streamStub();
+		harness.acquireLocalMedia.mockResolvedValueOnce(firstMedia.stream);
+		harness.rpcHandlers.set('respond_to_call', (args) => ({
+			data: callRow({
+				status: 'accepted',
+				callee_device: args.p_device,
+				callee_heartbeat_at: new Date().toISOString(),
+				callee_lease_expires_at: new Date(Date.now() + 120_000).toISOString(),
+				answered_at: new Date().toISOString()
+			}),
+			error: null
+		}));
+		await unavailable.accept();
+		await eventually(() => expect(unavailable.phase).toBe('error'));
+		expect(unavailable.error).toBe('call_relay_required_unavailable');
+		expect(unavailable.relayAvailable).toBeNull();
+		expect(unavailable.relayOnlyActive).toBe(false);
+		expect(harness.peerOptions).toHaveLength(0);
+		unavailable.bindUser(null);
+
+		harness.supabase = new FakeSupabase();
+		harness.fetchIceConfiguration.mockResolvedValue({
+			iceServers: [{ urls: ['turn:relay.example.test:3478'], username: 'user', credential: 'secret' }],
+			relayAvailable: true,
+			source: 'static'
+		});
+		harness.rpcHandlers.set('upsert_account_installation', () => ({ data: true, error: null }));
+		harness.rpcHandlers.set('heartbeat_account_installation', () => ({ data: true, error: null }));
+		harness.rpcHandlers.set('reap_stale_calls', () => ({ data: true, error: null }));
+		harness.rpcHandlers.set('ack_call_delivery', () => ({ data: true, error: null }));
+		harness.rpcHandlers.set('respond_to_call', (args) => ({
+			data: callRow({
+				status: 'accepted',
+				callee_device: args.p_device,
+				callee_heartbeat_at: new Date().toISOString(),
+				callee_lease_expires_at: new Date(Date.now() + 120_000).toISOString(),
+				answered_at: new Date().toISOString()
+			}),
+			error: null
+		}));
+		const relayed = new CallStore();
+		bind(relayed, CALLEE);
+		await settle();
+		harness.supabase.latest('call_sessions:').emitPostgres('call_sessions', callRow());
+		harness.acquireLocalMedia.mockResolvedValueOnce(streamStub().stream);
+		await relayed.accept();
+		await eventually(() => expect(harness.peerOptions).toHaveLength(1));
+		expect(harness.peerOptions[0].iceTransportPolicy).toBe('relay');
+		expect(relayed.relayAvailable).toBe(true);
+		expect(relayed.relayOnlyActive).toBe(true);
+		relayed.bindUser(null);
+	});
+
+	it('replaces account preferences synchronously on switch and clears them on logout', async () => {
+		await saveCallPreferences(CALLEE, { ringtone: 'pulse', relayOnly: true }, {
+			storage: null, caches: null, postToWorker: () => undefined, dispatch: () => undefined
+		});
+		const store = new CallStore();
+		bind(store, CALLEE);
+		await settle();
+		expect(store.callPreferences).toMatchObject({ accountId: CALLEE, ringtone: 'pulse', relayOnly: true });
+		bind(store, CALLER);
+		expect(store.callPreferences).toMatchObject({ accountId: CALLER, ringtone: 'classic', relayOnly: false });
+		store.bindUser(null);
+		expect(store.callPreferences).toBeNull();
+	});
+
 	it('shows the caller immediately, keeps delivery wording factual, and cancels cleanly', async () => {
 		const store = new CallStore();
 		bind(store, CALLER);
