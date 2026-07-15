@@ -14,12 +14,13 @@
   import {
     cancelGameInvitesForRoom,
     dismissInvite,
-    inviteToGame
+    inviteToGame,
+    validateIncomingGameInvite
   } from '$lib/account/game-invites';
 
   type Phase = 'menu' | 'creating' | 'waiting' | 'joining' | 'playing' | 'error';
   type LinkAction = 'share' | 'copy';
-  type ErrorKind = 'invalid_code' | 'connection' | 'room_full' | 'host_unavailable';
+  type ErrorKind = 'invalid_code' | 'invalid_invite' | 'connection' | 'room_full' | 'host_unavailable';
 
   const configured = isMultiplayerConfigured();
   let phase = $state<Phase>('menu');
@@ -36,6 +37,7 @@
   let sharedUrl = $state('');
   let canShare = $state(false);
   let acceptedInviteId = $state<string | null>(null);
+  let requestedInviteId = $state<string | null>(null);
   let errorKind = $state<ErrorKind>('connection');
   let inviteCleanupDone = false;
   let unsubPeer: (() => void) | null = null;
@@ -65,10 +67,8 @@
     const signature = `${requestedCode}:${requestedInvite ?? ''}:${requestedAttempt ?? ''}`;
     if (signature === lastJoinRequest) return;
     lastJoinRequest = signature;
-    if (acceptedInviteId && acceptedInviteId !== requestedInvite) restoreAcceptedInvite();
-    acceptedInviteId = requestedInvite;
     joinCode = normalizeRoomCode(requestedCode);
-    void joinRoomByCode();
+    void joinRoomByCode(requestedInvite);
   });
 
   onMount(() => {
@@ -118,9 +118,13 @@
   }
 
   function restoreAcceptedInvite(): void {
-    if (!acceptedInviteId || typeof window === 'undefined') return;
+    restoreInvite(acceptedInviteId);
+  }
+
+  function restoreInvite(id: string | null): void {
+    if (!id || typeof window === 'undefined') return;
     window.dispatchEvent(
-      new CustomEvent('presuntinho:game-invite-retry', { detail: { id: acceptedInviteId } })
+      new CustomEvent('presuntinho:game-invite-retry', { detail: { id } })
     );
   }
 
@@ -186,7 +190,10 @@
         const inviteId = acceptedInviteId;
         consumeAcceptedInvite(inviteId);
         acceptedInviteId = null;
-        void dismissInvite(inviteId).catch(() => undefined);
+        // The row was validated for this exact recipient and room before the
+        // join. Keep the same room predicate on consumption so a tampered or
+        // superseded deep link can never dismiss another valid invitation.
+        void dismissInvite(inviteId, roomCode).catch(() => undefined);
       }
       if (role === 'host' && !inviteCleanupDone) {
         inviteCleanupDone = true;
@@ -227,19 +234,41 @@
     return nextCode;
   }
 
-  async function joinRoomByCode(): Promise<void> {
+  async function joinRoomByCode(inviteId: string | null = null): Promise<void> {
     if (actionBusy) return;
     const normalized = normalizeRoomCode(joinCode);
     if (!isValidRoomCode(normalized)) {
-      restoreAcceptedInvite();
+      restoreInvite(inviteId || acceptedInviteId);
       errorKind = 'invalid_code';
       phase = 'error';
       return;
     }
 
+    if (acceptedInviteId && acceptedInviteId !== inviteId) {
+      restoreAcceptedInvite();
+      acceptedInviteId = null;
+    }
+    requestedInviteId = inviteId;
     actionBusy = 'join';
     phase = 'joining';
     try {
+      if (inviteId !== null) {
+        // A push URL is untrusted/stale input. Prove the row still exists, is
+        // addressed to this signed-in account, matches this room and has not
+        // expired before opening a Realtime channel.
+        const proof = await validateIncomingGameInvite(inviteId, normalized);
+        if (!proof) {
+          restoreInvite(inviteId);
+          errorKind = 'invalid_invite';
+          phase = 'error';
+          return;
+        }
+        acceptedInviteId = proof.id;
+      } else {
+        // No invite parameter means the existing public link/manual-code
+        // capability flow. It remains intentionally usable without an account.
+        acceptedInviteId = null;
+      }
       await disconnectCurrentRoom(true);
       code = normalized;
       await connect('guest', normalized);
@@ -262,7 +291,7 @@
       }
     } catch (error) {
       if (isConnectionAborted(error)) return;
-      restoreAcceptedInvite();
+      restoreInvite(inviteId || acceptedInviteId);
       friendlyConnectionError(error);
     } finally {
       actionBusy = null;
@@ -376,6 +405,7 @@
   function leave(): void {
     restoreAcceptedInvite();
     acceptedInviteId = null;
+    requestedInviteId = null;
     inviteAttempt += 1;
     connectionAttempt += 1;
     const hostedCode = room?.role === 'host' ? code : '';
@@ -398,7 +428,8 @@
   }
 
   function retryOrReset(): void {
-    if (isValidRoomCode(joinCode) && errorKind !== 'room_full') void joinRoomByCode();
+    if (errorKind === 'invalid_invite') leave();
+    else if (isValidRoomCode(joinCode) && errorKind !== 'room_full') void joinRoomByCode(requestedInviteId);
     else leave();
   }
 </script>
@@ -487,7 +518,7 @@
               bind:value={joinCode}
               aria-label={$t('versus.code_label')}
             />
-            <button type="button" class="ghost" onclick={joinRoomByCode}>{$t('versus.join')}</button>
+            <button type="button" class="ghost" onclick={() => void joinRoomByCode()}>{$t('versus.join')}</button>
           </div>
         </details>
       {:else if phase === 'creating' || phase === 'joining'}
@@ -521,11 +552,13 @@
         <button type="button" class="cancel" onclick={leave}>{$t('versus.cancel')}</button>
       {:else if phase === 'error'}
         <div class="error-state">
-          <span aria-hidden="true">🛜</span>
+          <span aria-hidden="true">{errorKind === 'invalid_invite' ? '⌛' : '🛜'}</span>
           <strong>
             {$t(
               errorKind === 'invalid_code'
                 ? 'versus.invalid_code'
+                : errorKind === 'invalid_invite'
+                  ? 'versus.invalid_invite'
                 : errorKind === 'room_full'
                   ? 'versus.room_full'
                   : errorKind === 'host_unavailable'
@@ -533,9 +566,11 @@
                     : 'versus.error'
             )}
           </strong>
-          <small>{$t('versus.error_hint')}</small>
+          <small>{$t(errorKind === 'invalid_invite' ? 'versus.invalid_invite_hint' : 'versus.error_hint')}</small>
         </div>
-        <button type="button" class="cta" onclick={retryOrReset}>{$t('versus.retry')}</button>
+        <button type="button" class="cta" onclick={retryOrReset}>
+          {$t(errorKind === 'invalid_invite' ? 'versus.back_to_lobby' : 'versus.retry')}
+        </button>
       {/if}
     </div>
   {/if}

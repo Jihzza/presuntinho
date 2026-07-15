@@ -88,4 +88,29 @@ describe('CallPeer signalling', () => {
 		expect((peer.pc as unknown as FakePeerConnection).createOffer).toHaveBeenCalledWith({ iceRestart: true });
 		expect(sent).toContainEqual({ type: 'offer', sdp: { type: 'offer', sdp: 'offer-sdp' } });
 	});
+
+	it('reports a temporary disconnect as reconnecting and recovers', () => {
+		Object.defineProperty(globalThis, 'RTCPeerConnection', { configurable: true, value: FakePeerConnection });
+		const onConnected = vi.fn();
+		const onReconnecting = vi.fn();
+		const peer = new CallPeer({
+			kind: 'audio',
+			caller: true,
+			iceServers: [],
+			localStream: streamStub(),
+			sendSignal: async () => undefined,
+			onRemoteStream: vi.fn(),
+			onConnected,
+			onReconnecting,
+			onDisconnected: vi.fn(),
+			onError: vi.fn()
+		});
+		const pc = peer.pc as unknown as FakePeerConnection;
+		pc.connectionState = 'disconnected';
+		pc.onconnectionstatechange?.();
+		expect(onReconnecting).toHaveBeenCalledTimes(1);
+		pc.connectionState = 'connected';
+		pc.onconnectionstatechange?.();
+		expect(onConnected).toHaveBeenCalledTimes(1);
+	});
 });

@@ -8,6 +8,7 @@ export interface CallPeerOptions {
 	sendSignal: (signal: CallSignal) => Promise<void>;
 	onRemoteStream: (stream: MediaStream) => void;
 	onConnected: () => void;
+	onReconnecting?: () => void;
 	onDisconnected: () => void;
 	onError: (error: Error) => void;
 }
@@ -53,6 +54,9 @@ export class CallPeer {
 	#closed = false;
 	#offered = false;
 	#restartAttempts = 0;
+	#reconnecting = false;
+	#recoveryTimer: ReturnType<typeof setTimeout> | null = null;
+	#recovering = false;
 
 	constructor(options: CallPeerOptions) {
 		this.#options = options;
@@ -70,7 +74,7 @@ export class CallPeer {
 		};
 		this.pc.onconnectionstatechange = () => this.#onConnectionState();
 		this.pc.oniceconnectionstatechange = () => {
-			if (this.pc.iceConnectionState === 'failed') this.#recoverIce();
+			if (this.pc.iceConnectionState === 'failed') this.#scheduleRecovery(0);
 		};
 	}
 
@@ -150,6 +154,8 @@ export class CallPeer {
 	close(stopLocal = true): void {
 		if (this.#closed) return;
 		this.#closed = true;
+		if (this.#recoveryTimer) clearTimeout(this.#recoveryTimer);
+		this.#recoveryTimer = null;
 		this.pc.onicecandidate = null;
 		this.pc.ontrack = null;
 		this.pc.onconnectionstatechange = null;
@@ -184,26 +190,54 @@ export class CallPeer {
 	#onConnectionState(): void {
 		if (this.#closed) return;
 		if (this.pc.connectionState === 'connected') {
+			if (this.#recoveryTimer) clearTimeout(this.#recoveryTimer);
+			this.#recoveryTimer = null;
 			this.#restartAttempts = 0;
+			this.#recovering = false;
+			this.#reconnecting = false;
 			this.#options.onConnected();
+		} else if (this.pc.connectionState === 'disconnected') {
+			this.#markReconnecting();
+			this.#scheduleRecovery(3_500);
 		} else if (this.pc.connectionState === 'failed') {
-			this.#recoverIce();
+			this.#markReconnecting();
+			this.#scheduleRecovery(0);
 		} else if (this.pc.connectionState === 'closed') {
 			this.#options.onDisconnected();
 		}
 	}
 
+	#scheduleRecovery(delay: number): void {
+		if (this.#closed || this.#recoveryTimer || this.#recovering) return;
+		this.#markReconnecting();
+		this.#recoveryTimer = setTimeout(() => {
+			this.#recoveryTimer = null;
+			this.#recoverIce();
+		}, delay);
+	}
+
 	#recoverIce(): void {
-		if (this.#closed || this.#restartAttempts >= 2) {
+		if (this.#closed || this.pc.connectionState === 'connected') return;
+		if (this.#restartAttempts >= 3) {
 			this.#options.onDisconnected();
 			return;
 		}
 		this.#restartAttempts += 1;
-		if (this.#options.caller) void this.startOffer(true);
-		else {
-			void this.#options
+		this.#recovering = true;
+		const recovery = this.#options.caller
+			? this.startOffer(true)
+			: this.#options
 				.sendSignal({ type: 'restart-request' })
 				.catch((error) => this.#options.onError(error instanceof Error ? error : new Error('signal_restart_failed')));
-		}
+		void recovery.finally(() => {
+			this.#recovering = false;
+			if (!this.#closed && this.pc.connectionState !== 'connected') this.#scheduleRecovery(4_000);
+		});
+	}
+
+	#markReconnecting(): void {
+		if (this.#closed || this.#reconnecting) return;
+		this.#reconnecting = true;
+		this.#options.onReconnecting?.();
 	}
 }

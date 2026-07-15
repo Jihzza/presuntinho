@@ -34,6 +34,8 @@ import {
 import type { ChatCallMeta, ChatReactionSummary, ChatReplyPreview, RichMessageKind } from './account-chat-model';
 
 export interface LocalChatMessage extends ChatMessage {
+  /** Exact server timestamp retained for lossless compound pagination. */
+  createdAt?: string;
   /** In-flight to the server right now. */
   pending?: boolean;
   /** Waiting in the offline outbox for connectivity. */
@@ -237,6 +239,11 @@ export class ChatStore {
     for (const m of this.messages) byId.set(m.id, m);
     for (const m of incoming) {
       if (!m || typeof m.id !== 'string' || typeof m.ts !== 'number') continue;
+      if (m.clientId) {
+        for (const [id, local] of byId) {
+          if (id !== m.id && local.clientId === m.clientId) byId.delete(id);
+        }
+      }
       const existing = byId.get(m.id);
       // Keep a locally cached preview if we already have one.
       byId.set(m.id, existing?.localDataUrl ? { ...m, localDataUrl: existing.localDataUrl } : m);
@@ -267,6 +274,7 @@ export class ChatStore {
       .filter((i) => (i.conversationId || 'main') === this.conversationId)
       .map<LocalChatMessage>((i) => ({
         id: i.localId,
+        clientId: i.localId,
         from: this.profile,
         text: i.kind === 'text' ? i.text : undefined,
         mediaType: i.mediaType,
@@ -300,9 +308,10 @@ export class ChatStore {
       conversationId: this.conversationId,
       pending: true
     };
+    local.clientId = local.id;
     this.messages = [...this.messages, local];
     this.#persistLocal();
-    return this.#deliver(local, () => sendText(this.profile, trimmed, this.conversationId), {
+    return this.#deliver(local, () => sendText(this.profile, trimmed, this.conversationId, local.id), {
       localId: local.id,
       kind: 'text',
       text: trimmed,
@@ -333,9 +342,10 @@ export class ChatStore {
       pending: true,
       localDataUrl: dataUrl
     };
+    local.clientId = local.id;
     this.messages = [...this.messages, local];
     this.#persistLocal();
-    return this.#deliver(local, () => sendMediaDataUrl(this.profile, dataUrl, finalName, this.conversationId), {
+    return this.#deliver(local, () => sendMediaDataUrl(this.profile, dataUrl, finalName, this.conversationId, local.id), {
       localId: local.id,
       kind: 'media',
       media: dataUrl,
@@ -385,8 +395,8 @@ export class ChatStore {
     if (!msg || (!msg.failed && !msg.queued)) return 'failed';
     this.#patchLocal(localId, { pending: true, failed: false, queued: false });
     const send = msg.localDataUrl
-      ? () => sendMediaDataUrl(this.profile, msg.localDataUrl as string, msg.name, this.conversationId)
-      : () => sendText(this.profile, msg.text ?? '', this.conversationId);
+      ? () => sendMediaDataUrl(this.profile, msg.localDataUrl as string, msg.name, this.conversationId, localId)
+      : () => sendText(this.profile, msg.text ?? '', this.conversationId, localId);
     const outboxItem = msg.localDataUrl
       ? {
           localId,
@@ -403,9 +413,9 @@ export class ChatStore {
 
   /** Flush the offline outbox (connectivity regained / page opened). */
   async #flushQueued(): Promise<void> {
-    if (readOutbox(this.profile).length === 0) return;
+    if (!readOutbox(this.profile).some((item) => (item.conversationId || 'main') === this.conversationId)) return;
     try {
-      const sent = await flushOutbox(this.profile);
+      const sent = await flushOutbox(this.profile, this.conversationId);
       if (sent.length > 0) {
         this.#merge(sent);
         this.#emptyPolls = 0;

@@ -15,6 +15,17 @@ export interface ChatCallMeta {
   endedAt?: string;
 }
 
+export type ChatCallDirection = 'outgoing' | 'incoming';
+
+export function chatCallDirection(
+  call: Pick<ChatCallMeta, 'caller' | 'callee'>,
+  accountId: string
+): ChatCallDirection | null {
+  if (call.caller === accountId) return 'outgoing';
+  if (call.callee === accountId) return 'incoming';
+  return null;
+}
+
 export interface ChatReactionSummary {
   emoji: string;
   count: number;
@@ -32,8 +43,27 @@ export interface ChatReplyPreview {
 export interface MergeableChatMessage {
   id: string;
   clientId?: string;
+  /** Exact Postgres timestamp. Keep this alongside `ts`: JavaScript dates
+   * discard the microseconds needed for a lossless pagination cursor. */
+  createdAt?: string;
   ts: number;
   pending?: boolean;
+}
+
+export interface ReplyReconcileMessage extends MergeableChatMessage {
+  from: string;
+  text?: string;
+  kind?: RichMessageKind;
+  name?: string;
+  deleted?: boolean;
+  reply?: ChatReplyPreview;
+  starred?: boolean;
+  reactions?: ChatReactionSummary[];
+}
+
+export interface ChatPageCursor {
+  createdAt: string;
+  id: string;
 }
 
 const MIME_EXTENSIONS: Record<string, string> = {
@@ -107,16 +137,81 @@ export function mediaExtension(name: string, type: string): string {
 /** Deterministic merge for initial pages, realtime rows and optimistic sends.
  * A server row replaces the optimistic row carrying the same client_id. */
 export function mergeChatMessages<T extends MergeableChatMessage>(current: T[], incoming: T[]): T[] {
-  const canonicalByClient = new Map(
-    incoming.filter((message) => !message.pending && message.clientId).map((message) => [message.clientId as string, message.id])
-  );
+  const combined = [...current, ...incoming];
+  // A committed row wins even when the local copy is already `failed` rather
+  // than `pending` (for example: the insert committed but its HTTP response
+  // was lost). Build this index across both sides of the merge so a later
+  // refresh also heals a failed bubble left by an earlier request.
+  const canonicalByClient = new Map<string, string>();
+  for (const message of combined) {
+    if (message.clientId && !message.id.startsWith('local-')) {
+      canonicalByClient.set(message.clientId, message.id);
+    }
+  }
   const byId = new Map<string, T>();
-  for (const message of [...current, ...incoming]) {
-    if (message.pending && message.clientId && canonicalByClient.has(message.clientId)) continue;
+  for (const message of combined) {
+    if (
+      message.clientId &&
+      canonicalByClient.has(message.clientId) &&
+      canonicalByClient.get(message.clientId) !== message.id
+    ) continue;
     const previous = byId.get(message.id);
     byId.set(message.id, previous ? ({ ...previous, ...message } as T) : message);
   }
-  return [...byId.values()].sort((a, b) => a.ts - b.ts || a.id.localeCompare(b.id));
+  return [...byId.values()].sort(compareChatMessages);
+}
+
+/** Reply previews are snapshots for fast rendering, but edits/deletes arriving
+ * over Realtime must reconcile every visible quote. Tombstones also clear
+ * local decoration state immediately. */
+export function reconcileMessageReferences<T extends ReplyReconcileMessage>(
+  messages: T[],
+  updated: ReplyReconcileMessage
+): T[] {
+  const preview: ChatReplyPreview = {
+    id: updated.id,
+    from: updated.from,
+    text: updated.deleted ? undefined : updated.text,
+    kind: updated.kind ?? 'text',
+    deleted: Boolean(updated.deleted)
+  };
+  return messages.map((message) => {
+    let next = message;
+    if (message.id === updated.id && updated.deleted) {
+      next = { ...next, starred: false, reactions: [] } as T;
+    }
+    if (message.reply?.id === updated.id) {
+      next = { ...next, reply: preview } as T;
+    }
+    return next;
+  });
+}
+
+/** Stable timeline ordering that retains Postgres microseconds where present. */
+export function compareChatMessages(a: MergeableChatMessage, b: MergeableChatMessage): number {
+  if (a.createdAt && b.createdAt && a.createdAt !== b.createdAt) {
+    return a.createdAt.localeCompare(b.createdAt);
+  }
+  return a.ts - b.ts || a.id.localeCompare(b.id);
+}
+
+/** PostgREST disjunction for descending `(created_at, id)` keyset paging. */
+export function chatPageFilter(cursor: ChatPageCursor): string {
+  return `created_at.lt.${cursor.createdAt},and(created_at.eq.${cursor.createdAt},id.lt.${cursor.id})`;
+}
+
+/** Preserve the newest exact server timestamp covered by a millisecond UI
+ * cursor, so read receipts do not get stuck just before `.123456`. */
+export function exactReadTimestamp(
+  messages: Array<Pick<MergeableChatMessage, 'ts' | 'createdAt'>>,
+  throughTs: number
+): string {
+  let latest: string | undefined;
+  for (const message of messages) {
+    if (message.ts > throughTs || !message.createdAt) continue;
+    if (!latest || message.createdAt > latest) latest = message.createdAt;
+  }
+  return latest ?? new Date(throughTs).toISOString();
 }
 
 export function summarizeReactions(

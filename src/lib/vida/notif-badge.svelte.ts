@@ -22,6 +22,7 @@ export const notifBadge = $state<{ count: number }>({ count: 0 });
 let cached: NotificationItem[] = [];
 let inflight: Promise<void> | null = null;
 let lastFetchAt = 0;
+let lifecycleEpoch = 0;
 const THROTTLE_MS = 8000;
 
 function recompute(): void {
@@ -42,18 +43,31 @@ export function refreshNotifBadge(force = false): Promise<void> {
     return Promise.resolve();
   }
   lastFetchAt = now;
-  inflight = (async () => {
+  const requestEpoch = lifecycleEpoch;
+  let pending!: Promise<void>;
+  pending = (async () => {
     try {
       const [items, extras] = await Promise.all([loadAgendaItems(), loadNotificationExtras()]);
+      if (requestEpoch !== lifecycleEpoch) return;
       cached = buildNotifications(items, extras);
       recompute();
     } catch (e) {
       console.error('[notif-badge] refresh failed', e);
     } finally {
-      inflight = null;
+      if (inflight === pending) inflight = null;
     }
   })();
-  return inflight;
+  inflight = pending;
+  return pending;
+}
+
+/** Drop another account's cached badge and invalidate any in-flight refresh. */
+export function resetNotifBadge(): void {
+  lifecycleEpoch += 1;
+  inflight = null;
+  lastFetchAt = 0;
+  cached = [];
+  notifBadge.count = 0;
 }
 
 /** Keep the count live when /notificacoes marks read / snoozes (no refetch). */

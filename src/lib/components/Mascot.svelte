@@ -16,7 +16,12 @@
   import { db } from '$lib/state/db';
   import { sendLove, sendNudge, type PingResult } from '$lib/couple/couple-store.svelte';
   import { COUPLE_MOMENT_EVENT, type CoupleMoment } from '$lib/couple/couple-moments';
-  import { playSfx, vibrate } from '$lib/gamification/sound';
+  import {
+    NUDGE_TAP_THRESHOLD,
+    mascotTapAction,
+    mascotTapFeedback
+  } from '$lib/couple/mascot-gestures';
+  import { playSfx, vibrate, vibrateLove, vibrateNudge } from '$lib/gamification/sound';
   import { fireConfettiEvent, prefersReducedMotion, showToast } from './events';
   import {
     DEFAULT_MASCOT_ID,
@@ -49,6 +54,9 @@
   let particles = $state<{ id: number; a: number; glyph: string; distance: number; size: number }[]>([]);
   let holdCharging = $state(false);
   let tapIntensity = $state(0);
+  let tapEnergy = $state(1);
+  let tapCount = $state(0);
+  let sendingMoment = $state<'love' | 'nudge' | null>(null);
   let mascotEl = $state<HTMLButtonElement | null>(null);
   // V10.4 — the FAB renders the ACTIVE mascot's ART (picked on /mascotes/).
   let mascotId = $state(DEFAULT_MASCOT_ID);
@@ -67,6 +75,30 @@
   const emotionLine = $derived(
     $t(`mascots.emotion.${emotion}`, { default: EMOTION_FALLBACKS[emotion] })
   );
+  const gestureStatus = $derived.by(() => {
+    if (sendingMoment === 'love') {
+      return $t('mascot.gesture.sending_love', { default: 'A enviar um amo-te… 💌' });
+    }
+    if (sendingMoment === 'nudge') {
+      return $t('mascot.gesture.sending_nudge', { default: 'A enviar as saudades… 💭' });
+    }
+    if (holdCharging) {
+      return $t('mascot.gesture.charging', { default: 'A encher de amor… não largues! 💗' });
+    }
+    if (tapCount >= NUDGE_TAP_THRESHOLD) {
+      return $t('mascot.gesture.nudge_ready', { default: 'SAUDADES carregadas! 💥' });
+    }
+    if (tapCount === 3) {
+      return $t('mascot.gesture.one_more', { default: 'Só mais um toque…' });
+    }
+    if (tapCount === 2) {
+      return $t('mascot.gesture.keep_tapping', { default: 'Continua para enviar saudades' });
+    }
+    if (tapCount === 1) {
+      return $t('mascot.gesture.first_tap', { default: 'Outra vez abre a conversa' });
+    }
+    return '';
+  });
 
   async function refreshEmotion(): Promise<void> {
     if (typeof indexedDB === 'undefined') return;
@@ -101,27 +133,28 @@
   //   hold   → send love (💛) with an "explode" burst
   const HOLD_MS = 900;
   const TAP_WINDOW = 500;
-  let tapCount = 0;
   let holdFired = false;
+  let primaryPointerId: number | null = null;
   let holdTimer: ReturnType<typeof setTimeout> | null = null;
   let tapTimer: ReturnType<typeof setTimeout> | null = null;
   let particleTimer: ReturnType<typeof setTimeout> | null = null;
   const holdPulseTimers = new Set<ReturnType<typeof setTimeout>>();
+  let tapAnimation: Animation | null = null;
   let pseq = 0;
 
   function fireParticles(kind: 'tap' | 'love' | 'nudge' | 'message', amount?: number): void {
     burst = kind;
     if (!reduced) {
-      const n = amount ?? (kind === 'love' ? 32 : kind === 'nudge' ? 24 : kind === 'message' ? 18 : 3);
+      const n = amount ?? (kind === 'love' ? 42 : kind === 'nudge' ? 32 : kind === 'message' ? 22 : 3);
       const glyph = kind === 'love' ? (special ? '❤️' : '💛') : kind === 'message' ? '💌' : '💭';
       const batch = Array.from({ length: n }, (_, i) => ({
         id: ++pseq,
         a: Math.round((360 / n) * i + (Math.random() - 0.5) * 14),
         glyph,
-        distance: kind === 'tap' ? 34 + tapIntensity * 3 : kind === 'love' ? 104 : 86,
-        size: kind === 'tap' ? 0.75 + tapIntensity * 0.06 : 1.15 + Math.random() * 0.45
+        distance: kind === 'tap' ? 36 + tapIntensity * 4 : kind === 'love' ? 132 : kind === 'nudge' ? 108 : 92,
+        size: kind === 'tap' ? 0.78 + tapIntensity * 0.065 : 1.18 + Math.random() * 0.55
       }));
-      particles = [...particles, ...batch].slice(-42);
+      particles = [...particles, ...batch].slice(-64);
     }
     if (particleTimer) clearTimeout(particleTimer);
     particleTimer = setTimeout(() => {
@@ -157,22 +190,24 @@
   }
 
   function tapFeedback(level: number): void {
-    tapIntensity = Math.min(10, level);
+    const feedback = mascotTapFeedback(level);
+    tapIntensity = feedback.level;
+    tapEnergy = feedback.scale;
     playSfx('pop');
-    vibrate(level < 3 ? 'tap' : level < 5 ? 'success' : 'warning');
-    fireParticles('tap', Math.min(7, 2 + Math.floor(level / 2)));
-    if (!mascotEl || reduced) return;
-    const amp = Math.min(13, 3 + level * 1.6);
-    const scale = Math.min(1.58, 1.04 + level * 0.075);
-    mascotEl.animate(
+    vibrate(feedback.haptic);
+    fireParticles('tap', feedback.particles);
+    if (!mascotEl || reduced || typeof mascotEl.animate !== 'function') return;
+    tapAnimation?.cancel();
+    tapAnimation = mascotEl.animate(
       [
         { transform: 'translateX(0) rotate(0) scale(1)' },
-        { transform: `translateX(-${amp}px) rotate(-${Math.min(18, 4 + level * 2)}deg) scale(${scale})` },
-        { transform: `translateX(${amp}px) rotate(${Math.min(18, 4 + level * 2)}deg) scale(${scale * 0.92})` },
+        { transform: `translateX(-${feedback.amplitude}px) rotate(-${feedback.rotation}deg) scale(${feedback.scale})` },
+        { transform: `translateX(${feedback.amplitude}px) rotate(${feedback.rotation}deg) scale(${feedback.scale * 0.94})` },
         { transform: 'translateX(0) rotate(0) scale(1)' }
       ],
-      { duration: Math.max(150, 260 - level * 14), easing: 'cubic-bezier(.2,.9,.3,1)' }
+      { duration: feedback.duration, easing: 'cubic-bezier(.18,1.15,.28,1)' }
     );
+    tapAnimation.addEventListener('finish', () => (tapAnimation = null), { once: true });
   }
 
   // Clear every gesture timer — called from the onMount cleanup so a pending
@@ -184,6 +219,10 @@
     holdTimer = tapTimer = particleTimer = null;
     holdCharging = false;
     tapIntensity = 0;
+    tapEnergy = 1;
+    primaryPointerId = null;
+    tapAnimation?.cancel();
+    tapAnimation = null;
     clearHoldPulses();
   }
 
@@ -194,39 +233,79 @@
   }
 
   async function doLove(): Promise<void> {
+    if (sendingMoment) return;
+    sendingMoment = 'love';
     fireParticles('love');
-    fireConfettiEvent({ origin: 'heart', count: 110, intensity: 5, palette: ['#ff4f9a', '#ff8fbd', '#ffd1e3', '#fff'] });
+    fireConfettiEvent({ origin: 'heart', count: 138, intensity: 5, palette: ['#ff4f9a', '#ff8fbd', '#ffd1e3', '#fff'] });
     shakeScreen();
     playSfx('levelup');
-    vibrate('warning');
-    const res = await sendLove();
-    if (res === 'sent') showToast($t('couple.love.sent', { default: '💌 Amor enviado 💛' }), 2200);
-    else toastForResult(res);
+    vibrateLove();
+    try {
+      const res = await sendLove();
+      if (res === 'sent') showToast($t('couple.love.sent', { default: '💌 Amor enviado 💛' }), 2200);
+      else toastForResult(res);
+    } finally {
+      sendingMoment = null;
+    }
   }
 
   async function doNudge(): Promise<void> {
+    if (sendingMoment) return;
+    sendingMoment = 'nudge';
     fireParticles('nudge');
-    fireConfettiEvent({ origin: 'heart', count: 82, intensity: 4, palette: ['#f472b6', '#a78bfa', '#fef3c7'] });
+    fireConfettiEvent({ origin: 'heart', count: 104, intensity: 4.5, palette: ['#f472b6', '#a78bfa', '#fef3c7'] });
     shakeScreen();
     playSfx('whoosh');
-    vibrate('warning');
-    const res = await sendNudge();
-    if (res === 'sent') showToast($t('couple.nudge.sent', { default: '📳 Saudades enviadas!' }), 2200);
-    else toastForResult(res);
+    vibrateNudge();
+    try {
+      const res = await sendNudge();
+      if (res === 'sent') showToast($t('couple.nudge.sent', { default: '📳 Saudades enviadas!' }), 2200);
+      else toastForResult(res);
+    } finally {
+      sendingMoment = null;
+    }
   }
 
   function resolveTaps(): void {
     const n = tapCount;
     tapCount = 0;
     tapIntensity = 0;
-    if (n >= 4) void doNudge();
-    else if (n >= 2) void goto('/mensagens');
+    tapEnergy = 1;
+    const action = mascotTapAction(n);
+    if (action === 'nudge') void doNudge();
+    else if (action === 'messages') void goto('/mensagens');
     else void goto('/agente');
   }
 
-  function onPointerDown(): void {
-    if (!interactive) return;
+  function scheduleTapResolution(): void {
+    if (tapTimer) clearTimeout(tapTimer);
+    if (tapCount < 1) {
+      tapTimer = null;
+      return;
+    }
+    tapTimer = setTimeout(() => {
+      tapTimer = null;
+      resolveTaps();
+    }, TAP_WINDOW);
+  }
+
+  function startHoldGesture(): void {
     holdFired = false;
+    // A second press belongs to the same tap burst. Pause its resolution while
+    // the pointer is down so changing one's mind into a long hold can never
+    // navigate away halfway through the love charge.
+    if (tapTimer) {
+      clearTimeout(tapTimer);
+      tapTimer = null;
+    }
+    if (burst === 'tap') {
+      burst = 'none';
+      particles = [];
+      if (particleTimer) {
+        clearTimeout(particleTimer);
+        particleTimer = null;
+      }
+    }
     beginHoldFeedback();
     if (holdTimer) clearTimeout(holdTimer);
     holdTimer = setTimeout(() => {
@@ -243,7 +322,7 @@
     }, HOLD_MS);
   }
 
-  function onPointerEnd(): void {
+  function finishHoldGesture(): void {
     if (holdTimer) {
       clearTimeout(holdTimer);
       holdTimer = null;
@@ -251,7 +330,31 @@
     if (!holdFired) {
       holdCharging = false;
       clearHoldPulses();
+      scheduleTapResolution();
     }
+  }
+
+  function onPointerDown(event: PointerEvent): void {
+    if (!interactive || sendingMoment || event.button !== 0 || !event.isPrimary) return;
+    primaryPointerId = event.pointerId;
+    startHoldGesture();
+  }
+
+  function onPointerEnd(event: PointerEvent): void {
+    if (primaryPointerId === null || event.pointerId !== primaryPointerId) return;
+    primaryPointerId = null;
+    finishHoldGesture();
+  }
+
+  function onKeyDown(event: KeyboardEvent): void {
+    // Native Space dispatches a click on key-up, so it can mirror the pointer
+    // hold exactly: a short press remains a tap; a 900ms press sends love.
+    if (event.key !== ' ' || event.repeat || !interactive || sendingMoment) return;
+    startHoldGesture();
+  }
+
+  function onKeyUp(event: KeyboardEvent): void {
+    if (event.key === ' ') finishHoldGesture();
   }
 
   // Click carries the taps (fires for mouse, touch-tap AND keyboard Enter/Space,
@@ -266,13 +369,10 @@
       holdFired = false;
       return;
     }
+    if (sendingMoment) return;
     tapCount += 1;
     tapFeedback(tapCount);
-    if (tapTimer) clearTimeout(tapTimer);
-    tapTimer = setTimeout(() => {
-      tapTimer = null;
-      resolveTaps();
-    }, TAP_WINDOW);
+    scheduleTapResolution();
   }
 
   async function refreshMascot(): Promise<void> {
@@ -347,14 +447,20 @@
     class:loving={burst === 'love'}
     class:nudging={burst === 'nudge'}
     class:receiving={burst === 'message'}
+    class:tapping={burst === 'tap'}
     class:charging-love={holdCharging}
-    style={`--hold-ms:${HOLD_MS}ms; --tap-intensity:${tapIntensity}`}
+    class:sending={sendingMoment !== null}
+    style={`--hold-ms:${HOLD_MS}ms; --tap-energy:${tapEnergy}; --tap-glow:${8 + tapIntensity * 2}px`}
     onpointerdown={onPointerDown}
     onpointerup={onPointerEnd}
     onpointercancel={onPointerEnd}
     onpointerleave={onPointerEnd}
+    onkeydown={onKeyDown}
+    onkeyup={onKeyUp}
     onclick={onClick}
     oncontextmenu={(e) => e.preventDefault()}
+    aria-busy={sendingMoment ? 'true' : undefined}
+    aria-describedby="mascot-gesture-help mascot-gesture-status"
     aria-label={$t('mascot.gesture.aria', { default: 'Mascote — toca para o agente, duas vezes para a conversa, mantém para enviar amor' })}
     title={emotionLine}
   >
@@ -366,6 +472,14 @@
       size={64}
       animate={!reduced && !holdCharging && burst === 'none'}
     />
+    {#if gestureStatus}
+      <span class="gesture-bubble" aria-hidden="true">
+        <span>{gestureStatus}</span>
+        {#if tapCount > 0 && !holdCharging}
+          <i class="tap-meter" style={`--progress:${Math.min(1, tapCount / NUDGE_TAP_THRESHOLD)}`}></i>
+        {/if}
+      </span>
+    {/if}
     {#each particles as p (p.id)}
       <span
         class="particle"
@@ -373,6 +487,10 @@
         aria-hidden="true">{p.glyph}</span>
     {/each}
   </button>
+  <span id="mascot-gesture-help" class="sr-only">
+    {$t('mascot.gesture.help', { default: 'Um toque abre o agente, dois abrem as mensagens, quatro ou mais enviam saudades; mantém premido com o dedo, rato ou tecla Espaço para enviar amor.' })}
+  </span>
+  <span id="mascot-gesture-status" class="sr-only" aria-live="polite" aria-atomic="true">{gestureStatus}</span>
 {/if}
 
 <style>
@@ -388,6 +506,10 @@
     background: transparent;
     color: var(--txt);
     cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -396,6 +518,7 @@
        non-fixed so it isn't hidden behind the Vida footer tab. `relative` also
        makes it the positioning context for the gesture particles below. */
     position: relative;
+    isolation: isolate;
     opacity: 0.82;
     filter: drop-shadow(0 3px 8px rgba(15, 23, 42, 0.42));
     transition:
@@ -417,6 +540,9 @@
   }
   .mascot-fab:active {
     transform: scale(0.95);
+  }
+  .mascot-fab.sending {
+    cursor: progress;
   }
   /* ── Família (especiais): aura a brilhar + batimento cardíaco suave. ── */
   .mascot-fab.special {
@@ -455,15 +581,39 @@
   .mascot-fab.charging-love {
     opacity: 1;
     z-index: 4;
+    transform-origin: 78% 82%;
     animation: mascot-love-charge var(--hold-ms, 900ms) cubic-bezier(.18,.78,.16,1) forwards;
     filter: drop-shadow(0 0 18px rgba(255, 79, 154, 0.82))
       drop-shadow(0 0 34px rgba(244, 114, 182, 0.45));
+  }
+  .mascot-fab.charging-love::after {
+    content: '';
+    position: absolute;
+    inset: -12px;
+    z-index: -1;
+    border: 4px solid rgba(255, 143, 189, 0.88);
+    border-top-color: rgba(255, 255, 255, 0.95);
+    border-radius: 999px;
+    box-shadow: 0 0 22px rgba(255, 79, 154, 0.68), inset 0 0 15px rgba(255, 79, 154, 0.25);
+    animation: mascot-charge-ring var(--hold-ms, 900ms) cubic-bezier(.2,.85,.2,1) both;
+    pointer-events: none;
   }
   /* Gesture bursts — deliberately emphatic final beats. */
   .mascot-fab.loving {
     opacity: 1;
     z-index: 4;
+    transform-origin: 78% 82%;
     animation: mascot-love 1.05s cubic-bezier(0.2, 1.35, 0.35, 1);
+  }
+  .mascot-fab.loving::after {
+    content: '';
+    position: absolute;
+    inset: -18px;
+    z-index: -1;
+    border: 5px solid rgba(255, 111, 165, 0.9);
+    border-radius: 999px;
+    animation: mascot-love-shockwave 820ms ease-out both;
+    pointer-events: none;
   }
   .mascot-fab.nudging {
     opacity: 1;
@@ -472,6 +622,28 @@
   .mascot-fab.receiving {
     opacity: 1;
     animation: mascot-message 0.9s cubic-bezier(.2,1.3,.35,1);
+  }
+  .mascot-fab.tapping::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    z-index: -1;
+    border-radius: 999px;
+    border: 3px solid color-mix(in srgb, var(--accent) 72%, #fff);
+    opacity: 0.82;
+    transform: scale(var(--tap-energy, 1));
+    box-shadow: 0 0 var(--tap-glow, 8px) color-mix(in srgb, var(--accent) 62%, transparent);
+    pointer-events: none;
+  }
+  @keyframes mascot-charge-ring {
+    0% { opacity: .2; transform: scale(.72) rotate(0); border-width: 2px; }
+    55% { opacity: .85; transform: scale(1.08) rotate(210deg); border-width: 5px; }
+    100% { opacity: 1; transform: scale(1.42) rotate(520deg); border-width: 7px; }
+  }
+  @keyframes mascot-love-shockwave {
+    0% { opacity: 1; transform: scale(.42); border-width: 9px; }
+    55% { opacity: .85; }
+    100% { opacity: 0; transform: scale(2.7); border-width: 1px; }
   }
   @keyframes mascot-love-charge {
     0% { transform: scale(1) rotate(0); }
@@ -508,6 +680,50 @@
     68% { transform: translateY(-12px) rotate(-4deg) scale(1.2); }
     84% { transform: translateY(0) rotate(2deg) scale(1.04); }
   }
+  .gesture-bubble {
+    position: absolute;
+    right: -2px;
+    bottom: calc(100% + 0.55rem);
+    width: max-content;
+    max-width: min(13rem, calc(100vw - 2rem));
+    display: grid;
+    gap: 0.38rem;
+    padding: 0.55rem 0.72rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 48%, rgba(255,255,255,.28));
+    border-radius: 0.9rem 0.9rem 0.2rem 0.9rem;
+    background: color-mix(in srgb, var(--card, #22314f) 92%, var(--accent) 8%);
+    color: var(--txt, #fff);
+    box-shadow: 0 10px 26px rgba(8, 15, 32, 0.38), 0 0 18px color-mix(in srgb, var(--accent) 20%, transparent);
+    font-size: 0.75rem;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: left;
+    pointer-events: none;
+    animation: gesture-bubble-pop 180ms cubic-bezier(.2,1.35,.35,1) both;
+  }
+  .tap-meter {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 4px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--txt) 14%, transparent);
+  }
+  .tap-meter::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #f9a8d4, #fb7185, #facc15);
+    transform: scaleX(var(--progress, 0));
+    transform-origin: left center;
+    transition: transform 120ms ease-out;
+  }
+  @keyframes gesture-bubble-pop {
+    from { opacity: 0; transform: translateY(6px) scale(.86); }
+    to { opacity: 1; transform: none; }
+  }
   /* Radial particle burst flung from the mascot's centre — bigger + further. */
   .particle {
     position: absolute;
@@ -542,6 +758,13 @@
       transition: none;
       animation: none;
     }
+    .mascot-fab::after,
+    .gesture-bubble,
+    .tap-meter::after {
+      animation: none;
+      transition: none;
+      transform: none;
+    }
     /* Keep the special aura as a static glow (no pulse) so it still reads as special. */
     .mascot-fab.special::before {
       animation: none;
@@ -551,5 +774,16 @@
       animation: none;
       display: none;
     }
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 </style>

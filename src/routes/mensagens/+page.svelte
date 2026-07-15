@@ -15,9 +15,9 @@
    * - Composer: fixed dock with the same geometry as /agente (bottom above
    *   the bottom-nav, width min(800px, 100vw - .75rem), z-index 65) so the
    *   layout's --page-bottom-inset clearance applies identically.
-   * - Read receipts: ✓ = delivered to the server, ✓✓ (accent) = the other
-   *   person's lastRead cursor passed the message. markRead fires when the
-   *   page is visible AND focused.
+   * - Read receipts: ✓ = accepted by the server, grey ✓✓ = synced by the
+   *   other device, accent ✓✓ = the other person's read cursor passed the
+   *   message. markRead only fires at the visible conversation tail.
    */
   import { onMount, tick } from 'svelte';
   import { t, locale } from 'svelte-i18n';
@@ -32,9 +32,54 @@
     AccountChatError,
     AccountChatStore,
     listAccountChatInbox,
+    updateAccountChatPreferences,
     type AccountChatInboxItem
   } from '$lib/chat/account-chat-store.svelte';
-  import { formatFileSize, replyLabel, type ChatCallMeta } from '$lib/chat/account-chat-model';
+  import {
+    chatCallDirection,
+    formatFileSize,
+    replyLabel,
+    type ChatCallDirection,
+    type ChatCallMeta
+  } from '$lib/chat/account-chat-model';
+  import { parseChatDeepLink, type ChatDeepLink } from '$lib/chat/chat-deep-link';
+  import {
+    accountChatVoiceDraftKey,
+    getAccountChatPersistence,
+    type AccountChatVoiceDraft
+  } from '$lib/chat/account-chat-outbox';
+  import {
+    canEditChatMessage,
+    copyTextToClipboard,
+    messageDeliveryState,
+    shouldClearVoiceDraft,
+    shouldMarkConversationRead,
+    type MessageDeliveryState
+  } from '$lib/chat/message-actions';
+  import {
+    chatDraftPreview,
+    chatDraftText,
+    readChatDrafts,
+    withoutConfirmedChatDraft,
+    withChatDraft,
+    writeChatDrafts,
+    type ChatDraft
+  } from '$lib/chat/message-drafts';
+  import {
+    announceChatPreferencesChanged,
+    compareConversationPreference,
+    isConversationMuted,
+    mutedUntilFor,
+    withConversationPreference,
+    type ConversationMuteMode,
+    type ConversationPreferencePatch
+  } from '$lib/chat/conversation-preferences';
+  import {
+    formatVoiceDuration,
+    normalizeVoiceMime,
+    preferredVoiceMime,
+    voiceFileName
+  } from '$lib/chat/voice-recorder';
   import { profileFor } from '$lib/profile/people';
   import { couple } from '$lib/couple/couple-store.svelte';
   import { accountState, startAccountSync } from '$lib/account/account-store.svelte';
@@ -42,6 +87,8 @@
   import { listSpaces, singleActiveCouple, otherMember } from '$lib/account/spaces';
   import Avatar from '$lib/components/Avatar.svelte';
   import CallButtons from '$lib/calls/CallButtons.svelte';
+  import CallStartAction from '$lib/calls/CallStartAction.svelte';
+  import type { CallStartBlockReason } from '$lib/calls/call-start-state';
 
   type ConversationPreset = {
     id: string;
@@ -51,6 +98,10 @@
   };
 
   type PanelMode = 'none' | 'conversations' | 'files';
+
+  type AccountConversationListRow =
+    | { key: string; kind: 'couple'; preset: ConversationPreset; inbox: AccountChatInboxItem | null }
+    | { key: string; kind: 'dm'; contact: Contact; inbox: AccountChatInboxItem | null };
 
   const REACTIONS = ['❤️', '😂', '🥰', '😮', '😢', '👍'];
 
@@ -63,6 +114,7 @@
   ];
 
   const SELECTED_CONVERSATION_KEY = 'presuntinho-mensagens-selected-conversation';
+  const voiceDraftPersistence = getAccountChatPersistence();
 
   let profile = $state<ChatProfile | null>(null);
   let noSession = $state(false);
@@ -82,6 +134,8 @@
   let dmContacts = $state<Contact[]>([]);
   let incomingReqs = $state<Contact[]>([]);
   let accountInbox = $state<AccountChatInboxItem[]>([]);
+  let showArchived = $state(false);
+  let conversationActionBusy = $state<string | null>(null);
   // Couple partner shown on the couple row/header: legacy persona OR the
   // account partner from the active couple space (fixes the fatma/daniel
   // fallback leaking into account couples).
@@ -92,6 +146,20 @@
 
   let input = $state('');
   let recording = $state(false);
+  let voicePreparing = $state(false);
+  let voiceFinalizing = $state(false);
+  let voiceSending = $state(false);
+  let recordingElapsedMs = $state(0);
+  let voiceAnnouncement = $state('');
+  let voiceDraft = $state<{
+    blob: Blob;
+    url: string;
+    fileName: string;
+    durationMs: number;
+    replyToId?: string;
+    accountId?: string;
+    conversationId?: string;
+  } | null>(null);
   let keyboardInset = $state(0);
   let pageActive = $state(true);
   let viewerSrc = $state<string | null>(null);
@@ -100,13 +168,38 @@
   let replyingTo = $state<LocalChatMessage | null>(null);
   let editingMessage = $state<LocalChatMessage | null>(null);
   let messageMenuId = $state<string | null>(null);
+  let messageInfo = $state<LocalChatMessage | null>(null);
+  let messageActionAnnouncement = $state('');
+  let drafts = $state<ChatDraft[]>([]);
+  let draftScopeId = $state<string | null>(null);
+  let draftStorageWarningShown = false;
+  let lastCount = 0;
+  let showJumpToEnd = $state(false);
+  let readAtBottom = $state(false);
+  let scrollConversationKey = '';
+  let accountUiId: string | null = null;
+  let accountLifecycleSeen = false;
+  let accountSocialReady = $state(false);
+  let handledDeepLinkKey = '';
 
   let scrollEl: HTMLDivElement | null = $state(null);
   let inputEl: HTMLTextAreaElement | null = $state(null);
   let fileInput: HTMLInputElement | null = $state(null);
+  let messageInfoDialogEl: HTMLDivElement | null = $state(null);
+  let messageInfoCloseEl: HTMLButtonElement | null = $state(null);
+  let messageInfoReturnFocus: HTMLElement | null = null;
   let mediaRecorder: MediaRecorder | null = null;
   let recordingChunks: BlobPart[] = [];
+  let recordingStream: MediaStream | null = null;
+  let recordingStartedAt = 0;
+  let recordingTimer: ReturnType<typeof setInterval> | null = null;
+  let recordingGeneration = 0;
+  let recordingStopMode: 'preview' | 'discard' = 'preview';
   let inboxPollTimer: ReturnType<typeof setInterval> | null = null;
+  let voiceDraftRestoreSequence = 0;
+  let voiceDraftRestoredScope = '';
+  let voiceDraftStorageWarningShown = false;
+  let pendingDeepLinkMessage = $state<{ conversationId: string; messageId: string } | null>(null);
 
   // ── day grouping ─────────────────────────────────────────────────────────
 
@@ -128,11 +221,14 @@
     const yesterdayKey = localDayKey(new Date(now.getTime() - 86_400_000));
     const out: DayGroup[] = [];
     const needle = searchQuery.trim().toLocaleLowerCase($locale || 'pt-PT');
-    const visible = needle
-      ? store.messages.filter((m) =>
+    const accountSearchStore = store instanceof AccountChatStore ? store : null;
+    const usingServerSearch = Boolean(needle && accountSearchStore && !accountSearchStore.searchError);
+    const source = usingServerSearch ? accountSearchStore?.searchResults ?? [] : store.messages;
+    const visible = needle && !usingServerSearch
+      ? source.filter((m) =>
           [m.text, m.name, m.reply?.text].some((value) => value?.toLocaleLowerCase($locale || 'pt-PT').includes(needle))
         )
-      : store.messages;
+      : source;
     for (const m of visible) {
       const date = new Date(m.ts);
       const key = localDayKey(date);
@@ -156,6 +252,12 @@
   const otherPerson = $derived(profileFor(other));
   const syncBlocked = $derived(Boolean(legacy && threadKind === 'couple' && (secureSetupNeeded || store?.authError)));
   const richStore = $derived(store instanceof AccountChatStore ? store : null);
+  const callSurfaceDisabledReason = $derived.by<CallStartBlockReason | null>(() => {
+    if (!richStore) return 'call_account_not_ready';
+    if (richStore.offline) return 'call_offline';
+    if (!richStore.ready) return 'call_account_not_ready';
+    return null;
+  });
   // Couple surface lights up for the legacy pair AND active account couples.
   const canCouple = $derived(couple.available);
   // Partner identity for the couple thread, by session kind.
@@ -165,9 +267,146 @@
   const meEmoji = $derived(legacy ? meProfile.emoji : (accountState.account?.emoji ?? '🙂'));
   const meHref = $derived(legacy ? '/perfil/' : '/conta/');
   const selectedConversation = $derived(CONVERSATIONS.find((c) => c.id === selectedConversationId) ?? CONVERSATIONS[0]);
-  const fileMessages = $derived((store?.messages ?? []).filter((m) => !m.deleted && Boolean(m.mediaType || m.mediaKey || m.localDataUrl)));
+  const fileMessages = $derived(
+    richStore
+      ? richStore.mediaItems
+      : (store?.messages ?? []).filter((m) => !m.deleted && Boolean(m.mediaType || m.mediaKey || m.localDataUrl))
+  );
+  const accountConversationRows = $derived.by<AccountConversationListRow[]>(() => {
+    if (legacy) return [];
+    const rows: AccountConversationListRow[] = [
+      ...(canCouple
+        ? CONVERSATIONS.map((preset) => ({
+            key: `couple:${preset.id}`,
+            kind: 'couple' as const,
+            preset,
+            inbox: coupleInboxItem(preset.id)
+          }))
+        : []),
+      ...dmContacts.map((contact) => ({
+        key: `dm:${contact.id}`,
+        kind: 'dm' as const,
+        contact,
+        inbox: dmInboxItem(contact.id)
+      }))
+    ];
+
+    return rows
+      .filter((row) => Boolean(row.inbox?.archivedAt) === showArchived)
+      .sort((a, b) =>
+        compareConversationPreference(
+          {
+            conversationId: a.inbox?.conversationId ?? a.key,
+            lastMessageAt: a.inbox?.lastMessageAt ?? 0,
+            pinnedAt: a.inbox?.pinnedAt ?? 0,
+            mutedUntil: a.inbox?.mutedUntil ?? 0,
+            archivedAt: a.inbox?.archivedAt ?? 0
+          },
+          {
+            conversationId: b.inbox?.conversationId ?? b.key,
+            lastMessageAt: b.inbox?.lastMessageAt ?? 0,
+            pinnedAt: b.inbox?.pinnedAt ?? 0,
+            mutedUntil: b.inbox?.mutedUntil ?? 0,
+            archivedAt: b.inbox?.archivedAt ?? 0
+          }
+        )
+      );
+  });
+  const archivedConversationCount = $derived(
+    accountInbox.filter((item) =>
+      item.archivedAt > 0 && (
+        (item.kind === 'couple' && CONVERSATIONS.some((preset) => preset.id === item.topic) && (!acctCoupleId || item.spaceId === acctCoupleId)) ||
+        (item.kind === 'direct' && dmContacts.some((contact) => contact.id === item.otherAccount))
+      )
+    ).length
+  );
+
+  function coupleDraftKey(topic: string, spaceId: string | null = acctCoupleId): string | null {
+    if (legacy) return `legacy:${topic}`;
+    const coupleIdentity = spaceId ?? acctCoupleId ?? acctPartner?.id;
+    return coupleIdentity ? `couple:${coupleIdentity}:${topic}` : null;
+  }
+
+  function directDraftKey(accountId: string | null | undefined): string | null {
+    return accountId ? `direct:${accountId}:main` : null;
+  }
+
+  function currentDraftKey(): string | null {
+    return threadKind === 'dm' ? directDraftKey(dmOther?.id) : coupleDraftKey(selectedConversationId);
+  }
+
+  function accountRowDraftKey(row: AccountConversationListRow): string | null {
+    return row.kind === 'dm'
+      ? directDraftKey(row.contact.id)
+      : coupleDraftKey(row.preset.id, row.inbox?.spaceId ?? acctCoupleId);
+  }
+
+  function draftFor(key: string | null): string {
+    return chatDraftText(drafts, key);
+  }
+
+  function draftLabel(text: string): string {
+    return $t('mensagens.draft.preview', {
+      default: 'Rascunho: {text}',
+      values: { text: chatDraftPreview(text) }
+    });
+  }
+
+  function accountRowPreview(row: AccountConversationListRow): string {
+    const draft = draftFor(accountRowDraftKey(row));
+    if (draft) return draftLabel(draft);
+    if (row.kind === 'dm') return inboxPreview(row.inbox) ?? `@${row.contact.handle}`;
+    return inboxPreview(row.inbox) ?? $t(row.preset.descKey);
+  }
+
+  function browserStorage(): Storage | null {
+    return typeof localStorage === 'undefined' ? null : localStorage;
+  }
+
+  function loadDraftScope(accountId: string): void {
+    draftScopeId = accountId;
+    drafts = readChatDrafts(browserStorage(), accountId);
+  }
+
+  function persistDraft(key: string | null, text: string): void {
+    if (!draftScopeId || !key) return;
+    drafts = withChatDraft(drafts, key, text);
+    if (writeChatDrafts(browserStorage(), draftScopeId, drafts) || draftStorageWarningShown) return;
+    draftStorageWarningShown = true;
+    showToast($t('mensagens.draft.storage_failed', {
+      default: 'O rascunho fica aberto, mas este browser não o conseguiu guardar para depois.'
+    }));
+  }
+
+  function persistCurrentDraft(): void {
+    // The list view can keep a stopped thread/store around for previews. Never
+    // associate that hidden textarea value with whichever row happens to be
+    // selected next.
+    if (editingMessage || view !== 'thread') return;
+    persistDraft(currentDraftKey(), input);
+  }
+
+  function restoreCurrentDraft(): void {
+    if (editingMessage) return;
+    input = draftFor(currentDraftKey());
+    void tick().then(autogrow);
+  }
+
+  function clearConfirmedDraft(key: string | null, submitted: string): void {
+    if (!draftScopeId || !key) return;
+    const next = withoutConfirmedChatDraft(drafts, key, submitted);
+    if (next === drafts) return;
+    drafts = next;
+    if (writeChatDrafts(browserStorage(), draftScopeId, drafts) || draftStorageWarningShown) return;
+    draftStorageWarningShown = true;
+    showToast($t('mensagens.draft.storage_failed', {
+      default: 'O rascunho fica aberto, mas este browser não o conseguiu guardar para depois.'
+    }));
+  }
 
   function conversationPreview(id: string): string {
+    const draft = draftFor(coupleDraftKey(id));
+    if (draft) return draftLabel(draft);
     const last = [...(store?.messages ?? [])].reverse().find((m) => (m.conversationId || 'main') === id);
     if (!last) {
       const inbox = coupleInboxItem(id);
@@ -231,6 +470,39 @@
     }
   }
 
+  function fmtDateTime(ts: number): string {
+    try {
+      return new Date(ts).toLocaleString($locale || 'pt-PT', {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      });
+    } catch {
+      return new Date(ts).toISOString();
+    }
+  }
+
+  function deliveryState(message: LocalChatMessage): MessageDeliveryState {
+    return messageDeliveryState(
+      message,
+      store?.otherLastRead ?? 0,
+      richStore?.otherLastDelivered ?? 0,
+      richStore?.peerLastReadAt ?? '',
+      richStore?.peerLastDeliveredAt ?? ''
+    );
+  }
+
+  function deliveryStatusLabel(state: MessageDeliveryState): string {
+    const defaults: Record<MessageDeliveryState, string> = {
+      pending: 'A enviar…',
+      queued: 'Na fila neste dispositivo',
+      failed: 'Falhou',
+      sent: 'Enviada para o servidor',
+      delivered: 'Entregue no outro dispositivo',
+      read: 'Lida'
+    };
+    return $t(`mensagens.info.status.${state}`, { default: defaults[state] });
+  }
+
   function richPresenceLabel(): string | null {
     if (!richStore) return null;
     if (richStore.otherTyping) return $t('mensagens.presence.typing', { default: 'a escrever…' });
@@ -252,7 +524,18 @@
     const status = $t(`mensagens.call.status.${call.status}`, {
       default: call.status
     });
-    return `${kind} · ${status}`;
+    const direction = callDirection(call);
+    const directionLabel = direction
+      ? $t(`mensagens.call.direction.${direction}`, {
+          default: direction === 'outgoing' ? 'Efetuada' : 'Recebida'
+        })
+      : null;
+    return [kind, directionLabel, status].filter(Boolean).join(' · ');
+  }
+
+  function callDirection(call: ChatCallMeta | null | undefined): ChatCallDirection | null {
+    const accountId = richStore?.profile ?? accountState.account?.id;
+    return call && accountId ? chatCallDirection(call, accountId) : null;
   }
 
   function callHistoryLabel(message: LocalChatMessage): string {
@@ -271,6 +554,43 @@
     return `${minutes}:${String(seconds % 60).padStart(2, '0')}`;
   }
 
+  function toggleFilesPanel(): void {
+    if (panelMode === 'files') {
+      panelMode = 'none';
+      return;
+    }
+    panelMode = 'files';
+    if (richStore && !richStore.mediaLoaded) void richStore.loadMediaGallery();
+  }
+
+  function openExactChatDeepLink(deepLink: ChatDeepLink): boolean {
+    pendingDeepLinkMessage = null;
+    const linkedConversation = accountInbox.find((item) => item.conversationId === deepLink.conversationId);
+    if (linkedConversation?.kind === 'direct') {
+      const target = dmContacts.find((contact) => contact.id === linkedConversation.otherAccount);
+      if (!target) return false;
+      if (deepLink.messageId) {
+        pendingDeepLinkMessage = { conversationId: deepLink.conversationId, messageId: deepLink.messageId };
+      }
+      openDm(target);
+      return true;
+    }
+    if (linkedConversation?.kind === 'couple' && CONVERSATIONS.some((item) => item.id === linkedConversation.topic)) {
+      if (deepLink.messageId) {
+        pendingDeepLinkMessage = { conversationId: deepLink.conversationId, messageId: deepLink.messageId };
+      }
+      selectConversation(linkedConversation.topic);
+      return true;
+    }
+    return false;
+  }
+
+  function reportUnavailableDeepLink(): void {
+    showToast($t('mensagens.deep_link.conversation_unavailable', {
+      default: 'Não consegui abrir essa conversa neste momento.'
+    }));
+  }
+
   // ── lifecycle ────────────────────────────────────────────────────────────
 
   async function scrollToBottom() {
@@ -281,6 +601,8 @@
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: document.documentElement.scrollHeight });
     }
+    readAtBottom = true;
+    showJumpToEnd = false;
   }
 
   function startChat() {
@@ -318,6 +640,10 @@
   /** Open a full rich-media friend DM, keyed dm:<a>:<b> in Supabase. */
   function openDm(c: Contact): void {
     if (!accountState.account) return;
+    persistCurrentDraft();
+    resetVoiceComposer(false);
+    replyingTo = null;
+    editingMessage = null;
     store?.stop();
     threadKind = 'dm';
     dmOther = c;
@@ -326,33 +652,37 @@
     view = 'thread';
     store = new AccountChatStore({ meId: accountState.account.id, peerId: c.id, kind: 'direct', topic: 'main' });
     store.start();
+    restoreCurrentDraft();
     void scrollToBottom();
   }
 
   /** Contacts, requests and the couple partner for the list view. */
   async function refreshSocial(): Promise<void> {
-    if (!accountState.account) return;
+    const accountId = accountState.account?.id;
+    if (!accountId) return;
     try {
       const [cs, inc, spaces] = await Promise.all([listContacts(), listIncoming(), listSpaces()]);
+      if (accountState.account?.id !== accountId) return;
       incomingReqs = inc;
       const active = singleActiveCouple(spaces);
-      const partner = active ? otherMember(active, accountState.account.id) : null;
+      const partner = active ? otherMember(active, accountId) : null;
       acctCoupleId = active?.id ?? null;
       acctPartner = partner
         ? { id: partner.id, label: partner.display_name || `@${partner.handle}`, emoji: partner.emoji ?? '💞', handle: partner.handle }
         : null;
       // The couple partner lives on the pinned couple thread — not as a DM row.
       dmContacts = partner ? cs.filter((c) => c.id !== partner.id) : cs;
-      await refreshInbox();
+      await refreshInbox(accountId);
     } catch (e) {
       console.warn('[mensagens] social refresh failed', e);
     }
   }
 
-  async function refreshInbox(): Promise<void> {
-    if (legacy || !accountState.account) return;
+  async function refreshInbox(expectedAccountId = accountState.account?.id): Promise<void> {
+    if (legacy || !expectedAccountId || accountState.account?.id !== expectedAccountId) return;
     try {
-      accountInbox = await listAccountChatInbox();
+      const next = await listAccountChatInbox();
+      if (accountState.account?.id === expectedAccountId) accountInbox = next;
     } catch (error) {
       // Keep contacts usable during rolling deploys or a temporary network
       // failure; the open conversation store continues to recover separately.
@@ -360,23 +690,127 @@
     }
   }
 
+  function closeConversationMenu(event: MouseEvent): void {
+    (event.currentTarget as HTMLElement | null)?.closest('details')?.removeAttribute('open');
+  }
+
+  async function changeConversationPreference(
+    item: AccountChatInboxItem,
+    patch: ConversationPreferencePatch,
+    successMessage: string,
+    event: MouseEvent
+  ): Promise<void> {
+    const accountId = accountState.account?.id;
+    if (!accountId || conversationActionBusy === item.conversationId) return;
+    closeConversationMenu(event);
+
+    const rollback: ConversationPreferencePatch = {};
+    if (patch.pinnedAt !== undefined) rollback.pinnedAt = item.pinnedAt;
+    if (patch.mutedUntil !== undefined) rollback.mutedUntil = item.mutedUntil;
+    if (patch.archivedAt !== undefined) rollback.archivedAt = item.archivedAt;
+
+    conversationActionBusy = item.conversationId;
+    accountInbox = accountInbox.map((candidate) =>
+      candidate.conversationId === item.conversationId
+        ? withConversationPreference(candidate, patch)
+        : candidate
+    );
+    if (patch.mutedUntil !== undefined) {
+      announceChatPreferencesChanged({ conversationId: item.conversationId, mutedUntil: patch.mutedUntil });
+    }
+
+    if (patch.archivedAt === 0 && !accountInbox.some((candidate) => candidate.archivedAt > 0)) {
+      showArchived = false;
+    }
+
+    try {
+      await updateAccountChatPreferences(item.conversationId, accountId, patch);
+      if (accountState.account?.id !== accountId) return;
+      showToast(successMessage);
+      await refreshInbox(accountId);
+    } catch (error) {
+      if (accountState.account?.id !== accountId) return;
+      accountInbox = accountInbox.map((candidate) =>
+        candidate.conversationId === item.conversationId
+          ? withConversationPreference(candidate, rollback)
+          : candidate
+      );
+      if (rollback.mutedUntil !== undefined) {
+        announceChatPreferencesChanged({ conversationId: item.conversationId, mutedUntil: rollback.mutedUntil });
+      }
+      console.warn('[mensagens] conversation preference failed', error);
+      showToast($t('mensagens.preferences.failed', {
+        default: 'Não consegui guardar esta opção. Tenta novamente.'
+      }));
+    } finally {
+      if (accountState.account?.id === accountId && conversationActionBusy === item.conversationId) {
+        conversationActionBusy = null;
+      }
+    }
+  }
+
+  function toggleConversationPinned(item: AccountChatInboxItem, event: MouseEvent): void {
+    const pinning = item.pinnedAt <= 0;
+    void changeConversationPreference(
+      item,
+      { pinnedAt: pinning ? Date.now() : 0 },
+      pinning
+        ? $t('mensagens.preferences.pinned_toast', { default: 'Conversa fixada.' })
+        : $t('mensagens.preferences.unpinned_toast', { default: 'Conversa desafixada.' }),
+      event
+    );
+  }
+
+  function setConversationMute(item: AccountChatInboxItem, mode: ConversationMuteMode, event: MouseEvent): void {
+    const mutedUntil = mutedUntilFor(mode);
+    const successMessage = mode === 'off'
+      ? $t('mensagens.preferences.unmuted_toast', { default: 'Notificações desta conversa ligadas.' })
+      : mode === 'forever'
+        ? $t('mensagens.preferences.muted_forever_toast', { default: 'Conversa silenciada sempre.' })
+        : $t('mensagens.preferences.muted_8h_toast', { default: 'Conversa silenciada durante 8 horas.' });
+    void changeConversationPreference(item, { mutedUntil }, successMessage, event);
+  }
+
+  function toggleConversationArchived(item: AccountChatInboxItem, event: MouseEvent): void {
+    const archiving = item.archivedAt <= 0;
+    void changeConversationPreference(
+      item,
+      { archivedAt: archiving ? Date.now() : 0 },
+      archiving
+        ? $t('mensagens.preferences.archived_toast', { default: 'Conversa arquivada.' })
+        : $t('mensagens.preferences.unarchived_toast', { default: 'Conversa retirada do arquivo.' }),
+      event
+    );
+  }
+
   function selectConversation(id: string): void {
+    persistCurrentDraft();
+    resetVoiceComposer(false);
+    replyingTo = null;
+    editingMessage = null;
     selectedConversationId = id;
     if (typeof localStorage !== 'undefined') localStorage.setItem(SELECTED_CONVERSATION_KEY, id);
     panelMode = 'none';
     view = 'thread'; // WhatsApp-style: tapping a chat row opens its thread
     startChat();
+    restoreCurrentDraft();
     void scrollToBottom();
   }
 
   /** WhatsApp-style back arrow: return from a thread to the conversation list. */
   function backToList(): void {
+    persistCurrentDraft();
+    resetVoiceComposer(false);
     panelMode = 'none';
     searchOpen = false;
     searchQuery = '';
     replyingTo = null;
     editingMessage = null;
     messageMenuId = null;
+    messageInfo = null;
+    messageInfoReturnFocus = null;
+    messageActionAnnouncement = '';
+    viewerSrc = null;
     view = 'list';
     // Leaving a DM restores the couple store, so the couple rows' previews on
     // the list read from the right thread again.
@@ -426,6 +860,7 @@
     }
     profile = session.profile as ChatProfile;
     legacy = isLegacyProfile(session.profile);
+    loadDraftScope(session.profile);
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem(SELECTED_CONVERSATION_KEY);
       if (saved && CONVERSATIONS.some((c) => c.id === saved)) selectedConversationId = saved;
@@ -439,14 +874,24 @@
       void (async () => {
         await startAccountSync();
         if (!accountState.account) return;
+        const startupAccountId = accountState.account.id;
         await refreshSocial();
-        if (threadKind === 'couple') startChat();
+        if (accountState.account?.id !== startupAccountId) return;
+        const deepLink = parseChatDeepLink(page.url.searchParams);
+        if (deepLink) handledDeepLinkKey = `${startupAccountId}:${deepLink.conversationId}:${deepLink.messageId}`;
+        const linkedConversationOpened = deepLink ? openExactChatDeepLink(deepLink) : false;
+        if (deepLink && !linkedConversationOpened) reportUnavailableDeepLink();
+        accountSocialReady = true;
+        if (!linkedConversationOpened && threadKind === 'couple') {
+          startChat();
+          restoreCurrentDraft();
+        }
         unsubConn = subscribeConnections(() => void refreshSocial());
         inboxPollTimer = setInterval(() => {
           if (view === 'list' && document.visibilityState === 'visible') void refreshInbox();
         }, 10_000);
         const dmHandle = page.url.searchParams.get('dm');
-        if (dmHandle) {
+        if (dmHandle && !linkedConversationOpened) {
           const target = dmContacts.find((c) => c.handle.toLowerCase() === dmHandle.toLowerCase());
           if (target) openDm(target);
           else void goto(`/u/?h=${encodeURIComponent(dmHandle)}`);
@@ -467,20 +912,126 @@
       window.removeEventListener('focus', syncActive);
       window.removeEventListener('blur', syncActive);
       document.removeEventListener('visibilitychange', syncActive);
-      if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+      persistCurrentDraft();
+      resetVoiceComposer(false);
       unsubConn?.();
       if (inboxPollTimer) clearInterval(inboxPollTimer);
       store?.stop();
     };
   });
 
+  function clearAccountChatUi(): void {
+    store?.stop();
+    store = null;
+    view = 'list';
+    threadKind = 'couple';
+    dmOther = null;
+    dmContacts = [];
+    incomingReqs = [];
+    accountInbox = [];
+    conversationActionBusy = null;
+    acctPartner = null;
+    acctCoupleId = null;
+    input = '';
+    replyingTo = null;
+    editingMessage = null;
+    messageMenuId = null;
+    messageInfo = null;
+    messageInfoReturnFocus = null;
+    messageActionAnnouncement = '';
+    viewerSrc = null;
+    searchOpen = false;
+    searchQuery = '';
+    readAtBottom = false;
+    accountSocialReady = false;
+    handledDeepLinkKey = '';
+    pendingDeepLinkMessage = null;
+    resetVoiceComposer(false);
+  }
+
+  // A real-account logout/switch can happen while this route is mounted. Stop
+  // account A before any asynchronous response is allowed to paint account B.
+  $effect(() => {
+    if (legacy || !accountState.ready) return;
+    const liveAccountId = accountState.account?.id ?? null;
+    if (!liveAccountId) {
+      if (accountUiId || store instanceof AccountChatStore) clearAccountChatUi();
+      accountUiId = null;
+      drafts = [];
+      draftScopeId = null;
+      return;
+    }
+    if (liveAccountId === accountUiId) return;
+    const isSwitch = accountLifecycleSeen;
+    accountLifecycleSeen = true;
+    if (isSwitch) clearAccountChatUi();
+    accountUiId = liveAccountId;
+    input = '';
+    loadDraftScope(liveAccountId);
+    restoreCurrentDraft();
+
+    // Initial mount already owns its startup sequence. This branch is only for
+    // an account that appears after a logout/switch while the page stays alive.
+    if (isSwitch) {
+      void (async () => {
+        await refreshSocial();
+        if (accountState.account?.id !== liveAccountId) return;
+        startChat();
+        accountSocialReady = true;
+        unsubConn?.();
+        unsubConn = subscribeConnections(() => void refreshSocial());
+        if (inboxPollTimer) clearInterval(inboxPollTimer);
+        inboxPollTimer = setInterval(() => {
+          if (view === 'list' && document.visibilityState === 'visible') void refreshInbox(liveAccountId);
+        }, 10_000);
+      })();
+    }
+  });
+
+  // A notification can navigate an already-mounted /mensagens page to a new
+  // query string. Handle that exact target as well as the cold-start path.
+  $effect(() => {
+    const deepLink = parseChatDeepLink(page.url.searchParams);
+    const accountId = accountState.account?.id ?? null;
+    if (legacy || !accountId || !accountSocialReady || !deepLink) return;
+    const key = `${accountId}:${deepLink.conversationId}:${deepLink.messageId}`;
+    if (handledDeepLinkKey === key) return;
+    handledDeepLinkKey = key;
+    if (!openExactChatDeepLink(deepLink)) reportUnavailableDeepLink();
+  });
+
+  // A push/share link can target a message outside the newest page. Wait for
+  // the exact conversation store to resolve its durable id, then load context
+  // and move focus only once.
+  $effect(() => {
+    const pending = pendingDeepLinkMessage;
+    const targetStore = richStore;
+    if (
+      !pending ||
+      !targetStore?.ready ||
+      targetStore.conversationId !== pending.conversationId
+    ) return;
+    pendingDeepLinkMessage = null;
+    void jumpToMessage(pending.messageId, targetStore, true);
+  });
+
+  // Voice previews are restored only after the real conversation UUID exists;
+  // logical list keys are never used as a persistence/security boundary.
+  $effect(() => {
+    const targetStore = richStore;
+    const conversationId = targetStore?.conversationId;
+    if (!targetStore?.ready || !conversationId || view !== 'thread') return;
+    const scope = `${targetStore.profile}:${conversationId}`;
+    if (voiceDraftRestoredScope === scope) return;
+    voiceDraftRestoredScope = scope;
+    const sequence = ++voiceDraftRestoreSequence;
+    void restoreVoiceDraft(targetStore, conversationId, sequence);
+  });
+
   // Auto-scroll when the conversation grows — but ONLY when the user was
   // already near the bottom (or on the initial load). Reading old messages
   // must never have the scroll stolen; the "ir para o fim" FAB appears
   // instead (V10.1).
-  let lastCount = 0;
-  let showJumpToEnd = $state(false);
-
   function isNearBottom(): boolean {
     // V10.2 — a lista é o scroller interno; a janela já não rola no chat.
     if (scrollEl) {
@@ -491,11 +1042,28 @@
     return doc.scrollHeight - (window.scrollY + window.innerHeight) < 180;
   }
 
+  function isAtConversationTail(): boolean {
+    if (scrollEl) {
+      return scrollEl.scrollHeight - (scrollEl.scrollTop + scrollEl.clientHeight) < 32;
+    }
+    if (typeof window === 'undefined') return false;
+    const doc = document.documentElement;
+    return doc.scrollHeight - (window.scrollY + window.innerHeight) < 32;
+  }
+
   function onListScroll(): void {
+    readAtBottom = isAtConversationTail();
     showJumpToEnd = !isNearBottom() && (store?.messages.length ?? 0) > 0;
   }
 
   $effect(() => {
+    const nextKey = store ? `${store.profile}:${store.conversationId}` : '';
+    if (nextKey !== scrollConversationKey) {
+      scrollConversationKey = nextKey;
+      lastCount = 0;
+      readAtBottom = false;
+      showJumpToEnd = false;
+    }
     const count = store?.messages.length ?? 0;
     if (count !== lastCount) {
       const initialLoad = lastCount === 0;
@@ -509,10 +1077,30 @@
     }
   });
 
-  // Mark incoming messages as read while the page is visible AND focused.
+  // Read receipts require the real tail to be visible. The conversation list,
+  // search results and a user reading history never acknowledge newer rows.
   $effect(() => {
-    if (!store || !pageActive) return;
+    if (!store || !shouldMarkConversationRead({
+      pageActive,
+      threadVisible: view === 'thread',
+      searchOpen,
+      atBottom: readAtBottom
+    })) return;
     if (store.unreadCount > 0) void store.markReadUpTo(store.latestIncomingTs);
+  });
+
+  // Account chat searches the complete server history. A short debounce keeps
+  // typing responsive and each request is sequence-guarded inside the store.
+  $effect(() => {
+    const target = richStore;
+    const query = searchOpen ? searchQuery.trim() : '';
+    if (!target) return;
+    if (!query) {
+      target.clearSearch();
+      return;
+    }
+    const timer = setTimeout(() => void target.searchMessages(query), 250);
+    return () => clearTimeout(timer);
   });
 
   // ── sending ──────────────────────────────────────────────────────────────
@@ -524,33 +1112,73 @@
     richStore?.setTyping(Boolean(input.trim()) && !editingMessage);
   }
 
+  function onComposerInput(): void {
+    autogrow();
+    if (!editingMessage) persistCurrentDraft();
+  }
+
   function afterSendFeedback(result: 'sent' | 'queued' | 'failed'): void {
     if (result === 'queued') {
       showToast($t('mensagens.queued', { default: 'Guardada neste dispositivo — sincroniza quando a ligação segura estiver activa.' }));
     } else if (result === 'failed') {
-      showToast($t('mensagens.send_failed', { default: 'A mensagem não seguiu. Toca em «tentar de novo».' }));
+      const storageError = richStore?.outboxStorageError;
+      if (storageError === 'quota' || storageError === 'limit') {
+        showToast($t('mensagens.outbox.quota', {
+          default: 'O armazenamento deste browser está cheio. A mensagem não ficou guardada; liberta espaço e tenta novamente.'
+        }));
+      } else if (storageError === 'unavailable' || storageError === 'storage') {
+        showToast($t('mensagens.outbox.unavailable', {
+          default: 'Este browser não conseguiu guardar a mensagem offline. Mantém a app aberta ou tenta novamente com ligação.'
+        }));
+      } else {
+        showToast($t('mensagens.send_failed', { default: 'A mensagem não seguiu. Toca em «tentar de novo».' }));
+      }
     }
   }
 
   async function send() {
-    const text = input.trim();
+    const submittedInput = input;
+    const text = submittedInput.trim();
     if (!text || !store) return;
-    if (editingMessage && richStore) {
+    const targetStore = store;
+    const targetRichStore = targetStore instanceof AccountChatStore ? targetStore : null;
+    if (editingMessage && targetRichStore) {
       try {
-        await richStore.editMessage(editingMessage.id, text);
+        await targetRichStore.editMessage(editingMessage.id, text);
+        if (store !== targetStore) return;
         editingMessage = null;
-        input = '';
+        restoreCurrentDraft();
         showToast($t('mensagens.message.edited_toast', { default: 'Mensagem editada.' }));
-      } catch {
+      } catch (error) {
+        if (store !== targetStore) return;
+        if (error instanceof AccountChatError && error.code === 'edit_expired') {
+          editingMessage = null;
+          persistCurrentDraft();
+          showToast($t('mensagens.message.edit_expired', {
+            default: 'Já passaram 15 minutos. O texto ficou no compositor para enviares como nova mensagem.'
+          }));
+          return;
+        }
         showToast($t('mensagens.message.action_failed', { default: 'Não consegui fazer isso. Tenta novamente.' }));
         return;
       }
     } else {
+      const submittedDraftKey = currentDraftKey();
+      // Keep the durable draft until the server confirms the optimistic
+      // bubble. Programmatic clearing does not trigger textarea's oninput, so
+      // a reload during the request still restores the unsent words.
+      persistDraft(submittedDraftKey, submittedInput);
       input = '';
       playSfx('send');
-      const result = richStore
-        ? await richStore.sendTextMessage(text, replyingTo?.id)
-        : await store.sendTextMessage(text);
+      const result = targetRichStore
+        ? await targetRichStore.sendTextMessage(text, replyingTo?.id)
+        : await targetStore.sendTextMessage(text);
+      if (store !== targetStore) return;
+      if (result === 'sent' || result === 'queued') {
+        clearConfirmedDraft(submittedDraftKey, submittedInput);
+      } else if (submittedDraftKey === currentDraftKey() && !input) {
+        input = submittedInput;
+      }
       afterSendFeedback(result);
       replyingTo = null;
     }
@@ -582,87 +1210,482 @@
     const target = e.target as HTMLInputElement;
     const file = target.files?.[0];
     if (fileInput) fileInput.value = '';
-    if (!file || !store) return;
+    if (!file || !store || editingMessage) return;
+    const targetStore = store;
     try {
-      const result = richStore
-        ? await richStore.sendMediaMessage(file, file.name, replyingTo?.id)
-        : await store.sendMediaMessage(file, file.name);
+      const result = targetStore instanceof AccountChatStore
+        ? await targetStore.sendMediaMessage(file, file.name, replyingTo?.id)
+        : await targetStore.sendMediaMessage(file, file.name);
+      if (store !== targetStore) return;
       afterSendFeedback(result);
       replyingTo = null;
     } catch (err) {
+      if (store !== targetStore) return;
       mediaErrorToast(err);
     }
     void scrollToBottom();
   }
 
-  // Audio recording — same getUserMedia/MediaRecorder pattern as /agente.
-  async function toggleRecording() {
-    if (recording) {
-      try {
-        mediaRecorder?.stop();
-      } catch {
-        /* ignore */
+  // ── voice composer ───────────────────────────────────────────────────────
+
+  function clearRecordingTimer(): void {
+    if (recordingTimer) clearInterval(recordingTimer);
+    recordingTimer = null;
+  }
+
+  function stopRecordingTracks(stream: MediaStream | null): void {
+    for (const track of stream?.getTracks() ?? []) track.stop();
+  }
+
+  function clearVoiceDraft(): void {
+    if (voiceDraft && typeof URL !== 'undefined') URL.revokeObjectURL(voiceDraft.url);
+    voiceDraft = null;
+  }
+
+  function voiceDraftScope(
+    draft = voiceDraft,
+    targetStore: AccountChatStore | null = richStore
+  ): { accountId: string; conversationId: string } | null {
+    const accountId = draft?.accountId ?? targetStore?.profile;
+    const conversationId = draft?.conversationId ?? targetStore?.conversationId;
+    return accountId && conversationId ? { accountId, conversationId } : null;
+  }
+
+  function voiceStorageFeedback(key: 'save' | 'restore' | 'delete'): void {
+    const defaults = {
+      save: 'A gravação continua aberta, mas este browser não a conseguiu guardar para depois.',
+      restore: 'Este browser não conseguiu recuperar a gravação guardada.',
+      delete: 'A gravação saiu do ecrã, mas o browser não confirmou que a apagou do armazenamento.'
+    } as const;
+    const feedback = $t(`mensagens.voice.storage_${key}_failed`, { default: defaults[key] });
+    voiceAnnouncement = feedback;
+    showToast(feedback);
+  }
+
+  async function deletePersistedVoiceDraft(
+    draft = voiceDraft,
+    reportFailure = true
+  ): Promise<boolean> {
+    const scope = voiceDraftScope(draft);
+    if (!scope) return true;
+    try {
+      await voiceDraftPersistence.deleteVoiceDraft(scope.accountId, scope.conversationId);
+      return true;
+    } catch (error) {
+      console.warn('[mensagens] voice draft delete failed', error);
+      if (reportFailure) voiceStorageFeedback('delete');
+      return false;
+    }
+  }
+
+  async function persistVoiceDraft(
+    draft: NonNullable<typeof voiceDraft>,
+    targetStore: AccountChatStore
+  ): Promise<void> {
+    const conversationId = targetStore.conversationId;
+    if (!conversationId) {
+      if (!voiceDraftStorageWarningShown) {
+        voiceDraftStorageWarningShown = true;
+        voiceStorageFeedback('save');
       }
       return;
     }
-    if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
+    const stored: AccountChatVoiceDraft = {
+      key: accountChatVoiceDraftKey(targetStore.profile, conversationId),
+      accountId: targetStore.profile,
+      conversationId,
+      blob: draft.blob,
+      fileName: draft.fileName,
+      durationMs: draft.durationMs,
+      replyToId: draft.replyToId,
+      updatedAt: Date.now()
+    };
+    try {
+      await voiceDraftPersistence.putVoiceDraft(stored);
+      if (store === targetStore && voiceDraft?.url === draft.url) {
+        voiceDraft = {
+          ...voiceDraft,
+          accountId: targetStore.profile,
+          conversationId
+        };
+      }
+    } catch (error) {
+      console.warn('[mensagens] voice draft save failed', error);
+      if (!voiceDraftStorageWarningShown) {
+        voiceDraftStorageWarningShown = true;
+        voiceStorageFeedback('save');
+      }
+    }
+  }
+
+  function updateVoiceDraftReply(replyToId?: string): void {
+    const targetStore = richStore;
+    if (!voiceDraft || !targetStore) return;
+    voiceDraft = { ...voiceDraft, replyToId };
+    void persistVoiceDraft(voiceDraft, targetStore);
+  }
+
+  async function restoreVoiceDraft(
+    targetStore: AccountChatStore,
+    conversationId: string,
+    sequence: number
+  ): Promise<void> {
+    try {
+      const stored = await voiceDraftPersistence.getVoiceDraft(targetStore.profile, conversationId);
+      if (
+        sequence !== voiceDraftRestoreSequence ||
+        store !== targetStore ||
+        targetStore.conversationId !== conversationId ||
+        !stored
+      ) return;
+      clearVoiceDraft();
+      voiceDraft = {
+        blob: stored.blob,
+        url: URL.createObjectURL(stored.blob),
+        fileName: stored.fileName,
+        durationMs: stored.durationMs,
+        replyToId: stored.replyToId,
+        accountId: stored.accountId,
+        conversationId: stored.conversationId
+      };
+      recordingElapsedMs = stored.durationMs;
+      voiceAnnouncement = $t('mensagens.voice.restored', {
+        default: 'Recuperei a gravação que tinhas deixado nesta conversa.'
+      });
+      if (stored.replyToId) {
+        let reply = targetStore.messages.find((message) => message.id === stored.replyToId);
+        if (!reply && await targetStore.loadMessageContext(stored.replyToId)) {
+          reply = targetStore.messages.find((message) => message.id === stored.replyToId);
+        }
+        if (
+          reply &&
+          sequence === voiceDraftRestoreSequence &&
+          store === targetStore &&
+          voiceDraft?.replyToId === stored.replyToId
+        ) replyingTo = reply;
+      }
+    } catch (error) {
+      console.warn('[mensagens] voice draft restore failed', error);
+      if (!voiceDraftStorageWarningShown) {
+        voiceDraftStorageWarningShown = true;
+        voiceStorageFeedback('restore');
+      }
+    }
+  }
+
+  /** Tear down an in-flight permission request/recorder without creating a draft. */
+  function abandonVoiceRecording(): void {
+    recordingGeneration += 1;
+    recordingStopMode = 'discard';
+    clearRecordingTimer();
+
+    const recorder = mediaRecorder;
+    mediaRecorder = null;
+    recorder?.stream.getTracks().forEach((track) => track.stop());
+    if (recorder) {
+      recorder.ondataavailable = null;
+      recorder.onstop = null;
+      recorder.onerror = null;
+      if (recorder.state !== 'inactive') {
+        try {
+          recorder.stop();
+        } catch {
+          /* The tracks are already stopped; there is nothing left to retain. */
+        }
+      }
+    }
+
+    stopRecordingTracks(recordingStream);
+    recordingStream = null;
+    recordingChunks = [];
+    recordingStartedAt = 0;
+    recordingElapsedMs = 0;
+    recording = false;
+    voicePreparing = false;
+    voiceFinalizing = false;
+  }
+
+  function resetVoiceComposer(announce = true): void {
+    const hadVoice = voicePreparing || recording || voiceFinalizing || Boolean(voiceDraft);
+    const discardedDraft = voiceDraft;
+    voiceDraftRestoreSequence += 1;
+    abandonVoiceRecording();
+    clearVoiceDraft();
+    voiceSending = false;
+    if (announce && hadVoice) {
+      voiceAnnouncement = $t('mensagens.voice.deleted', { default: 'Gravação eliminada.' });
+      void deletePersistedVoiceDraft(discardedDraft);
+    } else if (!announce) {
+      voiceDraftRestoredScope = '';
+      voiceAnnouncement = '';
+    }
+  }
+
+  async function startVoiceRecording(): Promise<void> {
+    if (voicePreparing || recording || voiceFinalizing || voiceSending || !store || editingMessage) return;
+    if (
+      typeof navigator === 'undefined' ||
+      !navigator.mediaDevices?.getUserMedia ||
+      typeof MediaRecorder === 'undefined'
+    ) {
       showToast($t('agente.chat.no_audio_support', { default: 'O teu browser não suporta gravação de áudio.' }));
       return;
     }
+
+    const previousVoiceDraft = voiceDraft;
+    const generation = ++recordingGeneration;
+    const targetStore = store;
+    voicePreparing = true;
+    voiceAnnouncement = $t('mensagens.voice.requesting_mic', { default: 'A pedir acesso ao microfone.' });
+
+    let stream: MediaStream | null = null;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mr = new MediaRecorder(stream);
-      recordingChunks = [];
-      mr.ondataavailable = (ev) => {
-        if (ev.data && ev.data.size > 0) recordingChunks.push(ev.data);
-      };
-      mr.onstop = async () => {
-        recording = false;
-        for (const track of stream.getTracks()) track.stop();
-        // Strip codec params — the server validates the bare mime type.
-        const mime = (mr.mimeType || 'audio/webm').split(';')[0];
-        const blob = new Blob(recordingChunks, { type: mime });
-        recordingChunks = [];
-        if (blob.size === 0 || !store) return;
-        try {
-          const result = richStore
-            ? await richStore.sendMediaMessage(blob, `voz-${Date.now()}.webm`, replyingTo?.id)
-            : await store.sendMediaMessage(blob, `voz-${Date.now()}.webm`);
-          afterSendFeedback(result);
-          replyingTo = null;
-        } catch (err) {
-          mediaErrorToast(err);
+      stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
         }
-        void scrollToBottom();
+      });
+      if (generation !== recordingGeneration || targetStore !== store) {
+        stopRecordingTracks(stream);
+        return;
+      }
+
+      const supportsMime = typeof MediaRecorder.isTypeSupported === 'function'
+        ? (mimeType: string) => MediaRecorder.isTypeSupported(mimeType)
+        : undefined;
+      const preferredMime = preferredVoiceMime(supportsMime);
+      const recorder = preferredMime
+        ? new MediaRecorder(stream, { mimeType: preferredMime })
+        : new MediaRecorder(stream);
+
+      recordingChunks = [];
+      recordingStream = stream;
+      mediaRecorder = recorder;
+      recordingStopMode = 'preview';
+      recorder.ondataavailable = (event) => {
+        if (generation === recordingGeneration && event.data.size > 0) recordingChunks.push(event.data);
       };
-      mr.start();
-      mediaRecorder = mr;
+      recorder.onerror = () => {
+        if (generation !== recordingGeneration) return;
+        abandonVoiceRecording();
+        showToast($t('mensagens.voice.recording_failed', { default: 'A gravação parou. Tenta novamente.' }));
+      };
+      recorder.onstop = () => {
+        const chunks = recordingChunks;
+        const shouldPreview = generation === recordingGeneration && recordingStopMode === 'preview';
+        const wallClockDuration = recordingStartedAt > 0 ? Date.now() - recordingStartedAt : 0;
+        const durationMs = Math.max(recordingElapsedMs, wallClockDuration);
+        recordingChunks = [];
+        clearRecordingTimer();
+        stopRecordingTracks(stream);
+        if (generation !== recordingGeneration) return;
+
+        mediaRecorder = null;
+        recordingStream = null;
+        recordingStartedAt = 0;
+        recording = false;
+        voicePreparing = false;
+        voiceFinalizing = false;
+        if (!shouldPreview) {
+          recordingElapsedMs = 0;
+          return;
+        }
+
+        const chunkMime = chunks.find((chunk) => chunk instanceof Blob && Boolean(chunk.type));
+        const mimeType = normalizeVoiceMime(recorder.mimeType || (chunkMime instanceof Blob ? chunkMime.type : ''));
+        const blob = new Blob(chunks, { type: mimeType });
+        if (blob.size === 0) {
+          recordingElapsedMs = 0;
+          showToast($t('mensagens.voice.empty', { default: 'A gravação ficou vazia. Tenta novamente.' }));
+          return;
+        }
+
+        clearVoiceDraft();
+        const nextDraft: NonNullable<typeof voiceDraft> = {
+          blob,
+          url: URL.createObjectURL(blob),
+          fileName: voiceFileName(mimeType),
+          durationMs,
+          replyToId: replyingTo?.id,
+          accountId: targetStore instanceof AccountChatStore ? targetStore.profile : undefined,
+          conversationId: targetStore instanceof AccountChatStore ? targetStore.conversationId ?? undefined : undefined
+        };
+        voiceDraft = nextDraft;
+        if (targetStore instanceof AccountChatStore) void persistVoiceDraft(nextDraft, targetStore);
+        recordingElapsedMs = durationMs;
+        voiceAnnouncement = $t('mensagens.voice.preview_ready', {
+          default: 'Gravação pronta. Podes ouvi-la antes de enviar.'
+        });
+      };
+
+      recorder.start(250);
+      // A failed permission/start attempt leaves the previous take intact.
+      clearVoiceDraft();
+      if (previousVoiceDraft) void deletePersistedVoiceDraft(previousVoiceDraft);
+      recordingStartedAt = Date.now();
+      recordingElapsedMs = 0;
+      voicePreparing = false;
       recording = true;
-    } catch (e) {
-      console.error('[mensagens] getUserMedia failed', e);
+      voiceAnnouncement = $t('mensagens.voice.recording_started', { default: 'Gravação iniciada.' });
+      recordingTimer = setInterval(() => {
+        if (generation === recordingGeneration && recordingStartedAt > 0) {
+          recordingElapsedMs = Date.now() - recordingStartedAt;
+        }
+      }, 250);
+    } catch (error) {
+      stopRecordingTracks(stream);
+      if (generation !== recordingGeneration) return;
+      abandonVoiceRecording();
+      console.error('[mensagens] getUserMedia failed', error);
       showToast($t('agente.chat.mic_denied', { default: 'Não consegui aceder ao microfone. Verifica as permissões.' }));
     }
   }
 
+  function stopVoiceRecording(): void {
+    const recorder = mediaRecorder;
+    if (!recorder || recorder.state === 'inactive' || voiceFinalizing) return;
+    recordingElapsedMs = Math.max(recordingElapsedMs, Date.now() - recordingStartedAt);
+    clearRecordingTimer();
+    recordingStopMode = 'preview';
+    recording = false;
+    voiceFinalizing = true;
+    voiceAnnouncement = $t('mensagens.voice.preparing_preview', { default: 'A preparar a gravação.' });
+    try {
+      recorder.stop();
+    } catch {
+      abandonVoiceRecording();
+      showToast($t('mensagens.voice.recording_failed', { default: 'A gravação parou. Tenta novamente.' }));
+    }
+  }
+
+  function cancelVoiceRecording(): void {
+    resetVoiceComposer(true);
+  }
+
+  async function recordVoiceAgain(): Promise<void> {
+    recordingElapsedMs = 0;
+    await startVoiceRecording();
+  }
+
+  async function sendVoiceDraft(): Promise<void> {
+    const draft = voiceDraft;
+    const targetStore = store;
+    if (!draft || !targetStore || voiceSending) return;
+
+    voiceSending = true;
+    voiceAnnouncement = $t('mensagens.voice.sending', { default: 'A enviar a mensagem de voz.' });
+    try {
+      const result = targetStore instanceof AccountChatStore
+        ? await targetStore.sendMediaMessage(draft.blob, draft.fileName, draft.replyToId ?? replyingTo?.id)
+        : await targetStore.sendMediaMessage(draft.blob, draft.fileName);
+      if (shouldClearVoiceDraft(result)) await deletePersistedVoiceDraft(draft);
+      if (store !== targetStore) return;
+      afterSendFeedback(result);
+      if (shouldClearVoiceDraft(result) && voiceDraft?.url === draft.url) clearVoiceDraft();
+      if (store === targetStore) {
+        if (shouldClearVoiceDraft(result)) replyingTo = null;
+        voiceAnnouncement = result === 'failed'
+          ? $t('mensagens.voice.send_failed', { default: 'Não foi possível enviar a gravação.' })
+          : $t('mensagens.voice.sent', { default: 'Mensagem de voz enviada.' });
+        void scrollToBottom();
+      }
+    } catch (error) {
+      if (store !== targetStore) return;
+      mediaErrorToast(error);
+      voiceAnnouncement = $t('mensagens.voice.send_failed', {
+        default: 'Não foi possível enviar. A gravação continua disponível.'
+      });
+    } finally {
+      if (store === targetStore) voiceSending = false;
+    }
+  }
+
+  async function announceMessageAction(feedback: string): Promise<void> {
+    messageActionAnnouncement = '';
+    await tick();
+    messageActionAnnouncement = feedback;
+  }
+
   async function retry(localId: string) {
     if (!store) return;
-    const result = await store.retryMessage(localId);
-    afterSendFeedback(result);
+    const targetStore = store;
+    const retried = targetStore.messages.find((message) => message.id === localId);
+    try {
+      const result = await targetStore.retryMessage(localId);
+      if (store !== targetStore) return;
+      if (result === 'sent' && retried?.text) {
+        const key = currentDraftKey();
+        const storedDraft = draftFor(key);
+        if (storedDraft.trim() === retried.text.trim()) clearConfirmedDraft(key, storedDraft);
+      }
+      afterSendFeedback(result);
+      if (
+        result === 'sent' &&
+        retried &&
+        (Boolean(retried.localBlob || retried.mediaType) || ['image', 'audio', 'video', 'file'].includes(retried.kind ?? ''))
+      ) {
+        const feedback = $t('mensagens.media_retry_sent', { default: 'Anexo enviado com sucesso.' });
+        await announceMessageAction(feedback);
+        showToast(feedback);
+      } else if (result === 'failed') {
+        await announceMessageAction($t('mensagens.retry_failed', {
+          default: 'A nova tentativa falhou. O anexo continua disponível se ainda estiver neste dispositivo.'
+        }));
+      }
+    } catch (error) {
+      if (store !== targetStore) return;
+      mediaErrorToast(error);
+      await announceMessageAction($t('mensagens.retry_failed', {
+        default: 'A nova tentativa falhou. Tenta novamente quando houver ligação.'
+      }));
+    }
+  }
+
+  async function discardFailed(localId: string): Promise<void> {
+    const targetStore = richStore;
+    if (!targetStore) return;
+    const confirmed = typeof window === 'undefined' || window.confirm($t('mensagens.discard_failed.confirm', {
+      default: 'Remover esta mensagem que não foi enviada?'
+    }));
+    if (!confirmed) return;
+    const result = await targetStore.discardFailedMessage(localId);
+    if (store !== targetStore) return;
+    const feedback = result === 'discarded'
+      ? $t('mensagens.discard_failed.done', { default: 'Mensagem não enviada removida.' })
+      : result === 'reconciled'
+        ? $t('mensagens.discard_failed.reconciled', {
+            default: 'A mensagem afinal já tinha sido enviada e foi recuperada.'
+          })
+        : $t('mensagens.discard_failed.blocked', {
+            default: 'Ainda não é seguro remover: não consegui confirmar o estado no servidor.'
+          });
+    await announceMessageAction(feedback);
+    showToast(feedback);
   }
 
   function beginReply(message: LocalChatMessage): void {
     if (!richStore || message.deleted) return;
     replyingTo = message;
+    updateVoiceDraftReply(message.id);
     editingMessage = null;
     messageMenuId = null;
     void tick().then(() => inputEl?.focus());
   }
 
   function beginEdit(message: LocalChatMessage): void {
-    if (!richStore || message.deleted || message.from !== richStore.profile || !message.text) return;
+    if (!richStore || !canEditChatMessage(message, richStore.profile)) return;
+    if (voicePreparing || recording || voiceFinalizing || voiceDraft) {
+      showToast($t('mensagens.message.finish_voice_first', {
+        default: 'Termina ou elimina a gravação antes de editar uma mensagem.'
+      }));
+      return;
+    }
+    persistCurrentDraft();
     editingMessage = message;
     replyingTo = null;
-    input = message.text;
+    input = message.text ?? '';
     messageMenuId = null;
     void tick().then(() => {
       autogrow();
@@ -673,58 +1696,172 @@
 
   function cancelComposeMode(): void {
     replyingTo = null;
-    if (editingMessage) input = '';
+    updateVoiceDraftReply(undefined);
+    const wasEditing = Boolean(editingMessage);
     editingMessage = null;
-    if (inputEl) inputEl.style.height = 'auto';
+    if (wasEditing) restoreCurrentDraft();
+    else if (inputEl) inputEl.style.height = 'auto';
   }
 
   async function deleteRichMessage(message: LocalChatMessage): Promise<void> {
-    if (!richStore || message.from !== richStore.profile) return;
+    const targetStore = richStore;
+    if (!targetStore || message.from !== targetStore.profile) return;
     messageMenuId = null;
     try {
-      await richStore.deleteMessage(message.id);
+      await targetStore.deleteMessage(message.id);
+      if (richStore !== targetStore) return;
       showToast($t('mensagens.message.deleted_toast', { default: 'Mensagem apagada.' }));
     } catch {
+      if (richStore !== targetStore) return;
       showToast($t('mensagens.message.action_failed', { default: 'Não consegui fazer isso. Tenta novamente.' }));
     }
   }
 
   async function reactTo(message: LocalChatMessage, emoji: string): Promise<void> {
-    if (!richStore || message.deleted) return;
+    const targetStore = richStore;
+    if (!targetStore || message.deleted) return;
     messageMenuId = null;
     try {
-      await richStore.toggleReaction(message.id, emoji);
+      await targetStore.toggleReaction(message.id, emoji);
     } catch {
+      if (richStore !== targetStore) return;
       showToast($t('mensagens.message.action_failed', { default: 'Não consegui fazer isso. Tenta novamente.' }));
     }
   }
 
   async function toggleStar(message: LocalChatMessage): Promise<void> {
-    if (!richStore || message.deleted) return;
+    const targetStore = richStore;
+    if (!targetStore || message.deleted) return;
     messageMenuId = null;
     try {
-      await richStore.toggleStar(message.id);
+      await targetStore.toggleStar(message.id);
     } catch {
+      if (richStore !== targetStore) return;
       showToast($t('mensagens.message.action_failed', { default: 'Não consegui fazer isso. Tenta novamente.' }));
     }
   }
 
   async function copyMessage(message: LocalChatMessage): Promise<void> {
+    const targetStore = store;
     messageMenuId = null;
-    if (!message.text || typeof navigator === 'undefined' || !navigator.clipboard) return;
-    try {
-      await navigator.clipboard.writeText(message.text);
-      showToast($t('mensagens.message.copied', { default: 'Mensagem copiada.' }));
-    } catch {
-      showToast($t('mensagens.message.action_failed', { default: 'Não consegui fazer isso. Tenta novamente.' }));
+    const copied = Boolean(message.text) && await copyTextToClipboard(message.text ?? '');
+    if (store !== targetStore) return;
+    const feedback = copied
+      ? $t('mensagens.message.copied', { default: 'Mensagem copiada.' })
+      : $t('mensagens.message.copy_failed', { default: 'Não foi possível copiar esta mensagem.' });
+    // Clear first so screen readers announce the same action twice in a row.
+    await announceMessageAction(feedback);
+    showToast(feedback);
+  }
+
+  function openMessageInfo(message: LocalChatMessage): void {
+    if (!richStore || message.from !== richStore.profile) return;
+    messageMenuId = null;
+    messageInfoReturnFocus = typeof document === 'undefined' ? null : document.activeElement as HTMLElement | null;
+    messageInfo = message;
+    void tick().then(() => messageInfoCloseEl?.focus());
+  }
+
+  function closeMessageInfo(): void {
+    messageInfo = null;
+    const returnFocus = messageInfoReturnFocus;
+    messageInfoReturnFocus = null;
+    void tick().then(() => returnFocus?.focus());
+  }
+
+  function onMessageInfoKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeMessageInfo();
+      return;
+    }
+    if (event.key !== 'Tab' || !messageInfoDialogEl) return;
+    const focusable = [...messageInfoDialogEl.querySelectorAll<HTMLElement>('button, [href], [tabindex]:not([tabindex="-1"])')]
+      .filter((element) => !element.hasAttribute('disabled'));
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
     }
   }
 
-  function jumpToMessage(id: string): void {
-    const element = document.querySelector<HTMLElement>(`[data-message-id="${CSS.escape(id)}"]`);
-    element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    element?.classList.add('message-highlight');
-    setTimeout(() => element?.classList.remove('message-highlight'), 1200);
+  function toggleMessageMenu(id: string): void {
+    const opening = messageMenuId !== id;
+    messageMenuId = opening ? id : null;
+    if (opening) {
+      void tick().then(() => {
+        document.querySelector<HTMLElement>(`#message-actions-${CSS.escape(id)} [role="menuitem"]`)?.focus();
+      });
+    }
+  }
+
+  function onMessageMenuKeydown(event: KeyboardEvent, id: string): void {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      messageMenuId = null;
+      void tick().then(() => document.getElementById(`message-menu-trigger-${id}`)?.focus());
+      return;
+    }
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
+    const items = [...(event.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('[role="menuitem"]')]
+      .filter((element) => !element.hasAttribute('disabled'));
+    if (!items.length) return;
+    event.preventDefault();
+    const active = items.indexOf(document.activeElement as HTMLElement);
+    const index = event.key === 'Home'
+      ? 0
+      : event.key === 'End'
+        ? items.length - 1
+        : event.key === 'ArrowUp'
+          ? (active <= 0 ? items.length - 1 : active - 1)
+          : (active + 1) % items.length;
+    items[index]?.focus();
+  }
+
+  async function jumpToMessage(
+    id: string,
+    targetStore: AccountChatStore | null = richStore,
+    fromDeepLink = false
+  ): Promise<void> {
+    let element = document.querySelector<HTMLElement>(`[data-message-id="${CSS.escape(id)}"]`);
+    if (!element && searchQuery) {
+      searchOpen = false;
+      searchQuery = '';
+      targetStore?.clearSearch();
+      await tick();
+      element = document.querySelector<HTMLElement>(`[data-message-id="${CSS.escape(id)}"]`);
+    }
+    if (!element && targetStore) {
+      const loaded = await targetStore.loadMessageContext(id);
+      if (store !== targetStore) return;
+      if (loaded) {
+        await tick();
+        element = document.querySelector<HTMLElement>(`[data-message-id="${CSS.escape(id)}"]`);
+      }
+    }
+    if (!element) {
+      const feedback = $t('mensagens.message.context_unavailable', {
+        default: 'Não consegui abrir essa mensagem. Pode ter sido apagada ou a ligação pode estar indisponível.'
+      });
+      await announceMessageAction(feedback);
+      showToast(feedback);
+      return;
+    }
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    element.classList.add('message-highlight');
+    if (fromDeepLink) {
+      element.setAttribute('tabindex', '-1');
+      element.focus({ preventScroll: true });
+    }
+    setTimeout(() => {
+      element?.classList.remove('message-highlight');
+      if (fromDeepLink) element?.removeAttribute('tabindex');
+    }, 1600);
   }
 
   function onViewerKeydown(e: KeyboardEvent) {
@@ -738,7 +1875,71 @@
   <title>{$t('mensagens.title', { default: 'Mensagens' })} — Presuntinho</title>
 </svelte:head>
 
+{#snippet conversationIndicators(item: AccountChatInboxItem)}
+  {#if item.pinnedAt > 0}
+    <span
+      class="preference-indicator"
+      title={$t('mensagens.preferences.pinned', { default: 'Conversa fixada' })}
+      aria-label={$t('mensagens.preferences.pinned', { default: 'Conversa fixada' })}
+    >📌</span>
+  {/if}
+  {#if isConversationMuted(item.mutedUntil)}
+    <span
+      class="preference-indicator"
+      title={$t('mensagens.preferences.muted', { default: 'Conversa silenciada' })}
+      aria-label={$t('mensagens.preferences.muted', { default: 'Conversa silenciada' })}
+    >🔕</span>
+  {/if}
+{/snippet}
+
+{#snippet conversationMenu(item: AccountChatInboxItem, name: string)}
+  <details class="conversation-menu" aria-busy={conversationActionBusy === item.conversationId}>
+    <summary
+      aria-label={$t('mensagens.preferences.actions_for', {
+        default: 'Opções para {name}',
+        values: { name }
+      })}
+      title={$t('mensagens.preferences.actions', { default: 'Opções da conversa' })}
+    >{conversationActionBusy === item.conversationId ? '…' : '⋮'}</summary>
+    <div class="conversation-menu-panel" role="menu" aria-label={$t('mensagens.preferences.actions', { default: 'Opções da conversa' })}>
+      <button
+        type="button"
+        role="menuitem"
+        disabled={conversationActionBusy === item.conversationId}
+        onclick={(event) => toggleConversationPinned(item, event)}
+      >{item.pinnedAt > 0 ? '📌 ' + $t('mensagens.preferences.unpin', { default: 'Desafixar' }) : '📌 ' + $t('mensagens.preferences.pin', { default: 'Fixar' })}</button>
+      <button
+        type="button"
+        role="menuitem"
+        disabled={conversationActionBusy === item.conversationId}
+        onclick={(event) => setConversationMute(item, 'eight_hours', event)}
+      >🔕 {$t('mensagens.preferences.mute_8h', { default: 'Silenciar durante 8 horas' })}</button>
+      <button
+        type="button"
+        role="menuitem"
+        disabled={conversationActionBusy === item.conversationId}
+        onclick={(event) => setConversationMute(item, 'forever', event)}
+      >🔕 {$t('mensagens.preferences.mute_forever', { default: 'Silenciar sempre' })}</button>
+      {#if isConversationMuted(item.mutedUntil)}
+        <button
+          type="button"
+          role="menuitem"
+          disabled={conversationActionBusy === item.conversationId}
+          onclick={(event) => setConversationMute(item, 'off', event)}
+        >🔔 {$t('mensagens.preferences.unmute', { default: 'Voltar a ouvir' })}</button>
+      {/if}
+      <button
+        type="button"
+        role="menuitem"
+        disabled={conversationActionBusy === item.conversationId}
+        onclick={(event) => toggleConversationArchived(item, event)}
+      >{item.archivedAt > 0 ? '🗃️ ' + $t('mensagens.preferences.unarchive', { default: 'Desarquivar' }) : '🗃️ ' + $t('mensagens.preferences.archive', { default: 'Arquivar' })}</button>
+    </div>
+  </details>
+{/snippet}
+
 <div class="chat-root">
+  <p class="message-action-live" role="status" aria-live="polite" aria-atomic="true">{messageActionAnnouncement}</p>
   <header class="chat-header">
     {#if view === 'thread' && !noSession}
       <button type="button" class="back-btn" onclick={backToList} aria-label={$t('mensagens.back', { default: 'Voltar às conversas' })}>←</button>
@@ -758,7 +1959,9 @@
           {#if richPresenceLabel()}
             {richPresenceLabel()}
           {:else if store?.offline}
-            {$t('mensagens.status.offline', { default: 'Offline — guardado no dispositivo.' })}
+            {richStore
+              ? $t('mensagens.status.offline_retry', { default: 'Sem ligação — os envios falhados ficam com a opção Tentar novamente.' })
+              : $t('mensagens.status.offline', { default: 'Offline — guardado no dispositivo.' })}
           {:else}
             {$t('mensagens.status.dm', { default: 'Conversa privada entre amigos.' })}
           {/if}
@@ -776,7 +1979,9 @@
           {:else if syncBlocked}
             {$t('mensagens.status.local', { default: 'Modo local — a sincronização segura ainda não está activa neste dispositivo.' })}
           {:else if store?.offline}
-            {$t('mensagens.status.offline', { default: 'Offline — guardado no dispositivo.' })}
+            {richStore
+              ? $t('mensagens.status.offline_retry', { default: 'Sem ligação — os envios falhados ficam com a opção Tentar novamente.' })
+              : $t('mensagens.status.offline', { default: 'Offline — guardado no dispositivo.' })}
           {:else}
             {$t('mensagens.status.secure', { default: 'Ligação segura activa.' })}
           {/if}
@@ -787,7 +1992,7 @@
       {#if view === 'thread' && richStore}
         <CallButtons
           conversationId={richStore.conversationId}
-          disabled={!richStore.ready || richStore.offline}
+          disabledReason={callSurfaceDisabledReason}
         />
       {/if}
       {#if view === 'thread' && richStore}
@@ -815,6 +2020,7 @@
       <input
         type="search"
         bind:value={searchQuery}
+        maxlength="160"
         placeholder={$t('mensagens.search.placeholder', { default: 'Pesquisar mensagens…' })}
         aria-label={$t('mensagens.search.placeholder', { default: 'Pesquisar mensagens…' })}
       />
@@ -822,6 +2028,26 @@
         <button type="button" onclick={() => (searchQuery = '')} aria-label={$t('mensagens.search.clear', { default: 'Limpar pesquisa' })}>×</button>
       {/if}
     </div>
+    {#if searchQuery.trim()}
+      <div class:search-error={!richStore || richStore.searchError} class="chat-search-status" role="status" aria-live="polite">
+        {#if !richStore}
+          <span>{$t('mensagens.search.loaded_only', {
+            default: 'Resultados apenas das mensagens carregadas neste dispositivo.'
+          })}</span>
+        {:else if richStore.searchError}
+          <span>{$t('mensagens.search.local_fallback', {
+            default: 'Não foi possível pesquisar no servidor. Resultados apenas das mensagens carregadas.'
+          })}</span>
+          <button type="button" onclick={() => void richStore?.searchMessages(searchQuery)}>
+            {$t('mensagens.search.retry', { default: 'Tentar novamente' })}
+          </button>
+        {:else if richStore.searchLoading || richStore.searchActiveQuery !== searchQuery.trim()}
+          <span>{$t('mensagens.search.searching_all', { default: 'A pesquisar em toda a conversa…' })}</span>
+        {:else}
+          <span>{$t('mensagens.search.all_history', { default: 'Resultados de toda a conversa' })}</span>
+        {/if}
+      </div>
+    {/if}
   {/if}
 
   {#if !noSession}
@@ -834,7 +2060,7 @@
             👋 {$t('mensagens.requests_banner', { values: { n: incomingReqs.length }, default: '{n} pedidos à tua espera — responder' })} →
           </a>
         {/if}
-        {#if canCouple}
+        {#if legacy && canCouple}
           <button type="button" class="chat-row couple" onclick={() => selectConversation('main')}>
             <span class="row-av couple-av" aria-hidden="true">{partnerEmoji}</span>
             <span class="row-body">
@@ -847,7 +2073,7 @@
                   {/if}
                 </span>
               </span>
-              <small>{conversationPreview('main')}</small>
+              <small class:has-draft={Boolean(draftFor(coupleDraftKey('main')))}>{conversationPreview('main')}</small>
             </span>
           </button>
           {#each CONVERSATIONS.filter((c) => c.id !== 'main') as c (c.id)}
@@ -863,35 +2089,84 @@
                     {/if}
                   </span>
                 </span>
-                <small>{conversationPreview(c.id)}</small>
+                <small class:has-draft={Boolean(draftFor(coupleDraftKey(c.id)))}>{conversationPreview(c.id)}</small>
               </span>
             </button>
           {/each}
-        {/if}
-        {#if !legacy && accountState.account}
-          <h2 class="list-section">{$t('mensagens.friends_section', { default: 'Amigos' })}</h2>
-          {#each dmContacts as c (c.id)}
-            {@const inbox = dmInboxItem(c.id)}
-            <button type="button" class="chat-row" onclick={() => openDm(c)}>
-              <Avatar emoji={c.emoji} url={c.avatar_url} size={52} alt="" />
-              <span class="row-body">
-                <span class="row-top">
-                  <strong>{c.display_name || `@${c.handle}`}</strong>
-                  <span class="row-meta">
-                    {#if inbox?.lastMessageAt}<time>{fmtTime(inbox.lastMessageAt)}</time>{/if}
-                    {#if inbox?.unreadCount}
-                      <span class="unread-badge" aria-label={$t('mensagens.unread_count', { default: '{n} mensagens por ler', values: { n: inbox.unreadCount } })}>{inbox.unreadCount}</span>
-                    {/if}
-                  </span>
-                </span>
-                <small>{inboxPreview(inbox) ?? `@${c.handle}`}</small>
-              </span>
+        {:else if !legacy && accountState.account}
+          {#if archivedConversationCount > 0 || showArchived}
+            <button
+              type="button"
+              class="archived-toggle"
+              aria-expanded={showArchived}
+              onclick={() => (showArchived = !showArchived)}
+            >
+              <span aria-hidden="true">{showArchived ? '←' : '🗃️'}</span>
+              <span>{showArchived
+                ? $t('mensagens.preferences.back_to_chats', { default: 'Voltar às conversas' })
+                : $t('mensagens.preferences.archived', { default: 'Arquivadas' })}</span>
+              {#if !showArchived}<span class="archive-count">{archivedConversationCount}</span>{/if}
             </button>
-          {/each}
-          {#if dmContacts.length === 0}
-            <p class="list-hint">{$t('mensagens.no_friends_hint', { default: 'Quando adicionares amigos, as conversas aparecem aqui.' })}</p>
           {/if}
-          <a class="find-row" href="/contactos/">🔍 {$t('mensagens.find_people', { default: 'Procurar pessoas' })}</a>
+
+          {#if showArchived}
+            <h2 class="list-section">{$t('mensagens.preferences.archived', { default: 'Arquivadas' })}</h2>
+          {/if}
+
+          {#each accountConversationRows as row (row.key)}
+            <div class:couple={row.kind === 'couple' && row.preset.id === 'main'} class="chat-row-wrap">
+              {#if row.kind === 'couple'}
+                {@const itemName = row.preset.id === 'main' ? partnerName : $t(row.preset.titleKey)}
+                <button type="button" class="chat-row" onclick={() => selectConversation(row.preset.id)}>
+                  <span class:couple-av={row.preset.id === 'main'} class="row-av" aria-hidden="true">{row.preset.id === 'main' ? partnerEmoji : row.preset.icon}</span>
+                  <span class="row-body">
+                    <span class="row-top">
+                      <strong>{itemName}{#if row.preset.id === 'main'} <span class="couple-heart" aria-hidden="true">💞</span>{/if}</strong>
+                      <span class="row-meta">
+                        {#if row.inbox}{@render conversationIndicators(row.inbox)}{/if}
+                        {#if row.inbox?.lastMessageAt}<time>{fmtTime(row.inbox.lastMessageAt)}</time>{/if}
+                        {#if row.inbox?.unreadCount}
+                          <span class="unread-badge" aria-label={$t('mensagens.unread_count', { default: '{n} mensagens por ler', values: { n: row.inbox.unreadCount } })}>{row.inbox.unreadCount}</span>
+                        {/if}
+                      </span>
+                    </span>
+                    <small class:has-draft={Boolean(draftFor(accountRowDraftKey(row)))}>{accountRowPreview(row)}</small>
+                  </span>
+                </button>
+                {#if row.inbox}{@render conversationMenu(row.inbox, itemName)}{/if}
+              {:else}
+                {@const itemName = row.contact.display_name || `@${row.contact.handle}`}
+                <button type="button" class="chat-row" onclick={() => openDm(row.contact)}>
+                  <Avatar emoji={row.contact.emoji} url={row.contact.avatar_url} size={52} alt="" />
+                  <span class="row-body">
+                    <span class="row-top">
+                      <strong>{itemName}</strong>
+                      <span class="row-meta">
+                        {#if row.inbox}{@render conversationIndicators(row.inbox)}{/if}
+                        {#if row.inbox?.lastMessageAt}<time>{fmtTime(row.inbox.lastMessageAt)}</time>{/if}
+                        {#if row.inbox?.unreadCount}
+                          <span class="unread-badge" aria-label={$t('mensagens.unread_count', { default: '{n} mensagens por ler', values: { n: row.inbox.unreadCount } })}>{row.inbox.unreadCount}</span>
+                        {/if}
+                      </span>
+                    </span>
+                    <small class:has-draft={Boolean(draftFor(accountRowDraftKey(row)))}>{accountRowPreview(row)}</small>
+                  </span>
+                </button>
+                {#if row.inbox}{@render conversationMenu(row.inbox, itemName)}{/if}
+              {/if}
+            </div>
+          {/each}
+
+          {#if accountConversationRows.length === 0}
+            <p class="list-hint">
+              {showArchived
+                ? $t('mensagens.preferences.no_archived', { default: 'Não tens conversas arquivadas.' })
+                : $t('mensagens.no_friends_hint', { default: 'Quando adicionares amigos, as conversas aparecem aqui.' })}
+            </p>
+          {/if}
+          {#if !showArchived}
+            <a class="find-row" href="/contactos/">🔍 {$t('mensagens.find_people', { default: 'Procurar pessoas' })}</a>
+          {/if}
         {:else if !canCouple}
           <div class="gate card">
             <span class="gate-emoji" aria-hidden="true">💬</span>
@@ -907,7 +2182,7 @@
           💬 {$t('mensagens.tools.conversations', { default: 'Conversas' })}
         </button>
       {/if}
-      <button type="button" class:active={panelMode === 'files'} onclick={() => (panelMode = panelMode === 'files' ? 'none' : 'files')}>
+      <button type="button" class:active={panelMode === 'files'} onclick={toggleFilesPanel}>
         📎 {$t('mensagens.tools.files', { default: 'Ficheiros' })}
       </button>
       <a href={threadKind === 'dm' && dmOther ? `/u/?h=${dmOther.handle}` : partnerHref}>{$t('mensagens.tools.partner_profile', { default: 'Perfil de {name}', values: { name: threadKind === 'dm' && dmOther ? (dmOther.display_name || `@${dmOther.handle}`) : partnerName } })}</a>
@@ -925,7 +2200,7 @@
               <span class="conv-icon" aria-hidden="true">{c.icon}</span>
               <span>
                 <strong>{$t(c.titleKey)}</strong>
-                <small>{conversationPreview(c.id)}</small>
+                <small class:has-draft={Boolean(draftFor(coupleDraftKey(c.id)))}>{conversationPreview(c.id)}</small>
               </span>
             </button>
           {/each}
@@ -937,7 +2212,16 @@
           <strong>{$t('mensagens.files.title', { default: 'Ficheiros' })}</strong>
           <button type="button" onclick={() => (panelMode = 'none')} aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}>×</button>
         </div>
-        {#if fileMessages.length === 0}
+        {#if richStore?.mediaLoading && !richStore.mediaLoaded}
+          <p class="panel-empty" role="status">{$t('mensagens.files.loading', { default: 'A carregar a galeria…' })}</p>
+        {:else if richStore?.mediaError && fileMessages.length === 0}
+          <div class="panel-empty panel-retry" role="alert">
+            <p>{$t('mensagens.files.load_failed', { default: 'Não consegui carregar a galeria.' })}</p>
+            <button type="button" onclick={() => void richStore?.loadMediaGallery()}>
+              {$t('mensagens.search.retry', { default: 'Tentar novamente' })}
+            </button>
+          </div>
+        {:else if fileMessages.length === 0}
           <p class="panel-empty">{$t('mensagens.files.empty', { default: 'Ainda não há ficheiros nesta conversa.' })}</p>
         {:else}
           <div class="file-grid">
@@ -958,6 +2242,25 @@
               {/if}
             {/each}
           </div>
+          {#if richStore?.mediaError}
+            <div class="panel-empty panel-retry" role="alert">
+              <p>{$t('mensagens.files.more_failed', { default: 'Não consegui carregar mais ficheiros.' })}</p>
+              <button type="button" onclick={() => void richStore?.loadMediaGallery(true)}>
+                {$t('mensagens.search.retry', { default: 'Tentar novamente' })}
+              </button>
+            </div>
+          {:else if richStore?.mediaHasMore}
+            <button
+              type="button"
+              class="load-more-media"
+              disabled={richStore.mediaLoading}
+              onclick={() => void richStore?.loadMediaGallery(true)}
+            >
+              {richStore.mediaLoading
+                ? $t('mensagens.files.loading_more', { default: 'A carregar…' })
+                : $t('mensagens.files.load_more', { default: 'Carregar mais ficheiros' })}
+            </button>
+          {/if}
         {/if}
       </aside>
     {/if}
@@ -965,9 +2268,13 @@
 
   {#if store?.offline && !syncBlocked && view === 'thread'}
     <div class="offline-banner" role="status">
-      {$t('mensagens.offline', {
-        default: 'Sem ligação — as mensagens ficam guardadas e seguem quando houver rede.'
-      })}
+      {richStore
+        ? $t('mensagens.offline_retry', {
+            default: 'Sem ligação — as mensagens ficam guardadas neste dispositivo e seguem automaticamente quando a ligação voltar.'
+          })
+        : $t('mensagens.offline', {
+            default: 'Sem ligação — as mensagens ficam guardadas e seguem quando houver rede.'
+          })}
     </div>
   {/if}
 
@@ -1007,7 +2314,7 @@
             : $t('mensagens.history.older', { default: 'Carregar mensagens anteriores' })}
         </button>
       {/if}
-      {#if store.ready && store.messages.length === 0}
+      {#if store.ready && store.messages.length === 0 && !searchQuery.trim()}
         <div class="empty">
           <span class="empty-heart" aria-hidden="true">💌</span>
           <p class="empty-title">{$t('mensagens.empty', { default: 'Ainda não há mensagens aqui.' })}</p>
@@ -1017,7 +2324,7 @@
               : $t('mensagens.empty_hint', { default: 'Deixa uma nota, envia uma foto ou grava um áudio quando quiseres.' })}
           </p>
         </div>
-      {:else if searchQuery && groups.length === 0}
+      {:else if searchQuery && groups.length === 0 && !(richStore && !richStore.searchError && (richStore.searchLoading || richStore.searchActiveQuery !== searchQuery.trim()))}
         <div class="empty compact">
           <span class="empty-heart" aria-hidden="true">🔎</span>
           <p class="empty-title">{$t('mensagens.search.empty', { default: 'Não encontrei essa mensagem.' })}</p>
@@ -1034,11 +2341,18 @@
         </div>
         {#each g.items as m (m.id)}
           {@const own = m.from === store.profile}
+          {@const messageState = own ? deliveryState(m) : 'sent'}
+          {@const historyCallDirection = m.kind === 'call' ? callDirection(m.call) : null}
           <div class="msg" class:msg-own={own} class:msg-other={!own} class:msg-system={m.kind === 'call'} data-message-id={m.id}>
             <div class="bubble" class:bubble-own={own} class:pop={own} class:bubble-call={m.kind === 'call'} class:bubble-deleted={m.deleted}>
               {#if m.starred}<span class="star-mark" title={$t('mensagens.message.starred', { default: 'Marcada' })}>★</span>{/if}
               {#if m.reply}
-                <button type="button" class="reply-quote" onclick={() => jumpToMessage(m.reply?.id ?? '')}>
+                <button
+                  type="button"
+                  class="reply-quote"
+                  onclick={() => void jumpToMessage(m.reply?.id ?? '')}
+                  aria-label={`${$t('mensagens.message.reply', { default: 'Resposta' })}: ${replyLabel({ text: m.reply.text, kind: m.reply.kind, deleted: m.reply.deleted })}`}
+                >
                   <strong>{$t('mensagens.message.reply', { default: 'Resposta' })}</strong>
                   <span>{replyLabel({ text: m.reply.text, kind: m.reply.kind, deleted: m.reply.deleted })}</span>
                 </button>
@@ -1047,12 +2361,23 @@
                 <div class="deleted-copy">🚫 {$t('mensagens.message.deleted', { default: 'Mensagem apagada' })}</div>
               {:else if m.kind === 'call'}
                 <div class="call-event">
-                  <span class="call-event-icon" aria-hidden="true">{m.call?.kind === 'video' ? '🎥' : '📞'}</span>
+                  <span class="call-event-icon" aria-hidden="true">
+                    {m.call?.kind === 'video' ? '🎥' : '📞'}{historyCallDirection === 'outgoing' ? '↗' : historyCallDirection === 'incoming' ? '↙' : ''}
+                  </span>
                   <span class="call-event-copy">
                     <strong>{callHistoryLabel(m)}</strong>
                     {#if callDuration(m)}
                       <small>{$t('mensagens.call.duration', { default: 'Duração {time}', values: { time: callDuration(m) ?? '' } })}</small>
                     {/if}
+                  </span>
+                  <span class="call-again">
+                    <CallStartAction
+                      conversationId={richStore?.conversationId ?? null}
+                      kind={m.call?.kind === 'video' ? 'video' : 'audio'}
+                      variant="history"
+                      disabledReason={callSurfaceDisabledReason}
+                      descriptionId={m.id}
+                    />
                   </span>
                 </div>
               {:else if m.mediaType?.startsWith('image/')}
@@ -1103,18 +2428,27 @@
                 <span class="time">{fmtTime(m.ts)}</span>
                 {#if m.editedAt}<span class="edited">{$t('mensagens.message.edited', { default: 'editada' })}</span>{/if}
                 {#if own}
-                  {#if m.pending}
+                  {#if messageState === 'pending'}
                     <span class="ticks" aria-label={$t('mensagens.aria.pendente', { default: 'A enviar…' })}>🕓</span>
-                  {:else if m.queued}
+                  {:else if messageState === 'queued'}
                     <span class="ticks" aria-label={$t('mensagens.aria.na_fila', { default: 'Na fila para enviar' })}>🕓</span>
-                  {:else if m.failed}
-                    <button type="button" class="retry" onclick={() => retry(m.id)}>
-                      ⚠️ {$t('mensagens.retry', { default: 'Tentar de novo' })}
-                    </button>
-                  {:else if store.otherLastRead >= m.ts}
+                  {:else if messageState === 'failed'}
+                    <span class="failed-actions">
+                      <button type="button" class="retry" onclick={() => void retry(m.id)}>
+                        ⚠️ {$t('mensagens.retry', { default: 'Tentar de novo' })}
+                      </button>
+                      {#if richStore}
+                        <button type="button" class="discard-failed" onclick={() => void discardFailed(m.id)}>
+                          {$t('mensagens.discard_failed.action', { default: 'Remover' })}
+                        </button>
+                      {/if}
+                    </span>
+                  {:else if messageState === 'read'}
                     <span class="ticks read" aria-label={$t('mensagens.aria.lida', { default: 'Lida' })}>✓✓</span>
+                  {:else if messageState === 'delivered'}
+                    <span class="ticks" aria-label={$t('mensagens.aria.entregue', { default: 'Entregue no outro dispositivo' })}>✓✓</span>
                   {:else}
-                    <span class="ticks" aria-label={$t('mensagens.aria.enviada', { default: 'Enviada' })}>✓</span>
+                    <span class="ticks" aria-label={$t('mensagens.aria.enviada', { default: 'Enviada para o servidor' })}>✓</span>
                   {/if}
                 {/if}
               </div>
@@ -1134,23 +2468,35 @@
                 <button
                   type="button"
                   class="message-menu-trigger"
-                  onclick={() => (messageMenuId = messageMenuId === m.id ? null : m.id)}
+                  id={`message-menu-trigger-${m.id}`}
+                  onclick={() => toggleMessageMenu(m.id)}
+                  aria-haspopup="menu"
+                  aria-expanded={messageMenuId === m.id}
+                  aria-controls={`message-actions-${m.id}`}
                   aria-label={$t('mensagens.message.actions', { default: 'Ações da mensagem' })}
                 >⋯</button>
                 {#if messageMenuId === m.id}
-                  <div class="message-menu" role="menu">
+                  <div
+                    class="message-menu"
+                    role="menu"
+                    tabindex="-1"
+                    id={`message-actions-${m.id}`}
+                    aria-label={$t('mensagens.message.actions', { default: 'Ações da mensagem' })}
+                    onkeydown={(event) => onMessageMenuKeydown(event, m.id)}
+                  >
                     {#if !m.deleted}
-                      <div class="reaction-picker" aria-label={$t('mensagens.message.react', { default: 'Reagir' })}>
+                      <div class="reaction-picker" role="group" aria-label={$t('mensagens.message.react', { default: 'Reagir' })}>
                         {#each REACTIONS as emoji}
-                          <button type="button" onclick={() => void reactTo(m, emoji)} aria-label={emoji}>{emoji}</button>
+                          <button type="button" role="menuitem" onclick={() => void reactTo(m, emoji)} aria-label={emoji}>{emoji}</button>
                         {/each}
                       </div>
-                      <button type="button" onclick={() => beginReply(m)}>↩ {$t('mensagens.message.reply', { default: 'Responder' })}</button>
-                      {#if m.text}<button type="button" onclick={() => void copyMessage(m)}>⧉ {$t('mensagens.message.copy', { default: 'Copiar' })}</button>{/if}
-                      <button type="button" onclick={() => void toggleStar(m)}>{m.starred ? '☆' : '★'} {m.starred ? $t('mensagens.message.unstar', { default: 'Desmarcar' }) : $t('mensagens.message.star', { default: 'Marcar' })}</button>
+                      <button type="button" role="menuitem" onclick={() => beginReply(m)}>↩ {$t('mensagens.message.reply', { default: 'Responder' })}</button>
+                      {#if m.text}<button type="button" role="menuitem" onclick={() => void copyMessage(m)}>⧉ {$t('mensagens.message.copy', { default: 'Copiar' })}</button>{/if}
+                      <button type="button" role="menuitem" onclick={() => void toggleStar(m)}>{m.starred ? '☆' : '★'} {m.starred ? $t('mensagens.message.unstar', { default: 'Desmarcar' }) : $t('mensagens.message.star', { default: 'Marcar' })}</button>
                     {/if}
-                    {#if own && m.text && !m.deleted}<button type="button" onclick={() => beginEdit(m)}>✎ {$t('mensagens.message.edit', { default: 'Editar' })}</button>{/if}
-                    {#if own && !m.deleted}<button type="button" class="danger" onclick={() => void deleteRichMessage(m)}>⌫ {$t('mensagens.message.delete', { default: 'Apagar' })}</button>{/if}
+                    {#if own}<button type="button" role="menuitem" onclick={() => openMessageInfo(m)}>ⓘ {$t('mensagens.info.action', { default: 'Informação' })}</button>{/if}
+                    {#if canEditChatMessage(m, richStore.profile)}<button type="button" role="menuitem" onclick={() => beginEdit(m)}>✎ {$t('mensagens.message.edit', { default: 'Editar' })}</button>{/if}
+                    {#if own && !m.deleted}<button type="button" role="menuitem" class="danger" onclick={() => void deleteRichMessage(m)}>⌫ {$t('mensagens.message.delete', { default: 'Apagar' })}</button>{/if}
                   </div>
                 {/if}
               {/if}
@@ -1158,6 +2504,18 @@
           </div>
         {/each}
       {/each}
+      {#if searchQuery.trim() && richStore?.searchHasMore && !richStore.searchError}
+        <button
+          type="button"
+          class="load-older"
+          disabled={richStore.searchLoading}
+          onclick={() => void richStore?.searchMessages(searchQuery, true)}
+        >
+          {richStore.searchLoading
+            ? $t('mensagens.history.loading', { default: 'A carregar…' })
+            : $t('mensagens.search.more', { default: 'Mais resultados' })}
+        </button>
+      {/if}
       {#if richStore?.otherTyping && !searchQuery}
         <div class="typing-bubble" role="status" aria-label={$t('mensagens.presence.typing', { default: 'a escrever…' })}>
           <span></span><span></span><span></span>
@@ -1181,11 +2539,6 @@
     {/if}
 
     <div class="composer-dock" style={`--keyboard-inset: ${keyboardInset}px`}>
-      {#if recording}
-        <div class="recording-hint" role="status">
-          {$t('mensagens.recording', { default: 'A gravar… toca no botão para parar 🎙️' })}
-        </div>
-      {/if}
       {#if replyingTo || editingMessage}
         <div class="compose-context">
           <span aria-hidden="true">{editingMessage ? '✎' : '↩'}</span>
@@ -1196,50 +2549,153 @@
           <button type="button" onclick={cancelComposeMode} aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}>×</button>
         </div>
       {/if}
-      <div class="composer">
-        <input type="file" bind:this={fileInput} onchange={onFileChosen} hidden accept={richStore ? 'image/*,audio/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip' : 'image/*,audio/*'} />
-        <div class="input-shell">
-          {#if threadKind === 'couple' || richStore}
+      <p class="voice-live" aria-live="polite" aria-atomic="true">{voiceAnnouncement}</p>
+      {#if voicePreparing || recording || voiceFinalizing || voiceDraft}
+        <div
+          class="voice-composer"
+          class:has-preview={Boolean(voiceDraft)}
+          role="group"
+          aria-label={$t('mensagens.voice.composer', { default: 'Mensagem de voz' })}
+          aria-busy={voicePreparing || voiceFinalizing || voiceSending}
+        >
+          {#if voiceDraft}
             <button
               type="button"
-              class="attach-btn"
-              onclick={() => fileInput?.click()}
-              aria-label={$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}
-              title={$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}
+              class="voice-icon-btn voice-delete"
+              onclick={() => resetVoiceComposer(true)}
+              disabled={voiceSending || voicePreparing}
+              aria-label={$t('mensagens.voice.delete', { default: 'Apagar gravação' })}
+              title={$t('mensagens.voice.delete', { default: 'Apagar gravação' })}
             >
-              📎
+              <span aria-hidden="true">🗑️</span>
             </button>
+            <div class="voice-preview">
+              <span class="voice-preview-icon" aria-hidden="true">🎙️</span>
+              <audio
+                controls
+                preload="metadata"
+                src={voiceDraft.url}
+                aria-label={$t('mensagens.voice.preview', { default: 'Pré-visualização da mensagem de voz' })}
+              ></audio>
+              <time
+                datetime={`PT${Math.max(0, Math.round(voiceDraft.durationMs / 1000))}S`}
+                aria-label={$t('mensagens.voice.duration', {
+                  values: { duration: formatVoiceDuration(voiceDraft.durationMs) },
+                  default: `Duração ${formatVoiceDuration(voiceDraft.durationMs)}`
+                })}
+              >{formatVoiceDuration(voiceDraft.durationMs)}</time>
+            </div>
+            <button
+              type="button"
+              class="voice-icon-btn"
+              onclick={() => void recordVoiceAgain()}
+              disabled={voiceSending || voicePreparing}
+              aria-label={$t('mensagens.voice.retake', { default: 'Gravar novamente' })}
+              title={$t('mensagens.voice.retake', { default: 'Gravar novamente' })}
+            >
+              <span aria-hidden="true">↻</span>
+            </button>
+            <button
+              type="button"
+              class="voice-send-btn"
+              onclick={() => void sendVoiceDraft()}
+              disabled={voiceSending || voicePreparing || !store}
+              aria-label={voiceSending
+                ? $t('mensagens.voice.sending', { default: 'A enviar mensagem de voz' })
+                : $t('mensagens.voice.send', { default: 'Enviar mensagem de voz' })}
+              title={$t('mensagens.voice.send', { default: 'Enviar mensagem de voz' })}
+            >
+              <span aria-hidden="true">{voiceSending ? '…' : '➤'}</span>
+            </button>
+          {:else}
+            <button
+              type="button"
+              class="voice-icon-btn voice-delete"
+              onclick={cancelVoiceRecording}
+              aria-label={$t('mensagens.voice.cancel', { default: 'Cancelar e apagar gravação' })}
+              title={$t('mensagens.voice.cancel', { default: 'Cancelar e apagar gravação' })}
+            >
+              <span aria-hidden="true">🗑️</span>
+            </button>
+            <div class="voice-recording-status" role="status">
+              {#if voicePreparing}
+                <span class="voice-spinner" aria-hidden="true"></span>
+                <strong>{$t('mensagens.voice.requesting_mic_short', { default: 'A preparar microfone…' })}</strong>
+              {:else if voiceFinalizing}
+                <span class="voice-spinner" aria-hidden="true"></span>
+                <strong>{$t('mensagens.voice.preparing_preview_short', { default: 'A preparar áudio…' })}</strong>
+              {:else}
+                <span class="voice-recording-dot" aria-hidden="true"></span>
+                <strong>{$t('mensagens.voice.recording_short', { default: 'A gravar' })}</strong>
+              {/if}
+              <time
+                datetime={`PT${Math.max(0, Math.round(recordingElapsedMs / 1000))}S`}
+                aria-label={$t('mensagens.voice.elapsed', {
+                  values: { duration: formatVoiceDuration(recordingElapsedMs) },
+                  default: `Tempo gravado ${formatVoiceDuration(recordingElapsedMs)}`
+                })}
+              >{formatVoiceDuration(recordingElapsedMs)}</time>
+            </div>
+            {#if recording}
+              <button
+                type="button"
+                class="voice-stop-btn"
+                onclick={stopVoiceRecording}
+                aria-label={$t('agente.aria.parar_gravacao', { default: 'Parar gravação' })}
+                title={$t('agente.aria.parar_gravacao', { default: 'Parar gravação' })}
+              >
+                <span aria-hidden="true"></span>
+              </button>
+            {/if}
           {/if}
-          <textarea
-            bind:this={inputEl}
-            bind:value={input}
-            onkeydown={onKeydown}
-            oninput={autogrow}
-            onblur={() => richStore?.setTyping(false)}
-            placeholder={editingMessage ? $t('mensagens.message.edit_placeholder', { default: 'Edita a mensagem…' }) : $t('mensagens.placeholder', { default: 'Escreve uma mensagem…' })}
-            maxlength="4000"
-            rows="1"
-          ></textarea>
         </div>
-        <button
-          type="button"
-          class="action-btn"
-          class:recording
-          onclick={() => (input.trim() ? void send() : void toggleRecording())}
-          aria-label={input.trim()
-            ? $t('a11y.aria.enviar', { default: 'Enviar' })
-            : recording
-              ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
+      {:else}
+        <div class="composer">
+          <input type="file" bind:this={fileInput} onchange={onFileChosen} disabled={Boolean(editingMessage)} hidden accept={richStore ? 'image/*,audio/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip' : 'image/*,audio/*'} />
+          <div class="input-shell">
+            {#if threadKind === 'couple' || richStore}
+              <button
+                type="button"
+                class="attach-btn"
+                disabled={Boolean(editingMessage)}
+                onclick={() => editingMessage ? undefined : fileInput?.click()}
+                aria-label={$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}
+                title={$t('a11y.aria.anexar_ficheiro', { default: 'Anexar ficheiro' })}
+              >
+                📎
+              </button>
+            {/if}
+            <textarea
+              bind:this={inputEl}
+              bind:value={input}
+              onkeydown={onKeydown}
+              oninput={onComposerInput}
+              onblur={() => richStore?.setTyping(false)}
+              placeholder={editingMessage ? $t('mensagens.message.edit_placeholder', { default: 'Edita a mensagem…' }) : $t('mensagens.placeholder', { default: 'Escreve uma mensagem…' })}
+              maxlength="4000"
+              rows="1"
+            ></textarea>
+          </div>
+          <button
+            type="button"
+            class="action-btn"
+            disabled={Boolean(editingMessage && !input.trim())}
+            onclick={() => (editingMessage ? void send() : input.trim() ? void send() : void startVoiceRecording())}
+            aria-label={editingMessage
+              ? $t('mensagens.message.save_edit', { default: 'Guardar edição' })
+              : input.trim()
+                ? $t('a11y.aria.enviar', { default: 'Enviar' })
               : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
-          title={input.trim()
-            ? $t('a11y.aria.enviar', { default: 'Enviar' })
-            : recording
-              ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
+            title={editingMessage
+              ? $t('mensagens.message.save_edit', { default: 'Guardar edição' })
+              : input.trim()
+                ? $t('a11y.aria.enviar', { default: 'Enviar' })
               : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
-        >
-          {#if input.trim()}➤{:else if recording}⏹️{:else}🎤{/if}
-        </button>
-      </div>
+          >
+            {#if editingMessage || input.trim()}➤{:else}🎤{/if}
+          </button>
+        </div>
+      {/if}
     </div>
     {/if}
   {:else}
@@ -1267,6 +2723,74 @@
     >
       ✕
     </button>
+  </div>
+{/if}
+
+{#if messageInfo}
+  {@const infoState = deliveryState(messageInfo)}
+  <div class="message-info-layer">
+    <button
+      type="button"
+      class="message-info-backdrop"
+      onclick={closeMessageInfo}
+      aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}
+    ></button>
+    <div
+      class="message-info-sheet"
+      bind:this={messageInfoDialogEl}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="message-info-title"
+      tabindex="-1"
+      onkeydown={onMessageInfoKeydown}
+    >
+      <header>
+        <span class="message-info-icon" aria-hidden="true">ⓘ</span>
+        <h2 id="message-info-title">{$t('mensagens.info.title', { default: 'Informação da mensagem' })}</h2>
+        <button
+          type="button"
+          class="message-info-close"
+          bind:this={messageInfoCloseEl}
+          onclick={closeMessageInfo}
+          aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}
+        >×</button>
+      </header>
+      <div class="message-info-preview">
+        <span aria-hidden="true">{messageInfo.kind === 'image' ? '📷' : messageInfo.kind === 'audio' ? '🎙️' : messageInfo.kind === 'video' ? '🎬' : messageInfo.kind === 'file' ? '📎' : '💬'}</span>
+        <p>{replyLabel({ text: messageInfo.text, kind: messageInfo.kind, name: messageInfo.name, deleted: messageInfo.deleted })}</p>
+      </div>
+      <dl class="message-info-facts">
+        <div>
+          <dt>{$t('mensagens.info.status', { default: 'Estado' })}</dt>
+          <dd><span class:read={infoState === 'read'} aria-hidden="true">{infoState === 'read' || infoState === 'delivered' ? '✓✓' : infoState === 'sent' ? '✓' : infoState === 'failed' ? '!' : '🕓'}</span>{deliveryStatusLabel(infoState)}</dd>
+        </div>
+        <div>
+          <dt>{$t('mensagens.info.sent_at', { default: 'Enviada' })}</dt>
+          <dd><time datetime={new Date(messageInfo.ts).toISOString()}>{fmtDateTime(messageInfo.ts)}</time></dd>
+        </div>
+        {#if messageInfo.editedAt}
+          <div>
+            <dt>{$t('mensagens.info.edited_at', { default: 'Editada' })}</dt>
+            <dd><time datetime={new Date(messageInfo.editedAt).toISOString()}>{fmtDateTime(messageInfo.editedAt)}</time></dd>
+          </div>
+        {/if}
+        {#if infoState === 'read' || infoState === 'delivered'}
+          <div>
+            <dt>{infoState === 'read' ? $t('mensagens.info.read', { default: 'Leitura' }) : $t('mensagens.info.delivery', { default: 'Entrega' })}</dt>
+            <dd>✓ {infoState === 'read' ? $t('mensagens.info.read_confirmed', { default: 'Confirmada' }) : $t('mensagens.info.delivery_confirmed', { default: 'Confirmada no outro dispositivo' })}</dd>
+          </div>
+        {/if}
+      </dl>
+      {#if infoState === 'read'}
+        <p class="message-info-note">{$t('mensagens.info.read_time_unavailable', {
+          default: 'A leitura está confirmada. O Presuntinho ainda não guarda a hora exata de leitura de cada mensagem.'
+        })}</p>
+      {:else if infoState === 'delivered'}
+        <p class="message-info-note">{$t('mensagens.info.delivery_time_unavailable', {
+          default: 'A entrega no outro dispositivo está confirmada. A hora exata desse evento ainda não é guardada por mensagem.'
+        })}</p>
+      {/if}
+    </div>
   </div>
 {/if}
 
@@ -1323,6 +2847,16 @@
     display: flex;
     flex-direction: column;
   }
+  .chat-row-wrap {
+    position: relative;
+    flex: 0 0 auto;
+  }
+  .chat-row-wrap .chat-row {
+    padding-inline-end: 4rem;
+  }
+  .chat-row-wrap.couple .chat-row {
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
+  }
   .chat-row {
     display: flex;
     align-items: center;
@@ -1359,6 +2893,13 @@
   .row-top strong { font-size: var(--fs-md); font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .row-top time { flex: 0 0 auto; font-size: var(--fs-xs); color: var(--txt3); }
   .row-meta { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 0.35rem; }
+  .preference-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    line-height: 1;
+  }
   .unread-badge {
     min-width: 1.25rem;
     height: 1.25rem;
@@ -1379,8 +2920,118 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .row-body small.has-draft {
+    color: var(--accent);
+    font-weight: 750;
+  }
   .chat-row.couple { background: color-mix(in srgb, var(--accent) 6%, transparent); }
   .couple-heart { font-size: 0.9em; }
+  .archived-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    min-height: 48px;
+    padding: var(--space-2) var(--space-4);
+    border: 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+    background: color-mix(in srgb, var(--accent) 5%, transparent);
+    color: var(--txt2);
+    font: inherit;
+    font-weight: 800;
+    text-align: start;
+    cursor: pointer;
+  }
+  .archived-toggle:hover,
+  .archived-toggle:focus-visible {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 11%, transparent);
+    outline: none;
+  }
+  .archive-count {
+    min-width: 1.45rem;
+    height: 1.45rem;
+    margin-inline-start: auto;
+    display: inline-grid;
+    place-items: center;
+    padding-inline: 0.3rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+    color: var(--accent);
+    font-size: var(--fs-xs);
+  }
+  .conversation-menu {
+    position: absolute;
+    z-index: 12;
+    inset-inline-end: var(--space-3);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .conversation-menu[open] {
+    z-index: 30;
+  }
+  .conversation-menu summary {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    color: var(--txt3);
+    cursor: pointer;
+    font-size: 1.35rem;
+    font-weight: 900;
+    line-height: 1;
+    list-style: none;
+    user-select: none;
+  }
+  .conversation-menu summary::-webkit-details-marker { display: none; }
+  .conversation-menu summary:hover,
+  .conversation-menu summary:focus-visible,
+  .conversation-menu[open] summary {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 13%, var(--bg-elev));
+    outline: none;
+  }
+  .conversation-menu-panel {
+    position: absolute;
+    z-index: 31;
+    inset-inline-end: 0;
+    top: calc(100% + 0.35rem);
+    width: min(17rem, calc(100vw - 2rem));
+    display: grid;
+    padding: 0.35rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-elev);
+    box-shadow: var(--shadow-lg);
+  }
+  .chat-row-wrap:nth-last-of-type(-n + 3) .conversation-menu-panel {
+    top: auto;
+    bottom: calc(100% + 0.35rem);
+  }
+  .conversation-menu-panel button {
+    width: 100%;
+    padding: 0.7rem 0.8rem;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--txt);
+    font: inherit;
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    text-align: start;
+    cursor: pointer;
+  }
+  .conversation-menu-panel button:hover,
+  .conversation-menu-panel button:focus-visible {
+    background: color-mix(in srgb, var(--accent) 11%, transparent);
+    color: var(--accent);
+    outline: none;
+  }
+  .conversation-menu-panel button:disabled {
+    cursor: wait;
+    opacity: 0.55;
+  }
   .req-banner {
     display: flex;
     align-items: center;
@@ -1526,6 +3177,32 @@
     cursor: pointer;
     font-size: 1.25rem;
   }
+  .chat-search-status {
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: 0.35rem var(--space-4);
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--accent) 6%, var(--bg-elev));
+    color: var(--txt2);
+    font-size: var(--fs-xs);
+    text-align: center;
+  }
+  .chat-search-status.search-error {
+    background: color-mix(in srgb, var(--error) 8%, var(--bg-elev));
+    color: var(--txt);
+  }
+  .chat-search-status button {
+    border: 0;
+    background: transparent;
+    color: var(--accent);
+    font: inherit;
+    font-weight: 800;
+    text-decoration: underline;
+    cursor: pointer;
+  }
   .chat-tools {
     display: flex;
     gap: var(--space-2);
@@ -1639,6 +3316,28 @@
   .file-card span {
     font-size: 1.5rem;
   }
+  .panel-retry {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-2);
+    text-align: center;
+  }
+  .panel-retry p { margin: 0; }
+  .panel-retry button,
+  .load-more-media {
+    min-height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg-elev);
+    color: var(--txt);
+    padding: 0.55rem 1rem;
+    cursor: pointer;
+  }
+  .load-more-media {
+    display: block;
+    margin: var(--space-3) auto 0;
+  }
+  .load-more-media:disabled { cursor: wait; opacity: 0.7; }
   .sync-banner,
   .offline-banner {
     margin: var(--space-2) var(--space-4) 0;
@@ -1842,11 +3541,12 @@
     border-color: color-mix(in srgb, var(--accent) 25%, var(--border));
     padding: 0.55rem 1rem;
   }
-  .call-event { display: flex; align-items: center; justify-content: center; gap: var(--space-2); }
+  .call-event { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: var(--space-2); }
   .call-event-icon { font-size: 1.15rem; }
   .call-event-copy { display: grid; line-height: 1.2; }
   .call-event-copy strong { font-weight: 750; }
   .call-event-copy small { margin-top: 0.15rem; color: var(--txt3); font-size: var(--fs-xs); }
+  .call-again { flex: 1 0 100%; display: flex; justify-content: center; min-width: 0; }
   .bubble-deleted { background: color-mix(in srgb, var(--card) 82%, transparent); color: var(--txt3); font-style: italic; }
   .deleted-copy { display: flex; align-items: center; gap: var(--space-1); }
   .star-mark {
@@ -1911,7 +3611,15 @@
     opacity: 1;
     text-shadow: 0 0 6px currentColor;
   }
-  .retry {
+  .failed-actions {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.3rem;
+  }
+  .retry,
+  .discard-failed {
     background: transparent;
     border: 1px solid currentColor;
     color: inherit;
@@ -1921,7 +3629,13 @@
     min-height: 28px;
     cursor: pointer;
   }
-  .retry:focus-visible {
+  .discard-failed {
+    border-color: transparent;
+    text-decoration: underline;
+    opacity: 0.85;
+  }
+  .retry:focus-visible,
+  .discard-failed:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
   }
@@ -2115,18 +3829,153 @@
       transform: translateX(-50%) translateY(0);
     }
   }
-  .recording-hint {
-    text-align: center;
-    font-size: var(--fs-xs);
-    color: var(--txt2);
-    background: color-mix(in srgb, var(--bg-elev) 85%, transparent);
-    border: 1px solid var(--border);
+  .voice-live {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .voice-composer {
+    min-height: 58px;
+    display: grid;
+    grid-template-columns: var(--touch-target) minmax(0, 1fr) var(--touch-target);
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0.35rem 0.45rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--border));
+    border-radius: 1.25rem;
+    background: color-mix(in srgb, var(--bg-elev) 93%, var(--accent) 7%);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+  .voice-composer.has-preview {
+    grid-template-columns: var(--touch-target) minmax(0, 1fr) var(--touch-target) var(--touch-target);
+  }
+  .voice-icon-btn,
+  .voice-send-btn,
+  .voice-stop-btn {
+    width: var(--touch-target);
+    height: var(--touch-target);
+    min-width: var(--touch-target);
+    min-height: var(--touch-target);
+    display: inline-grid;
+    place-items: center;
+    border: 0;
     border-radius: 999px;
-    padding: 0.3rem 0.8rem;
-    margin: 0 auto 0.4rem;
-    width: fit-content;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    color: var(--txt);
+    cursor: pointer;
+    font: inherit;
+    font-size: 1.1rem;
+    transition: transform var(--motion-fast) ease, filter var(--motion-fast) ease, background var(--motion-fast) ease;
+  }
+  .voice-icon-btn {
+    background: color-mix(in srgb, var(--txt) 8%, transparent);
+  }
+  .voice-icon-btn:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--txt) 14%, transparent);
+  }
+  .voice-delete {
+    color: var(--error);
+  }
+  .voice-send-btn {
+    background: var(--accent);
+    color: var(--on-accent);
+    box-shadow: var(--shadow-sm);
+  }
+  .voice-stop-btn {
+    background: var(--error);
+    color: #fff;
+  }
+  .voice-stop-btn > span {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    background: currentColor;
+  }
+  .voice-icon-btn:active:not(:disabled),
+  .voice-send-btn:active:not(:disabled),
+  .voice-stop-btn:active:not(:disabled) {
+    transform: scale(0.92);
+  }
+  .voice-icon-btn:focus-visible,
+  .voice-send-btn:focus-visible,
+  .voice-stop-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+  .voice-icon-btn:disabled,
+  .voice-send-btn:disabled,
+  .voice-stop-btn:disabled {
+    cursor: wait;
+    opacity: 0.55;
+  }
+  .voice-recording-status,
+  .voice-preview {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .voice-recording-status strong {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--txt);
+    font-size: var(--fs-sm);
+  }
+  .voice-recording-status time,
+  .voice-preview time {
+    margin-inline-start: auto;
+    color: var(--txt2);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--fs-sm);
+  }
+  .voice-recording-dot {
+    flex: 0 0 auto;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--error);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--error) 52%, transparent);
+    animation: voice-recording-pulse 1.25s ease-out infinite;
+  }
+  .voice-spinner {
+    flex: 0 0 auto;
+    width: 17px;
+    height: 17px;
+    border: 2px solid color-mix(in srgb, var(--accent) 28%, transparent);
+    border-top-color: var(--accent);
+    border-radius: 999px;
+    animation: voice-spin 0.8s linear infinite;
+  }
+  .voice-preview-icon {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+  }
+  .voice-preview audio {
+    min-width: 0;
+    width: 100%;
+    height: 40px;
+    accent-color: var(--accent);
+  }
+  @keyframes voice-recording-pulse {
+    70% { box-shadow: 0 0 0 9px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+  }
+  @keyframes voice-spin {
+    to { transform: rotate(360deg); }
   }
   .compose-context {
     display: grid;
@@ -2191,6 +4040,12 @@
     outline: none;
     box-shadow: var(--focus-ring);
   }
+  .attach-btn:disabled,
+  .action-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.48;
+    filter: none;
+  }
   .composer textarea {
     flex: 1;
     resize: none;
@@ -2234,8 +4089,157 @@
     outline: none;
     box-shadow: var(--focus-ring);
   }
-  .action-btn.recording {
-    background: var(--error);
+  @media (max-width: 520px) {
+    .voice-composer,
+    .voice-composer.has-preview {
+      gap: var(--space-1);
+      padding-inline: 0.25rem;
+    }
+    .voice-preview-icon { display: none; }
+    .voice-preview audio { height: 38px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .voice-recording-dot,
+    .voice-spinner { animation: none; }
+  }
+
+  .message-action-live {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ── sender message information ── */
+  .message-info-layer {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+    display: grid;
+    place-items: end center;
+  }
+  .message-info-backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    border: 0;
+    background: color-mix(in srgb, var(--bg) 35%, rgb(0 0 0 / 0.68));
+    cursor: default;
+  }
+  .message-info-sheet {
+    position: relative;
+    width: min(520px, 100%);
+    max-height: min(78dvh, 620px);
+    overflow-y: auto;
+    padding: var(--space-4) var(--space-4) calc(var(--space-5) + env(safe-area-inset-bottom));
+    border: 1px solid var(--border-strong);
+    border-bottom: 0;
+    border-radius: 1.4rem 1.4rem 0 0;
+    background: var(--bg-elev);
+    color: var(--txt);
+    box-shadow: var(--shadow-lg);
+    animation: message-info-in var(--motion-base) ease-out;
+  }
+  @keyframes message-info-in {
+    from { opacity: 0; transform: translateY(1rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .message-info-sheet > header {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .message-info-sheet h2 {
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+  .message-info-icon {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+    color: var(--accent);
+    font-size: 1.2rem;
+  }
+  .message-info-close {
+    width: var(--touch-target);
+    height: var(--touch-target);
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--txt2);
+    font: inherit;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  .message-info-close:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .message-info-close:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+  .message-info-preview {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-4) 0;
+    padding: var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--accent) 7%, var(--card));
+  }
+  .message-info-preview > span { font-size: 1.35rem; }
+  .message-info-preview p {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--txt2);
+  }
+  .message-info-facts { margin: 0; display: grid; }
+  .message-info-facts > div {
+    display: grid;
+    grid-template-columns: minmax(7rem, 0.7fr) minmax(0, 1.3fr);
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  }
+  .message-info-facts dt { color: var(--txt3); font-size: var(--fs-sm); }
+  .message-info-facts dd {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    margin: 0;
+    text-align: end;
+    font-size: var(--fs-sm);
+    font-weight: 750;
+  }
+  .message-info-facts dd span { color: var(--txt3); letter-spacing: -0.1em; }
+  .message-info-facts dd span.read { color: var(--accent); }
+  .message-info-note {
+    margin: var(--space-4) 0 0;
+    color: var(--txt3);
+    font-size: var(--fs-xs);
+    line-height: 1.5;
+  }
+  @media (min-width: 680px) {
+    .message-info-layer { place-items: center; padding: var(--space-4); }
+    .message-info-sheet {
+      border-bottom: 1px solid var(--border-strong);
+      border-radius: 1.4rem;
+      padding-bottom: var(--space-5);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .message-info-sheet { animation: none; }
   }
 
   /* ── fullscreen image viewer ── */

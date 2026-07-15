@@ -2,10 +2,16 @@
   import '../app.css';
   import { page } from '$app/state';
   import { goto, afterNavigate } from '$app/navigation';
-  import { getSession, isLegacyProfile } from '$lib/auth/session';
+  import {
+    getSession,
+    isLegacyProfile,
+    subscribeSessionChanges,
+    type Session as LocalSession
+  } from '$lib/auth/session';
   import CoupleCelebration from '$lib/components/CoupleCelebration.svelte';
   import { accountState } from '$lib/account/account-store.svelte';
-  import { initStores, markVisited } from '$lib/state/stores';
+  import { canConfigureAccountCommunications } from '$lib/communications/visibility';
+  import { initStores, markVisited, resetStores } from '$lib/state/stores';
   import Confetti from '$lib/components/Confetti.svelte';
   import Toast from '$lib/components/Toast.svelte';
   import PageLoader from '$lib/components/PageLoader.svelte';
@@ -31,11 +37,17 @@
   import { applyAppLogo, getAppLogo } from '$lib/app-logo';
   import { readActiveMood, isMoodIntroAcknowledged, MOOD_EVENT, MOOD_META, type ActiveMood } from '$lib/mood';
 
-  import { notifBadge, refreshNotifBadge, bindNotifBadge } from '$lib/vida/notif-badge.svelte';
+  import { notifBadge, refreshNotifBadge, bindNotifBadge, resetNotifBadge } from '$lib/vida/notif-badge.svelte';
   import { showToast } from '$lib/components/events';
   import { t } from 'svelte-i18n';
   import { get } from 'svelte/store';
   import { applyInitialDocumentLocale } from '$lib/i18n';
+  import { startAccountChatOutboxPump } from '$lib/chat/account-chat-outbox-pump';
+  import {
+    purgeAccountChatAccount,
+    purgeAllAccountChatData,
+    purgeOtherAccountChatAccounts
+  } from '$lib/chat/account-chat-outbox';
   import { onMount } from 'svelte';
 
   let { children } = $props();
@@ -46,6 +58,10 @@
   let authRedirectTimer: ReturnType<typeof setTimeout> | null = null;
   let stopForegroundMessages: (() => void) | null = null;
   let foregroundMessagesProfile: string | null = null;
+  let unwatchCoupleLink: (() => void) | null = null;
+  let stopAccountChatOutbox: (() => void) | null = null;
+  let accountChatOutboxProfile: string | null = null;
+  let profileRuntimeEpoch = 0;
 
   // PWA prompt-mode update flow: the SW registration below hands us an
   // `updateSW` callback; when 'presuntinho:pwa-update' fires with
@@ -61,21 +77,39 @@
   // Conta para o avatar do header (fonte única de identidade) — o $state do
   // account-store é reativo entre módulos, basta derivar.
   const headerAccount = $derived(accountState.account);
-  // Convite one-time para ativar o push quando o casal está ativo mas este
-  // dispositivo ainda não tem subscrição (sem ela, pings/mensagens não chegam
-  // ao telemóvel — foi exatamente o que aconteceu no primeiro teste real).
+  const communicationsAccountId = $derived(
+    canConfigureAccountCommunications({
+      accountReady: accountState.ready,
+      authUserId: accountState.user?.id ?? null,
+      accountProfileId: accountState.account?.id ?? null,
+      localProfileId: session?.profile ?? null
+    })
+      ? (accountState.account?.id ?? null)
+      : null
+  );
+  // Convite por conta/instalação para ativar o push. Chamadas e DMs também
+  // precisam dele, por isso não fica condicionado a existir um casal ativo.
+  // A versão da chave é intencional: utilizadores que dispensaram o prompt
+  // antigo (que nem mencionava chamadas) devem ver esta explicação uma vez.
   let pushPrompt = $state<'hidden' | 'ask' | 'ios'>('hidden');
-  let pushPromptChecked = false;
-  const PUSH_PROMPTED_KEY = 'presuntinho-push-prompted';
+  let pushPromptCheckedFor: string | null = null;
+  const PUSH_PROMPTED_KEY = 'presuntinho-push-prompted-v2';
 
   $effect(() => {
-    if (!couple.available || pushPromptChecked) return;
-    pushPromptChecked = true;
+    const accountId = communicationsAccountId;
+    if (!accountId) {
+      pushPromptCheckedFor = null;
+      pushPrompt = 'hidden';
+      return;
+    }
+    if (pushPromptCheckedFor === accountId) return;
+    pushPromptCheckedFor = accountId;
     void (async () => {
       try {
-        if (localStorage.getItem(PUSH_PROMPTED_KEY)) return;
+        if (localStorage.getItem(PUSH_PROMPTED_KEY + ':' + accountId)) return;
         const { getPushState } = await import('$lib/push');
         const s = await getPushState();
+        if (communicationsAccountId !== accountId) return;
         if (s === 'off') pushPrompt = 'ask';
         else if (s === 'ios-needs-install') pushPrompt = 'ios';
       } catch {
@@ -87,23 +121,28 @@
   function dismissPushPrompt(): void {
     pushPrompt = 'hidden';
     try {
-      localStorage.setItem(PUSH_PROMPTED_KEY, '1');
+      const accountId = communicationsAccountId;
+      if (accountId) localStorage.setItem(PUSH_PROMPTED_KEY + ':' + accountId, '1');
     } catch {
       /* ignore */
     }
   }
 
   async function acceptPushPrompt(): Promise<void> {
+    if (!communicationsAccountId) {
+      pushPrompt = 'hidden';
+      return;
+    }
     try {
       const { enablePush } = await import('$lib/push');
       const s = await enablePush();
       if (s === 'on') {
-        showToast(get(t)('push.enabled', { default: '🔔 Notificações ativas! Os pings chegam mesmo com a app fechada.' }), 3000);
+        showToast(get(t)('push.enabled', { default: '🔔 Notificações ativas! Chamadas, mensagens e pings podem chegar com a app fechada.' }), 3000);
       } else if (s === 'denied') {
         showToast(get(t)('push.denied', { default: 'O browser bloqueou as notificações — ativa-as nas definições do site.' }), 3800, 'error');
       }
     } catch {
-      /* best-effort */
+      showToast(get(t)('push.failed', { default: 'Não foi possível preparar as notificações neste dispositivo. Tenta novamente nas definições.' }), 3800, 'error');
     }
     dismissPushPrompt();
   }
@@ -137,28 +176,168 @@
     }
   }
 
+  function stopProfileServices(): void {
+    stopCouplePoller();
+    stopForegroundMessages?.();
+    stopForegroundMessages = null;
+    foregroundMessagesProfile = null;
+    unwatchCoupleLink?.();
+    unwatchCoupleLink = null;
+    stopAccountChatOutbox?.();
+    stopAccountChatOutbox = null;
+    accountChatOutboxProfile = null;
+    socialBadge = 0;
+    socialInvites = 0;
+    coupleCelebration = null;
+    secretRoomOpen = false;
+    resetNotifBadge();
+    void import('$lib/state/progress-sync').then((m) => m.stopProgressSync()).catch(() => {});
+  }
+
+  function startCoupleLinkWatcher(profile: string, epoch: number): void {
+    unwatchCoupleLink?.();
+    unwatchCoupleLink = null;
+    if (isLegacyProfile(profile)) return;
+    void import('$lib/account/couple-link')
+      .then(({ watchCoupleLink }) => {
+        if (epoch !== profileRuntimeEpoch || session?.profile !== profile) return;
+        unwatchCoupleLink = watchCoupleLink(profile, {
+          onCoupleActive: (_space, partner) => {
+            const label = partner?.display_name || (partner ? `@${partner.handle}` : '💞');
+            coupleCelebration = { label };
+            void import('$lib/habitos/reminders')
+              .then(({ showAppNotification }) =>
+                showAppNotification(get(t)('couplelink.notif.title', { default: '💞 Modo casal ativado!' }), {
+                  body: get(t)('couplelink.notif.body', {
+                    values: { name: label },
+                    default: `Tu e ${label} estão ligados. Abre o Presuntinho!`
+                  })
+                })
+              )
+              .catch(() => undefined);
+            void import('$lib/couple/couple-supabase').then((m) => m.invalidateCoupleId()).catch(() => undefined);
+            void import('$lib/couple/couple-store.svelte').then((m) => m.refreshCoupleEnabled()).catch(() => undefined);
+          },
+          onRequestsChanged: (reqs) => {
+            socialBadge = reqs.friends.length + reqs.couples.length;
+          },
+          onInvitesChanged: (invites) => {
+            socialInvites = invites.length;
+          },
+          onNewRequest: (req) => {
+            const name = req.from.display_name || `@${req.from.handle}`;
+            const title = req.kind === 'couple'
+              ? get(t)('social.notif.couple_title', { default: '💞 Pedido de casal!' })
+              : get(t)('social.notif.friend_title', { default: '👋 Pedido de amizade' });
+            const body = req.kind === 'couple'
+              ? get(t)('social.notif.couple_body', { values: { name }, default: `${name} quer ser teu casal. Toca para responder!` })
+              : get(t)('social.notif.friend_body', { values: { name }, default: `${name} quer ligar-se contigo.` });
+            showToast(`${title} ${body}`, 4200);
+            void import('$lib/habitos/reminders')
+              .then(({ showAppNotification }) => showAppNotification(title, { body }))
+              .catch(() => undefined);
+          }
+        });
+      })
+      .catch(() => undefined);
+  }
+
+  function startProfileServices(profile: string, epoch: number): void {
+    if (!isLegacyProfile(profile)) {
+      // Delete stale data belonging to another signed-out account before the
+      // current account-wide pump can inspect IndexedDB. The active account's
+      // pending work is retained and drains even outside /mensagens/.
+      void purgeOtherAccountChatAccounts(profile)
+        .catch((error) => console.warn('[presuntinho] stale chat outbox cleanup unavailable', error))
+        .finally(() => {
+          if (epoch !== profileRuntimeEpoch || session?.profile !== profile) return;
+          if (accountChatOutboxProfile === profile) return;
+          stopAccountChatOutbox?.();
+          accountChatOutboxProfile = profile;
+          stopAccountChatOutbox = startAccountChatOutboxPump(profile);
+        });
+    } else {
+      // Legacy local profiles never own authenticated account-chat data.
+      void purgeAllAccountChatData()
+        .catch((error) => console.warn('[presuntinho] logged-out chat cleanup unavailable', error));
+    }
+    startCoupleLinkWatcher(profile, epoch);
+    void import('$lib/couple/couple-supabase')
+      .then(async (module) => {
+        module.invalidateCoupleId();
+        await module.resolveCoupleId();
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (epoch === profileRuntimeEpoch && session?.profile === profile) startCouplePoller();
+      });
+    void import('$lib/state/progress-sync')
+      .then((module) => {
+        if (epoch === profileRuntimeEpoch && session?.profile === profile) {
+          return module.startProgressSync(profile);
+        }
+      })
+      .catch((error) => console.warn('[presuntinho] progress sync unavailable', error));
+  }
+
+  async function synchronizeSession(next: LocalSession | null): Promise<void> {
+    const previousProfile = session?.profile ?? null;
+    const nextProfile = next?.profile ?? null;
+    if (previousProfile === nextProfile) {
+      session = next;
+      return;
+    }
+
+    const epoch = ++profileRuntimeEpoch;
+    stopProfileServices();
+    session = next;
+    storesReady = false;
+    resetStores();
+
+    if (previousProfile && !isLegacyProfile(previousProfile)) {
+      try {
+        await purgeAccountChatAccount(previousProfile);
+      } catch (error) {
+        // The UI identity is already cleared, so no stale row can render. Keep
+        // the failure factual and retry cleanup on the next account startup.
+        console.warn('[presuntinho] account chat logout cleanup unavailable', error);
+      }
+    }
+
+    if (!next) {
+      if (authRedirectTimer) {
+        clearTimeout(authRedirectTimer);
+        authRedirectTimer = null;
+      }
+      if (page.url.pathname !== '/splash/') {
+        await goto('/splash/', { replaceState: true });
+      }
+      return;
+    }
+
+    try {
+      await initStores(next.profile);
+      if (epoch !== profileRuntimeEpoch || session?.profile !== next.profile) return;
+      storesReady = true;
+      startProfileServices(next.profile, epoch);
+      void refreshNotifBadge();
+    } catch (error) {
+      if (epoch === profileRuntimeEpoch) {
+        console.error('[presuntinho] profile switch init failed:', error);
+      }
+    }
+  }
+
   // Runs after EVERY client-side navigation (including the initial one),
   // so deep navigation is tracked — not only the first mounted page.
   afterNavigate((nav) => {
     const pathname = nav.to?.url.pathname ?? page.url.pathname;
     void trackVisit(pathname);
-    // A sessão é lida uma vez no arranque; /login e /splash escrevem-na e
-    // navegam SPA para "/" sem reload — sem re-ler aqui, a bottom-nav ficava
-    // presa em "inicia sessão primeiro" até um refresh manual.
-    if (!session) {
-      const fresh = getSession();
-      if (fresh) {
-        session = fresh;
-        if (authRedirectTimer) {
-          clearTimeout(authRedirectTimer);
-          authRedirectTimer = null;
-        }
-        // initStores é idempotente e sensível ao perfil — chamamos sempre,
-        // porque o boot marca storesReady=true mesmo sem sessão (defaults).
-        void initStores(fresh.profile)
-          .then(() => (storesReady = true))
-          .catch((e) => console.error('[presuntinho] initStores failed:', e));
-      }
+    // Reconcile both login and logout/profile-switch. Session changes normally
+    // arrive through the event bridge below; this also covers restored tabs.
+    const fresh = getSession();
+    if ((fresh?.profile ?? null) !== (session?.profile ?? null)) {
+      void synchronizeSession(fresh);
     }
     // Keep the header bell fresh as you move around (throttled inside).
     if (session && storesReady) void refreshNotifBadge();
@@ -209,12 +388,22 @@
   });
   onMount(() => {
     const unbind = bindNotifBadge();
+    const unbindSession = subscribeSessionChanges((change) => {
+      void synchronizeSession(change.session);
+    });
     const onVis = () => {
-      if (document.visibilityState === 'visible' && session && storesReady) void refreshNotifBadge();
+      if (document.visibilityState !== 'visible') return;
+      const fresh = getSession();
+      if ((fresh?.profile ?? null) !== (session?.profile ?? null)) {
+        void synchronizeSession(fresh);
+      } else if (session && storesReady) {
+        void refreshNotifBadge();
+      }
     };
     document.addEventListener('visibilitychange', onVis);
     return () => {
       unbind();
+      unbindSession();
       document.removeEventListener('visibilitychange', onVis);
     };
   });
@@ -243,7 +432,6 @@
     let moodPoll: ReturnType<typeof setInterval> | null = null;
     let swPoll: ReturnType<typeof setInterval> | null = null;
     let seasonalTimer: ReturnType<typeof setTimeout> | null = null;
-    let unwatchCoupleLink: (() => void) | null = null;
 
     async function refreshMood(): Promise<void> {
       const mood = await readActiveMood();
@@ -264,66 +452,6 @@
     void refreshMood();
     window.addEventListener(MOOD_EVENT, onMoodChanged);
     moodPoll = setInterval(refreshMood, 30_000);
-
-    // Couple sync: one global poller keeps shared points fresh and surfaces
-    // incoming love/nudge pings as toasts (+ a buzz). No-ops without a token.
-    // Phase 3b: resolve the couple_id from an ACTIVE couple space first (<=3s,
-    // timeout-guarded so it can't stall), then start; falls back to legacy.
-    void import('$lib/couple/couple-supabase')
-      .then((m) => m.resolveCoupleId())
-      .catch(() => {})
-      .finally(() => startCouplePoller());
-
-    // Couple LINKING: watch for couple invites/activations for account users.
-    // When a couple becomes ACTIVE (both said yes), celebrate once per device
-    // (full-screen congrats + notification) and re-arm the couple features.
-    {
-      const sessionProfile = getSession()?.profile;
-      if (sessionProfile && !isLegacyProfile(sessionProfile)) {
-        void import('$lib/account/couple-link').then(({ watchCoupleLink }) => {
-          unwatchCoupleLink = watchCoupleLink(sessionProfile, {
-            onCoupleActive: (_space, partner) => {
-              const label = partner?.display_name || (partner ? `@${partner.handle}` : '💞');
-              coupleCelebration = { label };
-              void import('$lib/habitos/reminders')
-                .then(({ showAppNotification }) =>
-                  showAppNotification(get(t)('couplelink.notif.title', { default: '💞 Modo casal ativado!' }), {
-                    body: get(t)('couplelink.notif.body', {
-                      values: { name: label },
-                      default: `Tu e ${label} estão ligados. Abre o Presuntinho!`
-                    })
-                  })
-                )
-                .catch(() => undefined);
-              // Re-scope points/pings to the fresh couple space right away.
-              void import('$lib/couple/couple-supabase').then((m) => m.invalidateCoupleId()).catch(() => undefined);
-              void import('$lib/couple/couple-store.svelte').then((m) => m.refreshCoupleEnabled()).catch(() => undefined);
-            },
-            onRequestsChanged: (reqs) => {
-              socialBadge = reqs.friends.length + reqs.couples.length;
-            },
-            onInvitesChanged: (invites) => {
-              socialInvites = invites.length;
-            },
-            onNewRequest: (req) => {
-              const name = req.from.display_name || `@${req.from.handle}`;
-              const title =
-                req.kind === 'couple'
-                  ? get(t)('social.notif.couple_title', { default: '💞 Pedido de casal!' })
-                  : get(t)('social.notif.friend_title', { default: '👋 Pedido de amizade' });
-              const body =
-                req.kind === 'couple'
-                  ? get(t)('social.notif.couple_body', { values: { name }, default: `${name} quer ser teu casal. Toca para responder!` })
-                  : get(t)('social.notif.friend_body', { values: { name }, default: `${name} quer ligar-se contigo.` });
-              showToast(`${title} ${body}`, 4200);
-              void import('$lib/habitos/reminders')
-                .then(({ showAppNotification }) => showAppNotification(title, { body }))
-                .catch(() => undefined);
-            }
-          });
-        }).catch(() => undefined);
-      }
-    }
 
     // Easter-egg boot hooks — used to live on the always-mounted HeartButton,
     // which the SurpriseHeart replaced. Warm the config cache and run the
@@ -418,25 +546,18 @@
 
     void (async () => {
       // Initialise Dexie-backed stores + run migration (Phase 3 #17)
+      const bootEpoch = profileRuntimeEpoch;
+      const bootProfile = session?.profile ?? null;
       try {
-        if (session) await initStores(session.profile);
-        storesReady = true;
+        if (!bootProfile) await purgeAllAccountChatData();
+        if (bootProfile) await initStores(bootProfile);
+        if (bootEpoch === profileRuntimeEpoch && (session?.profile ?? null) === bootProfile) {
+          storesReady = true;
+          if (bootProfile) startProfileServices(bootProfile, bootEpoch);
+        }
       } catch (e) {
         console.error('[presuntinho] initStores failed:', e);
         // Continue rendering; stores will fall back to defaults
-      }
-
-      // Layer A — cross-device achievement sync (XP / badges / secrets /
-      // visited / quiz). Non-destructive merge, so it's safe to run
-      // automatically. Dynamic import keeps @supabase out of the main bundle;
-      // no-ops when Supabase isn't configured.
-      if (session && storesReady) {
-        void import('$lib/couple/couple-supabase')
-          .then((c) => c.resolveCoupleId())
-          .catch(() => {})
-          .then(() => import('$lib/state/progress-sync'))
-          .then((m) => m.startProgressSync(session!.profile))
-          .catch((err) => console.warn('[presuntinho] progress sync unavailable', err));
       }
 
       // Phase 1 — track the real Supabase account (login state) for the whole
@@ -467,6 +588,7 @@
     })();
 
     return () => {
+      profileRuntimeEpoch += 1;
       if (unbindKey) unbindKey();
       if (unbindExtra) unbindExtra();
       if (authRedirectTimer) clearTimeout(authRedirectTimer);
@@ -475,12 +597,7 @@
       if (moodPoll) clearInterval(moodPoll);
       if (swPoll) clearInterval(swPoll);
       if (seasonalTimer) clearTimeout(seasonalTimer);
-      stopCouplePoller();
-      stopForegroundMessages?.();
-      stopForegroundMessages = null;
-      foregroundMessagesProfile = null;
-      unwatchCoupleLink?.();
-      void import('$lib/state/progress-sync').then((m) => m.stopProgressSync()).catch(() => {});
+      stopProfileServices();
     };
   });
 
@@ -518,11 +635,15 @@
   <Confetti />
   <Toast />
   <XpToast />
-  <GamificationLayer />
-  <CoupleMomentLayer />
-  <GameInviteListener />
-  <CallLayer />
-  <HabitReminders />
+  {#if session}
+    {#key session.profile}
+      <GamificationLayer />
+      <CoupleMomentLayer />
+      <GameInviteListener />
+      <CallLayer />
+      <HabitReminders />
+    {/key}
+  {/if}
   <SecretModal bind:open={secretRoomOpen} />
   <!-- Phase 15: offline status banner (listens to online/offline events). -->
   <OfflineIndicator />
@@ -682,11 +803,11 @@
                   <div class="push-prompt" role="dialog" aria-label={$t('push.prompt_aria', { default: 'Ativar notificações' })}>
                     <span class="pp-icon" aria-hidden="true">🔔</span>
                     <div class="pp-body">
-                      <strong>{$t('push.prompt_title', { default: 'Recebe os pings no telemóvel' })}</strong>
+                      <strong>{$t('push.prompt_title', { default: 'Recebe chamadas e mensagens no telemóvel' })}</strong>
                       {#if pushPrompt === 'ios'}
                         <small>{$t('push.ios_hint', { default: 'No iPhone: abre no Safari → Partilhar → "Adicionar ao ecrã principal", e ativa as notificações dentro da app instalada.' })}</small>
                       {:else}
-                        <small>{$t('push.prompt_body', { default: 'Os "amo-te", as "saudades" e as mensagens chegam mesmo com a app fechada.' })}</small>
+                        <small>{$t('push.prompt_body', { default: 'Ativa para receber chamadas, mensagens, "amo-te" e "saudades" mesmo com a app fechada.' })}</small>
                       {/if}
                     </div>
                     {#if pushPrompt === 'ask'}

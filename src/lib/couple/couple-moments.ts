@@ -26,6 +26,8 @@ export interface CoupleMoment {
 	title?: string;
 	/** Optional message preview or transport-provided copy. */
 	body?: string;
+	/** Number of foreground messages coalesced into this one visible card. */
+	count?: number;
 	/** Internal app destination opened when the moment is tapped. */
 	href?: string;
 	/** Epoch milliseconds. Defaults to receipt time when omitted. */
@@ -84,6 +86,9 @@ export class BoundedIdDeduper {
 }
 
 const deliveredMomentIds = new BoundedIdDeduper(256);
+const SHARED_DEDUPE_KEY = 'presuntinho-couple-moment-ids-v1';
+const SHARED_DEDUPE_TTL_MS = 2 * 60_000;
+const SHARED_DEDUPE_MAX = 64;
 const VALID_KINDS = new Set<CoupleMomentKind>(['love', 'nudge', 'message', 'heart-tap']);
 const VALID_SOURCES = new Set<CoupleMomentSource>(['broadcast', 'postgres', 'push', 'poll', 'local']);
 
@@ -115,6 +120,58 @@ function momentTime(value: unknown): number {
 	return Date.now();
 }
 
+interface MomentStorage {
+	getItem(key: string): string | null;
+	setItem(key: string, value: string): void;
+}
+
+/**
+ * Best-effort physical-device dedupe for Realtime events delivered to more
+ * than one open tab/window. Web Push already chooses one visible client, but
+ * each tab owns its own Supabase channel. A short, bounded localStorage claim
+ * prevents both tabs from sounding and vibrating for the same stable event id.
+ * Storage being unavailable (private mode/policy/quota) deliberately fails
+ * open; the in-memory exact-id deduper still protects the current tab.
+ */
+export function claimCoupleMomentAcrossTabs(
+	id: string,
+	storage: MomentStorage,
+	now = Date.now()
+): boolean {
+	const key = typeof id === 'string' ? id.trim() : '';
+	if (!key) return false;
+	try {
+		let parsed: unknown = [];
+		try {
+			parsed = JSON.parse(storage.getItem(SHARED_DEDUPE_KEY) ?? '[]') as unknown;
+		} catch {
+			// Repair malformed/old local data with the fresh claim below.
+			parsed = [];
+		}
+		const cutoff = now - SHARED_DEDUPE_TTL_MS;
+		const rows = Array.isArray(parsed)
+			? parsed
+					.filter(
+						(row): row is [string, number] =>
+							Array.isArray(row) &&
+							typeof row[0] === 'string' &&
+							typeof row[1] === 'number' &&
+							Number.isFinite(row[1]) &&
+							row[1] >= cutoff
+					)
+					.slice(-SHARED_DEDUPE_MAX)
+			: [];
+		if (rows.some(([seen]) => seen === key)) return false;
+		storage.setItem(
+			SHARED_DEDUPE_KEY,
+			JSON.stringify([...rows, [key, now] as [string, number]].slice(-SHARED_DEDUPE_MAX))
+		);
+		return true;
+	} catch {
+		return true;
+	}
+}
+
 /** Validate and normalise an untrusted realtime/service-worker payload. */
 export function parseCoupleMoment(value: unknown, fallbackSource: CoupleMomentSource = 'local'): CoupleMoment | null {
 	const raw = record(value);
@@ -133,6 +190,10 @@ export function parseCoupleMoment(value: unknown, fallbackSource: CoupleMomentSo
 		senderName: optionalText(raw.senderName),
 		title: optionalText(raw.title),
 		body: optionalText(raw.body),
+		count:
+			typeof raw.count === 'number' && Number.isInteger(raw.count) && raw.count > 1
+				? Math.min(99, raw.count)
+				: undefined,
 		href: optionalText(raw.href),
 		createdAt: momentTime(raw.createdAt),
 		source
@@ -154,6 +215,9 @@ export function presentCoupleMoment(detail: CoupleMomentDetail | CoupleMoment | 
 		return false;
 	}
 	if (!moment || !deliveredMomentIds.accept(moment.id)) return false;
+	if (typeof localStorage !== 'undefined' && !claimCoupleMomentAcrossTabs(moment.id, localStorage)) {
+		return false;
+	}
 	window.dispatchEvent(new CustomEvent<CoupleMoment>(COUPLE_MOMENT_EVENT, { detail: moment }));
 	return true;
 }
@@ -164,6 +228,11 @@ export const dispatchCoupleMoment = presentCoupleMoment;
 /** Test/logout helper; normal app code should not need to clear delivery ids. */
 export function resetCoupleMomentDedupe(): void {
 	deliveredMomentIds.clear();
+	try {
+		localStorage.removeItem(SHARED_DEDUPE_KEY);
+	} catch {
+		// SSR/private mode: there is no shared claim to clear.
+	}
 }
 
 /**

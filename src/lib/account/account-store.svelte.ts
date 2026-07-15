@@ -4,6 +4,7 @@
 
 import type { User } from '@supabase/supabase-js';
 import { accountsEnabled, getAuthUser, getMyAccount, onAuthChange, type Account } from './auth';
+import { isCurrentAccountHydration } from './account-hydration';
 
 export const accountState = $state<{
   ready: boolean; // finished the initial check
@@ -12,6 +13,9 @@ export const accountState = $state<{
 }>({ ready: false, user: null, account: null });
 
 let unsub: (() => void) | null = null;
+let startPromise: Promise<void> | null = null;
+let hydrateEpoch = 0;
+let lifecycleEpoch = 0;
 
 /** True once signed in AND a @handle has been claimed. */
 export function isOnboardedAccount(): boolean {
@@ -19,19 +23,30 @@ export function isOnboardedAccount(): boolean {
 }
 
 async function hydrate(user: User | null): Promise<void> {
+  const requestEpoch = ++hydrateEpoch;
+  const previousUserId = accountState.user?.id ?? null;
+  const identityChanged = previousUserId !== (user?.id ?? null);
   accountState.user = user;
+  // Never leave account A visible while B (or logout) is hydrating.
+  if (identityChanged) accountState.account = null;
   if (!user) {
-    accountState.account = null;
     accountState.ready = true;
     return;
   }
   try {
-    accountState.account = await getMyAccount();
+    const account = await getMyAccount();
+    if (isCurrentAccountHydration(requestEpoch, hydrateEpoch, user.id, accountState.user?.id)) {
+      accountState.account = account;
+    }
   } catch (e) {
-    console.warn('[account] load failed', e);
-    accountState.account = null;
+    if (isCurrentAccountHydration(requestEpoch, hydrateEpoch, user.id, accountState.user?.id)) {
+      console.warn('[account] load failed', e);
+      if (identityChanged) accountState.account = null;
+    }
   }
-  accountState.ready = true;
+  if (isCurrentAccountHydration(requestEpoch, hydrateEpoch, user.id, accountState.user?.id)) {
+    accountState.ready = true;
+  }
 }
 
 /** Start tracking auth state. Idempotent; safe to call from the layout onMount. */
@@ -41,21 +56,38 @@ export async function startAccountSync(): Promise<void> {
     return;
   }
   if (unsub) return;
+  if (startPromise) return startPromise;
+  const generation = lifecycleEpoch;
+  const pending = (async () => {
+    try {
+      await hydrate(await getAuthUser());
+    } catch (e) {
+      if (generation === lifecycleEpoch) {
+        console.warn('[account] initial hydrate failed', e);
+        accountState.ready = true;
+      }
+    }
+    if (generation === lifecycleEpoch && !unsub) {
+      unsub = onAuthChange((user) => void hydrate(user));
+    }
+  })();
+  startPromise = pending;
   try {
-    await hydrate(await getAuthUser());
-  } catch (e) {
-    console.warn('[account] initial hydrate failed', e);
-    accountState.ready = true;
+    await pending;
+  } finally {
+    if (startPromise === pending) startPromise = null;
   }
-  unsub = onAuthChange((user) => void hydrate(user));
 }
 
 export function stopAccountSync(): void {
+  lifecycleEpoch += 1;
+  hydrateEpoch += 1;
+  startPromise = null;
   unsub?.();
   unsub = null;
 }
 
 /** Re-read the account row (after claiming/editing a handle). */
 export async function refreshAccount(): Promise<void> {
-  if (accountState.user) accountState.account = await getMyAccount();
+  if (accountState.user) await hydrate(accountState.user);
 }

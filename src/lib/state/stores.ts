@@ -18,6 +18,7 @@ let _initialized = false;
 let _initializedProfile: ProfileId | null = null;
 let _initPromise: Promise<void> | null = null;
 let _initializingProfile: ProfileId | null = null;
+let _initGeneration = 0;
 
 function resolveInitProfile(profile?: ProfileId): ProfileId {
   return profile ?? _initializedProfile ?? _initializingProfile ?? 'fatma';
@@ -36,18 +37,27 @@ export async function initStores(profile?: ProfileId): Promise<void> {
     return initStores(targetProfile);
   }
   _initializingProfile = targetProfile;
-  _initPromise = (async () => {
+  const generation = _initGeneration;
+  const pending = (async () => {
     setActiveProfile(targetProfile);
     await bootMigration(targetProfile);
     await ensureDefaults(targetProfile);
-    await hydrateStores(targetProfile);
+    await hydrateStores(targetProfile, generation);
+    if (generation !== _initGeneration) return;
     _initialized = true;
     _initializedProfile = targetProfile;
-  })().finally(() => {
-    _initPromise = null;
-    _initializingProfile = null;
-  });
-  return _initPromise;
+  })();
+  _initPromise = pending;
+  try {
+    await pending;
+  } finally {
+    // A reset/profile switch may already have installed a newer initializer.
+    // Never let the stale promise clear that newer in-flight identity.
+    if (_initPromise === pending) {
+      _initPromise = null;
+      _initializingProfile = null;
+    }
+  }
 }
 
 export function resetStores(): void {
@@ -55,7 +65,9 @@ export function resetStores(): void {
   // (both store factories guard their write subscription on `_initialized`).
   _initialized = false;
   _initializedProfile = null;
+  _initGeneration += 1;
   _initPromise = null;
+  _initializingProfile = null;
   resetDbCache();
   // Drop the previous profile's in-memory values so a logout / profile switch
   // can't bleed one user's XP/theme/easter-egg progress into the next — and so
@@ -161,12 +173,13 @@ export const theme = createSettingsStore('theme', DEFAULT_SETTINGS.theme) as Wri
 export const lang = createSettingsStore('lang', DEFAULT_SETTINGS.lang) as Writable<'pt-PT' | 'en' | 'tn' | 'fr' | 'ar'>;
 export const funMode = createSettingsStore('funMode', DEFAULT_SETTINGS.funMode) as Writable<boolean>;
 
-async function hydrateStores(profile: ProfileId): Promise<void> {
+async function hydrateStores(profile: ProfileId, generation = _initGeneration): Promise<void> {
   const d = db(profile);
   const [stateRow, settingsRow] = await Promise.all([
     d.state.get('main'),
     d.settings.get('main')
   ]);
+  if (generation !== _initGeneration) return;
   if (stateRow) {
     xp.set(stateRow.xp);
     heartClicks.set(stateRow.heartClicks);
@@ -317,5 +330,7 @@ export async function markQuizComplete(quizId: string): Promise<void> {
 export function __resetForTests(): void {
   _initialized = false;
   _initializedProfile = null;
+  _initGeneration += 1;
   _initPromise = null;
+  _initializingProfile = null;
 }

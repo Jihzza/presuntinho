@@ -6,7 +6,9 @@
   command = "npm run build"
 
 [build.environment]
-  NODE_VERSION = "20"
+  # Node 20 reached end-of-life and Supabase JS stopped supporting it on
+  # 2026-06-30. Keep builds and bundled Netlify Functions on an active LTS.
+  NODE_VERSION = "22"
   NPM_FLAGS = "--legacy-peer-deps"
 
 # SPA fallback — SvelteKit adapter-static emits a single index.html fallback
@@ -73,9 +75,10 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    # Allow same-origin microphone/camera for the agent + private Mensagens
-    # audio/media flows; keep geolocation disabled.
-    Permissions-Policy = "geolocation=(), microphone=(self), camera=(self)"
+    # Keep calling capabilities same-origin only. `speaker-selection` gates
+    # output-device pickers/setSinkId and `display-capture` gates screen share
+    # in browsers that implement those Permissions Policy directives.
+    Permissions-Policy = "geolocation=(), microphone=(self), camera=(self), speaker-selection=(self), display-capture=(self)"
 
 # Pretty URL aliases (UNCHANGED from V3)
 [[redirects]]

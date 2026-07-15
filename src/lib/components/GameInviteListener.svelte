@@ -27,7 +27,15 @@
   const ignoredAt = new Map<string, number>();
   const lastSeenCreatedAt = new Map<string, number>();
   const realtimeTouched = new Map<string, number>();
+  // `send_game_invite` replaces the previous row with a new semantic id. Keep
+  // a per-sender/game high-water mark so an in-flight snapshot can never put
+  // the deleted invitation back after the replacement INSERT arrives.
+  const latestBySenderGame = new Map<string, { id: string; createdAt: number }>();
   const invite = $derived(invites[0] ?? null);
+
+  function senderGameKey(item: GameInvite): string {
+    return `${item.from.id}:${item.game}`;
+  }
 
   function scheduleExpiry(): void {
     if (expiryTimer) clearTimeout(expiryTimer);
@@ -41,8 +49,20 @@
     }, delay + 25);
   }
 
-  function canShowInvite(next: GameInvite): boolean {
+  function canShowInvite(next: GameInvite, authoritativeRealtime = false): boolean {
     const createdAt = Date.parse(next.createdAt);
+    const key = senderGameKey(next);
+    const latest = latestBySenderGame.get(key);
+    if (
+      latest &&
+      latest.id !== next.id &&
+      Number.isFinite(createdAt) &&
+      latest.createdAt >= createdAt &&
+      !authoritativeRealtime
+    ) return false;
+    if (Number.isFinite(createdAt)) {
+      latestBySenderGame.set(key, { id: next.id, createdAt });
+    }
     if (Number.isFinite(createdAt)) {
       lastSeenCreatedAt.set(next.id, Math.max(lastSeenCreatedAt.get(next.id) ?? 0, createdAt));
     }
@@ -56,9 +76,10 @@
 
   function addInvite(next: GameInvite, announce = false, realtime = false): void {
     if (realtime) realtimeTouched.set(next.id, ++realtimeRevision);
-    if (!canShowInvite(next)) return;
+    if (!canShowInvite(next, realtime)) return;
     const existed = invites.some((item) => item.id === next.id);
-    invites = [next, ...invites.filter((item) => item.id !== next.id)].sort(
+    const key = senderGameKey(next);
+    invites = [next, ...invites.filter((item) => item.id !== next.id && senderGameKey(item) !== key)].sort(
       (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
     );
     scheduleExpiry();
@@ -116,6 +137,7 @@
     ignoredAt.clear();
     lastSeenCreatedAt.clear();
     realtimeTouched.clear();
+    latestBySenderGame.clear();
     realtimeRevision = 0;
     accepting = false;
     acceptingInviteId = null;
