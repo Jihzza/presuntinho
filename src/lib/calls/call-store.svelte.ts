@@ -31,10 +31,14 @@ import {
 	isRingingCallLive,
 	isTerminalCallStatus,
 	otherCallParticipant,
+	parseCallHandoff,
+	parseCallHandoffTarget,
 	parseCallDelivery,
 	parseCallSession,
 	type CallDeliveryStage,
 	type CallKind,
+	type CallHandoff,
+	type CallHandoffTarget,
 	type CallPeerProfile,
 	type CallSession,
 	type CallSignal,
@@ -50,6 +54,8 @@ const GLOBAL_POLL_MS = 4_000;
 const PROGRESS_POLL_MS = 2_500;
 const INCOMING_ACK_MAX_ATTEMPTS = 4;
 const INCOMING_ACK_RETRY_DELAYS_MS = [350, 1_000, 2_500] as const;
+const INSTALLATION_HEARTBEAT_MS = 30_000;
+const HANDOFF_RECONCILE_MS = 4_000;
 const CALL_DELIVERY_PROGRESS_COLUMNS = [
 	'id', 'call_id', 'account', 'installation_id', 'channel', 'status',
 	'provider_accepted_at', 'received_at', 'presented_at', 'ringing_at',
@@ -146,6 +152,12 @@ export class CallStore {
 	minimized = $state(false);
 	followupAction = $state<CallFollowupAction | null>(null);
 	followupStatus = $state<CallFollowupStatus>('idle');
+	handoffTargets = $state.raw<CallHandoffTarget[]>([]);
+	handoffPickerOpen = $state(false);
+	handoffBusy = $state(false);
+	handoffError = $state<string | null>(null);
+	handoffOffer = $state<CallHandoff | null>(null);
+	handoffOutgoing = $state<CallHandoff | null>(null);
 
 	#userId: string | null = null;
 	#deviceId = '';
@@ -197,6 +209,12 @@ export class CallStore {
 	#audioUnlockListener: (() => void) | null = null;
 	#lastStart: { conversationId: string; kind: CallKind; requestId: string } | null = null;
 	#followupClientIds = new Map<string, string>();
+	#installationHeartbeatTimer: ReturnType<typeof setInterval> | null = null;
+	#handoffPollTimer: ReturnType<typeof setTimeout> | null = null;
+	#handoffExpiryTimer: ReturnType<typeof setTimeout> | null = null;
+	#handoffOperationGeneration = 0;
+	#activeHandoffId: string | null = null;
+	#locallyTransferredCallId: string | null = null;
 
 	get busy(): boolean {
 		return this.phase !== 'idle' && this.phase !== 'ended' && this.phase !== 'error';
@@ -222,6 +240,17 @@ export class CallStore {
 			this.phase === 'ended' &&
 			this.outcome === 'declined' &&
 			this.direction === 'incoming'
+		);
+	}
+
+	get canHandoff(): boolean {
+		const call = this.session;
+		return Boolean(
+			call &&
+			call.status === 'accepted' &&
+			this.#isClaimedByThisDevice(call) &&
+			(this.phase === 'active' || this.phase === 'reconnecting') &&
+			!this.handoffOutgoing
 		);
 	}
 
@@ -255,6 +284,8 @@ export class CallStore {
 		this.#deviceId = deviceId(this.#installationId);
 		this.#openGlobalChannel(next, this.#globalGeneration);
 		this.#installLifecycleListeners();
+		this.#startInstallationHeartbeat();
+		this.#startHandoffPoll(this.#globalGeneration);
 		void this.#registerInstallation();
 	}
 
@@ -378,6 +409,235 @@ export class CallStore {
 		if (!this.#lastStart || this.busy) return;
 		const { conversationId, kind, requestId } = this.#lastStart;
 		void this.startCall(conversationId, kind, requestId);
+	}
+
+	async openHandoffPicker(): Promise<void> {
+		const call = this.session;
+		if (!call || !this.canHandoff || this.handoffBusy) return;
+		this.handoffPickerOpen = true;
+		this.handoffBusy = true;
+		this.handoffError = null;
+		try {
+			const { data, error } = await getSupabaseClient().rpc('list_call_handoff_targets', {
+				p_call: call.id,
+				p_device: this.#deviceId
+			});
+			if (error) throw error;
+			if (this.session?.id !== call.id || !this.#isClaimedByThisDevice(this.session)) return;
+			this.handoffTargets = (Array.isArray(data) ? data : [])
+				.map(parseCallHandoffTarget)
+				.filter((target): target is CallHandoffTarget => Boolean(target));
+		} catch (error) {
+			this.handoffTargets = [];
+			this.handoffError = this.#handoffErrorCode(error, 'handoff_unavailable');
+		} finally {
+			this.handoffBusy = false;
+		}
+	}
+
+	closeHandoffPicker(): void {
+		if (this.handoffBusy) return;
+		this.handoffPickerOpen = false;
+		this.handoffTargets = [];
+		this.handoffError = null;
+	}
+
+	async requestHandoff(targetInstallationId: string): Promise<void> {
+		const call = this.session;
+		if (
+			!call ||
+			!this.canHandoff ||
+			this.handoffBusy ||
+			!this.handoffTargets.some((target) => target.installationId === targetInstallationId)
+		) return;
+		const requestId = crypto.randomUUID();
+		const operation = ++this.#handoffOperationGeneration;
+		this.handoffBusy = true;
+		this.handoffError = null;
+		try {
+			const { data, error } = await getSupabaseClient().rpc('request_call_handoff', {
+				p_call: call.id,
+				p_device: this.#deviceId,
+				p_target_installation_id: targetInstallationId,
+				p_request_id: requestId
+			});
+			if (error) throw error;
+			const handoff = parseCallHandoff(firstRow(data));
+			if (!handoff || handoff.callId !== call.id || handoff.fromDevice !== this.#deviceId) {
+				throw new Error('handoff_invalid_response');
+			}
+			if (operation !== this.#handoffOperationGeneration || this.session?.id !== call.id) return;
+			this.handoffOutgoing = handoff;
+			this.handoffPickerOpen = false;
+			this.handoffTargets = [];
+			this.#scheduleHandoffExpiry(handoff);
+		} catch (error) {
+			if (operation === this.#handoffOperationGeneration) {
+				this.handoffError = this.#handoffErrorCode(error, 'handoff_request_failed');
+			}
+		} finally {
+			if (operation === this.#handoffOperationGeneration) this.handoffBusy = false;
+		}
+	}
+
+	async cancelOutgoingHandoff(): Promise<void> {
+		const handoff = this.handoffOutgoing;
+		if (!handoff || this.handoffBusy) return;
+		const operation = ++this.#handoffOperationGeneration;
+		this.handoffBusy = true;
+		this.handoffError = null;
+		try {
+			const { data, error } = await getSupabaseClient().rpc('cancel_call_handoff', {
+				p_handoff: handoff.id,
+				p_device: this.#deviceId
+			});
+			if (error || data !== true) throw error ?? new Error('handoff_cancel_rejected');
+			if (operation !== this.#handoffOperationGeneration) return;
+			this.#clearHandoffExpiry();
+			this.handoffOutgoing = null;
+		} catch (error) {
+			if (operation === this.#handoffOperationGeneration) {
+				this.handoffError = this.#handoffErrorCode(error, 'handoff_cancel_failed');
+			}
+		} finally {
+			if (operation === this.#handoffOperationGeneration) this.handoffBusy = false;
+		}
+	}
+
+	async declineHandoffOffer(): Promise<void> {
+		const handoff = this.handoffOffer;
+		if (!handoff || this.handoffBusy) return;
+		const operation = ++this.#handoffOperationGeneration;
+		this.handoffBusy = true;
+		this.handoffError = null;
+		try {
+			const { data, error } = await getSupabaseClient().rpc('cancel_call_handoff', {
+				p_handoff: handoff.id,
+				p_device: this.#deviceId
+			});
+			if (error || data !== true) throw error ?? new Error('handoff_decline_rejected');
+			if (operation === this.#handoffOperationGeneration) this.handoffOffer = null;
+		} catch (error) {
+			if (operation === this.#handoffOperationGeneration) {
+				this.handoffError = this.#handoffErrorCode(error, 'handoff_decline_failed');
+			}
+		} finally {
+			if (operation === this.#handoffOperationGeneration) this.handoffBusy = false;
+		}
+	}
+
+	async acceptHandoffOffer(): Promise<void> {
+		// Media APIs and AudioContext require the original user gesture. Ownership
+		// moves only after media succeeds, so a permission denial cannot strand the
+		// live call on a device that never became usable.
+		callAudio.primeFromGesture();
+		const handoff = this.handoffOffer;
+		if (!handoff || this.handoffBusy || this.phase !== 'idle') return;
+		const userId = this.#userId;
+		const device = this.#deviceId;
+		const globalGeneration = this.#globalGeneration;
+		if (!userId || !device) return;
+		const operation = ++this.#handoffOperationGeneration;
+		this.handoffBusy = true;
+		this.handoffError = null;
+		let stream: MediaStream | null = null;
+		try {
+			const { data: rawCall, error: callError } = await getSupabaseClient()
+				.from('call_sessions')
+				.select('*')
+				.eq('id', handoff.callId)
+				.maybeSingle();
+			if (callError) throw callError;
+			const pendingCall = parseCallSession(rawCall);
+			if (
+				!pendingCall ||
+				pendingCall.status !== 'accepted' ||
+				callDeviceForParticipant(pendingCall, userId) !== handoff.fromDevice
+			) throw new Error('handoff_call_changed');
+			stream = await acquireLocalMedia({ kind: pendingCall.kind, facingMode: this.facingMode });
+			if (
+				operation !== this.#handoffOperationGeneration ||
+				this.handoffOffer?.id !== handoff.id ||
+				this.phase !== 'idle'
+			) {
+				stopMediaStream(stream);
+				return;
+			}
+			const { data, error } = await getSupabaseClient().rpc('claim_call_handoff', {
+				p_handoff: handoff.id,
+				p_device: device
+			});
+			let call: CallSession | null = null;
+			if (error) {
+				// The claim RPC is an atomic ownership boundary, but its HTTP response can
+				// still be lost after commit. Re-read the durable call before reporting a
+				// failure: if this exact device owns the participant lease, continuing is
+				// the only truthful and safe outcome.
+				const { data: recoveredRow, error: recoveryError } = await getSupabaseClient()
+					.from('call_sessions')
+					.select('*')
+					.eq('id', handoff.callId)
+					.maybeSingle();
+				if (!recoveryError) call = parseCallSession(recoveredRow);
+				if (!call || call.status !== 'accepted' || callDeviceForParticipant(call, userId) !== device) {
+					throw error;
+				}
+			} else {
+				const result = data && typeof data === 'object' && !Array.isArray(data)
+					? data as Record<string, unknown>
+					: null;
+				if (!result || result.ok !== true) {
+					throw new Error(`handoff_${typeof result?.reason === 'string' ? result.reason : 'claim_rejected'}`);
+				}
+				call = parseCallSession(result.call);
+			}
+			if (
+				!call ||
+				call.status !== 'accepted' ||
+				callDeviceForParticipant(call, userId) !== device
+			) throw new Error('handoff_claim_invalid');
+			// `call_handoffs=claimed` can arrive before this RPC response and clear the
+			// visual offer. Once the transaction commits, its returned call row is the
+			// authority; presentation state must not strand the transferred lease.
+			if (
+				operation !== this.#handoffOperationGeneration ||
+				this.#userId !== userId ||
+				this.#deviceId !== device ||
+				this.#globalGeneration !== globalGeneration ||
+				this.phase !== 'idle'
+			) {
+				stopMediaStream(stream);
+				return;
+			}
+
+			this.requestedKind = call.kind;
+			this.localStream = stream;
+			this.#prepareLocalMediaState(call.kind, stream);
+			this.handoffOffer = null;
+			this.handoffBusy = false;
+			this.#activeHandoffId = handoff.id;
+			this.#transition({ type: 'HANDOFF_ACCEPTED', call });
+			if (this.session?.id !== call.id || (this.phase as CallPhase) !== 'connecting') {
+				stopMediaStream(stream);
+				this.localStream = null;
+				throw new Error('handoff_transition_failed');
+			}
+			this.#startHeartbeat(call);
+			void this.#loadPeerProfile(call);
+			this.#scheduleNegotiationTimeout(call);
+			await this.#openCallChannel(call).catch(() => {
+				if (this.session?.id === call.id) {
+					this.realtimeHealth = 'degraded';
+					this.#scheduleReconnect(call, this.#callGeneration);
+				}
+			});
+		} catch (error) {
+			if (stream && this.localStream !== stream) stopMediaStream(stream);
+			if (operation === this.#handoffOperationGeneration) {
+				this.handoffError = this.#handoffErrorCode(error, 'handoff_claim_failed');
+				this.handoffBusy = false;
+			}
+		}
 	}
 
 	minimize(): void {
@@ -810,6 +1070,14 @@ export class CallStore {
 				if (generation !== this.#globalGeneration || this.#globalChannel !== channel) return;
 				this.#applyDatabaseRow(payload.new);
 			})
+			.on(
+				'postgres_changes',
+				{ event: '*', schema: 'public', table: 'call_handoffs', filter: `account=eq.${userId}` },
+				(payload) => {
+					if (generation !== this.#globalGeneration || this.#globalChannel !== channel) return;
+					this.#applyHandoffRow(payload.new);
+				}
+			)
 			.subscribe((status) => {
 				if (generation !== this.#globalGeneration || this.#globalChannel !== channel) return;
 				if (status === 'SUBSCRIBED') {
@@ -818,6 +1086,7 @@ export class CallStore {
 					this.readiness = 'ready';
 					this.#stopIncomingPoll();
 					void this.#reconcileGlobalCalls(generation);
+					void this.#reconcileHandoffs(generation);
 					void this.#heartbeatInstallation();
 					if (this.phase === 'incoming') this.#retryPendingIncomingAckNow();
 				} else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') {
@@ -832,6 +1101,7 @@ export class CallStore {
 		this.readiness = navigator.onLine ? 'connecting' : 'offline';
 		this.#startIncomingPoll(generation);
 		void this.#reconcileGlobalCalls(generation);
+		void this.#reconcileHandoffs(generation);
 	}
 
 	#scheduleGlobalReconnect(userId: string, generation: number, channel: RealtimeChannel): void {
@@ -894,6 +1164,77 @@ export class CallStore {
 		}
 	}
 
+	async #reconcileHandoffs(generation: number): Promise<void> {
+		const userId = this.#userId;
+		const installationId = this.#installationId;
+		if (!userId || !installationId || generation !== this.#globalGeneration) return;
+		try {
+			const { data: incoming, error: incomingError } = await getSupabaseClient()
+				.from('call_handoffs')
+				.select('*')
+				.eq('account', userId)
+				.eq('target_installation_id', installationId)
+				.eq('status', 'requested')
+				.gt('expires_at', new Date().toISOString())
+				.order('created_at', { ascending: false })
+				.limit(1);
+			if (incomingError) throw incomingError;
+			if (generation !== this.#globalGeneration || userId !== this.#userId) return;
+			const offer = parseCallHandoff(incoming?.[0]);
+			if (offer) this.#applyHandoffRow(incoming?.[0]);
+			else if (this.handoffOffer?.targetInstallationId === installationId) this.handoffOffer = null;
+
+			const call = this.session;
+			if (call?.status === 'accepted' && this.#isClaimedByThisDevice(call)) {
+				const { data: outgoing, error: outgoingError } = await getSupabaseClient()
+					.from('call_handoffs')
+					.select('*')
+					.eq('account', userId)
+					.eq('call_id', call.id)
+					.in('status', ['requested', 'claimed'])
+					.order('created_at', { ascending: false })
+					.limit(1);
+				if (outgoingError) throw outgoingError;
+				if (generation !== this.#globalGeneration || this.session?.id !== call.id) return;
+				if (outgoing?.[0]) this.#applyHandoffRow(outgoing[0]);
+			}
+		} catch {
+			/* Backend-first rollout: Realtime/visibility will retry after migration. */
+		}
+	}
+
+	#applyHandoffRow(value: unknown): void {
+		const handoff = parseCallHandoff(value);
+		if (!handoff || !this.#userId || handoff.account !== this.#userId) return;
+		const pending = handoff.status === 'requested' && Date.parse(handoff.expiresAt) > Date.now();
+
+		if (handoff.targetInstallationId === this.#installationId) {
+			if (pending && handoff.fromDevice !== this.#deviceId && this.phase === 'idle') {
+				this.handoffOffer = handoff;
+				this.handoffError = null;
+			} else if (this.handoffOffer?.id === handoff.id && !pending) {
+				this.handoffOffer = null;
+			}
+		}
+
+		if (this.handoffOutgoing?.id === handoff.id || handoff.fromDevice === this.#deviceId) {
+			if (pending) {
+				this.handoffOutgoing = handoff;
+				this.#scheduleHandoffExpiry(handoff);
+				return;
+			}
+			this.#clearHandoffExpiry();
+			if (handoff.status === 'claimed' || handoff.status === 'completed') {
+				const call = this.session;
+				if (call?.id === handoff.callId && call.status === 'accepted') this.#finishTransferred(call);
+				return;
+			}
+			this.handoffOutgoing = null;
+			if (handoff.status === 'declined') this.handoffError = 'handoff_declined';
+			else if (handoff.status === 'expired') this.handoffError = 'handoff_expired';
+		}
+	}
+
 	async #loadIncoming(generation: number): Promise<void> {
 		const userId = this.#userId;
 		if (!userId || generation !== this.#globalGeneration || this.busy) return;
@@ -936,16 +1277,36 @@ export class CallStore {
 			return;
 		}
 		if (this.session?.id === call.id) {
+			if (
+				this.#locallyTransferredCallId === call.id &&
+				this.phase === 'ended' &&
+				this.outcome === 'transferred'
+			) return;
+			const previous = this.session;
 			if (call.status === 'accepted') {
 				this.#closeCallNotification(call.id);
 				if (!this.#isClaimedByThisDevice(call)) {
-					// Another tab/phone of this account claimed the call first.
-					this.#finish(
-						{ ...call, status: 'ended', endedAt: new Date().toISOString() },
-						'answered_elsewhere'
-					);
+					const movedActiveCall = previous.status === 'accepted' &&
+						callDeviceForParticipant(previous, this.#userId) === this.#deviceId &&
+						['connecting', 'active', 'reconnecting'].includes(this.phase);
+					if (movedActiveCall) this.#finishTransferred(call);
+					else {
+						// Another tab/phone of this account answered the incoming call first.
+						this.#finish(
+							{ ...call, status: 'ended', endedAt: new Date().toISOString() },
+							'answered_elsewhere'
+						);
+					}
 					return;
 				}
+				const other = otherCallParticipant(call, this.#userId);
+				const remoteDeviceChanged = Boolean(
+					other &&
+					previous.status === 'accepted' &&
+					callDeviceForParticipant(previous, other) &&
+					callDeviceForParticipant(call, other) &&
+					callDeviceForParticipant(previous, other) !== callDeviceForParticipant(call, other)
+				);
 				this.session = call;
 				if (
 					this.phase === 'notifying' ||
@@ -958,7 +1319,8 @@ export class CallStore {
 				this.#clearExpiry();
 				this.#startHeartbeat(call);
 				if (this.phase !== 'active') this.#scheduleNegotiationTimeout(call);
-				if (this.#callChannel) void this.#ensureTransport(call);
+				if (remoteDeviceChanged) this.#restartForRemoteHandoff(call);
+				else if (this.#callChannel) void this.#ensureTransport(call);
 			} else if (isTerminalCallStatus(call.status) && this.phase !== 'error') {
 				this.#finish(call, this.#outcomeForCall(call));
 			} else {
@@ -1407,6 +1769,20 @@ export class CallStore {
 		}
 	}
 
+	#restartForRemoteHandoff(call: CallSession): void {
+		if (this.session?.id !== call.id || !this.#isClaimedByThisDevice(call)) return;
+		if (this.phase === 'active') this.#transition({ type: 'CONNECTION_LOST' });
+		this.#clearNegotiationTimeout();
+		this.#scheduleNegotiationTimeout(call);
+		this.#reconnectAttempts = 0;
+		void this.#openCallChannel(call).catch(() => {
+			if (this.session?.id === call.id) {
+				this.realtimeHealth = 'degraded';
+				this.#scheduleReconnect(call, this.#callGeneration);
+			}
+		});
+	}
+
 	async #openCallChannel(call: CallSession): Promise<void> {
 		if (!this.#userId || this.session?.id !== call.id) return;
 		if (call.status === 'accepted' && !this.#isClaimedByThisDevice(call)) throw new Error('call_claimed_elsewhere');
@@ -1557,6 +1933,7 @@ export class CallStore {
 					this.#clearNegotiationTimeout();
 					this.#transition({ type: 'CONNECTED' });
 					this.#activateConnectedRuntime(peer, generation);
+					void this.#completeActiveHandoff(call.id);
 				},
 				onReconnecting: () => {
 					if (generation === this.#callGeneration && this.session?.id === call.id) {
@@ -1843,6 +2220,63 @@ export class CallStore {
 		this.#expiryTimer = null;
 	}
 
+	#scheduleHandoffExpiry(handoff: CallHandoff): void {
+		this.#clearHandoffExpiry();
+		const delay = Math.max(0, Date.parse(handoff.expiresAt) - Date.now()) + 80;
+		this.#handoffExpiryTimer = setTimeout(() => {
+			this.#handoffExpiryTimer = null;
+			if (this.handoffOutgoing?.id !== handoff.id || this.handoffOutgoing.status !== 'requested') return;
+			void this.cancelOutgoingHandoff().finally(() => {
+				if (!this.handoffOutgoing || this.handoffOutgoing.id === handoff.id) {
+					this.handoffError = 'handoff_expired';
+				}
+			});
+		}, delay);
+	}
+
+	#clearHandoffExpiry(): void {
+		if (this.#handoffExpiryTimer) clearTimeout(this.#handoffExpiryTimer);
+		this.#handoffExpiryTimer = null;
+	}
+
+	async #completeActiveHandoff(callId: string): Promise<void> {
+		const handoffId = this.#activeHandoffId;
+		if (!handoffId || this.session?.id !== callId || !this.#isClaimedByThisDevice(this.session)) return;
+		for (let attempt = 0; attempt < 3; attempt += 1) {
+			try {
+				const { data, error } = await getSupabaseClient().rpc('complete_call_handoff', {
+					p_handoff: handoffId,
+					p_device: this.#deviceId
+				});
+				if (error) throw error;
+				if (data === true && this.#activeHandoffId === handoffId) this.#activeHandoffId = null;
+				return;
+			} catch {
+				if (attempt + 1 < 3) await wait(250 * 2 ** attempt);
+			}
+		}
+	}
+
+	#finishTransferred(call: CallSession): void {
+		if (
+			this.#locallyTransferredCallId === call.id &&
+			this.phase === 'ended' &&
+			this.outcome === 'transferred'
+		) return;
+		this.#locallyTransferredCallId = call.id;
+		this.#handoffOperationGeneration += 1;
+		this.#clearHandoffExpiry();
+		this.handoffOutgoing = null;
+		this.handoffPickerOpen = false;
+		this.handoffTargets = [];
+		this.handoffBusy = false;
+		this.handoffError = null;
+		this.#activeHandoffId = null;
+		// This is local teardown only. Never call end_call: the same durable call
+		// continues on the device that atomically acquired this participant lease.
+		this.#finish(call, 'transferred');
+	}
+
 	#finish(call: CallSession, outcome = this.#outcomeForCall(call)): void {
 		this.#operationGeneration += 1;
 		this.#clearIncomingAck();
@@ -1957,6 +2391,16 @@ export class CallStore {
 		this.followupStatus = 'idle';
 		this.#followupClientIds.clear();
 		this.#lastStart = null;
+		this.#handoffOperationGeneration += 1;
+		this.#clearHandoffExpiry();
+		this.handoffTargets = [];
+		this.handoffPickerOpen = false;
+		this.handoffBusy = false;
+		this.handoffError = null;
+		this.handoffOffer = null;
+		this.handoffOutgoing = null;
+		this.#activeHandoffId = null;
+		this.#locallyTransferredCallId = null;
 		this.attentionMuted = false;
 		callAudio.setMuted(false);
 	}
@@ -2064,6 +2508,7 @@ export class CallStore {
 				return;
 			}
 			void this.#reconcileGlobalCalls(this.#globalGeneration);
+			void this.#reconcileHandoffs(this.#globalGeneration);
 			void this.#heartbeatInstallation();
 			const call = this.session;
 			if (
@@ -2127,6 +2572,39 @@ export class CallStore {
 		this.#resumeListener = null;
 		this.#pushListener = null;
 		this.#audioUnlockListener = null;
+		if (this.#installationHeartbeatTimer) clearInterval(this.#installationHeartbeatTimer);
+		this.#installationHeartbeatTimer = null;
+		if (this.#handoffPollTimer) clearTimeout(this.#handoffPollTimer);
+		this.#handoffPollTimer = null;
+	}
+
+	#startInstallationHeartbeat(): void {
+		if (this.#installationHeartbeatTimer) clearInterval(this.#installationHeartbeatTimer);
+		this.#installationHeartbeatTimer = setInterval(() => {
+			if (
+				this.#userId &&
+				typeof document !== 'undefined' &&
+				document.visibilityState === 'visible' &&
+				typeof navigator !== 'undefined' &&
+				navigator.onLine
+			) void this.#heartbeatInstallation();
+		}, INSTALLATION_HEARTBEAT_MS);
+	}
+
+	#startHandoffPoll(generation: number): void {
+		if (this.#handoffPollTimer || generation !== this.#globalGeneration) return;
+		const poll = () => {
+			this.#handoffPollTimer = null;
+			if (generation !== this.#globalGeneration || !this.#userId) return;
+			if (
+				typeof document !== 'undefined' &&
+				document.visibilityState === 'visible' &&
+				typeof navigator !== 'undefined' &&
+				navigator.onLine
+			) void this.#reconcileHandoffs(generation);
+			this.#handoffPollTimer = setTimeout(poll, HANDOFF_RECONCILE_MS);
+		};
+		this.#handoffPollTimer = setTimeout(poll, 500);
 	}
 
 	async #registerInstallation(): Promise<boolean> {
@@ -2172,6 +2650,8 @@ export class CallStore {
 		);
 		return {
 			realtime: true,
+			call_handoff: true,
+			video_calls: typeof navigator !== 'undefined' && Boolean(navigator.mediaDevices?.getUserMedia),
 			web_push: typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window,
 			notification_actions: typeof window !== 'undefined' && 'Notification' in window,
 			vibrate: typeof navigator !== 'undefined' && 'vibrate' in navigator,
@@ -2248,6 +2728,20 @@ export class CallStore {
 
 	#isClaimedByThisDevice(call: CallSession): boolean {
 		return Boolean(this.#userId && this.#deviceId && callDeviceForParticipant(call, this.#userId) === this.#deviceId);
+	}
+
+	#handoffErrorCode(error: unknown, fallback: string): string {
+		const code = this.#errorCode(error, fallback).toLowerCase();
+		if (code === 'media_denied' || code === 'media_missing' || code === 'media_unsupported') return code;
+		if (code.includes('already_claimed') || code.includes('source_changed') || code.includes('claimed by another device')) {
+			return 'handoff_claimed_elsewhere';
+		}
+		if (code.includes('expired')) return 'handoff_expired';
+		if (code.includes('declined')) return 'handoff_declined';
+		if (code.includes('not active') || code.includes('not registered') || code.includes('unavailable')) {
+			return 'handoff_unavailable';
+		}
+		return code || fallback;
 	}
 
 	#errorCode(error: unknown, fallback: string): string {

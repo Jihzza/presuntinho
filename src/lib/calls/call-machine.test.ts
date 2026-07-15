@@ -4,6 +4,8 @@ import {
 	callTopic,
 	deliveryConfirmsRinging,
 	isCallSignalEnvelope,
+	parseCallHandoff,
+	parseCallHandoffTarget,
 	parseCallDelivery,
 	parseCallSession,
 	type CallSession
@@ -79,6 +81,43 @@ describe('call session boundary', () => {
 		expect(deliveryConfirmsRinging('ringing')).toBe(true);
 		expect(deliveryConfirmsRinging('opened')).toBe(false);
 	});
+
+	it('parses handoff lifecycle metadata without accepting malformed device claims', () => {
+		const handoff = {
+			id: '58ef18ff-0001-485a-b0ce-08c535bc5c6e',
+			call_id: ROW.id,
+			account: ROW.caller,
+			from_device: 'source-install-12345678.tab-1234567890',
+			from_installation_id: 'source-install-12345678',
+			target_installation_id: 'target-install-12345678',
+			claimed_device: null,
+			status: 'requested',
+			client_request_id: '68ef18ff-0001-485a-b0ce-08c535bc5c6e',
+			created_at: ROW.created_at,
+			expires_at: ROW.expires_at,
+			claimed_at: null,
+			completed_at: null,
+			cancelled_at: null
+		};
+		expect(parseCallHandoff(handoff)).toMatchObject({
+			callId: ROW.id,
+			status: 'requested',
+			targetInstallationId: 'target-install-12345678'
+		});
+		expect(parseCallHandoff({ ...handoff, status: 'claimed' })).toBeNull();
+		expect(parseCallHandoff({
+			...handoff,
+			claimed_device: 'target-install-12345678.tab-1234567890',
+			claimed_at: ROW.created_at
+		})).toBeNull();
+		expect(parseCallHandoff({ ...handoff, target_installation_id: handoff.from_installation_id })).toBeNull();
+		expect(parseCallHandoffTarget({
+			installation_id: 'target-install-12345678',
+			platform: 'android',
+			last_seen_at: ROW.created_at,
+			supports_video: true
+		})).toMatchObject({ platform: 'android', supportsVideo: true });
+	});
 });
 
 describe('call state machine', () => {
@@ -132,5 +171,18 @@ describe('call state machine', () => {
 		const ended = reduceCallMachine(incoming, { type: 'ENDED', call: { ...ringing, status: 'declined' } });
 		const accepted = { ...ringing, status: 'accepted' as const };
 		expect(reduceCallMachine(ended, { type: 'ACCEPTED', call: accepted })).toEqual(ended);
+	});
+
+	it('adopts an already accepted shared call from an idle target device', () => {
+		const ringing = parseCallSession(ROW) as CallSession;
+		const accepted = {
+			...ringing,
+			status: 'accepted' as const,
+			calleeDevice: 'device-b-1234567890',
+			calleeHeartbeatAt: ROW.created_at,
+			calleeLeaseExpiresAt: ROW.caller_lease_expires_at
+		};
+		const state = reduceCallMachine(INITIAL_CALL_MACHINE, { type: 'HANDOFF_ACCEPTED', call: accepted });
+		expect(state).toMatchObject({ phase: 'connecting', call: { id: ROW.id }, outcome: null });
 	});
 });

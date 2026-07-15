@@ -18,7 +18,8 @@
 	const FOCUSABLE = 'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 	const label = $derived(callStore.peerProfile?.label || $t('calls.someone', { default: 'Alguém especial' }));
 	const isVideo = $derived(callStore.kind === 'video');
-	const showCall = $derived(callStore.phase !== 'idle');
+	const showHandoffOffer = $derived(callStore.phase === 'idle' && Boolean(callStore.handoffOffer));
+	const showCall = $derived(callStore.phase !== 'idle' || showHandoffOffer);
 	const canMinimize = $derived(callStore.phase === 'active' || callStore.phase === 'reconnecting');
 	const showMiniCall = $derived(showCall && canMinimize && callStore.minimized);
 	const showExpandedCall = $derived(showCall && !showMiniCall);
@@ -230,9 +231,37 @@
 			case 'busy': return $t('calls.status.busy', { default: `${label} está noutra chamada` });
 			case 'unreachable': return $t('calls.status.unreachable', { default: 'Não foi possível chegar ao outro dispositivo' });
 			case 'answered_elsewhere': return $t('calls.status.answered_elsewhere', { default: 'Atendida noutro dispositivo' });
+			case 'transferred': return $t('calls.handoff.moved', { default: 'A chamada continua no outro dispositivo' });
 			case 'connection_lost': return $t('calls.status.connection_lost', { default: 'A ligação foi perdida' });
 			case 'failed': return $t('calls.status.failed', { default: 'A chamada falhou' });
 			default: return $t('calls.status.ended', { default: 'Chamada terminada' });
+		}
+	}
+
+	function handoffPlatform(platform: string): string {
+		switch (platform) {
+			case 'ios': return $t('calls.handoff.platform.ios', { default: 'iPhone ou iPad' });
+			case 'android': return $t('calls.handoff.platform.android', { default: 'Android' });
+			case 'windows': return $t('calls.handoff.platform.windows', { default: 'Windows' });
+			case 'macos': return $t('calls.handoff.platform.macos', { default: 'Mac' });
+			case 'linux': return $t('calls.handoff.platform.linux', { default: 'Linux' });
+			default: return $t('calls.handoff.platform.other', { default: 'Outro dispositivo' });
+		}
+	}
+
+	function handoffTargetLabel(platform: string, installationId: string): string {
+		return `${handoffPlatform(platform)} · ${installationId.slice(-4)}`;
+	}
+
+	function handoffErrorText(): string {
+		switch (callStore.handoffError) {
+			case 'handoff_expired': return $t('calls.handoff.error.expired', { default: 'O outro dispositivo não respondeu. A chamada continua aqui.' });
+			case 'handoff_declined': return $t('calls.handoff.error.declined', { default: 'A transferência foi recusada. A chamada continua aqui.' });
+			case 'handoff_claimed_elsewhere': return $t('calls.handoff.error.claimed', { default: 'Outro separador recebeu a chamada primeiro.' });
+			case 'handoff_unavailable': return $t('calls.handoff.error.unavailable', { default: 'Esse dispositivo deixou de estar disponível.' });
+			case 'media_denied': return $t('calls.handoff.error.permission', { default: 'Permite o microfone e a câmara antes de continuar a chamada aqui.' });
+			case 'media_missing': return $t('calls.handoff.error.media', { default: 'Este dispositivo não tem o microfone ou a câmara necessários.' });
+			default: return $t('calls.handoff.error.generic', { default: 'Não foi possível mover a chamada. Ela continua no dispositivo atual.' });
 		}
 	}
 
@@ -287,7 +316,8 @@
 		if (event.key === 'Escape') {
 			event.preventDefault();
 			event.stopPropagation();
-			if (callStore.phase === 'incoming' && !callStore.accepting) void callStore.decline();
+			if (showHandoffOffer && !callStore.handoffBusy) void callStore.declineHandoffOffer();
+			else if (callStore.phase === 'incoming' && !callStore.accepting) void callStore.decline();
 			else if (['preparing', 'creating', 'notifying', 'contacting', 'ringing', 'connecting'].includes(callStore.phase)) void callStore.end();
 			else if (callStore.phase === 'ended' || callStore.phase === 'error') callStore.dismiss();
 			return;
@@ -313,7 +343,36 @@
 </script>
 
 {#if showCall}
-	{#if showMiniCall}
+	{#if showHandoffOffer}
+		<div
+			bind:this={dialogElement}
+			class="handoff-offer-layer"
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="presuntinho-handoff-title"
+			aria-describedby="presuntinho-handoff-copy"
+			aria-busy={callStore.handoffBusy}
+			tabindex="-1"
+			onkeydown={handleDialogKeydown}
+		>
+			<div class="call-backdrop" aria-hidden="true"></div>
+			<section class="handoff-offer-card">
+				<div class="handoff-icon" aria-hidden="true">📲</div>
+				<p class="handoff-kicker">{$t('calls.handoff.offer_kicker', { default: 'Transferência segura' })}</p>
+				<h2 id="presuntinho-handoff-title">{$t('calls.handoff.offer_title', { default: 'Continuar a chamada neste dispositivo?' })}</h2>
+				<p id="presuntinho-handoff-copy">{$t('calls.handoff.offer_body', { default: 'O dispositivo atual só desliga depois de este assumir a mesma chamada.' })}</p>
+				{#if callStore.handoffError}<p class="handoff-error" role="alert">{handoffErrorText()}</p>{/if}
+				<div class="handoff-offer-actions">
+					<button type="button" class="handoff-decline" disabled={callStore.handoffBusy} onclick={() => void callStore.declineHandoffOffer()}>
+						{$t('calls.handoff.decline', { default: 'Agora não' })}
+					</button>
+					<button type="button" class="handoff-accept" disabled={callStore.handoffBusy} onclick={() => void callStore.acceptHandoffOffer()}>
+						{callStore.handoffBusy ? $t('calls.handoff.joining', { default: 'A preparar…' }) : $t('calls.handoff.accept', { default: 'Continuar aqui' })}
+					</button>
+				</div>
+			</section>
+		</div>
+	{:else if showMiniCall}
 		<aside
 			class="call-mini"
 			data-phase={callStore.phase}
@@ -441,6 +500,49 @@
 					onTogglePictureInPicture={togglePictureInPicture}
 				/>
 			{/if}
+			{#if callStore.phase === 'active' || callStore.phase === 'reconnecting'}
+				<section class="handoff-panel" aria-label={$t('calls.handoff.title', { default: 'Mudar de dispositivo' })}>
+					{#if callStore.handoffOutgoing}
+						<div class="handoff-waiting" role="status" aria-live="polite">
+							<span aria-hidden="true">📲</span>
+							<div>
+								<strong>{$t('calls.handoff.waiting', { default: 'À espera do outro dispositivo…' })}</strong>
+								<small>{$t('calls.handoff.waiting_hint', { default: 'Esta chamada continua aqui até o outro aceitar.' })}</small>
+							</div>
+							<button type="button" disabled={callStore.handoffBusy} onclick={() => void callStore.cancelOutgoingHandoff()}>{$t('calls.handoff.cancel', { default: 'Cancelar' })}</button>
+						</div>
+					{:else}
+						<button type="button" class="handoff-open" disabled={!callStore.canHandoff || callStore.handoffBusy} onclick={() => void callStore.openHandoffPicker()}>
+							<span aria-hidden="true">📲</span> {$t('calls.handoff.action', { default: 'Mudar de dispositivo' })}
+						</button>
+					{/if}
+
+					{#if callStore.handoffPickerOpen && !callStore.handoffOutgoing}
+						<div class="handoff-picker">
+							<div class="handoff-picker-head">
+								<div><strong>{$t('calls.handoff.title', { default: 'Mudar de dispositivo' })}</strong><small>{$t('calls.handoff.choose', { default: 'Escolhe outro dispositivo ativo nesta conta.' })}</small></div>
+								<button type="button" disabled={callStore.handoffBusy} onclick={() => callStore.closeHandoffPicker()} aria-label={$t('calls.close', { default: 'Fechar' })}>×</button>
+							</div>
+							{#if callStore.handoffBusy}
+								<p class="handoff-loading">{$t('calls.handoff.loading', { default: 'A procurar dispositivos ativos…' })}</p>
+							{:else if callStore.handoffTargets.length === 0}
+								<p class="handoff-empty">{$t('calls.handoff.none', { default: 'Abre o Presuntinho no outro dispositivo para ele aparecer aqui.' })}</p>
+							{:else}
+								<div class="handoff-targets">
+									{#each callStore.handoffTargets as target (target.installationId)}
+										<button type="button" disabled={callStore.handoffBusy} onclick={() => void callStore.requestHandoff(target.installationId)}>
+											<span aria-hidden="true">📱</span>
+											<span><strong>{handoffTargetLabel(target.platform, target.installationId)}</strong><small>{$t('calls.handoff.active_now', { default: 'Ativo agora' })}</small></span>
+											<span aria-hidden="true">›</span>
+										</button>
+									{/each}
+								</div>
+							{/if}
+						</div>
+					{/if}
+					{#if callStore.handoffError}<p class="handoff-error" role="alert">{handoffErrorText()}</p>{/if}
+				</section>
+			{/if}
 			{#if callStore.phase === 'incoming' && callStore.error}
 				<p class="inline-error" role="alert">{errorText()}</p>
 			{/if}
@@ -541,6 +643,40 @@
 {/if}
 
 <style>
+	.handoff-offer-layer { position: fixed; z-index: 11010; inset: 0; display: grid; place-items: center; padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left)); color: #fff; }
+	.handoff-offer-card { position: relative; z-index: 1; width: min(100%, 29rem); display: grid; justify-items: center; gap: .72rem; padding: clamp(1.35rem, 5vw, 2.2rem); border: 1px solid rgba(255,255,255,.25); border-radius: 2rem; background: linear-gradient(155deg, rgba(30,41,67,.98), rgba(10,18,34,.98)); box-shadow: 0 30px 90px rgba(0,0,0,.55), 0 0 80px rgba(244,114,182,.16); text-align: center; }
+	.handoff-icon { width: 82px; height: 82px; display: grid; place-items: center; border-radius: 50%; background: linear-gradient(145deg, rgba(244,114,182,.32), rgba(96,165,250,.3)); box-shadow: 0 0 0 10px rgba(255,255,255,.05); font-size: 2.65rem; animation: handoff-float 1.8s ease-in-out infinite; }
+	.handoff-kicker { margin: .25rem 0 -.35rem; color: #f9a8d4; font-size: .72rem; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+	.handoff-offer-card h2 { margin: 0; font-size: clamp(1.35rem, 5vw, 1.85rem); }
+	.handoff-offer-card > p:not(.handoff-kicker):not(.handoff-error) { margin: 0; color: rgba(255,255,255,.7); font-size: .88rem; line-height: 1.5; }
+	.handoff-offer-actions { width: 100%; display: grid; grid-template-columns: 1fr 1.2fr; gap: .65rem; margin-top: .35rem; }
+	.handoff-offer-actions button { min-height: 50px; border: 1px solid rgba(255,255,255,.22); border-radius: 999px; color: #fff; font: inherit; font-weight: 850; cursor: pointer; }
+	.handoff-offer-actions button:disabled { opacity: .58; cursor: wait; }
+	.handoff-decline { background: rgba(255,255,255,.08); }
+	.handoff-accept { background: linear-gradient(135deg, #ec4899, #8b5cf6); box-shadow: 0 12px 28px rgba(236,72,153,.28); }
+	.handoff-panel { width: min(100%, 31rem); display: grid; justify-items: center; gap: .48rem; }
+	.handoff-open { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: .42rem; padding: .5rem .82rem; border: 1px solid rgba(255,255,255,.22); border-radius: 999px; background: rgba(8,15,29,.58); color: #fff; font: inherit; font-size: .72rem; font-weight: 800; cursor: pointer; }
+	.handoff-open:disabled { opacity: .5; cursor: wait; }
+	.handoff-picker, .handoff-waiting { width: 100%; border: 1px solid rgba(255,255,255,.23); border-radius: 1.15rem; background: rgba(8,15,29,.93); box-shadow: 0 18px 48px rgba(0,0,0,.36); backdrop-filter: blur(18px); }
+	.handoff-picker { padding: .75rem; text-align: start; }
+	.handoff-picker-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .6rem; }
+	.handoff-picker-head > div { min-width: 0; display: grid; gap: .15rem; }
+	.handoff-picker-head strong { font-size: .84rem; }
+	.handoff-picker-head small { color: rgba(255,255,255,.62); font-size: .68rem; }
+	.handoff-picker-head > button { width: 34px; height: 34px; flex: 0 0 34px; border: 0; border-radius: 50%; background: rgba(255,255,255,.1); color: #fff; font: inherit; font-size: 1.25rem; cursor: pointer; }
+	.handoff-loading, .handoff-empty { margin: .65rem 0 .1rem; padding: .65rem; border-radius: .75rem; background: rgba(255,255,255,.06); color: rgba(255,255,255,.72); font-size: .72rem; line-height: 1.45; }
+	.handoff-targets { display: grid; gap: .42rem; margin-top: .65rem; }
+	.handoff-targets button { width: 100%; min-height: 58px; display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: .58rem; padding: .55rem .65rem; border: 1px solid rgba(255,255,255,.15); border-radius: .85rem; background: rgba(255,255,255,.07); color: #fff; text-align: start; font: inherit; cursor: pointer; }
+	.handoff-targets button > span:nth-child(2) { min-width: 0; display: grid; gap: .12rem; }
+	.handoff-targets strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .76rem; }
+	.handoff-targets small { color: #86efac; font-size: .65rem; font-weight: 750; }
+	.handoff-waiting { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: .65rem; padding: .65rem .75rem; text-align: start; }
+	.handoff-waiting > span { font-size: 1.4rem; animation: handoff-float 1.8s ease-in-out infinite; }
+	.handoff-waiting > div { min-width: 0; display: grid; gap: .12rem; }
+	.handoff-waiting strong { font-size: .75rem; }
+	.handoff-waiting small { color: rgba(255,255,255,.62); font-size: .64rem; }
+	.handoff-waiting button { min-height: 36px; padding: .35rem .65rem; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; background: rgba(255,255,255,.1); color: #fff; font: inherit; font-size: .65rem; font-weight: 800; cursor: pointer; }
+	.handoff-error { width: min(100%, 31rem); margin: 0; padding: .52rem .68rem; border: 1px solid rgba(253,164,175,.4); border-radius: .75rem; background: rgba(127,29,29,.42); color: #ffe4e6; font-size: .7rem; font-weight: 720; text-align: center; }
 	.call-mini { position: fixed; z-index: 10950; inset-inline: max(.65rem, env(safe-area-inset-left)) max(.65rem, env(safe-area-inset-right)); bottom: calc(5.35rem + var(--page-bottom-inset, 0px) + env(safe-area-inset-bottom)); width: min(44rem, calc(100vw - 1.3rem)); min-height: 72px; margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: .65rem; padding: .58rem .68rem; border: 1px solid rgba(255,255,255,.2); border-radius: 1.25rem; background: linear-gradient(135deg, rgba(20,32,54,.97), rgba(8,15,29,.98)); color: #fff; box-shadow: 0 20px 54px rgba(0,0,0,.42), 0 0 0 1px rgba(244,114,182,.1); backdrop-filter: blur(20px); animation: mini-enter .24s ease-out both; }
 	.mini-identity { min-width: 0; min-height: 52px; display: flex; align-items: center; gap: .65rem; padding: 0; border: 0; background: transparent; color: inherit; text-align: start; font: inherit; cursor: pointer; }
 	.mini-avatar { width: 48px; height: 48px; flex: 0 0 48px; display: grid; place-items: center; overflow: hidden; border: 1px solid rgba(255,255,255,.42); border-radius: 50%; background: linear-gradient(145deg, rgba(244,114,182,.55), rgba(96,165,250,.3)); font-size: 1.7rem; }
@@ -635,9 +771,10 @@
 	@keyframes step-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.09); } }
 	@keyframes reconnect-pulse { 0%,100% { opacity: .66; transform: scale(.96); } 50% { opacity: 1; transform: scale(1.03); } }
 	@keyframes mini-enter { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+	@keyframes handoff-float { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-6px) rotate(2deg); } }
 	@media (max-width: 560px) { .call-mini { grid-template-columns: minmax(0, 1fr) auto; gap: .45rem; } .mini-quality { grid-column: 1; padding-inline-start: 3.35rem; margin-top: -.55rem; } .mini-quality span { display: none; } .mini-actions { grid-column: 2; grid-row: 1 / span 2; } .mini-actions button { width: 40px; height: 40px; } }
 	@media (max-width: 380px) { .call-mini { padding-inline: .5rem; } .mini-avatar { width: 42px; height: 42px; flex-basis: 42px; } .mini-restore { display: none !important; } }
 	@media (max-height: 700px) { .call-panel { min-height: calc(100dvh - 2rem); } .avatar-stage { width: 112px; } .call-meta { margin-bottom: 0; } .call-timeline { margin-bottom: .45rem; } h2 { margin-top: .25rem; } }
-	@media (orientation: landscape) and (max-height: 540px) { .call-panel { display: grid; grid-template-columns: 130px minmax(220px, 1fr); grid-auto-rows: min-content; column-gap: 1.2rem; align-content: center; } .call-meta, .avatar-stage { grid-column: 1; } h2, .call-status, .call-timeline, .incoming-hint, .incoming-actions, .attention-toggle, .call-controls, .result-actions, .dismiss { grid-column: 2; } .avatar-stage { grid-row: 2 / span 5; align-self: center; } .call-meta { grid-row: 1; } h2 { margin-top: 0; } }
-	@media (prefers-reduced-motion: reduce) { .call-mini, .call-avatar, .signal-rings i, .accept > span, .video-wait span, .call-backdrop::after, .call-timeline li.current > span { animation: none !important; } }
+	@media (orientation: landscape) and (max-height: 540px) { .call-panel { display: grid; grid-template-columns: 130px minmax(220px, 1fr); grid-auto-rows: min-content; column-gap: 1.2rem; align-content: center; } .call-meta, .avatar-stage { grid-column: 1; } h2, .call-status, .call-timeline, .incoming-hint, .incoming-actions, .attention-toggle, .call-controls, .handoff-panel, .result-actions, .dismiss { grid-column: 2; } .avatar-stage { grid-row: 2 / span 5; align-self: center; } .call-meta { grid-row: 1; } h2 { margin-top: 0; } }
+	@media (prefers-reduced-motion: reduce) { .call-mini, .call-avatar, .signal-rings i, .accept > span, .video-wait span, .call-backdrop::after, .call-timeline li.current > span, .handoff-icon, .handoff-waiting > span { animation: none !important; } }
 </style>

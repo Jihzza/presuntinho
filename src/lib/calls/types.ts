@@ -27,6 +27,39 @@ export interface CallSession {
 	pushSentAt: string | null;
 	answeredAt: string | null;
 	endedAt: string | null;
+	handoffGeneration: number;
+}
+
+export type CallHandoffStatus =
+	| 'requested'
+	| 'claimed'
+	| 'completed'
+	| 'cancelled'
+	| 'declined'
+	| 'expired';
+
+export interface CallHandoff {
+	id: string;
+	callId: string;
+	account: string;
+	fromDevice: string;
+	fromInstallationId: string;
+	targetInstallationId: string;
+	claimedDevice: string | null;
+	status: CallHandoffStatus;
+	clientRequestId: string;
+	createdAt: string;
+	expiresAt: string;
+	claimedAt: string | null;
+	completedAt: string | null;
+	cancelledAt: string | null;
+}
+
+export interface CallHandoffTarget {
+	installationId: string;
+	platform: string;
+	lastSeenAt: string;
+	supportsVideo: boolean;
 }
 
 export interface CallPeerProfile {
@@ -96,6 +129,14 @@ const DELIVERY_STAGES = new Set<CallDeliveryStage>([
 	'cancelled',
 	'answered_elsewhere'
 ]);
+const HANDOFF_STATUSES = new Set<CallHandoffStatus>([
+	'requested',
+	'claimed',
+	'completed',
+	'cancelled',
+	'declined',
+	'expired'
+]);
 
 function nullableDate(value: unknown): string | null {
 	return typeof value === 'string' && Number.isFinite(Date.parse(value)) ? value : null;
@@ -119,6 +160,7 @@ export function parseCallSession(value: unknown): CallSession | null {
 	const calleeHeartbeatAt = nullableDate(row.callee_heartbeat_at);
 	const callerLeaseExpiresAt = nullableDate(row.caller_lease_expires_at);
 	const calleeLeaseExpiresAt = nullableDate(row.callee_lease_expires_at);
+	const handoffGeneration = row.handoff_generation ?? 0;
 	if (
 		typeof id !== 'string' ||
 		!UUID_RE.test(id) ||
@@ -141,7 +183,10 @@ export function parseCallSession(value: unknown): CallSession | null {
 		!callerLeaseExpiresAt ||
 		!(row.callee_heartbeat_at == null || calleeHeartbeatAt) ||
 		!(row.callee_lease_expires_at == null || calleeLeaseExpiresAt) ||
-		((status === 'accepted') && (!calleeDevice || !calleeHeartbeatAt || !calleeLeaseExpiresAt))
+		((status === 'accepted') && (!calleeDevice || !calleeHeartbeatAt || !calleeLeaseExpiresAt)) ||
+		typeof handoffGeneration !== 'number' ||
+		!Number.isSafeInteger(handoffGeneration) ||
+		handoffGeneration < 0
 	) {
 		return null;
 	}
@@ -162,8 +207,81 @@ export function parseCallSession(value: unknown): CallSession | null {
 		calleeLeaseExpiresAt,
 		pushSentAt: nullableDate(row.push_sent_at),
 		answeredAt: nullableDate(row.answered_at),
-		endedAt: nullableDate(row.ended_at)
+		endedAt: nullableDate(row.ended_at),
+		handoffGeneration
 	};
+}
+
+/** Account-scoped durable handoff row; it intentionally contains no SDP/ICE. */
+export function parseCallHandoff(value: unknown): CallHandoff | null {
+	if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+	const row = value as Record<string, unknown>;
+	const status = row.status;
+	const claimedDevice = row.claimed_device;
+	const createdAt = nullableDate(row.created_at);
+	const expiresAt = nullableDate(row.expires_at);
+	const claimedAt = nullableDate(row.claimed_at);
+	const completedAt = nullableDate(row.completed_at);
+	const cancelledAt = nullableDate(row.cancelled_at);
+	const isClaimed = status === 'claimed' || status === 'completed';
+	const isClosedWithoutClaim = status === 'cancelled' || status === 'declined' || status === 'expired';
+	if (
+		typeof row.id !== 'string' || !UUID_RE.test(row.id) ||
+		typeof row.call_id !== 'string' || !UUID_RE.test(row.call_id) ||
+		typeof row.account !== 'string' || !UUID_RE.test(row.account) ||
+		typeof row.from_device !== 'string' || !DEVICE_RE.test(row.from_device) ||
+		typeof row.from_installation_id !== 'string' || !DEVICE_RE.test(row.from_installation_id) ||
+		typeof row.target_installation_id !== 'string' || !DEVICE_RE.test(row.target_installation_id) ||
+		row.from_installation_id === row.target_installation_id ||
+		!(claimedDevice == null || (typeof claimedDevice === 'string' && DEVICE_RE.test(claimedDevice))) ||
+		typeof status !== 'string' || !HANDOFF_STATUSES.has(status as CallHandoffStatus) ||
+		typeof row.client_request_id !== 'string' || !UUID_RE.test(row.client_request_id) ||
+		!createdAt || !expiresAt ||
+		!(row.claimed_at == null || claimedAt) ||
+		!(row.completed_at == null || completedAt) ||
+		!(row.cancelled_at == null || cancelledAt) ||
+		Date.parse(expiresAt) <= Date.parse(createdAt) ||
+		(status === 'requested' && (claimedDevice != null || claimedAt || completedAt || cancelledAt)) ||
+		(isClaimed && (!claimedDevice || !claimedAt || cancelledAt)) ||
+		(status === 'claimed' && completedAt) ||
+		(status === 'completed' && !completedAt) ||
+		(isClosedWithoutClaim && (claimedDevice != null || claimedAt || completedAt || !cancelledAt)) ||
+		(typeof claimedDevice === 'string' && !(
+			claimedDevice === row.target_installation_id ||
+			claimedDevice.startsWith(`${row.target_installation_id}.`)
+		))
+	) return null;
+	return {
+		id: row.id,
+		callId: row.call_id,
+		account: row.account,
+		fromDevice: row.from_device,
+		fromInstallationId: row.from_installation_id,
+		targetInstallationId: row.target_installation_id,
+		claimedDevice: typeof claimedDevice === 'string' ? claimedDevice : null,
+		status: status as CallHandoffStatus,
+		clientRequestId: row.client_request_id,
+		createdAt,
+		expiresAt,
+		claimedAt,
+		completedAt,
+		cancelledAt
+	};
+}
+
+export function parseCallHandoffTarget(value: unknown): CallHandoffTarget | null {
+	if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+	const row = value as Record<string, unknown>;
+	const installationId = row.installation_id;
+	const platform = row.platform;
+	const lastSeenAt = nullableDate(row.last_seen_at);
+	const supportsVideo = row.supports_video;
+	if (
+		typeof installationId !== 'string' || !DEVICE_RE.test(installationId) ||
+		typeof platform !== 'string' || platform.length > 32 ||
+		!lastSeenAt || typeof supportsVideo !== 'boolean'
+	) return null;
+	return { installationId, platform, lastSeenAt, supportsVideo };
 }
 
 /** Parse both Realtime payload rows and PostgREST delivery rows. */
