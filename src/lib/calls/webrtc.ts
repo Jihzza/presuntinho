@@ -89,9 +89,9 @@ export class CallPeer {
 		await this.#enqueue(() => this.#createAndSendOffer(restart));
 	}
 
-	async receive(signal: CallSignal): Promise<void> {
-		if (this.#closed) return;
-		await this.#enqueue(async () => {
+	async receive(signal: CallSignal): Promise<boolean> {
+		if (this.#closed) return false;
+		return this.#enqueue(async () => {
 			switch (signal.type) {
 				case 'offer': {
 					await this.pc.setRemoteDescription(signal.sdp);
@@ -121,7 +121,7 @@ export class CallPeer {
 					this.#options.onDisconnected();
 					break;
 			}
-		});
+		}, false);
 	}
 
 	setMuted(muted: boolean): void {
@@ -185,11 +185,15 @@ export class CallPeer {
 		});
 	}
 
-	#enqueue(work: () => Promise<void>): Promise<void> {
-		this.#serial = this.#serial.then(work).catch((error) => {
-			this.#options.onError(error instanceof Error ? error : new Error('webrtc_failed'));
+	#enqueue(work: () => Promise<void>, reportError = true): Promise<boolean> {
+		let applied = false;
+		this.#serial = this.#serial.then(async () => {
+			await work();
+			applied = true;
+		}).catch((error) => {
+			if (reportError) this.#options.onError(error instanceof Error ? error : new Error('webrtc_failed'));
 		});
-		return this.#serial;
+		return this.#serial.then(() => applied);
 	}
 
 	#onConnectionState(): void {

@@ -21,6 +21,7 @@ const ROW = {
 	kind: 'audio',
 	status: 'ringing',
 	created_at: '2026-07-15T10:00:00.000Z',
+	updated_at: '2026-07-15T10:00:00.000Z',
 	expires_at: '2026-07-15T10:01:00.000Z',
 	caller_heartbeat_at: '2026-07-15T10:00:00.000Z',
 	callee_heartbeat_at: null,
@@ -28,7 +29,8 @@ const ROW = {
 	callee_lease_expires_at: null,
 	push_sent_at: null,
 	answered_at: null,
-	ended_at: null
+	ended_at: null,
+	handoff_generation: 0
 } as const;
 
 describe('call session boundary', () => {
@@ -63,6 +65,34 @@ describe('call session boundary', () => {
 		expect(isCallSignalEnvelope({ ...envelope, seq: 2.5 }, ROW.id, ROW.callee)).toBe(false);
 	});
 
+	it('accepts an omitted signaling generation only for generation zero and otherwise requires an exact match', () => {
+		const envelope = {
+			v: 1,
+			callId: ROW.id,
+			from: ROW.callee,
+			device: 'device-b-1234567890',
+			seq: 3,
+			signal: { type: 'restart-request' }
+		};
+
+		expect(isCallSignalEnvelope(envelope, ROW.id, ROW.callee, envelope.device, 0)).toBe(true);
+		expect(isCallSignalEnvelope(envelope, ROW.id, ROW.callee, envelope.device, 1)).toBe(false);
+		expect(isCallSignalEnvelope(
+			{ ...envelope, handoffGeneration: 0 },
+			ROW.id,
+			ROW.callee,
+			envelope.device,
+			1
+		)).toBe(false);
+		expect(isCallSignalEnvelope(
+			{ ...envelope, handoffGeneration: 1 },
+			ROW.id,
+			ROW.callee,
+			envelope.device,
+			1
+		)).toBe(true);
+	});
+
 	it('only treats an explicit device ringing/opened ACK as ringing', () => {
 		expect(parseCallDelivery({
 			call_id: ROW.id,
@@ -93,8 +123,14 @@ describe('call session boundary', () => {
 			claimed_device: null,
 			status: 'requested',
 			client_request_id: '68ef18ff-0001-485a-b0ce-08c535bc5c6e',
+			source_generation: 0,
+			claimed_generation: null,
+			state_version: 0,
 			created_at: ROW.created_at,
+			updated_at: ROW.created_at,
 			expires_at: ROW.expires_at,
+			recovery_expires_at: null,
+			claim_device_lease_expires_at: null,
 			claimed_at: null,
 			completed_at: null,
 			cancelled_at: null
@@ -105,6 +141,21 @@ describe('call session boundary', () => {
 			targetInstallationId: 'target-install-12345678'
 		});
 		expect(parseCallHandoff({ ...handoff, status: 'claimed' })).toBeNull();
+		expect(parseCallHandoff({
+			...handoff,
+			claimed_device: 'target-install-12345678.tab-1234567890',
+			status: 'claimed',
+			claimed_generation: 1,
+			state_version: 1,
+			updated_at: '2026-07-15T10:00:01.000Z',
+			recovery_expires_at: '2026-07-15T10:02:00.000Z',
+			claim_device_lease_expires_at: '2026-07-15T10:01:00.000Z',
+			claimed_at: ROW.created_at
+		})).toMatchObject({
+			status: 'claimed',
+			claimedGeneration: 1,
+			stateVersion: 1
+		});
 		expect(parseCallHandoff({
 			...handoff,
 			claimed_device: 'target-install-12345678.tab-1234567890',

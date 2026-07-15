@@ -19,6 +19,7 @@ export interface CallSession {
 	kind: CallKind;
 	status: CallStatus;
 	createdAt: string;
+	updatedAt: string;
 	expiresAt: string;
 	callerHeartbeatAt: string;
 	calleeHeartbeatAt: string | null;
@@ -36,7 +37,9 @@ export type CallHandoffStatus =
 	| 'completed'
 	| 'cancelled'
 	| 'declined'
-	| 'expired';
+	| 'expired'
+	| 'reverted'
+	| 'terminated';
 
 export interface CallHandoff {
 	id: string;
@@ -48,8 +51,14 @@ export interface CallHandoff {
 	claimedDevice: string | null;
 	status: CallHandoffStatus;
 	clientRequestId: string;
+	sourceGeneration: number;
+	claimedGeneration: number | null;
+	stateVersion: number;
 	createdAt: string;
+	updatedAt: string;
 	expiresAt: string;
+	recoveryExpiresAt: string | null;
+	claimDeviceLeaseExpiresAt: string | null;
 	claimedAt: string | null;
 	completedAt: string | null;
 	cancelledAt: string | null;
@@ -101,6 +110,8 @@ export interface CallSignalEnvelope {
 	callId: string;
 	from: string;
 	device: string;
+	/** Omitted only by rolling generation-zero clients. */
+	handoffGeneration?: number;
 	seq: number;
 	signal: CallSignal;
 }
@@ -135,7 +146,9 @@ const HANDOFF_STATUSES = new Set<CallHandoffStatus>([
 	'completed',
 	'cancelled',
 	'declined',
-	'expired'
+	'expired',
+	'reverted',
+	'terminated'
 ]);
 
 function nullableDate(value: unknown): string | null {
@@ -155,6 +168,7 @@ export function parseCallSession(value: unknown): CallSession | null {
 	const kind = row.kind;
 	const status = row.status;
 	const createdAt = nullableDate(row.created_at);
+	const updatedAt = nullableDate(row.updated_at) ?? createdAt;
 	const expiresAt = nullableDate(row.expires_at);
 	const callerHeartbeatAt = nullableDate(row.caller_heartbeat_at);
 	const calleeHeartbeatAt = nullableDate(row.callee_heartbeat_at);
@@ -200,6 +214,7 @@ export function parseCallSession(value: unknown): CallSession | null {
 		kind,
 		status: status as CallStatus,
 		createdAt,
+		updatedAt: updatedAt!,
 		expiresAt,
 		callerHeartbeatAt,
 		calleeHeartbeatAt,
@@ -223,8 +238,15 @@ export function parseCallHandoff(value: unknown): CallHandoff | null {
 	const claimedAt = nullableDate(row.claimed_at);
 	const completedAt = nullableDate(row.completed_at);
 	const cancelledAt = nullableDate(row.cancelled_at);
+	const recoveryExpiresAt = nullableDate(row.recovery_expires_at);
+	const claimDeviceLeaseExpiresAt = nullableDate(row.claim_device_lease_expires_at);
+	const updatedAt = nullableDate(row.updated_at);
+	const sourceGeneration = row.source_generation;
+	const claimedGeneration = row.claimed_generation;
+	const stateVersion = row.state_version;
 	const isClaimed = status === 'claimed' || status === 'completed';
 	const isClosedWithoutClaim = status === 'cancelled' || status === 'declined' || status === 'expired';
+	const isClosedAfterClaim = status === 'reverted' || status === 'terminated';
 	if (
 		typeof row.id !== 'string' || !UUID_RE.test(row.id) ||
 		typeof row.call_id !== 'string' || !UUID_RE.test(row.call_id) ||
@@ -236,16 +258,29 @@ export function parseCallHandoff(value: unknown): CallHandoff | null {
 		!(claimedDevice == null || (typeof claimedDevice === 'string' && DEVICE_RE.test(claimedDevice))) ||
 		typeof status !== 'string' || !HANDOFF_STATUSES.has(status as CallHandoffStatus) ||
 		typeof row.client_request_id !== 'string' || !UUID_RE.test(row.client_request_id) ||
-		!createdAt || !expiresAt ||
+		typeof sourceGeneration !== 'number' || !Number.isSafeInteger(sourceGeneration) || sourceGeneration < 0 ||
+		typeof stateVersion !== 'number' || !Number.isSafeInteger(stateVersion) || stateVersion < 0 ||
+		!(claimedGeneration == null || (
+			typeof claimedGeneration === 'number' &&
+			Number.isSafeInteger(claimedGeneration) &&
+			claimedGeneration > sourceGeneration
+		)) ||
+		!createdAt || !updatedAt || !expiresAt ||
+		!(row.recovery_expires_at == null || recoveryExpiresAt) ||
+		!(row.claim_device_lease_expires_at == null || claimDeviceLeaseExpiresAt) ||
 		!(row.claimed_at == null || claimedAt) ||
 		!(row.completed_at == null || completedAt) ||
 		!(row.cancelled_at == null || cancelledAt) ||
 		Date.parse(expiresAt) <= Date.parse(createdAt) ||
-		(status === 'requested' && (claimedDevice != null || claimedAt || completedAt || cancelledAt)) ||
-		(isClaimed && (!claimedDevice || !claimedAt || cancelledAt)) ||
+		(status === 'requested' && (claimedDevice != null || claimedGeneration != null || recoveryExpiresAt || claimDeviceLeaseExpiresAt || claimedAt || completedAt || cancelledAt)) ||
+		(isClaimed && (!claimedDevice || claimedGeneration == null || !recoveryExpiresAt || !claimDeviceLeaseExpiresAt || !claimedAt || cancelledAt)) ||
 		(status === 'claimed' && completedAt) ||
 		(status === 'completed' && !completedAt) ||
-		(isClosedWithoutClaim && (claimedDevice != null || claimedAt || completedAt || !cancelledAt)) ||
+		(isClosedWithoutClaim && (claimedDevice != null || claimedGeneration != null || recoveryExpiresAt || claimDeviceLeaseExpiresAt || claimedAt || completedAt || !cancelledAt)) ||
+		(isClosedAfterClaim && (!claimedDevice || claimedGeneration == null || !recoveryExpiresAt || !claimDeviceLeaseExpiresAt || !claimedAt || completedAt || !cancelledAt)) ||
+		(Boolean(claimedAt && recoveryExpiresAt) && Date.parse(recoveryExpiresAt!) <= Date.parse(claimedAt!)) ||
+		(Boolean(claimedAt && claimDeviceLeaseExpiresAt) && Date.parse(claimDeviceLeaseExpiresAt!) <= Date.parse(claimedAt!)) ||
+		(Boolean(claimDeviceLeaseExpiresAt && recoveryExpiresAt) && Date.parse(claimDeviceLeaseExpiresAt!) >= Date.parse(recoveryExpiresAt!)) ||
 		(typeof claimedDevice === 'string' && !(
 			claimedDevice === row.target_installation_id ||
 			claimedDevice.startsWith(`${row.target_installation_id}.`)
@@ -261,8 +296,14 @@ export function parseCallHandoff(value: unknown): CallHandoff | null {
 		claimedDevice: typeof claimedDevice === 'string' ? claimedDevice : null,
 		status: status as CallHandoffStatus,
 		clientRequestId: row.client_request_id,
+		sourceGeneration,
+		claimedGeneration: typeof claimedGeneration === 'number' ? claimedGeneration : null,
+		stateVersion,
 		createdAt,
+		updatedAt,
 		expiresAt,
+		recoveryExpiresAt,
+		claimDeviceLeaseExpiresAt,
 		claimedAt,
 		completedAt,
 		cancelledAt
@@ -339,6 +380,18 @@ export function isTerminalCallStatus(status: CallStatus): boolean {
 	return status === 'declined' || status === 'cancelled' || status === 'ended' || status === 'missed' || status === 'failed';
 }
 
+/** Reject stale poll/Realtime snapshots and make a terminal row absorbing. */
+export function isCallSessionSnapshotMonotonic(previous: CallSession, next: CallSession): boolean {
+	if (previous.id !== next.id) return true;
+	if (isTerminalCallStatus(previous.status) && !isTerminalCallStatus(next.status)) return false;
+	if (next.handoffGeneration < previous.handoffGeneration) return false;
+	if (
+		next.handoffGeneration === previous.handoffGeneration &&
+		Date.parse(next.updatedAt) < Date.parse(previous.updatedAt)
+	) return false;
+	return true;
+}
+
 export function otherCallParticipant(call: CallSession, me: string): string | null {
 	if (call.caller === me) return call.callee;
 	if (call.callee === me) return call.caller;
@@ -354,7 +407,8 @@ export function isCallSignalEnvelope(
 	value: unknown,
 	callId: string,
 	expectedSender: string,
-	expectedDevice?: string | null
+	expectedDevice?: string | null,
+	expectedHandoffGeneration?: number
 ): value is CallSignalEnvelope {
 	if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
 	const envelope = value as Partial<CallSignalEnvelope>;
@@ -364,6 +418,13 @@ export function isCallSignalEnvelope(
 		envelope.from !== expectedSender ||
 		!isCallDeviceId(envelope.device) ||
 		(Boolean(expectedDevice) && envelope.device !== expectedDevice) ||
+		!(envelope.handoffGeneration == null || (
+			typeof envelope.handoffGeneration === 'number' &&
+			Number.isSafeInteger(envelope.handoffGeneration) &&
+			envelope.handoffGeneration >= 0
+		)) ||
+		(expectedHandoffGeneration !== undefined &&
+			!callHandoffGenerationMatches(envelope.handoffGeneration, expectedHandoffGeneration)) ||
 		typeof envelope.seq !== 'number' ||
 		!Number.isSafeInteger(envelope.seq) ||
 		!envelope.signal ||
@@ -371,4 +432,11 @@ export function isCallSignalEnvelope(
 	) return false;
 	const signal = envelope.signal as Partial<CallSignal>;
 	return signal.type === 'offer' || signal.type === 'answer' || signal.type === 'candidate' || signal.type === 'restart-request' || signal.type === 'hangup';
+}
+
+/** Generation zero accepts an omitted field during rolling deployment; later generations are exact. */
+export function callHandoffGenerationMatches(value: unknown, expected: number): boolean {
+	if (!Number.isSafeInteger(expected) || expected < 0) return false;
+	if (value == null) return expected === 0;
+	return typeof value === 'number' && Number.isSafeInteger(value) && value === expected;
 }

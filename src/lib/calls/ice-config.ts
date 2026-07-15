@@ -11,6 +11,8 @@ interface FetchCallIceOptions {
 	callId: string;
 	device: string;
 	accessToken: string;
+	handoffId?: string;
+	handoffRecoveryId?: string;
 	fetcher?: typeof fetch;
 	timeoutMs?: number;
 }
@@ -200,12 +202,17 @@ export async function fetchCallIceConfiguration({
 	callId,
 	device,
 	accessToken,
+	handoffId,
+	handoffRecoveryId,
 	fetcher = fetch,
 	timeoutMs = DEFAULT_TIMEOUT_MS
 }: FetchCallIceOptions): Promise<CallIceConfiguration> {
 	if (
 		!UUID_RE.test(callId) ||
 		!DEVICE_RE.test(device) ||
+		!(handoffId == null || UUID_RE.test(handoffId)) ||
+		!(handoffRecoveryId == null || UUID_RE.test(handoffRecoveryId)) ||
+		(Boolean(handoffRecoveryId) && !handoffId) ||
 		accessToken.length < 20 ||
 		accessToken.length > 8192 ||
 		/[\s,]/.test(accessToken)
@@ -219,7 +226,12 @@ export async function fetchCallIceConfiguration({
 			'content-type': 'application/json',
 			authorization: `Bearer ${accessToken}`
 		},
-		body: JSON.stringify({ callId, device })
+		body: JSON.stringify({
+			callId,
+			device,
+			...(handoffId ? { handoffId } : {}),
+			...(handoffRecoveryId ? { handoffRecoveryId } : {})
+		})
 	};
 
 	for (let index = 0; index < ICE_ENDPOINTS.length; index += 1) {

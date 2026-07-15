@@ -20,7 +20,13 @@ const harness = vi.hoisted(() => ({
 	getAuthSession: vi.fn(),
 	fetchIceConfiguration: vi.fn(),
 	peerOptions: [] as Array<Record<string, (...args: any[]) => unknown>>,
-	peerInstances: [] as Array<{ pc: RTCPeerConnection; localStream: MediaStream }>,
+	peerInstances: [] as Array<{
+		pc: RTCPeerConnection;
+		localStream: MediaStream;
+		startOffer: ReturnType<typeof vi.fn>;
+		receive: ReturnType<typeof vi.fn>;
+		close: ReturnType<typeof vi.fn>;
+	}>,
 	enumerateDevices: vi.fn(),
 	mediaGetUserMedia: vi.fn(),
 	mediaGetDisplayMedia: vi.fn(),
@@ -91,7 +97,7 @@ vi.mock('./webrtc', () => ({
 		setMuted = vi.fn();
 		setCameraOff = vi.fn();
 		startOffer = vi.fn(async () => undefined);
-		receive = vi.fn(async () => undefined);
+		receive = vi.fn(async () => true);
 		flipCamera = vi.fn(async () => undefined);
 	}
 }));
@@ -102,7 +108,7 @@ import {
 	defaultCallPreferences,
 	saveCallPreferences
 } from './call-preferences';
-import { parseCallSession, type CallSession } from './types';
+import { isCallSessionSnapshotMonotonic, parseCallSession, type CallSession } from './types';
 
 class Deferred<T> {
 	promise: Promise<T>;
@@ -125,7 +131,7 @@ class FakeChannel {
 		callback: (payload: any) => void;
 	}> = [];
 	statusCallback: ((status: string, error?: Error) => void) | null = null;
-	presence: Record<string, Array<{ account?: string; device?: string }>> = {};
+	presence: Record<string, Array<{ account?: string; device?: string; handoffGeneration?: number }>> = {};
 	send = vi.fn(async () => 'ok');
 	track = vi.fn(async () => 'ok');
 	untrack = vi.fn(async () => 'ok');
@@ -157,6 +163,18 @@ class FakeChannel {
 			if (handler.type === 'postgres_changes' && handler.filter.table === table) {
 				handler.callback({ new: row });
 			}
+		}
+	}
+
+	emitPresence(event: 'sync' | 'join' | 'leave' = 'sync'): void {
+		for (const handler of this.handlers) {
+			if (handler.type === 'presence' && handler.filter.event === event) handler.callback({});
+		}
+	}
+
+	emitBroadcast(event: string, payload: unknown): void {
+		for (const handler of this.handlers) {
+			if (handler.type === 'broadcast' && handler.filter.event === event) handler.callback({ payload });
 		}
 	}
 }
@@ -253,7 +271,16 @@ class FakeSupabase {
 			});
 			return { data: row ?? null, error: null };
 		}
-		if (!single && this.tableRows.has(table)) return { data: this.tableRows.get(table) ?? [], error: null };
+		if (this.tableRows.has(table)) {
+			const rows = (this.tableRows.get(table) ?? []).filter((candidate) => {
+				if (!candidate || typeof candidate !== 'object') return false;
+				return [...filters].every(([column, value]) => {
+					const actual = (candidate as Record<string, unknown>)[column];
+					return Array.isArray(value) ? value.includes(actual) : actual === value;
+				});
+			});
+			return { data: single ? rows[0] ?? null : rows, error: null };
+		}
 		return { data: [], error: null };
 	}
 
@@ -276,6 +303,7 @@ function callRow(overrides: Record<string, unknown> = {}): Record<string, unknow
 		kind: 'audio',
 		status: 'ringing',
 		created_at: new Date(now).toISOString(),
+		updated_at: new Date(now).toISOString(),
 		expires_at: new Date(now + 60_000).toISOString(),
 		caller_heartbeat_at: new Date(now).toISOString(),
 		callee_heartbeat_at: null,
@@ -284,6 +312,7 @@ function callRow(overrides: Record<string, unknown> = {}): Record<string, unknow
 		push_sent_at: null,
 		answered_at: null,
 		ended_at: null,
+		handoff_generation: 0,
 		...overrides
 	};
 }
@@ -1305,6 +1334,7 @@ describe('CallStore deterministic experience matrix', () => {
 });
 
 const HANDOFF_ID = '77777777-7777-4777-8777-777777777777';
+const HANDOFF_RECOVERY_ID = '76767676-7676-4676-8676-767676767676';
 const HANDOFF_REQUEST_ID = '88888888-8888-4888-8888-888888888888';
 const TARGET_INSTALLATION = '99999999-9999-4999-8999-999999999999';
 const TARGET_DEVICE = `${TARGET_INSTALLATION}.aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa`;
@@ -1325,11 +1355,12 @@ function acceptedCallRow(ownerDevice: string, overrides: Record<string, unknown>
 
 function handoffRow(
 	fromDevice: string,
-	status: 'requested' | 'claimed' | 'completed' = 'requested',
+	status: 'requested' | 'claimed' | 'completed' | 'cancelled' | 'declined' | 'expired' | 'reverted' | 'terminated' = 'requested',
 	overrides: Record<string, unknown> = {}
 ): Record<string, unknown> {
 	const now = new Date().toISOString();
-	const claimed = status === 'claimed' || status === 'completed';
+	const claimed = ['claimed', 'completed', 'reverted', 'terminated'].includes(status);
+	const closed = ['cancelled', 'declined', 'expired', 'reverted', 'terminated'].includes(status);
 	return {
 		id: HANDOFF_ID,
 		call_id: CALL_ID,
@@ -1344,11 +1375,17 @@ function handoffRow(
 		claimed_device: claimed ? TARGET_DEVICE : null,
 		status,
 		client_request_id: HANDOFF_REQUEST_ID,
+		source_generation: 0,
+		claimed_generation: claimed ? 1 : null,
+		state_version: status === 'requested' ? 0 : status === 'claimed' ? 1 : 2,
 		created_at: now,
+		updated_at: now,
 		expires_at: new Date(Date.now() + 35_000).toISOString(),
+		recovery_expires_at: claimed ? new Date(Date.now() + 45_000).toISOString() : null,
+		claim_device_lease_expires_at: claimed ? new Date(Date.now() + 12_000).toISOString() : null,
 		claimed_at: claimed ? now : null,
 		completed_at: status === 'completed' ? now : null,
-		cancelled_at: null,
+		cancelled_at: closed ? now : null,
 		...overrides
 	};
 }
@@ -1374,6 +1411,36 @@ async function connectCallerStore(): Promise<{ store: CallStore; device: string;
 	return { store, device, channel };
 }
 
+function sharedCacheHarness() {
+	const values = new Map<string, Response>();
+	const put = vi.fn(async (key: RequestInfo | URL, response: Response) => {
+		values.set(String(key), response.clone());
+	});
+	const match = vi.fn(async (key: RequestInfo | URL) => values.get(String(key))?.clone() ?? null);
+	const remove = vi.fn(async (key: RequestInfo | URL) => values.delete(String(key)));
+	return {
+		storage: { open: vi.fn(async () => ({ put, match, delete: remove })) },
+		put,
+		match,
+		remove,
+		values
+	};
+}
+
+async function prepareHandoffTarget(kind: 'audio' | 'video' = 'audio') {
+	const store = new CallStore();
+	bind(store, CALLER);
+	await settle();
+	const sourceDevice = 'source-installation-0001.source-tab-00000001';
+	const global = harness.supabase!.latest('call_sessions:');
+	global.emitPostgres('call_handoffs', handoffRow(sourceDevice, 'requested'));
+	expect(store.handoffOffer?.id).toBe(HANDOFF_ID);
+	harness.supabase!.rows.set(CALL_ID, acceptedCallRow(sourceDevice, { kind }));
+	const local = streamStub();
+	harness.acquireLocalMedia.mockResolvedValueOnce(local.stream);
+	return { store, sourceDevice, global, local };
+}
+
 describe('CallStore active-call handoff', () => {
 	it('recovers an authoritative claim when the RPC response is lost after commit', async () => {
 		const store = new CallStore();
@@ -1385,14 +1452,15 @@ describe('CallStore active-call handoff', () => {
 		global.emitPostgres('call_handoffs', requested);
 		expect(store.handoffOffer?.id).toBe(HANDOFF_ID);
 
-		harness.supabase!.rows.set(CALL_ID, acceptedCallRow(sourceDevice));
+		harness.supabase!.rows.set(CALL_ID, acceptedCallRow(sourceDevice, { kind: 'video' }));
 		const local = streamStub();
 		harness.acquireLocalMedia.mockResolvedValueOnce(local.stream);
 		let claimedDevice = '';
 		harness.rpcHandlers.set('claim_call_handoff', (args) => {
 			claimedDevice = String(args.p_device);
 			harness.supabase!.rows.set(CALL_ID, acceptedCallRow(claimedDevice, {
-				handoff_generation: 1
+				handoff_generation: 1,
+				kind: 'video'
 			}));
 			return { data: null, error: new Error('response lost after commit') };
 		});
@@ -1403,7 +1471,16 @@ describe('CallStore active-call handoff', () => {
 		expect(claimedDevice).toContain(`${INSTALLATION}.`);
 		expect(store.phase).toBe('connecting');
 		expect(store.session?.handoffGeneration).toBe(1);
-		expect(store.localStream).toBe(local.stream);
+		expect(store.localStream).toEqual(local.stream);
+		expect(local.audioTrack.enabled).toBe(false);
+		expect(local.videoTrack.enabled).toBe(false);
+		expect(store.muted).toBe(true);
+		expect(store.cameraOff).toBe(true);
+		expect(harness.fetchIceConfiguration).toHaveBeenCalledWith(expect.objectContaining({
+			callId: CALL_ID,
+			handoffId: HANDOFF_ID,
+			handoffRecoveryId: expect.any(String)
+		}));
 		expect(harness.stopMediaStream).not.toHaveBeenCalledWith(local.stream);
 		await eventually(() => expect(harness.peerOptions.length).toBeGreaterThan(0));
 		harness.peerOptions.at(-1)!.onConnected();
@@ -1455,7 +1532,8 @@ describe('CallStore active-call handoff', () => {
 
 		expect(store.phase).toBe('connecting');
 		expect(store.session?.id).toBe(CALL_ID);
-		expect(store.localStream).toBe(local.stream);
+		expect(store.localStream).toEqual(local.stream);
+		expect(local.audioTrack.enabled).toBe(false);
 		expect(harness.stopMediaStream).not.toHaveBeenCalledWith(local.stream);
 		await eventually(() => expect(harness.peerOptions.length).toBeGreaterThan(0));
 		harness.peerOptions.at(-1)!.onConnected();
@@ -1469,24 +1547,516 @@ describe('CallStore active-call handoff', () => {
 	});
 
 	it.each(['handoff-first', 'call-first'] as const)(
-		'keeps the transferred outcome and never ends the shared call when events arrive %s',
+		'keeps source media through claim and exits only after connected completion when events arrive %s',
 		async (order) => {
 			const { store, device, channel } = await connectCallerStore();
 			const claimed = handoffRow(device, 'claimed');
-			const moved = acceptedCallRow(TARGET_DEVICE, { handoff_generation: 1 });
+			// Generation 2 models an unrelated later participant handoff overtaking
+			// this row. completed(v2 for this handoff) must remain absorbing by id.
+			const moved = acceptedCallRow(TARGET_DEVICE, { handoff_generation: 2 });
 			if (order === 'handoff-first') {
 				channel.emitPostgres('call_handoffs', claimed);
-				expect(store.outcome).toBe('transferred');
+				expect(store.phase).toBe('active');
 				channel.emitPostgres('call_sessions', moved);
 			} else {
 				channel.emitPostgres('call_sessions', moved);
-				expect(store.outcome).toBe('transferred');
+				expect(store.phase).toBe('reconnecting');
 				channel.emitPostgres('call_handoffs', claimed);
 			}
+			expect(store.phase).toBe('reconnecting');
+			expect(store.outcome).toBeNull();
+			expect(store.localStream).not.toBeNull();
+			channel.emitPostgres('call_handoffs', handoffRow(device, 'completed', {
+				claimed_generation: 1,
+				state_version: 2
+			}));
 			expect(store.phase).toBe('ended');
 			expect(store.outcome).toBe('transferred');
 			expect(harness.supabase!.rpcCalls.some(({ name }) => name === 'end_call')).toBe(false);
 			store.bindUser(null);
 		}
 	);
+
+	it('preflights relay-only ICE before claim and leaves ownership on the source when TURN is unavailable', async () => {
+		await saveCallPreferences(CALLER, { relayOnly: true }, {
+			storage: null, caches: null, postToWorker: () => undefined, dispatch: () => undefined
+		});
+		const { store, local } = await prepareHandoffTarget('video');
+
+		await store.acceptHandoffOffer();
+
+		expect(store.phase).toBe('idle');
+		expect(store.handoffError).toBe('call_relay_required_unavailable');
+		expect(harness.fetchIceConfiguration).toHaveBeenCalledWith(expect.objectContaining({
+			handoffId: HANDOFF_ID,
+			handoffRecoveryId: expect.any(String)
+		}));
+		expect(harness.supabase!.rpcCalls.some(({ name }) => name === 'claim_call_handoff')).toBe(false);
+		expect(harness.stopMediaStream).toHaveBeenCalledWith(local.stream);
+		store.bindUser(null);
+	});
+
+	it('does not regress claimed state when a delayed requested RPC response arrives', async () => {
+		const { store, device, channel } = await connectCallerStore();
+		store.handoffTargets = [{
+			installationId: TARGET_INSTALLATION,
+			platform: 'android',
+			lastSeenAt: new Date().toISOString(),
+			supportsVideo: true
+		}];
+		const requested = handoffRow(device, 'requested');
+		const response = new Deferred<RpcResult>();
+		harness.rpcHandlers.set('request_call_handoff', () => response.promise);
+
+		const requesting = store.requestHandoff(TARGET_INSTALLATION);
+		await eventually(() => expect(
+			harness.supabase!.rpcCalls.some(({ name }) => name === 'request_call_handoff')
+		).toBe(true));
+		channel.emitPostgres('call_handoffs', handoffRow(device, 'claimed', {
+			updated_at: new Date(Date.now() + 1_000).toISOString()
+		}));
+		expect(store.handoffOutgoing?.status).toBe('claimed');
+		response.resolve({ data: requested, error: null });
+		await requesting;
+
+		expect(store.handoffOutgoing?.status).toBe('claimed');
+		store.bindUser(null);
+	});
+
+	it('aborts a committed claim if account context changes while the RPC response is in flight', async () => {
+		const { store } = await prepareHandoffTarget();
+		const claim = new Deferred<RpcResult>();
+		let claimedDevice = '';
+		harness.rpcHandlers.set('claim_call_handoff', (args) => {
+			claimedDevice = String(args.p_device);
+			return claim.promise;
+		});
+		harness.rpcHandlers.set('abort_call_handoff', () => ({ data: true, error: null }));
+
+		const accepting = store.acceptHandoffOffer();
+		await eventually(() => expect(claimedDevice).toContain(`${INSTALLATION}.`));
+		expect(store.busy).toBe(true);
+		store.bindUser(null);
+		claim.resolve({
+			data: {
+				ok: true,
+				handoffId: HANDOFF_ID,
+				call: acceptedCallRow(claimedDevice, { handoff_generation: 1 })
+			},
+			error: null
+		});
+		await accepting;
+
+		expect(harness.supabase!.rpcCalls).toContainEqual({
+			name: 'abort_call_handoff',
+			args: expect.objectContaining({
+				p_handoff: HANDOFF_ID,
+				p_device: claimedDevice,
+				p_recovery_id: expect.any(String)
+			})
+		});
+	});
+
+	it('retries a lost completion ACK from the next successful heartbeat', async () => {
+		vi.useFakeTimers();
+		const { store } = await prepareHandoffTarget();
+		let claimedDevice = '';
+		harness.rpcHandlers.set('claim_call_handoff', (args) => {
+			claimedDevice = String(args.p_device);
+			return {
+				data: {
+					ok: true,
+					handoffId: HANDOFF_ID,
+					call: acceptedCallRow(claimedDevice, { handoff_generation: 1 })
+				},
+				error: null
+			};
+		});
+		let completionAttempts = 0;
+		harness.rpcHandlers.set('complete_call_handoff', () => {
+			completionAttempts += 1;
+			return completionAttempts <= 3
+				? { data: null, error: new Error('temporary completion outage') }
+				: { data: true, error: null };
+		});
+		harness.rpcHandlers.set('heartbeat_call', () => ({
+			data: acceptedCallRow(claimedDevice, {
+				handoff_generation: 1,
+				updated_at: new Date(Date.now()).toISOString()
+			}),
+			error: null
+		}));
+
+		await store.acceptHandoffOffer();
+		await eventually(() => expect(harness.peerOptions.length).toBeGreaterThan(0));
+		harness.peerOptions.at(-1)!.onConnected();
+		await vi.advanceTimersByTimeAsync(800);
+		expect(completionAttempts).toBe(3);
+		await vi.advanceTimersByTimeAsync(20_100);
+		await eventually(() => expect(completionAttempts).toBe(4));
+		store.bindUser(null);
+	});
+
+	it('clears the shared recovery bearer when a terminal handoff row is observed after a lost RPC response', async () => {
+		const cache = sharedCacheHarness();
+		vi.stubGlobal('caches', cache.storage);
+		const { store, sourceDevice, global } = await prepareHandoffTarget();
+		let claimedDevice = '';
+		harness.rpcHandlers.set('claim_call_handoff', (args) => {
+			claimedDevice = String(args.p_device);
+			return {
+				data: {
+					ok: true,
+					handoffId: HANDOFF_ID,
+					call: acceptedCallRow(claimedDevice, { handoff_generation: 1 })
+				},
+				error: null
+			};
+		});
+		await store.acceptHandoffOffer();
+		expect(cache.put).toHaveBeenCalled();
+
+		global.emitPostgres('call_handoffs', handoffRow(sourceDevice, 'terminated', {
+			from_installation_id: 'source-installation-0001',
+			target_installation_id: INSTALLATION,
+			claimed_device: claimedDevice,
+			state_version: 2
+		}));
+		await eventually(() => expect(cache.remove).toHaveBeenCalled());
+		store.bindUser(null);
+	});
+
+	it('fences presence by handoff generation and re-offers after an exact-generation rebuild', async () => {
+		const { store, device, channel } = await connectCallerStore();
+		const firstCallChannel = harness.supabase!.latest(`call:${CALL_ID}`);
+		const firstPeer = harness.peerInstances.at(-1)!;
+		firstCallChannel.presence = {
+			remote: [{ account: CALLEE, device: PEER_DEVICE, handoffGeneration: 1 }]
+		};
+		firstCallChannel.emitPresence();
+		expect(firstPeer.startOffer).not.toHaveBeenCalled();
+		firstCallChannel.presence.remote[0].handoffGeneration = 0;
+		firstCallChannel.emitPresence();
+		await eventually(() => expect(firstPeer.startOffer).toHaveBeenCalledTimes(1));
+
+		channel.emitPostgres('call_sessions', acceptedCallRow(device, {
+			handoff_generation: 1,
+			updated_at: new Date(Date.now() + 1_000).toISOString()
+		}));
+		await eventually(() => expect(harness.peerInstances.length).toBeGreaterThan(1));
+		const rebuiltChannel = harness.supabase!.latest(`call:${CALL_ID}`);
+		const rebuiltPeer = harness.peerInstances.at(-1)!;
+		rebuiltChannel.presence = {
+			remote: [{ account: CALLEE, device: PEER_DEVICE, handoffGeneration: 0 }]
+		};
+		rebuiltChannel.emitPresence();
+		expect(rebuiltPeer.startOffer).not.toHaveBeenCalled();
+		rebuiltChannel.presence.remote[0].handoffGeneration = 1;
+		rebuiltChannel.emitPresence();
+		await eventually(() => expect(rebuiltPeer.startOffer).toHaveBeenCalledTimes(1));
+		store.bindUser(null);
+	});
+
+	it('retries a vanished first offer in the same presence and generation until an answer arrives', async () => {
+		vi.useFakeTimers();
+		const store = new CallStore();
+		bind(store, CALLER);
+		await settle();
+		const local = streamStub();
+		let device = '';
+		harness.acquireLocalMedia.mockResolvedValueOnce(local.stream);
+		harness.startCallReliably.mockImplementationOnce(async (args) => {
+			device = String(args.device);
+			return parseCallSession(callRow({ caller_device: device }))!;
+		});
+		await store.startCall(CONVERSATION, 'audio');
+		const global = harness.supabase!.latest('call_sessions:');
+		global.emitPostgres('call_sessions', acceptedCallRow(device));
+		await eventually(() => expect(harness.peerInstances.length).toBeGreaterThan(0));
+		const callChannel = harness.supabase!.latest(`call:${CALL_ID}`);
+		const peer = harness.peerInstances.at(-1)!;
+		callChannel.presence = {
+			remote: [{ account: CALLEE, device: PEER_DEVICE, handoffGeneration: 0 }]
+		};
+		callChannel.emitPresence();
+		await eventually(() => expect(peer.startOffer).toHaveBeenCalledTimes(1));
+
+		// The first server ACK did not mean the remote received the broadcast.
+		await vi.advanceTimersByTimeAsync(1_500);
+		await eventually(() => expect(peer.startOffer).toHaveBeenCalledTimes(2));
+		expect(peer.startOffer.mock.calls[1]).toEqual([true]);
+		peer.receive.mockRejectedValueOnce(new Error('stale answer'));
+		callChannel.emitBroadcast('signal', {
+			v: 1,
+			callId: CALL_ID,
+			from: CALLEE,
+			device: PEER_DEVICE,
+			handoffGeneration: 0,
+			seq: 1,
+			signal: { type: 'answer', sdp: { type: 'answer', sdp: 'v=0' } }
+		});
+		await settle(10);
+		await vi.advanceTimersByTimeAsync(3_000);
+		await eventually(() => expect(peer.startOffer).toHaveBeenCalledTimes(3));
+		callChannel.emitBroadcast('signal', {
+			v: 1,
+			callId: CALL_ID,
+			from: CALLEE,
+			device: PEER_DEVICE,
+			handoffGeneration: 0,
+			seq: 2,
+			signal: { type: 'answer', sdp: { type: 'answer', sdp: 'v=0' } }
+		});
+		await eventually(() => expect(peer.receive).toHaveBeenCalledTimes(2));
+		harness.peerOptions.at(-1)!.onConnected();
+		await vi.advanceTimersByTimeAsync(10_000);
+		expect(peer.startOffer).toHaveBeenCalledTimes(3);
+		expect(store.phase).toBe('active');
+		store.bindUser(null);
+	});
+
+	it('ignores a regressive heartbeat snapshot after a higher handoff generation is active', async () => {
+		vi.useFakeTimers();
+		const { store, device, channel } = await connectCallerStore();
+		channel.emitPostgres('call_sessions', acceptedCallRow(device, {
+			handoff_generation: 1,
+			updated_at: new Date(Date.now() + 1_000).toISOString()
+		}));
+		await settle(10);
+		harness.rpcHandlers.set('heartbeat_call', () => ({
+			data: acceptedCallRow(device, {
+				handoff_generation: 0,
+				updated_at: new Date(Date.now() + 60_000).toISOString()
+			}),
+			error: null
+		}));
+		await vi.advanceTimersByTimeAsync(20_100);
+		expect(store.session?.handoffGeneration).toBe(1);
+		store.bindUser(null);
+	});
+
+	it('reconciles a terminal outgoing handoff even when its Realtime event was lost', async () => {
+		vi.useFakeTimers();
+		const { store, device, channel } = await connectCallerStore();
+		channel.emitPostgres('call_handoffs', handoffRow(device, 'requested'));
+		expect(store.handoffOutgoing?.status).toBe('requested');
+		harness.supabase!.tableRows.set('call_handoffs', [handoffRow(device, 'completed')]);
+
+		await vi.advanceTimersByTimeAsync(600);
+		await eventually(() => expect(store.phase).toBe('ended'));
+		expect(store.outcome).toBe('transferred');
+		store.bindUser(null);
+	});
+
+	it('lets a recovered sibling suffix take over without deleting its shared bearer', async () => {
+		const cache = sharedCacheHarness();
+		vi.stubGlobal('caches', cache.storage);
+		const { store, sourceDevice, global } = await prepareHandoffTarget();
+		let firstTargetDevice = '';
+		harness.rpcHandlers.set('claim_call_handoff', (args) => {
+			firstTargetDevice = String(args.p_device);
+			return {
+				data: {
+					ok: true,
+					handoffId: HANDOFF_ID,
+					call: acceptedCallRow(firstTargetDevice, { handoff_generation: 1 })
+				},
+				error: null
+			};
+		});
+		await store.acceptHandoffOffer();
+		await eventually(() => expect(harness.peerOptions.length).toBeGreaterThan(0));
+		harness.peerOptions.at(-1)!.onDisconnected();
+		expect(store.phase).toBe('connecting');
+		expect(cache.remove).not.toHaveBeenCalled();
+		const siblingDevice = `${INSTALLATION}.dddddddd-dddd-4ddd-8ddd-dddddddddddd`;
+		global.emitPostgres('call_sessions', acceptedCallRow(siblingDevice, {
+			handoff_generation: 2,
+			updated_at: new Date(Date.now() + 1_000).toISOString()
+		}));
+
+		expect(store.phase).toBe('ended');
+		expect(store.outcome).toBe('transferred');
+		expect(cache.remove).not.toHaveBeenCalled();
+		expect(harness.supabase!.rpcCalls.some(({ name }) => name === 'end_call')).toBe(false);
+		global.emitPostgres('call_handoffs', handoffRow(sourceDevice, 'completed', {
+			from_installation_id: 'source-installation-0001',
+			target_installation_id: INSTALLATION,
+			claimed_device: siblingDevice,
+			claimed_generation: 2,
+			state_version: 3
+		}));
+		await eventually(() => expect(cache.remove).toHaveBeenCalled());
+		store.bindUser(null);
+	});
+
+	it('recovers after reload by reading the installation bearer and waiting for the old suffix lease', async () => {
+		vi.useFakeTimers();
+		const cache = sharedCacheHarness();
+		vi.stubGlobal('caches', cache.storage);
+		const recoveryToken = 'abababab-abab-4bab-8bab-abababababab';
+		const cacheUrl = new URL(
+			`/__presuntinho_call_handoff_recovery__/${INSTALLATION}/${HANDOFF_RECOVERY_ID}`,
+			'https://presuntinho.invalid'
+		).toString();
+		cache.values.set(cacheUrl, new Response(JSON.stringify({
+			handoffId: HANDOFF_RECOVERY_ID,
+			installationId: INSTALLATION,
+			token: recoveryToken
+		}), { headers: { 'content-type': 'application/json' } }));
+		const oldSuffix = `${INSTALLATION}.eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee`;
+		const claimed = handoffRow('source-installation-0001.source-tab-00000001', 'claimed', {
+			id: HANDOFF_RECOVERY_ID,
+			from_installation_id: 'source-installation-0001',
+			target_installation_id: INSTALLATION,
+			claimed_device: oldSuffix,
+			claimed_at: new Date(Date.now() - 20_000).toISOString(),
+			claim_device_lease_expires_at: new Date(Date.now() - 1_000).toISOString(),
+			recovery_expires_at: new Date(Date.now() + 30_000).toISOString()
+		});
+		harness.supabase!.tableRows.set('call_handoffs', [claimed]);
+		harness.supabase!.rows.set(CALL_ID, acceptedCallRow(oldSuffix, { handoff_generation: 1 }));
+		const store = new CallStore();
+		bind(store, CALLER);
+		await settle();
+		const global = harness.supabase!.latest('call_sessions:');
+		global.emitPostgres('call_handoffs', claimed);
+		expect(store.handoffOffer).toBeNull();
+		await vi.advanceTimersByTimeAsync(50);
+		await eventually(() => expect(store.handoffOffer?.id).toBe(HANDOFF_RECOVERY_ID));
+		const local = streamStub();
+		harness.acquireLocalMedia.mockResolvedValueOnce(local.stream);
+		let recoveredDevice = '';
+		harness.rpcHandlers.set('claim_call_handoff', (args) => {
+			recoveredDevice = String(args.p_device);
+			expect(args.p_recovery_id).toBe(recoveryToken);
+			return {
+				data: {
+					ok: true,
+					handoffId: HANDOFF_RECOVERY_ID,
+					call: acceptedCallRow(recoveredDevice, { handoff_generation: 2 })
+				},
+				error: null
+			};
+		});
+		harness.rpcHandlers.set('abort_call_handoff', () => ({ data: true, error: null }));
+
+		await store.acceptHandoffOffer();
+		expect(recoveredDevice).toContain(`${INSTALLATION}.`);
+		expect(recoveredDevice).not.toBe(oldSuffix);
+		expect(store.session?.handoffGeneration).toBe(2);
+		expect(harness.fetchIceConfiguration).toHaveBeenCalledWith(expect.objectContaining({
+			handoffId: HANDOFF_RECOVERY_ID,
+			handoffRecoveryId: recoveryToken
+		}));
+		store.bindUser(null);
+	});
+
+	it('keeps the original source call alive when backend recovery reverts ownership', async () => {
+		const { store, device, channel } = await connectCallerStore();
+		channel.emitPostgres('call_handoffs', handoffRow(device, 'claimed'));
+		channel.emitPostgres('call_sessions', acceptedCallRow(TARGET_DEVICE, { handoff_generation: 1 }));
+		expect(store.phase).toBe('reconnecting');
+		channel.emitPostgres('call_handoffs', handoffRow(device, 'reverted', { state_version: 2 }));
+		channel.emitPostgres('call_sessions', acceptedCallRow(device, {
+			handoff_generation: 2,
+			updated_at: new Date(Date.now() + 1_000).toISOString()
+		}));
+
+		expect(store.phase).toBe('reconnecting');
+		expect(store.outcome).toBeNull();
+		expect(store.handoffOutgoing).toBeNull();
+		expect(harness.supabase!.rpcCalls.some(({ name }) => name === 'end_call')).toBe(false);
+		store.bindUser(null);
+	});
+});
+
+describe('CallStore durable preference and snapshot gates', () => {
+	it('does not present or ring until the durable Cache Storage preference settles', async () => {
+		const cacheRead = new Deferred<Response | null>();
+		vi.stubGlobal('caches', {
+			open: vi.fn(async () => ({
+				match: vi.fn(() => cacheRead.promise),
+				put: vi.fn(async () => undefined),
+				delete: vi.fn(async () => true)
+			}))
+		});
+		const store = new CallStore();
+		bind(store, CALLEE);
+		harness.supabase!.latest('call_sessions:').emitPostgres('call_sessions', callRow());
+		await settle(10);
+		expect(store.preferencesReady).toBe(false);
+		expect(store.phase).toBe('idle');
+		expect(harness.audio.startIncoming).not.toHaveBeenCalled();
+
+		cacheRead.resolve(new Response(JSON.stringify({
+			...defaultCallPreferences(CALLEE),
+			dndEnabled: true,
+			dndStartMinutes: 0,
+			dndEndMinutes: 0,
+			updatedAt: new Date(Date.now() + 60_000).toISOString()
+		}), { headers: { 'content-type': 'application/json' } }));
+		await eventually(() => expect(store.phase).toBe('incoming'));
+		expect(store.preferencesReady).toBe(true);
+		expect(store.attentionMuted).toBe(true);
+		expect(harness.audio.startIncoming).not.toHaveBeenCalled();
+		store.bindUser(null);
+	});
+
+	it('keeps the call fully hidden when a deferred durable permission blocks the caller', async () => {
+		const cacheRead = new Deferred<Response | null>();
+		vi.stubGlobal('caches', {
+			open: vi.fn(async () => ({
+				match: vi.fn(() => cacheRead.promise),
+				put: vi.fn(async () => undefined),
+				delete: vi.fn(async () => true)
+			}))
+		});
+		const store = new CallStore();
+		bind(store, CALLEE);
+		harness.supabase!.latest('call_sessions:').emitPostgres('call_sessions', callRow());
+		await settle(10);
+		expect(store.phase).toBe('idle');
+		cacheRead.resolve(new Response(JSON.stringify({
+			...defaultCallPreferences(CALLEE),
+			whoMayCall: 'nobody',
+			updatedAt: new Date(Date.now() + 60_000).toISOString()
+		}), { headers: { 'content-type': 'application/json' } }));
+		await eventually(() => expect(store.preferencesReady).toBe(true));
+		await settle(10);
+		expect(store.phase).toBe('idle');
+		expect(store.session).toBeNull();
+		expect(harness.audio.startIncoming).not.toHaveBeenCalled();
+		expect(harness.audio.confirmIncomingFeedback).not.toHaveBeenCalled();
+		store.bindUser(null);
+	});
+
+	it('rejects lower generations, older same-generation rows, and resurrection after terminal state', () => {
+		const current = parseCallSession(acceptedCallRow(OTHER_DEVICE, {
+			handoff_generation: 1,
+			updated_at: '2026-07-15T12:00:02.000Z'
+		}))!;
+		const lowerGeneration = parseCallSession(acceptedCallRow(OTHER_DEVICE, {
+			handoff_generation: 0,
+			updated_at: '2026-07-15T12:00:03.000Z'
+		}))!;
+		const olderSameGeneration = parseCallSession(acceptedCallRow(OTHER_DEVICE, {
+			handoff_generation: 1,
+			updated_at: '2026-07-15T12:00:01.000Z'
+		}))!;
+		const terminal = parseCallSession(acceptedCallRow(OTHER_DEVICE, {
+			status: 'ended',
+			ended_at: '2026-07-15T12:00:04.000Z',
+			handoff_generation: 1,
+			updated_at: '2026-07-15T12:00:04.000Z'
+		}))!;
+		const resurrected = parseCallSession(acceptedCallRow(OTHER_DEVICE, {
+			handoff_generation: 2,
+			updated_at: '2026-07-15T12:00:05.000Z'
+		}))!;
+
+		expect(isCallSessionSnapshotMonotonic(current, lowerGeneration)).toBe(false);
+		expect(isCallSessionSnapshotMonotonic(current, olderSameGeneration)).toBe(false);
+		expect(isCallSessionSnapshotMonotonic(terminal, resurrected)).toBe(false);
+	});
 });

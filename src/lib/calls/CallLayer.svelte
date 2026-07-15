@@ -261,6 +261,7 @@
 			case 'handoff_unavailable': return $t('calls.handoff.error.unavailable', { default: 'Esse dispositivo deixou de estar disponível.' });
 			case 'media_denied': return $t('calls.handoff.error.permission', { default: 'Permite o microfone e a câmara antes de continuar a chamada aqui.' });
 			case 'media_missing': return $t('calls.handoff.error.media', { default: 'Este dispositivo não tem o microfone ou a câmara necessários.' });
+			case 'call_relay_required_unavailable': return $t('calls.error.relay_unavailable', { default: 'O modo apenas relay não está disponível. A chamada continua segura no dispositivo atual.' });
 			default: return $t('calls.handoff.error.generic', { default: 'Não foi possível mover a chamada. Ela continua no dispositivo atual.' });
 		}
 	}
@@ -513,7 +514,9 @@
 								<strong>{$t('calls.handoff.waiting', { default: 'À espera do outro dispositivo…' })}</strong>
 								<small>{$t('calls.handoff.waiting_hint', { default: 'Esta chamada continua aqui até o outro aceitar.' })}</small>
 							</div>
-							<button type="button" disabled={callStore.handoffBusy} onclick={() => void callStore.cancelOutgoingHandoff()}>{$t('calls.handoff.cancel', { default: 'Cancelar' })}</button>
+							{#if callStore.handoffOutgoing.status === 'requested'}
+								<button type="button" disabled={callStore.handoffBusy} onclick={() => void callStore.cancelOutgoingHandoff()}>{$t('calls.handoff.cancel', { default: 'Cancelar' })}</button>
+							{/if}
 						</div>
 					{:else}
 						<button type="button" class="handoff-open" disabled={!callStore.canHandoff || callStore.handoffBusy} onclick={() => void callStore.openHandoffPicker()}>

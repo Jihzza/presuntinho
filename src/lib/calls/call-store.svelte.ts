@@ -29,7 +29,11 @@ import {
 	ConnectionQualityMonitor,
 	type ConnectionQualitySample
 } from './connection-quality';
-import { fetchCallIceConfiguration, type CallIceSource } from './ice-config';
+import {
+	fetchCallIceConfiguration,
+	type CallIceConfiguration,
+	type CallIceSource
+} from './ice-config';
 import {
 	CallMediaController,
 	enumerateCallMediaDevices,
@@ -39,10 +43,12 @@ import { CallWakeLockController, type CallWakeLockState } from './call-runtime';
 import { IncomingCallLeaderCoordinator } from './incoming-call-leader';
 import {
 	callDeviceForParticipant,
+	callHandoffGenerationMatches,
 	callTopic,
 	deliveryConfirmsRinging,
 	isCallSignalEnvelope,
 	isRingingCallLive,
+	isCallSessionSnapshotMonotonic,
 	isTerminalCallStatus,
 	otherCallParticipant,
 	parseCallHandoff,
@@ -64,12 +70,16 @@ const ACTIONABLE_RESET_AFTER_END_MS = 10_000;
 const HEARTBEAT_INTERVAL_MS = 20_000;
 const NEGOTIATION_TIMEOUT_MS = 25_000;
 const SIGNAL_SEND_ATTEMPTS = 3;
+const OFFER_RETRY_DELAYS_MS = [1_500, 3_000, 5_000] as const;
 const GLOBAL_POLL_MS = 4_000;
 const PROGRESS_POLL_MS = 2_500;
 const INCOMING_ACK_MAX_ATTEMPTS = 4;
 const INCOMING_ACK_RETRY_DELAYS_MS = [350, 1_000, 2_500] as const;
 const INSTALLATION_HEARTBEAT_MS = 30_000;
 const HANDOFF_RECONCILE_MS = 4_000;
+const HANDOFF_ICE_PREFLIGHT_MS = 15_000;
+const HANDOFF_RECOVERY_TOKEN_PREFIX = 'presuntinho:call-handoff-recovery:v1:';
+const HANDOFF_RECOVERY_CACHE = 'presuntinho-call-handoff-recovery-v1';
 const CALL_DELIVERY_PROGRESS_COLUMNS = [
 	'id', 'call_id', 'account', 'installation_id', 'channel', 'status',
 	'provider_accepted_at', 'received_at', 'presented_at', 'ringing_at',
@@ -103,6 +113,16 @@ type PendingIncomingAck = {
 
 type CallRpcName = 'respond_to_call' | 'heartbeat_call' | 'end_call' | 'expire_call';
 
+type PrefetchedHandoffIce = {
+	callId: string;
+	handoffId: string;
+	userId: string;
+	device: string;
+	relayOnly: boolean;
+	validUntil: number;
+	configuration: CallIceConfiguration;
+};
+
 export type CallMediaAction =
 	| 'refresh-devices'
 	| 'microphone'
@@ -115,6 +135,123 @@ export type CallFollowupAction = 'call_back' | 'cant_now';
 export type CallFollowupStatus = 'idle' | 'sending' | 'sent' | 'failed';
 
 let pageDeviceId = '';
+const memoryHandoffRecoveryTokens = new Map<string, string>();
+
+function handoffRecoveryKey(handoffId: string, installationId: string): string {
+	return `${installationId}:${handoffId}`;
+}
+
+function handoffRecoveryStorageKey(handoffId: string, installationId: string): string {
+	return `${HANDOFF_RECOVERY_TOKEN_PREFIX}${handoffRecoveryKey(handoffId, installationId)}`;
+}
+
+function handoffRecoveryCacheUrl(handoffId: string, installationId: string): string {
+	const origin = typeof location === 'undefined' ? 'https://presuntinho.invalid' : location.origin;
+	return new URL(
+		`/__presuntinho_call_handoff_recovery__/${encodeURIComponent(installationId)}/${encodeURIComponent(handoffId)}`,
+		origin
+	).toString();
+}
+
+async function readHandoffRecoveryToken(handoffId: string, installationId: string): Promise<string | null> {
+	const key = handoffRecoveryKey(handoffId, installationId);
+	const memory = memoryHandoffRecoveryTokens.get(key);
+	if (memory) return memory;
+	try {
+		const stored = typeof sessionStorage === 'undefined'
+			? null
+			: sessionStorage.getItem(handoffRecoveryStorageKey(handoffId, installationId));
+		if (stored && /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(stored)) {
+			memoryHandoffRecoveryTokens.set(key, stored);
+			return stored;
+		}
+	} catch {
+		/* The in-memory token still covers this page in private browsing. */
+	}
+	try {
+		if (typeof caches !== 'undefined') {
+			const cache = await caches.open(HANDOFF_RECOVERY_CACHE);
+			const response = await cache.match(handoffRecoveryCacheUrl(handoffId, installationId));
+			const value = response ? await response.json().catch(() => null) : null;
+			if (
+				value &&
+				typeof value === 'object' &&
+				value.handoffId === handoffId &&
+				value.installationId === installationId &&
+				typeof value.token === 'string' &&
+				/^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(value.token)
+			) {
+				memoryHandoffRecoveryTokens.set(key, value.token);
+				return value.token;
+			}
+		}
+	} catch {
+		/* Source-side grace recovery remains authoritative if storage is denied. */
+	}
+	return null;
+}
+
+async function ensureHandoffRecoveryToken(handoffId: string, installationId: string): Promise<string> {
+	const createOrRead = async (): Promise<string> => {
+		const existing = await readHandoffRecoveryToken(handoffId, installationId);
+		if (existing) return existing;
+		const created = crypto.randomUUID();
+		const key = handoffRecoveryKey(handoffId, installationId);
+		memoryHandoffRecoveryTokens.set(key, created);
+		try {
+			if (typeof sessionStorage !== 'undefined') {
+				sessionStorage.setItem(handoffRecoveryStorageKey(handoffId, installationId), created);
+			}
+		} catch {
+			/* Reload recovery degrades to source-side grace recovery. */
+		}
+		try {
+			if (typeof caches !== 'undefined') {
+				const cache = await caches.open(HANDOFF_RECOVERY_CACHE);
+				await cache.put(
+					handoffRecoveryCacheUrl(handoffId, installationId),
+					new Response(JSON.stringify({ handoffId, installationId, token: created }), {
+						headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }
+					})
+				);
+			}
+		} catch {
+			/* The current tab can still finish, otherwise source recovery wins. */
+		}
+		return created;
+	};
+	try {
+		if (typeof navigator !== 'undefined' && navigator.locks) {
+			return await navigator.locks.request(
+				`presuntinho-call-handoff:${handoffRecoveryKey(handoffId, installationId)}`,
+				{ mode: 'exclusive' },
+				createOrRead
+			);
+		}
+	} catch {
+		/* Cache Storage + source grace remain the fallback without Web Locks. */
+	}
+	return createOrRead();
+}
+
+async function clearHandoffRecoveryToken(handoffId: string, installationId: string): Promise<void> {
+	memoryHandoffRecoveryTokens.delete(handoffRecoveryKey(handoffId, installationId));
+	try {
+		if (typeof sessionStorage !== 'undefined') {
+			sessionStorage.removeItem(handoffRecoveryStorageKey(handoffId, installationId));
+		}
+	} catch {
+		/* no-op */
+	}
+	try {
+		if (typeof caches !== 'undefined') {
+			const cache = await caches.open(HANDOFF_RECOVERY_CACHE);
+			await cache.delete(handoffRecoveryCacheUrl(handoffId, installationId));
+		}
+	} catch {
+		/* no-op */
+	}
+}
 function deviceId(install: string): string {
 	if (pageDeviceId) return pageDeviceId;
 	// Each tab needs its own Presence key and signal sequence. Sharing the
@@ -147,6 +284,7 @@ export class CallStore {
 	iceSource = $state<CallIceSource | null>(null);
 	relayOnlyActive = $state(false);
 	callPreferences = $state.raw<CallPreferences | null>(null);
+	preferencesReady = $state(false);
 	attentionPreferenceReason = $state<'dnd' | null>(null);
 	accepting = $state(false);
 	responseAction = $state<'accept' | 'decline' | null>(null);
@@ -200,6 +338,9 @@ export class CallStore {
 	#remoteDevice: string | null = null;
 	#pendingSignals: CallSignal[] = [];
 	#offerRequested = false;
+	#offerAnswered = false;
+	#offerRetryAttempts = 0;
+	#offerRetryTimer: ReturnType<typeof setTimeout> | null = null;
 	#expiryTimer: ReturnType<typeof setTimeout> | null = null;
 	#heartbeatTimer: ReturnType<typeof setInterval> | null = null;
 	#heartbeatCallId: string | null = null;
@@ -234,10 +375,18 @@ export class CallStore {
 	#handoffExpiryTimer: ReturnType<typeof setTimeout> | null = null;
 	#handoffOperationGeneration = 0;
 	#activeHandoffId: string | null = null;
+	#activeHandoffRecoveryId: string | null = null;
+	#prefetchedHandoffIce: PrefetchedHandoffIce | null = null;
+	#handoffRecoveryInFlight: string | null = null;
+	#handoffCompletionInFlight = false;
+	#handoffSourceAwaitingCallId: string | null = null;
+	#handoffRowVersions = new Map<string, { version: number; updatedAt: number }>();
+	#handoffRecoveryOfferTimer: ReturnType<typeof setTimeout> | null = null;
 	#locallyTransferredCallId: string | null = null;
+	#preferencesReadyPromise: Promise<void> = Promise.resolve();
 
 	get busy(): boolean {
-		return this.phase !== 'idle' && this.phase !== 'ended' && this.phase !== 'error';
+		return this.handoffBusy || (this.phase !== 'idle' && this.phase !== 'ended' && this.phase !== 'error');
 	}
 
 	get direction(): 'incoming' | 'outgoing' | null {
@@ -286,7 +435,22 @@ export class CallStore {
 	bindUser(userId: string | null): void {
 		const next = userId?.trim() || null;
 		if (next === this.#userId) return;
+		const abandonedHandoffId = this.#activeHandoffId;
+		const abandonedRecoveryId = this.#activeHandoffRecoveryId;
+		const abandonedDevice = this.#deviceId;
+		const abandonedInstallation = this.#installationId;
+		if (abandonedHandoffId && abandonedRecoveryId && abandonedDevice) {
+			void this.#abortClaimedHandoff(
+				abandonedHandoffId,
+				abandonedDevice,
+				abandonedRecoveryId,
+				abandonedInstallation
+			);
+		}
 		this.#globalGeneration += 1;
+		this.#handoffRowVersions.clear();
+		if (this.#handoffRecoveryOfferTimer) clearTimeout(this.#handoffRecoveryOfferTimer);
+		this.#handoffRecoveryOfferTimer = null;
 		this.#removeGlobalChannel();
 		this.#removeLifecycleListeners();
 		this.#resetNow();
@@ -294,6 +458,8 @@ export class CallStore {
 		this.#incomingLeader = null;
 		this.#userId = next;
 		this.callPreferences = null;
+		this.preferencesReady = false;
+		this.#preferencesReadyPromise = Promise.resolve();
 		this.#installationRegistered = false;
 		if (!next || typeof window === 'undefined') {
 			this.readiness = 'unbound';
@@ -305,11 +471,15 @@ export class CallStore {
 		this.#deviceId = deviceId(this.#installationId);
 		this.#applyCallPreferences(readCallPreferencesSync(next));
 		const preferencesGeneration = this.#globalGeneration;
-		void loadCallPreferences(next).then((preferences) => {
+		this.#preferencesReadyPromise = loadCallPreferences(next).then((preferences) => {
 			if (preferencesGeneration === this.#globalGeneration && this.#userId === next) {
 				this.#applyCallPreferences(preferences);
 			}
-		}).catch(() => undefined);
+		}).catch(() => undefined).then(() => {
+			if (preferencesGeneration === this.#globalGeneration && this.#userId === next) {
+				this.preferencesReady = true;
+			}
+		});
 		void this.#refreshKnownContacts(next, preferencesGeneration);
 		this.#openGlobalChannel(next, this.#globalGeneration);
 		this.#installLifecycleListeners();
@@ -491,15 +661,18 @@ export class CallStore {
 				p_request_id: requestId
 			});
 			if (error) throw error;
-			const handoff = parseCallHandoff(firstRow(data));
+			const rawHandoff = firstRow(data);
+			const handoff = parseCallHandoff(rawHandoff);
 			if (!handoff || handoff.callId !== call.id || handoff.fromDevice !== this.#deviceId) {
 				throw new Error('handoff_invalid_response');
 			}
 			if (operation !== this.#handoffOperationGeneration || this.session?.id !== call.id) return;
-			this.handoffOutgoing = handoff;
+			// The broadcast can overtake this HTTP response. Route the returned row
+			// through the same state-version gate so requested(v0) cannot overwrite a
+			// claimed/completed row already observed from Realtime.
+			this.#applyHandoffRow(rawHandoff);
 			this.handoffPickerOpen = false;
 			this.handoffTargets = [];
-			this.#scheduleHandoffExpiry(handoff);
 		} catch (error) {
 			if (operation === this.#handoffOperationGeneration) {
 				this.handoffError = this.#handoffErrorCode(error, 'handoff_request_failed');
@@ -546,6 +719,7 @@ export class CallStore {
 			});
 			if (error || data !== true) throw error ?? new Error('handoff_decline_rejected');
 			if (operation === this.#handoffOperationGeneration) this.handoffOffer = null;
+			void clearHandoffRecoveryToken(handoff.id, this.#installationId);
 		} catch (error) {
 			if (operation === this.#handoffOperationGeneration) {
 				this.handoffError = this.#handoffErrorCode(error, 'handoff_decline_failed');
@@ -556,21 +730,36 @@ export class CallStore {
 	}
 
 	async acceptHandoffOffer(): Promise<void> {
-		// Media APIs and AudioContext require the original user gesture. Ownership
-		// moves only after media succeeds, so a permission denial cannot strand the
-		// live call on a device that never became usable.
+		// Media and a usable ICE policy are preflighted before the ownership RPC.
+		// The source therefore remains authoritative on permission/TURN failures.
 		callAudio.primeFromGesture();
 		const handoff = this.handoffOffer;
-		if (!handoff || this.handoffBusy || this.phase !== 'idle') return;
+		if (
+			!handoff ||
+			!['requested', 'claimed'].includes(handoff.status) ||
+			(handoff.status === 'claimed' && (
+				!handoff.claimDeviceLeaseExpiresAt ||
+				Date.parse(handoff.claimDeviceLeaseExpiresAt) > Date.now()
+			)) ||
+			this.handoffBusy ||
+			this.phase !== 'idle'
+		) return;
 		const userId = this.#userId;
 		const device = this.#deviceId;
+		const installationId = this.#installationId;
 		const globalGeneration = this.#globalGeneration;
-		if (!userId || !device) return;
+		if (!userId || !device || !installationId) return;
 		const operation = ++this.#handoffOperationGeneration;
 		this.handoffBusy = true;
 		this.handoffError = null;
 		let stream: MediaStream | null = null;
+		let claimed = false;
+		let recoveryId: string | null = null;
 		try {
+			recoveryId = handoff.status === 'claimed'
+				? await readHandoffRecoveryToken(handoff.id, installationId)
+				: await ensureHandoffRecoveryToken(handoff.id, installationId);
+			if (!recoveryId) throw new Error('handoff_recovery_missing');
 			const { data: rawCall, error: callError } = await getSupabaseClient()
 				.from('call_sessions')
 				.select('*')
@@ -578,23 +767,52 @@ export class CallStore {
 				.maybeSingle();
 			if (callError) throw callError;
 			const pendingCall = parseCallSession(rawCall);
+			const expectedOwner = handoff.status === 'claimed' ? handoff.claimedDevice : handoff.fromDevice;
+			const expectedGeneration = handoff.status === 'claimed'
+				? handoff.claimedGeneration
+				: handoff.sourceGeneration;
 			if (
 				!pendingCall ||
 				pendingCall.status !== 'accepted' ||
-				callDeviceForParticipant(pendingCall, userId) !== handoff.fromDevice
+				!expectedOwner ||
+				expectedGeneration == null ||
+				pendingCall.handoffGeneration !== expectedGeneration ||
+				callDeviceForParticipant(pendingCall, userId) !== expectedOwner
 			) throw new Error('handoff_call_changed');
 			stream = await acquireLocalMedia({ kind: pendingCall.kind, facingMode: this.facingMode });
+			// A transfer never opens a hot microphone/camera on the destination. The
+			// user explicitly enables either control after the call is visible there.
+			for (const track of stream.getAudioTracks()) track.enabled = false;
+			for (const track of stream.getVideoTracks()) track.enabled = false;
 			if (
 				operation !== this.#handoffOperationGeneration ||
 				this.handoffOffer?.id !== handoff.id ||
-				this.phase !== 'idle'
+				this.phase !== 'idle' ||
+				this.#userId !== userId ||
+				this.#deviceId !== device ||
+				this.#globalGeneration !== globalGeneration
+			) {
+				stopMediaStream(stream);
+				return;
+			}
+			await this.#preferencesReadyPromise;
+			if (!this.preferencesReady) throw new Error('handoff_preferences_not_ready');
+			await this.#preflightHandoffIce(pendingCall.id, handoff.id, recoveryId, userId, device);
+			if (
+				operation !== this.#handoffOperationGeneration ||
+				this.handoffOffer?.id !== handoff.id ||
+				this.phase !== 'idle' ||
+				this.#userId !== userId ||
+				this.#deviceId !== device ||
+				this.#globalGeneration !== globalGeneration
 			) {
 				stopMediaStream(stream);
 				return;
 			}
 			const { data, error } = await getSupabaseClient().rpc('claim_call_handoff', {
 				p_handoff: handoff.id,
-				p_device: device
+				p_device: device,
+				p_recovery_id: recoveryId
 			});
 			let call: CallSession | null = null;
 			if (error) {
@@ -620,11 +838,19 @@ export class CallStore {
 				}
 				call = parseCallSession(result.call);
 			}
+			const claimedGeneration = handoff.status === 'requested'
+				? handoff.sourceGeneration + 1
+				: handoff.claimedDevice === device
+					? handoff.claimedGeneration
+					: (handoff.claimedGeneration ?? handoff.sourceGeneration) + 1;
 			if (
 				!call ||
 				call.status !== 'accepted' ||
-				callDeviceForParticipant(call, userId) !== device
+				callDeviceForParticipant(call, userId) !== device ||
+				claimedGeneration == null ||
+				call.handoffGeneration !== claimedGeneration
 			) throw new Error('handoff_claim_invalid');
+			claimed = true;
 			// `call_handoffs=claimed` can arrive before this RPC response and clear the
 			// visual offer. Once the transaction commits, its returned call row is the
 			// authority; presentation state must not strand the transferred lease.
@@ -635,6 +861,7 @@ export class CallStore {
 				this.#globalGeneration !== globalGeneration ||
 				this.phase !== 'idle'
 			) {
+				await this.#abortClaimedHandoff(handoff.id, device, recoveryId).catch(() => false);
 				stopMediaStream(stream);
 				return;
 			}
@@ -642,9 +869,12 @@ export class CallStore {
 			this.requestedKind = call.kind;
 			this.localStream = stream;
 			this.#prepareLocalMediaState(call.kind, stream);
+			this.muted = true;
+			this.cameraOff = call.kind === 'video';
 			this.handoffOffer = null;
 			this.handoffBusy = false;
 			this.#activeHandoffId = handoff.id;
+			this.#activeHandoffRecoveryId = recoveryId;
 			this.#transition({ type: 'HANDOFF_ACCEPTED', call });
 			if (this.session?.id !== call.id || (this.phase as CallPhase) !== 'connecting') {
 				stopMediaStream(stream);
@@ -661,7 +891,12 @@ export class CallStore {
 				}
 			});
 		} catch (error) {
-			if (stream && this.localStream !== stream) stopMediaStream(stream);
+			if (claimed && recoveryId) await this.#abortClaimedHandoff(handoff.id, device, recoveryId).catch(() => false);
+			if (stream) {
+				if (this.localStream === stream) this.localStream = null;
+				stopMediaStream(stream);
+			}
+			this.#prefetchedHandoffIce = null;
 			if (operation === this.#handoffOperationGeneration) {
 				this.handoffError = this.#handoffErrorCode(error, 'handoff_claim_failed');
 				this.handoffBusy = false;
@@ -1205,8 +1440,7 @@ export class CallStore {
 				.select('*')
 				.eq('account', userId)
 				.eq('target_installation_id', installationId)
-				.eq('status', 'requested')
-				.gt('expires_at', new Date().toISOString())
+				.in('status', ['requested', 'claimed'])
 				.order('created_at', { ascending: false })
 				.limit(1);
 			if (incomingError) throw incomingError;
@@ -1216,19 +1450,37 @@ export class CallStore {
 			else if (this.handoffOffer?.targetInstallationId === installationId) this.handoffOffer = null;
 
 			const call = this.session;
-			if (call?.status === 'accepted' && this.#isClaimedByThisDevice(call)) {
+			let outgoingRow: unknown = null;
+			if (this.handoffOutgoing) {
+				const { data: outgoing, error: outgoingError } = await getSupabaseClient()
+					.from('call_handoffs')
+					.select('*')
+					.eq('id', this.handoffOutgoing.id)
+					.maybeSingle();
+				if (outgoingError) throw outgoingError;
+				outgoingRow = outgoing;
+			} else if (call?.status === 'accepted' && ['connecting', 'active', 'reconnecting'].includes(this.phase)) {
+				// This also repairs the call-row-first race: after ownership moved, the
+				// source discovers the durable handoff by its old exact device id.
 				const { data: outgoing, error: outgoingError } = await getSupabaseClient()
 					.from('call_handoffs')
 					.select('*')
 					.eq('account', userId)
 					.eq('call_id', call.id)
-					.in('status', ['requested', 'claimed'])
+					.eq('from_device', this.#deviceId)
 					.order('created_at', { ascending: false })
 					.limit(1);
 				if (outgoingError) throw outgoingError;
-				if (generation !== this.#globalGeneration || this.session?.id !== call.id) return;
-				if (outgoing?.[0]) this.#applyHandoffRow(outgoing[0]);
+				outgoingRow = outgoing?.[0] ?? null;
 			}
+			if (generation !== this.#globalGeneration || userId !== this.#userId) return;
+			if (outgoingRow) this.#applyHandoffRow(outgoingRow);
+			const outgoing = this.handoffOutgoing;
+			if (
+				outgoing?.status === 'claimed' &&
+				outgoing.recoveryExpiresAt &&
+				Date.parse(outgoing.recoveryExpiresAt) <= Date.now()
+			) void this.#recoverOutgoingHandoff(outgoing);
 		} catch {
 			/* Backend-first rollout: Realtime/visibility will retry after migration. */
 		}
@@ -1237,14 +1489,46 @@ export class CallStore {
 	#applyHandoffRow(value: unknown): void {
 		const handoff = parseCallHandoff(value);
 		if (!handoff || !this.#userId || handoff.account !== this.#userId) return;
+		const updatedAt = Date.parse(handoff.updatedAt);
+		const known = this.#handoffRowVersions.get(handoff.id);
+		if (known && (
+			handoff.stateVersion < known.version ||
+			(handoff.stateVersion === known.version && updatedAt <= known.updatedAt)
+		)) return;
+		this.#handoffRowVersions.set(handoff.id, { version: handoff.stateVersion, updatedAt });
 		const pending = handoff.status === 'requested' && Date.parse(handoff.expiresAt) > Date.now();
+		const terminal = ['completed', 'reverted', 'terminated', 'cancelled', 'expired', 'declined'].includes(
+			handoff.status
+		);
+		const rowGeneration = handoff.claimedGeneration ?? handoff.sourceGeneration;
+		if (
+			this.session?.id === handoff.callId &&
+			rowGeneration < this.session.handoffGeneration &&
+			['requested', 'claimed'].includes(handoff.status)
+		) return;
 
 		if (handoff.targetInstallationId === this.#installationId) {
+			if (terminal) {
+				// Realtime/reconciliation is the durable cleanup path when an RPC response
+				// is lost. Never leave a recovery bearer behind after a closed handoff.
+				void clearHandoffRecoveryToken(handoff.id, this.#installationId);
+				if (this.#activeHandoffId === handoff.id) {
+					this.#activeHandoffId = null;
+					this.#activeHandoffRecoveryId = null;
+					this.#handoffCompletionInFlight = false;
+				}
+				if (this.#prefetchedHandoffIce?.handoffId === handoff.id) this.#prefetchedHandoffIce = null;
+			}
 			if (pending && handoff.fromDevice !== this.#deviceId && this.phase === 'idle') {
 				this.handoffOffer = handoff;
 				this.handoffError = null;
 			} else if (this.handoffOffer?.id === handoff.id && !pending) {
 				this.handoffOffer = null;
+			}
+			if (handoff.status === 'claimed') this.#scheduleRecoverableHandoffOffer(handoff);
+			else if (this.#handoffRecoveryOfferTimer) {
+				clearTimeout(this.#handoffRecoveryOfferTimer);
+				this.#handoffRecoveryOfferTimer = null;
 			}
 		}
 
@@ -1255,12 +1539,27 @@ export class CallStore {
 				return;
 			}
 			this.#clearHandoffExpiry();
-			if (handoff.status === 'claimed' || handoff.status === 'completed') {
+			if (handoff.status === 'claimed') {
+				this.handoffOutgoing = handoff;
+				this.#handoffSourceAwaitingCallId = handoff.callId;
+				return;
+			}
+			if (handoff.status === 'completed') {
 				const call = this.session;
 				if (call?.id === handoff.callId && call.status === 'accepted') this.#finishTransferred(call);
 				return;
 			}
 			this.handoffOutgoing = null;
+			this.#handoffSourceAwaitingCallId = null;
+			if (handoff.status === 'reverted') {
+				this.handoffError = null;
+				void this.#reconcileGlobalCalls(this.#globalGeneration);
+				return;
+			}
+			if (handoff.status === 'terminated') {
+				void this.#reconcileGlobalCalls(this.#globalGeneration);
+				return;
+			}
 			if (handoff.status === 'declined') this.handoffError = 'handoff_declined';
 			else if (handoff.status === 'expired') this.handoffError = 'handoff_expired';
 		}
@@ -1314,13 +1613,30 @@ export class CallStore {
 				this.outcome === 'transferred'
 			) return;
 			const previous = this.session;
+			if (!isCallSessionSnapshotMonotonic(previous, call)) return;
 			if (call.status === 'accepted') {
 				this.#closeCallNotification(call.id);
 				if (!this.#isClaimedByThisDevice(call)) {
 					const movedActiveCall = previous.status === 'accepted' &&
 						callDeviceForParticipant(previous, this.#userId) === this.#deviceId &&
 						['connecting', 'active', 'reconnecting'].includes(this.phase);
-					if (movedActiveCall) this.#finishTransferred(call);
+					if (movedActiveCall) {
+						if (this.#activeHandoffId) {
+							// A sibling tab on the target installation recovered the same
+							// handoff after this tab's short claim lease expired. Yield locally
+							// without ending the shared call or deleting the installation-wide
+							// recovery bearer that the new suffix still needs.
+							this.#finishTransferred(call);
+							return;
+						}
+						// Claim is only the ownership boundary. Keep the source UI/media until
+						// the destination reports an actual connected peer (`completed`).
+						this.session = call;
+						this.#handoffSourceAwaitingCallId = call.id;
+						this.#clearHeartbeat();
+						if (this.phase === 'active') this.#transition({ type: 'CONNECTION_LOST' });
+						void this.#reconcileHandoffs(this.#globalGeneration);
+					}
 					else {
 						// Another tab/phone of this account answered the incoming call first.
 						this.#finish(
@@ -1338,6 +1654,7 @@ export class CallStore {
 					callDeviceForParticipant(call, other) &&
 					callDeviceForParticipant(previous, other) !== callDeviceForParticipant(call, other)
 				);
+				const handoffGenerationChanged = call.handoffGeneration > previous.handoffGeneration;
 				this.session = call;
 				if (
 					this.phase === 'notifying' ||
@@ -1350,7 +1667,7 @@ export class CallStore {
 				this.#clearExpiry();
 				this.#startHeartbeat(call);
 				if (this.phase !== 'active') this.#scheduleNegotiationTimeout(call);
-				if (remoteDeviceChanged) this.#restartForRemoteHandoff(call);
+				if (remoteDeviceChanged || handoffGenerationChanged) this.#restartForRemoteHandoff(call);
 				else if (this.#callChannel) void this.#ensureTransport(call);
 			} else if (isTerminalCallStatus(call.status) && this.phase !== 'error') {
 				this.#finish(call, this.#outcomeForCall(call));
@@ -1399,6 +1716,16 @@ export class CallStore {
 			generation !== this.#globalGeneration ||
 			call?.id !== callId ||
 			!this.#incomingLeader?.isLeader(callId)
+		) return;
+		// Cache Storage can contain a newer account-scoped DND/block decision than
+		// the synchronous localStorage snapshot. Never flash or ring foreground UI
+		// until that durable preference read has settled for this exact account.
+		if (!this.preferencesReady) await this.#preferencesReadyPromise;
+		if (
+			generation !== this.#globalGeneration ||
+			call?.id !== callId ||
+			!this.#incomingLeader?.isLeader(callId) ||
+			!this.preferencesReady
 		) return;
 		if (takeover) {
 			try {
@@ -1853,6 +2180,7 @@ export class CallStore {
 		this.#channelSubscribed = false;
 		this.#otherPresent = false;
 		this.#offerRequested = false;
+		this.#clearOfferRetry(true);
 		this.#lastRemoteSequence.clear();
 		this.#remoteDevice = null;
 		const me = this.#userId;
@@ -1872,27 +2200,60 @@ export class CallStore {
 				generation !== this.#callGeneration ||
 				active?.status !== 'accepted' ||
 				!expectedDevice ||
-				!isCallSignalEnvelope(payload, call.id, other, expectedDevice)
+				!isCallSignalEnvelope(
+					payload,
+					call.id,
+					other,
+					expectedDevice,
+					active.handoffGeneration
+				)
 			) return;
 			const last = this.#lastRemoteSequence.get(payload.device) ?? -1;
 			if (payload.seq <= last) return;
 			this.#lastRemoteSequence.set(payload.device, payload.seq);
 			this.#remoteDevice ??= payload.device;
 			if (payload.signal.type === 'hangup') {
-				void this.#finishRemote(call);
+				void this.#finishRemote(call, true);
 				return;
 			}
-			if (this.#peer) void this.#peer.receive(payload.signal);
+			if (this.#peer) {
+				const peer = this.#peer;
+				void peer.receive(payload.signal).then((applied) => {
+					if (
+						applied &&
+						payload.signal.type === 'answer' &&
+						generation === this.#callGeneration &&
+						this.#peer === peer &&
+						this.session?.id === call.id &&
+						this.session.handoffGeneration === active.handoffGeneration
+					) {
+						this.#offerAnswered = true;
+						this.#clearOfferRetry();
+					}
+				}).catch(() => undefined);
+			}
 			else this.#pendingSignals.push(payload.signal);
 		});
 		const syncPresence = () => {
 			if (generation !== this.#callGeneration) return;
-			const state = channel.presenceState<{ account?: string; device?: string }>();
+			const state = channel.presenceState<{
+				account?: string;
+				device?: string;
+				handoffGeneration?: number;
+			}>();
 			const active = this.session;
 			const expectedDevice = active?.id === call.id ? callDeviceForParticipant(active, other) : null;
 			this.#otherPresent = Boolean(expectedDevice) && Object.values(state).some((entries) =>
-				entries.some((entry) => entry.account === other && entry.device === expectedDevice)
+				entries.some((entry) =>
+					entry.account === other &&
+					entry.device === expectedDevice &&
+					callHandoffGenerationMatches(entry.handoffGeneration, active?.handoffGeneration ?? -1)
+				)
 			);
+			if (!this.#otherPresent) {
+				this.#offerRequested = false;
+				this.#clearOfferRetry(true);
+			}
 			this.#maybeOffer();
 		};
 		channel.on('presence', { event: 'sync' }, syncPresence);
@@ -1912,7 +2273,14 @@ export class CallStore {
 				if (status === 'SUBSCRIBED') {
 					this.#channelSubscribed = true;
 					this.#reconnectAttempts = 0;
-					void channel.track({ account: me, device: this.#deviceId, kind: call.kind }).then((result) => {
+					void channel.track({
+						account: me,
+						device: this.#deviceId,
+						kind: call.kind,
+						handoffGeneration: this.session?.id === call.id
+							? this.session.handoffGeneration
+							: call.handoffGeneration
+					}).then((result) => {
 						if (generation === this.#callGeneration && result !== 'ok') this.#scheduleReconnect(call, generation);
 					});
 					const active = this.session;
@@ -1988,6 +2356,8 @@ export class CallStore {
 				onConnected: () => {
 					if (generation !== this.#callGeneration || this.session?.id !== call.id) return;
 					this.connectedAt ??= Date.now();
+					this.#offerAnswered = true;
+					this.#clearOfferRetry();
 					this.#clearNegotiationTimeout();
 					this.#transition({ type: 'CONNECTED' });
 					this.#activateConnectedRuntime(peer, generation);
@@ -2000,6 +2370,10 @@ export class CallStore {
 				},
 				onDisconnected: () => {
 					if (generation === this.#callGeneration && this.session?.id === call.id && this.phase !== 'ended') {
+						if (this.#isAwaitingHandoffCompletion(call.id)) {
+							if (this.phase === 'active') this.#transition({ type: 'CONNECTION_LOST' });
+							return;
+						}
 						void this.#finishRemote(call);
 					}
 				},
@@ -2021,7 +2395,11 @@ export class CallStore {
 			const queued = this.#pendingSignals.splice(0);
 			for (const signal of queued) {
 				if (generation !== this.#callGeneration || this.#peer !== peer) break;
-				await peer.receive(signal);
+				const applied = await peer.receive(signal);
+				if (applied && signal.type === 'answer') {
+					this.#offerAnswered = true;
+					this.#clearOfferRetry();
+				}
 			}
 			this.#maybeOffer();
 		})().catch((error) => {
@@ -2124,7 +2502,55 @@ export class CallStore {
 			this.#offerRequested
 		) return;
 		this.#offerRequested = true;
-		void this.#peer.startOffer();
+		this.#offerAnswered = false;
+		this.#offerRetryAttempts = 0;
+		const peer = this.#peer;
+		const generation = this.#callGeneration;
+		void peer.startOffer().then(() => this.#scheduleOfferRetry(call, peer, generation));
+	}
+
+	#scheduleOfferRetry(call: CallSession, peer: CallPeer, generation: number): void {
+		if (
+			generation !== this.#callGeneration ||
+			this.#peer !== peer ||
+			this.session?.id !== call.id ||
+			this.#offerRetryTimer ||
+			this.#offerAnswered ||
+			this.#offerRetryAttempts >= OFFER_RETRY_DELAYS_MS.length
+		) return;
+		const delay = OFFER_RETRY_DELAYS_MS[this.#offerRetryAttempts];
+		this.#offerRetryTimer = setTimeout(() => {
+			this.#offerRetryTimer = null;
+			if (
+				generation !== this.#callGeneration ||
+				this.#peer !== peer ||
+				this.session?.id !== call.id ||
+				this.session.status !== 'accepted' ||
+				this.session.handoffGeneration !== call.handoffGeneration ||
+				this.session.caller !== this.#userId ||
+				!this.#channelSubscribed ||
+				!this.#otherPresent ||
+				this.#offerAnswered ||
+				!['connecting', 'reconnecting'].includes(this.phase)
+			) {
+				if (!this.#otherPresent) {
+					this.#offerRequested = false;
+					this.#clearOfferRetry(true);
+				}
+				return;
+			}
+			this.#offerRetryAttempts += 1;
+			void peer.startOffer(true).then(() => this.#scheduleOfferRetry(call, peer, generation));
+		}, delay);
+	}
+
+	#clearOfferRetry(reset = false): void {
+		if (this.#offerRetryTimer) clearTimeout(this.#offerRetryTimer);
+		this.#offerRetryTimer = null;
+		if (reset) {
+			this.#offerRetryAttempts = 0;
+			this.#offerAnswered = false;
+		}
 	}
 
 	async #sendSignal(signal: CallSignal): Promise<void> {
@@ -2140,6 +2566,7 @@ export class CallStore {
 			callId: call.id,
 			from: this.#userId,
 			device: this.#deviceId,
+			handoffGeneration: call.handoffGeneration,
 			seq: ++this.#signalSequence,
 			signal
 		};
@@ -2163,18 +2590,180 @@ export class CallStore {
 		throw lastError instanceof Error ? lastError : new Error('call_signal_failed');
 	}
 
-	async #fetchIceConfiguration(callId: string) {
+	async #fetchFreshIceConfiguration(
+		callId: string,
+		handoffId?: string,
+		handoffRecoveryId?: string
+	): Promise<CallIceConfiguration> {
 		const auth = await getAuthSession();
 		if (!auth) throw new Error('call_ice_auth_missing');
 		return fetchCallIceConfiguration({
 			callId,
 			device: this.#deviceId,
-			accessToken: auth.access_token
+			accessToken: auth.access_token,
+			...(handoffId ? { handoffId } : {}),
+			...(handoffRecoveryId ? { handoffRecoveryId } : {})
 		});
 	}
 
-	async #finishRemote(call: CallSession): Promise<void> {
+	async #preflightHandoffIce(
+		callId: string,
+		handoffId: string,
+		recoveryId: string,
+		userId: string,
+		device: string
+	): Promise<void> {
+		const configuration = await this.#fetchFreshIceConfiguration(callId, handoffId, recoveryId);
+		if (this.#userId !== userId || this.#deviceId !== device) throw new Error('handoff_context_changed');
+		const relayOnly = this.callPreferences?.relayOnly === true;
+		if (relayOnly && !configuration.relayAvailable) {
+			throw new Error('call_relay_required_unavailable');
+		}
+		const credentialExpiry = configuration.expiresAt ? Date.parse(configuration.expiresAt) - 5_000 : Infinity;
+		const validUntil = Math.min(Date.now() + HANDOFF_ICE_PREFLIGHT_MS, credentialExpiry);
+		if (!Number.isFinite(validUntil) && validUntil !== Infinity) throw new Error('call_ice_invalid_expiry');
+		if (validUntil <= Date.now()) throw new Error('call_ice_expired');
+		this.#prefetchedHandoffIce = {
+			callId,
+			handoffId,
+			userId,
+			device,
+			relayOnly,
+			validUntil,
+			configuration
+		};
+	}
+
+	async #fetchIceConfiguration(callId: string): Promise<CallIceConfiguration> {
+		const prefetched = this.#prefetchedHandoffIce;
+		if (
+			prefetched &&
+			prefetched.callId === callId &&
+			prefetched.handoffId === this.#activeHandoffId &&
+			prefetched.userId === this.#userId &&
+			prefetched.device === this.#deviceId &&
+			prefetched.relayOnly === (this.callPreferences?.relayOnly === true) &&
+			prefetched.validUntil > Date.now()
+		) {
+			this.#prefetchedHandoffIce = null;
+			return prefetched.configuration;
+		}
+		if (prefetched?.callId === callId) this.#prefetchedHandoffIce = null;
+		return this.#fetchFreshIceConfiguration(callId);
+	}
+
+	async #abortClaimedHandoff(
+		handoffId: string,
+		device: string,
+		recoveryId: string,
+		installationId = this.#installationId
+	): Promise<boolean> {
+		const { data, error } = await getSupabaseClient().rpc('abort_call_handoff', {
+			p_handoff: handoffId,
+			p_device: device,
+			p_recovery_id: recoveryId
+		});
+		if (error) throw error;
+		if (data === true) {
+			await clearHandoffRecoveryToken(handoffId, installationId);
+			if (this.#activeHandoffId === handoffId) {
+				this.#activeHandoffId = null;
+				this.#activeHandoffRecoveryId = null;
+			}
+			if (this.#prefetchedHandoffIce?.handoffId === handoffId) this.#prefetchedHandoffIce = null;
+		}
+		return data === true;
+	}
+
+	async #recoverOutgoingHandoff(handoff: CallHandoff): Promise<void> {
+		if (
+			this.#handoffRecoveryInFlight ||
+			this.handoffOutgoing?.id !== handoff.id ||
+			handoff.fromDevice !== this.#deviceId
+		) return;
+		this.#handoffRecoveryInFlight = handoff.id;
+		try {
+			const { data, error } = await getSupabaseClient().rpc('recover_call_handoff_source', {
+				p_handoff: handoff.id,
+				p_device: this.#deviceId
+			});
+			if (error) throw error;
+			if (data === true) {
+				this.handoffOutgoing = null;
+				this.#handoffSourceAwaitingCallId = null;
+				void this.#reconcileGlobalCalls(this.#globalGeneration);
+			}
+		} catch {
+			/* The next visibility/poll pass retries while the claimed grace is open. */
+		} finally {
+			if (this.#handoffRecoveryInFlight === handoff.id) this.#handoffRecoveryInFlight = null;
+		}
+	}
+
+	#scheduleRecoverableHandoffOffer(handoff: CallHandoff): void {
+		if (
+			!handoff.claimDeviceLeaseExpiresAt ||
+			!handoff.recoveryExpiresAt ||
+			Date.parse(handoff.recoveryExpiresAt) <= Date.now()
+		) return;
+		if (this.#handoffRecoveryOfferTimer) clearTimeout(this.#handoffRecoveryOfferTimer);
+		const delay = Math.max(0, Date.parse(handoff.claimDeviceLeaseExpiresAt) - Date.now()) + 40;
+		this.#handoffRecoveryOfferTimer = setTimeout(() => {
+			this.#handoffRecoveryOfferTimer = null;
+			void (async () => {
+				const userId = this.#userId;
+				const installationId = this.#installationId;
+				if (!userId || handoff.account !== userId || handoff.targetInstallationId !== installationId) return;
+				const { data, error } = await getSupabaseClient()
+					.from('call_handoffs')
+					.select('*')
+					.eq('id', handoff.id)
+					.maybeSingle();
+				if (error) return;
+				const current = parseCallHandoff(data);
+				if (!current) return;
+				if (current.stateVersion > handoff.stateVersion) this.#applyHandoffRow(data);
+				if (
+					current.status !== 'claimed' ||
+					current.stateVersion !== handoff.stateVersion ||
+					!current.claimDeviceLeaseExpiresAt ||
+					Date.parse(current.claimDeviceLeaseExpiresAt) > Date.now() ||
+					!current.recoveryExpiresAt ||
+					Date.parse(current.recoveryExpiresAt) <= Date.now() ||
+					this.phase !== 'idle' ||
+					this.#userId !== userId ||
+					this.#installationId !== installationId
+				) return;
+				const token = await readHandoffRecoveryToken(current.id, installationId);
+				if (
+					token &&
+					this.phase === 'idle' &&
+					this.#userId === userId &&
+					this.#installationId === installationId &&
+					this.#handoffRowVersions.get(current.id)?.version === current.stateVersion
+				) {
+					this.handoffOffer = current;
+					this.handoffError = null;
+				}
+			})();
+		}, delay);
+	}
+
+	#isAwaitingHandoffCompletion(callId: string): boolean {
+		return (Boolean(this.#activeHandoffId) && this.session?.id === callId) ||
+			this.#handoffSourceAwaitingCallId === callId || (
+			this.handoffOutgoing?.callId === callId &&
+			['requested', 'claimed'].includes(this.handoffOutgoing.status)
+		);
+	}
+
+	async #finishRemote(call: CallSession, explicitRemoteHangup = false): Promise<void> {
 		if (this.session?.id !== call.id) return;
+		if (!explicitRemoteHangup && this.#isAwaitingHandoffCompletion(call.id)) {
+			if (this.phase === 'active') this.#transition({ type: 'CONNECTION_LOST' });
+			void this.#reconcileHandoffs(this.#globalGeneration);
+			return;
+		}
 		void this.#retryTerminalCallRpc('end_call', { p_call: call.id, p_device: this.#deviceId }).catch(() => undefined);
 		this.#finish({ ...call, status: 'ended', endedAt: new Date().toISOString() });
 	}
@@ -2211,22 +2800,36 @@ export class CallStore {
 		try {
 			const refreshed = await this.#callRpc('heartbeat_call', { p_call: call.id, p_device: this.#deviceId });
 			if (this.session?.id !== call.id) return;
+			if (!isCallSessionSnapshotMonotonic(this.session, refreshed)) return;
 			this.#heartbeatFailures = 0;
 			if (isTerminalCallStatus(refreshed.status)) {
 				this.#finish(refreshed);
 				return;
 			}
 			if (!this.#isClaimedByThisDevice(refreshed)) {
-				this.#finish({ ...refreshed, status: 'ended', endedAt: new Date().toISOString() });
+				if (this.#isAwaitingHandoffCompletion(refreshed.id)) {
+					this.session = refreshed;
+					this.#clearHeartbeat();
+					void this.#reconcileHandoffs(this.#globalGeneration);
+				} else {
+					this.#finish({ ...refreshed, status: 'ended', endedAt: new Date().toISOString() });
+				}
 				return;
 			}
 			this.session = refreshed;
+			if (this.connectedAt && this.#activeHandoffId) void this.#completeActiveHandoff(refreshed.id);
 		} catch (error) {
 			if (this.session?.id !== call.id) return;
 			this.#heartbeatFailures += 1;
 			const message = this.#errorCode(error, 'call_heartbeat_failed');
 			if (message.includes('claimed by another device')) {
-				this.#finish({ ...call, status: 'ended', endedAt: new Date().toISOString() });
+				if (this.#isAwaitingHandoffCompletion(call.id)) {
+					this.#clearHeartbeat();
+					void this.#reconcileGlobalCalls(this.#globalGeneration);
+					void this.#reconcileHandoffs(this.#globalGeneration);
+				} else {
+					this.#finish({ ...call, status: 'ended', endedAt: new Date().toISOString() });
+				}
 				return;
 			}
 			const lease = call.caller === this.#userId ? call.callerLeaseExpiresAt : call.calleeLeaseExpiresAt;
@@ -2299,19 +2902,34 @@ export class CallStore {
 
 	async #completeActiveHandoff(callId: string): Promise<void> {
 		const handoffId = this.#activeHandoffId;
-		if (!handoffId || this.session?.id !== callId || !this.#isClaimedByThisDevice(this.session)) return;
-		for (let attempt = 0; attempt < 3; attempt += 1) {
-			try {
-				const { data, error } = await getSupabaseClient().rpc('complete_call_handoff', {
-					p_handoff: handoffId,
-					p_device: this.#deviceId
-				});
-				if (error) throw error;
-				if (data === true && this.#activeHandoffId === handoffId) this.#activeHandoffId = null;
-				return;
-			} catch {
-				if (attempt + 1 < 3) await wait(250 * 2 ** attempt);
+		if (
+			!handoffId ||
+			this.#handoffCompletionInFlight ||
+			!this.connectedAt ||
+			this.session?.id !== callId ||
+			!this.#isClaimedByThisDevice(this.session)
+		) return;
+		this.#handoffCompletionInFlight = true;
+		try {
+			for (let attempt = 0; attempt < 3; attempt += 1) {
+				try {
+					const { data, error } = await getSupabaseClient().rpc('complete_call_handoff', {
+						p_handoff: handoffId,
+						p_device: this.#deviceId
+					});
+					if (error) throw error;
+					if (data === true && this.#activeHandoffId === handoffId) {
+						this.#activeHandoffId = null;
+						this.#activeHandoffRecoveryId = null;
+						void clearHandoffRecoveryToken(handoffId, this.#installationId);
+					}
+					return;
+				} catch {
+					if (attempt + 1 < 3) await wait(250 * 2 ** attempt);
+				}
 			}
+		} finally {
+			this.#handoffCompletionInFlight = false;
 		}
 	}
 
@@ -2330,12 +2948,22 @@ export class CallStore {
 		this.handoffBusy = false;
 		this.handoffError = null;
 		this.#activeHandoffId = null;
+		this.#activeHandoffRecoveryId = null;
+		this.#handoffCompletionInFlight = false;
+		this.#handoffSourceAwaitingCallId = null;
 		// This is local teardown only. Never call end_call: the same durable call
 		// continues on the device that atomically acquired this participant lease.
 		this.#finish(call, 'transferred');
 	}
 
 	#finish(call: CallSession, outcome = this.#outcomeForCall(call)): void {
+		const completedOrTerminalHandoff = this.#activeHandoffId;
+		if (completedOrTerminalHandoff) {
+			void clearHandoffRecoveryToken(completedOrTerminalHandoff, this.#installationId);
+			this.#activeHandoffId = null;
+			this.#activeHandoffRecoveryId = null;
+			this.#handoffCompletionInFlight = false;
+		}
 		this.#operationGeneration += 1;
 		this.#clearIncomingAck();
 		this.#releaseIncomingLeadership(call.id);
@@ -2370,7 +2998,16 @@ export class CallStore {
 		this.followupStatus = 'idle';
 		callAudio.stop();
 		const call = this.session;
-		if (call && (call.status === 'ringing' || call.status === 'accepted') && this.#isClaimedByThisDevice(call)) {
+		const activeHandoffId = this.#activeHandoffId;
+		const activeRecoveryId = this.#activeHandoffRecoveryId;
+		if (call && activeHandoffId && activeRecoveryId && this.#isClaimedByThisDevice(call)) {
+			void this.#abortClaimedHandoff(
+				activeHandoffId,
+				this.#deviceId,
+				activeRecoveryId,
+				this.#installationId
+			).catch(() => false);
+		} else if (call && (call.status === 'ringing' || call.status === 'accepted') && this.#isClaimedByThisDevice(call)) {
 			void this.#retryTerminalCallRpc('end_call', { p_call: call.id, p_device: this.#deviceId }).catch(() => undefined);
 		}
 		this.#clearExpiry();
@@ -2404,10 +3041,12 @@ export class CallStore {
 		this.relayAvailable = null;
 		this.iceSource = null;
 		this.relayOnlyActive = false;
+		this.#prefetchedHandoffIce = null;
 		this.#pendingSignals = [];
 		this.#remoteDevice = null;
 		this.#otherPresent = false;
 		this.#offerRequested = false;
+		this.#clearOfferRetry(true);
 		if (this.#reconnectTimer) clearTimeout(this.#reconnectTimer);
 		this.#reconnectTimer = null;
 		this.#reconnectAttempts = 0;
@@ -2459,6 +3098,11 @@ export class CallStore {
 		this.handoffOffer = null;
 		this.handoffOutgoing = null;
 		this.#activeHandoffId = null;
+		this.#activeHandoffRecoveryId = null;
+		this.#handoffCompletionInFlight = false;
+		this.#handoffSourceAwaitingCallId = null;
+		if (this.#handoffRecoveryOfferTimer) clearTimeout(this.#handoffRecoveryOfferTimer);
+		this.#handoffRecoveryOfferTimer = null;
 		this.#locallyTransferredCallId = null;
 		this.attentionMuted = false;
 		this.attentionPreferenceReason = null;
@@ -2580,6 +3224,7 @@ export class CallStore {
 				this.#retryPendingIncomingAckNow();
 			}
 			if (call && this.#shouldHeartbeat(call)) void this.#heartbeat(call.id);
+			if (call && this.connectedAt && this.#activeHandoffId) void this.#completeActiveHandoff(call.id);
 			if (
 				call?.status === 'accepted' &&
 				this.#isClaimedByThisDevice(call) &&
@@ -2858,6 +3503,7 @@ export class CallStore {
 	#handoffErrorCode(error: unknown, fallback: string): string {
 		const code = this.#errorCode(error, fallback).toLowerCase();
 		if (code === 'media_denied' || code === 'media_missing' || code === 'media_unsupported') return code;
+		if (code.includes('relay_required_unavailable')) return 'call_relay_required_unavailable';
 		if (code.includes('already_claimed') || code.includes('source_changed') || code.includes('claimed by another device')) {
 			return 'handoff_claimed_elsewhere';
 		}
