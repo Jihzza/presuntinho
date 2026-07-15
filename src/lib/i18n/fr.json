@@ -5255,6 +5255,8 @@
   "settings.push.title": "Pings sur le téléphone",
   "settings.push.hint": "Reçois les « je t’aime très fort » et « tu me manques » en notification avec une vibration dédiée — même app fermée.",
   "couple.ping.push_body": "Touche pour ouvrir Presuntinho 🐷",
+  "couple.ping.push_body_love": "{name} t'a envoyé un 💛",
+  "couple.ping.push_body_nudge": "{name} pense à toi 👀",
   "agenda.notifications.ping.love": "💛 {name} t’a envoyé de l’amour",
   "agenda.notifications.ping.love_many": "💛 {name} t’a envoyé de l’amour ×{n}",
   "agenda.notifications.ping.nudge": "👀 Tu as manqué à {name}",

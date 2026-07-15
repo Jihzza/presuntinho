@@ -5268,6 +5268,8 @@
   "settings.push.title": "Pings fel telifoun",
   "settings.push.hint": "Tousslek \"n7ebbek barcha\" w \"twa7achtek\" ka notification fel telifoun b vibration khassa — 7atta ki l’app msakkra.",
   "couple.ping.push_body": "Enzel bech t7ell Presuntinho 🐷",
+  "couple.ping.push_body_love": "{name} ba3thelek 💛",
+  "couple.ping.push_body_nudge": "{name} mechte9lek 👀",
   "agenda.notifications.ping.love": "💛 {name} ba3athlek 7ob",
   "agenda.notifications.ping.love_many": "💛 {name} ba3athlek 7ob ×{n}",
   "agenda.notifications.ping.nudge": "👀 {name} twa7achek",

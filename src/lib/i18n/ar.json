@@ -5255,6 +5255,8 @@
   "settings.push.title": "نبضات على الهاتف",
   "settings.push.hint": "استقبل «أحبك كثيرًا» و«اشتقت إليك» كإشعار على الهاتف باهتزاز خاص — حتى والتطبيق مغلق.",
   "couple.ping.push_body": "المس لفتح Presuntinho 🐷",
+  "couple.ping.push_body_love": "{name} أرسلك 💛",
+  "couple.ping.push_body_nudge": "{name} يشتاق إليك 👀",
   "agenda.notifications.ping.love": "💛 {name} أرسل لك حبًا",
   "agenda.notifications.ping.love_many": "💛 {name} أرسل لك حبًا ×{n}",
   "agenda.notifications.ping.nudge": "👀 {name} اشتاق إليك",

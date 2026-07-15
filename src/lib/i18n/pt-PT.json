@@ -5255,6 +5255,8 @@
   "settings.push.title": "Pings no telemóvel",
   "settings.push.hint": "Recebe os \"amo-te muito\" e as \"saudades\" como notificação no telemóvel, com vibração própria — mesmo com a app fechada.",
   "couple.ping.push_body": "Toca para abrir o Presuntinho 🐷",
+  "couple.ping.push_body_love": "{name} enviou-te um 💛",
+  "couple.ping.push_body_nudge": "{name} tem saudades tuas 👀",
   "agenda.notifications.ping.love": "💛 {name} mandou-te amor",
   "agenda.notifications.ping.love_many": "💛 {name} mandou-te amor ×{n}",
   "agenda.notifications.ping.nudge": "👀 {name} teve saudades tuas",

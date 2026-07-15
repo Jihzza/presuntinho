@@ -5255,6 +5255,8 @@
   "settings.push.title": "Pings on your phone",
   "settings.push.hint": "Get the \"love you so much\" and \"miss you\" as a phone notification with its own vibration — even with the app closed.",
   "couple.ping.push_body": "Tap to open Presuntinho 🐷",
+  "couple.ping.push_body_love": "{name} sent you a 💛",
+  "couple.ping.push_body_nudge": "{name} misses you 👀",
   "agenda.notifications.ping.love": "💛 {name} sent you love",
   "agenda.notifications.ping.love_many": "💛 {name} sent you love ×{n}",
   "agenda.notifications.ping.nudge": "👀 {name} missed you",
