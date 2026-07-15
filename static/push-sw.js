@@ -72,7 +72,7 @@ function canonicalAppUrl(value) {
 
 function canonicalPushEvent(data) {
   const source = data && typeof data === 'object' ? data : {};
-  const kind = ['love', 'nudge', 'message', 'call', 'test', 'game_invite'].includes(source.kind) ? source.kind : 'love';
+  const kind = ['love', 'nudge', 'message', 'call', 'test', 'game_invite', 'reminder'].includes(source.kind) ? source.kind : 'love';
   let url = canonicalAppUrl(source.url);
   const callId = typeof source.callId === 'string' && UUID_RE.test(source.callId)
     ? source.callId
@@ -460,6 +460,15 @@ function gameInviteExpired(pushEvent, now = Date.now()) {
   }
 }
 
+function reminderExpired(pushEvent, now = Date.now()) {
+  if (pushEvent.kind !== 'reminder') return false;
+  const expiresAt = pushEvent.expiresAt ? Date.parse(pushEvent.expiresAt) : NaN;
+  // Reminders are server-only durable events. Missing/elapsed authority means
+  // the source may already have disappeared, so never surface a stale link.
+  return !UUID_RE.test(String(pushEvent.eventId || '')) ||
+    !Number.isFinite(expiresAt) || expiresAt <= now;
+}
+
 function tombstoneUrl(callId) {
   return `${self.location.origin}/__presuntinho_call_tombstone__/${encodeURIComponent(callId)}`;
 }
@@ -663,6 +672,8 @@ function notificationOptions(pushEvent, foreground, preferences, dndActive) {
         ? callNotificationTag(pushEvent)
         : kind === 'message'
           ? messageNotificationTag(url)
+          : kind === 'reminder'
+            ? `presuntinho-reminder-${pushEvent.eventId}`
           : kind === 'game_invite'
             ? `presuntinho-game-invite-${pushEvent.eventId}`
           : `presuntinho-ping-${kind}`,
@@ -685,6 +696,8 @@ function notificationOptions(pushEvent, foreground, preferences, dndActive) {
         ? NUDGE_VIBRATION
         : kind === 'message'
           ? MESSAGE_VIBRATION
+          : kind === 'reminder'
+            ? MESSAGE_VIBRATION
           : kind === 'game_invite'
             ? GAME_INVITE_VIBRATION
           : LOVE_VIBRATION;
@@ -714,7 +727,7 @@ self.addEventListener('push', (event) => {
       // A provider can deliver at the edge of the TTL. Never vibrate or open a
       // room for an expired/malformed durable invite; the page independently
       // revalidates the database row before joining as the final authority.
-      if (gameInviteExpired(pushEvent)) return;
+      if (gameInviteExpired(pushEvent) || reminderExpired(pushEvent)) return;
       if (!await pushMatchesActiveAccount(pushEvent)) {
         if (pushEvent.kind === 'call') await closeCallNotifications(pushEvent);
         return;
@@ -874,7 +887,7 @@ self.addEventListener('message', (event) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const pushEvent = canonicalPushEvent(event.notification.data || {});
-  if (callExpired(pushEvent) || terminalCallExpired(pushEvent) || gameInviteExpired(pushEvent)) {
+  if (callExpired(pushEvent) || terminalCallExpired(pushEvent) || gameInviteExpired(pushEvent) || reminderExpired(pushEvent)) {
     event.waitUntil(closeCallNotifications(pushEvent));
     return;
   }

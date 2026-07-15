@@ -37,6 +37,16 @@ describe('scheduled durable push recovery', () => {
     const effects = [];
     const fetchMock = vi.fn(async (input, init = {}) => {
       const url = new URL(String(input));
+      if (url.pathname.endsWith('/rpc/expire_chat_messages')) {
+        effects.push('expire-chat');
+        expect(JSON.parse(String(init.body))).toEqual({ p_limit: 200 });
+        return json(1);
+      }
+      if (url.pathname.endsWith('/rpc/enqueue_due_chat_reminders')) {
+        effects.push('enqueue-reminders');
+        expect(JSON.parse(String(init.body))).toEqual({ p_limit: 50 });
+        return json(1);
+      }
       if (url.pathname.endsWith('/rpc/maintain_communication_push_outbox')) {
 			effects.push('maintain-push');
         return json([{ expired_count: 12, deleted_count: 2 }]);
@@ -100,7 +110,7 @@ describe('scheduled durable push recovery', () => {
 
     expect(response.status).toBe(204);
     expect(effects).toEqual([
-			'maintain-push', 'maintain-media', 'claim-media',
+			'expire-chat', 'enqueue-reminders', 'maintain-push', 'maintain-media', 'claim-media',
 			'delete-media', 'record-media', 'list', 'queue'
 		]);
   });
@@ -112,6 +122,14 @@ describe('scheduled durable push recovery', () => {
     const effects = [];
     const fetchMock = vi.fn(async (input) => {
       const url = new URL(String(input));
+      if (url.pathname.endsWith('/rpc/expire_chat_messages')) {
+        effects.push('expire-chat');
+        return json(0);
+      }
+      if (url.pathname.endsWith('/rpc/enqueue_due_chat_reminders')) {
+        effects.push('enqueue-reminders');
+        return json(0);
+      }
       if (url.pathname.endsWith('/rpc/maintain_communication_push_outbox')) {
         effects.push('maintain-push');
         // Simulate a slow upstream consuming the handler-owned 22s budget.
@@ -128,7 +146,7 @@ describe('scheduled durable push recovery', () => {
     );
 
     expect(response.status).toBe(204);
-    expect(effects).toEqual(['maintain-push']);
+    expect(effects).toEqual(['expire-chat', 'enqueue-reminders', 'maintain-push']);
     expect(effects).not.toContain('/rest/v1/rpc/claim_chat_media_deletion_batch');
   });
 
@@ -137,6 +155,14 @@ describe('scheduled durable push recovery', () => {
     const effects = [];
     const fetchMock = vi.fn(async (input, init = {}) => {
       const url = new URL(String(input));
+      if (url.pathname.endsWith('/rpc/expire_chat_messages')) {
+        effects.push('expire-chat');
+        return json(0);
+      }
+      if (url.pathname.endsWith('/rpc/enqueue_due_chat_reminders')) {
+        effects.push('enqueue-reminders');
+        return json(0);
+      }
       if (url.pathname.endsWith('/rpc/maintain_communication_push_outbox')) {
         effects.push('maintain-push');
         return json([{ expired_count: 0, deleted_count: 0 }]);
@@ -194,7 +220,7 @@ describe('scheduled durable push recovery', () => {
 
     expect(response.status).toBe(204);
     expect(effects).toEqual([
-      'maintain-push', 'maintain-media', 'claim-media',
+      'expire-chat', 'enqueue-reminders', 'maintain-push', 'maintain-media', 'claim-media',
       'delete-media-failed', 'record-retry', 'list', 'queue-failed'
     ]);
   });

@@ -31,7 +31,13 @@ import {
   type ChatMeta,
   type ChatProfile
 } from './client';
-import type { ChatCallMeta, ChatReactionSummary, ChatReplyPreview, RichMessageKind } from './account-chat-model';
+import type {
+  ChatCallMeta,
+  ChatMediaVariant,
+  ChatReactionSummary,
+  ChatReplyPreview,
+  RichMessageKind
+} from './account-chat-model';
 
 export interface LocalChatMessage extends ChatMessage {
   /** Exact server timestamp retained for lossless compound pagination. */
@@ -61,6 +67,11 @@ export interface LocalChatMessage extends ChatMessage {
   deleted?: boolean;
   reactions?: ChatReactionSummary[];
   starred?: boolean;
+  reminderAt?: number;
+  forwardedFromId?: string;
+  mediaVariant?: ChatMediaVariant;
+  /** Server-authoritative expiry. Absence means retained. */
+  expiresAt?: number;
   mediaBucket?: string;
   mediaSize?: number;
   /** Kept only until an optimistic upload succeeds/retries; never persisted. */

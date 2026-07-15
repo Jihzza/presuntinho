@@ -27,6 +27,7 @@ import {
 const CALL_ID = '00000000-0000-4000-8000-000000000001';
 const MESSAGE_ID = '00000000-0000-4000-8000-000000000004';
 const GAME_INVITE_ID = '77777777-7777-4777-8777-777777777777';
+const REMINDER_ID = '99999999-9999-4999-8999-999999999998';
 const SENDER_ID = '00000000-0000-4000-8000-000000000002';
 const CALLEE_ID = '00000000-0000-4000-8000-000000000003';
 const DELIVERY_ID = '11111111-1111-4111-8111-111111111111';
@@ -442,6 +443,51 @@ describe('push sender security and retry helpers', () => {
 			url: `/secrets/versus/?join=ABC234&invite=${GAME_INVITE_ID}`
 		});
 		expect(send.mock.calls[0][2]).toMatchObject({ urgency: 'high' });
+	});
+
+	it('delivers a private reminder to the owning account with a normal-priority exact deep link', async () => {
+		const expiresAt = new Date(Date.now() + 60 * 60_000).toISOString();
+		const sbAdmin = vi.fn(async (path) => {
+			if (path.endsWith('/rpc/claim_communication_push')) {
+				return json([{
+					event_id: REMINDER_ID,
+					kind: 'reminder',
+					sender: SENDER_ID,
+					target: SENDER_ID,
+					title: 'Lembrete do Presuntinho',
+					body: 'Guardaste uma mensagem para rever agora.',
+					url: `/mensagens/?conversation=${CALL_ID}&message=${MESSAGE_ID}`,
+					attempt_token: COMMUNICATION_ATTEMPT_TOKEN,
+					attempt_count: 1,
+					expires_at: expiresAt
+				}]);
+			}
+			if (path.startsWith('/rest/v1/push_subscriptions?')) {
+				expect(path).toContain(`account=eq.${SENDER_ID}`);
+				return json([{
+					id: SUBSCRIPTION_ID,
+					delivery_version: 1,
+					endpoint: 'https://fcm.googleapis.com/wp/reminder',
+					p256dh: 'A'.repeat(64),
+					auth: 'B'.repeat(32)
+				}]);
+			}
+			if (path.endsWith('/rpc/record_communication_push_result')) return json(true);
+			throw new Error(`unexpected reminder fetch ${path}`);
+		});
+		const send = vi.spyOn(webpush, 'sendNotification').mockResolvedValue({ statusCode: 201 });
+
+		const result = await dispatchCommunicationPush({ sbAdmin, eventId: REMINDER_ID });
+
+		expect(result.result).toMatchObject({ sent: 1, failed: 0, status: 'sent' });
+		const payload = JSON.parse(String(send.mock.calls[0][1]));
+		expect(payload).toMatchObject({
+			eventId: REMINDER_ID,
+			kind: 'reminder',
+			recipientId: SENDER_ID,
+			url: `/mensagens/?conversation=${CALL_ID}&message=${MESSAGE_ID}`
+		});
+		expect(send.mock.calls[0][2]).toMatchObject({ urgency: 'normal' });
 	});
 
 	it('binds generic background jobs to the event id', () => {

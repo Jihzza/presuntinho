@@ -199,7 +199,9 @@ export function createSupabaseAccountChatOutboxGateway(
             client_id: entry.clientId,
             kind: 'text',
             body: entry.text,
-            reply_to_id: entry.replyToId ?? null
+            reply_to_id: entry.replyToId ?? null,
+            forwarded_from_id: entry.forwardedFromId ?? null,
+            media_variant: 'attachment'
           }
         : {
             conversation_id: entry.conversationId,
@@ -213,11 +215,13 @@ export function createSupabaseAccountChatOutboxGateway(
                   ? 'video'
                   : 'file',
             reply_to_id: entry.replyToId ?? null,
+            forwarded_from_id: null,
             media_bucket: entry.mediaBucket,
             media_path: entry.mediaPath,
             media_mime: entry.mediaType,
             media_name: entry.mediaName,
-            media_size: entry.mediaSize ?? entry.mediaBlob?.size
+            media_size: entry.mediaSize ?? entry.mediaBlob?.size,
+            media_variant: entry.mediaVariant ?? (entry.mediaType === 'image/gif' ? 'gif' : 'attachment')
           };
       const { error } = await client.from('chat_messages').insert(payload as never);
       if (error) throw error;

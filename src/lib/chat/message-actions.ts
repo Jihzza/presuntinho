@@ -38,6 +38,7 @@ export interface EditableMessageLike extends MessageStateLike {
   text?: string;
   kind?: string;
   deleted?: boolean;
+  forwardedFromId?: string;
 }
 
 /** The server remains authoritative, but mirroring its 15 minute rule in the
@@ -51,6 +52,7 @@ export function canEditChatMessage(
     message.from === profile &&
     (message.kind ?? 'text') === 'text' &&
     Boolean(message.text?.trim()) &&
+    !message.forwardedFromId &&
     !message.deleted &&
     !message.pending &&
     !message.queued &&

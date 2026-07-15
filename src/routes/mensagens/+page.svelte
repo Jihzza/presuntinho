@@ -31,10 +31,22 @@
   import {
     AccountChatError,
     AccountChatStore,
+    listAccountChatDisappearingEvents,
     listAccountChatInbox,
+    listAccountChatReminders,
+    listAccountChatStars,
     updateAccountChatPreferences,
-    type AccountChatInboxItem
+    type AccountChatDisappearingEvent,
+    type AccountChatInboxItem,
+    type AccountChatReminderItem,
+    type AccountChatStarredItem
   } from '$lib/chat/account-chat-store.svelte';
+  import {
+    canForwardAccountChatMessage,
+    forwardAccountChatMessage,
+    forwardedMessagePreview
+  } from '$lib/chat/chat-forwarding';
+  import { CHAT_STICKERS, createStickerBlob, isGifFile, type ChatSticker } from '$lib/chat/chat-stickers';
   import {
     chatCallDirection,
     formatFileSize,
@@ -97,11 +109,18 @@
     descKey: string;
   };
 
-  type PanelMode = 'none' | 'conversations' | 'files';
+  type PanelMode = 'none' | 'conversations' | 'files' | 'starred' | 'reminders' | 'privacy';
 
   type AccountConversationListRow =
     | { key: string; kind: 'couple'; preset: ConversationPreset; inbox: AccountChatInboxItem | null }
     | { key: string; kind: 'dm'; contact: Contact; inbox: AccountChatInboxItem | null };
+
+  type ForwardTarget = {
+    conversationId: string;
+    label: string;
+    detail: string;
+    otherAccount: string | null;
+  };
 
   const REACTIONS = ['❤️', '😂', '🥰', '😮', '😢', '👍'];
 
@@ -181,10 +200,30 @@
   let accountLifecycleSeen = false;
   let accountSocialReady = $state(false);
   let handledDeepLinkKey = '';
+  let starredItems = $state<AccountChatStarredItem[]>([]);
+  let starredLoading = $state(false);
+  let starredError = $state(false);
+  let starredHasMore = $state(false);
+  let reminderItems = $state<AccountChatReminderItem[]>([]);
+  let remindersLoading = $state(false);
+  let remindersError = $state(false);
+  let disappearingEvents = $state<AccountChatDisappearingEvent[]>([]);
+  let privacyLoading = $state(false);
+  let privacyBusy = $state(false);
+  let privacyError = $state(false);
+  let forwardSource = $state<LocalChatMessage | null>(null);
+  let forwardTargetId = $state('');
+  let forwardBusy = $state(false);
+  let reminderSource = $state<LocalChatMessage | null>(null);
+  let reminderInput = $state('');
+  let reminderBusy = $state(false);
+  let stickerPickerOpen = $state(false);
+  let stickerSending = $state(false);
 
   let scrollEl: HTMLDivElement | null = $state(null);
   let inputEl: HTMLTextAreaElement | null = $state(null);
   let fileInput: HTMLInputElement | null = $state(null);
+  let gifInput: HTMLInputElement | null = $state(null);
   let messageInfoDialogEl: HTMLDivElement | null = $state(null);
   let messageInfoCloseEl: HTMLButtonElement | null = $state(null);
   let messageInfoReturnFocus: HTMLElement | null = null;
@@ -200,6 +239,9 @@
   let voiceDraftRestoredScope = '';
   let voiceDraftStorageWarningShown = false;
   let pendingDeepLinkMessage = $state<{ conversationId: string; messageId: string } | null>(null);
+  let starredLoadSequence = 0;
+  let remindersLoadSequence = 0;
+  let privacyLoadSequence = 0;
 
   // ── day grouping ─────────────────────────────────────────────────────────
 
@@ -320,6 +362,31 @@
       )
     ).length
   );
+  const forwardTargets = $derived.by<ForwardTarget[]>(() => accountInbox
+    .filter((item) => item.conversationId !== richStore?.conversationId)
+    .map((item) => {
+      if (item.kind === 'direct') {
+        const label = item.otherDisplayName || (item.otherHandle ? `@${item.otherHandle}` : $t('mensagens.forward.direct', { default: 'Conversa direta' }));
+        return {
+          conversationId: item.conversationId,
+          label,
+          detail: item.otherHandle ? `@${item.otherHandle}` : $t('mensagens.forward.direct', { default: 'Conversa direta' }),
+          otherAccount: item.otherAccount
+        };
+      }
+      const preset = CONVERSATIONS.find((conversation) => conversation.id === item.topic);
+      return {
+        conversationId: item.conversationId,
+        label: preset ? $t(preset.titleKey) : item.topic,
+        detail: $t('mensagens.forward.couple', {
+          default: 'Conversa com {name}',
+          values: { name: partnerName }
+        }),
+        otherAccount: item.otherAccount ?? acctPartner?.id ?? null
+      };
+    })
+    .sort((a, b) => a.label.localeCompare(b.label, $locale || 'pt-PT')));
+  const selectedForwardTarget = $derived(forwardTargets.find((target) => target.conversationId === forwardTargetId) ?? null);
 
   function coupleDraftKey(topic: string, spaceId: string | null = acctCoupleId): string | null {
     if (legacy) return `legacy:${topic}`;
@@ -563,6 +630,179 @@
     if (richStore && !richStore.mediaLoaded) void richStore.loadMediaGallery();
   }
 
+  /** Invalidate responses that were authenticated for a store/account which is
+   * no longer on screen. This is a privacy boundary, not only loading polish:
+   * a late account-A response must never repaint account B after a switch. */
+  function invalidateAdvancedPanelLoads(clearResults = true): void {
+    starredLoadSequence += 1;
+    remindersLoadSequence += 1;
+    privacyLoadSequence += 1;
+    starredLoading = false;
+    remindersLoading = false;
+    privacyLoading = false;
+    privacyBusy = false;
+    forwardBusy = false;
+    reminderBusy = false;
+    stickerSending = false;
+    starredError = false;
+    remindersError = false;
+    privacyError = false;
+    if (!clearResults) return;
+    starredItems = [];
+    starredHasMore = false;
+    reminderItems = [];
+    disappearingEvents = [];
+  }
+
+  async function loadStarred(append = false): Promise<void> {
+    const targetStore = richStore;
+    if (!targetStore || starredLoading) return;
+    const accountId = targetStore.profile;
+    const sequence = ++starredLoadSequence;
+    const stillCurrent = () =>
+      sequence === starredLoadSequence &&
+      richStore === targetStore &&
+      accountState.account?.id === accountId;
+    starredLoading = true;
+    starredError = false;
+    try {
+      const last = append ? starredItems.at(-1) : null;
+      const page = await listAccountChatStars(
+        last ? { starredAt: last.starredAtExact, messageId: last.messageId } : undefined,
+        30
+      );
+      if (!stillCurrent()) return;
+      starredItems = append ? [...starredItems, ...page] : page;
+      starredHasMore = page.length === 30;
+    } catch {
+      if (!stillCurrent()) return;
+      starredError = true;
+      if (!append) starredItems = [];
+    } finally {
+      if (sequence === starredLoadSequence) starredLoading = false;
+    }
+  }
+
+  function toggleStarredPanel(): void {
+    if (panelMode === 'starred') {
+      panelMode = 'none';
+      return;
+    }
+    panelMode = 'starred';
+    void loadStarred();
+  }
+
+  async function loadReminders(): Promise<void> {
+    const targetStore = richStore;
+    if (!targetStore || remindersLoading) return;
+    const accountId = targetStore.profile;
+    const sequence = ++remindersLoadSequence;
+    const stillCurrent = () =>
+      sequence === remindersLoadSequence &&
+      richStore === targetStore &&
+      accountState.account?.id === accountId;
+    remindersLoading = true;
+    remindersError = false;
+    try {
+      const items = await listAccountChatReminders();
+      if (!stillCurrent()) return;
+      reminderItems = items;
+    } catch {
+      if (!stillCurrent()) return;
+      remindersError = true;
+    } finally {
+      if (sequence === remindersLoadSequence) remindersLoading = false;
+    }
+  }
+
+  function toggleRemindersPanel(): void {
+    if (panelMode === 'reminders') {
+      panelMode = 'none';
+      return;
+    }
+    panelMode = 'reminders';
+    void loadReminders();
+  }
+
+  async function loadPrivacyHistory(): Promise<void> {
+    const targetStore = richStore;
+    const conversationId = targetStore?.conversationId;
+    if (!targetStore || !conversationId || privacyLoading) return;
+    const accountId = targetStore.profile;
+    const sequence = ++privacyLoadSequence;
+    const stillCurrent = () =>
+      sequence === privacyLoadSequence &&
+      richStore === targetStore &&
+      targetStore.conversationId === conversationId &&
+      accountState.account?.id === accountId;
+    privacyLoading = true;
+    privacyError = false;
+    try {
+      const events = await listAccountChatDisappearingEvents(conversationId, 10);
+      if (!stillCurrent()) return;
+      disappearingEvents = events;
+    } catch {
+      if (!stillCurrent()) return;
+      privacyError = true;
+    } finally {
+      if (sequence === privacyLoadSequence) privacyLoading = false;
+    }
+  }
+
+  function togglePrivacyPanel(): void {
+    if (panelMode === 'privacy') {
+      panelMode = 'none';
+      return;
+    }
+    panelMode = 'privacy';
+    void loadPrivacyHistory();
+  }
+
+  function advancedMessagePreview(item: Pick<AccountChatStarredItem | AccountChatReminderItem, 'kind' | 'body' | 'mediaName'>): string {
+    if (item.body) return item.body;
+    if (item.kind === 'image') return $t('mensagens.files.image', { default: 'Imagem' });
+    if (item.kind === 'audio') return $t('mensagens.files.audio', { default: 'Áudio' });
+    if (item.kind === 'video') return $t('mensagens.files.video', { default: 'Vídeo' });
+    return item.mediaName || $t('mensagens.files.file', { default: 'Ficheiro' });
+  }
+
+  function openAdvancedMessage(conversationId: string, messageId: string): void {
+    panelMode = 'none';
+    if (!openExactChatDeepLink({ conversationId, messageId })) reportUnavailableDeepLink();
+  }
+
+  async function setDisappearing(seconds: number): Promise<void> {
+    const targetStore = richStore;
+    if (!targetStore || privacyBusy) return;
+    const accountId = targetStore.profile;
+    const stillCurrent = () =>
+      richStore === targetStore && accountState.account?.id === accountId;
+    privacyBusy = true;
+    privacyError = false;
+    try {
+      await targetStore.setDisappearingSeconds(seconds);
+      if (!stillCurrent()) return;
+      await loadPrivacyHistory();
+      if (!stillCurrent()) return;
+      showToast($t('mensagens.disappearing.updated', {
+        default: seconds === 0 ? 'Mensagens temporárias desativadas.' : 'Duração das novas mensagens atualizada.'
+      }));
+    } catch {
+      if (!stillCurrent()) return;
+      privacyError = true;
+      showToast($t('mensagens.message.action_failed', { default: 'Não consegui fazer isso. Tenta novamente.' }));
+    } finally {
+      if (stillCurrent()) privacyBusy = false;
+    }
+  }
+
+  function disappearingLabel(seconds: number): string {
+    if (seconds === 86400) return $t('mensagens.disappearing.day', { default: '24 horas' });
+    if (seconds === 604800) return $t('mensagens.disappearing.week', { default: '7 dias' });
+    if (seconds === 7776000) return $t('mensagens.disappearing.months', { default: '90 dias' });
+    return $t('mensagens.disappearing.off', { default: 'Desativadas' });
+  }
+
   function openExactChatDeepLink(deepLink: ChatDeepLink): boolean {
     pendingDeepLinkMessage = null;
     const linkedConversation = accountInbox.find((item) => item.conversationId === deepLink.conversationId);
@@ -607,6 +847,7 @@
 
   function startChat() {
     if (!profile) return;
+    invalidateAdvancedPanelLoads();
     store?.stop();
     threadKind = 'couple';
     dmOther = null;
@@ -642,6 +883,7 @@
     if (!accountState.account) return;
     persistCurrentDraft();
     resetVoiceComposer(false);
+    invalidateAdvancedPanelLoads();
     replyingTo = null;
     editingMessage = null;
     store?.stop();
@@ -811,6 +1053,11 @@
     messageInfoReturnFocus = null;
     messageActionAnnouncement = '';
     viewerSrc = null;
+    forwardSource = null;
+    forwardTargetId = '';
+    reminderSource = null;
+    reminderInput = '';
+    stickerPickerOpen = false;
     view = 'list';
     // Leaving a DM restores the couple store, so the couple rows' previews on
     // the list read from the right thread again.
@@ -921,6 +1168,7 @@
   });
 
   function clearAccountChatUi(): void {
+    invalidateAdvancedPanelLoads();
     store?.stop();
     store = null;
     view = 'list';
@@ -946,6 +1194,11 @@
     accountSocialReady = false;
     handledDeepLinkKey = '';
     pendingDeepLinkMessage = null;
+    forwardSource = null;
+    forwardTargetId = '';
+    reminderSource = null;
+    reminderInput = '';
+    stickerPickerOpen = false;
     resetVoiceComposer(false);
   }
 
@@ -1735,9 +1988,210 @@
     messageMenuId = null;
     try {
       await targetStore.toggleStar(message.id);
+      if (message.starred) starredItems = starredItems.filter((item) => item.messageId !== message.id);
+      if (panelMode === 'starred') void loadStarred();
     } catch {
       if (richStore !== targetStore) return;
       showToast($t('mensagens.message.action_failed', { default: 'Não consegui fazer isso. Tenta novamente.' }));
+    }
+  }
+
+  function beginForward(message: LocalChatMessage): void {
+    if (!richStore || !canForwardAccountChatMessage(message)) return;
+    messageMenuId = null;
+    forwardSource = message;
+    forwardTargetId = forwardTargets[0]?.conversationId ?? '';
+  }
+
+  function closeForward(): void {
+    if (forwardBusy) return;
+    forwardSource = null;
+    forwardTargetId = '';
+  }
+
+  async function forwardMediaBlob(message: LocalChatMessage): Promise<Blob | undefined> {
+    if (message.text) return undefined;
+    if (message.localBlob) return message.localBlob;
+    const src = richStore?.mediaSrc(message);
+    if (!src) throw new Error('forward_media_unavailable');
+    const response = await fetch(src, { credentials: 'omit' });
+    if (!response.ok) throw new Error('forward_media_fetch_failed');
+    const blob = await response.blob();
+    if (blob.type || !message.mediaType) return blob;
+    return new Blob([blob], { type: message.mediaType });
+  }
+
+  async function confirmForward(): Promise<void> {
+    const source = forwardSource;
+    const target = selectedForwardTarget;
+    const targetStore = richStore;
+    const account = accountState.account;
+    if (!source || !target || !targetStore || !account || account.id !== targetStore.profile || forwardBusy) return;
+    const accountId = targetStore.profile;
+    const stillCurrent = () =>
+      richStore === targetStore && accountState.account?.id === accountId;
+    forwardBusy = true;
+    try {
+      const mediaBlob = await forwardMediaBlob(source);
+      const result = await forwardAccountChatMessage({
+        accountId: targetStore.profile,
+        targetConversationId: target.conversationId,
+        targetAccountId: target.otherAccount ?? undefined,
+        senderLabel: account.display_name || `@${account.handle}`,
+        message: source,
+        mediaBlob
+      });
+      if (!stillCurrent()) return;
+      if (result === 'sent' || result === 'queued') {
+        forwardSource = null;
+        forwardTargetId = '';
+        showToast(result === 'sent'
+          ? $t('mensagens.forward.sent', { default: 'Mensagem reencaminhada.' })
+          : $t('mensagens.forward.queued', { default: 'Ficou guardada e será reencaminhada quando houver ligação.' }));
+      } else {
+        showToast($t('mensagens.forward.failed', { default: 'Não consegui reencaminhar esta mensagem.' }));
+      }
+    } catch {
+      if (stillCurrent()) {
+        showToast($t('mensagens.forward.media_online', {
+          default: 'Preciso de ligação para copiar este anexo para a outra conversa.'
+        }));
+      }
+    } finally {
+      if (stillCurrent()) forwardBusy = false;
+    }
+  }
+
+  function localDateTimeValue(timestamp: number): string {
+    const date = new Date(timestamp - new Date(timestamp).getTimezoneOffset() * 60_000);
+    return date.toISOString().slice(0, 16);
+  }
+
+  function beginReminder(message: LocalChatMessage): void {
+    if (!richStore || message.deleted || !/^[0-9a-f-]{36}$/i.test(message.id)) return;
+    messageMenuId = null;
+    reminderSource = message;
+    reminderInput = localDateTimeValue(message.reminderAt && message.reminderAt > Date.now()
+      ? message.reminderAt
+      : Date.now() + 60 * 60 * 1_000);
+  }
+
+  function closeReminder(): void {
+    if (reminderBusy) return;
+    reminderSource = null;
+    reminderInput = '';
+  }
+
+  async function confirmReminder(): Promise<void> {
+    const message = reminderSource;
+    const targetStore = richStore;
+    const remindAt = new Date(reminderInput).getTime();
+    if (!message || !targetStore || reminderBusy) return;
+    const accountId = targetStore.profile;
+    const stillCurrent = () =>
+      richStore === targetStore && accountState.account?.id === accountId;
+    if (!Number.isFinite(remindAt) || remindAt < Date.now() + 60_000) {
+      showToast($t('mensagens.reminders.invalid_time', { default: 'Escolhe uma hora futura (pelo menos daqui a um minuto).' }));
+      return;
+    }
+    reminderBusy = true;
+    try {
+      await targetStore.setReminder(message.id, remindAt);
+      if (!stillCurrent()) return;
+      reminderSource = null;
+      reminderInput = '';
+      if (panelMode === 'reminders') void loadReminders();
+      showToast($t('mensagens.reminders.saved', { default: 'Lembrete guardado.' }));
+    } catch {
+      if (stillCurrent()) {
+        showToast($t('mensagens.reminders.failed', { default: 'Não consegui guardar o lembrete.' }));
+      }
+    } finally {
+      if (stillCurrent()) reminderBusy = false;
+    }
+  }
+
+  async function cancelReminder(message: LocalChatMessage): Promise<void> {
+    const targetStore = richStore;
+    if (!targetStore) return;
+    messageMenuId = null;
+    try {
+      await targetStore.cancelReminder(message.id);
+      if (richStore !== targetStore) return;
+      if (panelMode === 'reminders') void loadReminders();
+      showToast($t('mensagens.reminders.cancelled', { default: 'Lembrete removido.' }));
+    } catch {
+      if (richStore === targetStore) {
+        showToast($t('mensagens.reminders.failed', { default: 'Não consegui alterar o lembrete.' }));
+      }
+    }
+  }
+
+  async function removeReminderItem(item: AccountChatReminderItem): Promise<void> {
+    const targetStore = richStore;
+    if (!targetStore) return;
+    try {
+      await targetStore.cancelReminder(item.messageId);
+      if (richStore === targetStore) await loadReminders();
+    } catch {
+      if (richStore === targetStore) {
+        showToast($t('mensagens.reminders.failed', { default: 'Não consegui alterar o lembrete.' }));
+      }
+    }
+  }
+
+  async function sendSticker(sticker: ChatSticker): Promise<void> {
+    const targetStore = richStore;
+    if (!targetStore || stickerSending || editingMessage) return;
+    const accountId = targetStore.profile;
+    const stillCurrent = () =>
+      richStore === targetStore && accountState.account?.id === accountId;
+    stickerSending = true;
+    try {
+      const blob = await createStickerBlob(sticker);
+      const result = await targetStore.sendMediaMessage(blob, `${sticker.id}.png`, replyingTo?.id, {
+        mediaVariant: 'sticker'
+      });
+      if (!stillCurrent()) return;
+      afterSendFeedback(result);
+      if (result === 'sent' || result === 'queued') {
+        stickerPickerOpen = false;
+        replyingTo = null;
+      }
+    } catch (error) {
+      if (stillCurrent()) mediaErrorToast(error);
+    } finally {
+      if (stillCurrent()) stickerSending = false;
+    }
+  }
+
+  async function onGifChosen(event: Event): Promise<void> {
+    const target = event.target as HTMLInputElement;
+    const file = target.files?.[0];
+    if (gifInput) gifInput.value = '';
+    const targetStore = richStore;
+    if (!file || !targetStore || !isGifFile(file) || editingMessage) {
+      if (file && !isGifFile(file)) {
+        showToast($t('mensagens.gif.invalid', { default: 'Escolhe um ficheiro GIF.' }));
+      }
+      return;
+    }
+    try {
+      // Some mobile pickers leave File.type empty even for a .gif. Preserve the
+      // bytes but make the format explicit so the DB invariant and renderer
+      // agree on the attachment variant.
+      const gif = file.type.toLowerCase() === 'image/gif'
+        ? file
+        : new Blob([file], { type: 'image/gif' });
+      const result = await targetStore.sendMediaMessage(gif, file.name, replyingTo?.id, { mediaVariant: 'gif' });
+      if (richStore !== targetStore) return;
+      afterSendFeedback(result);
+      if (result === 'sent' || result === 'queued') {
+        stickerPickerOpen = false;
+        replyingTo = null;
+      }
+    } catch (error) {
+      if (richStore === targetStore) mediaErrorToast(error);
     }
   }
 
@@ -1865,7 +2319,11 @@
   }
 
   function onViewerKeydown(e: KeyboardEvent) {
-    if (e.key === 'Escape' && viewerSrc) viewerSrc = null;
+    if (e.key !== 'Escape') return;
+    if (viewerSrc) viewerSrc = null;
+    else if (forwardSource && !forwardBusy) closeForward();
+    else if (reminderSource && !reminderBusy) closeReminder();
+    else if (stickerPickerOpen) stickerPickerOpen = false;
   }
 </script>
 
@@ -2185,6 +2643,17 @@
       <button type="button" class:active={panelMode === 'files'} onclick={toggleFilesPanel}>
         📎 {$t('mensagens.tools.files', { default: 'Ficheiros' })}
       </button>
+      {#if richStore}
+        <button type="button" class:active={panelMode === 'starred'} onclick={toggleStarredPanel}>
+          ★ {$t('mensagens.tools.starred', { default: 'Favoritas' })}
+        </button>
+        <button type="button" class:active={panelMode === 'reminders'} onclick={toggleRemindersPanel}>
+          ⏰ {$t('mensagens.tools.reminders', { default: 'Lembretes' })}
+        </button>
+        <button type="button" class:active={panelMode === 'privacy'} onclick={togglePrivacyPanel}>
+          ⏱ {$t('mensagens.tools.disappearing', { default: 'Temporárias' })}
+        </button>
+      {/if}
       <a href={threadKind === 'dm' && dmOther ? `/u/?h=${dmOther.handle}` : partnerHref}>{$t('mensagens.tools.partner_profile', { default: 'Perfil de {name}', values: { name: threadKind === 'dm' && dmOther ? (dmOther.display_name || `@${dmOther.handle}`) : partnerName } })}</a>
     </nav>
 
@@ -2262,6 +2731,118 @@
             </button>
           {/if}
         {/if}
+      </aside>
+    {:else if panelMode === 'starred'}
+      <aside class="chat-panel advanced-panel" aria-label={$t('mensagens.starred.title', { default: 'Mensagens favoritas' })}>
+        <div class="panel-head">
+          <strong>★ {$t('mensagens.starred.title', { default: 'Mensagens favoritas' })}</strong>
+          <button type="button" onclick={() => (panelMode = 'none')} aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}>×</button>
+        </div>
+        {#if starredLoading && starredItems.length === 0}
+          <p class="panel-empty" role="status">{$t('mensagens.starred.loading', { default: 'A carregar favoritas…' })}</p>
+        {:else if starredError && starredItems.length === 0}
+          <div class="panel-empty panel-retry" role="alert">
+            <p>{$t('mensagens.starred.failed', { default: 'Não consegui carregar as favoritas.' })}</p>
+            <button type="button" onclick={() => void loadStarred()}>{$t('mensagens.search.retry', { default: 'Tentar novamente' })}</button>
+          </div>
+        {:else if starredItems.length === 0}
+          <p class="panel-empty">{$t('mensagens.starred.empty', { default: 'Marca uma mensagem com ★ para a encontrares aqui.' })}</p>
+        {:else}
+          <div class="advanced-list">
+            {#each starredItems as item (item.messageId)}
+              <button type="button" class="advanced-row" onclick={() => openAdvancedMessage(item.conversationId, item.messageId)}>
+                <span aria-hidden="true">{item.mediaVariant === 'sticker' ? '💟' : item.mediaVariant === 'gif' ? '🎞️' : '★'}</span>
+                <span>
+                  <strong>{advancedMessagePreview(item)}</strong>
+                  <small>{fmtDateTime(item.messageCreatedAt)}</small>
+                </span>
+                <span aria-hidden="true">›</span>
+              </button>
+            {/each}
+          </div>
+          {#if starredHasMore}
+            <button type="button" class="load-more-media" disabled={starredLoading} onclick={() => void loadStarred(true)}>
+              {starredLoading ? $t('mensagens.history.loading', { default: 'A carregar…' }) : $t('mensagens.starred.more', { default: 'Carregar mais' })}
+            </button>
+          {/if}
+        {/if}
+      </aside>
+    {:else if panelMode === 'reminders'}
+      <aside class="chat-panel advanced-panel" aria-label={$t('mensagens.reminders.title', { default: 'Lembretes' })}>
+        <div class="panel-head">
+          <strong>⏰ {$t('mensagens.reminders.title', { default: 'Lembretes' })}</strong>
+          <button type="button" onclick={() => (panelMode = 'none')} aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}>×</button>
+        </div>
+        {#if remindersLoading && reminderItems.length === 0}
+          <p class="panel-empty" role="status">{$t('mensagens.reminders.loading', { default: 'A carregar lembretes…' })}</p>
+        {:else if remindersError}
+          <div class="panel-empty panel-retry" role="alert">
+            <p>{$t('mensagens.reminders.load_failed', { default: 'Não consegui carregar os lembretes.' })}</p>
+            <button type="button" onclick={() => void loadReminders()}>{$t('mensagens.search.retry', { default: 'Tentar novamente' })}</button>
+          </div>
+        {:else if reminderItems.length === 0}
+          <p class="panel-empty">{$t('mensagens.reminders.empty', { default: 'Abre as ações de uma mensagem e escolhe «Lembrar-me».' })}</p>
+        {:else}
+          <div class="advanced-list">
+            {#each reminderItems as item (item.id)}
+              <div class="advanced-row reminder-row">
+                <button type="button" onclick={() => openAdvancedMessage(item.conversationId, item.messageId)}>
+                  <span aria-hidden="true">{item.status === 'notified' ? '🔔' : '⏰'}</span>
+                  <span>
+                    <strong>{advancedMessagePreview(item)}</strong>
+                    <small>{item.status === 'notified'
+                      ? $t('mensagens.reminders.notified', { default: 'Chegou a hora em {date}', values: { date: fmtDateTime(item.notifiedAt || item.remindAt) } })
+                      : fmtDateTime(item.remindAt)}</small>
+                  </span>
+                </button>
+                <button type="button" class="advanced-remove" onclick={() => void removeReminderItem(item)} aria-label={$t('mensagens.reminders.remove', { default: 'Remover lembrete' })}>×</button>
+              </div>
+            {/each}
+          </div>
+        {/if}
+      </aside>
+    {:else if panelMode === 'privacy'}
+      <aside class="chat-panel advanced-panel privacy-panel" aria-label={$t('mensagens.disappearing.title', { default: 'Mensagens temporárias' })}>
+        <div class="panel-head">
+          <strong>⏱ {$t('mensagens.disappearing.title', { default: 'Mensagens temporárias' })}</strong>
+          <button type="button" onclick={() => (panelMode = 'none')} aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}>×</button>
+        </div>
+        <p>{$t('mensagens.disappearing.explain', {
+          default: 'A duração escolhida aplica-se apenas às novas mensagens. O servidor deixa de as mostrar no prazo e elimina depois o conteúdo e os anexos.'
+        })}</p>
+        <p class="honest-note">{$t('mensagens.disappearing.not_e2ee', {
+          default: 'Isto controla retenção; não significa encriptação ponta-a-ponta. Notificações já mostradas e cópias guardadas fora da app não podem ser retiradas.'
+        })}</p>
+        <div class="duration-options" role="group" aria-label={$t('mensagens.disappearing.duration', { default: 'Duração das novas mensagens' })}>
+          {#each [0, 86400, 604800, 7776000] as seconds}
+            <button
+              type="button"
+              class:active={richStore?.disappearingSeconds === seconds}
+              disabled={privacyBusy}
+              onclick={() => void setDisappearing(seconds)}
+            >{disappearingLabel(seconds)}</button>
+          {/each}
+        </div>
+        <div class="privacy-history">
+          <strong>{$t('mensagens.disappearing.history', { default: 'Histórico desta conversa' })}</strong>
+          {#if privacyLoading}
+            <p role="status">{$t('mensagens.history.loading', { default: 'A carregar…' })}</p>
+          {:else if privacyError}
+            <button type="button" onclick={() => void loadPrivacyHistory()}>{$t('mensagens.search.retry', { default: 'Tentar novamente' })}</button>
+          {:else if disappearingEvents.length === 0}
+            <p>{$t('mensagens.disappearing.no_changes', { default: 'Ainda ninguém alterou esta opção.' })}</p>
+          {:else}
+            <ol>
+              {#each disappearingEvents as event (event.id)}
+                <li>
+                  <span>{event.actorId === richStore?.profile ? $t('mensagens.disappearing.you', { default: 'Tu' }) : partnerName}</span>
+                  <strong>{disappearingLabel(event.seconds)}</strong>
+                  <time>{fmtDateTime(event.createdAt)}</time>
+                </li>
+              {/each}
+            </ol>
+          {/if}
+        </div>
       </aside>
     {/if}
   {/if}
@@ -2344,8 +2925,10 @@
           {@const messageState = own ? deliveryState(m) : 'sent'}
           {@const historyCallDirection = m.kind === 'call' ? callDirection(m.call) : null}
           <div class="msg" class:msg-own={own} class:msg-other={!own} class:msg-system={m.kind === 'call'} data-message-id={m.id}>
-            <div class="bubble" class:bubble-own={own} class:pop={own} class:bubble-call={m.kind === 'call'} class:bubble-deleted={m.deleted}>
+            <div class="bubble" class:bubble-own={own} class:pop={own} class:bubble-call={m.kind === 'call'} class:bubble-deleted={m.deleted} class:bubble-sticker={m.mediaVariant === 'sticker'}>
               {#if m.starred}<span class="star-mark" title={$t('mensagens.message.starred', { default: 'Marcada' })}>★</span>{/if}
+              {#if m.reminderAt}<span class="reminder-mark" title={$t('mensagens.reminders.scheduled', { default: 'Lembrete: {date}', values: { date: fmtDateTime(m.reminderAt) } })}>⏰</span>{/if}
+              {#if m.forwardedFromId}<span class="forwarded-mark">↪ {$t('mensagens.forward.badge', { default: 'Reencaminhada' })}</span>{/if}
               {#if m.reply}
                 <button
                   type="button"
@@ -2389,7 +2972,7 @@
                     onclick={() => (viewerSrc = src)}
                     aria-label={$t('mensagens.aria.abrir_imagem', { default: 'Abrir imagem em ecrã inteiro' })}
                   >
-                    <img {src} alt={m.name || $t('mensagens.image_alt', { default: 'Imagem enviada' })} loading="lazy" />
+                    <img class:sticker-media={m.mediaVariant === 'sticker'} {src} alt={m.mediaVariant === 'sticker' ? $t('mensagens.sticker.alt', { default: 'Sticker enviado' }) : m.name || $t('mensagens.image_alt', { default: 'Imagem enviada' })} loading="lazy" />
                   </button>
                 {:else}
                   <div class="media-loading">📷 {$t('mensagens.media_loading', { default: 'a carregar…' })}</div>
@@ -2427,6 +3010,7 @@
               <div class="meta-row">
                 <span class="time">{fmtTime(m.ts)}</span>
                 {#if m.editedAt}<span class="edited">{$t('mensagens.message.edited', { default: 'editada' })}</span>{/if}
+                {#if m.expiresAt}<span class="expires-mark" title={$t('mensagens.disappearing.expires', { default: 'Desaparece em {date}', values: { date: fmtDateTime(m.expiresAt) } })}>⏱</span>{/if}
                 {#if own}
                   {#if messageState === 'pending'}
                     <span class="ticks" aria-label={$t('mensagens.aria.pendente', { default: 'A enviar…' })}>🕓</span>
@@ -2492,7 +3076,10 @@
                       </div>
                       <button type="button" role="menuitem" onclick={() => beginReply(m)}>↩ {$t('mensagens.message.reply', { default: 'Responder' })}</button>
                       {#if m.text}<button type="button" role="menuitem" onclick={() => void copyMessage(m)}>⧉ {$t('mensagens.message.copy', { default: 'Copiar' })}</button>{/if}
+                      {#if canForwardAccountChatMessage(m)}<button type="button" role="menuitem" onclick={() => beginForward(m)}>↪ {$t('mensagens.forward.action', { default: 'Reencaminhar' })}</button>{/if}
                       <button type="button" role="menuitem" onclick={() => void toggleStar(m)}>{m.starred ? '☆' : '★'} {m.starred ? $t('mensagens.message.unstar', { default: 'Desmarcar' }) : $t('mensagens.message.star', { default: 'Marcar' })}</button>
+                      <button type="button" role="menuitem" onclick={() => beginReminder(m)}>⏰ {m.reminderAt ? $t('mensagens.reminders.reschedule', { default: 'Alterar lembrete' }) : $t('mensagens.reminders.action', { default: 'Lembrar-me' })}</button>
+                      {#if m.reminderAt}<button type="button" role="menuitem" onclick={() => void cancelReminder(m)}>⏰ {$t('mensagens.reminders.remove', { default: 'Remover lembrete' })}</button>{/if}
                     {/if}
                     {#if own}<button type="button" role="menuitem" onclick={() => openMessageInfo(m)}>ⓘ {$t('mensagens.info.action', { default: 'Informação' })}</button>{/if}
                     {#if canEditChatMessage(m, richStore.profile)}<button type="button" role="menuitem" onclick={() => beginEdit(m)}>✎ {$t('mensagens.message.edit', { default: 'Editar' })}</button>{/if}
@@ -2650,8 +3237,26 @@
           {/if}
         </div>
       {:else}
+        {#if richStore && stickerPickerOpen}
+          <div class="sticker-picker" role="group" aria-label={$t('mensagens.sticker.picker', { default: 'Stickers e GIF' })}>
+            <div class="sticker-picker-head">
+              <strong>{$t('mensagens.sticker.title', { default: 'Stickers' })}</strong>
+              <button type="button" onclick={() => (stickerPickerOpen = false)} aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}>×</button>
+            </div>
+            <div class="sticker-grid">
+              {#each CHAT_STICKERS as sticker (sticker.id)}
+                <button type="button" disabled={stickerSending} onclick={() => void sendSticker(sticker)} aria-label={sticker.emoji}>{sticker.emoji}</button>
+              {/each}
+            </div>
+            <button type="button" class="gif-device" onclick={() => gifInput?.click()}>
+              GIF {$t('mensagens.gif.from_device', { default: 'Escolher do dispositivo' })}
+            </button>
+            <small>{$t('mensagens.gif.no_provider', { default: 'Sem pesquisas externas: o GIF fica entre ti, a app e o armazenamento privado da conversa.' })}</small>
+          </div>
+        {/if}
         <div class="composer">
           <input type="file" bind:this={fileInput} onchange={onFileChosen} disabled={Boolean(editingMessage)} hidden accept={richStore ? 'image/*,audio/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip' : 'image/*,audio/*'} />
+          <input type="file" bind:this={gifInput} onchange={onGifChosen} disabled={Boolean(editingMessage)} hidden accept="image/gif,.gif" />
           <div class="input-shell">
             {#if threadKind === 'couple' || richStore}
               <button
@@ -2664,6 +3269,17 @@
               >
                 📎
               </button>
+            {/if}
+            {#if richStore}
+              <button
+                type="button"
+                class="attach-btn sticker-btn"
+                disabled={Boolean(editingMessage)}
+                onclick={() => (stickerPickerOpen = !stickerPickerOpen)}
+                aria-expanded={stickerPickerOpen}
+                aria-label={$t('mensagens.sticker.open', { default: 'Abrir stickers e GIF' })}
+                title={$t('mensagens.sticker.open', { default: 'Abrir stickers e GIF' })}
+              >☺</button>
             {/if}
             <textarea
               bind:this={inputEl}
@@ -2705,6 +3321,89 @@
     </div>
   {/if}
 </div>
+
+{#if forwardSource}
+  <div class="advanced-modal-layer">
+    <button type="button" class="advanced-modal-backdrop" onclick={closeForward} aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}></button>
+    <div class="advanced-modal" role="dialog" aria-modal="true" aria-labelledby="forward-title">
+      <header>
+        <div>
+          <span aria-hidden="true">↪</span>
+          <h2 id="forward-title">{$t('mensagens.forward.title', { default: 'Reencaminhar mensagem' })}</h2>
+        </div>
+        <button type="button" onclick={closeForward} disabled={forwardBusy} aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}>×</button>
+      </header>
+      <div class="advanced-modal-preview">
+        <strong>{$t('mensagens.forward.message', { default: 'Mensagem' })}</strong>
+        <p>{forwardedMessagePreview(forwardSource)}</p>
+      </div>
+      {#if !forwardSource.text}
+        <p class="honest-note">{$t('mensagens.forward.media_copy', {
+          default: 'O anexo será descarregado e enviado novamente como um ficheiro independente. Não recebe o selo de cópia verificada.'
+        })}</p>
+      {/if}
+      <fieldset class="forward-targets">
+        <legend>{$t('mensagens.forward.choose_target', { default: 'Escolhe exatamente uma conversa' })}</legend>
+        {#each forwardTargets as target (target.conversationId)}
+          <label>
+            <input type="radio" name="forward-target" value={target.conversationId} bind:group={forwardTargetId} />
+            <span><strong>{target.label}</strong><small>{target.detail}</small></span>
+          </label>
+        {/each}
+        {#if forwardTargets.length === 0}
+          <p>{$t('mensagens.forward.no_target', { default: 'Ainda não tens outra conversa para onde enviar.' })}</p>
+        {/if}
+      </fieldset>
+      {#if selectedForwardTarget}
+        <p class="confirmation-copy">{$t('mensagens.forward.confirm_copy', {
+          default: 'Confirmas o envio para {target}?',
+          values: { target: selectedForwardTarget.label }
+        })}</p>
+      {/if}
+      <footer>
+        <button type="button" class="secondary" onclick={closeForward} disabled={forwardBusy}>{$t('common.cancel', { default: 'Cancelar' })}</button>
+        <button type="button" class="primary" onclick={() => void confirmForward()} disabled={forwardBusy || !selectedForwardTarget}>
+          {forwardBusy ? $t('mensagens.forward.sending', { default: 'A reencaminhar…' }) : $t('mensagens.forward.confirm', { default: 'Confirmar e enviar' })}
+        </button>
+      </footer>
+    </div>
+  </div>
+{/if}
+
+{#if reminderSource}
+  <div class="advanced-modal-layer">
+    <button type="button" class="advanced-modal-backdrop" onclick={closeReminder} aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}></button>
+    <div class="advanced-modal reminder-modal" role="dialog" aria-modal="true" aria-labelledby="reminder-title">
+      <header>
+        <div>
+          <span aria-hidden="true">⏰</span>
+          <h2 id="reminder-title">{$t('mensagens.reminders.create', { default: 'Criar lembrete' })}</h2>
+        </div>
+        <button type="button" onclick={closeReminder} disabled={reminderBusy} aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}>×</button>
+      </header>
+      <div class="advanced-modal-preview"><p>{forwardedMessagePreview(reminderSource)}</p></div>
+      <label class="reminder-time">
+        <span>{$t('mensagens.reminders.when', { default: 'Quando queres ser lembrado?' })}</span>
+        <input
+          type="datetime-local"
+          bind:value={reminderInput}
+          min={localDateTimeValue(Date.now() + 60_000)}
+          max={localDateTimeValue(Date.now() + 365 * 24 * 60 * 60 * 1_000)}
+          required
+        />
+      </label>
+      <p class="honest-note">{$t('mensagens.reminders.delivery_note', {
+        default: 'O lembrete fica privado na tua conta. A notificação depende de teres notificações ativas; a lista na app continua a ser a fonte de verdade.'
+      })}</p>
+      <footer>
+        <button type="button" class="secondary" onclick={closeReminder} disabled={reminderBusy}>{$t('common.cancel', { default: 'Cancelar' })}</button>
+        <button type="button" class="primary" onclick={() => void confirmReminder()} disabled={reminderBusy || !reminderInput}>
+          {reminderBusy ? $t('mensagens.reminders.saving', { default: 'A guardar…' }) : $t('mensagens.reminders.save', { default: 'Guardar lembrete' })}
+        </button>
+      </footer>
+    </div>
+  </div>
+{/if}
 
 {#if viewerSrc}
   <div class="viewer" role="dialog" aria-modal="true">
@@ -4240,6 +4939,249 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .message-info-sheet { animation: none; }
+  }
+
+  /* ── CHAT-006 advanced messaging ── */
+  .advanced-panel {
+    max-height: min(56dvh, 34rem);
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  .advanced-list { display: grid; gap: var(--space-2); }
+  .advanced-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: var(--space-2);
+    align-items: center;
+    min-height: var(--touch-target);
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-elev);
+    color: var(--txt);
+    text-align: start;
+    cursor: pointer;
+  }
+  .advanced-row > span:nth-child(2),
+  .advanced-row > button > span:nth-child(2) { min-width: 0; display: grid; gap: 0.12rem; }
+  .advanced-row strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .advanced-row small { color: var(--txt3); font-size: var(--fs-xs); }
+  .advanced-row:focus-visible,
+  .advanced-row button:focus-visible,
+  .duration-options button:focus-visible,
+  .sticker-picker button:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+  .reminder-row { padding: 0; cursor: default; }
+  .reminder-row > button:first-child {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+    min-height: var(--touch-target);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: start;
+    padding: 0.65rem 0.75rem;
+    cursor: pointer;
+  }
+  .advanced-remove {
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--error) 12%, transparent);
+    color: var(--error);
+    cursor: pointer;
+  }
+  .privacy-panel > p { margin: 0 0 var(--space-2); line-height: 1.5; }
+  .honest-note {
+    padding: 0.65rem 0.75rem;
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--accent) 8%, var(--bg-elev));
+    color: var(--txt3);
+    font-size: var(--fs-xs);
+    line-height: 1.5;
+  }
+  .duration-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); }
+  .duration-options button {
+    min-height: var(--touch-target);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg-elev);
+    color: var(--txt2);
+    cursor: pointer;
+  }
+  .duration-options button.active {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 16%, var(--bg-elev));
+    color: var(--txt);
+    font-weight: 800;
+  }
+  .privacy-history { display: grid; gap: var(--space-2); margin-top: var(--space-4); }
+  .privacy-history ol { display: grid; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
+  .privacy-history li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.15rem var(--space-2);
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: var(--fs-xs);
+  }
+  .privacy-history li time { grid-column: 1 / -1; color: var(--txt3); }
+  .forwarded-mark {
+    display: block;
+    margin: -0.08rem 0 0.25rem;
+    font-size: 0.68rem;
+    font-weight: 750;
+    opacity: 0.72;
+  }
+  .reminder-mark {
+    position: absolute;
+    top: 0.2rem;
+    inset-inline-end: 1.35rem;
+    font-size: 0.66rem;
+  }
+  .expires-mark { opacity: 0.75; font-size: 0.72rem; }
+  .bubble-sticker,
+  .bubble-sticker.bubble-own {
+    padding: 0.15rem;
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    color: var(--txt);
+  }
+  .sticker-media { width: min(11rem, 48vw); max-height: 11rem; object-fit: contain; }
+  .sticker-picker {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0 0.35rem 0.4rem;
+    padding: var(--space-3);
+    border: 1px solid var(--border-strong);
+    border-radius: 1.25rem;
+    background: color-mix(in srgb, var(--bg-elev) 96%, transparent);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(18px);
+  }
+  .sticker-picker-head { display: flex; align-items: center; justify-content: space-between; }
+  .sticker-picker-head button {
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--txt);
+    cursor: pointer;
+  }
+  .sticker-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2); }
+  .sticker-grid button {
+    min-height: 54px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--card);
+    font-size: 1.65rem;
+    cursor: pointer;
+  }
+  .gif-device {
+    min-height: var(--touch-target);
+    border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 12%, var(--card));
+    color: var(--txt);
+    font: inherit;
+    font-weight: 750;
+    cursor: pointer;
+  }
+  .sticker-picker > small { color: var(--txt3); line-height: 1.4; }
+  .sticker-btn { font-weight: 900; font-size: 1.1rem; }
+
+  .advanced-modal-layer {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+    display: grid;
+    place-items: center;
+    padding: max(var(--space-3), env(safe-area-inset-top)) var(--space-3) max(var(--space-3), env(safe-area-inset-bottom));
+  }
+  .advanced-modal-backdrop { position: absolute; inset: 0; border: 0; background: rgb(4 8 18 / 0.72); }
+  .advanced-modal {
+    position: relative;
+    width: min(100%, 31rem);
+    max-height: min(88dvh, 44rem);
+    overflow: auto;
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border: 1px solid var(--border-strong);
+    border-radius: 1.35rem;
+    background: var(--bg-elev);
+    color: var(--txt);
+    box-shadow: var(--shadow-lg);
+  }
+  .advanced-modal header,
+  .advanced-modal header > div,
+  .advanced-modal footer { display: flex; align-items: center; gap: var(--space-2); }
+  .advanced-modal header { justify-content: space-between; }
+  .advanced-modal h2 { margin: 0; font-size: var(--fs-lg); }
+  .advanced-modal header > button {
+    width: var(--touch-target);
+    height: var(--touch-target);
+    border: 0;
+    border-radius: 999px;
+    background: var(--card);
+    color: inherit;
+    cursor: pointer;
+  }
+  .advanced-modal-preview {
+    padding: var(--space-3);
+    border-inline-start: 3px solid var(--accent);
+    border-radius: var(--radius-md);
+    background: var(--card);
+  }
+  .advanced-modal-preview p { margin: 0.2rem 0 0; max-height: 5.5rem; overflow: hidden; }
+  .forward-targets { display: grid; gap: var(--space-2); margin: 0; padding: 0; border: 0; }
+  .forward-targets legend { margin-bottom: var(--space-2); font-weight: 800; }
+  .forward-targets label {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-2);
+    align-items: center;
+    min-height: var(--touch-target);
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--card);
+    cursor: pointer;
+  }
+  .forward-targets label:has(input:checked) { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--card)); }
+  .forward-targets span { display: grid; min-width: 0; }
+  .forward-targets small { color: var(--txt3); }
+  .confirmation-copy { margin: 0; font-weight: 750; }
+  .advanced-modal footer { justify-content: flex-end; flex-wrap: wrap; }
+  .advanced-modal footer button {
+    min-height: var(--touch-target);
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .advanced-modal footer .secondary { border: 1px solid var(--border); background: var(--card); color: var(--txt); }
+  .advanced-modal footer .primary { border: 1px solid transparent; background: var(--accent); color: var(--on-accent); }
+  .advanced-modal button:disabled { opacity: 0.55; cursor: wait; }
+  .reminder-time { display: grid; gap: var(--space-2); font-weight: 750; }
+  .reminder-time input {
+    min-height: var(--touch-target);
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--card);
+    color: var(--txt);
+    font: inherit;
   }
 
   /* ── fullscreen image viewer ── */

@@ -53,11 +53,37 @@ const mock = vi.hoisted(() => {
         };
         return chain;
       }
+      if (table === 'chat_conversations') {
+        const chain = {
+          select() { return chain; },
+          eq() { return chain; },
+          maybeSingle: async () => ({
+            data: {
+              disappearing_seconds: 0,
+              disappearing_updated_at: null,
+              disappearing_updated_by: null
+            },
+            error: null
+          })
+        };
+        return chain;
+      }
       if (table === 'chat_reactions') {
         return { select: () => ({ in: async () => ({ data: [], error: null }) }) };
       }
       if (table === 'chat_stars') {
         return { select: () => ({ eq: () => ({ in: async () => ({ data: [], error: null }) }) }) };
+      }
+      if (table === 'chat_reminders') {
+        const chain = {
+          select() { return chain; },
+          eq() { return chain; },
+          in() { return chain; },
+          then(resolve: (value: { data: unknown[]; error: null }) => void) {
+            return Promise.resolve({ data: [], error: null }).then(resolve);
+          }
+        };
+        return chain;
       }
       throw new Error(`unexpected table ${table}`);
     },

@@ -2,6 +2,14 @@ export type AccountConversationKind = 'couple' | 'direct';
 
 export type RichMessageKind = 'text' | 'image' | 'audio' | 'video' | 'file' | 'call' | 'system';
 
+export type ChatMediaVariant = 'attachment' | 'gif' | 'sticker';
+
+export function chatMediaVariant(type: string, requested?: ChatMediaVariant): ChatMediaVariant {
+  if (requested === 'sticker' && type.toLowerCase().startsWith('image/')) return 'sticker';
+  if (type.toLowerCase() === 'image/gif') return 'gif';
+  return 'attachment';
+}
+
 export type ChatCallKind = 'audio' | 'video';
 export type ChatCallStatus = 'ringing' | 'accepted' | 'declined' | 'cancelled' | 'ended' | 'missed' | 'failed';
 

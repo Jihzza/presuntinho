@@ -73,6 +73,62 @@ describe('account chat IndexedDB rows', () => {
     })).toBeNull();
   });
 
+  it('retains exact text provenance but strips unverifiable media provenance', () => {
+    const forwardedFromId = '30000000-0000-4000-8000-000000000005';
+    const text = normalizeAccountChatOutboxEntry({
+      key: accountChatOutboxKey(ACCOUNT, CONVERSATION, CLIENT),
+      accountId: ACCOUNT,
+      conversationId: CONVERSATION,
+      clientId: CLIENT,
+      kind: 'text',
+      text: '  cópia exata  ',
+      forwardedFromId,
+      createdAt: 1,
+      updatedAt: 1,
+      attempts: 0,
+      state: 'queued'
+    });
+    expect(text).toMatchObject({ text: '  cópia exata  ', forwardedFromId });
+
+    const media = normalizeAccountChatOutboxEntry({
+      key: accountChatOutboxKey(ACCOUNT, CONVERSATION, CLIENT),
+      accountId: ACCOUNT,
+      conversationId: CONVERSATION,
+      clientId: CLIENT,
+      kind: 'media',
+      mediaBlob: new Blob(['png'], { type: 'image/png' }),
+      mediaName: 'sticker.png',
+      mediaType: 'image/png',
+      mediaVariant: 'sticker',
+      forwardedFromId,
+      createdAt: 1,
+      updatedAt: 1,
+      attempts: 0,
+      state: 'queued'
+    });
+    expect(media).toMatchObject({ mediaVariant: 'sticker' });
+    expect(media?.forwardedFromId).toBeUndefined();
+  });
+
+  it('downgrades sticker metadata when the persisted Blob is not an image', () => {
+    const entry = normalizeAccountChatOutboxEntry({
+      key: accountChatOutboxKey(ACCOUNT, CONVERSATION, CLIENT),
+      accountId: ACCOUNT,
+      conversationId: CONVERSATION,
+      clientId: CLIENT,
+      kind: 'media',
+      mediaBlob: new Blob(['plain'], { type: 'text/plain' }),
+      mediaName: 'not-a-sticker.txt',
+      mediaType: 'text/plain',
+      mediaVariant: 'sticker',
+      createdAt: 1,
+      updatedAt: 1,
+      attempts: 0,
+      state: 'queued'
+    });
+    expect(entry?.mediaVariant).toBe('attachment');
+  });
+
   it('validates voice drafts independently per account and conversation', () => {
     const blob = new Blob(['voice'], { type: 'audio/webm' });
     const draft = normalizeAccountChatVoiceDraft({

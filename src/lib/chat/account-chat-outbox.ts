@@ -11,6 +11,8 @@
  * describe a message as "queued" after `putOutbox` resolves.
  */
 
+import type { ChatMediaVariant } from './account-chat-model';
+
 export const ACCOUNT_CHAT_OUTBOX_DB = 'presuntinho-account-chat-v1';
 export const ACCOUNT_CHAT_MAX_PENDING = 100;
 export const ACCOUNT_CHAT_MAX_PENDING_BYTES = 75 * 1024 * 1024;
@@ -25,6 +27,7 @@ const MAX_TEXT_LENGTH = 4_000;
 const MAX_ID_LENGTH = 180;
 const MAX_NAME_LENGTH = 240;
 const MAX_PATH_LENGTH = 800;
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export type AccountChatOutboxState = 'queued' | 'failed';
 export type AccountChatOutboxKind = 'text' | 'media';
@@ -39,12 +42,14 @@ export interface AccountChatOutboxEntry {
   kind: AccountChatOutboxKind;
   text?: string;
   replyToId?: string;
+  forwardedFromId?: string;
   mediaBlob?: Blob;
   mediaName?: string;
   mediaType?: string;
   mediaSize?: number;
   mediaBucket?: string;
   mediaPath?: string;
+  mediaVariant?: ChatMediaVariant;
   createdAt: number;
   updatedAt: number;
   attempts: number;
@@ -174,6 +179,9 @@ export function normalizeAccountChatOutboxEntry(value: unknown): AccountChatOutb
       kind: 'text',
       text: String(row.text).slice(0, MAX_TEXT_LENGTH),
       replyToId: validString(row.replyToId) ? row.replyToId : undefined,
+      forwardedFromId: typeof row.forwardedFromId === 'string' && UUID_RE.test(row.forwardedFromId)
+        ? row.forwardedFromId
+        : undefined,
       createdAt,
       updatedAt,
       attempts: Math.floor(attempts),
@@ -196,6 +204,9 @@ export function normalizeAccountChatOutboxEntry(value: unknown): AccountChatOutb
     targetKey: validString(row.targetKey, 800) ? row.targetKey : undefined,
     kind: 'media',
     replyToId: validString(row.replyToId) ? row.replyToId : undefined,
+    // Media forwards are independent re-uploads. Only exact text copies carry
+    // server-verifiable provenance; never replay an old/forged media badge.
+    forwardedFromId: undefined,
     mediaBlob: row.mediaBlob,
     mediaName: row.mediaName,
     mediaType: typeof row.mediaType === 'string' ? row.mediaType.slice(0, 160) : row.mediaBlob.type,
@@ -204,6 +215,17 @@ export function normalizeAccountChatOutboxEntry(value: unknown): AccountChatOutb
     mediaSize: storedMediaSize === null ? row.mediaBlob.size : storedMediaSize,
     mediaBucket: validString(row.mediaBucket, 120) ? row.mediaBucket : undefined,
     mediaPath: validString(row.mediaPath, MAX_PATH_LENGTH) ? row.mediaPath : undefined,
+    mediaVariant: row.mediaVariant === 'sticker' && (
+      String(row.mediaType || '').toLowerCase().startsWith('image/') ||
+      row.mediaBlob.type.toLowerCase().startsWith('image/')
+    )
+      ? 'sticker'
+      : row.mediaVariant === 'gif' && (
+          String(row.mediaType || '').toLowerCase() === 'image/gif' ||
+          row.mediaBlob.type.toLowerCase() === 'image/gif'
+        )
+        ? 'gif'
+        : 'attachment',
     createdAt,
     updatedAt,
     attempts: Math.floor(attempts),

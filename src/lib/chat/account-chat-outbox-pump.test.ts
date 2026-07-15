@@ -90,6 +90,42 @@ describe('account-wide chat outbox pass', () => {
     expect(persistence.outbox.size).toBe(1);
   });
 
+  it('passes exact text provenance but never claims provenance for media bytes', async () => {
+    const persistence = new MemoryPersistence();
+    const sourceId = '30000000-0000-4000-8000-000000000005';
+    const forwardedText = {
+      ...textEntry(CONVERSATION_A, 'client-forward-text'),
+      text: '  cópia exata  ',
+      forwardedFromId: sourceId
+    };
+    const forwardedMedia: AccountChatOutboxEntry = {
+      ...textEntry(CONVERSATION_B, 'client-forward-media'),
+      kind: 'media',
+      text: undefined,
+      forwardedFromId: sourceId,
+      mediaBlob: new Blob(['png'], { type: 'image/png' }),
+      mediaType: 'image/png',
+      mediaName: 'sticker.png',
+      mediaVariant: 'sticker'
+    };
+    persistence.outbox.set(forwardedText.key, forwardedText);
+    persistence.outbox.set(forwardedMedia.key, forwardedMedia);
+    const inserts: Record<string, unknown>[] = [];
+    const transport = gateway({ insert: vi.fn(async (entry) => { inserts.push({ ...entry }); }) });
+
+    await runAccountChatOutboxPass({ accountId: ACCOUNT, persistence, gateway: transport, now: 10 });
+
+    expect(inserts.find((entry) => entry.clientId === 'client-forward-text')).toMatchObject({
+      text: '  cópia exata  ',
+      forwardedFromId: sourceId
+    });
+    // The Supabase gateway has a second defence and always inserts NULL for a
+    // media provenance column; the durable normalizer strips it on reload.
+    expect(inserts.find((entry) => entry.clientId === 'client-forward-media')).toMatchObject({
+      mediaVariant: 'sticker'
+    });
+  });
+
   it('reconciles a response-lost commit before inserting again', async () => {
     const persistence = new MemoryPersistence();
     const entry = textEntry(CONVERSATION_A, 'client-committed');

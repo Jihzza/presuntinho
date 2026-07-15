@@ -287,6 +287,47 @@ describe('push service worker call delivery', () => {
 		expect(worker.notifications.size).toBe(1);
 	});
 
+	it('presents each personal reminder with message haptics and its exact message link', async () => {
+		const worker = createWorkerHarness();
+		const eventId = '99999999-9999-4999-8999-999999999998';
+		const conversation = '66666666-6666-4666-8666-666666666666';
+		const message = '22222222-bbbb-4222-8222-222222222222';
+		await worker.push({
+			type: 'presuntinho:push-event',
+			eventId,
+			kind: 'reminder',
+			title: 'Lembrete do Presuntinho',
+			body: 'Guardaste uma mensagem para rever agora.',
+			url: `/mensagens/?conversation=${conversation}&message=${message}`,
+			expiresAt: new Date(Date.now() + 60_000).toISOString()
+		});
+
+		expect(worker.shown).toHaveLength(1);
+		expect(worker.shown[0].options).toMatchObject({
+			tag: `presuntinho-reminder-${eventId}`,
+			vibrate: [70, 60, 70]
+		});
+		expect(worker.shown[0].options.data).toMatchObject({
+			kind: 'reminder',
+			url: `/mensagens/?conversation=${conversation}&message=${message}`
+		});
+	});
+
+	it('fails closed instead of presenting an expired or unauthorised reminder link', async () => {
+		const worker = createWorkerHarness();
+		await worker.push({
+			type: 'presuntinho:push-event',
+			eventId: '99999999-9999-4999-8999-999999999997',
+			kind: 'reminder',
+			title: 'Lembrete do Presuntinho',
+			body: 'Guardaste uma mensagem para rever agora.',
+			url: '/mensagens/?conversation=66666666-6666-4666-8666-666666666666',
+			expiresAt: new Date(Date.now() - 1).toISOString()
+		});
+
+		expect(worker.shown).toHaveLength(0);
+	});
+
 	it('shows a visible foreground notification, ACKs only observable stages and strips the token', async () => {
 		const handlers = new Map<string, (event: any) => void>();
 		const notifications: Array<{ title: string; options: any }> = [];

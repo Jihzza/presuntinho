@@ -15,7 +15,10 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 
 export type PushState = 'unsupported' | 'ios-needs-install' | 'denied' | 'off' | 'on';
 export type PushKind = 'love' | 'nudge' | 'message' | 'call' | 'game_invite';
-export type ForegroundPushKind = PushKind | 'test';
+// `reminder` is minted only by the service worker backend. Keeping it out of
+// PushKind prevents browser callers from spoofing a reminder while still
+// typing the foreground event posted by push-sw.js.
+export type ForegroundPushKind = PushKind | 'test' | 'reminder';
 export const PUSH_FOREGROUND_EVENT_TYPE = 'presuntinho:push-event' as const;
 export const PUSH_PRESENTED_EVENT_TYPE = 'presuntinho:push-presented' as const;
 export const PUSH_ACCOUNT_BINDING_EVENT_TYPE = 'presuntinho:push-account-binding' as const;
