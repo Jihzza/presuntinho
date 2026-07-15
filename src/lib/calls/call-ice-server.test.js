@@ -10,7 +10,11 @@ const CALL_ID = '00000000-0000-4000-8000-000000000001';
 const CALLER_ID = '00000000-0000-4000-8000-000000000002';
 const CALLEE_ID = '00000000-0000-4000-8000-000000000003';
 const CONVERSATION_ID = '00000000-0000-4000-8000-000000000004';
+const HANDOFF_ID = '00000000-0000-4000-8000-000000000005';
+const HANDOFF_RECOVERY_ID = '00000000-0000-4000-8000-000000000006';
 const DEVICE = 'install-0123456789.device-abcdef';
+const CALLEE_DEVICE = 'install-fedcba9876.device-fedcba';
+const HANDOFF_DEVICE = 'install-handoff1234.device-target01';
 const AUTH = 'header.payload.signature-value';
 
 afterEach(() => {
@@ -47,7 +51,12 @@ function request(body = { callId: CALL_ID, device: DEVICE }, headers = {}) {
 	});
 }
 
-function authenticatedCallRouter({ cloudflareResponse } = {}) {
+function authenticatedCallRouter({
+	cloudflareResponse,
+	callOverrides = {},
+	handoffAuthorization = false,
+	onHandoffAuthorization
+} = {}) {
 	return vi.fn(async (input, init = {}) => {
 		const url = new URL(String(input));
 		if (url.hostname === 'rtc.live.cloudflare.com') {
@@ -65,7 +74,9 @@ function authenticatedCallRouter({ cloudflareResponse } = {}) {
 				status: 'ringing',
 				expires_at: new Date(Date.now() + 60_000).toISOString(),
 				caller_lease_expires_at: new Date(Date.now() + 60_000).toISOString(),
-				callee_lease_expires_at: null
+				callee_lease_expires_at: null,
+				handoff_generation: 0,
+				...callOverrides
 			}]);
 		}
 		if (url.pathname === '/rest/v1/chat_conversations') {
@@ -76,9 +87,21 @@ function authenticatedCallRouter({ cloudflareResponse } = {}) {
 				direct_key: `dm:${CALLER_ID}:${CALLEE_ID}`
 			}]);
 		}
+		if (url.pathname.endsWith('/rpc/authorize_call_handoff_ice')) {
+			onHandoffAuthorization?.(url, init);
+			return json(handoffAuthorization);
+		}
 		if (url.pathname.endsWith('/rpc/is_dm_member')) return json(true);
 		throw new Error(`unexpected fetch ${init.method || 'GET'} ${url}`);
 	});
+}
+
+function acceptedCallOverrides() {
+	return {
+		status: 'accepted',
+		callee_device: CALLEE_DEVICE,
+		callee_lease_expires_at: new Date(Date.now() + 60_000).toISOString()
+	};
 }
 
 describe('call ICE endpoint hardening', () => {
@@ -121,6 +144,106 @@ describe('call ICE endpoint hardening', () => {
 		const response = await pending;
 		expect(response.status).toBe(504);
 		expect(await response.json()).toEqual({ error: 'upstream_timeout' });
+	});
+
+	it('issues ICE to the current device owner of an accepted call without consulting handoff authorization', async () => {
+		netlifyEnvironment();
+		const onHandoffAuthorization = vi.fn();
+		const fetchMock = authenticatedCallRouter({
+			callOverrides: acceptedCallOverrides(),
+			onHandoffAuthorization
+		});
+		vi.stubGlobal('fetch', fetchMock);
+
+		const response = await handler(request());
+		expect(response.status).toBe(200);
+		expect(onHandoffAuthorization).not.toHaveBeenCalled();
+	});
+
+	it.each([
+		['permits a handoff target when the RPC validates its token and lease', true, 200, null],
+		['rejects an arbitrary same-account device when the RPC denies it', false, 403, 'handoff_not_authorized']
+	])('%s', async (_label, handoffAuthorization, expectedStatus, expectedError) => {
+		netlifyEnvironment();
+		const onHandoffAuthorization = vi.fn((_url, init) => {
+			expect(init.method).toBe('POST');
+			expect(init.headers.authorization).toBe(`Bearer ${AUTH}`);
+			expect(JSON.parse(init.body)).toEqual({
+				p_call: CALL_ID,
+				p_handoff: HANDOFF_ID,
+				p_device: HANDOFF_DEVICE,
+				p_recovery_id: HANDOFF_RECOVERY_ID
+			});
+		});
+		vi.stubGlobal('fetch', authenticatedCallRouter({
+			callOverrides: acceptedCallOverrides(),
+			handoffAuthorization,
+			onHandoffAuthorization
+		}));
+
+		const response = await handler(request({
+			callId: CALL_ID,
+			device: HANDOFF_DEVICE,
+			handoffId: HANDOFF_ID,
+			handoffRecoveryId: HANDOFF_RECOVERY_ID
+		}));
+
+		expect(response.status).toBe(expectedStatus);
+		expect(onHandoffAuthorization).toHaveBeenCalledOnce();
+		if (expectedError) expect(await response.json()).toEqual({ error: expectedError });
+	});
+
+	it('does not treat a handoff id without its recovery bearer as wrong-device authority', async () => {
+		netlifyEnvironment();
+		const onHandoffAuthorization = vi.fn();
+		vi.stubGlobal('fetch', authenticatedCallRouter({
+			callOverrides: acceptedCallOverrides(),
+			handoffAuthorization: true,
+			onHandoffAuthorization
+		}));
+
+		const response = await handler(request({
+			callId: CALL_ID,
+			device: HANDOFF_DEVICE,
+			handoffId: HANDOFF_ID
+		}));
+
+		expect(response.status).toBe(403);
+		expect(await response.json()).toEqual({ error: 'wrong_call_device' });
+		expect(onHandoffAuthorization).not.toHaveBeenCalled();
+	});
+
+	it('rejects malformed handoff identifiers before any upstream request', async () => {
+		netlifyEnvironment();
+		const fetchMock = vi.fn();
+		vi.stubGlobal('fetch', fetchMock);
+
+		const badHandoff = await handler(request({
+			callId: CALL_ID,
+			device: HANDOFF_DEVICE,
+			handoffId: '../not-a-handoff',
+			handoffRecoveryId: HANDOFF_RECOVERY_ID
+		}));
+		expect(badHandoff.status).toBe(400);
+		expect(await badHandoff.json()).toEqual({ error: 'bad_handoff' });
+
+		const badRecovery = await handler(request({
+			callId: CALL_ID,
+			device: HANDOFF_DEVICE,
+			handoffId: HANDOFF_ID,
+			handoffRecoveryId: 'not-a-recovery-token'
+		}));
+		expect(badRecovery.status).toBe(400);
+		expect(await badRecovery.json()).toEqual({ error: 'bad_handoff_recovery' });
+
+		const orphanRecovery = await handler(request({
+			callId: CALL_ID,
+			device: HANDOFF_DEVICE,
+			handoffRecoveryId: HANDOFF_RECOVERY_ID
+		}));
+		expect(orphanRecovery.status).toBe(400);
+		expect(await orphanRecovery.json()).toEqual({ error: 'bad_handoff_recovery' });
+		expect(fetchMock).not.toHaveBeenCalled();
 	});
 
 	it('returns short-lived Cloudflare relay configuration without exposing provider keys', async () => {

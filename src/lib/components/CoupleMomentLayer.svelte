@@ -7,6 +7,16 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { t } from 'svelte-i18n';
+	import { accountState } from '$lib/account/account-store.svelte';
+	import {
+		CALL_PREFERENCES_EVENT,
+		isCallDndActive,
+		isCallPreferencesStorageKey,
+		loadCallPreferences,
+		parseCallPreferences,
+		readCallPreferencesSync,
+		type CallPreferences
+	} from '$lib/calls/call-preferences';
 	import {
 		COUPLE_MOMENT_EVENT,
 		bindCoupleMomentServiceWorker,
@@ -40,6 +50,19 @@
 	let remainingDisplayMs = 0;
 	let hoverPaused = false;
 	let focusPaused = false;
+	let attentionPreferences = $state.raw<CallPreferences | null>(null);
+
+	$effect(() => {
+		const accountId = accountState.user?.id ?? null;
+		attentionPreferences = null;
+		if (!accountId) return;
+		attentionPreferences = readCallPreferencesSync(accountId);
+		let active = true;
+		void loadCallPreferences(accountId).then((preferences) => {
+			if (active && accountState.user?.id === accountId) attentionPreferences = preferences;
+		}).catch(() => undefined);
+		return () => { active = false; };
+	});
 
 	function copyFor(moment: CoupleMoment): { title: string; body: string } {
 		const partner = moment.senderName || $t('couple.name.partner', { default: 'O teu amor' });
@@ -76,27 +99,30 @@
 	});
 
 	function runFeedback(moment: CoupleMoment): void {
+		const quiet = moment.silent === true || Boolean(attentionPreferences && isCallDndActive(attentionPreferences));
+		if (quiet) return;
+		const vibrationAllowed = moment.vibration !== false && attentionPreferences?.vibration !== false;
 		if (moment.kind === 'love') {
 			playSfx('levelup');
-			vibrateLove();
+			if (vibrationAllowed) vibrateLove();
 			if (!reduced) {
 				fireConfettiEvent({ count: 118, intensity: 3.2, origin: 'heart', palette: ['#fb7185', '#f472b6', '#fda4af', '#fef3c7'] });
 				window.dispatchEvent(new CustomEvent('presuntinho:screen-shake'));
 			}
 		} else if (moment.kind === 'nudge') {
 			playSfx('milestone');
-			vibrateNudge();
+			if (vibrationAllowed) vibrateNudge();
 			if (!reduced) {
 				fireConfettiEvent({ count: 78, intensity: 2.6, origin: 'center', palette: ['#f59e0b', '#facc15', '#f472b6', '#a78bfa'] });
 				window.dispatchEvent(new CustomEvent('presuntinho:screen-shake'));
 			}
 		} else if (moment.kind === 'message') {
 			playSfx('ding');
-			vibrate('success');
+			if (vibrationAllowed) vibrate('success');
 			if (!reduced) fireConfettiEvent({ count: 30, intensity: 0.9, origin: 'top', palette: ['#60a5fa', '#93c5fd', '#f9a8d4', '#fff'] });
 		} else {
 			playSfx('pop');
-			vibrate('tap');
+			if (vibrationAllowed) vibrate('tap');
 			if (!reduced) fireConfettiEvent({ count: 18, intensity: 0.65, origin: 'heart' });
 		}
 	}
@@ -256,16 +282,32 @@
 			if (id) mascotId = id;
 			else void refreshMascot();
 		};
+		const onCallPreferences = (event: Event) => {
+			const accountId = accountState.user?.id;
+			if (!accountId) return;
+			const preferences = parseCallPreferences((event as CustomEvent<unknown>).detail, accountId);
+			if (preferences) attentionPreferences = preferences;
+		};
+		const onCallPreferencesStorage = (event: StorageEvent) => {
+			const accountId = accountState.user?.id;
+			if (accountId && isCallPreferencesStorageKey(event.key, accountId)) {
+				attentionPreferences = readCallPreferencesSync(accountId);
+			}
+		};
 		const onKeyDown = (event: KeyboardEvent) => {
 			if (event.key === 'Escape' && active) dismiss();
 		};
 		window.addEventListener(COUPLE_MOMENT_EVENT, onMoment);
 		window.addEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
+		window.addEventListener(CALL_PREFERENCES_EVENT, onCallPreferences);
+		window.addEventListener('storage', onCallPreferencesStorage);
 		window.addEventListener('keydown', onKeyDown);
 		return () => {
 			unbindWorker();
 			window.removeEventListener(COUPLE_MOMENT_EVENT, onMoment);
 			window.removeEventListener(MASCOT_CHANGED_EVENT, onMascotChanged);
+			window.removeEventListener(CALL_PREFERENCES_EVENT, onCallPreferences);
+			window.removeEventListener('storage', onCallPreferencesStorage);
 			window.removeEventListener('keydown', onKeyDown);
 			clearDismissTimer();
 		};

@@ -77,6 +77,7 @@
   import Database from 'lucide-svelte/icons/database';
   import Heart from 'lucide-svelte/icons/heart';
   import PushToggle from '$lib/components/PushToggle.svelte';
+  import CallPreferencesSettings from '$lib/calls/CallPreferencesSettings.svelte';
   import Github from 'lucide-svelte/icons/github';
   import ExternalLink from 'lucide-svelte/icons/external-link';
   import Bot from 'lucide-svelte/icons/bot';
@@ -1588,6 +1589,11 @@
       <div class="ccard-content">
       <p class="muted">{$t('settings.push.hint', { default: 'Recebe chamadas, mensagens e pings mesmo com a app fechada. O som e a vibração dependem das definições do telemóvel; no iPhone instala primeiro a app no ecrã principal.' })}</p>
       <PushToggle />
+      {#if accountState.user}
+        {#key accountState.user.id}
+          <CallPreferencesSettings accountId={accountState.user.id} />
+        {/key}
+      {/if}
           </div>
     </CollapsibleCard>
   {/if}

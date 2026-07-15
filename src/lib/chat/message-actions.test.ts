@@ -32,6 +32,7 @@ describe('message actions', () => {
     expect(canEditChatMessage({ ...message, ts: message.ts - 1 }, 'me', now)).toBe(false);
     expect(canEditChatMessage({ ...message, from: 'peer' }, 'me', now)).toBe(false);
     expect(canEditChatMessage({ ...message, kind: 'image' }, 'me', now)).toBe(false);
+    expect(canEditChatMessage({ ...message, forwardedFromId: 'source-message' }, 'me', now)).toBe(false);
     expect(canEditChatMessage({ ...message, deleted: true }, 'me', now)).toBe(false);
     expect(canEditChatMessage({ ...message, pending: true }, 'me', now)).toBe(false);
   });

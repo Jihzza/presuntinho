@@ -11,6 +11,7 @@ import { getSupabaseClient } from '$lib/multiplayer/client';
 import type { LocalChatMessage } from './store.svelte';
 import {
   chatPageFilter,
+  chatMediaVariant,
   exactReadTimestamp,
   mediaExtension,
   mediaKind,
@@ -21,6 +22,7 @@ import {
   type AccountConversationKind,
   type ChatPageCursor,
   type ChatCallMeta,
+  type ChatMediaVariant,
   type ChatReplyPreview,
   type RichMessageKind
 } from './account-chat-model';
@@ -86,6 +88,9 @@ interface MessageRow {
   media_mime: string | null;
   media_name: string | null;
   media_size: number | null;
+  media_variant?: string | null;
+  forwarded_from_id?: string | null;
+  expires_at?: string | null;
   edited_at: string | null;
   deleted_at?: string | null;
   created_at: string;
@@ -125,6 +130,36 @@ interface InboxRow {
   pinned_at: string | null;
   muted_until: string | null;
   archived_at: string | null;
+}
+
+interface StarredRow {
+  message_id: string;
+  conversation_id: string;
+  conversation_kind: string;
+  topic: string;
+  sender_id: string;
+  message_kind: string;
+  body: string | null;
+  media_name: string | null;
+  media_mime: string | null;
+  media_variant: string | null;
+  forwarded_from_id: string | null;
+  expires_at: string | null;
+  message_created_at: string;
+  starred_at: string;
+}
+
+interface ReminderRow {
+  id: string;
+  message_id: string;
+  conversation_id: string;
+  remind_at: string;
+  status: string;
+  notified_at: string | null;
+  message_kind: string;
+  message_body: string | null;
+  media_name: string | null;
+  created_at: string;
 }
 
 export interface AccountChatInboxItem {
@@ -202,6 +237,117 @@ export async function listAccountChatInbox(): Promise<AccountChatInboxItem[]> {
       archivedAt: asTime(row.archived_at)
     };
   });
+}
+
+export interface AccountChatStarredItem {
+  messageId: string;
+  conversationId: string;
+  conversationKind: AccountConversationKind;
+  topic: string;
+  senderId: string;
+  kind: RichMessageKind;
+  body: string | null;
+  mediaName: string | null;
+  mediaMime: string | null;
+  mediaVariant: ChatMediaVariant;
+  forwardedFromId: string | null;
+  expiresAt: number;
+  messageCreatedAt: number;
+  starredAt: number;
+  starredAtExact: string;
+}
+
+export interface AccountChatReminderItem {
+  id: string;
+  messageId: string;
+  conversationId: string;
+  remindAt: number;
+  status: 'pending' | 'notified';
+  notifiedAt: number;
+  kind: RichMessageKind;
+  body: string | null;
+  mediaName: string | null;
+  createdAt: number;
+}
+
+export interface AccountChatDisappearingEvent {
+  id: string;
+  conversationId: string;
+  actorId: string | null;
+  seconds: number;
+  createdAt: number;
+}
+
+export async function listAccountChatStars(
+  cursor?: { starredAt: string; messageId: string },
+  limit = 30
+): Promise<AccountChatStarredItem[]> {
+  const { data, error } = await getSupabaseClient().rpc('list_starred_chat_messages', {
+    p_before_at: cursor?.starredAt ?? null,
+    p_before_id: cursor?.messageId ?? null,
+    p_limit: Math.max(1, Math.min(limit, 100))
+  });
+  if (error) throw error;
+  return ((data ?? []) as StarredRow[]).map((row) => ({
+    messageId: row.message_id,
+    conversationId: row.conversation_id,
+    conversationKind: row.conversation_kind === 'couple' ? 'couple' : 'direct',
+    topic: row.topic,
+    senderId: row.sender_id,
+    kind: richKind(row.message_kind),
+    body: row.body,
+    mediaName: row.media_name,
+    mediaMime: row.media_mime,
+    mediaVariant: row.media_variant === 'sticker'
+      ? 'sticker'
+      : row.media_variant === 'gif'
+        ? 'gif'
+        : 'attachment',
+    forwardedFromId: row.forwarded_from_id,
+    expiresAt: asTime(row.expires_at),
+    messageCreatedAt: asTime(row.message_created_at),
+    starredAt: asTime(row.starred_at),
+    starredAtExact: row.starred_at
+  }));
+}
+
+export async function listAccountChatReminders(): Promise<AccountChatReminderItem[]> {
+  const { data, error } = await getSupabaseClient().rpc('list_chat_reminders');
+  if (error) throw error;
+  return ((data ?? []) as ReminderRow[]).map((row) => ({
+    id: row.id,
+    messageId: row.message_id,
+    conversationId: row.conversation_id,
+    remindAt: asTime(row.remind_at),
+    status: row.status === 'notified' ? 'notified' : 'pending',
+    notifiedAt: asTime(row.notified_at),
+    kind: richKind(row.message_kind),
+    body: row.message_body,
+    mediaName: row.media_name,
+    createdAt: asTime(row.created_at)
+  }));
+}
+
+export async function listAccountChatDisappearingEvents(
+  conversationId: string,
+  limit = 10
+): Promise<AccountChatDisappearingEvent[]> {
+  if (!UUID_RE.test(conversationId)) throw new AccountChatError('invalid_conversation');
+  const { data, error } = await getSupabaseClient()
+    .from('chat_disappearing_events')
+    .select('id,conversation_id,actor_id,seconds,created_at')
+    .eq('conversation_id', conversationId)
+    .order('created_at', { ascending: false })
+    .order('id', { ascending: false })
+    .limit(Math.max(1, Math.min(limit, 30)));
+  if (error) throw error;
+  return (data ?? []).map((row) => ({
+    id: String(row.id),
+    conversationId: String(row.conversation_id),
+    actorId: typeof row.actor_id === 'string' ? row.actor_id : null,
+    seconds: Number(row.seconds) || 0,
+    createdAt: asTime(row.created_at)
+  }));
 }
 
 /** Update only this authenticated account's private conversation settings.
@@ -314,6 +460,9 @@ export class AccountChatStore {
   mediaError = $state(false);
   mediaHasMore = $state(false);
   mediaLoaded = $state(false);
+  disappearingSeconds = $state(0);
+  disappearingUpdatedAt = $state(0);
+  disappearingUpdatedBy = $state<string | null>(null);
   /** Set only when this browser could not durably retain the latest send. */
   outboxStorageError = $state<AccountChatStorageErrorCode | null>(null);
 
@@ -325,6 +474,7 @@ export class AccountChatStore {
   #contextSequence = 0;
   #mediaSequence = 0;
   #pollTimer: ReturnType<typeof setInterval> | null = null;
+  #expiryTimer: ReturnType<typeof setInterval> | null = null;
   #typingIdleTimer: ReturnType<typeof setTimeout> | null = null;
   #peerTypingTimer: ReturnType<typeof setTimeout> | null = null;
   #lastTypingWrite = 0;
@@ -415,9 +565,11 @@ export class AccountChatStore {
     if (this.#typingIdleTimer) clearTimeout(this.#typingIdleTimer);
     if (this.#peerTypingTimer) clearTimeout(this.#peerTypingTimer);
     if (this.#pollTimer) clearInterval(this.#pollTimer);
+    if (this.#expiryTimer) clearInterval(this.#expiryTimer);
     this.#typingIdleTimer = null;
     this.#peerTypingTimer = null;
     this.#pollTimer = null;
+    this.#expiryTimer = null;
     if (this.#channel) {
       void this.#channel.untrack().catch(() => undefined);
       void this.#sb.removeChannel(this.#channel);
@@ -462,6 +614,8 @@ export class AccountChatStore {
         if (this.#stopped || (typeof document !== 'undefined' && document.visibilityState !== 'visible')) return;
         void this.#recover();
       }, POLL_MS);
+      if (this.#expiryTimer) clearInterval(this.#expiryTimer);
+      this.#expiryTimer = setInterval(() => this.#pruneExpiredMessages(), 15_000);
       this.offline = false;
       this.authError = false;
       void this.#drainOutbox(true);
@@ -517,6 +671,22 @@ export class AccountChatStore {
     await this.#refreshDecorations();
     if (!this.offline) this.authError = false;
     await this.#drainOutbox(forceOutbox);
+    this.#pruneExpiredMessages();
+  }
+
+  #pruneExpiredMessages(now = Date.now()): void {
+    const expired = new Set(
+      [...this.messages, ...this.searchResults, ...this.mediaItems]
+        .filter((message) => Boolean(message.expiresAt && (message.expiresAt as number) <= now))
+        .map((message) => message.id)
+    );
+    if (!expired.size) return;
+    for (const message of [...this.messages, ...this.searchResults, ...this.mediaItems]) {
+      if (expired.has(message.id)) this.#releaseObjectUrl(message.localDataUrl);
+    }
+    this.messages = this.messages.filter((message) => !expired.has(message.id));
+    this.searchResults = this.searchResults.filter((message) => !expired.has(message.id));
+    this.mediaItems = this.mediaItems.filter((message) => !expired.has(message.id));
   }
 
   #openChannel(): void {
@@ -556,6 +726,7 @@ export class AccountChatStore {
         () => void this.#loadMembers()
       )
       .on('broadcast', { event: 'typing' }, ({ payload }) => this.#receiveTyping(payload as PresencePayload))
+      .on('broadcast', { event: 'settings' }, () => void this.#loadMembers())
       .on('presence', { event: 'sync' }, () => this.#syncPresence())
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
@@ -624,12 +795,26 @@ export class AccountChatStore {
   async #loadMembers(): Promise<void> {
     const conversationId = this.conversationId;
     if (!conversationId) return;
-    const { data, error } = await this.#sb
-      .from('chat_members')
-      .select('conversation_id,account,last_read_at,last_delivered_at,last_seen_at,typing_until')
-      .eq('conversation_id', conversationId);
+    const [{ data, error }, conversationResult] = await Promise.all([
+      this.#sb
+        .from('chat_members')
+        .select('conversation_id,account,last_read_at,last_delivered_at,last_seen_at,typing_until')
+        .eq('conversation_id', conversationId),
+      this.#sb
+        .from('chat_conversations')
+        .select('disappearing_seconds,disappearing_updated_at,disappearing_updated_by')
+        .eq('id', conversationId)
+        .maybeSingle()
+    ]);
     if (error) return;
     if (this.#stopped || conversationId !== this.conversationId) return;
+    if (!conversationResult.error && conversationResult.data) {
+      this.disappearingSeconds = Number(conversationResult.data.disappearing_seconds) || 0;
+      this.disappearingUpdatedAt = asTime(conversationResult.data.disappearing_updated_at);
+      this.disappearingUpdatedBy = typeof conversationResult.data.disappearing_updated_by === 'string'
+        ? conversationResult.data.disappearing_updated_by
+        : null;
+    }
     for (const raw of data ?? []) {
       const row = raw as MemberRow;
       if (row.account === this.profile) {
@@ -897,6 +1082,9 @@ export class AccountChatStore {
         media_mime: message.mediaType ?? null,
         media_name: message.name ?? null,
         media_size: message.mediaSize ?? null,
+        media_variant: message.mediaVariant ?? 'attachment',
+        forwarded_from_id: message.forwardedFromId ?? null,
+        expires_at: message.expiresAt ? new Date(message.expiresAt).toISOString() : null,
         edited_at: message.editedAt ? new Date(message.editedAt).toISOString() : null,
         deleted_at: message.deleted ? new Date(message.ts).toISOString() : null,
         created_at: message.createdAt ?? new Date(message.ts).toISOString()
@@ -941,6 +1129,15 @@ export class AccountChatStore {
       mediaType: row.deleted_at ? undefined : row.media_mime ?? undefined,
       name: row.deleted_at ? undefined : row.media_name ?? undefined,
       mediaSize: row.media_size ?? undefined,
+      mediaVariant: row.deleted_at
+        ? undefined
+        : row.media_variant === 'sticker'
+          ? 'sticker'
+          : row.media_variant === 'gif'
+            ? 'gif'
+            : 'attachment',
+      forwardedFromId: row.deleted_at ? undefined : row.forwarded_from_id ?? undefined,
+      expiresAt: asTime(row.expires_at) || undefined,
       editedAt: asTime(row.edited_at) || undefined,
       deleted: Boolean(row.deleted_at)
     };
@@ -1000,20 +1197,29 @@ export class AccountChatStore {
     if (!ids.length) return messages;
     const reactionRows: ReactionRow[] = [];
     const starRows: Array<{ message_id: string }> = [];
+    const reminderRows: Array<{ message_id: string; remind_at: string; status: string }> = [];
     for (let index = 0; index < ids.length; index += 100) {
       const chunk = ids.slice(index, index + 100);
-      const [reactionResult, starResult] = await Promise.all([
+      const [reactionResult, starResult, reminderResult] = await Promise.all([
         this.#sb.from('chat_reactions').select('message_id,account_id,emoji').in('message_id', chunk),
-        this.#sb.from('chat_stars').select('message_id').eq('account_id', this.profile).in('message_id', chunk)
+        this.#sb.from('chat_stars').select('message_id').eq('account_id', this.profile).in('message_id', chunk),
+        this.#sb
+          .from('chat_reminders')
+          .select('message_id,remind_at,status')
+          .eq('account_id', this.profile)
+          .in('status', ['pending', 'notified'])
+          .in('message_id', chunk)
       ]);
       reactionRows.push(...((reactionResult.data ?? []) as ReactionRow[]));
       starRows.push(...((starResult.data ?? []) as Array<{ message_id: string }>));
+      reminderRows.push(...((reminderResult.data ?? []) as Array<{ message_id: string; remind_at: string; status: string }>));
     }
     const reactions = new Map<string, ReactionRow[]>();
     for (const row of reactionRows) {
       reactions.set(row.message_id, [...(reactions.get(row.message_id) ?? []), row]);
     }
     const stars = new Set(starRows.map((row) => String(row.message_id)));
+    const reminders = new Map(reminderRows.map((row) => [String(row.message_id), asTime(row.remind_at)]));
     return messages.map((message) => ({
       ...message,
       reactions: message.deleted
@@ -1022,7 +1228,8 @@ export class AccountChatStore {
             (reactions.get(message.id) ?? []).map((row) => ({ emoji: row.emoji, account_id: row.account_id })),
             this.profile
           ),
-      starred: message.deleted ? false : stars.has(message.id)
+      starred: message.deleted ? false : stars.has(message.id),
+      reminderAt: message.deleted ? undefined : reminders.get(message.id) || undefined
     }));
   }
 
@@ -1031,18 +1238,18 @@ export class AccountChatStore {
     const decorated = await this.#decorate(all);
     const byId = new Map(decorated.map((message) => [message.id, message]));
     // A realtime message may arrive while the decoration queries are in
-    // flight. Merge only the reaction/star fields so that row is never lost.
+    // flight. Merge only decoration fields so that row is never lost.
     this.messages = this.messages.map((message) => {
       const next = byId.get(message.id);
-      return next ? { ...message, reactions: next.reactions, starred: next.starred } : message;
+      return next ? { ...message, reactions: next.reactions, starred: next.starred, reminderAt: next.reminderAt } : message;
     });
     this.searchResults = this.searchResults.map((message) => {
       const next = byId.get(message.id);
-      return next ? { ...message, reactions: next.reactions, starred: next.starred } : message;
+      return next ? { ...message, reactions: next.reactions, starred: next.starred, reminderAt: next.reminderAt } : message;
     });
     this.mediaItems = this.mediaItems.map((message) => {
       const next = byId.get(message.id);
-      return next ? { ...message, reactions: next.reactions, starred: next.starred } : message;
+      return next ? { ...message, reactions: next.reactions, starred: next.starred, reminderAt: next.reminderAt } : message;
     });
   }
 
@@ -1129,6 +1336,7 @@ export class AccountChatStore {
       conversationId: this.topic,
       replyToId: entry.replyToId,
       reply: this.#replyPreview(entry.replyToId),
+      forwardedFromId: entry.forwardedFromId,
       ts: entry.createdAt,
       pending: false,
       queued: entry.state === 'queued',
@@ -1142,6 +1350,7 @@ export class AccountChatStore {
       mediaType: entry.mediaType || blob.type || 'application/octet-stream',
       name: entry.mediaName,
       mediaSize: entry.mediaSize ?? blob.size,
+      mediaVariant: entry.mediaVariant ?? chatMediaVariant(entry.mediaType || blob.type),
       mediaBucket: entry.mediaBucket,
       mediaKey: entry.mediaPath,
       localBlob: blob,
@@ -1345,7 +1554,9 @@ export class AccountChatStore {
           client_id: clientId,
           kind: 'text',
           body,
-          reply_to_id: message.replyToId ?? null
+          reply_to_id: message.replyToId ?? null,
+          forwarded_from_id: message.forwardedFromId ?? null,
+          media_variant: 'attachment'
         })
         .select()
         .single();
@@ -1362,7 +1573,11 @@ export class AccountChatStore {
     }
   }
 
-  async sendTextMessage(text: string, replyToId?: string): Promise<SendResult> {
+  async sendTextMessage(
+    text: string,
+    replyToId?: string,
+    options: { forwardedFromId?: string } = {}
+  ): Promise<SendResult> {
     const body = text.trim();
     if (!body || body.length > MAX_TEXT_LENGTH || !this.conversationId) return 'failed';
     const clientId = crypto.randomUUID();
@@ -1376,6 +1591,7 @@ export class AccountChatStore {
       conversationId: this.topic,
       replyToId,
       reply: this.#replyPreview(replyToId),
+      forwardedFromId: options.forwardedFromId,
       ts: Date.now(),
       pending: true
     };
@@ -1390,6 +1606,7 @@ export class AccountChatStore {
       kind: 'text',
       text: body,
       replyToId,
+      forwardedFromId: options.forwardedFromId,
       createdAt: now,
       updatedAt: now,
       attempts: 0,
@@ -1402,7 +1619,12 @@ export class AccountChatStore {
     return this.#sendTextAttempt(optimistic);
   }
 
-  async sendMediaMessage(file: Blob, name: string, replyToId?: string): Promise<SendResult> {
+  async sendMediaMessage(
+    file: Blob,
+    name: string,
+    replyToId?: string,
+    options: { mediaVariant?: ChatMediaVariant } = {}
+  ): Promise<SendResult> {
     if (!this.conversationId) return 'failed';
     if (file.size > MAX_FILE_BYTES) throw new AccountChatError('too_large');
     const kind = mediaKind(file.type);
@@ -1418,6 +1640,7 @@ export class AccountChatStore {
       mediaType: file.type || 'application/octet-stream',
       name,
       mediaSize: file.size,
+      mediaVariant: chatMediaVariant(file.type, options.mediaVariant),
       localBlob: file,
       localDataUrl: preview,
       conversationId: this.topic,
@@ -1440,6 +1663,7 @@ export class AccountChatStore {
       mediaName: name,
       mediaType: file.type || 'application/octet-stream',
       mediaSize: file.size,
+      mediaVariant: chatMediaVariant(file.type, options.mediaVariant),
       createdAt: now,
       updatedAt: now,
       attempts: 0,
@@ -1518,11 +1742,13 @@ export class AccountChatStore {
           client_id: clientId,
           kind,
           reply_to_id: message.replyToId ?? null,
+          forwarded_from_id: null,
           media_bucket: bucket,
           media_path: path,
           media_mime: mime,
           media_name: message.name,
-          media_size: size
+          media_size: size,
+          media_variant: message.mediaVariant ?? chatMediaVariant(mime)
         })
         .select()
         .single();
@@ -1599,6 +1825,7 @@ export class AccountChatStore {
           mediaSize: retrying.mediaSize ?? retrying.localBlob.size,
           mediaBucket: retrying.mediaBucket,
           mediaPath: retrying.mediaKey,
+          mediaVariant: retrying.mediaVariant,
           createdAt: retrying.ts,
           updatedAt: now,
           attempts: 0,
@@ -1616,6 +1843,7 @@ export class AccountChatStore {
             kind: 'text',
             text: retrying.text,
             replyToId: message.replyToId,
+            forwardedFromId: message.forwardedFromId,
             createdAt: retrying.ts,
             updatedAt: now,
             attempts: 0,
@@ -1806,6 +2034,53 @@ export class AccountChatStore {
     this.searchResults = this.searchResults.map((candidate) =>
       candidate.id === messageId ? { ...candidate, starred: !candidate.starred } : candidate
     );
+    this.mediaItems = this.mediaItems.map((candidate) =>
+      candidate.id === messageId ? { ...candidate, starred: !candidate.starred } : candidate
+    );
+  }
+
+  async setReminder(messageId: string, remindAt: number): Promise<void> {
+    if (!UUID_RE.test(messageId) || !Number.isFinite(remindAt)) return;
+    const { error } = await this.#sb.rpc('set_chat_reminder', {
+      p_message: messageId,
+      p_remind_at: new Date(remindAt).toISOString()
+    });
+    if (error) throw error;
+    const apply = (message: LocalChatMessage) =>
+      message.id === messageId ? { ...message, reminderAt: remindAt } : message;
+    this.messages = this.messages.map(apply);
+    this.searchResults = this.searchResults.map(apply);
+    this.mediaItems = this.mediaItems.map(apply);
+  }
+
+  async cancelReminder(messageId: string): Promise<void> {
+    if (!UUID_RE.test(messageId)) return;
+    const { error } = await this.#sb.rpc('cancel_chat_reminder', { p_message: messageId });
+    if (error) throw error;
+    const apply = (message: LocalChatMessage) =>
+      message.id === messageId ? { ...message, reminderAt: undefined } : message;
+    this.messages = this.messages.map(apply);
+    this.searchResults = this.searchResults.map(apply);
+    this.mediaItems = this.mediaItems.map(apply);
+  }
+
+  async setDisappearingSeconds(seconds: number): Promise<void> {
+    const conversationId = this.conversationId;
+    if (!conversationId || ![0, 86400, 604800, 7776000].includes(seconds)) return;
+    const { data, error } = await this.#sb.rpc('set_chat_disappearing', {
+      p_conversation: conversationId,
+      p_seconds: seconds
+    });
+    if (error) throw error;
+    const value = Number(Array.isArray(data) ? data[0] : data);
+    this.disappearingSeconds = Number.isFinite(value) ? value : seconds;
+    this.disappearingUpdatedAt = Date.now();
+    this.disappearingUpdatedBy = this.profile;
+    void this.#channel?.send({
+      type: 'broadcast',
+      event: 'settings',
+      payload: { disappearingSeconds: this.disappearingSeconds }
+    });
   }
 
   async markReadUpTo(ts: number): Promise<void> {

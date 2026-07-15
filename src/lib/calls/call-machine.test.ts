@@ -4,6 +4,8 @@ import {
 	callTopic,
 	deliveryConfirmsRinging,
 	isCallSignalEnvelope,
+	parseCallHandoff,
+	parseCallHandoffTarget,
 	parseCallDelivery,
 	parseCallSession,
 	type CallSession
@@ -19,6 +21,7 @@ const ROW = {
 	kind: 'audio',
 	status: 'ringing',
 	created_at: '2026-07-15T10:00:00.000Z',
+	updated_at: '2026-07-15T10:00:00.000Z',
 	expires_at: '2026-07-15T10:01:00.000Z',
 	caller_heartbeat_at: '2026-07-15T10:00:00.000Z',
 	callee_heartbeat_at: null,
@@ -26,7 +29,8 @@ const ROW = {
 	callee_lease_expires_at: null,
 	push_sent_at: null,
 	answered_at: null,
-	ended_at: null
+	ended_at: null,
+	handoff_generation: 0
 } as const;
 
 describe('call session boundary', () => {
@@ -61,6 +65,34 @@ describe('call session boundary', () => {
 		expect(isCallSignalEnvelope({ ...envelope, seq: 2.5 }, ROW.id, ROW.callee)).toBe(false);
 	});
 
+	it('accepts an omitted signaling generation only for generation zero and otherwise requires an exact match', () => {
+		const envelope = {
+			v: 1,
+			callId: ROW.id,
+			from: ROW.callee,
+			device: 'device-b-1234567890',
+			seq: 3,
+			signal: { type: 'restart-request' }
+		};
+
+		expect(isCallSignalEnvelope(envelope, ROW.id, ROW.callee, envelope.device, 0)).toBe(true);
+		expect(isCallSignalEnvelope(envelope, ROW.id, ROW.callee, envelope.device, 1)).toBe(false);
+		expect(isCallSignalEnvelope(
+			{ ...envelope, handoffGeneration: 0 },
+			ROW.id,
+			ROW.callee,
+			envelope.device,
+			1
+		)).toBe(false);
+		expect(isCallSignalEnvelope(
+			{ ...envelope, handoffGeneration: 1 },
+			ROW.id,
+			ROW.callee,
+			envelope.device,
+			1
+		)).toBe(true);
+	});
+
 	it('only treats an explicit device ringing/opened ACK as ringing', () => {
 		expect(parseCallDelivery({
 			call_id: ROW.id,
@@ -78,6 +110,64 @@ describe('call session boundary', () => {
 		expect(deliveryConfirmsRinging('presented')).toBe(false);
 		expect(deliveryConfirmsRinging('ringing')).toBe(true);
 		expect(deliveryConfirmsRinging('opened')).toBe(false);
+	});
+
+	it('parses handoff lifecycle metadata without accepting malformed device claims', () => {
+		const handoff = {
+			id: '58ef18ff-0001-485a-b0ce-08c535bc5c6e',
+			call_id: ROW.id,
+			account: ROW.caller,
+			from_device: 'source-install-12345678.tab-1234567890',
+			from_installation_id: 'source-install-12345678',
+			target_installation_id: 'target-install-12345678',
+			claimed_device: null,
+			status: 'requested',
+			client_request_id: '68ef18ff-0001-485a-b0ce-08c535bc5c6e',
+			source_generation: 0,
+			claimed_generation: null,
+			state_version: 0,
+			created_at: ROW.created_at,
+			updated_at: ROW.created_at,
+			expires_at: ROW.expires_at,
+			recovery_expires_at: null,
+			claim_device_lease_expires_at: null,
+			claimed_at: null,
+			completed_at: null,
+			cancelled_at: null
+		};
+		expect(parseCallHandoff(handoff)).toMatchObject({
+			callId: ROW.id,
+			status: 'requested',
+			targetInstallationId: 'target-install-12345678'
+		});
+		expect(parseCallHandoff({ ...handoff, status: 'claimed' })).toBeNull();
+		expect(parseCallHandoff({
+			...handoff,
+			claimed_device: 'target-install-12345678.tab-1234567890',
+			status: 'claimed',
+			claimed_generation: 1,
+			state_version: 1,
+			updated_at: '2026-07-15T10:00:01.000Z',
+			recovery_expires_at: '2026-07-15T10:02:00.000Z',
+			claim_device_lease_expires_at: '2026-07-15T10:01:00.000Z',
+			claimed_at: ROW.created_at
+		})).toMatchObject({
+			status: 'claimed',
+			claimedGeneration: 1,
+			stateVersion: 1
+		});
+		expect(parseCallHandoff({
+			...handoff,
+			claimed_device: 'target-install-12345678.tab-1234567890',
+			claimed_at: ROW.created_at
+		})).toBeNull();
+		expect(parseCallHandoff({ ...handoff, target_installation_id: handoff.from_installation_id })).toBeNull();
+		expect(parseCallHandoffTarget({
+			installation_id: 'target-install-12345678',
+			platform: 'android',
+			last_seen_at: ROW.created_at,
+			supports_video: true
+		})).toMatchObject({ platform: 'android', supportsVideo: true });
 	});
 });
 
@@ -132,5 +222,18 @@ describe('call state machine', () => {
 		const ended = reduceCallMachine(incoming, { type: 'ENDED', call: { ...ringing, status: 'declined' } });
 		const accepted = { ...ringing, status: 'accepted' as const };
 		expect(reduceCallMachine(ended, { type: 'ACCEPTED', call: accepted })).toEqual(ended);
+	});
+
+	it('adopts an already accepted shared call from an idle target device', () => {
+		const ringing = parseCallSession(ROW) as CallSession;
+		const accepted = {
+			...ringing,
+			status: 'accepted' as const,
+			calleeDevice: 'device-b-1234567890',
+			calleeHeartbeatAt: ROW.created_at,
+			calleeLeaseExpiresAt: ROW.caller_lease_expires_at
+		};
+		const state = reduceCallMachine(INITIAL_CALL_MACHINE, { type: 'HANDOFF_ACCEPTED', call: accepted });
+		expect(state).toMatchObject({ phase: 'connecting', call: { id: ROW.id }, outcome: null });
 	});
 });

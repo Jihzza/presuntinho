@@ -632,7 +632,7 @@ export async function dispatchCallTerminalBatch({
   };
 }
 
-const COMMUNICATION_KINDS = new Set(['love', 'nudge', 'message', 'test', 'game_invite']);
+const COMMUNICATION_KINDS = new Set(['love', 'nudge', 'message', 'test', 'game_invite', 'reminder']);
 
 function validCommunicationClaim(row, eventId) {
   if (!row || typeof row !== 'object' || Array.isArray(row)) return null;
@@ -763,6 +763,7 @@ export async function dispatchCommunicationPush({ sbAdmin, eventId }) {
     body: claim.body,
     url: claim.url,
     senderId: claim.sender,
+    recipientId: claim.target,
     // Provider acceptance is not presentation. A device can receive a queued
     // push near the end of its TTL, so the worker also needs the authoritative
     // deadline to suppress an invitation that is already unusable.
@@ -772,7 +773,7 @@ export async function dispatchCommunicationPush({ sbAdmin, eventId }) {
   await Promise.all(subscriptions.map(async ({ id, version, subscription }) => {
     const provider = await sendWebPushWithRetry(subscription, message, {
       TTL: Math.max(1, Math.min(3600, Math.ceil((claim.expiresAt - Date.now()) / 1000))),
-      urgency: claim.kind === 'message' ? 'normal' : 'high',
+      urgency: claim.kind === 'message' || claim.kind === 'reminder' ? 'normal' : 'high',
       timeout: WEB_PUSH_TIMEOUT_MS,
       deadlineAt: claim.expiresAt
     });

@@ -93,4 +93,23 @@ describe('CallAudioManager', () => {
 		audio.startRingback();
 		expect(audio.mode).toBe('idle');
 	});
+
+	it('applies ringtone choice, independent volumes and vibration preferences without a false ringing ACK', async () => {
+		const vibrate = vi.fn(() => true);
+		const context = fakeContext();
+		const audio = new CallAudioManager({ createContext: () => context, vibrate });
+		audio.configure({ ringtone: 'pulse', ringtoneVolume: 0, ringbackVolume: 0, vibration: false });
+		audio.startIncoming();
+		expect(context.createOscillator).not.toHaveBeenCalled();
+		expect(vibrate).not.toHaveBeenCalledWith(expect.any(Array));
+		expect(await audio.confirmIncomingFeedback()).toBe(false);
+		audio.stop();
+		audio.configure({ ringtone: 'pulse', ringtoneVolume: 0.7, ringbackVolume: 0, vibration: false });
+		audio.startIncoming();
+		expect(context.createOscillator).toHaveBeenCalledTimes(4);
+		audio.stop();
+		(context.createOscillator as ReturnType<typeof vi.fn>).mockClear();
+		audio.startRingback();
+		expect(context.createOscillator).not.toHaveBeenCalled();
+	});
 });

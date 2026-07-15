@@ -8,6 +8,27 @@ const RECIPIENT_ID = '33333333-3333-4333-8333-333333333333';
 const OTHER_ACCOUNT_ID = '99999999-9999-4999-8999-999999999999';
 const TOKEN = '4'.repeat(64);
 
+function callPreferences(accountId: string, overrides: Record<string, unknown> = {}) {
+	return {
+		version: 1,
+		accountId,
+		ringtone: 'classic',
+		ringtoneVolume: 0.8,
+		ringbackVolume: 0.55,
+		vibration: true,
+		notificationPreviews: true,
+		dndEnabled: false,
+		dndStartMinutes: 1320,
+		dndEndMinutes: 480,
+		whoMayCall: 'contacts',
+		relayOnly: false,
+		knownContactIds: [],
+		contactsSyncedAt: null,
+		updatedAt: new Date().toISOString(),
+		...overrides
+	};
+}
+
 function createWorkerHarness({
 	clients = [] as any[],
 	cacheEntries = new Map<string, Response>()
@@ -266,6 +287,69 @@ describe('push service worker call delivery', () => {
 		expect(worker.notifications.size).toBe(1);
 	});
 
+	it('presents each personal reminder with message haptics and its exact message link', async () => {
+		const worker = createWorkerHarness();
+		const eventId = '99999999-9999-4999-8999-999999999998';
+		const conversation = '66666666-6666-4666-8666-666666666666';
+		const message = '22222222-bbbb-4222-8222-222222222222';
+		await worker.push({
+			type: 'presuntinho:push-event',
+			eventId,
+			kind: 'reminder',
+			title: 'Lembrete do Presuntinho',
+			body: 'Guardaste uma mensagem para rever agora.',
+			url: `/mensagens/?conversation=${conversation}&message=${message}`,
+			expiresAt: new Date(Date.now() + 60_000).toISOString()
+		});
+
+		expect(worker.shown).toHaveLength(1);
+		expect(worker.shown[0].options).toMatchObject({
+			tag: `presuntinho-reminder-${eventId}`,
+			vibrate: [70, 60, 70]
+		});
+		expect(worker.shown[0].options.data).toMatchObject({
+			kind: 'reminder',
+			url: `/mensagens/?conversation=${conversation}&message=${message}`
+		});
+	});
+
+	it('fails closed instead of presenting an expired or unauthorised reminder link', async () => {
+		const worker = createWorkerHarness();
+		await worker.push({
+			type: 'presuntinho:push-event',
+			eventId: '99999999-9999-4999-8999-999999999997',
+			kind: 'reminder',
+			title: 'Lembrete do Presuntinho',
+			body: 'Guardaste uma mensagem para rever agora.',
+			url: '/mensagens/?conversation=66666666-6666-4666-8666-666666666666',
+			expiresAt: new Date(Date.now() - 1).toISOString()
+		});
+
+		expect(worker.shown).toHaveLength(0);
+	});
+
+	it('never presents a personal reminder after this installation switches accounts', async () => {
+		const worker = createWorkerHarness();
+		await worker.message({
+			type: 'presuntinho:push-account-binding',
+			accountId: OTHER_ACCOUNT_ID
+		});
+		await worker.push({
+			type: 'presuntinho:push-event',
+			eventId: '99999999-9999-4999-8999-999999999996',
+			kind: 'reminder',
+			title: 'Lembrete do Presuntinho',
+			body: 'Guardaste uma mensagem para rever agora.',
+			url: '/mensagens/?conversation=66666666-6666-4666-8666-666666666666&message=22222222-bbbb-4222-8222-222222222222',
+			recipientId: RECIPIENT_ID,
+			expiresAt: new Date(Date.now() + 60_000).toISOString()
+		});
+
+		expect(worker.shown).toHaveLength(0);
+		expect(worker.notifications.size).toBe(0);
+		expect(worker.messages).toHaveLength(0);
+	});
+
 	it('shows a visible foreground notification, ACKs only observable stages and strips the token', async () => {
 		const handlers = new Map<string, (event: any) => void>();
 		const notifications: Array<{ title: string; options: any }> = [];
@@ -388,6 +472,142 @@ describe('push service worker call delivery', () => {
 			renotify: true
 		});
 		expect(worker.shown[0].options.silent).toBeUndefined();
+	});
+
+	it('persists private previews and vibration settings across worker restart', async () => {
+		const cacheEntries = new Map<string, Response>();
+		const worker = createWorkerHarness({ cacheEntries });
+		await worker.message({ type: 'presuntinho:push-account-binding', accountId: RECIPIENT_ID });
+		await worker.message({
+			type: 'presuntinho:call-preferences',
+			preferences: callPreferences(RECIPIENT_ID, {
+				notificationPreviews: false,
+				vibration: false
+			})
+		});
+		await worker.push({
+			eventId: 'private-message-1',
+			kind: 'message',
+			title: 'Rafael',
+			body: 'Conteúdo muito privado',
+			url: '/mensagens/',
+			recipientId: RECIPIENT_ID
+		});
+		expect(worker.shown[0]).toMatchObject({
+			title: 'Presuntinho',
+			options: { body: 'Nova mensagem' }
+		});
+		expect(worker.shown[0].options.vibrate).toEqual([]);
+
+		const restarted = createWorkerHarness({ cacheEntries });
+		await restarted.push({
+			eventId: 'private-message-2',
+			kind: 'message',
+			title: 'Fatma',
+			body: 'Outro conteúdo privado',
+			url: '/mensagens/',
+			recipientId: RECIPIENT_ID
+		});
+		expect(restarted.shown[0]).toMatchObject({
+			title: 'Presuntinho',
+			options: { body: 'Nova mensagem' }
+		});
+		expect(restarted.shown[0].options.vibrate).toEqual([]);
+	});
+
+	it('shows DND calls silently while preserving received and presented delivery truth', async () => {
+		const worker = createWorkerHarness({ clients: [{ focused: true, visibilityState: 'visible' }] });
+		await worker.message({ type: 'presuntinho:push-account-binding', accountId: RECIPIENT_ID });
+		await worker.message({
+			type: 'presuntinho:call-preferences',
+			preferences: callPreferences(RECIPIENT_ID, {
+				dndEnabled: true,
+				dndStartMinutes: 0,
+				dndEndMinutes: 0
+			})
+		});
+		await worker.push({
+			eventId: CALL_ID,
+			kind: 'call',
+			title: 'Chamada recebida',
+			body: 'Rafael está a ligar-te.',
+			url: '/mensagens/',
+			recipientId: RECIPIENT_ID,
+			senderId: OTHER_ACCOUNT_ID,
+			callId: CALL_ID,
+			deliveryId: DELIVERY_ID,
+			deliveryToken: TOKEN,
+			expiresAt: new Date(Date.now() + 60_000).toISOString()
+		});
+		expect(worker.shown).toHaveLength(1);
+		expect(worker.shown[0].options.silent).toBe(true);
+		expect(worker.shown[0].options.vibrate).toBeUndefined();
+		expect(worker.ackStages).toEqual(['received', 'presented']);
+		expect(worker.messages[0]).toMatchObject({ silent: true, vibration: true });
+	});
+
+	it('blocks a call on only the installation that chose nobody and does not emit a global decline', async () => {
+		const blockedCache = new Map<string, Response>();
+		const blocked = createWorkerHarness({ cacheEntries: blockedCache });
+		await blocked.message({ type: 'presuntinho:push-account-binding', accountId: RECIPIENT_ID });
+		await blocked.message({
+			type: 'presuntinho:call-preferences',
+			preferences: callPreferences(RECIPIENT_ID, { whoMayCall: 'nobody' })
+		});
+		const incoming = {
+			eventId: CALL_ID,
+			kind: 'call',
+			title: 'Chamada recebida',
+			body: 'Rafael está a ligar-te.',
+			url: '/mensagens/',
+			recipientId: RECIPIENT_ID,
+			senderId: OTHER_ACCOUNT_ID,
+			callId: CALL_ID,
+			deliveryId: DELIVERY_ID,
+			deliveryToken: TOKEN,
+			expiresAt: new Date(Date.now() + 60_000).toISOString()
+		};
+		const staleNotification = blocked.setNotification(`presuntinho-call-${CALL_ID}`, incoming);
+		await blocked.push(incoming);
+		expect(blocked.shown).toHaveLength(0);
+		expect(staleNotification.close).toHaveBeenCalledTimes(1);
+		expect(blocked.notifications.size).toBe(0);
+		expect(blocked.ackStages).toEqual(['received']);
+		expect(blocked.fetchMock).toHaveBeenCalledTimes(1);
+
+		// A different installation has a different Cache Storage namespace in
+		// practice. It receives and presents the same account call normally.
+		const otherInstallation = createWorkerHarness();
+		await otherInstallation.message({ type: 'presuntinho:push-account-binding', accountId: RECIPIENT_ID });
+		await otherInstallation.push(incoming);
+		expect(otherInstallation.shown).toHaveLength(1);
+		expect(otherInstallation.ackStages).toEqual(['received', 'presented']);
+	});
+
+	it('rejects stale-account preference writes and never applies one account settings to another', async () => {
+		const cacheEntries = new Map<string, Response>();
+		const worker = createWorkerHarness({ cacheEntries });
+		await worker.message({ type: 'presuntinho:push-account-binding', accountId: OTHER_ACCOUNT_ID });
+		await worker.message({
+			type: 'presuntinho:call-preferences',
+			preferences: callPreferences(RECIPIENT_ID, {
+				notificationPreviews: false,
+				vibration: false,
+				whoMayCall: 'nobody'
+			})
+		});
+		await worker.push({
+			eventId: 'other-account-message',
+			kind: 'message',
+			title: 'Fatma',
+			body: 'Visível para a conta correta',
+			url: '/mensagens/',
+			recipientId: OTHER_ACCOUNT_ID
+		});
+		expect(worker.shown[0].title).toBe('Fatma');
+		expect(worker.shown[0].options.body).toBe('Visível para a conta correta');
+		expect(worker.shown[0].options.vibrate).toEqual([70, 60, 70]);
+		expect([...cacheEntries.keys()].some((key) => key.includes('__presuntinho_call_preferences__'))).toBe(false);
 	});
 
 	it('suppresses a late call for the previous account and never ACKs it as received', async () => {

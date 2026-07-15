@@ -29,6 +29,9 @@ const PUSH_EVENT_DEDUPE_CACHE = 'presuntinho-push-events-v1';
 const PUSH_EVENT_DEDUPE_TTL_MS = 2 * 60 * 60 * 1000;
 const PUSH_ACCOUNT_BINDING_CACHE = 'presuntinho-push-account-v1';
 const PUSH_ACCOUNT_BINDING_URL = '/__presuntinho_push_account_binding__';
+const CALL_PREFERENCES_EVENT_TYPE = 'presuntinho:call-preferences';
+const CALL_PREFERENCES_CACHE = 'presuntinho-call-preferences-v1';
+const CALL_PREFERENCES_PATH = '/__presuntinho_call_preferences__/';
 const TERMINAL_NOTICE_MS = 3500;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const ROOM_CODE_RE = /^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}$/;
@@ -44,6 +47,7 @@ const TERMINAL_EVENTS = new Set([
 ]);
 const memoryCallTombstones = new Map();
 const memoryPushEvents = new Map();
+const memoryCallPreferences = new Map();
 const callOperationQueues = new Map();
 let activeAccountKnown = false;
 let activeAccountId = null;
@@ -68,7 +72,7 @@ function canonicalAppUrl(value) {
 
 function canonicalPushEvent(data) {
   const source = data && typeof data === 'object' ? data : {};
-  const kind = ['love', 'nudge', 'message', 'call', 'test', 'game_invite'].includes(source.kind) ? source.kind : 'love';
+  const kind = ['love', 'nudge', 'message', 'call', 'test', 'game_invite', 'reminder'].includes(source.kind) ? source.kind : 'love';
   let url = canonicalAppUrl(source.url);
   const callId = typeof source.callId === 'string' && UUID_RE.test(source.callId)
     ? source.callId
@@ -174,6 +178,133 @@ async function readActiveAccount() {
   }
 }
 
+function defaultCallPreferences(accountId) {
+  return {
+    version: 1,
+    accountId,
+    ringtone: 'classic',
+    ringtoneVolume: 0.8,
+    ringbackVolume: 0.55,
+    vibration: true,
+    notificationPreviews: true,
+    dndEnabled: false,
+    dndStartMinutes: 22 * 60,
+    dndEndMinutes: 8 * 60,
+    whoMayCall: 'contacts',
+    relayOnly: false,
+    knownContactIds: [],
+    contactsSyncedAt: null,
+    updatedAt: new Date().toISOString()
+  };
+}
+
+function canonicalCallPreferences(value, expectedAccountId) {
+  if (!UUID_RE.test(String(expectedAccountId || '')) || !value || typeof value !== 'object') return null;
+  if (String(value.accountId || '').toLowerCase() !== String(expectedAccountId).toLowerCase()) return null;
+  const fallback = defaultCallPreferences(String(expectedAccountId).toLowerCase());
+  const minute = (candidate, defaultValue) => Number.isInteger(candidate) && candidate >= 0 && candidate < 1440
+    ? candidate
+    : defaultValue;
+  const volume = (candidate, defaultValue) => Number.isFinite(Number(candidate))
+    ? Math.round(Math.min(1, Math.max(0, Number(candidate))) * 100) / 100
+    : defaultValue;
+  const contactIds = Array.isArray(value.knownContactIds)
+    ? [...new Set(value.knownContactIds.filter((id) => UUID_RE.test(String(id || ''))).map((id) => String(id).toLowerCase()))].slice(0, 500)
+    : [];
+  return {
+    ...fallback,
+    ringtone: ['classic', 'soft', 'pulse'].includes(value.ringtone) ? value.ringtone : fallback.ringtone,
+    ringtoneVolume: volume(value.ringtoneVolume, fallback.ringtoneVolume),
+    ringbackVolume: volume(value.ringbackVolume, fallback.ringbackVolume),
+    vibration: typeof value.vibration === 'boolean' ? value.vibration : fallback.vibration,
+    notificationPreviews: typeof value.notificationPreviews === 'boolean'
+      ? value.notificationPreviews
+      : fallback.notificationPreviews,
+    dndEnabled: typeof value.dndEnabled === 'boolean' ? value.dndEnabled : fallback.dndEnabled,
+    dndStartMinutes: minute(value.dndStartMinutes, fallback.dndStartMinutes),
+    dndEndMinutes: minute(value.dndEndMinutes, fallback.dndEndMinutes),
+    whoMayCall: ['contacts', 'direct-chats', 'nobody'].includes(value.whoMayCall)
+      ? value.whoMayCall
+      : fallback.whoMayCall,
+    relayOnly: typeof value.relayOnly === 'boolean' ? value.relayOnly : fallback.relayOnly,
+    knownContactIds: contactIds.filter((id) => id !== fallback.accountId),
+    contactsSyncedAt: value.contactsSyncedAt === null || (
+      typeof value.contactsSyncedAt === 'string' && Number.isFinite(Date.parse(value.contactsSyncedAt))
+    ) ? value.contactsSyncedAt : null,
+    updatedAt: typeof value.updatedAt === 'string' && Number.isFinite(Date.parse(value.updatedAt))
+      ? value.updatedAt
+      : fallback.updatedAt
+  };
+}
+
+function callPreferencesUrl(accountId) {
+  return `${self.location.origin}${CALL_PREFERENCES_PATH}${encodeURIComponent(accountId)}`;
+}
+
+async function persistCallPreferences(preferences) {
+  memoryCallPreferences.set(preferences.accountId, preferences);
+  if (typeof caches === 'undefined') return;
+  try {
+    const cache = await caches.open(CALL_PREFERENCES_CACHE);
+    await cache.put(
+      callPreferencesUrl(preferences.accountId),
+      new Response(JSON.stringify(preferences), {
+        headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }
+      })
+    );
+  } catch {
+    // The current worker still enforces the in-memory copy.
+  }
+}
+
+async function readCallPreferences(accountId) {
+  if (!UUID_RE.test(String(accountId || ''))) return defaultCallPreferences('');
+  const normalized = String(accountId).toLowerCase();
+  const memory = memoryCallPreferences.get(normalized);
+  if (memory) return memory;
+  if (typeof caches !== 'undefined') {
+    try {
+      const cache = await caches.open(CALL_PREFERENCES_CACHE);
+      const response = await cache.match(callPreferencesUrl(normalized));
+      const parsed = response
+        ? canonicalCallPreferences(await response.json().catch(() => null), normalized)
+        : null;
+      if (parsed) {
+        memoryCallPreferences.set(normalized, parsed);
+        return parsed;
+      }
+    } catch {
+      // Default preferences preserve existing delivery behavior.
+    }
+  }
+  return defaultCallPreferences(normalized);
+}
+
+async function preferencesForPush(pushEvent) {
+  if (pushEvent.recipientId) return readCallPreferences(pushEvent.recipientId);
+  const binding = await readActiveAccount();
+  return binding.known && binding.accountId
+    ? readCallPreferences(binding.accountId)
+    : defaultCallPreferences('');
+}
+
+function callDndActive(preferences, now = new Date()) {
+  if (!preferences.dndEnabled) return false;
+  const current = now.getHours() * 60 + now.getMinutes();
+  const start = preferences.dndStartMinutes;
+  const end = preferences.dndEndMinutes;
+  if (start === end) return true;
+  return start < end ? current >= start && current < end : current >= start || current < end;
+}
+
+function callBlockedByPreferences(pushEvent, preferences) {
+  if (pushEvent.kind !== 'call' || pushEvent.callState !== 'incoming') return false;
+  if (preferences.whoMayCall === 'nobody') return true;
+  return preferences.whoMayCall === 'contacts' &&
+    Boolean(preferences.contactsSyncedAt) &&
+    (!pushEvent.senderId || !preferences.knownContactIds.includes(pushEvent.senderId.toLowerCase()));
+}
+
 async function pushMatchesActiveAccount(pushEvent) {
   if (!pushEvent.recipientId) return true;
   const binding = await readActiveAccount();
@@ -202,9 +333,13 @@ async function closeForeignAccountNotifications() {
   }
 }
 
-function publicPushEvent(pushEvent) {
+function publicPushEvent(pushEvent, preferences, dndActive) {
   const { deliveryToken: _privateToken, ...visible } = pushEvent;
-  return visible;
+  return {
+    ...visible,
+    silent: Boolean(dndActive),
+    vibration: preferences ? preferences.vibration !== false : true
+  };
 }
 
 function reportLocalPresentation(client, pushEvent) {
@@ -323,6 +458,15 @@ function gameInviteExpired(pushEvent, now = Date.now()) {
   } catch {
     return true;
   }
+}
+
+function reminderExpired(pushEvent, now = Date.now()) {
+  if (pushEvent.kind !== 'reminder') return false;
+  const expiresAt = pushEvent.expiresAt ? Date.parse(pushEvent.expiresAt) : NaN;
+  // Reminders are server-only durable events. Missing/elapsed authority means
+  // the source may already have disappeared, so never surface a stale link.
+  return !UUID_RE.test(String(pushEvent.eventId || '')) ||
+    !Number.isFinite(expiresAt) || expiresAt <= now;
 }
 
 function tombstoneUrl(callId) {
@@ -500,11 +644,25 @@ async function closeExpiredCallNotifications() {
   }
 }
 
-function notificationOptions(pushEvent, foreground) {
+function privateNotificationCopy(pushEvent) {
+  if (pushEvent.kind === 'call') {
+    return pushEvent.callState === 'terminal'
+      ? { title: 'Presuntinho', body: 'Atualização de chamada' }
+      : { title: 'Presuntinho', body: 'Chamada recebida' };
+  }
+  if (pushEvent.kind === 'message') return { title: 'Presuntinho', body: 'Nova mensagem' };
+  if (pushEvent.kind === 'game_invite') return { title: 'Presuntinho', body: 'Novo convite' };
+  return { title: 'Presuntinho', body: 'Nova notificação' };
+}
+
+function notificationOptions(pushEvent, foreground, preferences, dndActive) {
   const { kind, body, url } = pushEvent;
   const terminalCall = kind === 'call' && pushEvent.callState === 'terminal';
+  const copy = preferences.notificationPreviews
+    ? { title: pushEvent.title, body }
+    : privateNotificationCopy(pushEvent);
   const options = {
-    body,
+    body: copy.body,
     icon: '/icons/icon-192.png',
     badge: '/icons/icon-192.png',
     // Mensagens coalescem por conversa (o url identifica a thread); pings
@@ -514,6 +672,8 @@ function notificationOptions(pushEvent, foreground) {
         ? callNotificationTag(pushEvent)
         : kind === 'message'
           ? messageNotificationTag(url)
+          : kind === 'reminder'
+            ? `presuntinho-reminder-${pushEvent.eventId}`
           : kind === 'game_invite'
             ? `presuntinho-game-invite-${pushEvent.eventId}`
           : `presuntinho-ping-${kind}`,
@@ -521,7 +681,7 @@ function notificationOptions(pushEvent, foreground) {
     requireInteraction: kind === 'call' && !terminalCall,
     data: pushEvent
   };
-  if (terminalCall) {
+  if (terminalCall || dndActive) {
     // userVisibleOnly still receives a real notification, but terminal updates
     // must never ring/vibrate a second time.
     options.silent = true;
@@ -529,18 +689,24 @@ function notificationOptions(pushEvent, foreground) {
     // `silent` and `vibrate` must not be combined. The focused app owns the
     // cute in-app feedback and haptics, while this still fulfils userVisibleOnly.
     options.silent = true;
-  } else {
+  } else if (preferences.vibration) {
     options.vibrate = kind === 'call'
       ? CALL_VIBRATION
       : kind === 'nudge'
         ? NUDGE_VIBRATION
         : kind === 'message'
           ? MESSAGE_VIBRATION
+          : kind === 'reminder'
+            ? MESSAGE_VIBRATION
           : kind === 'game_invite'
             ? GAME_INVITE_VIBRATION
           : LOVE_VIBRATION;
+  } else {
+    // An explicit empty pattern is a stronger no-vibration request than
+    // omitting the field, while preserving normal notification sound.
+    options.vibrate = [];
   }
-  return options;
+  return { title: copy.title, options };
 }
 
 self.addEventListener('push', (event) => {
@@ -561,11 +727,13 @@ self.addEventListener('push', (event) => {
       // A provider can deliver at the edge of the TTL. Never vibrate or open a
       // room for an expired/malformed durable invite; the page independently
       // revalidates the database row before joining as the final authority.
-      if (gameInviteExpired(pushEvent)) return;
+      if (gameInviteExpired(pushEvent) || reminderExpired(pushEvent)) return;
       if (!await pushMatchesActiveAccount(pushEvent)) {
         if (pushEvent.kind === 'call') await closeCallNotifications(pushEvent);
         return;
       }
+      const preferences = await preferencesForPush(pushEvent);
+      const dndActive = callDndActive(preferences);
       if (pushEvent.kind === 'call' && pushEvent.callState === 'terminal') {
         await markCallTerminal(pushEvent.callId);
         if (terminalCallExpired(pushEvent)) {
@@ -581,10 +749,11 @@ self.addEventListener('push', (event) => {
           clients.find((client) => client.focused === true) ||
           clients.find((client) => client.visibilityState === 'visible');
         try {
-          if (foregroundClient) foregroundClient.postMessage(publicPushEvent(pushEvent));
+          if (foregroundClient) foregroundClient.postMessage(publicPushEvent(pushEvent, preferences, dndActive));
+          const presentation = notificationOptions(pushEvent, Boolean(foregroundClient), preferences, dndActive);
           await self.registration.showNotification(
-            pushEvent.title,
-            notificationOptions(pushEvent, Boolean(foregroundClient))
+            presentation.title,
+            presentation.options
           );
           if (!await pushMatchesActiveAccount(pushEvent)) {
             await closeCallNotifications(pushEvent);
@@ -606,6 +775,11 @@ self.addEventListener('push', (event) => {
       const receivedAck = ackCallDelivery(pushEvent, 'received');
       if (callExpired(pushEvent)) {
         await markCallTerminal(pushEvent.callId);
+        await closeCallNotifications(pushEvent);
+        await receivedAck;
+        return;
+      }
+      if (callBlockedByPreferences(pushEvent, preferences)) {
         await closeCallNotifications(pushEvent);
         await receivedAck;
         return;
@@ -633,10 +807,11 @@ self.addEventListener('push', (event) => {
         clients.find((client) => client.focused === true) ||
         clients.find((client) => client.visibilityState === 'visible');
       try {
-        if (foregroundClient) foregroundClient.postMessage(publicPushEvent(pushEvent));
+        if (foregroundClient) foregroundClient.postMessage(publicPushEvent(pushEvent, preferences, dndActive));
+        const presentation = notificationOptions(pushEvent, Boolean(foregroundClient), preferences, dndActive);
         await self.registration.showNotification(
-          pushEvent.title,
-          notificationOptions(pushEvent, Boolean(foregroundClient))
+          presentation.title,
+          presentation.options
         );
         if (!await pushMatchesActiveAccount(pushEvent)) {
           if (pushEvent.kind === 'call') await closeCallNotifications(pushEvent);
@@ -684,6 +859,19 @@ self.addEventListener('message', (event) => {
     })());
     return;
   }
+  if (data.type === CALL_PREFERENCES_EVENT_TYPE) {
+    const preferenceAccountId = data.preferences && typeof data.preferences === 'object'
+      ? String(data.preferences.accountId || '').toLowerCase()
+      : '';
+    const preferences = canonicalCallPreferences(data.preferences, preferenceAccountId);
+    if (!preferences) return;
+    event.waitUntil((async () => {
+      const binding = await readActiveAccount();
+      if (binding.known && binding.accountId !== preferences.accountId) return;
+      await persistCallPreferences(preferences);
+    })());
+    return;
+  }
   const callId = data.type === LOCAL_CALL_TERMINAL_TYPE && UUID_RE.test(String(data.callId || ''))
     ? String(data.callId)
     : null;
@@ -699,7 +887,7 @@ self.addEventListener('message', (event) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const pushEvent = canonicalPushEvent(event.notification.data || {});
-  if (callExpired(pushEvent) || terminalCallExpired(pushEvent) || gameInviteExpired(pushEvent)) {
+  if (callExpired(pushEvent) || terminalCallExpired(pushEvent) || gameInviteExpired(pushEvent) || reminderExpired(pushEvent)) {
     event.waitUntil(closeCallNotifications(pushEvent));
     return;
   }

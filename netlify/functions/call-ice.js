@@ -270,8 +270,14 @@ async function handle(req, deadline) {
   }
   const callId = typeof payload.callId === 'string' ? payload.callId : '';
   const device = typeof payload.device === 'string' ? payload.device : '';
+  const handoffId = typeof payload.handoffId === 'string' ? payload.handoffId : '';
+  const handoffRecoveryId = typeof payload.handoffRecoveryId === 'string' ? payload.handoffRecoveryId : '';
   if (!UUID_RE.test(callId)) return json(400, { error: 'bad_call' });
   if (!validDevice(device)) return json(400, { error: 'bad_device' });
+  if (handoffId && !UUID_RE.test(handoffId)) return json(400, { error: 'bad_handoff' });
+  if (handoffRecoveryId && (!handoffId || !UUID_RE.test(handoffRecoveryId))) {
+    return json(400, { error: 'bad_handoff_recovery' });
+  }
 
   const sb = (path, init = {}) => timedFetch(
     `${supabaseUrl}${path}`,
@@ -297,7 +303,7 @@ async function handle(req, deadline) {
   const callRes = await sb(
     `/rest/v1/call_sessions?id=eq.${encodeURIComponent(callId)}` +
       '&select=conversation_id,caller,callee,caller_device,callee_device,status,expires_at,' +
-      'caller_lease_expires_at,callee_lease_expires_at&limit=1'
+      'caller_lease_expires_at,callee_lease_expires_at,handoff_generation&limit=1'
   );
   if (!callRes.ok) return json(502, { error: 'call_lookup_failed' });
   const calls = await responseJson(callRes).catch(() => []);
@@ -327,7 +333,22 @@ async function handle(req, deadline) {
       return json(409, { error: 'call_lease_invalid' });
     }
     if ((call.caller === userId ? call.caller_device : call.callee_device) !== device) {
-      return json(403, { error: 'wrong_call_device' });
+      // A not-yet-authoritative handoff target can preflight TURN only through a
+      // narrowly scoped database authorization. This never grants another
+      // arbitrary device on the same account access to relay credentials.
+      if (!handoffId || !handoffRecoveryId) return json(403, { error: 'wrong_call_device' });
+      const handoffAuthorization = await sb('/rest/v1/rpc/authorize_call_handoff_ice', {
+        method: 'POST',
+        body: JSON.stringify({
+          p_call: callId,
+          p_handoff: handoffId,
+          p_device: device,
+          p_recovery_id: handoffRecoveryId || null
+        })
+      });
+      if (!handoffAuthorization.ok) return json(403, { error: 'handoff_not_authorized' });
+      const handoffAllowed = await responseJson(handoffAuthorization).catch(() => false);
+      if (handoffAllowed !== true) return json(403, { error: 'handoff_not_authorized' });
     }
   }
 

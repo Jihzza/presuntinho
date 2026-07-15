@@ -77,6 +77,7 @@ async function showCall(
 				kind: next.kind ?? 'audio',
 				status: next.phase === 'connecting' || next.phase === 'active' ? 'accepted' : 'ringing',
 				createdAt: new Date(now).toISOString(),
+				updatedAt: new Date(now).toISOString(),
 				expiresAt: new Date(now + 60_000).toISOString(),
 				callerHeartbeatAt: new Date(now).toISOString(),
 				calleeHeartbeatAt: next.phase === 'connecting' || next.phase === 'active' ? new Date(now).toISOString() : null,
@@ -84,7 +85,8 @@ async function showCall(
 				calleeLeaseExpiresAt: next.phase === 'connecting' || next.phase === 'active' ? new Date(now + 120_000).toISOString() : null,
 				pushSentAt: null,
 				answeredAt: next.phase === 'connecting' || next.phase === 'active' ? new Date(now).toISOString() : null,
-				endedAt: null
+				endedAt: null,
+				handoffGeneration: 0
 			};
 		callStore.deliveryStage = next.deliveryStage ?? null;
 		callStore.error = next.error ?? null;
@@ -254,4 +256,83 @@ test('active call exposes quality and device controls without overflowing mobile
 	await expect(page.locator('.call-layer[data-phase="active"]')).toBeVisible();
 	await expect(mini).toHaveCount(0);
 	expect(await page.evaluate(() => document.body.style.overflow)).toBe('hidden');
+});
+
+test('device handoff picker and receiving offer stay explicit and mobile-safe', async ({ page }, testInfo) => {
+	await openLocalApp(page);
+	await showCall(page, { phase: 'active', kind: 'video' });
+	await page.evaluate(async () => {
+		const loadStore = Function('return import("/src/lib/calls/call-store.svelte.ts")');
+		const { callStore } = await loadStore();
+		callStore.handoffPickerOpen = true;
+		callStore.handoffTargets = [
+			{
+				installationId: 'device_android_0000000000000001',
+				platform: 'android',
+				lastSeenAt: new Date().toISOString(),
+				supportsVideo: true
+			},
+			{
+				installationId: 'device_windows_0000000000000002',
+				platform: 'windows',
+				lastSeenAt: new Date().toISOString(),
+				supportsVideo: true
+			}
+		];
+	});
+
+	const picker = page.locator('.handoff-picker');
+	await expect(picker).toBeVisible();
+	await expect(picker.getByText(/Android/i)).toBeVisible();
+	await expect(picker.getByText(/Windows/i)).toBeVisible();
+	const pickerBox = await picker.boundingBox();
+	const viewport = page.viewportSize();
+	expect(pickerBox).not.toBeNull();
+	expect(viewport).not.toBeNull();
+	expect(pickerBox!.x).toBeGreaterThanOrEqual(0);
+	expect(pickerBox!.x + pickerBox!.width).toBeLessThanOrEqual(viewport!.width);
+	await page.screenshot({ path: testInfo.outputPath('handoff-picker.png'), fullPage: true });
+
+	await page.evaluate(async ({ ids }) => {
+		const loadStore = Function('return import("/src/lib/calls/call-store.svelte.ts")');
+		const { callStore } = await loadStore();
+		callStore.phase = 'idle';
+		callStore.session = null;
+		callStore.handoffPickerOpen = false;
+		callStore.handoffTargets = [];
+		callStore.handoffOffer = {
+			id: '77777777-7777-4777-8777-777777777777',
+			callId: ids.callId,
+			account: ids.callee,
+			fromDevice: `${ids.device}.source`,
+			fromInstallationId: 'device_source_0000000000000003',
+			targetInstallationId: 'device_target_0000000000000004',
+			claimedDevice: null,
+			status: 'requested',
+			clientRequestId: '88888888-8888-4888-8888-888888888888',
+			sourceGeneration: 0,
+			claimedGeneration: null,
+			stateVersion: 0,
+			createdAt: new Date().toISOString(),
+			updatedAt: new Date().toISOString(),
+			expiresAt: new Date(Date.now() + 30_000).toISOString(),
+			recoveryExpiresAt: null,
+			claimDeviceLeaseExpiresAt: null,
+			claimedAt: null,
+			completedAt: null,
+			cancelledAt: null
+		};
+	}, { ids: { callId: CALL_ID, callee: CALLEE, device: DEVICE } });
+
+	const offer = page.locator('.handoff-offer-layer[role="dialog"]');
+	await expect(offer).toBeVisible();
+	await expect(offer.getByText(/Continuar a chamada neste dispositivo/i)).toBeVisible();
+	await expect(offer.getByRole('button', { name: /Agora não/i })).toBeVisible();
+	await expect(offer.getByRole('button', { name: /Continuar aqui/i })).toBeVisible();
+	const offerBox = await offer.locator('.handoff-offer-card').boundingBox();
+	expect(offerBox).not.toBeNull();
+	expect(offerBox!.x).toBeGreaterThanOrEqual(0);
+	expect(offerBox!.x + offerBox!.width).toBeLessThanOrEqual(viewport!.width);
+	expect(offerBox!.y + offerBox!.height).toBeLessThanOrEqual(viewport!.height);
+	await page.screenshot({ path: testInfo.outputPath('handoff-offer.png'), fullPage: true });
 });

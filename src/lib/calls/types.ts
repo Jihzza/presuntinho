@@ -19,6 +19,7 @@ export interface CallSession {
 	kind: CallKind;
 	status: CallStatus;
 	createdAt: string;
+	updatedAt: string;
 	expiresAt: string;
 	callerHeartbeatAt: string;
 	calleeHeartbeatAt: string | null;
@@ -27,6 +28,47 @@ export interface CallSession {
 	pushSentAt: string | null;
 	answeredAt: string | null;
 	endedAt: string | null;
+	handoffGeneration: number;
+}
+
+export type CallHandoffStatus =
+	| 'requested'
+	| 'claimed'
+	| 'completed'
+	| 'cancelled'
+	| 'declined'
+	| 'expired'
+	| 'reverted'
+	| 'terminated';
+
+export interface CallHandoff {
+	id: string;
+	callId: string;
+	account: string;
+	fromDevice: string;
+	fromInstallationId: string;
+	targetInstallationId: string;
+	claimedDevice: string | null;
+	status: CallHandoffStatus;
+	clientRequestId: string;
+	sourceGeneration: number;
+	claimedGeneration: number | null;
+	stateVersion: number;
+	createdAt: string;
+	updatedAt: string;
+	expiresAt: string;
+	recoveryExpiresAt: string | null;
+	claimDeviceLeaseExpiresAt: string | null;
+	claimedAt: string | null;
+	completedAt: string | null;
+	cancelledAt: string | null;
+}
+
+export interface CallHandoffTarget {
+	installationId: string;
+	platform: string;
+	lastSeenAt: string;
+	supportsVideo: boolean;
 }
 
 export interface CallPeerProfile {
@@ -68,6 +110,8 @@ export interface CallSignalEnvelope {
 	callId: string;
 	from: string;
 	device: string;
+	/** Omitted only by rolling generation-zero clients. */
+	handoffGeneration?: number;
 	seq: number;
 	signal: CallSignal;
 }
@@ -96,6 +140,16 @@ const DELIVERY_STAGES = new Set<CallDeliveryStage>([
 	'cancelled',
 	'answered_elsewhere'
 ]);
+const HANDOFF_STATUSES = new Set<CallHandoffStatus>([
+	'requested',
+	'claimed',
+	'completed',
+	'cancelled',
+	'declined',
+	'expired',
+	'reverted',
+	'terminated'
+]);
 
 function nullableDate(value: unknown): string | null {
 	return typeof value === 'string' && Number.isFinite(Date.parse(value)) ? value : null;
@@ -114,11 +168,13 @@ export function parseCallSession(value: unknown): CallSession | null {
 	const kind = row.kind;
 	const status = row.status;
 	const createdAt = nullableDate(row.created_at);
+	const updatedAt = nullableDate(row.updated_at) ?? createdAt;
 	const expiresAt = nullableDate(row.expires_at);
 	const callerHeartbeatAt = nullableDate(row.caller_heartbeat_at);
 	const calleeHeartbeatAt = nullableDate(row.callee_heartbeat_at);
 	const callerLeaseExpiresAt = nullableDate(row.caller_lease_expires_at);
 	const calleeLeaseExpiresAt = nullableDate(row.callee_lease_expires_at);
+	const handoffGeneration = row.handoff_generation ?? 0;
 	if (
 		typeof id !== 'string' ||
 		!UUID_RE.test(id) ||
@@ -141,7 +197,10 @@ export function parseCallSession(value: unknown): CallSession | null {
 		!callerLeaseExpiresAt ||
 		!(row.callee_heartbeat_at == null || calleeHeartbeatAt) ||
 		!(row.callee_lease_expires_at == null || calleeLeaseExpiresAt) ||
-		((status === 'accepted') && (!calleeDevice || !calleeHeartbeatAt || !calleeLeaseExpiresAt))
+		((status === 'accepted') && (!calleeDevice || !calleeHeartbeatAt || !calleeLeaseExpiresAt)) ||
+		typeof handoffGeneration !== 'number' ||
+		!Number.isSafeInteger(handoffGeneration) ||
+		handoffGeneration < 0
 	) {
 		return null;
 	}
@@ -155,6 +214,7 @@ export function parseCallSession(value: unknown): CallSession | null {
 		kind,
 		status: status as CallStatus,
 		createdAt,
+		updatedAt: updatedAt!,
 		expiresAt,
 		callerHeartbeatAt,
 		calleeHeartbeatAt,
@@ -162,8 +222,107 @@ export function parseCallSession(value: unknown): CallSession | null {
 		calleeLeaseExpiresAt,
 		pushSentAt: nullableDate(row.push_sent_at),
 		answeredAt: nullableDate(row.answered_at),
-		endedAt: nullableDate(row.ended_at)
+		endedAt: nullableDate(row.ended_at),
+		handoffGeneration
 	};
+}
+
+/** Account-scoped durable handoff row; it intentionally contains no SDP/ICE. */
+export function parseCallHandoff(value: unknown): CallHandoff | null {
+	if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+	const row = value as Record<string, unknown>;
+	const status = row.status;
+	const claimedDevice = row.claimed_device;
+	const createdAt = nullableDate(row.created_at);
+	const expiresAt = nullableDate(row.expires_at);
+	const claimedAt = nullableDate(row.claimed_at);
+	const completedAt = nullableDate(row.completed_at);
+	const cancelledAt = nullableDate(row.cancelled_at);
+	const recoveryExpiresAt = nullableDate(row.recovery_expires_at);
+	const claimDeviceLeaseExpiresAt = nullableDate(row.claim_device_lease_expires_at);
+	const updatedAt = nullableDate(row.updated_at);
+	const sourceGeneration = row.source_generation;
+	const claimedGeneration = row.claimed_generation;
+	const stateVersion = row.state_version;
+	const isClaimed = status === 'claimed' || status === 'completed';
+	const isClosedWithoutClaim = status === 'cancelled' || status === 'declined' || status === 'expired';
+	const isClosedAfterClaim = status === 'reverted' || status === 'terminated';
+	if (
+		typeof row.id !== 'string' || !UUID_RE.test(row.id) ||
+		typeof row.call_id !== 'string' || !UUID_RE.test(row.call_id) ||
+		typeof row.account !== 'string' || !UUID_RE.test(row.account) ||
+		typeof row.from_device !== 'string' || !DEVICE_RE.test(row.from_device) ||
+		typeof row.from_installation_id !== 'string' || !DEVICE_RE.test(row.from_installation_id) ||
+		typeof row.target_installation_id !== 'string' || !DEVICE_RE.test(row.target_installation_id) ||
+		row.from_installation_id === row.target_installation_id ||
+		!(claimedDevice == null || (typeof claimedDevice === 'string' && DEVICE_RE.test(claimedDevice))) ||
+		typeof status !== 'string' || !HANDOFF_STATUSES.has(status as CallHandoffStatus) ||
+		typeof row.client_request_id !== 'string' || !UUID_RE.test(row.client_request_id) ||
+		typeof sourceGeneration !== 'number' || !Number.isSafeInteger(sourceGeneration) || sourceGeneration < 0 ||
+		typeof stateVersion !== 'number' || !Number.isSafeInteger(stateVersion) || stateVersion < 0 ||
+		!(claimedGeneration == null || (
+			typeof claimedGeneration === 'number' &&
+			Number.isSafeInteger(claimedGeneration) &&
+			claimedGeneration > sourceGeneration
+		)) ||
+		!createdAt || !updatedAt || !expiresAt ||
+		!(row.recovery_expires_at == null || recoveryExpiresAt) ||
+		!(row.claim_device_lease_expires_at == null || claimDeviceLeaseExpiresAt) ||
+		!(row.claimed_at == null || claimedAt) ||
+		!(row.completed_at == null || completedAt) ||
+		!(row.cancelled_at == null || cancelledAt) ||
+		Date.parse(expiresAt) <= Date.parse(createdAt) ||
+		(status === 'requested' && (claimedDevice != null || claimedGeneration != null || recoveryExpiresAt || claimDeviceLeaseExpiresAt || claimedAt || completedAt || cancelledAt)) ||
+		(isClaimed && (!claimedDevice || claimedGeneration == null || !recoveryExpiresAt || !claimDeviceLeaseExpiresAt || !claimedAt || cancelledAt)) ||
+		(status === 'claimed' && completedAt) ||
+		(status === 'completed' && !completedAt) ||
+		(isClosedWithoutClaim && (claimedDevice != null || claimedGeneration != null || recoveryExpiresAt || claimDeviceLeaseExpiresAt || claimedAt || completedAt || !cancelledAt)) ||
+		(isClosedAfterClaim && (!claimedDevice || claimedGeneration == null || !recoveryExpiresAt || !claimDeviceLeaseExpiresAt || !claimedAt || completedAt || !cancelledAt)) ||
+		(Boolean(claimedAt && recoveryExpiresAt) && Date.parse(recoveryExpiresAt!) <= Date.parse(claimedAt!)) ||
+		(Boolean(claimedAt && claimDeviceLeaseExpiresAt) && Date.parse(claimDeviceLeaseExpiresAt!) <= Date.parse(claimedAt!)) ||
+		(Boolean(claimDeviceLeaseExpiresAt && recoveryExpiresAt) && Date.parse(claimDeviceLeaseExpiresAt!) >= Date.parse(recoveryExpiresAt!)) ||
+		(typeof claimedDevice === 'string' && !(
+			claimedDevice === row.target_installation_id ||
+			claimedDevice.startsWith(`${row.target_installation_id}.`)
+		))
+	) return null;
+	return {
+		id: row.id,
+		callId: row.call_id,
+		account: row.account,
+		fromDevice: row.from_device,
+		fromInstallationId: row.from_installation_id,
+		targetInstallationId: row.target_installation_id,
+		claimedDevice: typeof claimedDevice === 'string' ? claimedDevice : null,
+		status: status as CallHandoffStatus,
+		clientRequestId: row.client_request_id,
+		sourceGeneration,
+		claimedGeneration: typeof claimedGeneration === 'number' ? claimedGeneration : null,
+		stateVersion,
+		createdAt,
+		updatedAt,
+		expiresAt,
+		recoveryExpiresAt,
+		claimDeviceLeaseExpiresAt,
+		claimedAt,
+		completedAt,
+		cancelledAt
+	};
+}
+
+export function parseCallHandoffTarget(value: unknown): CallHandoffTarget | null {
+	if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+	const row = value as Record<string, unknown>;
+	const installationId = row.installation_id;
+	const platform = row.platform;
+	const lastSeenAt = nullableDate(row.last_seen_at);
+	const supportsVideo = row.supports_video;
+	if (
+		typeof installationId !== 'string' || !DEVICE_RE.test(installationId) ||
+		typeof platform !== 'string' || platform.length > 32 ||
+		!lastSeenAt || typeof supportsVideo !== 'boolean'
+	) return null;
+	return { installationId, platform, lastSeenAt, supportsVideo };
 }
 
 /** Parse both Realtime payload rows and PostgREST delivery rows. */
@@ -221,6 +380,18 @@ export function isTerminalCallStatus(status: CallStatus): boolean {
 	return status === 'declined' || status === 'cancelled' || status === 'ended' || status === 'missed' || status === 'failed';
 }
 
+/** Reject stale poll/Realtime snapshots and make a terminal row absorbing. */
+export function isCallSessionSnapshotMonotonic(previous: CallSession, next: CallSession): boolean {
+	if (previous.id !== next.id) return true;
+	if (isTerminalCallStatus(previous.status) && !isTerminalCallStatus(next.status)) return false;
+	if (next.handoffGeneration < previous.handoffGeneration) return false;
+	if (
+		next.handoffGeneration === previous.handoffGeneration &&
+		Date.parse(next.updatedAt) < Date.parse(previous.updatedAt)
+	) return false;
+	return true;
+}
+
 export function otherCallParticipant(call: CallSession, me: string): string | null {
 	if (call.caller === me) return call.callee;
 	if (call.callee === me) return call.caller;
@@ -236,7 +407,8 @@ export function isCallSignalEnvelope(
 	value: unknown,
 	callId: string,
 	expectedSender: string,
-	expectedDevice?: string | null
+	expectedDevice?: string | null,
+	expectedHandoffGeneration?: number
 ): value is CallSignalEnvelope {
 	if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
 	const envelope = value as Partial<CallSignalEnvelope>;
@@ -246,6 +418,13 @@ export function isCallSignalEnvelope(
 		envelope.from !== expectedSender ||
 		!isCallDeviceId(envelope.device) ||
 		(Boolean(expectedDevice) && envelope.device !== expectedDevice) ||
+		!(envelope.handoffGeneration == null || (
+			typeof envelope.handoffGeneration === 'number' &&
+			Number.isSafeInteger(envelope.handoffGeneration) &&
+			envelope.handoffGeneration >= 0
+		)) ||
+		(expectedHandoffGeneration !== undefined &&
+			!callHandoffGenerationMatches(envelope.handoffGeneration, expectedHandoffGeneration)) ||
 		typeof envelope.seq !== 'number' ||
 		!Number.isSafeInteger(envelope.seq) ||
 		!envelope.signal ||
@@ -253,4 +432,11 @@ export function isCallSignalEnvelope(
 	) return false;
 	const signal = envelope.signal as Partial<CallSignal>;
 	return signal.type === 'offer' || signal.type === 'answer' || signal.type === 'candidate' || signal.type === 'restart-request' || signal.type === 'hangup';
+}
+
+/** Generation zero accepts an omitted field during rolling deployment; later generations are exact. */
+export function callHandoffGenerationMatches(value: unknown, expected: number): boolean {
+	if (!Number.isSafeInteger(expected) || expected < 0) return false;
+	if (value == null) return expected === 0;
+	return typeof value === 'number' && Number.isSafeInteger(value) && value === expected;
 }

@@ -105,9 +105,21 @@ export default async function handler(req) {
     }
   });
 
-  // Expire deadlines and purge previews before candidate selection. Failure is
-  // non-fatal for call recovery; the candidate RPC independently filters
-  // expired rows before LIMIT so stale work can never starve fresh jobs.
+  // First make chat time semantics durable: expiry tombstones media (which
+  // atomically creates deletion jobs) and due reminders create push jobs.
+  await Promise.allSettled([
+    sbAdmin('/rest/v1/rpc/expire_chat_messages', {
+      method: 'POST',
+      body: JSON.stringify({ p_limit: 200 })
+    }),
+    sbAdmin('/rest/v1/rpc/enqueue_due_chat_reminders', {
+      method: 'POST',
+      body: JSON.stringify({ p_limit: 50 })
+    })
+  ]);
+
+  // Then purge/repair the outboxes. Keeping this as a second phase prevents a
+  // freshly due reminder or media deletion from racing maintenance/claiming.
   await Promise.allSettled([
     sbAdmin('/rest/v1/rpc/maintain_communication_push_outbox', {
       method: 'POST',

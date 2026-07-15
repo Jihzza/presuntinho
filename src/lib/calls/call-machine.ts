@@ -29,7 +29,8 @@ export type CallOutcome =
 	| 'unreachable'
 	| 'failed'
 	| 'connection_lost'
-	| 'answered_elsewhere';
+	| 'answered_elsewhere'
+	| 'transferred';
 
 export interface CallMachineState {
 	phase: CallPhase;
@@ -46,6 +47,7 @@ export type CallMachineEvent =
 	| { type: 'RINGING'; call?: CallSession }
 	| { type: 'INCOMING'; call: CallSession }
 	| { type: 'ACCEPTED'; call: CallSession }
+	| { type: 'HANDOFF_ACCEPTED'; call: CallSession }
 	| { type: 'CONNECTED' }
 	| { type: 'CONNECTION_LOST' }
 	| { type: 'RECONNECTED' }
@@ -90,6 +92,10 @@ export function reduceCallMachine(state: CallMachineState, event: CallMachineEve
 		case 'ACCEPTED':
 			return state.call?.id === event.call.id &&
 				(state.phase === 'incoming' || OUTGOING_WAIT_PHASES.includes(state.phase) || state.phase === 'connecting')
+				? { phase: 'connecting', call: event.call, error: null, outcome: null }
+				: state;
+		case 'HANDOFF_ACCEPTED':
+			return state.phase === 'idle'
 				? { phase: 'connecting', call: event.call, error: null, outcome: null }
 				: state;
 		case 'CONNECTED':
