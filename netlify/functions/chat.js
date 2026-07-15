@@ -31,6 +31,12 @@
 
 import { connectLambda, getStore } from '@netlify/blobs';
 import crypto from 'crypto';
+import {
+  chatIdempotencyKey,
+  chatPayloadFingerprint,
+  claimChatMessage,
+  normalizeChatClientId,
+} from './_shared/chat-idempotency.js';
 
 const STORE_NAME = 'chat';
 const META_KEY = 'meta';
@@ -53,6 +59,7 @@ const clampPoints = (v) => Math.max(0, Math.min(MAX_COUPLE_POINTS, Math.floor(v)
 const clampScore = (v) => Math.max(0, Math.min(MAX_GAME_SCORE, Math.floor(v)));
 
 const ALLOWED_ORIGINS = new Set([
+  'https://presuntinho.love',
   'https://presuntinho.netlify.app',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
@@ -85,7 +92,7 @@ function requestOrigin(event) {
   }
 }
 
-function isAllowedOrigin(event) {
+export function isAllowedOrigin(event) {
   const origin = requestOrigin(event);
   if (!origin) return false;
   return ALLOWED_ORIGINS.has(origin) || NETLIFY_PREVIEW_ORIGIN_RE.test(origin);
@@ -240,6 +247,37 @@ async function readChunk(store, key) {
   }
 }
 
+/** Idempotent, CAS-backed append. It protects both replayed client ids and
+ * unrelated concurrent messages from the read-modify-write lost-update race. */
+async function ensureMessageLogged(store, message) {
+  const key = logKey(message.ts);
+  for (let attempt = 0; attempt < MAX_CAS_RETRIES; attempt++) {
+    const current = await store.getWithMetadata(key, { type: 'json', consistency: 'strong' });
+    const chunk = Array.isArray(current?.data) ? current.data : [];
+    if (chunk.some((candidate) => candidate?.id === message.id)) return;
+    const next = [...chunk.filter((candidate) => candidate?.id !== message.id), message]
+      .sort((a, b) => (a?.ts || 0) - (b?.ts || 0) || String(a?.id || '').localeCompare(String(b?.id || '')));
+    const conditions = current?.etag ? { onlyIfMatch: current.etag } : { onlyIfNew: true };
+    const result = await store.setJSON(key, next, conditions);
+    if (result?.modified) return;
+  }
+  throw new Error('chat_log_contention');
+}
+
+/** Monotonic meta cursor update; preserves concurrent read/couple fields. */
+async function bumpMessageCursor(store, ts) {
+  for (let attempt = 0; attempt < MAX_CAS_RETRIES; attempt++) {
+    const current = await store.getWithMetadata(META_KEY, { type: 'json', consistency: 'strong' });
+    const meta = normalizeMeta(current?.data);
+    if (meta.latestTs >= ts) return meta;
+    meta.latestTs = ts;
+    const conditions = current?.etag ? { onlyIfMatch: current.etag } : { onlyIfNew: true };
+    const result = await store.setJSON(META_KEY, meta, conditions);
+    if (result?.modified) return meta;
+  }
+  throw new Error('chat_meta_contention');
+}
+
 function isValidMessageShape(m) {
   return m && typeof m === 'object' && typeof m.id === 'string' && typeof m.ts === 'number';
 }
@@ -321,57 +359,63 @@ async function handleGet(event, profile) {
  * Compare-and-swap the shared meta blob for couple writes. Reads the current
  * meta WITH its etag, applies `mutate(meta)` (which may return an error string
  * to abort), then writes only if the etag still matches — retrying on conflict
- * so concurrent writers can't silently clobber each other. This is what makes
- * the additive point counter safe even when both partners (or two tabs) tap at
- * once. Falls back to one unconditional write after MAX_CAS_RETRIES so a user's
- * action is never dropped outright.
- * Returns { meta } on success or { error } when the mutation rejected input.
+ * so concurrent writers can't silently clobber each other. Sustained
+ * contention is returned to the client; an unconditional fallback would
+ * overwrite a partner's points, ping, score or read cursor.
  */
 const MAX_CAS_RETRIES = 6;
-async function commitCoupleMeta(store, mutate) {
+export async function commitCoupleMeta(store, mutate) {
   for (let attempt = 0; attempt < MAX_CAS_RETRIES; attempt++) {
-    let raw = null;
-    let etag;
+    let current;
     try {
-      const res = await store.getWithMetadata(META_KEY, { type: 'json' });
-      if (res) {
-        raw = res.data;
-        etag = res.etag;
-      }
+      current = await store.getWithMetadata(META_KEY, {
+        type: 'json',
+        consistency: 'strong',
+      });
     } catch (e) {
       console.error('[chat] couple meta read failed', e);
+      continue;
     }
-    const meta = normalizeMeta(raw);
+    const meta = normalizeMeta(current?.data);
     const err = mutate(meta);
     if (err) return { error: err };
     try {
-      const opts = etag ? { onlyIfMatch: etag } : { onlyIfNew: true };
+      const opts = current?.etag ? { onlyIfMatch: current.etag } : { onlyIfNew: true };
       const result = await store.setJSON(META_KEY, meta, opts);
-      if (result && result.modified) return { meta };
-      // Not modified → the blob changed under us (etag stale / key now exists).
-      // Loop to re-read the fresh value and re-apply.
+      if (result?.modified) return { meta };
     } catch (e) {
       console.error('[chat] couple CAS write failed', e);
     }
   }
-  // Exhausted retries under sustained contention — do a best-effort plain
-  // read-modify-write so the action isn't lost (accepts the rare lost update).
-  let raw = null;
-  try {
-    raw = await store.get(META_KEY, { type: 'json' });
-  } catch (e) {
-    console.error('[chat] couple meta fallback read failed', e);
+  return { error: 'meta_contention', contention: true };
+}
+
+/** Monotonic read cursor update that preserves every concurrent meta field. */
+export async function commitReadMeta(store, profile, readTs) {
+  for (let attempt = 0; attempt < MAX_CAS_RETRIES; attempt++) {
+    let current;
+    try {
+      current = await store.getWithMetadata(META_KEY, {
+        type: 'json',
+        consistency: 'strong',
+      });
+    } catch (e) {
+      console.error('[chat] read meta CAS read failed', e);
+      continue;
+    }
+    const meta = normalizeMeta(current?.data);
+    const previous = meta.lastRead[profile] || 0;
+    if (previous >= readTs) return { meta };
+    meta.lastRead[profile] = Math.max(previous, readTs);
+    try {
+      const opts = current?.etag ? { onlyIfMatch: current.etag } : { onlyIfNew: true };
+      const result = await store.setJSON(META_KEY, meta, opts);
+      if (result?.modified) return { meta };
+    } catch (e) {
+      console.error('[chat] read meta CAS write failed', e);
+    }
   }
-  const meta = normalizeMeta(raw);
-  const err = mutate(meta);
-  if (err) return { error: err };
-  try {
-    await store.setJSON(META_KEY, meta);
-  } catch (e) {
-    console.error('[chat] couple write failed', e);
-    return {};
-  }
-  return { meta };
+  return { error: 'meta_contention', contention: true };
 }
 
 // ── POST ── send text / send media / mark read ──
@@ -400,15 +444,11 @@ async function handlePost(event, profile) {
 
   // ── mark read ──
   if (typeof payload.read === 'number' && Number.isFinite(payload.read)) {
-    const meta = await readMeta(store);
-    meta.lastRead[profile] = Math.max(meta.lastRead[profile] || 0, payload.read);
-    try {
-      await store.setJSON(META_KEY, meta);
-    } catch (e) {
-      console.error('[chat] meta write failed', e);
-      return buildResponse(500, { error: 'meta_write_failed' });
+    const outcome = await commitReadMeta(store, profile, payload.read);
+    if (outcome.error) {
+      return buildResponse(outcome.contention ? 409 : 500, { error: outcome.error });
     }
-    return buildResponse(200, { ok: true, meta });
+    return buildResponse(200, { ok: true, meta: outcome.meta });
   }
 
   // ── couple sync: shared points / love / nudge / async game score ──
@@ -455,7 +495,9 @@ async function handlePost(event, profile) {
     };
 
     const outcome = await commitCoupleMeta(store, mutate);
-    if (outcome.error) return buildResponse(400, { error: outcome.error });
+    if (outcome.error) {
+      return buildResponse(outcome.contention ? 409 : 400, { error: outcome.error });
+    }
     if (!outcome.meta) return buildResponse(500, { error: 'couple_write_failed' });
     return buildResponse(200, { ok: true, meta: outcome.meta });
   }
@@ -463,7 +505,12 @@ async function handlePost(event, profile) {
   const ts = Date.now();
   const id = mintId(ts, profile);
   const conversationId = normalizeConversationId(payload.conversationId);
+  const clientId = normalizeChatClientId(payload.clientId);
+  if (clientId === undefined) return buildResponse(400, { error: 'invalid_client_id' });
   let message = null;
+  let mediaPayload = null;
+  let normalizedText = null;
+  let normalizedName = null;
 
   // ── text message ──
   if (typeof payload.text === 'string') {
@@ -471,6 +518,7 @@ async function handlePost(event, profile) {
     if (!text) return buildResponse(400, { error: 'empty_text' });
     if (text.length > MAX_TEXT_LEN) return buildResponse(400, { error: 'text_too_long' });
     message = { id, from: profile, text, conversationId, ts };
+    normalizedText = text;
   }
 
   // ── media message ──
@@ -489,48 +537,75 @@ async function handlePost(event, profile) {
       typeof payload.name === 'string' && payload.name.trim()
         ? payload.name.trim().slice(0, MAX_NAME_LEN)
         : undefined;
-    try {
-      await store.set(`media:${id}`, payload.media);
-    } catch (e) {
-      console.error('[chat] media write failed', e);
-      return buildResponse(500, { error: 'media_write_failed' });
-    }
     message = { id, from: profile, mediaKey: `media:${id}`, mediaType, conversationId, ts };
     if (name) message.name = name;
+    mediaPayload = payload.media;
+    normalizedName = name ?? null;
   }
 
   if (!message) {
     return buildResponse(400, { error: 'invalid_payload' });
   }
 
-  // Append to today's chunk (read-modify-write). Two writers can race, so we
-  // verify-after-write ONCE: re-read the chunk and re-append if our id was
-  // clobbered by a concurrent write.
-  const key = logKey(ts);
-  try {
-    const chunk = await readChunk(store, key);
-    chunk.push(message);
-    await store.setJSON(key, chunk);
-
-    const verify = await readChunk(store, key);
-    if (!verify.some((m) => m && m.id === id)) {
-      verify.push(message);
-      verify.sort((a, b) => (a?.ts || 0) - (b?.ts || 0));
-      await store.setJSON(key, verify);
+  if (clientId) {
+    message.clientId = clientId;
+    try {
+      const outcome = await claimChatMessage(store, {
+        key: chatIdempotencyKey(profile, conversationId, clientId),
+        fingerprint: chatPayloadFingerprint({
+          conversationId,
+          text: normalizedText,
+          media: mediaPayload,
+          name: normalizedName,
+        }),
+        message,
+      });
+      if (outcome.status === 'conflict') {
+        return buildResponse(409, { error: 'client_id_conflict' });
+      }
+      message = outcome.message;
+      if (
+        !isValidMessageShape(message) ||
+        message.from !== profile ||
+        (message.conversationId || 'main') !== conversationId ||
+        message.clientId !== clientId
+      ) {
+        return buildResponse(500, { error: 'invalid_idempotency_claim' });
+      }
+    } catch (e) {
+      console.error('[chat] idempotency claim failed', e);
+      return buildResponse(500, { error: 'idempotency_failed' });
     }
+  }
+
+  // Claim first, then materialise media. A retry after a crash uses the
+  // winner's canonical media key and repairs any missing object/log entry.
+  if (mediaPayload && message.mediaKey) {
+    try {
+      await store.set(message.mediaKey, mediaPayload);
+    } catch (e) {
+      console.error('[chat] media write failed', e);
+      return buildResponse(500, { error: 'media_write_failed' });
+    }
+  }
+
+  // Replays and unrelated concurrent sends converge on one CAS-backed row.
+  try {
+    await ensureMessageLogged(store, message);
   } catch (e) {
     console.error('[chat] log write failed', e);
     return buildResponse(500, { error: 'log_write_failed' });
   }
 
   // Bump the meta cursor so pollers wake up.
-  const meta = await readMeta(store);
-  meta.latestTs = Math.max(meta.latestTs, ts);
+  let meta;
   try {
-    await store.setJSON(META_KEY, meta);
+    meta = await bumpMessageCursor(store, message.ts);
   } catch (e) {
     // Non-fatal: message is stored; the next successful write fixes latestTs.
     console.error('[chat] meta bump failed', e);
+    meta = await readMeta(store);
+    meta.latestTs = Math.max(meta.latestTs, message.ts);
   }
 
   return buildResponse(200, { message, meta });

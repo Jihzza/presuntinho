@@ -124,9 +124,14 @@ export function isAhead(rawMerged: ProgressSnapshot, rawLocal: ProgressSnapshot)
 }
 
 /** Write the merged snapshot into local Dexie — UPGRADES ONLY, never deletes. */
-async function applyToLocal(profile: ProfileId, merged: ProgressSnapshot): Promise<void> {
+async function applyToLocal(
+  profile: ProfileId,
+  merged: ProgressSnapshot,
+  isCurrent: () => boolean = () => true
+): Promise<void> {
   const d = db(profile);
   const prev = await snapshotLocal(profile);
+  if (!isCurrent()) return;
   // xp via the store so the UI reflects it immediately (the store persists to
   // Dexie itself); only ever raise it.
   if (merged.xp > prev.xp) xpStore.set(merged.xp);
@@ -152,7 +157,7 @@ async function applyToLocal(profile: ProfileId, merged: ProgressSnapshot): Promi
   if (secretRows.length) await d.secrets.bulkPut(secretRows);
   if (quizRows.length) await d.quizScores.bulkPut(quizRows);
 
-  if (typeof window !== 'undefined' && (badgeRows.length || visitedRows.length || secretRows.length || quizRows.length || merged.xp > prev.xp)) {
+  if (isCurrent() && typeof window !== 'undefined' && (badgeRows.length || visitedRows.length || secretRows.length || quizRows.length || merged.xp > prev.xp)) {
     window.dispatchEvent(new CustomEvent(PROGRESS_SYNCED_EVENT));
   }
 }
@@ -186,6 +191,7 @@ let pushTimer: ReturnType<typeof setTimeout> | null = null;
 let suppressPushUntil = 0;
 let unsubXp: (() => void) | null = null;
 let onChanged: (() => void) | null = null;
+let lifecycleEpoch = 0;
 
 /** Debounced push: re-snapshot local and mirror it to the cloud. */
 function schedulePush(): void {
@@ -208,19 +214,26 @@ export async function startProgressSync(profile: ProfileId): Promise<void> {
   if (!progressSyncEnabled()) return;
   if (activeProfile === profile && channel) return; // already running for this profile
   stopProgressSync();
+  const epoch = lifecycleEpoch;
   activeProfile = profile;
+  const isCurrent = () => epoch === lifecycleEpoch && activeProfile === profile;
   try {
     const local = await snapshotLocal(profile);
+    if (!isCurrent()) return;
     const remote = await fetchRemote(profile).catch(() => null);
+    if (!isCurrent()) return;
     const merged = remote ? mergeSnapshots(local, remote) : local;
     suppressPushUntil = Date.now() + 2500;
-    await applyToLocal(profile, merged);
+    await applyToLocal(profile, merged, isCurrent);
+    if (!isCurrent()) return;
     // Push if we now hold anything the cloud didn't (first run, or this device
     // was ahead). Skips a redundant write when the cloud was already complete.
     if (!remote || isAhead(merged, remote)) await pushRemote(profile, merged).catch((e) => console.warn('[progress-sync] initial push', e));
   } catch (e) {
     console.warn('[progress-sync] initial sync failed', e);
   }
+
+  if (!isCurrent()) return;
 
   // Realtime: another device's update lands here → merge (upgrades only).
   channel = sb()
@@ -229,14 +242,16 @@ export async function startProgressSync(profile: ProfileId): Promise<void> {
       'postgres_changes',
       { event: '*', schema: 'public', table: 'progress', filter: `couple_id=eq.${COUPLE_ID}` },
       (payload) => {
+        if (!isCurrent()) return;
         const row = payload.new as { profile?: string; data?: ProgressSnapshot } | null;
         if (!row || row.profile !== profile || !row.data) return;
         void (async () => {
           try {
             const local = await snapshotLocal(profile);
+            if (!isCurrent()) return;
             const merged = mergeSnapshots(local, row.data as ProgressSnapshot);
             suppressPushUntil = Date.now() + 2500;
-            await applyToLocal(profile, merged);
+            await applyToLocal(profile, merged, isCurrent);
           } catch (e) {
             console.warn('[progress-sync] remote merge failed', e);
           }
@@ -255,6 +270,7 @@ export async function startProgressSync(profile: ProfileId): Promise<void> {
 }
 
 export function stopProgressSync(): void {
+  lifecycleEpoch += 1;
   if (pushTimer) clearTimeout(pushTimer);
   pushTimer = null;
   if (channel) {

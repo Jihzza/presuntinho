@@ -1,0 +1,1800 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Presuntinho Communications Master Plan</title>
+<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;max-width:736px;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
+</head>
+<body>
+<iframe sandbox="allow-scripts allow-popups" referrerpolicy="no-referrer" title="Presuntinho Communications Master Plan" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;pt-PT&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
+&lt;title&gt;Presuntinho Communications Master Plan&lt;/title&gt;
+&lt;style&gt;:root {
+  color-scheme: light dark;
+  background-color: var(--background) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: light-dark(rgb(255 255 255), rgb(24 24 24));
+  --foreground: light-dark(rgb(26 28 31), rgb(255 255 255));
+  --card: color-mix(in oklab, var(--foreground) 5%, transparent);
+  --card-foreground: var(--foreground);
+  --popover: light-dark(rgb(255 255 255), rgb(45 45 45));
+  --popover-foreground: var(--foreground);
+  --primary: light-dark(rgb(51 156 255), rgb(131 195 255));
+  --primary-foreground: light-dark(rgb(255 255 255), rgb(13 13 13));
+  --secondary: light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%));
+  --secondary-foreground: var(--foreground);
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: light-dark(
+    rgb(26 28 31 / 49.4%),
+    rgb(255 255 255 / 49.8%)
+  );
+  --accent: light-dark(rgb(229 242 255), rgb(13 39 63));
+  --accent-foreground: var(--primary);
+  --destructive: light-dark(rgb(226 85 7), rgb(255 133 73));
+  --border: light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%));
+  --input: light-dark(
+    rgb(26 28 31 / 11.8%),
+    color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+  );
+  --ring: light-dark(rgb(51 156 255), rgb(131 195 255 / 76%));
+  --font-size-base: 14px;
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, &quot;Segoe UI&quot;, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;,
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: 12.5px;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 17 17&#x27;%3E%3Cpath d=&#x27;M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z&#x27;/%3E%3C/svg%3E&quot;);
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+  --color-background-primary: var(--background);
+  --color-text-primary: var(--foreground);
+  --color-border-secondary: var(--border);
+}
+
+:root[data-theme=&quot;light&quot;] {
+  color-scheme: light;
+}
+
+:root[data-theme=&quot;dark&quot;] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html &gt; body {
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--viz-font-weight-medium);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: superellipse(1.5);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget &gt; :not(.card) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls &gt; .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls &gt; .form-label &gt; :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type=&quot;file&quot;] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type=&quot;file&quot;]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type=&quot;file&quot;]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type=&quot;color&quot;] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: superellipse(1.5);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type=&quot;checkbox&quot;]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: &quot;&quot;;
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type=&quot;radio&quot;] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type=&quot;radio&quot;]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: &quot;&quot;;
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+    [aria-pressed=&quot;true&quot;],
+    [aria-selected=&quot;true&quot;],
+    .is-selected
+  ) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed=&quot;true&quot;], [aria-selected=&quot;true&quot;], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget &gt; svg {
+  width: 100%;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html&gt;body{padding:0}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;main class=&quot;plan-shell&quot; id=&quot;presuntinho-communications-plan&quot;&gt;
+  &lt;header class=&quot;hero&quot;&gt;
+    &lt;div class=&quot;hero-copy&quot;&gt;
+      &lt;p class=&quot;eyebrow&quot;&gt;Presuntinho · Comunicações v2&lt;/p&gt;
+      &lt;h1&gt;Plano mestre de mensagens e chamadas&lt;/h1&gt;
+      &lt;p class=&quot;lede&quot;&gt;Um plano executável para transformar a conversa do casal numa experiência fiável, expressiva e honesta — com estados confirmados por dispositivo, chamadas WebRTC resilientes, notificações observáveis e uma interface que nunca deixa ninguém sem resposta.&lt;/p&gt;
+      &lt;div class=&quot;hero-badges&quot; aria-label=&quot;Estado do plano&quot;&gt;
+        &lt;span class=&quot;badge goal&quot;&gt;Goal ativo&lt;/span&gt;
+        &lt;span class=&quot;badge danger&quot;&gt;Backend em produção + preview verde · merge, TURN e device lab pendentes&lt;/span&gt;
+        &lt;span class=&quot;badge neutral&quot;&gt;Atualizado 15 jul 2026&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;aside class=&quot;north-star&quot; aria-label=&quot;Objetivo principal&quot;&gt;
+      &lt;span class=&quot;north-icon&quot; aria-hidden=&quot;true&quot;&gt;♥&lt;/span&gt;
+      &lt;strong&gt;Regra de ouro&lt;/strong&gt;
+      &lt;p&gt;“A tocar” só aparece depois de um dispositivo da outra pessoa confirmar que apresentou a chamada. Um push aceite pelo servidor não é um telefone a tocar.&lt;/p&gt;
+    &lt;/aside&gt;
+  &lt;/header&gt;
+
+  &lt;nav class=&quot;jump-nav&quot; aria-label=&quot;Índice do plano&quot;&gt;
+    &lt;a href=&quot;#diagnostico&quot;&gt;Diagnóstico&lt;/a&gt;
+    &lt;a href=&quot;#benchmark&quot;&gt;Benchmark&lt;/a&gt;
+    &lt;a href=&quot;#arquitetura&quot;&gt;Arquitetura&lt;/a&gt;
+    &lt;a href=&quot;#estados&quot;&gt;Estados&lt;/a&gt;
+    &lt;a href=&quot;#plataformas&quot;&gt;Plataformas&lt;/a&gt;
+    &lt;a href=&quot;#execucao&quot;&gt;Execução&lt;/a&gt;
+    &lt;a href=&quot;#mensagens&quot;&gt;Mensagens&lt;/a&gt;
+    &lt;a href=&quot;#pedidos-anteriores&quot;&gt;Pedidos anteriores&lt;/a&gt;
+    &lt;a href=&quot;#testes&quot;&gt;Testes&lt;/a&gt;
+  &lt;/nav&gt;
+
+  &lt;section class=&quot;scoreboard&quot; aria-label=&quot;Resumo de execução&quot;&gt;
+    &lt;article&gt;
+      &lt;span class=&quot;metric&quot; id=&quot;done-count&quot;&gt;25&lt;/span&gt;
+      &lt;span class=&quot;metric-label&quot;&gt;tarefas concluídas&lt;/span&gt;
+    &lt;/article&gt;
+    &lt;article&gt;
+      &lt;span class=&quot;metric&quot; id=&quot;active-count&quot;&gt;7&lt;/span&gt;
+      &lt;span class=&quot;metric-label&quot;&gt;em execução&lt;/span&gt;
+    &lt;/article&gt;
+    &lt;article&gt;
+      &lt;span class=&quot;metric&quot; id=&quot;todo-count&quot;&gt;3&lt;/span&gt;
+      &lt;span class=&quot;metric-label&quot;&gt;por executar&lt;/span&gt;
+    &lt;/article&gt;
+    &lt;article class=&quot;critical&quot;&gt;
+      &lt;span class=&quot;metric&quot;&gt;0&lt;/span&gt;
+      &lt;span class=&quot;metric-label&quot;&gt;sessões reais na tentativa observada · snapshot 2026-07-15&lt;/span&gt;
+    &lt;/article&gt;
+  &lt;/section&gt;
+
+  &lt;section id=&quot;diagnostico&quot; class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-heading&quot;&gt;
+      &lt;div&gt;
+        &lt;p class=&quot;section-kicker&quot;&gt;01 · Auditoria forense&lt;/p&gt;
+        &lt;h2&gt;Porque a chamada pareceu não fazer nada&lt;/h2&gt;
+      &lt;/div&gt;
+      &lt;span class=&quot;section-tag&quot;&gt;Evidência de produção + código&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;finding-grid&quot;&gt;
+      &lt;article class=&quot;finding p0&quot;&gt;
+        &lt;span class=&quot;finding-number&quot;&gt;01&lt;/span&gt;
+        &lt;h3&gt;O botão pode falhar sem explicação&lt;/h3&gt;
+        &lt;p&gt;Se a conversa ainda não estiver pronta, estiver marcada offline ou não tiver um UUID, o botão fica bloqueado e o clique é ignorado. Não existe texto a explicar o motivo nem ação para recuperar.&lt;/p&gt;
+        &lt;small&gt;Correção: estado de prontidão explícito, tooltip, diagnóstico e retry.&lt;/small&gt;
+      &lt;/article&gt;
+      &lt;article class=&quot;finding p0&quot;&gt;
+        &lt;span class=&quot;finding-number&quot;&gt;02&lt;/span&gt;
+        &lt;h3&gt;A chamada nasce tarde demais&lt;/h3&gt;
+        &lt;p&gt;A implementação pede microfone/câmara antes de criar a sessão durável. Uma permissão lenta, recusada ou indisponível impede que a outra pessoa seja contactada e pode terminar sem uma chamada registada.&lt;/p&gt;
+        &lt;small&gt;Correção implementada no worktree: UI imediata → permissão de media → call-start atómico → notificar, sempre com erro visível.&lt;/small&gt;
+      &lt;/article&gt;
+      &lt;article class=&quot;finding p0&quot;&gt;
+        &lt;span class=&quot;finding-number&quot;&gt;03&lt;/span&gt;
+        &lt;h3&gt;Push é fire-and-forget&lt;/h3&gt;
+        &lt;p&gt;O cliente ignora o resultado do endpoint; erros HTTP são engolidos. Mesmo quando o servidor responde, só sabemos quantos pedidos de push aceitou — não se o dispositivo recebeu ou mostrou o alerta.&lt;/p&gt;
+        &lt;small&gt;Correção: outbox + tentativas + ACK apresentado/a tocar por instalação.&lt;/small&gt;
+      &lt;/article&gt;
+      &lt;article class=&quot;finding p0&quot;&gt;
+        &lt;span class=&quot;finding-number&quot;&gt;04&lt;/span&gt;
+        &lt;h3&gt;O AudioContext nunca chegava a nascer&lt;/h3&gt;
+        &lt;p&gt;&lt;code&gt;#ensureContext()&lt;/code&gt; verificava &lt;code&gt;this.#context?.state !== &#x27;closed&#x27;&lt;/code&gt;. No primeiro toque, o optional chaining produzia &lt;code&gt;undefined&lt;/code&gt;; como &lt;code&gt;undefined !== &#x27;closed&#x27;&lt;/code&gt; é verdadeiro, a função devolvia &lt;code&gt;null&lt;/code&gt; antes de criar o contexto. Resultado: sem ringtone nem ringback, mesmo após um gesto válido.&lt;/p&gt;
+        &lt;small&gt;Corrigido em código: guarda explícita &lt;code&gt;this.#context &amp;amp;&amp;amp; …&lt;/code&gt;, prime no gesto, &lt;code&gt;resume()&lt;/code&gt; e testes unitários. A prova física em iOS/Android continua pendente.&lt;/small&gt;
+      &lt;/article&gt;
+      &lt;article class=&quot;finding p0&quot;&gt;
+        &lt;span class=&quot;finding-number&quot;&gt;05&lt;/span&gt;
+        &lt;h3&gt;Não há verdade sobre entrega&lt;/h3&gt;
+        &lt;p&gt;O chamador vê apenas “A chamar…”; não distingue sessão criada, push enviado, dispositivo contactado, alerta apresentado ou destinatário efetivamente a tocar.&lt;/p&gt;
+        &lt;small&gt;Correção: timeline factual e estados derivados de eventos persistidos.&lt;/small&gt;
+      &lt;/article&gt;
+      &lt;article class=&quot;finding p0&quot;&gt;
+        &lt;span class=&quot;finding-number&quot;&gt;06&lt;/span&gt;
+        &lt;h3&gt;STUN sem TURN não chega&lt;/h3&gt;
+        &lt;p&gt;Produção usa fallback STUN e não tem credenciais TURN configuradas. Redes móveis, CGNAT, firewalls e Wi-Fi restritivo podem impedir áudio/vídeo mesmo depois de atender.&lt;/p&gt;
+        &lt;small&gt;Alvo pendente: TURN temporário, política relay privada e métricas ICE; faltam secrets e prova física em produção.&lt;/small&gt;
+      &lt;/article&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;evidence-strip&quot;&gt;
+      &lt;strong&gt;Evidência acumulada · snapshot 2026-07-15&lt;/strong&gt;
+      &lt;span&gt;A tentativa original terminou com zero sessões reais: a falha começou antes da entrega.&lt;/span&gt;
+      &lt;span&gt;O bug de som foi isolado na condição &lt;code&gt;undefined !== &#x27;closed&#x27;&lt;/code&gt; e coberto por teste.&lt;/span&gt;
+      &lt;span&gt;Suite global: 60 ficheiros e 425 testes; chat: 82 testes.&lt;/span&gt;
+      &lt;span&gt;&lt;code&gt;check&lt;/code&gt;: 0 erros/0 avisos; i18n: 5 idiomas × 4143 chaves.&lt;/span&gt;
+      &lt;span&gt;SQL combinado verde em rollback; as 5 migrations foram depois aplicadas individualmente e verificadas em produção.&lt;/span&gt;
+      &lt;span&gt;Playwright: 8/8 cenários simulados; não substitui dois aparelhos físicos.&lt;/span&gt;
+      &lt;span&gt;Call-start/outboxes estão no backend de produção e o preview passou smoke; TURN, dois aparelhos e frontend final ainda não passaram.&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section id=&quot;benchmark&quot; class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-heading&quot;&gt;
+      &lt;div&gt;
+        &lt;p class=&quot;section-kicker&quot;&gt;02 · Pesquisa oficial&lt;/p&gt;
+        &lt;h2&gt;O que adaptar das melhores apps&lt;/h2&gt;
+      &lt;/div&gt;
+      &lt;span class=&quot;section-tag&quot;&gt;Adaptar padrões, não copiar superfícies&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;table-wrap&quot;&gt;
+      &lt;table&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;
+            &lt;th&gt;Produto&lt;/th&gt;
+            &lt;th&gt;Padrão forte&lt;/th&gt;
+            &lt;th&gt;Adaptação Presuntinho&lt;/th&gt;
+            &lt;th&gt;Limite/nota&lt;/th&gt;
+          &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr&gt;
+            &lt;th&gt;WhatsApp&lt;/th&gt;
+            &lt;td&gt;Controlos de chamada familiares, links de chamada e melhorias públicas de calling.&lt;/td&gt;
+            &lt;td&gt;Botões simples; ecrã inteiro; voltar a ligar; primeiro dispositivo a atender ganha.&lt;/td&gt;
+            &lt;td&gt;A fonte sustenta os padrões de calling; histórico e multi-device não são inferidos dela. Não prometer lock screen nativo numa PWA.&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;th&gt;Signal&lt;/th&gt;
+            &lt;td&gt;Distingue contactar de ringing; privacidade e verificação são parte da UX.&lt;/td&gt;
+            &lt;td&gt;Só usar “A tocar” após ACK; relay privado e indicador de proteção permanecem alvo explícito.&lt;/td&gt;
+            &lt;td&gt;Mais tarde: E2EE verificável de mensagens e media.&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;th&gt;Telegram&lt;/th&gt;
+            &lt;td&gt;Sincronização cloud multi-dispositivo e continuidade entre aparelhos.&lt;/td&gt;
+            &lt;td&gt;Entrega por instalação, ACK por device, answered elsewhere e handoff futuro.&lt;/td&gt;
+            &lt;td&gt;“Receive date” não é atribuída ao FAQ; no Presuntinho, o estado durável continua a ser a fonte de verdade.&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;th&gt;Discord&lt;/th&gt;
+            &lt;td&gt;Estados técnicos visíveis, áudio configurável, controlos persistentes e presença social.&lt;/td&gt;
+            &lt;td&gt;Traduzir ICE/RTC em linguagem humana; ringtone/ringback; mini-call ao navegar.&lt;/td&gt;
+            &lt;td&gt;Overlay Android e CallKit iOS exigem app nativa.&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;th&gt;Zoom&lt;/th&gt;
+            &lt;td&gt;Teste de microfone/altifalante e seleção explícita de dispositivos de áudio.&lt;/td&gt;
+            &lt;td&gt;Centro “Este dispositivo está pronto?”, teste de áudio, seletor de media e motivos de falha.&lt;/td&gt;
+            &lt;td&gt;A fonte citada não sustenta notificações, histórico ou transferência; Focus/DND continuam limitações externas.&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;th&gt;X / Twitter&lt;/th&gt;
+            &lt;td&gt;Controlos de chamada simples e explicação clara da privacidade de IP.&lt;/td&gt;
+            &lt;td&gt;Voz/vídeo no cabeçalho; mute, speaker, câmara, flip e terminar; TURN por defeito é o alvo, ainda não o estado de produção.&lt;/td&gt;
+            &lt;td&gt;Privacidade melhor que o default P2P exposto.&lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;source-row&quot; aria-label=&quot;Fontes principais&quot;&gt;
+      &lt;a href=&quot;https://about.fb.com/news/2022/12/improved-calling-features-on-whatsapp/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;WhatsApp Calling&lt;/a&gt;
+      &lt;a href=&quot;https://support.signal.org/hc/en-us/articles/360007060672-Troubleshooting-Calling&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;Signal Call States&lt;/a&gt;
+      &lt;a href=&quot;https://telegram.org/faq&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;Telegram FAQ&lt;/a&gt;
+      &lt;a href=&quot;https://support.discord.com/hc/en-us/articles/360041721052-Video-Calls&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;Discord Calls&lt;/a&gt;
+      &lt;a href=&quot;https://support.zoom.com/hc/en/article?id=zm_kb&amp;amp;sysparm_article=KB0062765&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;Zoom Audio Test&lt;/a&gt;
+      &lt;a href=&quot;https://help.x.com/en/using-x/direct-messages/audio-video-calls&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;X Calls&lt;/a&gt;
+      &lt;a href=&quot;https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;WebKit iOS Push&lt;/a&gt;
+      &lt;a href=&quot;https://developers.cloudflare.com/realtime/turn/generate-credentials/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;Cloudflare TURN&lt;/a&gt;
+      &lt;a href=&quot;https://supabase.com/docs/guides/realtime&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;Supabase Realtime&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section id=&quot;arquitetura&quot; class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-heading&quot;&gt;
+      &lt;div&gt;
+        &lt;p class=&quot;section-kicker&quot;&gt;03 · Arquitetura alvo&lt;/p&gt;
+        &lt;h2&gt;Uma chamada é uma operação distribuída&lt;/h2&gt;
+      &lt;/div&gt;
+      &lt;span class=&quot;section-tag&quot;&gt;Postgres durável + Realtime + Push + WebRTC&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;architecture&quot; role=&quot;img&quot; aria-label=&quot;Arquitetura da chamada desde o chamador ao destinatário&quot;&gt;
+      &lt;div class=&quot;arch-lane caller&quot;&gt;
+        &lt;span class=&quot;lane-label&quot;&gt;Chamador&lt;/span&gt;
+        &lt;div class=&quot;node&quot;&gt;&lt;b&gt;UI imediata&lt;/b&gt;&lt;small&gt;preparar, cancelar, ringback&lt;/small&gt;&lt;/div&gt;
+        &lt;div class=&quot;arrow&quot; aria-hidden=&quot;true&quot;&gt;→&lt;/div&gt;
+        &lt;div class=&quot;node&quot;&gt;&lt;b&gt;Permissão de media&lt;/b&gt;&lt;small&gt;microfone/câmara após UI; erro recuperável&lt;/small&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;arch-spine&quot;&gt;
+        &lt;div class=&quot;node primary&quot;&gt;&lt;b&gt;Call-start atómico · integrado&lt;/b&gt;&lt;small&gt;&lt;code&gt;POST /api/call-start&lt;/code&gt; + &lt;code&gt;client_request_id&lt;/code&gt; → gateway autenticado → &lt;code&gt;start_call_from_gateway&lt;/code&gt;; replay devolve a mesma sessão&lt;/small&gt;&lt;/div&gt;
+        &lt;div class=&quot;branch-row&quot;&gt;
+          &lt;div class=&quot;node&quot;&gt;&lt;b&gt;Postgres&lt;/b&gt;&lt;small&gt;sessão, devices, eventos, leases&lt;/small&gt;&lt;/div&gt;
+          &lt;div class=&quot;node&quot;&gt;&lt;b&gt;Realtime Broadcast&lt;/b&gt;&lt;small&gt;caminho rápido, privado, com ACK&lt;/small&gt;&lt;/div&gt;
+          &lt;div class=&quot;node&quot;&gt;&lt;b&gt;Push dispatcher&lt;/b&gt;&lt;small&gt;fanout, retry, stale cleanup&lt;/small&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;node primary&quot;&gt;&lt;b&gt;Event ledger&lt;/b&gt;&lt;small&gt;sent → received → presented → ringing → accepted&lt;/small&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;arch-lane callee&quot;&gt;
+        &lt;span class=&quot;lane-label&quot;&gt;Destinatário&lt;/span&gt;
+        &lt;div class=&quot;node&quot;&gt;&lt;b&gt;Service worker&lt;/b&gt;&lt;small&gt;alerta visível + ACK por instalação&lt;/small&gt;&lt;/div&gt;
+        &lt;div class=&quot;arrow&quot; aria-hidden=&quot;true&quot;&gt;→&lt;/div&gt;
+        &lt;div class=&quot;node&quot;&gt;&lt;b&gt;Incoming call UI&lt;/b&gt;&lt;small&gt;ringtone, vibração, atender/recusar&lt;/small&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;media-plane&quot;&gt;
+        &lt;div&gt;&lt;b&gt;Media plane&lt;/b&gt;&lt;small&gt;WebRTC áudio/vídeo&lt;/small&gt;&lt;/div&gt;
+        &lt;span&gt;ICE restart&lt;/span&gt;
+        &lt;span&gt;TURN temporário · alvo pendente&lt;/span&gt;
+        &lt;span&gt;relay privado · alvo pendente&lt;/span&gt;
+        &lt;span&gt;qualidade e reconexão&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;principles&quot;&gt;
+      &lt;article&gt;&lt;b&gt;Durável primeiro&lt;/b&gt;&lt;span&gt;Broadcast acelera; nunca substitui a sessão persistida.&lt;/span&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;b&gt;Um evento, um significado&lt;/b&gt;&lt;span&gt;Sent, delivered e ringing são factos diferentes.&lt;/span&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;b&gt;Por dispositivo&lt;/b&gt;&lt;span&gt;Cada instalação tem identidade, capacidades, last seen e ACKs.&lt;/span&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;b&gt;First answer wins&lt;/b&gt;&lt;span&gt;Atender, recusar e cancelar são transações concorrentes seguras.&lt;/span&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;b&gt;Privacidade alvo&lt;/b&gt;&lt;span&gt;TURN + política relay podem evitar exposição de IP; produção ainda precisa de secrets e de ativar essa política.&lt;/span&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;b&gt;Observável&lt;/b&gt;&lt;span&gt;Cada falha tem etapa, razão e correlação por call ID.&lt;/span&gt;&lt;/article&gt;
+    &lt;/div&gt;
+    &lt;p class=&quot;implementation-note&quot;&gt;&lt;strong&gt;Sequência real implementada:&lt;/strong&gt; o clique mostra a UI imediatamente e fixa o request ID; a app pede permissão de microfone/câmara; quando a media fica pronta chama o gateway atómico, que cria ou devolve a mesma sessão durável; depois inicia notificação e sinalização. O backend e as migrations estão em produção e o frontend passou num deploy de preview. TURN privado por defeito continua apenas como alvo: faltam secrets de produção e uma política &lt;code&gt;iceTransportPolicy: &#x27;relay&#x27;&lt;/code&gt; ou preferência equivalente. Merge do frontend e prova em dois aparelhos continuam gates separados.&lt;/p&gt;
+    &lt;div class=&quot;source-row&quot; aria-label=&quot;Fontes técnicas da arquitetura&quot;&gt;
+      &lt;a href=&quot;https://developers.cloudflare.com/realtime/turn/generate-credentials/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;Cloudflare TURN credentials&lt;/a&gt;
+      &lt;a href=&quot;https://developers.cloudflare.com/realtime/turn/faq/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;Cloudflare TURN FAQ&lt;/a&gt;
+      &lt;a href=&quot;https://docs.netlify.com/build/functions/api/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;Netlify Functions API&lt;/a&gt;
+      &lt;a href=&quot;https://docs.netlify.com/build/functions/background-functions/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;Netlify Background Functions&lt;/a&gt;
+      &lt;a href=&quot;https://docs.netlify.com/build/functions/scheduled-functions/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;Netlify Scheduled Functions&lt;/a&gt;
+      &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/resume&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;MDN AudioContext.resume()&lt;/a&gt;
+      &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;MDN Autoplay&lt;/a&gt;
+      &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;MDN showNotification()&lt;/a&gt;
+      &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/restartIce&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;MDN restartIce()&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section id=&quot;estados&quot; class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-heading&quot;&gt;
+      &lt;div&gt;
+        &lt;p class=&quot;section-kicker&quot;&gt;04 · Máquinas de estado&lt;/p&gt;
+        &lt;h2&gt;Textos que só afirmam factos&lt;/h2&gt;
+      &lt;/div&gt;
+      &lt;span class=&quot;section-tag&quot;&gt;Caller e callee sincronizados&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;state-flow&quot; aria-label=&quot;Fluxo principal de estados&quot;&gt;
+      &lt;div class=&quot;state active&quot;&gt;&lt;span&gt;1&lt;/span&gt;&lt;b&gt;A preparar&lt;/b&gt;&lt;small&gt;UI já visível; media em validação&lt;/small&gt;&lt;/div&gt;
+      &lt;i aria-hidden=&quot;true&quot;&gt;→&lt;/i&gt;
+      &lt;div class=&quot;state&quot;&gt;&lt;span&gt;2&lt;/span&gt;&lt;b&gt;A enviar&lt;/b&gt;&lt;small&gt;sessão + outbox criadas&lt;/small&gt;&lt;/div&gt;
+      &lt;i aria-hidden=&quot;true&quot;&gt;→&lt;/i&gt;
+      &lt;div class=&quot;state&quot;&gt;&lt;span&gt;3&lt;/span&gt;&lt;b&gt;Envio aceite&lt;/b&gt;&lt;small&gt;Realtime/provider aceitou; dispositivo ainda não confirmado&lt;/small&gt;&lt;/div&gt;
+      &lt;i aria-hidden=&quot;true&quot;&gt;→&lt;/i&gt;
+      &lt;div class=&quot;state&quot;&gt;&lt;span&gt;4&lt;/span&gt;&lt;b&gt;Contactada&lt;/b&gt;&lt;small&gt;received/presented confirma um device real; nunca só HTTP 202&lt;/small&gt;&lt;/div&gt;
+      &lt;i aria-hidden=&quot;true&quot;&gt;→&lt;/i&gt;
+      &lt;div class=&quot;state&quot;&gt;&lt;span&gt;5&lt;/span&gt;&lt;b&gt;A tocar&lt;/b&gt;&lt;small&gt;ringing confirma som/haptic iniciado no device&lt;/small&gt;&lt;/div&gt;
+      &lt;i aria-hidden=&quot;true&quot;&gt;→&lt;/i&gt;
+      &lt;div class=&quot;state&quot;&gt;&lt;span&gt;6&lt;/span&gt;&lt;b&gt;Atendeu&lt;/b&gt;&lt;small&gt;claim transacional&lt;/small&gt;&lt;/div&gt;
+      &lt;i aria-hidden=&quot;true&quot;&gt;→&lt;/i&gt;
+      &lt;div class=&quot;state&quot;&gt;&lt;span&gt;7&lt;/span&gt;&lt;b&gt;A ligar&lt;/b&gt;&lt;small&gt;ICE/DTLS/media&lt;/small&gt;&lt;/div&gt;
+      &lt;i aria-hidden=&quot;true&quot;&gt;→&lt;/i&gt;
+      &lt;div class=&quot;state success&quot;&gt;&lt;span&gt;8&lt;/span&gt;&lt;b&gt;Ligados&lt;/b&gt;&lt;small&gt;duração + qualidade&lt;/small&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;terminal-grid&quot;&gt;
+      &lt;article&gt;&lt;b&gt;Recusada&lt;/b&gt;&lt;span&gt;A outra pessoa recusou; oferecer mensagem rápida.&lt;/span&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;b&gt;Não atendida&lt;/b&gt;&lt;span&gt;Expirou depois de pelo menos um dispositivo tocar.&lt;/span&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;b&gt;Indisponível&lt;/b&gt;&lt;span&gt;Nenhum dispositivo recebeu; explicar notificações/offline.&lt;/span&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;b&gt;Ocupada&lt;/b&gt;&lt;span&gt;Já existe outra sessão ativa; permitir enviar mensagem.&lt;/span&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;b&gt;Atendida noutro aparelho&lt;/b&gt;&lt;span&gt;Fechar overlays restantes sem marcar como falha.&lt;/span&gt;&lt;/article&gt;
+      &lt;article&gt;&lt;b&gt;Ligação falhou&lt;/b&gt;&lt;span&gt;Mostrar etapa e ação: tentar outra vez, mudar rede ou testar áudio.&lt;/span&gt;&lt;/article&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section id=&quot;plataformas&quot; class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-heading&quot;&gt;
+      &lt;div&gt;
+        &lt;p class=&quot;section-kicker&quot;&gt;05 · Contrato por plataforma&lt;/p&gt;
+        &lt;h2&gt;O que conseguimos realmente garantir&lt;/h2&gt;
+      &lt;/div&gt;
+      &lt;span class=&quot;section-tag&quot;&gt;Sem promessas falsas de PWA&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;table-wrap&quot;&gt;
+      &lt;table class=&quot;capability-table&quot;&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;
+            &lt;th&gt;Cenário&lt;/th&gt;
+            &lt;th&gt;Overlay&lt;/th&gt;
+            &lt;th&gt;Som contínuo&lt;/th&gt;
+            &lt;th&gt;Vibração&lt;/th&gt;
+            &lt;th&gt;Ação Presuntinho&lt;/th&gt;
+          &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr&gt;
+            &lt;th&gt;App aberta&lt;/th&gt;
+            &lt;td class=&quot;yes&quot;&gt;Sim&lt;/td&gt;
+            &lt;td class=&quot;yes&quot;&gt;Sim, após desbloqueio de áudio&lt;/td&gt;
+            &lt;td class=&quot;partial&quot;&gt;Quando suportada&lt;/td&gt;
+            &lt;td&gt;Overlay total + ringtone + ACK “ringing”.&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;th&gt;Android PWA em background&lt;/th&gt;
+            &lt;td class=&quot;no&quot;&gt;Não&lt;/td&gt;
+            &lt;td class=&quot;partial&quot;&gt;Som do sistema&lt;/td&gt;
+            &lt;td class=&quot;partial&quot;&gt;Depende do browser/SO&lt;/td&gt;
+            &lt;td&gt;Web Push persistente + deep-link + ACK do SW.&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;th&gt;iPhone PWA no Home Screen&lt;/th&gt;
+            &lt;td class=&quot;no&quot;&gt;Não&lt;/td&gt;
+            &lt;td class=&quot;partial&quot;&gt;Som de notificação do sistema&lt;/td&gt;
+            &lt;td class=&quot;partial&quot;&gt;Controlada pelo iOS/Focus&lt;/td&gt;
+            &lt;td&gt;Push visível; explicar Home Screen, permissão e Focus.&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;th&gt;iPhone em Safari, não instalada&lt;/th&gt;
+            &lt;td class=&quot;no&quot;&gt;Não&lt;/td&gt;
+            &lt;td class=&quot;no&quot;&gt;Não em background&lt;/td&gt;
+            &lt;td class=&quot;no&quot;&gt;Não&lt;/td&gt;
+            &lt;td&gt;Mostrar instalação obrigatória para receber fechada.&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;th&gt;App totalmente fechada&lt;/th&gt;
+            &lt;td class=&quot;no&quot;&gt;Não&lt;/td&gt;
+            &lt;td class=&quot;partial&quot;&gt;Apenas alerta do SO&lt;/td&gt;
+            &lt;td class=&quot;partial&quot;&gt;Sem garantia&lt;/td&gt;
+            &lt;td&gt;Push + histórico de perdida; nunca prometer ringtone nativo.&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;th&gt;Experiência CallKit/lock screen&lt;/th&gt;
+            &lt;td class=&quot;yes&quot;&gt;Nativa&lt;/td&gt;
+            &lt;td class=&quot;yes&quot;&gt;Nativo&lt;/td&gt;
+            &lt;td class=&quot;yes&quot;&gt;Nativa&lt;/td&gt;
+            &lt;td&gt;Trilho futuro: wrapper/app iOS e Android.&lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section id=&quot;execucao&quot; class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-heading&quot;&gt;
+      &lt;div&gt;
+        &lt;p class=&quot;section-kicker&quot;&gt;06 · Plano executável&lt;/p&gt;
+        &lt;h2&gt;Backlog com gates e critérios de aceitação&lt;/h2&gt;
+      &lt;/div&gt;
+      &lt;span class=&quot;section-tag&quot;&gt;O HTML será atualizado a cada merge&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;filter-bar&quot; role=&quot;group&quot; aria-label=&quot;Filtrar tarefas&quot;&gt;
+      &lt;button type=&quot;button&quot; class=&quot;filter active&quot; data-filter=&quot;all&quot;&gt;Todas&lt;/button&gt;
+      &lt;button type=&quot;button&quot; class=&quot;filter&quot; data-filter=&quot;p0&quot;&gt;P0&lt;/button&gt;
+      &lt;button type=&quot;button&quot; class=&quot;filter&quot; data-filter=&quot;p1&quot;&gt;P1&lt;/button&gt;
+      &lt;button type=&quot;button&quot; class=&quot;filter&quot; data-filter=&quot;p2&quot;&gt;P2&lt;/button&gt;
+      &lt;button type=&quot;button&quot; class=&quot;filter&quot; data-filter=&quot;done&quot;&gt;Concluídas&lt;/button&gt;
+      &lt;button type=&quot;button&quot; class=&quot;filter&quot; data-filter=&quot;active&quot;&gt;Em execução&lt;/button&gt;
+      &lt;button type=&quot;button&quot; class=&quot;filter&quot; data-filter=&quot;todo&quot;&gt;Pendentes&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;phase-list&quot;&gt;
+      &lt;article class=&quot;phase&quot;&gt;
+        &lt;div class=&quot;phase-title&quot;&gt;
+          &lt;span&gt;Fase A&lt;/span&gt;
+          &lt;div&gt;&lt;h3&gt;Fundação de fiabilidade&lt;/h3&gt;&lt;p&gt;Fazer a chamada existir, chegar e ser observável antes de polir o ecrã.&lt;/p&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;task-grid&quot;&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;CALL-001&lt;/span&gt;&lt;b&gt;Sessão e outbox atómicas&lt;/b&gt;&lt;p&gt;O gateway &lt;code&gt;/api/call-start&lt;/code&gt; usa &lt;code&gt;client_request_id&lt;/code&gt;, fila antes da criação e replay idempotente.&lt;/p&gt;&lt;small&gt;Duplo clique, timeout ambíguo, resposta perdida e acesso direto ao RPC ficaram cobertos por testes.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;CALL-002&lt;/span&gt;&lt;b&gt;Identidade por instalação&lt;/b&gt;&lt;p&gt;Device ID estável, plataforma, capacidades, heartbeat, push endpoint e versão CAS da subscrição.&lt;/p&gt;&lt;small&gt;Provado por matriz SQL, incluindo prefixos literais e rotação de subscrição.&lt;/small&gt;&lt;em&gt;Concluída&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;CALL-003&lt;/span&gt;&lt;b&gt;Dispatcher com retry&lt;/b&gt;&lt;p&gt;Fanout Web Push, worker de background, sweep agendado, backoff, TTL e limpeza CAS de endpoints.&lt;/p&gt;&lt;small&gt;Testes de servidor e matriz SQL verdes; deploy continua um gate separado.&lt;/small&gt;&lt;em&gt;Concluída&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;CALL-004&lt;/span&gt;&lt;b&gt;ACK real do destinatário&lt;/b&gt;&lt;p&gt;Service worker e app registam received, presented, ringing e opened; ringing exige som ou haptic realmente iniciado.&lt;/p&gt;&lt;small&gt;Tombstones persistentes e ACK tardio estão cobertos por regressão.&lt;/small&gt;&lt;em&gt;Concluída&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;active&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;CALL-005&lt;/span&gt;&lt;b&gt;First-answer-wins&lt;/b&gt;&lt;p&gt;Accept/decline/cancel transacionais e answered_elsewhere já existem.&lt;/p&gt;&lt;small&gt;Falta o ensaio concorrente em dois aparelhos/multi-tab reais.&lt;/small&gt;&lt;em&gt;Em validação&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;active&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;CALL-006&lt;/span&gt;&lt;b&gt;Telemetria mínima&lt;/b&gt;&lt;p&gt;Call ID, instalação, tentativa, timestamps, eventos e razões de falha são persistidos sem SDP.&lt;/p&gt;&lt;small&gt;Falta provar reconstrução operacional ponta a ponta em produção.&lt;/small&gt;&lt;em&gt;Em validação&lt;/em&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;
+
+      &lt;article class=&quot;phase&quot;&gt;
+        &lt;div class=&quot;phase-title&quot;&gt;
+          &lt;span&gt;Fase B&lt;/span&gt;
+          &lt;div&gt;&lt;h3&gt;Experiência de tocar e atender&lt;/h3&gt;&lt;p&gt;Feedback imediato para quem liga e presença forte para quem recebe.&lt;/p&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;task-grid&quot;&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;UX-001&lt;/span&gt;&lt;b&gt;Overlay imediato do chamador&lt;/b&gt;&lt;p&gt;A fase preparing aparece antes do primeiro await, com pessoa, tipo, progresso e cancelar.&lt;/p&gt;&lt;small&gt;O call-start atómico ainda melhora a recuperação, mas a reação visual já não depende do RPC.&lt;/small&gt;&lt;em&gt;Concluída&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;UX-002&lt;/span&gt;&lt;b&gt;Timeline factual&lt;/b&gt;&lt;p&gt;Preparing, creating, notifying, contacting, ringing, connecting e active vêm da state machine e dos ACKs.&lt;/p&gt;&lt;small&gt;Provider aceite fica em notifying; contacting exige device ACK e “A tocar” exige confirmação factual de ringing.&lt;/small&gt;&lt;em&gt;Concluída&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;UX-003&lt;/span&gt;&lt;b&gt;Ringtone e ringback&lt;/b&gt;&lt;p&gt;Gestor dedicado controla tons, gesto de desbloqueio, mute, vibração e cleanup determinístico.&lt;/p&gt;&lt;small&gt;O bug &lt;code&gt;undefined !== &#x27;closed&#x27;&lt;/code&gt; foi corrigido e testado; falta prova física mobile.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;UX-004&lt;/span&gt;&lt;b&gt;Incoming call expressiva&lt;/b&gt;&lt;p&gt;Overlay total, pulse/ripple, vibração progressiva, foco modal, safe areas e reduced motion.&lt;/p&gt;&lt;small&gt;A validação física iOS/Android continua no gate de dispositivos.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;active&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;UX-005&lt;/span&gt;&lt;b&gt;Erros acionáveis&lt;/b&gt;&lt;p&gt;Permissão, offline, conta, ausência de media, ocupado, timeout, entrega e rede têm texto e retry.&lt;/p&gt;&lt;small&gt;Falta fechar Focus/DND e confirmar todas as cópias em dispositivos reais.&lt;/small&gt;&lt;em&gt;Em validação&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;UX-006&lt;/span&gt;&lt;b&gt;Recusar com carinho&lt;/b&gt;&lt;p&gt;Depois de recusar, o destinatário pode enviar “Já te ligo”, “Agora não consigo” ou “Manda mensagem”.&lt;/p&gt;&lt;small&gt;A resposta usa &lt;code&gt;client_id&lt;/code&gt; estável, reconciliação idempotente e estado factual de envio.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;
+
+      &lt;article class=&quot;phase&quot;&gt;
+        &lt;div class=&quot;phase-title&quot;&gt;
+          &lt;span&gt;Fase C&lt;/span&gt;
+          &lt;div&gt;&lt;h3&gt;Media, rede e privacidade&lt;/h3&gt;&lt;p&gt;A chamada atendida tem de ligar em redes reais, não apenas no Wi-Fi de desenvolvimento.&lt;/p&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;task-grid&quot;&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;active&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;RTC-001&lt;/span&gt;&lt;b&gt;TURN em produção&lt;/b&gt;&lt;p&gt;Endpoint autenticado para credenciais Cloudflare temporárias e fallback configurável já existe.&lt;/p&gt;&lt;small&gt;Não concluída: faltam secrets, relay físico, NAT restritivo e verificação de produção.&lt;/small&gt;&lt;em&gt;Em integração&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;active&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;RTC-002&lt;/span&gt;&lt;b&gt;Sinalização resiliente&lt;/b&gt;&lt;p&gt;Sequência, dedupe, retry limitado, presença por dispositivo e reconnect foram implementados.&lt;/p&gt;&lt;small&gt;Falta ensaio Wi-Fi ↔ dados durante negociação.&lt;/small&gt;&lt;em&gt;Em validação&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;active&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;RTC-003&lt;/span&gt;&lt;b&gt;ICE restart e reconexão&lt;/b&gt;&lt;p&gt;Estado reconnecting, backoff, restart ICE e timeout distinto de ended estão em código e testes.&lt;/p&gt;&lt;small&gt;Falta recuperar uma quebra transitória num par de aparelhos reais.&lt;/small&gt;&lt;em&gt;Em validação&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;RTC-004&lt;/span&gt;&lt;b&gt;Seletor de dispositivos&lt;/b&gt;&lt;p&gt;Microfone, câmara e saída aparecem durante a chamada, com troca atómica de tracks e fallback factual.&lt;/p&gt;&lt;small&gt;Integração mobile/desktop e browsers sem &lt;code&gt;setSinkId&lt;/code&gt; estão cobertos.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;RTC-005&lt;/span&gt;&lt;b&gt;Qualidade visível&lt;/b&gt;&lt;p&gt;RTT, jitter, perda e bitrate alimentam o indicador boa/instável/fraca e detalhes em linguagem humana.&lt;/p&gt;&lt;small&gt;O monitor corre no peer ativo e também aparece na mini-call.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p2&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;RTC-006&lt;/span&gt;&lt;b&gt;Partilha de ecrã&lt;/b&gt;&lt;p&gt;Desktop com feature detection, consentimento do browser, retorno seguro à câmara e stop automático.&lt;/p&gt;&lt;small&gt;Quando a plataforma não suporta, o controlo não é inventado.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;
+
+      &lt;article class=&quot;phase&quot;&gt;
+        &lt;div class=&quot;phase-title&quot;&gt;
+          &lt;span&gt;Fase D&lt;/span&gt;
+          &lt;div&gt;&lt;h3&gt;Prontidão, histórico e operação&lt;/h3&gt;&lt;p&gt;O utilizador consegue saber antes da chamada se o próprio dispositivo está preparado.&lt;/p&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;task-grid&quot;&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;OPS-001&lt;/span&gt;&lt;b&gt;Centro de prontidão&lt;/b&gt;&lt;p&gt;PWA, HTTPS, service worker, push, media, áudio, vibração e rede aparecem nas definições com ações.&lt;/p&gt;&lt;small&gt;Implementado e localizado; Focus/DND continua limitado pelo sistema/browser.&lt;/small&gt;&lt;em&gt;Concluída&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;OPS-002&lt;/span&gt;&lt;b&gt;Teste de chamada/notificação&lt;/b&gt;&lt;p&gt;O centro testa som, vibração, microfone, câmara e um Web Push real deste dispositivo.&lt;/p&gt;&lt;small&gt;Distingue apresentado localmente, aceite pelo provider, em fila e falha; não chama “recebido” a um simples HTTP 202.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;active&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;OPS-003&lt;/span&gt;&lt;b&gt;Histórico rico&lt;/b&gt;&lt;p&gt;Estado, direção, duração e voltar a ligar estão integrados na conversa.&lt;/p&gt;&lt;small&gt;Falta confirmar consistência nos dois utilizadores reais.&lt;/small&gt;&lt;em&gt;Em validação&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;todo&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;OPS-004&lt;/span&gt;&lt;b&gt;Preferências&lt;/b&gt;&lt;p&gt;Ringtone, volume, vibração, previews, DND, quem pode ligar e relay obrigatório.&lt;/p&gt;&lt;small&gt;Gate: defaults seguros e sincronização.&lt;/small&gt;&lt;em&gt;Por executar&lt;/em&gt;&lt;/div&gt;
+          &lt;div class=&quot;task&quot; data-priority=&quot;p2&quot; data-status=&quot;todo&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;OPS-005&lt;/span&gt;&lt;b&gt;Handoff de device&lt;/b&gt;&lt;p&gt;Transferir chamada explicitamente entre aparelhos da mesma conta.&lt;/p&gt;&lt;small&gt;Gate: anterior termina como transferred.&lt;/small&gt;&lt;em&gt;Por executar&lt;/em&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section id=&quot;mensagens&quot; class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-heading&quot;&gt;
+      &lt;div&gt;
+        &lt;p class=&quot;section-kicker&quot;&gt;07 · Mensagens ao nível certo&lt;/p&gt;
+        &lt;h2&gt;Backlog inspirado nas apps, adaptado ao casal&lt;/h2&gt;
+      &lt;/div&gt;
+      &lt;span class=&quot;section-tag&quot;&gt;P1 implementado no worktree; P2 futuro permanece separado&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;task-grid chat-task-grid&quot; aria-label=&quot;Estado das funcionalidades P1 de mensagens&quot;&gt;
+      &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;CHAT-001&lt;/span&gt;&lt;b&gt;Inbox e organização&lt;/b&gt;&lt;p&gt;Lista de conversas, não lidas, pesquisa, pins, mute, arquivo e previews de drafts.&lt;/p&gt;&lt;small&gt;Integrado na página de mensagens e coberto por testes de preferências/drafts.&lt;/small&gt;&lt;em&gt;Concluída&lt;/em&gt;&lt;/div&gt;
+      &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;CHAT-002&lt;/span&gt;&lt;b&gt;Ações e presença&lt;/b&gt;&lt;p&gt;Reply, edit, delete, reações, typing e sent/read com cursor factual.&lt;/p&gt;&lt;small&gt;Leitura só avança quando o fim real da thread está visível.&lt;/small&gt;&lt;em&gt;Concluída&lt;/em&gt;&lt;/div&gt;
+      &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;CHAT-003&lt;/span&gt;&lt;b&gt;Voice notes e drafts&lt;/b&gt;&lt;p&gt;Gravar, cancelar, ouvir preview, repetir, enviar e manter draft por conversa.&lt;/p&gt;&lt;small&gt;Falhas preservam o rascunho; envio confirmado limpa-o.&lt;/small&gt;&lt;em&gt;Concluída&lt;/em&gt;&lt;/div&gt;
+      &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;CHAT-004&lt;/span&gt;&lt;b&gt;Media e galeria&lt;/b&gt;&lt;p&gt;Foto, vídeo, ficheiro, preview, galeria paginada e URLs locais com revogação individual estão integrados.&lt;/p&gt;&lt;small&gt;Concluído em código; uploads grandes em aparelhos reais continuam no gate físico.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+      &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;CHAT-005&lt;/span&gt;&lt;b&gt;Offline e idempotência&lt;/b&gt;&lt;p&gt;Outbox global por conta, retry, bootstrap offline, recuperação do commit e descarte seguro evitam duplicados e perda após timeout.&lt;/p&gt;&lt;small&gt;82 testes de chat passaram; reconnect prolongado e produção continuam gates de release.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+      &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;todo&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;CHAT-006&lt;/span&gt;&lt;b&gt;Camada avançada&lt;/b&gt;&lt;p&gt;Forward, favoritos, reminders, GIF/stickers e mensagens temporárias.&lt;/p&gt;&lt;small&gt;E2EE verificável permanece um trilho próprio e não está concluído.&lt;/small&gt;&lt;em&gt;Por executar&lt;/em&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;feature-columns&quot;&gt;
+      &lt;article&gt;
+        &lt;h3&gt;Compor e enviar&lt;/h3&gt;
+        &lt;ul&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; voice note, cancelar, preview e draft por conta/conversa&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Feito em código:&lt;/strong&gt; vídeo, foto, ficheiro e câmara; validação física de ficheiros grandes pendente&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; reply, edit e delete/unsend; &lt;strong&gt;futuro:&lt;/strong&gt; forward&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; drafts, outbox por conta e retry offline idempotente&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Futuro:&lt;/strong&gt; GIF, stickers e emoji recentes&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Futuro:&lt;/strong&gt; mensagens temporárias opcionais&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/article&gt;
+      &lt;article&gt;
+        &lt;h3&gt;Ler e encontrar&lt;/h3&gt;
+        &lt;ul&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; sent, delivered e read por mensagem&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; pesquisa textual; &lt;strong&gt;futuro:&lt;/strong&gt; filtros avançados por autor/data/media&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; deep-link exato e jump-to-message com contexto&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; pins; &lt;strong&gt;futuro:&lt;/strong&gt; favoritos e reminders&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; galeria paginada de links/media/ficheiros&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; inbox e marcador de não lidas&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/article&gt;
+      &lt;article&gt;
+        &lt;h3&gt;Sentir a conversa&lt;/h3&gt;
+        &lt;ul&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; typing e presença com privacidade&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; reações rápidas, animadas e acessíveis&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; mascote reage a mensagem, amor e saudade&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; foreground cards grandes e fofos&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; sons/haptics distintos; &lt;strong&gt;futuro:&lt;/strong&gt; preferências completas&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Feito:&lt;/strong&gt; reduced motion e mute; &lt;strong&gt;limitado pela plataforma:&lt;/strong&gt; DND/Focus&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/article&gt;
+      &lt;article&gt;
+        &lt;h3&gt;Segurança&lt;/h3&gt;
+        &lt;ul&gt;
+          &lt;li&gt;&lt;strong&gt;Futuro:&lt;/strong&gt; E2EE verificável de conteúdo como trilho próprio&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Futuro:&lt;/strong&gt; safety number e gestão de dispositivos ligados&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Futuro:&lt;/strong&gt; preview de links seguro e opt-in&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Futuro:&lt;/strong&gt; malware scanning; limites de ficheiro atuais não equivalem a scanning&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Futuro:&lt;/strong&gt; report/block para contactos gerais&lt;/li&gt;
+          &lt;li&gt;&lt;strong&gt;Futuro:&lt;/strong&gt; retenção configurável e exportação transparente&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/article&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section id=&quot;pedidos-anteriores&quot; class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-heading&quot;&gt;
+      &lt;div&gt;
+        &lt;p class=&quot;section-kicker&quot;&gt;08 · Rastreabilidade do pedido completo&lt;/p&gt;
+        &lt;h2&gt;Os pedidos anteriores continuam dentro do mesmo produto&lt;/h2&gt;
+      &lt;/div&gt;
+      &lt;span class=&quot;section-tag&quot;&gt;Concluídos no worktree; release continua separada&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;task-grid&quot; aria-label=&quot;Rastreabilidade dos pedidos anteriores do Presuntinho&quot;&gt;
+      &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;SOCIAL-001&lt;/span&gt;&lt;b&gt;Multiplayer simples&lt;/b&gt;&lt;p&gt;Procurar amigo e convidar com um clique, ou partilhar/copiar link para entrar na sala.&lt;/p&gt;&lt;small&gt;Aceitação in-app, entrada pelo link, retry, expiração, cancelamento, substituição e limite de dois lugares estão cobertos por 25 testes.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+      &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;SOCIAL-002&lt;/span&gt;&lt;b&gt;Convite de jogo durável&lt;/b&gt;&lt;p&gt;Push transacional com destinatário, sala, jogo, validade, autenticação, deep-link e substituição/cancelamento.&lt;/p&gt;&lt;small&gt;O service worker preserva o ramo de convite e a política impede convites após remover amizade.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+      &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;COUPLE-001&lt;/span&gt;&lt;b&gt;Outbox de comunicação do casal&lt;/b&gt;&lt;p&gt;Chat, “amo-te” e “tenho saudades” usam entrega durável, retry/sweep, dedupe e payloads redigidos.&lt;/p&gt;&lt;small&gt;O mesmo contrato evita perder estes gestos quando o outro aparelho está offline ou em background.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+      &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;MEDIA-001&lt;/span&gt;&lt;b&gt;Eliminação de media fiável&lt;/b&gt;&lt;p&gt;A remoção de anexos passa por outbox com lease, retry seguro e tratamento de caminhos reutilizados.&lt;/p&gt;&lt;small&gt;Falhas permanentes de Storage não entram num ciclo infinito.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+      &lt;div class=&quot;task&quot; data-priority=&quot;p0&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;COUPLE-002&lt;/span&gt;&lt;b&gt;Coração e pontos do casal&lt;/b&gt;&lt;p&gt;O coração só aparece em modo casal, sincronizado nas duas contas pelo mesmo período, acima da mascote e com pontos exclusivos do casal.&lt;/p&gt;&lt;small&gt;O clique produz haptic coordenado nos dois aparelhos sem misturar a pontuação original.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+      &lt;div class=&quot;task&quot; data-priority=&quot;p1&quot; data-status=&quot;done&quot;&gt;&lt;span class=&quot;task-id&quot;&gt;MASCOT-001&lt;/span&gt;&lt;b&gt;Expressividade da mascote&lt;/b&gt;&lt;p&gt;Press-and-hold “amo-te”, multi-tap “saudades” e receção foreground de mensagem, amor ou saudade ganharam reações progressivas e finais visíveis.&lt;/p&gt;&lt;small&gt;Inclui inchar exponencialmente, explosão de corações, intensidade por toque, card fofo e animação da mascote ao receber; a sensação física final continua no device lab.&lt;/small&gt;&lt;em&gt;Concluída em código&lt;/em&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section id=&quot;testes&quot; class=&quot;section&quot;&gt;
+    &lt;div class=&quot;section-heading&quot;&gt;
+      &lt;div&gt;
+        &lt;p class=&quot;section-kicker&quot;&gt;09 · Matriz de validação&lt;/p&gt;
+        &lt;h2&gt;Não está pronto até passar em dois aparelhos reais&lt;/h2&gt;
+      &lt;/div&gt;
+      &lt;span class=&quot;section-tag&quot;&gt;Automação + device lab manual&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;test-matrix&quot;&gt;
+      &lt;div class=&quot;test-axis&quot;&gt;
+        &lt;b&gt;Origem&lt;/b&gt;
+        &lt;span&gt;iPhone Home Screen&lt;/span&gt;&lt;span&gt;Android PWA&lt;/span&gt;&lt;span&gt;Desktop Chrome&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;test-axis&quot;&gt;
+        &lt;b&gt;Destino&lt;/b&gt;
+        &lt;span&gt;Foreground&lt;/span&gt;&lt;span&gt;Background&lt;/span&gt;&lt;span&gt;Fechada&lt;/span&gt;&lt;span&gt;Offline&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;test-axis&quot;&gt;
+        &lt;b&gt;Rede&lt;/b&gt;
+        &lt;span&gt;Mesmo Wi-Fi&lt;/span&gt;&lt;span&gt;Wi-Fi ↔ 4G/5G&lt;/span&gt;&lt;span&gt;NAT restritivo&lt;/span&gt;&lt;span&gt;Troca de rede&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;test-axis&quot;&gt;
+        &lt;b&gt;Estado&lt;/b&gt;
+        &lt;span&gt;Atende&lt;/span&gt;&lt;span&gt;Recusa&lt;/span&gt;&lt;span&gt;Ignora&lt;/span&gt;&lt;span&gt;Ocupada&lt;/span&gt;&lt;span&gt;Dois devices&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;acceptance&quot;&gt;
+      &lt;h3&gt;Critérios de saída P0&lt;/h3&gt;
+      &lt;p class=&quot;acceptance-warning&quot;&gt;&lt;strong&gt;Ainda não aprovados:&lt;/strong&gt; TURN/relay em rede restritiva, corrida em dois aparelhos físicos, background/fechada nos dois sistemas e smoke de produção.&lt;/p&gt;
+      &lt;ol&gt;
+        &lt;li&gt;O overlay do chamador aparece em menos de 100 ms após o clique, independentemente de permissões ou rede.&lt;/li&gt;
+        &lt;li&gt;O destinatário com app aberta vê overlay e ouve ringtone; vibra onde a plataforma permite.&lt;/li&gt;
+        &lt;li&gt;Em background/fechada, recebe notificação visível quando a plataforma e permissões permitem.&lt;/li&gt;
+        &lt;li&gt;O chamador só vê “A tocar” depois de ACK real de um dispositivo.&lt;/li&gt;
+        &lt;li&gt;Nenhum device disponível produz “Não conseguimos contactar este dispositivo”, nunca silêncio.&lt;/li&gt;
+        &lt;li&gt;Atender em dois devices simultaneamente resulta num vencedor e answered_elsewhere no outro.&lt;/li&gt;
+        &lt;li&gt;Áudio e vídeo ligam através de TURN em redes diferentes e recuperam de uma interrupção transitória.&lt;/li&gt;
+        &lt;li&gt;Cancelar, recusar, timeout e falha fecham som, vibração, media tracks, notificações e canais.&lt;/li&gt;
+        &lt;li&gt;Histórico e duração coincidem para os dois utilizadores.&lt;/li&gt;
+        &lt;li&gt;Testes unitários, integração, RLS/advisors, build e smoke production ficam verdes.&lt;/li&gt;
+      &lt;/ol&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section class=&quot;section release&quot;&gt;
+    &lt;div&gt;
+      &lt;p class=&quot;section-kicker&quot;&gt;10 · Release gates&lt;/p&gt;
+      &lt;h2&gt;Ordem de publicação&lt;/h2&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;release-flow&quot;&gt;
+      &lt;div class=&quot;done&quot;&gt;&lt;span&gt;1&lt;/span&gt;&lt;b&gt;Migrations verificadas&lt;/b&gt;&lt;small&gt;5 migrations + 5 testes passaram juntos em rollback; as migrations foram depois aplicadas individualmente e confirmadas no ledger de produção.&lt;/small&gt;&lt;/div&gt;
+      &lt;i&gt;→&lt;/i&gt;
+      &lt;div class=&quot;done&quot;&gt;&lt;span&gt;2&lt;/span&gt;&lt;b&gt;Backend de entrega&lt;/b&gt;&lt;small&gt;Push/outbox/ACK, call-start atómico, RLS, grants, Realtime e instalações push estão ativos em produção; TURN aguarda secrets e política relay.&lt;/small&gt;&lt;/div&gt;
+      &lt;i&gt;→&lt;/i&gt;
+      &lt;div class=&quot;active&quot;&gt;&lt;span&gt;3&lt;/span&gt;&lt;b&gt;Teste real a dois&lt;/b&gt;&lt;small&gt;Preview verde; pendente: foreground/background/closed e corrida multi-device em dois aparelhos.&lt;/small&gt;&lt;/div&gt;
+      &lt;i&gt;→&lt;/i&gt;
+      &lt;div&gt;&lt;span&gt;4&lt;/span&gt;&lt;b&gt;Frontend&lt;/b&gt;&lt;small&gt;Pendente: merge main + deploy Netlify.&lt;/small&gt;&lt;/div&gt;
+      &lt;i&gt;→&lt;/i&gt;
+      &lt;div&gt;&lt;span&gt;5&lt;/span&gt;&lt;b&gt;Verificação produção&lt;/b&gt;&lt;small&gt;Pendente: event ledger, notificação e media por TURN.&lt;/small&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;&lt;strong&gt;Documento vivo.&lt;/strong&gt; Cada tarefa muda de estado quando o respetivo gate tem evidência. “Implementado” sem teste real não conta como concluído.&lt;/p&gt;
+    &lt;a href=&quot;#presuntinho-communications-plan&quot;&gt;Voltar ao topo ↑&lt;/a&gt;
+  &lt;/footer&gt;
+&lt;/main&gt;
+
+&lt;style&gt;
+  :root {
+    --bg: #fff8f6;
+    --surface: #ffffff;
+    --surface-soft: #fff0ee;
+    --ink: #2e2025;
+    --muted: #725f66;
+    --line: #ead8d8;
+    --rose: #e74676;
+    --rose-dark: #a91f4b;
+    --peach: #ff8f70;
+    --gold: #e9a12c;
+    --green: #25845c;
+    --blue: #3a66c5;
+    --shadow: 0 18px 50px rgba(109, 50, 68, .10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1518;
+      --surface: #271d21;
+      --surface-soft: #342228;
+      --ink: #fff4f6;
+      --muted: #d4bfc5;
+      --line: #503640;
+      --rose: #ff6f9c;
+      --rose-dark: #ffabc5;
+      --peach: #ff9f86;
+      --gold: #ffc264;
+      --green: #6fd4a7;
+      --blue: #8eaaf2;
+      --shadow: 0 18px 50px rgba(0, 0, 0, .24);
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif; }
+  a { color: var(--rose-dark); }
+  .plan-shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 64px; }
+  .hero { position: relative; overflow: hidden; display: grid; grid-template-columns: 1.55fr .85fr; gap: 28px; align-items: stretch; padding: clamp(28px, 5vw, 62px); border: 1px solid var(--line); border-radius: 32px; background: linear-gradient(140deg, var(--surface) 10%, var(--surface-soft)); box-shadow: var(--shadow); }
+  .hero::after { content: &quot;♥&quot;; position: absolute; right: -25px; bottom: -105px; color: color-mix(in srgb, var(--rose) 8%, transparent); font-size: 290px; line-height: 1; transform: rotate(-12deg); pointer-events: none; }
+  .eyebrow, .section-kicker { margin: 0 0 10px; color: var(--rose-dark); font-size: .76rem; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
+  h1 { max-width: 760px; margin: 0; font-size: clamp(2.15rem, 6vw, 4.85rem); line-height: .96; letter-spacing: -.055em; }
+  .lede { max-width: 750px; margin: 24px 0 0; color: var(--muted); font-size: clamp(1rem, 2vw, 1.18rem); line-height: 1.7; }
+  .hero-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+  .badge, .section-tag { display: inline-flex; align-items: center; min-height: 30px; padding: 6px 11px; border-radius: 999px; font-size: .72rem; font-weight: 800; letter-spacing: .02em; }
+  .badge.goal { background: color-mix(in srgb, var(--green) 14%, transparent); color: var(--green); }
+  .badge.danger { background: color-mix(in srgb, var(--rose) 14%, transparent); color: var(--rose-dark); }
+  .badge.neutral, .section-tag { background: color-mix(in srgb, var(--muted) 10%, transparent); color: var(--muted); }
+  .north-star { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: flex-end; min-height: 280px; padding: 26px; border-radius: 24px; background: #2e2025; color: #fff; }
+  .north-star .north-icon { position: absolute; top: 18px; right: 22px; color: #ff759e; font-size: 4rem; animation: beat 1.8s ease-in-out infinite; }
+  .north-star strong { font-size: 1.45rem; }
+  .north-star p { margin: 10px 0 0; color: #ecdfe3; line-height: 1.55; }
+  .jump-nav { position: sticky; top: 10px; z-index: 20; display: flex; gap: 6px; overflow-x: auto; margin: 18px 0; padding: 8px; border: 1px solid var(--line); border-radius: 16px; background: color-mix(in srgb, var(--surface) 90%, transparent); box-shadow: 0 8px 30px rgba(55, 25, 34, .08); backdrop-filter: blur(14px); scrollbar-width: none; }
+  .jump-nav a { flex: 0 0 auto; padding: 9px 13px; border-radius: 10px; color: var(--muted); font-size: .78rem; font-weight: 750; text-decoration: none; }
+  .jump-nav a:hover, .jump-nav a:focus-visible { background: var(--surface-soft); color: var(--rose-dark); outline: none; }
+  .scoreboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 18px 0 0; }
+  .scoreboard article { display: flex; flex-direction: column; min-height: 116px; padding: 20px; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); }
+  .scoreboard article.critical { background: var(--rose-dark); color: #fff; border-color: transparent; }
+  .metric { font-size: 2.35rem; font-weight: 900; line-height: 1; }
+  .metric-label { margin-top: auto; color: var(--muted); font-size: .78rem; line-height: 1.25; }
+  .critical .metric-label { color: #ffe4ec; }
+  .section { scroll-margin-top: 85px; margin-top: 22px; padding: clamp(24px, 4vw, 44px); border: 1px solid var(--line); border-radius: 28px; background: var(--surface); box-shadow: 0 12px 40px rgba(109, 50, 68, .06); }
+  .section-heading { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; margin-bottom: 28px; }
+  h2 { margin: 0; font-size: clamp(1.65rem, 3.7vw, 2.85rem); line-height: 1.05; letter-spacing: -.04em; }
+  h3 { margin: 0; font-size: 1.05rem; }
+  .finding-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .finding { position: relative; overflow: hidden; min-height: 230px; padding: 22px; border: 1px solid var(--line); border-radius: 20px; background: var(--bg); }
+  .finding::after { content: &quot;&quot;; position: absolute; left: 0; top: 0; width: 5px; height: 100%; background: var(--rose); }
+  .finding-number { display: block; margin-bottom: 40px; color: var(--rose-dark); font-size: .75rem; font-weight: 900; }
+  .finding p { color: var(--muted); font-size: .88rem; line-height: 1.55; }
+  .finding small { display: block; color: var(--ink); font-size: .73rem; font-weight: 740; line-height: 1.45; }
+  .evidence-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; margin-top: 16px; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--line); }
+  .evidence-strip &gt; * { padding: 15px; background: var(--surface-soft); font-size: .75rem; line-height: 1.4; }
+  .evidence-strip strong { color: var(--rose-dark); }
+  .table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: 18px; }
+  table { width: 100%; min-width: 800px; border-collapse: collapse; text-align: left; }
+  th, td { padding: 15px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: .79rem; line-height: 1.45; }
+  thead th { background: var(--surface-soft); color: var(--muted); font-size: .7rem; letter-spacing: .07em; text-transform: uppercase; }
+  tbody th { color: var(--rose-dark); }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+  .source-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .source-row a { padding: 7px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: .7rem; font-weight: 750; text-decoration: none; }
+  .architecture { display: grid; gap: 12px; padding: 20px; border-radius: 24px; background: #2e2025; color: #fff; }
+  .arch-lane { display: grid; grid-template-columns: 100px 1fr 42px 1fr; gap: 10px; align-items: center; }
+  .lane-label { color: #ffabc5; font-size: .72rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+  .node { min-height: 74px; padding: 15px; border: 1px solid #614650; border-radius: 14px; background: #3b2930; }
+  .node b, .node small { display: block; }
+  .node small { margin-top: 5px; color: #dcc7ce; font-size: .7rem; line-height: 1.35; }
+  .node.primary { background: linear-gradient(135deg, #a91f4b, #65304d); border-color: #d95f85; }
+  .arrow { color: #ff7fa5; font-size: 1.6rem; text-align: center; }
+  .arch-spine { display: grid; gap: 10px; margin-left: 110px; }
+  .branch-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .media-plane { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; padding: 14px; border: 1px dashed #886b76; border-radius: 16px; }
+  .media-plane div { margin-right: auto; }
+  .media-plane b, .media-plane small { display: block; }
+  .media-plane small { color: #d8c1c9; font-size: .68rem; }
+  .media-plane span { padding: 6px 9px; border-radius: 999px; background: #4a343c; color: #f4dfe6; font-size: .67rem; }
+  .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+  .principles article { padding: 16px; border: 1px solid var(--line); border-radius: 15px; background: var(--bg); }
+  .principles b, .principles span { display: block; }
+  .principles span { margin-top: 5px; color: var(--muted); font-size: .73rem; line-height: 1.4; }
+  .implementation-note { margin: 14px 0 0; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: .78rem; line-height: 1.55; }
+  .implementation-note strong { color: var(--ink); }
+  .state-flow { display: grid; grid-template-columns: repeat(15, auto); align-items: center; gap: 7px; overflow-x: auto; padding-bottom: 8px; }
+  .state { min-width: 126px; min-height: 124px; padding: 14px; border: 1px solid var(--line); border-radius: 17px; background: var(--bg); }
+  .state span { display: grid; place-items: center; width: 25px; height: 25px; margin-bottom: 22px; border-radius: 50%; background: var(--surface-soft); color: var(--rose-dark); font-size: .67rem; font-weight: 900; }
+  .state b, .state small { display: block; }
+  .state small { margin-top: 5px; color: var(--muted); font-size: .65rem; line-height: 1.3; }
+  .state.active { border-color: var(--rose); box-shadow: inset 0 0 0 1px var(--rose); }
+  .state.success { border-color: var(--green); }
+  .state-flow i { color: var(--rose); font-style: normal; }
+  .terminal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-top: 16px; }
+  .terminal-grid article { padding: 14px; border-left: 3px solid var(--gold); border-radius: 8px 13px 13px 8px; background: var(--surface-soft); }
+  .terminal-grid b, .terminal-grid span { display: block; }
+  .terminal-grid span { margin-top: 4px; color: var(--muted); font-size: .71rem; line-height: 1.4; }
+  .yes { color: var(--green); font-weight: 800; }
+  .partial { color: var(--gold); font-weight: 800; }
+  .no { color: var(--rose-dark); font-weight: 800; }
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+  .filter { min-height: 38px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--muted); font: inherit; font-size: .75rem; font-weight: 800; cursor: pointer; }
+  .filter.active, .filter:hover, .filter:focus-visible { border-color: var(--rose); background: var(--surface-soft); color: var(--rose-dark); outline: none; }
+  .phase-list { display: grid; gap: 18px; }
+  .phase { padding: 20px; border: 1px solid var(--line); border-radius: 21px; background: var(--bg); }
+  .phase-title { display: grid; grid-template-columns: 72px 1fr; gap: 15px; margin-bottom: 16px; }
+  .phase-title &gt; span { display: grid; place-items: center; height: 45px; border-radius: 12px; background: var(--rose-dark); color: #fff; font-size: .74rem; font-weight: 850; }
+  .phase-title p { margin: 5px 0 0; color: var(--muted); font-size: .77rem; }
+  .task-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+  .task { position: relative; min-height: 190px; padding: 16px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface); transition: opacity .15s ease, transform .15s ease; }
+  .task.hidden { display: none; }
+  .task-id { display: block; margin-bottom: 28px; color: var(--rose-dark); font-size: .66rem; font-weight: 900; letter-spacing: .07em; }
+  .task b, .task p, .task small { display: block; }
+  .task p { color: var(--muted); font-size: .73rem; line-height: 1.45; }
+  .task small { color: var(--ink); font-size: .67rem; font-weight: 680; line-height: 1.4; }
+  .task em { position: absolute; top: 12px; right: 12px; padding: 4px 7px; border-radius: 999px; background: var(--surface-soft); color: var(--muted); font-size: .58rem; font-style: normal; font-weight: 800; }
+  .task[data-status=&quot;active&quot;] { border-color: var(--rose); box-shadow: inset 0 0 0 1px var(--rose); }
+  .task[data-status=&quot;active&quot;] em { background: color-mix(in srgb, var(--rose) 16%, transparent); color: var(--rose-dark); }
+  .task[data-status=&quot;done&quot;] { border-color: color-mix(in srgb, var(--green) 55%, var(--line)); background: color-mix(in srgb, var(--green) 5%, var(--surface)); }
+  .task[data-status=&quot;done&quot;] .task-id { color: var(--green); }
+  .task[data-status=&quot;done&quot;] em { background: color-mix(in srgb, var(--green) 15%, transparent); color: var(--green); }
+  .chat-task-grid { margin-bottom: 14px; }
+  .feature-columns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .feature-columns article { padding: 18px; border: 1px solid var(--line); border-radius: 17px; background: var(--bg); }
+  .feature-columns ul { margin: 14px 0 0; padding-left: 18px; }
+  .feature-columns li { margin: 8px 0; color: var(--muted); font-size: .73rem; line-height: 1.35; }
+  .test-matrix { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; }
+  .test-axis { padding: 17px; border: 1px solid var(--line); border-radius: 16px; background: var(--bg); }
+  .test-axis b { display: block; margin-bottom: 12px; color: var(--rose-dark); }
+  .test-axis span { display: block; margin: 6px 0; padding: 7px 8px; border-radius: 8px; background: var(--surface); color: var(--muted); font-size: .7rem; }
+  .acceptance { margin-top: 14px; padding: 22px; border-radius: 18px; background: #2e2025; color: #fff; }
+  .acceptance ol { columns: 2; column-gap: 36px; margin: 17px 0 0; padding-left: 20px; }
+  .acceptance li { break-inside: avoid; margin: 0 0 11px; color: #eadce1; font-size: .75rem; line-height: 1.5; }
+  .acceptance-warning { margin: 12px 0 0; color: #ffd4df; font-size: .76rem; line-height: 1.5; }
+  .release { background: linear-gradient(135deg, var(--surface), var(--surface-soft)); }
+  .release-flow { display: grid; grid-template-columns: 1fr 28px 1fr 28px 1fr 28px 1fr 28px 1fr; gap: 5px; align-items: center; margin-top: 22px; }
+  .release-flow div { min-height: 120px; padding: 14px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface); }
+  .release-flow div.done { border-color: color-mix(in srgb, var(--green) 55%, var(--line)); }
+  .release-flow div.active { border-color: var(--rose); box-shadow: inset 0 0 0 1px var(--rose); }
+  .release-flow span { display: grid; place-items: center; width: 26px; height: 26px; margin-bottom: 23px; border-radius: 50%; background: var(--rose-dark); color: #fff; font-size: .66rem; font-weight: 900; }
+  .release-flow b, .release-flow small { display: block; }
+  .release-flow small { margin-top: 5px; color: var(--muted); font-size: .66rem; line-height: 1.35; }
+  .release-flow i { color: var(--rose); font-style: normal; text-align: center; }
+  footer { display: flex; justify-content: space-between; gap: 18px; align-items: center; padding: 26px 5px 0; color: var(--muted); font-size: .76rem; }
+  footer p { max-width: 760px; margin: 0; }
+  footer a { flex: 0 0 auto; font-weight: 800; }
+  button:focus-visible, a:focus-visible { outline: 3px solid color-mix(in srgb, var(--rose) 55%, transparent); outline-offset: 3px; }
+  @keyframes beat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.12); } 30% { transform: scale(1); } }
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .north-star { min-height: 220px; }
+    .scoreboard { grid-template-columns: repeat(2, 1fr); }
+    .finding-grid, .task-grid, .principles, .terminal-grid { grid-template-columns: repeat(2, 1fr); }
+    .evidence-strip { grid-template-columns: 1fr 1fr; }
+    .evidence-strip strong { grid-column: 1 / -1; }
+    .arch-lane { grid-template-columns: 80px 1fr 26px 1fr; }
+    .arch-spine { margin-left: 90px; }
+    .feature-columns, .test-matrix { grid-template-columns: repeat(2, 1fr); }
+    .release-flow { grid-template-columns: 1fr; }
+    .release-flow i { transform: rotate(90deg); }
+  }
+  @media (max-width: 560px) {
+    .plan-shell { width: min(100% - 18px, 1180px); padding-top: 9px; }
+    .hero, .section { border-radius: 21px; padding: 22px 18px; }
+    .jump-nav { top: 5px; margin: 9px 0; }
+    .scoreboard { gap: 7px; }
+    .scoreboard article { min-height: 100px; padding: 15px; }
+    .section-heading { display: block; }
+    .section-tag { margin-top: 11px; }
+    .finding-grid, .task-grid, .principles, .terminal-grid, .feature-columns, .test-matrix { grid-template-columns: 1fr; }
+    .finding { min-height: 0; }
+    .evidence-strip { display: block; background: transparent; }
+    .evidence-strip &gt; * { display: block; border-bottom: 1px solid var(--line); }
+    .arch-lane { grid-template-columns: 1fr; }
+    .lane-label { margin-top: 5px; }
+    .arrow { transform: rotate(90deg); }
+    .arch-spine { margin-left: 0; }
+    .branch-row { grid-template-columns: 1fr; }
+    .phase { padding: 14px; }
+    .phase-title { grid-template-columns: 58px 1fr; }
+    .acceptance ol { columns: 1; }
+    footer { align-items: flex-start; flex-direction: column; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .north-star .north-icon { animation: none; }
+    .task { transition: none; }
+  }
+&lt;/style&gt;
+
+&lt;script&gt;
+  (function () {
+    var root = document.getElementById(&quot;presuntinho-communications-plan&quot;);
+    if (!root) return;
+    var buttons = Array.from(root.querySelectorAll(&quot;.filter&quot;));
+    var tasks = Array.from(root.querySelectorAll(&quot;.task&quot;));
+    function refreshCounts() {
+      var done = tasks.filter(function (task) { return task.dataset.status === &quot;done&quot;; }).length;
+      var active = tasks.filter(function (task) { return task.dataset.status === &quot;active&quot;; }).length;
+      var todo = tasks.filter(function (task) { return task.dataset.status === &quot;todo&quot;; }).length;
+      root.querySelector(&quot;#done-count&quot;).textContent = String(done);
+      root.querySelector(&quot;#active-count&quot;).textContent = String(active);
+      root.querySelector(&quot;#todo-count&quot;).textContent = String(todo);
+    }
+    buttons.forEach(function (button) {
+      button.addEventListener(&quot;click&quot;, function () {
+        var filter = button.dataset.filter || &quot;all&quot;;
+        buttons.forEach(function (item) { item.classList.toggle(&quot;active&quot;, item === button); });
+        tasks.forEach(function (task) {
+          var show = filter === &quot;all&quot; || task.dataset.priority === filter || task.dataset.status === filter;
+          task.classList.toggle(&quot;hidden&quot;, !show);
+        });
+      });
+    });
+    refreshCounts();
+  })();
+&lt;/script&gt;
+
+&lt;script src=&quot;https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set([&quot;top&quot;, &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+
+  const getTrigger = (target) =&gt;
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest(&quot;[data-tooltip]&quot;)
+      : null;
+  const containsTarget = (trigger, target) =&gt;
+    target?.nodeType != null &amp;&amp; trigger.contains(target);
+  const getContent = (trigger) =&gt;
+    trigger.getAttribute(&quot;data-tooltip&quot;)?.trim() ?? &quot;&quot;;
+  const getPlacement = (trigger) =&gt; {
+    const placement = trigger.getAttribute(&quot;data-tooltip-placement&quot;);
+    return tooltipPlacements.has(placement) ? placement : &quot;top&quot;;
+  };
+  const getTooltip = () =&gt; {
+    if (tooltip == null) {
+      tooltip = document.createElement(&quot;div&quot;);
+      tooltip.id = tooltipId;
+      tooltip.className = &quot;tooltip&quot;;
+      tooltip.setAttribute(&quot;role&quot;, &quot;tooltip&quot;);
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) =&gt; {
+    const ids = new Set(
+      (trigger.getAttribute(&quot;aria-describedby&quot;) ?? &quot;&quot;)
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute(&quot;aria-describedby&quot;);
+    } else {
+      trigger.setAttribute(&quot;aria-describedby&quot;, [...ids].join(&quot; &quot;));
+    }
+  };
+  const clearOpenTimeout = () =&gt; {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) =&gt; {
+    clearOpenTimeout();
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) =&gt; {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-width&quot;,
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-height&quot;,
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: &quot;fixed&quot;,
+    })
+      .then(({ x, y }) =&gt; {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = &quot;visible&quot;;
+      })
+      .catch(() =&gt; {
+        if (activeTrigger === trigger &amp;&amp; request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) =&gt; {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = &quot;hidden&quot;;
+    floating.style.transform = &quot;translate(0, 0)&quot;;
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () =&gt; {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) =&gt; {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() &lt; skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() =&gt; {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) =&gt; {
+    if (event.pointerType === &quot;touch&quot;) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handleLeave = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(&quot;:focus-visible&quot;)) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) =&gt; {
+    if (event.key === &quot;Escape&quot;) {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () =&gt; {
+    closeTooltip(false);
+    document.removeEventListener(&quot;pointerover&quot;, handlePointerOpen);
+    document.removeEventListener(&quot;pointerout&quot;, handleLeave);
+    document.removeEventListener(&quot;focusin&quot;, handleFocusIn);
+    document.removeEventListener(&quot;focusout&quot;, handleLeave);
+    document.removeEventListener(&quot;keydown&quot;, handleKeyDown);
+    document.removeEventListener(&quot;contextmenu&quot;, handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener(&quot;pointerover&quot;, handlePointerOpen);
+  document.addEventListener(&quot;pointerout&quot;, handleLeave);
+  document.addEventListener(&quot;focusin&quot;, handleFocusIn);
+  document.addEventListener(&quot;focusout&quot;, handleLeave);
+  document.addEventListener(&quot;keydown&quot;, handleKeyDown);
+  document.addEventListener(&quot;contextmenu&quot;, handleContextMenu);
+  window.addEventListener(&quot;pagehide&quot;, destroy, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-lucide&quot; async src=&quot;https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  const initialize = () =&gt; {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById(&quot;codex-visualization-lucide&quot;)
+    ?.addEventListener(&quot;load&quot;, initialize, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+</body>
+</html>

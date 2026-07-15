@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { INITIAL_CALL_MACHINE, reduceCallMachine } from './call-machine';
-import { callTopic, isCallSignalEnvelope, parseCallSession, type CallSession } from './types';
+import {
+	callTopic,
+	deliveryConfirmsRinging,
+	isCallSignalEnvelope,
+	parseCallDelivery,
+	parseCallSession,
+	type CallSession
+} from './types';
 
 const ROW = {
 	id: '18ef18ff-0001-485a-b0ce-08c535bc5c6e',
@@ -53,10 +60,29 @@ describe('call session boundary', () => {
 		expect(isCallSignalEnvelope(envelope, ROW.id, ROW.caller)).toBe(false);
 		expect(isCallSignalEnvelope({ ...envelope, seq: 2.5 }, ROW.id, ROW.callee)).toBe(false);
 	});
+
+	it('only treats an explicit device ringing/opened ACK as ringing', () => {
+		expect(parseCallDelivery({
+			call_id: ROW.id,
+			installation_id: 'install-a',
+			stage: 'presented',
+			updated_at: ROW.created_at
+		})).toMatchObject({ stage: 'presented' });
+		expect(parseCallDelivery({
+			call_id: ROW.id,
+			installation_id: 'install-a',
+			status: 'ringing',
+			updated_at: ROW.created_at
+		})).toMatchObject({ stage: 'ringing' });
+		expect(deliveryConfirmsRinging('provider_accepted')).toBe(false);
+		expect(deliveryConfirmsRinging('presented')).toBe(false);
+		expect(deliveryConfirmsRinging('ringing')).toBe(true);
+		expect(deliveryConfirmsRinging('opened')).toBe(false);
+	});
 });
 
 describe('call state machine', () => {
-	it('moves an outgoing call through prepare, ringing, connecting and active', () => {
+	it('moves an outgoing call through factual delivery and connection phases', () => {
 		const ringing = parseCallSession(ROW) as CallSession;
 		const accepted = {
 			...ringing,
@@ -68,11 +94,28 @@ describe('call state machine', () => {
 		};
 		let state = reduceCallMachine(INITIAL_CALL_MACHINE, { type: 'PREPARE' });
 		expect(state.phase).toBe('preparing');
-		state = reduceCallMachine(state, { type: 'OUTGOING', call: ringing });
-		expect(state.phase).toBe('outgoing');
+		state = reduceCallMachine(state, { type: 'CREATE' });
+		expect(state.phase).toBe('creating');
+		state = reduceCallMachine(state, { type: 'NOTIFYING', call: ringing });
+		expect(state.phase).toBe('notifying');
+		state = reduceCallMachine(state, { type: 'CONTACTING' });
+		expect(state.phase).toBe('contacting');
+		state = reduceCallMachine(state, { type: 'RINGING' });
+		expect(state.phase).toBe('ringing');
 		state = reduceCallMachine(state, { type: 'ACCEPTED', call: accepted });
 		expect(state.phase).toBe('connecting');
 		state = reduceCallMachine(state, { type: 'CONNECTED' });
+		expect(state.phase).toBe('active');
+	});
+
+	it('shows reconnection without ending an active call', () => {
+		const call = parseCallSession(ROW) as CallSession;
+		let state = reduceCallMachine(INITIAL_CALL_MACHINE, { type: 'INCOMING', call });
+		state = reduceCallMachine(state, { type: 'ACCEPTED', call: { ...call, status: 'accepted' } });
+		state = reduceCallMachine(state, { type: 'CONNECTED' });
+		state = reduceCallMachine(state, { type: 'CONNECTION_LOST' });
+		expect(state.phase).toBe('reconnecting');
+		state = reduceCallMachine(state, { type: 'RECONNECTED' });
 		expect(state.phase).toBe('active');
 	});
 

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  isAuthorizedGameInviteForJoin,
   isFreshGameInvite,
   isInviteNewerThanTombstone,
   normalizeGameInviteRow,
@@ -37,5 +38,16 @@ describe('game invite model', () => {
     expect(isInviteNewerThanTombstone(base.created_at, cancelledAt)).toBe(false);
     expect(isInviteNewerThanTombstone('2026-07-15T10:06:00.000Z', cancelledAt)).toBe(true);
     expect(isInviteNewerThanTombstone('not-a-date', cancelledAt)).toBe(false);
+  });
+
+  it('binds an invite deep link to the exact recipient, room and active row', () => {
+    const proof = { ...base, to_account: 'account-2' };
+    const now = Date.parse('2026-07-15T10:10:00.000Z');
+    expect(isAuthorizedGameInviteForJoin(proof, 'invite-1', 'account-2', ' abcd23 ', now)).toBe(true);
+    expect(isAuthorizedGameInviteForJoin(proof, 'invite-2', 'account-2', 'ABCD23', now)).toBe(false);
+    expect(isAuthorizedGameInviteForJoin(proof, 'invite-1', 'account-3', 'ABCD23', now)).toBe(false);
+    expect(isAuthorizedGameInviteForJoin(proof, 'invite-1', 'account-2', 'XYZ567', now)).toBe(false);
+    expect(isAuthorizedGameInviteForJoin({ ...proof, game: 'other' }, 'invite-1', 'account-2', 'ABCD23', now)).toBe(false);
+    expect(isAuthorizedGameInviteForJoin(proof, 'invite-1', 'account-2', 'ABCD23', Date.parse(base.expires_at))).toBe(false);
   });
 });

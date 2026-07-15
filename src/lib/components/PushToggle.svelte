@@ -1,20 +1,35 @@
 <script lang="ts">
   /**
-   * PushToggle — ativa/desativa as notificações push DESTE dispositivo para os
-   * pings de casal. Mostra o caminho certo em cada plataforma (iPhone precisa
-   * da app instalada no ecrã principal; vibração própria é Android).
+   * PushToggle — regista ESTE dispositivo para chamadas, mensagens e pings.
+   * Mostra o caminho certo em cada plataforma (no iPhone a PWA tem de estar
+   * instalada; som/vibração continuam sujeitos às definições do sistema).
    */
   import { onMount } from 'svelte';
   import { t } from 'svelte-i18n';
   import { showToast } from '$lib/components/events';
   import { enablePush, disablePush, getPushState, sendTestPush, type PushState } from '$lib/push';
+  import CommunicationsReadiness from '$lib/components/CommunicationsReadiness.svelte';
 
   let pushState = $state<PushState>('off');
   let busy = $state(false);
   let testing = $state(false);
 
+  async function refreshPushState(): Promise<void> {
+    if (busy) return;
+    pushState = await getPushState();
+  }
+
   onMount(() => {
-    void getPushState().then((s) => (pushState = s));
+    void refreshPushState();
+    const refreshOnReturn = () => {
+      if (document.visibilityState === 'visible') void refreshPushState();
+    };
+    window.addEventListener('focus', refreshPushState);
+    document.addEventListener('visibilitychange', refreshOnReturn);
+    return () => {
+      window.removeEventListener('focus', refreshPushState);
+      document.removeEventListener('visibilitychange', refreshOnReturn);
+    };
   });
 
   async function runTest(): Promise<void> {
@@ -25,8 +40,12 @@
         $t('push.test_title', { default: '🔔 Teste do Presuntinho' }),
         $t('push.test_body', { default: 'Se estás a ler isto no telemóvel, está tudo a funcionar! 🐷' })
       );
-      if (r && r.sent > 0)
-        showToast($t('push.test_sent', { values: { n: r.sent }, default: 'Teste enviado a {n} dispositivo(s) — deve chegar já! 📲' }), 3200);
+      if (r?.verification === 'presented')
+        showToast($t('push.test_presented', { default: '✅ Este dispositivo recebeu e apresentou a notificação.' }), 3600);
+      else if (r?.verification === 'provider-accepted')
+        showToast($t('push.test_unconfirmed', { values: { n: r.sent }, default: 'O fornecedor aceitou {n} envio(s), mas este dispositivo não confirmou a apresentação. Verifica as definições do sistema.' }), 5200, 'error');
+      else if (r?.verification === 'queued')
+        showToast($t('push.test_queued', { default: 'O teste ficou em repetição no servidor, mas este dispositivo ainda não o apresentou.' }), 5000, 'error');
       else
         showToast($t('push.test_failed', { default: 'O teste não seguiu — verifica a ligação e tenta de novo.' }), 3600, 'error');
     } finally {
@@ -45,7 +64,7 @@
       } else {
         pushState = await enablePush();
         if (pushState === 'on') {
-          showToast($t('push.enabled', { default: '🔔 Notificações ativas! Os pings chegam mesmo com a app fechada.' }), 3000);
+          showToast($t('push.enabled', { default: '🔔 Notificações ativas! Chamadas, mensagens e pings podem chegar com a app fechada.' }), 3000);
           void runTest(); // prova imediata no próprio ecrã de que a entrega funciona
         } else if (pushState === 'denied')
           showToast($t('push.denied', { default: 'O browser bloqueou as notificações — ativa-as nas definições do site.' }), 3800, 'error');
@@ -82,6 +101,7 @@
       <p class="hint">{$t('push.denied_hint', { default: 'Bloqueadas pelo browser — permite notificações nas definições deste site e tenta de novo.' })}</p>
     {/if}
   {/if}
+  <CommunicationsReadiness {pushState} refreshPush={refreshPushState} />
 </div>
 
 <style>

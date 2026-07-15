@@ -19,12 +19,12 @@
 
   import { onMount, tick } from 'svelte';
   import { db, DEFAULT_SETTINGS, type ThemeChoice } from '$lib/state/db';
-  import { theme as themeStore, lang as langStore, funMode as funModeStore, xp as xpStore, resetStores } from '$lib/state/stores';
+  import { theme as themeStore, lang as langStore, funMode as funModeStore, xp as xpStore } from '$lib/state/stores';
   import { locale, waitLocale } from 'svelte-i18n';
   import { setLocale, LOCALES, LOCALE_META, type Locale } from '$lib/i18n';
   import { goto } from '$app/navigation';
-  import { clearSession, isLegacyProfile } from '$lib/auth/session';
-  import { resetSoundPrefsCache } from '$lib/gamification/sound';
+  import { isLegacyProfile } from '$lib/auth/session';
+  import { signOutEverywhere } from '$lib/account/session-bridge';
   import LogOut from 'lucide-svelte/icons/log-out';
   import {
     // task-051 — extended backup surface.
@@ -69,6 +69,7 @@
   import CollapsibleCard from '$lib/components/settings/CollapsibleCard.svelte';
   import { accountState } from '$lib/account/account-store.svelte';
   import { accountsEnabled } from '$lib/account/auth';
+  import { canConfigureAccountCommunications } from '$lib/communications/visibility';
   import Palette from 'lucide-svelte/icons/palette';
   import Volume2 from 'lucide-svelte/icons/volume-2';
   import Bell from 'lucide-svelte/icons/bell';
@@ -109,6 +110,7 @@
     initSoundPrefs,
     isHapticsEnabled,
     isSoundEnabled,
+    resetSoundPrefsCache,
     setHapticsEnabled,
     setSoundEnabled
   } from '$lib/gamification/sound';
@@ -608,15 +610,22 @@
   // daniel in another tab).
   let activeProfileId = $state<ProfileId | null>(null);
 
-  function handleLogout(): void {
+  let logoutBusy = $state(false);
+
+  async function handleLogout(): Promise<void> {
+    if (logoutBusy) return;
     if (!confirm($t('settings.logout.confirm', { default: 'Terminar a sessão neste dispositivo?' }))) return;
-    clearSession();
-    resetStores(); // drop in-memory XP/theme/etc. now, before we navigate away
-    resetSoundPrefsCache();
-    // Also end the real-account (Supabase) session, else the splash bridge would
-    // silently log you straight back in.
-    void import('$lib/account/session-bridge').then((m) => m.signOutEverywhere()).catch(() => {});
-    void goto('/splash/');
+    logoutBusy = true;
+    try {
+      // Await the authenticated push revocation and Supabase sign-out before
+      // navigating. Clearing first used to race the very credentials needed to
+      // unbind this shared browser installation.
+      await signOutEverywhere();
+      resetSoundPrefsCache();
+      await goto('/splash/');
+    } finally {
+      logoutBusy = false;
+    }
   }
 
   function openResetModal(): void {
@@ -996,11 +1005,21 @@
 
   // ── Couple connection (the chat token that unlocks shared points + pings) ──
   let coupleProfile = $state<ChatProfile | null>(null);
+  let localSessionProfile = $state<string | null>(null);
   let coupleToken = $state('');
   let coupleConnected = $state(false);
+  const showCommunicationsSettings = $derived(
+    canConfigureAccountCommunications({
+      accountReady: accountState.ready,
+      authUserId: accountState.user?.id ?? null,
+      accountProfileId: accountState.account?.id ?? null,
+      localProfileId: localSessionProfile
+    })
+  );
 
   onMount(() => {
     const p = getSession()?.profile;
+    localSessionProfile = p ?? null;
     coupleProfile = p && isLegacyProfile(p) ? (p as 'fatma' | 'daniel') : null;
     coupleConnected = !!(coupleProfile && getChatToken(coupleProfile));
   });
@@ -1511,7 +1530,7 @@
       {$t('settings.reset_password.button')}
     </Button>
     <div class="logout-row">
-      <Button onclick={handleLogout}>
+      <Button onclick={handleLogout} disabled={logoutBusy}>
         <LogOut size={16} aria-hidden="true" />
         {$t('settings.logout.button', { default: 'Terminar sessão' })}
       </Button>
@@ -1562,12 +1581,12 @@
       </div>
   </CollapsibleCard>
 
-  <!-- ============ Push dos pings de casal (contas) ============ -->
-  {#if couple.available && !coupleProfile}
-    <CollapsibleCard id="push-h" title={$t('settings.push.title', { default: 'Pings no telemóvel' })}>
+  <!-- ============ Comunicações da conta (DMs/chamadas; casal opcional) ============ -->
+  {#if showCommunicationsSettings}
+    <CollapsibleCard id="push-h" title={$t('settings.push.title', { default: 'Chamadas e notificações' })}>
       {#snippet icon()}<Heart size={18} />{/snippet}
       <div class="ccard-content">
-      <p class="muted">{$t('settings.push.hint', { default: 'Recebe os "amo-te muito" e as "saudades" como notificação no telemóvel, com vibração própria — mesmo com a app fechada.' })}</p>
+      <p class="muted">{$t('settings.push.hint', { default: 'Recebe chamadas, mensagens e pings mesmo com a app fechada. O som e a vibração dependem das definições do telemóvel; no iPhone instala primeiro a app no ecrã principal.' })}</p>
       <PushToggle />
           </div>
     </CollapsibleCard>

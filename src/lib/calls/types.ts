@@ -36,6 +36,26 @@ export interface CallPeerProfile {
 	avatarUrl: string | null;
 }
 
+export type CallDeliveryStage =
+	| 'queued'
+	| 'dispatching'
+	| 'provider_accepted'
+	| 'received'
+	| 'presented'
+	| 'ringing'
+	| 'opened'
+	| 'failed'
+	| 'stale'
+	| 'cancelled'
+	| 'answered_elsewhere';
+
+export interface CallDelivery {
+	callId: string;
+	installationId: string | null;
+	stage: CallDeliveryStage;
+	updatedAt: string | null;
+}
+
 export type CallSignal =
 	| { type: 'offer'; sdp: RTCSessionDescriptionInit }
 	| { type: 'answer'; sdp: RTCSessionDescriptionInit }
@@ -62,6 +82,19 @@ const STATUSES = new Set<CallStatus>([
 	'ended',
 	'missed',
 	'failed'
+]);
+const DELIVERY_STAGES = new Set<CallDeliveryStage>([
+	'queued',
+	'dispatching',
+	'provider_accepted',
+	'received',
+	'presented',
+	'ringing',
+	'opened',
+	'failed',
+	'stale',
+	'cancelled',
+	'answered_elsewhere'
 ]);
 
 function nullableDate(value: unknown): string | null {
@@ -131,6 +164,34 @@ export function parseCallSession(value: unknown): CallSession | null {
 		answeredAt: nullableDate(row.answered_at),
 		endedAt: nullableDate(row.ended_at)
 	};
+}
+
+/** Parse both Realtime payload rows and PostgREST delivery rows. */
+export function parseCallDelivery(value: unknown): CallDelivery | null {
+	if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+	const row = value as Record<string, unknown>;
+	const callId = row.call_id;
+	const installationId = row.installation_id;
+	const stage = row.stage ?? row.status;
+	const updatedAt = nullableDate(row.updated_at ?? row.acknowledged_at ?? row.created_at);
+	if (
+		typeof callId !== 'string' ||
+		!UUID_RE.test(callId) ||
+		typeof stage !== 'string' ||
+		!DELIVERY_STAGES.has(stage as CallDeliveryStage) ||
+		!(installationId == null || typeof installationId === 'string')
+	) return null;
+	return {
+		callId,
+		installationId: typeof installationId === 'string' ? installationId : null,
+		stage: stage as CallDeliveryStage,
+		updatedAt
+	};
+}
+
+/** Only the foreground UI's explicit ringtone-started ACK may say “ringing”. */
+export function deliveryConfirmsRinging(stage: CallDeliveryStage): boolean {
+	return stage === 'ringing';
 }
 
 export function isCallDeviceId(value: unknown): value is string {

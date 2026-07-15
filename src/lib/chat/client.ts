@@ -14,6 +14,8 @@ export type ChatProfile = 'fatma' | 'daniel';
 
 export interface ChatMessage {
   id: string;
+  /** Stable sender-generated identity used to reconcile retries. */
+  clientId?: string;
   from: ChatProfile;
   text?: string;
   mediaKey?: string;
@@ -146,10 +148,15 @@ export async function fetchMedia(profile: ChatProfile, id: string): Promise<stri
   return data.dataUrl;
 }
 
-export async function sendText(profile: ChatProfile, text: string, conversationId = 'main'): Promise<{ message: ChatMessage; meta: ChatMeta }> {
+export async function sendText(
+  profile: ChatProfile,
+  text: string,
+  conversationId = 'main',
+  clientId?: string
+): Promise<{ message: ChatMessage; meta: ChatMeta }> {
   const data = await api<{ message: ChatMessage; meta?: ChatMeta }>(profile, '', {
     method: 'POST',
-    body: JSON.stringify({ text, conversationId })
+    body: JSON.stringify({ text, conversationId, clientId })
   });
   return { message: data.message, meta: normalizeMeta(data.meta) };
 }
@@ -158,11 +165,12 @@ export async function sendMediaDataUrl(
   profile: ChatProfile,
   dataUrl: string,
   name?: string,
-  conversationId = 'main'
+  conversationId = 'main',
+  clientId?: string
 ): Promise<{ message: ChatMessage; meta: ChatMeta }> {
   const data = await api<{ message: ChatMessage; meta?: ChatMeta }>(profile, '', {
     method: 'POST',
-    body: JSON.stringify({ media: dataUrl, name, conversationId })
+    body: JSON.stringify({ media: dataUrl, name, conversationId, clientId })
   });
   return { message: data.message, meta: normalizeMeta(data.meta) };
 }
@@ -294,7 +302,8 @@ function writeOutbox(profile: ChatProfile, items: OutboxItem[]): void {
 
 /** Queue a send for later. Returns false when the outbox would overflow. */
 export function queueOutbox(profile: ChatProfile, item: OutboxItem): boolean {
-  const items = readOutbox(profile);
+  // Re-queueing the same optimistic bubble must not create multiple sends.
+  const items = readOutbox(profile).filter((existing) => existing.localId !== item.localId);
   items.push(item);
   const serialized = JSON.stringify(items);
   if (serialized.length > MAX_OUTBOX_CHARS) return false;
@@ -319,31 +328,53 @@ export function removeFromOutbox(profile: ChatProfile, localId: string): void {
  * (items stay queued); drops items the server permanently rejects (4xx).
  * Returns the messages that made it through.
  */
-export async function flushOutbox(profile: ChatProfile): Promise<ChatMessage[]> {
-  const sent: ChatMessage[] = [];
-  for (const item of readOutbox(profile)) {
-    try {
-      let result: { message: ChatMessage };
-      if (item.kind === 'text' && item.text) {
-        result = await sendText(profile, item.text, item.conversationId);
-      } else if (item.kind === 'media' && item.media) {
-        result = await sendMediaDataUrl(profile, item.media, item.name, item.conversationId);
-      } else {
-        removeFromOutbox(profile, item.localId);
-        continue;
-      }
-      sent.push(result.message);
-      removeFromOutbox(profile, item.localId);
-    } catch (e) {
-      if (e instanceof ChatApiError && e.status >= 400 && e.status < 500 && e.status !== 401) {
-        // Permanently rejected — don't wedge the queue behind it.
-        removeFromOutbox(profile, item.localId);
-        continue;
-      }
-      break; // offline / 401 / 5xx — keep the queue and retry later
-    }
+const flushTails = new Map<ChatProfile, Promise<void>>();
+
+async function serializedProfileFlush<T>(profile: ChatProfile, task: () => Promise<T>): Promise<T> {
+  const previous = flushTails.get(profile) ?? Promise.resolve();
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => { release = resolve; });
+  const tail = previous.catch(() => undefined).then(() => gate);
+  flushTails.set(profile, tail);
+  await previous.catch(() => undefined);
+  try {
+    return await task();
+  } finally {
+    release();
+    if (flushTails.get(profile) === tail) flushTails.delete(profile);
   }
-  return sent;
+}
+
+export async function flushOutbox(profile: ChatProfile, conversationId = 'main'): Promise<ChatMessage[]> {
+  return serializedProfileFlush(profile, async () => {
+    const sent: ChatMessage[] = [];
+    const selected = readOutbox(profile).filter(
+      (item) => (item.conversationId || 'main') === conversationId
+    );
+    for (const item of selected) {
+      try {
+        let result: { message: ChatMessage };
+        if (item.kind === 'text' && item.text) {
+          result = await sendText(profile, item.text, conversationId, item.localId);
+        } else if (item.kind === 'media' && item.media) {
+          result = await sendMediaDataUrl(profile, item.media, item.name, conversationId, item.localId);
+        } else {
+          removeFromOutbox(profile, item.localId);
+          continue;
+        }
+        sent.push(result.message);
+        removeFromOutbox(profile, item.localId);
+      } catch (e) {
+        if (e instanceof ChatApiError && e.status >= 400 && e.status < 500 && e.status !== 401) {
+          // Permanently rejected — don't wedge the queue behind it.
+          removeFromOutbox(profile, item.localId);
+          continue;
+        }
+        break; // offline / 401 / 5xx — keep the queue and retry later
+      }
+    }
+    return sent;
+  });
 }
 
 export function mintLocalId(profile: ChatProfile): string {

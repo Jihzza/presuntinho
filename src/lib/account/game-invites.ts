@@ -6,7 +6,14 @@ import { getSupabaseClient } from '$lib/multiplayer/client';
 import { isMultiplayerConfigured } from '$lib/multiplayer/config';
 import { isValidRoomCode, normalizeRoomCode } from '$lib/multiplayer/room-code';
 import { getAuthUser, type Account } from './auth';
-import { isFreshGameInvite, normalizeGameInviteRow, type GameInviteRow } from './game-invite-model';
+import { sendPushNotify } from '$lib/push';
+import {
+  isAuthorizedGameInviteForJoin,
+  isFreshGameInvite,
+  normalizeGameInviteRow,
+  type GameInviteRow,
+  type IncomingGameInviteProof
+} from './game-invite-model';
 
 export interface GameInvite {
   id: string;
@@ -18,6 +25,7 @@ export interface GameInvite {
 }
 
 const sb = () => getSupabaseClient();
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** Invite a contact. Repeated taps replace the previous pending invite. */
 export async function inviteToGame(toAccountId: string, roomCode: string, game = 'versus'): Promise<void> {
@@ -27,17 +35,65 @@ export async function inviteToGame(toAccountId: string, roomCode: string, game =
   const user = await getAuthUser();
   if (!user) throw new Error('not signed in');
 
-  const { error } = await sb().rpc('send_game_invite', {
+  const { data, error } = await sb().rpc('send_game_invite', {
     p_to_account: toAccountId,
     p_room_code: normalized,
     p_game: game
   });
   if (error) throw error;
+  const inviteId = typeof data === 'string' ? data : null;
+  if (inviteId) {
+    // The database trigger already committed the durable outbox. Awaiting this
+    // wakeup makes the usual path immediate; the scheduled sweep still covers
+    // a closed tab, lost response or transient Netlify failure.
+    await sendPushNotify('game_invite', {
+      eventId: inviteId,
+      title: '🎮 Convite para jogar',
+      body: `Entra na sala ${normalized} com um toque.`,
+      url: `/secrets/versus/?join=${encodeURIComponent(normalized)}&invite=${encodeURIComponent(inviteId)}`
+    });
+  }
 }
 
-export async function dismissInvite(id: string): Promise<void> {
-  const { error } = await sb().from('game_invites').delete().eq('id', id);
+export async function dismissInvite(id: string, expectedRoomCode?: string): Promise<void> {
+  let request = sb().from('game_invites').delete().eq('id', id);
+  if (expectedRoomCode !== undefined) {
+    const normalized = normalizeRoomCode(expectedRoomCode);
+    if (!isValidRoomCode(normalized)) throw new Error('invalid room code');
+    request = request.eq('room_code', normalized);
+  }
+  const { error } = await request;
   if (error) throw error;
+}
+
+/** Fail-closed validation for an invite-bearing deep link. The authenticated
+ * SELECT and RLS prove recipient ownership/current friendship; the explicit
+ * comparisons stop a valid invite id being paired with a different room.
+ * Links without an `invite` parameter remain public room-capability links and
+ * intentionally bypass this helper. */
+export async function validateIncomingGameInvite(
+  inviteId: string,
+  roomCode: string
+): Promise<IncomingGameInviteProof | null> {
+  const normalized = normalizeRoomCode(roomCode);
+  if (!UUID_RE.test(inviteId) || !isValidRoomCode(normalized)) return null;
+
+  const user = await getAuthUser();
+  if (!user) return null;
+  const { data, error } = await sb()
+    .from('game_invites')
+    .select('id, from_account, to_account, room_code, game, created_at, expires_at, cancelled_at')
+    .eq('id', inviteId)
+    .eq('to_account', user.id)
+    .eq('room_code', normalized)
+    .eq('game', 'versus')
+    .is('cancelled_at', null)
+    .gt('expires_at', new Date().toISOString())
+    .maybeSingle();
+  if (error) throw error;
+  const row = data as IncomingGameInviteProof | null;
+  if (!row || !isAuthorizedGameInviteForJoin(row, inviteId, user.id, normalized)) return null;
+  return { ...row, room_code: normalized };
 }
 
 /** Cancel any still-pending invites sent for a room when its host leaves or a
