@@ -31,6 +31,7 @@ import {
   type ChatMeta,
   type ChatProfile
 } from './client';
+import type { ChatCallMeta, ChatReactionSummary, ChatReplyPreview, RichMessageKind } from './account-chat-model';
 
 export interface LocalChatMessage extends ChatMessage {
   /** In-flight to the server right now. */
@@ -45,6 +46,23 @@ export interface LocalChatMessage extends ChatMessage {
    *  Kept separate from mediaKey (the stable object path) so it can be
    *  re-signed after the signed-URL TTL expires without losing the path. */
   signedUrl?: string;
+  /** Expiry used by account chat to avoid minting a new signed URL on every fallback poll. */
+  signedUrlExpiresAt?: number;
+  /** Stable id generated on the sender before insert; reconciles optimistic/realtime rows. */
+  clientId?: string;
+  /** Rich account-chat fields. Legacy transports simply leave these absent. */
+  kind?: RichMessageKind;
+  call?: ChatCallMeta;
+  replyToId?: string;
+  reply?: ChatReplyPreview;
+  editedAt?: number;
+  deleted?: boolean;
+  reactions?: ChatReactionSummary[];
+  starred?: boolean;
+  mediaBucket?: string;
+  mediaSize?: number;
+  /** Kept only until an optimistic upload succeeds/retries; never persisted. */
+  localBlob?: Blob;
 }
 
 const POLL_MS = 4000;

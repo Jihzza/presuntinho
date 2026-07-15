@@ -27,16 +27,21 @@
   import { showToast } from '$lib/components/events';
   import { playSfx } from '$lib/gamification/sound';
   import { ChatApiError, getChatToken, setChatToken, otherProfile, type ChatProfile } from '$lib/chat/client';
-  import { CoupleChatStore } from '$lib/couple/couple-chat-store.svelte';
-  import { isMultiplayerConfigured } from '$lib/multiplayer/config';
   import { ChatStore, type LocalChatMessage } from '$lib/chat/store.svelte';
-  import { DmChatStore } from '$lib/chat/dm-store.svelte';
+  import {
+    AccountChatError,
+    AccountChatStore,
+    listAccountChatInbox,
+    type AccountChatInboxItem
+  } from '$lib/chat/account-chat-store.svelte';
+  import { formatFileSize, replyLabel, type ChatCallMeta } from '$lib/chat/account-chat-model';
   import { profileFor } from '$lib/profile/people';
   import { couple } from '$lib/couple/couple-store.svelte';
   import { accountState, startAccountSync } from '$lib/account/account-store.svelte';
   import { listContacts, listIncoming, subscribeConnections, type Contact } from '$lib/account/contacts';
   import { listSpaces, singleActiveCouple, otherMember } from '$lib/account/spaces';
   import Avatar from '$lib/components/Avatar.svelte';
+  import CallButtons from '$lib/calls/CallButtons.svelte';
 
   type ConversationPreset = {
     id: string;
@@ -46,6 +51,8 @@
   };
 
   type PanelMode = 'none' | 'conversations' | 'files';
+
+  const REACTIONS = ['❤️', '😂', '🥰', '😮', '😢', '👍'];
 
   const CONVERSATIONS: ConversationPreset[] = [
     { id: 'main', titleKey: 'mensagens.conversations.main', icon: '💬', descKey: 'mensagens.conversations.main_desc' },
@@ -62,8 +69,7 @@
   let secureSetupNeeded = $state(false);
   let setupKeyInput = $state('');
   let setupOpen = $state(false);
-  const supabaseChat = isMultiplayerConfigured();
-  let store = $state<ChatStore | CoupleChatStore | DmChatStore | null>(null);
+  let store = $state<ChatStore | AccountChatStore | null>(null);
   let selectedConversationId = $state('main');
   // WhatsApp-style two-pane flow on one screen: the conversation LIST, then the
   // open THREAD. Always start on the list so it reads like a messenger home.
@@ -75,6 +81,7 @@
   let dmOther = $state<Contact | null>(null);
   let dmContacts = $state<Contact[]>([]);
   let incomingReqs = $state<Contact[]>([]);
+  let accountInbox = $state<AccountChatInboxItem[]>([]);
   // Couple partner shown on the couple row/header: legacy persona OR the
   // account partner from the active couple space (fixes the fatma/daniel
   // fallback leaking into account couples).
@@ -88,12 +95,18 @@
   let keyboardInset = $state(0);
   let pageActive = $state(true);
   let viewerSrc = $state<string | null>(null);
+  let searchOpen = $state(false);
+  let searchQuery = $state('');
+  let replyingTo = $state<LocalChatMessage | null>(null);
+  let editingMessage = $state<LocalChatMessage | null>(null);
+  let messageMenuId = $state<string | null>(null);
 
   let scrollEl: HTMLDivElement | null = $state(null);
   let inputEl: HTMLTextAreaElement | null = $state(null);
   let fileInput: HTMLInputElement | null = $state(null);
   let mediaRecorder: MediaRecorder | null = null;
   let recordingChunks: BlobPart[] = [];
+  let inboxPollTimer: ReturnType<typeof setInterval> | null = null;
 
   // ── day grouping ─────────────────────────────────────────────────────────
 
@@ -114,7 +127,13 @@
     const todayKey = localDayKey(now);
     const yesterdayKey = localDayKey(new Date(now.getTime() - 86_400_000));
     const out: DayGroup[] = [];
-    for (const m of store.messages) {
+    const needle = searchQuery.trim().toLocaleLowerCase($locale || 'pt-PT');
+    const visible = needle
+      ? store.messages.filter((m) =>
+          [m.text, m.name, m.reply?.text].some((value) => value?.toLocaleLowerCase($locale || 'pt-PT').includes(needle))
+        )
+      : store.messages;
+    for (const m of visible) {
       const date = new Date(m.ts);
       const key = localDayKey(date);
       const last = out[out.length - 1];
@@ -135,7 +154,8 @@
   const other = $derived(profile ? otherProfile(profile) : 'daniel');
   const meProfile = $derived(profileFor(profile));
   const otherPerson = $derived(profileFor(other));
-  const syncBlocked = $derived(Boolean(threadKind === 'couple' && (secureSetupNeeded || store?.authError)));
+  const syncBlocked = $derived(Boolean(legacy && threadKind === 'couple' && (secureSetupNeeded || store?.authError)));
+  const richStore = $derived(store instanceof AccountChatStore ? store : null);
   // Couple surface lights up for the legacy pair AND active account couples.
   const canCouple = $derived(couple.available);
   // Partner identity for the couple thread, by session kind.
@@ -145,15 +165,47 @@
   const meEmoji = $derived(legacy ? meProfile.emoji : (accountState.account?.emoji ?? '🙂'));
   const meHref = $derived(legacy ? '/perfil/' : '/conta/');
   const selectedConversation = $derived(CONVERSATIONS.find((c) => c.id === selectedConversationId) ?? CONVERSATIONS[0]);
-  const fileMessages = $derived((store?.messages ?? []).filter((m) => Boolean(m.mediaType || m.mediaKey || m.localDataUrl)));
+  const fileMessages = $derived((store?.messages ?? []).filter((m) => !m.deleted && Boolean(m.mediaType || m.mediaKey || m.localDataUrl)));
 
   function conversationPreview(id: string): string {
     const last = [...(store?.messages ?? [])].reverse().find((m) => (m.conversationId || 'main') === id);
-    if (!last) return $t(CONVERSATIONS.find((c) => c.id === id)?.descKey ?? 'mensagens.conversations.empty_preview');
+    if (!last) {
+      const inbox = coupleInboxItem(id);
+      return inboxPreview(inbox) ?? $t(CONVERSATIONS.find((c) => c.id === id)?.descKey ?? 'mensagens.conversations.empty_preview');
+    }
+    if (last.deleted) return $t('mensagens.message.deleted', { default: 'Mensagem apagada' });
     if (last.text) return last.text.slice(0, 64);
     if (last.mediaType?.startsWith('audio/')) return $t('mensagens.files.audio', { default: 'Áudio' });
     if (last.mediaType?.startsWith('image/')) return $t('mensagens.files.image', { default: 'Imagem' });
+    if (last.mediaType?.startsWith('video/')) return $t('mensagens.files.video', { default: 'Vídeo' });
     return $t('mensagens.files.file', { default: 'Ficheiro' });
+  }
+
+  function coupleInboxItem(topic: string): AccountChatInboxItem | null {
+    return accountInbox.find(
+      (item) => item.kind === 'couple' && item.topic === topic && (!acctCoupleId || item.spaceId === acctCoupleId)
+    ) ?? null;
+  }
+
+  function dmInboxItem(accountId: string): AccountChatInboxItem | null {
+    return accountInbox.find(
+      (item) => item.kind === 'direct' && item.topic === 'main' && item.otherAccount === accountId
+    ) ?? null;
+  }
+
+  function inboxPreview(item: AccountChatInboxItem | null): string | null {
+    if (!item?.lastMessageId || !item.lastMessageKind) return null;
+    if (item.lastMessageKind === 'call') return callMetaLabel(item.lastCall);
+    if (item.lastMessageBody) return item.lastMessageBody.slice(0, 64);
+    if (item.lastMessageKind === 'image') return $t('mensagens.files.image', { default: 'Imagem' });
+    if (item.lastMessageKind === 'audio') return $t('mensagens.files.audio', { default: 'Áudio' });
+    if (item.lastMessageKind === 'video') return $t('mensagens.files.video', { default: 'Vídeo' });
+    if (item.lastMessageKind === 'file') return $t('mensagens.files.file', { default: 'Ficheiro' });
+    return $t('mensagens.message.deleted', { default: 'Mensagem apagada' });
+  }
+
+  function conversationUnread(topic: string): number {
+    return coupleInboxItem(topic)?.unreadCount ?? 0;
   }
 
   function fmtDate(d: Date): string {
@@ -179,6 +231,46 @@
     }
   }
 
+  function richPresenceLabel(): string | null {
+    if (!richStore) return null;
+    if (richStore.otherTyping) return $t('mensagens.presence.typing', { default: 'a escrever…' });
+    if (richStore.otherOnline) return $t('mensagens.presence.online', { default: 'online' });
+    if (richStore.otherLastSeen) {
+      return $t('mensagens.presence.last_seen', {
+        values: { time: fmtTime(richStore.otherLastSeen) },
+        default: 'visto pela última vez às {time}'
+      });
+    }
+    return null;
+  }
+
+  function callMetaLabel(call: ChatCallMeta | null | undefined): string {
+    if (!call) return $t('mensagens.message.call_event', { default: 'Chamada' });
+    const kind = call.kind === 'video'
+      ? $t('mensagens.call.video', { default: 'Videochamada' })
+      : $t('mensagens.call.audio', { default: 'Chamada de voz' });
+    const status = $t(`mensagens.call.status.${call.status}`, {
+      default: call.status
+    });
+    return `${kind} · ${status}`;
+  }
+
+  function callHistoryLabel(message: LocalChatMessage): string {
+    return callMetaLabel(message.call);
+  }
+
+  function callDuration(message: LocalChatMessage): string | null {
+    const call = message.call;
+    if (!call?.answeredAt || !call.endedAt) return null;
+    const seconds = Math.max(
+      0,
+      Math.floor((new Date(call.endedAt).getTime() - new Date(call.answeredAt).getTime()) / 1_000)
+    );
+    if (!Number.isFinite(seconds)) return null;
+    const minutes = Math.floor(seconds / 60);
+    return `${minutes}:${String(seconds % 60).padStart(2, '0')}`;
+  }
+
   // ── lifecycle ────────────────────────────────────────────────────────────
 
   async function scrollToBottom() {
@@ -196,26 +288,34 @@
     store?.stop();
     threadKind = 'couple';
     dmOther = null;
-    // Supabase-backed couple chat when configured (durable + realtime, no token);
-    // otherwise the Netlify-Blobs ChatStore. Both share the same shape.
-    const partnerId = legacy ? otherProfile(profile) : (acctPartner?.id ?? couple.partnerId);
-    const activeCoupleId = legacy ? undefined : (acctCoupleId ?? couple.coupleId);
-    // Account chat must never guess a Fatma/Daniel partner while the active
-    // couple is still resolving. refreshSocial() supplies both UUIDs from the
-    // same spaces snapshot, avoiding a race with the global couple store.
-    if (supabaseChat && (!partnerId || (!legacy && !activeCoupleId))) {
+    // Grandfathered Fatma/Daniel profiles always stay on the authenticated
+    // Netlify endpoint. Never let them fall through to a Supabase anon client.
+    if (legacy) {
+      store = new ChatStore(profile, selectedConversationId);
+      secureSetupNeeded = !getChatToken(profile);
+      store.start();
+      return;
+    }
+    const me = accountState.account;
+    const partnerId = acctPartner?.id ?? couple.partnerId;
+    const activeCoupleId = acctCoupleId ?? couple.coupleId;
+    if (!me || !partnerId || !activeCoupleId) {
       store = null;
       secureSetupNeeded = false;
       return;
     }
-    store = supabaseChat
-      ? new CoupleChatStore(profile, partnerId!, selectedConversationId, activeCoupleId ?? undefined)
-      : new ChatStore(profile, selectedConversationId);
-    secureSetupNeeded = !supabaseChat && !getChatToken(profile);
+    store = new AccountChatStore({
+      meId: me.id,
+      peerId: partnerId,
+      kind: 'couple',
+      spaceId: activeCoupleId,
+      topic: selectedConversationId
+    });
+    secureSetupNeeded = false;
     store.start();
   }
 
-  /** Open a friend DM thread (text-only, keyed dm:<a>:<b> in Supabase). */
+  /** Open a full rich-media friend DM, keyed dm:<a>:<b> in Supabase. */
   function openDm(c: Contact): void {
     if (!accountState.account) return;
     store?.stop();
@@ -224,7 +324,7 @@
     secureSetupNeeded = false;
     panelMode = 'none';
     view = 'thread';
-    store = new DmChatStore(accountState.account.id, c.id);
+    store = new AccountChatStore({ meId: accountState.account.id, peerId: c.id, kind: 'direct', topic: 'main' });
     store.start();
     void scrollToBottom();
   }
@@ -243,8 +343,20 @@
         : null;
       // The couple partner lives on the pinned couple thread — not as a DM row.
       dmContacts = partner ? cs.filter((c) => c.id !== partner.id) : cs;
+      await refreshInbox();
     } catch (e) {
       console.warn('[mensagens] social refresh failed', e);
+    }
+  }
+
+  async function refreshInbox(): Promise<void> {
+    if (legacy || !accountState.account) return;
+    try {
+      accountInbox = await listAccountChatInbox();
+    } catch (error) {
+      // Keep contacts usable during rolling deploys or a temporary network
+      // failure; the open conversation store continues to recover separately.
+      console.warn('[mensagens] inbox refresh failed', error);
     }
   }
 
@@ -260,16 +372,22 @@
   /** WhatsApp-style back arrow: return from a thread to the conversation list. */
   function backToList(): void {
     panelMode = 'none';
+    searchOpen = false;
+    searchQuery = '';
+    replyingTo = null;
+    editingMessage = null;
+    messageMenuId = null;
     view = 'list';
     // Leaving a DM restores the couple store, so the couple rows' previews on
     // the list read from the right thread again.
     if (threadKind === 'dm') startChat();
+    void refreshInbox();
   }
 
   /** Timestamp of the last message in a conversation (0 when unknown/empty). */
   function conversationLastTs(id: string): number {
     const last = [...(store?.messages ?? [])].reverse().find((m) => (m.conversationId || 'main') === id);
-    return last?.ts ?? 0;
+    return last?.ts ?? coupleInboxItem(id)?.lastMessageAt ?? 0;
   }
 
   function saveSecureKey() {
@@ -324,6 +442,9 @@
         await refreshSocial();
         if (threadKind === 'couple') startChat();
         unsubConn = subscribeConnections(() => void refreshSocial());
+        inboxPollTimer = setInterval(() => {
+          if (view === 'list' && document.visibilityState === 'visible') void refreshInbox();
+        }, 10_000);
         const dmHandle = page.url.searchParams.get('dm');
         if (dmHandle) {
           const target = dmContacts.find((c) => c.handle.toLowerCase() === dmHandle.toLowerCase());
@@ -348,6 +469,7 @@
       document.removeEventListener('visibilitychange', syncActive);
       if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
       unsubConn?.();
+      if (inboxPollTimer) clearInterval(inboxPollTimer);
       store?.stop();
     };
   });
@@ -399,6 +521,7 @@
     if (!inputEl) return;
     inputEl.style.height = 'auto';
     inputEl.style.height = `${Math.min(inputEl.scrollHeight, 132)}px`;
+    richStore?.setTyping(Boolean(input.trim()) && !editingMessage);
   }
 
   function afterSendFeedback(result: 'sent' | 'queued' | 'failed'): void {
@@ -412,11 +535,27 @@
   async function send() {
     const text = input.trim();
     if (!text || !store) return;
-    input = '';
+    if (editingMessage && richStore) {
+      try {
+        await richStore.editMessage(editingMessage.id, text);
+        editingMessage = null;
+        input = '';
+        showToast($t('mensagens.message.edited_toast', { default: 'Mensagem editada.' }));
+      } catch {
+        showToast($t('mensagens.message.action_failed', { default: 'Não consegui fazer isso. Tenta novamente.' }));
+        return;
+      }
+    } else {
+      input = '';
+      playSfx('send');
+      const result = richStore
+        ? await richStore.sendTextMessage(text, replyingTo?.id)
+        : await store.sendTextMessage(text);
+      afterSendFeedback(result);
+      replyingTo = null;
+    }
+    richStore?.setTyping(false);
     if (inputEl) inputEl.style.height = 'auto';
-    playSfx('send');
-    const result = await store.sendTextMessage(text);
-    afterSendFeedback(result);
     void scrollToBottom();
   }
 
@@ -428,8 +567,12 @@
   }
 
   function mediaErrorToast(e: unknown): void {
-    if (e instanceof ChatApiError && e.status === 413) {
+    if (e instanceof AccountChatError && e.code === 'too_large') {
+      showToast($t('mensagens.media_too_big_account', { default: 'Esse ficheiro é grandinho demais (máx. 25 MB) 🐘' }));
+    } else if (e instanceof ChatApiError && e.status === 413) {
       showToast($t('mensagens.media_too_big', { default: 'Esse ficheiro é grandinho demais (máx. 3 MB) 🐘' }));
+    } else if (richStore) {
+      showToast($t('mensagens.send_failed', { default: 'A mensagem não seguiu. Toca em «tentar de novo».' }));
     } else {
       showToast($t('mensagens.media_invalid', { default: 'Só consigo enviar imagens e áudios 🙈' }));
     }
@@ -441,8 +584,11 @@
     if (fileInput) fileInput.value = '';
     if (!file || !store) return;
     try {
-      const result = await store.sendMediaMessage(file, file.name);
+      const result = richStore
+        ? await richStore.sendMediaMessage(file, file.name, replyingTo?.id)
+        : await store.sendMediaMessage(file, file.name);
       afterSendFeedback(result);
+      replyingTo = null;
     } catch (err) {
       mediaErrorToast(err);
     }
@@ -479,8 +625,11 @@
         recordingChunks = [];
         if (blob.size === 0 || !store) return;
         try {
-          const result = await store.sendMediaMessage(blob, `voz-${Date.now()}.webm`);
+          const result = richStore
+            ? await richStore.sendMediaMessage(blob, `voz-${Date.now()}.webm`, replyingTo?.id)
+            : await store.sendMediaMessage(blob, `voz-${Date.now()}.webm`);
           afterSendFeedback(result);
+          replyingTo = null;
         } catch (err) {
           mediaErrorToast(err);
         }
@@ -499,6 +648,83 @@
     if (!store) return;
     const result = await store.retryMessage(localId);
     afterSendFeedback(result);
+  }
+
+  function beginReply(message: LocalChatMessage): void {
+    if (!richStore || message.deleted) return;
+    replyingTo = message;
+    editingMessage = null;
+    messageMenuId = null;
+    void tick().then(() => inputEl?.focus());
+  }
+
+  function beginEdit(message: LocalChatMessage): void {
+    if (!richStore || message.deleted || message.from !== richStore.profile || !message.text) return;
+    editingMessage = message;
+    replyingTo = null;
+    input = message.text;
+    messageMenuId = null;
+    void tick().then(() => {
+      autogrow();
+      inputEl?.focus();
+      inputEl?.setSelectionRange(input.length, input.length);
+    });
+  }
+
+  function cancelComposeMode(): void {
+    replyingTo = null;
+    if (editingMessage) input = '';
+    editingMessage = null;
+    if (inputEl) inputEl.style.height = 'auto';
+  }
+
+  async function deleteRichMessage(message: LocalChatMessage): Promise<void> {
+    if (!richStore || message.from !== richStore.profile) return;
+    messageMenuId = null;
+    try {
+      await richStore.deleteMessage(message.id);
+      showToast($t('mensagens.message.deleted_toast', { default: 'Mensagem apagada.' }));
+    } catch {
+      showToast($t('mensagens.message.action_failed', { default: 'Não consegui fazer isso. Tenta novamente.' }));
+    }
+  }
+
+  async function reactTo(message: LocalChatMessage, emoji: string): Promise<void> {
+    if (!richStore || message.deleted) return;
+    messageMenuId = null;
+    try {
+      await richStore.toggleReaction(message.id, emoji);
+    } catch {
+      showToast($t('mensagens.message.action_failed', { default: 'Não consegui fazer isso. Tenta novamente.' }));
+    }
+  }
+
+  async function toggleStar(message: LocalChatMessage): Promise<void> {
+    if (!richStore || message.deleted) return;
+    messageMenuId = null;
+    try {
+      await richStore.toggleStar(message.id);
+    } catch {
+      showToast($t('mensagens.message.action_failed', { default: 'Não consegui fazer isso. Tenta novamente.' }));
+    }
+  }
+
+  async function copyMessage(message: LocalChatMessage): Promise<void> {
+    messageMenuId = null;
+    if (!message.text || typeof navigator === 'undefined' || !navigator.clipboard) return;
+    try {
+      await navigator.clipboard.writeText(message.text);
+      showToast($t('mensagens.message.copied', { default: 'Mensagem copiada.' }));
+    } catch {
+      showToast($t('mensagens.message.action_failed', { default: 'Não consegui fazer isso. Tenta novamente.' }));
+    }
+  }
+
+  function jumpToMessage(id: string): void {
+    const element = document.querySelector<HTMLElement>(`[data-message-id="${CSS.escape(id)}"]`);
+    element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    element?.classList.add('message-highlight');
+    setTimeout(() => element?.classList.remove('message-highlight'), 1200);
   }
 
   function onViewerKeydown(e: KeyboardEvent) {
@@ -529,7 +755,9 @@
           </a>
         </h1>
         <p class="subtitle">
-          {#if store?.offline}
+          {#if richPresenceLabel()}
+            {richPresenceLabel()}
+          {:else if store?.offline}
             {$t('mensagens.status.offline', { default: 'Offline — guardado no dispositivo.' })}
           {:else}
             {$t('mensagens.status.dm', { default: 'Conversa privada entre amigos.' })}
@@ -543,7 +771,9 @@
           </a>
         </h1>
         <p class="subtitle">
-          {#if syncBlocked}
+          {#if richPresenceLabel()}
+            {richPresenceLabel()}
+          {:else if syncBlocked}
             {$t('mensagens.status.local', { default: 'Modo local — a sincronização segura ainda não está activa neste dispositivo.' })}
           {:else if store?.offline}
             {$t('mensagens.status.offline', { default: 'Offline — guardado no dispositivo.' })}
@@ -553,10 +783,46 @@
         </p>
       {/if}
     </div>
-    <a class="profile-link" href={meHref} aria-label={$t('mensagens.aria.open_own_profile', { default: 'Abrir o meu perfil' })} title={$t('mensagens.aria.open_own_profile', { default: 'Abrir o meu perfil' })}>
-      {meEmoji}
-    </a>
+    <div class="header-actions">
+      {#if view === 'thread' && richStore}
+        <CallButtons
+          conversationId={richStore.conversationId}
+          disabled={!richStore.ready || richStore.offline}
+        />
+      {/if}
+      {#if view === 'thread' && richStore}
+        <button
+          type="button"
+          class:active={searchOpen}
+          class="header-action"
+          onclick={() => {
+            searchOpen = !searchOpen;
+            if (!searchOpen) searchQuery = '';
+          }}
+          aria-label={$t('mensagens.search.open', { default: 'Pesquisar na conversa' })}
+          title={$t('mensagens.search.open', { default: 'Pesquisar na conversa' })}
+        >🔎</button>
+      {/if}
+      <a class="profile-link" href={meHref} aria-label={$t('mensagens.aria.open_own_profile', { default: 'Abrir o meu perfil' })} title={$t('mensagens.aria.open_own_profile', { default: 'Abrir o meu perfil' })}>
+        {meEmoji}
+      </a>
+    </div>
   </header>
+
+  {#if view === 'thread' && searchOpen}
+    <div class="chat-search" role="search">
+      <span aria-hidden="true">🔎</span>
+      <input
+        type="search"
+        bind:value={searchQuery}
+        placeholder={$t('mensagens.search.placeholder', { default: 'Pesquisar mensagens…' })}
+        aria-label={$t('mensagens.search.placeholder', { default: 'Pesquisar mensagens…' })}
+      />
+      {#if searchQuery}
+        <button type="button" onclick={() => (searchQuery = '')} aria-label={$t('mensagens.search.clear', { default: 'Limpar pesquisa' })}>×</button>
+      {/if}
+    </div>
+  {/if}
 
   {#if !noSession}
     {#if view === 'list'}
@@ -574,7 +840,12 @@
             <span class="row-body">
               <span class="row-top">
                 <strong>{partnerName} <span class="couple-heart" aria-hidden="true">💞</span></strong>
-                {#if conversationLastTs('main')}<time>{fmtTime(conversationLastTs('main'))}</time>{/if}
+                <span class="row-meta">
+                  {#if conversationLastTs('main')}<time>{fmtTime(conversationLastTs('main'))}</time>{/if}
+                  {#if conversationUnread('main')}
+                    <span class="unread-badge" aria-label={$t('mensagens.unread_count', { default: '{n} mensagens por ler', values: { n: conversationUnread('main') } })}>{conversationUnread('main')}</span>
+                  {/if}
+                </span>
               </span>
               <small>{conversationPreview('main')}</small>
             </span>
@@ -585,7 +856,12 @@
               <span class="row-body">
                 <span class="row-top">
                   <strong>{$t(c.titleKey)}</strong>
-                  {#if conversationLastTs(c.id)}<time>{fmtTime(conversationLastTs(c.id))}</time>{/if}
+                  <span class="row-meta">
+                    {#if conversationLastTs(c.id)}<time>{fmtTime(conversationLastTs(c.id))}</time>{/if}
+                    {#if conversationUnread(c.id)}
+                      <span class="unread-badge" aria-label={$t('mensagens.unread_count', { default: '{n} mensagens por ler', values: { n: conversationUnread(c.id) } })}>{conversationUnread(c.id)}</span>
+                    {/if}
+                  </span>
                 </span>
                 <small>{conversationPreview(c.id)}</small>
               </span>
@@ -595,13 +871,20 @@
         {#if !legacy && accountState.account}
           <h2 class="list-section">{$t('mensagens.friends_section', { default: 'Amigos' })}</h2>
           {#each dmContacts as c (c.id)}
+            {@const inbox = dmInboxItem(c.id)}
             <button type="button" class="chat-row" onclick={() => openDm(c)}>
               <Avatar emoji={c.emoji} url={c.avatar_url} size={52} alt="" />
               <span class="row-body">
                 <span class="row-top">
                   <strong>{c.display_name || `@${c.handle}`}</strong>
+                  <span class="row-meta">
+                    {#if inbox?.lastMessageAt}<time>{fmtTime(inbox.lastMessageAt)}</time>{/if}
+                    {#if inbox?.unreadCount}
+                      <span class="unread-badge" aria-label={$t('mensagens.unread_count', { default: '{n} mensagens por ler', values: { n: inbox.unreadCount } })}>{inbox.unreadCount}</span>
+                    {/if}
+                  </span>
                 </span>
-                <small>@{c.handle}</small>
+                <small>{inboxPreview(inbox) ?? `@${c.handle}`}</small>
               </span>
             </button>
           {/each}
@@ -617,15 +900,17 @@
           </div>
         {/if}
       </div>
-    {:else if threadKind === 'couple'}
+    {:else}
     <nav class="chat-tools" aria-label={$t('mensagens.tools.aria', { default: 'Ferramentas da conversa' })}>
-      <button type="button" class:active={panelMode === 'conversations'} onclick={() => (panelMode = panelMode === 'conversations' ? 'none' : 'conversations')}>
-        💬 {$t('mensagens.tools.conversations', { default: 'Conversas' })}
-      </button>
+      {#if threadKind === 'couple'}
+        <button type="button" class:active={panelMode === 'conversations'} onclick={() => (panelMode = panelMode === 'conversations' ? 'none' : 'conversations')}>
+          💬 {$t('mensagens.tools.conversations', { default: 'Conversas' })}
+        </button>
+      {/if}
       <button type="button" class:active={panelMode === 'files'} onclick={() => (panelMode = panelMode === 'files' ? 'none' : 'files')}>
         📎 {$t('mensagens.tools.files', { default: 'Ficheiros' })}
       </button>
-      <a href={partnerHref}>{$t('mensagens.tools.partner_profile', { default: 'Perfil de {name}', values: { name: partnerName } })}</a>
+      <a href={threadKind === 'dm' && dmOther ? `/u/?h=${dmOther.handle}` : partnerHref}>{$t('mensagens.tools.partner_profile', { default: 'Perfil de {name}', values: { name: threadKind === 'dm' && dmOther ? (dmOther.display_name || `@${dmOther.handle}`) : partnerName } })}</a>
     </nav>
 
     {#if panelMode === 'conversations'}
@@ -658,11 +943,19 @@
           <div class="file-grid">
             {#each fileMessages as m (m.id)}
               {@const src = store?.mediaSrc(m)}
-              <button type="button" class="file-card" onclick={() => (src ? (viewerSrc = src) : undefined)}>
-                <span aria-hidden="true">{m.mediaType?.startsWith('audio/') ? '🎧' : '🖼️'}</span>
-                <strong>{m.name || (m.mediaType?.startsWith('audio/') ? $t('mensagens.files.audio') : $t('mensagens.files.image'))}</strong>
-                <small>{fmtTime(m.ts)}</small>
-              </button>
+              {#if m.mediaType?.startsWith('image/')}
+                <button type="button" class="file-card" onclick={() => (src ? (viewerSrc = src) : undefined)}>
+                  <span aria-hidden="true">🖼️</span>
+                  <strong>{m.name || $t('mensagens.files.image')}</strong>
+                  <small>{fmtTime(m.ts)}</small>
+                </button>
+              {:else if src}
+                <a class="file-card" href={src} target="_blank" rel="noreferrer" download={m.name || undefined}>
+                  <span aria-hidden="true">{m.mediaType?.startsWith('audio/') ? '🎧' : m.mediaType?.startsWith('video/') ? '🎬' : '📎'}</span>
+                  <strong>{m.name || (m.mediaType?.startsWith('audio/') ? $t('mensagens.files.audio') : m.mediaType?.startsWith('video/') ? $t('mensagens.files.video', { default: 'Vídeo' }) : $t('mensagens.files.file'))}</strong>
+                  <small>{fmtTime(m.ts)}</small>
+                </a>
+              {/if}
             {/each}
           </div>
         {/if}
@@ -707,6 +1000,13 @@
 
   {#if store && view === 'thread'}
     <div class="chat-scroll" bind:this={scrollEl} onscroll={onListScroll}>
+      {#if richStore?.hasOlder && store.messages.length > 0 && !searchQuery}
+        <button type="button" class="load-older" disabled={richStore.loadingOlder} onclick={() => void richStore.loadOlder()}>
+          {richStore.loadingOlder
+            ? $t('mensagens.history.loading', { default: 'A carregar…' })
+            : $t('mensagens.history.older', { default: 'Carregar mensagens anteriores' })}
+        </button>
+      {/if}
       {#if store.ready && store.messages.length === 0}
         <div class="empty">
           <span class="empty-heart" aria-hidden="true">💌</span>
@@ -716,6 +1016,11 @@
               ? $t('mensagens.empty_hint_dm', { default: 'Diz olá! 👋' })
               : $t('mensagens.empty_hint', { default: 'Deixa uma nota, envia uma foto ou grava um áudio quando quiseres.' })}
           </p>
+        </div>
+      {:else if searchQuery && groups.length === 0}
+        <div class="empty compact">
+          <span class="empty-heart" aria-hidden="true">🔎</span>
+          <p class="empty-title">{$t('mensagens.search.empty', { default: 'Não encontrei essa mensagem.' })}</p>
         </div>
       {/if}
 
@@ -729,9 +1034,28 @@
         </div>
         {#each g.items as m (m.id)}
           {@const own = m.from === store.profile}
-          <div class="msg" class:msg-own={own} class:msg-other={!own}>
-            <div class="bubble" class:bubble-own={own} class:pop={own}>
-              {#if m.mediaType?.startsWith('image/')}
+          <div class="msg" class:msg-own={own} class:msg-other={!own} class:msg-system={m.kind === 'call'} data-message-id={m.id}>
+            <div class="bubble" class:bubble-own={own} class:pop={own} class:bubble-call={m.kind === 'call'} class:bubble-deleted={m.deleted}>
+              {#if m.starred}<span class="star-mark" title={$t('mensagens.message.starred', { default: 'Marcada' })}>★</span>{/if}
+              {#if m.reply}
+                <button type="button" class="reply-quote" onclick={() => jumpToMessage(m.reply?.id ?? '')}>
+                  <strong>{$t('mensagens.message.reply', { default: 'Resposta' })}</strong>
+                  <span>{replyLabel({ text: m.reply.text, kind: m.reply.kind, deleted: m.reply.deleted })}</span>
+                </button>
+              {/if}
+              {#if m.deleted}
+                <div class="deleted-copy">🚫 {$t('mensagens.message.deleted', { default: 'Mensagem apagada' })}</div>
+              {:else if m.kind === 'call'}
+                <div class="call-event">
+                  <span class="call-event-icon" aria-hidden="true">{m.call?.kind === 'video' ? '🎥' : '📞'}</span>
+                  <span class="call-event-copy">
+                    <strong>{callHistoryLabel(m)}</strong>
+                    {#if callDuration(m)}
+                      <small>{$t('mensagens.call.duration', { default: 'Duração {time}', values: { time: callDuration(m) ?? '' } })}</small>
+                    {/if}
+                  </span>
+                </div>
+              {:else if m.mediaType?.startsWith('image/')}
                 {@const src = store.mediaSrc(m)}
                 {#if src}
                   <button
@@ -752,12 +1076,32 @@
                 {:else}
                   <div class="media-loading">🎧 {$t('mensagens.media_loading', { default: 'a carregar…' })}</div>
                 {/if}
+              {:else if m.mediaType?.startsWith('video/')}
+                {@const src = store.mediaSrc(m)}
+                {#if src}
+                  <!-- svelte-ignore a11y_media_has_caption -->
+                  <video controls playsinline preload="metadata" {src} aria-label={$t('mensagens.video_label', { default: 'Vídeo enviado' })}></video>
+                {:else}
+                  <div class="media-loading">🎬 {$t('mensagens.media_loading', { default: 'a carregar…' })}</div>
+                {/if}
+              {:else if m.kind === 'file' || (m.mediaType && !m.mediaType.startsWith('image/') && !m.mediaType.startsWith('audio/') && !m.mediaType.startsWith('video/'))}
+                {@const src = store.mediaSrc(m)}
+                {#if src}
+                  <a class="document-card" href={src} target="_blank" rel="noreferrer" download={m.name || undefined}>
+                    <span aria-hidden="true">📄</span>
+                    <span><strong>{m.name || $t('mensagens.files.file', { default: 'Ficheiro' })}</strong><small>{formatFileSize(m.mediaSize)}</small></span>
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                {:else}
+                  <div class="media-loading">📎 {$t('mensagens.media_loading', { default: 'a carregar…' })}</div>
+                {/if}
               {/if}
-              {#if m.text}
+              {#if m.text && m.kind !== 'call' && !m.deleted}
                 <div class="text">{m.text}</div>
               {/if}
               <div class="meta-row">
                 <span class="time">{fmtTime(m.ts)}</span>
+                {#if m.editedAt}<span class="edited">{$t('mensagens.message.edited', { default: 'editada' })}</span>{/if}
                 {#if own}
                   {#if m.pending}
                     <span class="ticks" aria-label={$t('mensagens.aria.pendente', { default: 'A enviar…' })}>🕓</span>
@@ -774,10 +1118,51 @@
                   {/if}
                 {/if}
               </div>
+              {#if m.reactions?.length}
+                <div class="reaction-summary" aria-label={$t('mensagens.message.reactions', { default: 'Reações' })}>
+                  {#each m.reactions as reaction (reaction.emoji)}
+                    <button
+                      type="button"
+                      class:mine={reaction.reactedByMe}
+                      onclick={() => void reactTo(m, reaction.emoji)}
+                      aria-label={`${reaction.emoji} ${reaction.count}`}
+                    >{reaction.emoji} <span>{reaction.count}</span></button>
+                  {/each}
+                </div>
+              {/if}
+              {#if richStore && !m.pending && !m.failed && m.kind !== 'call'}
+                <button
+                  type="button"
+                  class="message-menu-trigger"
+                  onclick={() => (messageMenuId = messageMenuId === m.id ? null : m.id)}
+                  aria-label={$t('mensagens.message.actions', { default: 'Ações da mensagem' })}
+                >⋯</button>
+                {#if messageMenuId === m.id}
+                  <div class="message-menu" role="menu">
+                    {#if !m.deleted}
+                      <div class="reaction-picker" aria-label={$t('mensagens.message.react', { default: 'Reagir' })}>
+                        {#each REACTIONS as emoji}
+                          <button type="button" onclick={() => void reactTo(m, emoji)} aria-label={emoji}>{emoji}</button>
+                        {/each}
+                      </div>
+                      <button type="button" onclick={() => beginReply(m)}>↩ {$t('mensagens.message.reply', { default: 'Responder' })}</button>
+                      {#if m.text}<button type="button" onclick={() => void copyMessage(m)}>⧉ {$t('mensagens.message.copy', { default: 'Copiar' })}</button>{/if}
+                      <button type="button" onclick={() => void toggleStar(m)}>{m.starred ? '☆' : '★'} {m.starred ? $t('mensagens.message.unstar', { default: 'Desmarcar' }) : $t('mensagens.message.star', { default: 'Marcar' })}</button>
+                    {/if}
+                    {#if own && m.text && !m.deleted}<button type="button" onclick={() => beginEdit(m)}>✎ {$t('mensagens.message.edit', { default: 'Editar' })}</button>{/if}
+                    {#if own && !m.deleted}<button type="button" class="danger" onclick={() => void deleteRichMessage(m)}>⌫ {$t('mensagens.message.delete', { default: 'Apagar' })}</button>{/if}
+                  </div>
+                {/if}
+              {/if}
             </div>
           </div>
         {/each}
       {/each}
+      {#if richStore?.otherTyping && !searchQuery}
+        <div class="typing-bubble" role="status" aria-label={$t('mensagens.presence.typing', { default: 'a escrever…' })}>
+          <span></span><span></span><span></span>
+        </div>
+      {/if}
     </div>
 
     {#if showJumpToEnd}
@@ -801,10 +1186,20 @@
           {$t('mensagens.recording', { default: 'A gravar… toca no botão para parar 🎙️' })}
         </div>
       {/if}
+      {#if replyingTo || editingMessage}
+        <div class="compose-context">
+          <span aria-hidden="true">{editingMessage ? '✎' : '↩'}</span>
+          <span>
+            <strong>{editingMessage ? $t('mensagens.message.editing', { default: 'A editar mensagem' }) : $t('mensagens.message.replying', { default: 'A responder' })}</strong>
+            <small>{replyLabel(editingMessage ?? replyingTo ?? {})}</small>
+          </span>
+          <button type="button" onclick={cancelComposeMode} aria-label={$t('a11y.aria.fechar', { default: 'Fechar' })}>×</button>
+        </div>
+      {/if}
       <div class="composer">
-        <input type="file" bind:this={fileInput} onchange={onFileChosen} hidden accept="image/*,audio/*" />
+        <input type="file" bind:this={fileInput} onchange={onFileChosen} hidden accept={richStore ? 'image/*,audio/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip' : 'image/*,audio/*'} />
         <div class="input-shell">
-          {#if threadKind === 'couple'}
+          {#if threadKind === 'couple' || richStore}
             <button
               type="button"
               class="attach-btn"
@@ -820,41 +1215,30 @@
             bind:value={input}
             onkeydown={onKeydown}
             oninput={autogrow}
-            placeholder={$t('mensagens.placeholder', { default: 'Escreve uma mensagem…' })}
+            onblur={() => richStore?.setTyping(false)}
+            placeholder={editingMessage ? $t('mensagens.message.edit_placeholder', { default: 'Edita a mensagem…' }) : $t('mensagens.placeholder', { default: 'Escreve uma mensagem…' })}
+            maxlength="4000"
             rows="1"
           ></textarea>
         </div>
-        {#if threadKind === 'dm'}
-          <button
-            type="button"
-            class="action-btn"
-            disabled={!input.trim()}
-            onclick={() => void send()}
-            aria-label={$t('a11y.aria.enviar', { default: 'Enviar' })}
-            title={$t('a11y.aria.enviar', { default: 'Enviar' })}
-          >
-            ➤
-          </button>
-        {:else}
-          <button
-            type="button"
-            class="action-btn"
-            class:recording
-            onclick={() => (input.trim() ? void send() : void toggleRecording())}
-            aria-label={input.trim()
-              ? $t('a11y.aria.enviar', { default: 'Enviar' })
-              : recording
-                ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
-                : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
-            title={input.trim()
-              ? $t('a11y.aria.enviar', { default: 'Enviar' })
-              : recording
-                ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
-                : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
-          >
-            {#if input.trim()}➤{:else if recording}⏹️{:else}🎤{/if}
-          </button>
-        {/if}
+        <button
+          type="button"
+          class="action-btn"
+          class:recording
+          onclick={() => (input.trim() ? void send() : void toggleRecording())}
+          aria-label={input.trim()
+            ? $t('a11y.aria.enviar', { default: 'Enviar' })
+            : recording
+              ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
+              : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
+          title={input.trim()
+            ? $t('a11y.aria.enviar', { default: 'Enviar' })
+            : recording
+              ? $t('agente.aria.parar_gravacao', { default: 'Parar gravação' })
+              : $t('agente.aria.gravar', { default: 'Gravar áudio' })}
+        >
+          {#if input.trim()}➤{:else if recording}⏹️{:else}🎤{/if}
+        </button>
       </div>
     </div>
     {/if}
@@ -974,6 +1358,20 @@
   .row-top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
   .row-top strong { font-size: var(--fs-md); font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .row-top time { flex: 0 0 auto; font-size: var(--fs-xs); color: var(--txt3); }
+  .row-meta { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 0.35rem; }
+  .unread-badge {
+    min-width: 1.25rem;
+    height: 1.25rem;
+    display: inline-grid;
+    place-items: center;
+    padding-inline: 0.28rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-size: 0.68rem;
+    font-weight: 850;
+    line-height: 1;
+  }
   .row-body small {
     color: var(--txt3);
     font-size: var(--fs-sm);
@@ -1073,6 +1471,60 @@
   .profile-link:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    flex-shrink: 0;
+  }
+  .header-action {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    border: 0;
+    background: transparent;
+    color: var(--txt2);
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  .header-action:hover,
+  .header-action.active,
+  .header-action:focus-visible {
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+    outline: none;
+  }
+  .chat-search {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-elev);
+  }
+  .chat-search input {
+    flex: 1;
+    min-width: 0;
+    min-height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--txt);
+    padding: 0 var(--space-3);
+    font: inherit;
+  }
+  .chat-search button {
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--txt2);
+    cursor: pointer;
+    font-size: 1.25rem;
   }
   .chat-tools {
     display: flex;
@@ -1322,6 +1774,21 @@
     margin: var(--space-1) 0 0;
     font-size: var(--fs-sm);
   }
+  .empty.compact { padding-block: var(--space-4); }
+  .load-older {
+    align-self: center;
+    min-height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--accent);
+    padding: 0.35rem 0.9rem;
+    font: inherit;
+    font-size: var(--fs-xs);
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .load-older:disabled { opacity: 0.6; cursor: wait; }
   .day-sep {
     display: flex;
     justify-content: center;
@@ -1357,6 +1824,7 @@
     border: 1px solid var(--border);
     color: var(--txt);
     border-bottom-left-radius: 4px;
+    position: relative;
   }
   .bubble-own {
     background: var(--accent);
@@ -1365,6 +1833,46 @@
     border-bottom-left-radius: 14px;
     border-bottom-right-radius: 4px;
   }
+  .msg-system { justify-content: center; }
+  .bubble-call {
+    max-width: min(90%, 360px);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 10%, var(--card));
+    color: var(--txt2);
+    border-color: color-mix(in srgb, var(--accent) 25%, var(--border));
+    padding: 0.55rem 1rem;
+  }
+  .call-event { display: flex; align-items: center; justify-content: center; gap: var(--space-2); }
+  .call-event-icon { font-size: 1.15rem; }
+  .call-event-copy { display: grid; line-height: 1.2; }
+  .call-event-copy strong { font-weight: 750; }
+  .call-event-copy small { margin-top: 0.15rem; color: var(--txt3); font-size: var(--fs-xs); }
+  .bubble-deleted { background: color-mix(in srgb, var(--card) 82%, transparent); color: var(--txt3); font-style: italic; }
+  .deleted-copy { display: flex; align-items: center; gap: var(--space-1); }
+  .star-mark {
+    position: absolute;
+    top: 0.25rem;
+    inset-inline-end: 0.4rem;
+    font-size: 0.68rem;
+    opacity: 0.82;
+  }
+  .reply-quote {
+    display: grid;
+    width: 100%;
+    gap: 0.1rem;
+    margin-bottom: 0.4rem;
+    padding: 0.38rem 0.55rem;
+    border: 0;
+    border-inline-start: 3px solid currentColor;
+    border-radius: 0.45rem;
+    background: rgb(255 255 255 / 0.14);
+    color: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+  .bubble:not(.bubble-own) .reply-quote { background: color-mix(in srgb, var(--accent) 9%, transparent); }
+  .reply-quote strong { font-size: 0.7rem; opacity: 0.88; }
+  .reply-quote span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-xs); }
   /* Subtle pop on own bubbles. Runs only when the element mounts (keyed
      each) and is zeroed globally by the reduced-motion kill-switch. */
   @keyframes bubble-pop {
@@ -1392,6 +1900,7 @@
     font-size: 0.68rem;
     opacity: 0.75;
   }
+  .edited { font-size: 0.64rem; opacity: 0.72; }
   .ticks {
     font-size: 0.72rem;
     opacity: 0.85;
@@ -1440,6 +1949,116 @@
     max-width: min(240px, 100%);
     display: block;
   }
+  .bubble video {
+    display: block;
+    width: min(300px, 100%);
+    max-height: 360px;
+    border-radius: var(--radius-md);
+    background: #000;
+  }
+  .document-card {
+    min-width: min(250px, 68vw);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+    background: rgb(255 255 255 / 0.14);
+    color: inherit;
+    text-decoration: none;
+  }
+  .document-card > span:nth-child(2) { display: grid; min-width: 0; }
+  .document-card strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .document-card small { opacity: 0.75; }
+  .reaction-summary {
+    position: absolute;
+    bottom: -0.85rem;
+    inset-inline-start: 0.45rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem;
+    z-index: 2;
+  }
+  .reaction-summary button {
+    min-height: 26px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg-elev);
+    color: var(--txt);
+    padding: 0.05rem 0.35rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+  }
+  .reaction-summary button.mine { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, var(--bg-elev)); }
+  .reaction-summary + .message-menu-trigger { margin-bottom: -0.2rem; }
+  .message-menu-trigger {
+    position: absolute;
+    top: -0.75rem;
+    inset-inline-end: -0.85rem;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg-elev);
+    color: var(--txt2);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity var(--motion-fast) ease;
+    z-index: 4;
+  }
+  .bubble:hover .message-menu-trigger,
+  .message-menu-trigger:focus-visible { opacity: 1; }
+  @media (hover: none), (pointer: coarse) {
+    .message-menu-trigger { opacity: 0.72; }
+  }
+  .message-menu {
+    position: absolute;
+    top: 1.4rem;
+    inset-inline-end: 0.25rem;
+    z-index: 12;
+    min-width: 185px;
+    display: grid;
+    padding: 0.35rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-elev);
+    color: var(--txt);
+    box-shadow: var(--shadow-lg);
+    white-space: normal;
+  }
+  .message-menu > button {
+    min-height: 38px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: inherit;
+    padding: 0.35rem 0.55rem;
+    text-align: start;
+    cursor: pointer;
+  }
+  .message-menu > button:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  .message-menu > button.danger { color: var(--error); }
+  .reaction-picker { display: flex; justify-content: space-between; gap: 0.1rem; padding: 0.2rem; border-bottom: 1px solid var(--border); }
+  .reaction-picker button { width: 30px; height: 30px; border: 0; border-radius: 999px; background: transparent; cursor: pointer; }
+  .reaction-picker button:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); transform: scale(1.14); }
+  :global(.message-highlight) .bubble { animation: message-flash 1.2s ease; }
+  @keyframes message-flash { 40% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 45%, transparent); } }
+  .typing-bubble {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 0.22rem;
+    min-width: 54px;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 14px 14px 14px 4px;
+    background: var(--card);
+  }
+  .typing-bubble span { width: 6px; height: 6px; border-radius: 50%; background: var(--txt3); animation: typing-dot 1s ease-in-out infinite; }
+  .typing-bubble span:nth-child(2) { animation-delay: 0.14s; }
+  .typing-bubble span:nth-child(3) { animation-delay: 0.28s; }
+  @keyframes typing-dot { 50% { transform: translateY(-3px); opacity: 0.55; } }
   .media-loading {
     font-size: var(--fs-xs);
     opacity: 0.8;
@@ -1509,6 +2128,23 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
+  .compose-context {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-1);
+    padding: 0.45rem 0.65rem;
+    border: 1px solid var(--border);
+    border-inline-start: 3px solid var(--accent);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--bg-elev) 94%, var(--accent) 6%);
+    color: var(--txt);
+  }
+  .compose-context > span:nth-child(2) { min-width: 0; display: grid; }
+  .compose-context strong { font-size: var(--fs-xs); color: var(--accent); }
+  .compose-context small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--txt2); }
+  .compose-context button { width: 34px; height: 34px; border: 0; border-radius: 999px; background: transparent; color: var(--txt2); cursor: pointer; font-size: 1.2rem; }
   .composer {
     display: flex;
     align-items: flex-end;

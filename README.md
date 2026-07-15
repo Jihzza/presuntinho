@@ -48,8 +48,8 @@ Calendar (unified agenda across habits, school, finances, moods, events), a noti
 | PWA | `@vite-pwa/sveltekit` (Workbox), installable, offline app shell, update-on-prompt |
 | i18n | `svelte-i18n` — **pt-PT** (canonical), **en**, **fr**, **ar** (RTL), **tn** (Tunisian, Latin script) |
 | Charts | Chart.js · **Icons** lucide-svelte + emoji · **Dates** date-fns |
-| Realtime | **Supabase Realtime** (couple presence, versus arcade, profile/progress sync) |
-| Serverless | **Netlify Functions** (private chat, mood/love sync, pairing) + **Edge Function** (AI agent proxy), all over `@netlify/blobs` |
+| Realtime | **Supabase Realtime** (private chat presence, WebRTC signalling, couple sync, versus arcade) |
+| Serverless | **Netlify Functions** (legacy chat, Web Push, TURN credentials, mood/love sync, pairing) + **Edge Function** (AI agent proxy) |
 
 ---
 
@@ -57,7 +57,7 @@ Calendar (unified agenda across habits, school, finances, moods, events), a noti
 
 - **Local-first.** Almost everything lives in the browser's IndexedDB via Dexie and works fully offline. Cross-device features are additive layers on top, never a hard dependency.
 - **AI agent path.** The browser calls a same-origin Netlify **edge function** (`/api/agent/*`) that injects the API key server-side and forwards to a self-hosted Hermes gateway (exposed via a Tailscale Funnel). No key ships in the client bundle; every device works with zero setup. See [`docs/`](docs/) and the memory notes for the gateway runbook.
-- **Private messaging.** A Netlify function stores an append-only, day-chunked message log in Netlify Blobs, gated by per-person bearer tokens; the client polls with a `since` cursor and keeps an offline outbox.
+- **Private messaging and calls.** Account chats use a normalized Supabase model with strict membership RLS, private Storage, read/typing state and private Realtime topics. Voice/video media is WebRTC; only short-lived signalling crosses Supabase. The original Fatma/Daniel session remains on the token-protected Netlify Blobs backend.
 - **i18n is a product gate.** Every user-facing string is a `$t('key')` lookup; the five locale files are kept at exact key parity, `ar` renders RTL, and `tn` is validated to contain no Arabic-script characters.
 - **Gamification economy.** All XP flows through a single audited table (`awardXP('reason')`) with anti-farming guards; streaks, levels, quests, badges and mascots read from shared helpers.
 
@@ -78,7 +78,7 @@ src/
 │   ├── escola/             # course catalog + progress
 │   ├── couple/ · multiplayer/   # Supabase realtime (couple sync + versus arcade)
 │   ├── arcade/             # secret mini-games engine + games
-│   ├── chat/ · mood/ · vida/ · profile/ · pwa/
+│   ├── chat/ · calls/ · mood/ · vida/ · profile/ · pwa/
 │   ├── components/         # 61 Svelte components (incl. ui/ primitives)
 │   └── {financas,habitos,biblioteca,trabalhos}.ts   # sub-app helpers
 ├── app.html · app.css
@@ -110,10 +110,14 @@ The app runs fully offline out of the box — the local-first features (study, f
 |---|---|
 | `HERMES_GATEWAY_URL`, `HERMES_API_KEY` | AI agent — Netlify edge proxy → self-hosted Hermes gateway |
 | `CHAT_TOKEN_FATMA`, `CHAT_TOKEN_DANIEL` | Private Mensagens — per-person bearer tokens |
-| `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | Supabase Realtime — couple sync + versus arcade |
+| `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | Supabase Auth, rich chat, Realtime and multiplayer |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only Web Push subscription delivery (never exposed to the client) |
+| `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | Web Push for messages, couple pings and incoming calls |
+| `CLOUDFLARE_TURN_KEY_ID`, `CLOUDFLARE_TURN_API_TOKEN` | Recommended ephemeral TURN credentials for reliable calls |
+| `CALL_TURN_URLS`, `CALL_TURN_USERNAME`, `CALL_TURN_CREDENTIAL` | Static TURN alternative to Cloudflare |
 | `VITE_COUPLE_CHANNEL`, `VITE_COUPLE_ID` | (optional) scope the couple channel |
 
-Server-side secrets (`HERMES_*`, `CHAT_TOKEN_*`) live only in Netlify's environment — never in the client bundle. See [`docs/runbook-chat-tokens-netlify.md`](docs/runbook-chat-tokens-netlify.md) and [`docs/MULTIPLAYER_SETUP.md`](docs/MULTIPLAYER_SETUP.md).
+Server-side secrets (`HERMES_*`, `CHAT_TOKEN_*`, service-role, VAPID private and TURN credentials) live only in Netlify's environment — never in the client bundle. See [`docs/CALLS_AND_RICH_CHAT.md`](docs/CALLS_AND_RICH_CHAT.md), [`docs/runbook-chat-tokens-netlify.md`](docs/runbook-chat-tokens-netlify.md) and [`docs/MULTIPLAYER_SETUP.md`](docs/MULTIPLAYER_SETUP.md).
 
 ---
 

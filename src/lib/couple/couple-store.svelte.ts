@@ -395,19 +395,16 @@ async function sendPing(kind: 'love' | 'nudge'): Promise<PingResult> {
     // surprise heart, a ping is a "right now" moment, not a mailbox) + Web
     // Push real nos dispositivos do parceiro, com o MEU nome no título.
     if (room) broadcast(kind, { id: eventId, profile: me, ts: now });
-    // Persistência (couple_pings): alimenta a página de notificações e entrega
-    // o toast via postgres_changes quando a sala broadcast não está ligada.
-    void (async () => {
-      try {
-        const { getSupabaseClient } = await import('$lib/multiplayer/client');
-        await getSupabaseClient()
-          .from('couple_pings')
-          .insert({ id: eventId, couple_id: id.coupleId, sender: me, kind });
-      } catch {
-        /* best-effort */
-      }
-    })();
-    void (async () => {
+    try {
+      // Persist first: the server consumes this exact row as the one-shot
+      // authorisation for the push. Starting push earlier creates a race in
+      // which a valid ping is rejected because its row is not visible yet.
+      const { getSupabaseClient } = await import('$lib/multiplayer/client');
+      const { error } = await getSupabaseClient()
+        .from('couple_pings')
+        .insert({ id: eventId, couple_id: id.coupleId, sender: me, kind });
+      if (error) throw error;
+
       const [{ sendPingPush }, { accountState }] = await Promise.all([
         import('$lib/push'),
         import('$lib/account/account-store.svelte')
@@ -421,8 +418,18 @@ async function sendPing(kind: 'love' | 'nudge'): Promise<PingResult> {
           : get(t)('couple.ping.nudge.received', { values: { name: myName }, default: `👀 ${myName} tem saudades tuas!` });
       const body = get(t)('couple.ping.push_body', { default: 'Toca para abrir o Presuntinho 🐷' });
       await sendPingPush(kind, title, body, eventId);
-    })();
-    return 'sent';
+      return 'sent';
+    } catch (e) {
+      // A failed durable insert cannot authorise push, and must not consume the
+      // local cooldown: the user can retry as soon as connectivity returns.
+      if (kind === 'love') lastLoveAt = 0;
+      else lastNudgeAt = 0;
+      if (isNetworkError(e)) {
+        couple.online = false;
+        return 'offline';
+      }
+      return 'disabled';
+    }
   }
   try {
     const snap =
