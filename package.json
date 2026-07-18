@@ -15,6 +15,7 @@
     "check:depth": "node scripts/depth-gates.mjs",
     "check:i18n": "node scripts/i18n-parity-check.mjs",
     "scan:i18n": "node scripts/i18n-scan.mjs --report-only",
+    "test:i18n-scan": "node --test scripts/i18n-scan.test.mjs",
     "quota:gate": "node scripts/quota-gate.mjs"
   },
   "devDependencies": {

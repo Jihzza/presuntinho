@@ -167,11 +167,20 @@ function* scanText(text, lineBase) {
 }
 
 /**
- * Scan attribute values for UI slots: placeholder, title, alt, aria-*.
+ * Scan attribute values that contain user-facing copy.
+ *
+ * `aria-describedby` is deliberately parsed but excluded: its value is an
+ * IDREF list, not copy exposed to the user. The referenced elements remain in
+ * the template and are scanned normally, so excluding the technical IDs does
+ * not hide hardcoded accessible descriptions.
  */
 function* scanAttributes(text, lineBase) {
-  const UI_ATTRS = ['placeholder', 'title', 'alt', 'aria-label', 'aria-placeholder', 'aria-describedby'];
-  const attrRe = new RegExp(`\\b(${UI_ATTRS.join('|')})\\s*=\\s*"([^"]*)"`, 'gi');
+  const COPY_ATTRS = ['placeholder', 'title', 'alt', 'aria-label', 'aria-placeholder'];
+  const IDREF_ATTRS = new Set(['aria-describedby']);
+  const attrRe = new RegExp(
+    `\\b(${[...COPY_ATTRS, ...IDREF_ATTRS].join('|')})\\s*=\\s*"([^"]*)"`,
+    'gi'
+  );
   let line = lineBase;
   let m;
   // Walk character by character so newlines in multiline attrs are tracked
@@ -181,10 +190,12 @@ function* scanAttributes(text, lineBase) {
     const chunk = text.slice(i, m.index);
     line += (chunk.match(/\n/g) || []).length;
     i = m.index + m[0].length;
+    const attr = m[1].toLowerCase();
     const value = m[2];
     if (!value) continue;
+    if (IDREF_ATTRS.has(attr)) continue;
     if (!/[\p{L}\p{Extended_Pictographic}]/u.test(value)) continue;
-    yield [line, m[1].toLowerCase(), value];
+    yield [line, attr, value];
   }
 }
 
