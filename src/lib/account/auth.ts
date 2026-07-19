@@ -16,6 +16,11 @@ export interface Account {
   emoji: string | null;
   avatar_url: string | null;
   bio: string | null;
+  /** Perfil v2 (0017) — presentes quando a query os seleciona. */
+  cover_url?: string | null;
+  website?: string | null;
+  location?: string | null;
+  created_at?: string;
 }
 
 export function accountsEnabled(): boolean {
@@ -188,7 +193,7 @@ export function onAuthChange(cb: (user: User | null) => void): () => void {
 
 // ── accounts table ────────────────────────────────────────────────────────
 
-const ACCOUNT_COLS = 'id, handle, display_name, emoji, avatar_url, bio';
+const ACCOUNT_COLS = 'id, handle, display_name, emoji, avatar_url, bio, cover_url, website, location, created_at';
 
 /** The signed-in user's account row (null if not signed in or not yet claimed). */
 export async function getMyAccount(): Promise<Account | null> {
