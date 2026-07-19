@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Plano — Perfil v2 do Presuntinho 🐷</title>
+<style>
+  :root {
+    --bg: #faf7f5; --card: #ffffff; --ink: #2b2430; --ink2: #5c5364; --ink3: #8a8092;
+    --accent: #e0567b; --accent-soft: #fbe6ec; --ok: #2e9e6b; --warn: #c77d1f; --bad: #c04545;
+    --border: #e8dfe4; --code-bg: #241f28; --code-ink: #f2e9ee; --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #17131a; --card: #221c26; --ink: #f0e8ee; --ink2: #c3b8c6; --ink3: #94899b;
+      --accent: #f27a9b; --accent-soft: #3a2430; --border: #372f3c; --code-bg: #120e15; --code-ink: #ecdfe6; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--ink); }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 2rem 1.2rem 6rem; }
+  header.hero { text-align: center; padding: 2.2rem 1rem 1.6rem; }
+  header.hero h1 { margin: 0; font-size: clamp(1.7rem, 4.5vw, 2.6rem); }
+  header.hero p.sub { color: var(--ink2); max-width: 60ch; margin: .8rem auto 0; }
+  .pill { display: inline-block; background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: .78rem; border-radius: 999px; padding: .25rem .8rem; margin: .2rem .15rem; }
+  h2 { font-size: 1.45rem; margin: 2.6rem 0 .6rem; padding-bottom: .35rem; border-bottom: 2px solid var(--accent-soft); }
+  h2 .num { color: var(--accent); margin-right: .4rem; }
+  h3 { font-size: 1.08rem; margin: 1.6rem 0 .4rem; }
+  p { margin: .5rem 0; } .muted { color: var(--ink2); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.2rem; margin: 1rem 0; }
+  table { width: 100%; border-collapse: collapse; margin: .8rem 0; font-size: .92rem; }
+  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--ink3); font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; }
+  .tablewrap { overflow-x: auto; }
+  code { background: var(--accent-soft); border-radius: 6px; padding: .1rem .35rem; font-size: .88em; }
+  pre { background: var(--code-bg); color: var(--code-ink); border-radius: var(--radius); padding: 1rem 1.1rem; overflow-x: auto; font-size: .84rem; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  .yes { color: var(--ok); font-weight: 700; } .no { color: var(--bad); font-weight: 700; } .part { color: var(--warn); font-weight: 700; }
+  ul.check { list-style: none; padding-left: 0; }
+  ul.check li { padding-left: 1.7rem; position: relative; margin: .45rem 0; }
+  ul.check li::before { content: "☐"; position: absolute; left: 0; color: var(--accent); font-weight: 800; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+  .platform { border-top: 4px solid var(--accent); }
+  .platform h3 { margin-top: .2rem; }
+  .tag { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; border-radius: 6px; padding: .12rem .45rem; }
+  .tag.in { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
+  .tag.later { background: color-mix(in srgb, var(--warn) 15%, transparent); color: var(--warn); }
+  .wire { font-family: ui-monospace, monospace; white-space: pre; font-size: .78rem; line-height: 1.35; background: var(--code-bg); color: var(--code-ink); border-radius: var(--radius); padding: 1rem; overflow-x: auto; }
+  footer { margin-top: 3rem; text-align: center; color: var(--ink3); font-size: .85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>🐷 Perfil v2 — plano completo</h1>
+  <p class="sub">Transformar a página de perfil do Presuntinho de um cartão básico com posts de texto
+  num perfil social a sério — inspirado no melhor do Twitter/X, Instagram, YouTube e TikTok —
+  com publicações de <strong>fotos, vídeos, áudio e ficheiros</strong>.</p>
+  <div>
+    <span class="pill">SvelteKit 2 + Svelte 5</span>
+    <span class="pill">Supabase (RLS + Storage)</span>
+    <span class="pill">PWA local-first</span>
+    <span class="pill">i18n ×5 línguas</span>
+  </div>
+</header>
+
+<!-- ================================================================ -->
+<h2><span class="num">1.</span> Auditoria do estado atual</h2>
+
+<div class="card">
+<p>O perfil vive em <code>/u/?h=&lt;handle&gt;</code> (<code>src/routes/u/+page.svelte</code>, 586 linhas) com a camada de dados em
+<code>src/lib/social/posts.ts</code> e a migração <code>0016_posts_and_avatars.sql</code>. O <code>/perfil/</code> apenas redireciona.</p>
+
+<h3>O que já existe ✅</h3>
+<ul>
+  <li><strong>Identidade:</strong> avatar (foto webp 512px ou emoji), nome, <code>@handle</code>, bio (160 chars).</li>
+  <li><strong>Capa:</strong> gradiente <em>fixo</em> gerado por CSS — não personalizável.</li>
+  <li><strong>Relações:</strong> máquina de estados amigo/casal com UMA ação clara por estado (muito bom, mantém-se).</li>
+  <li><strong>Posts v1:</strong> só texto (1–500 chars), likes, comentários (300 chars), apagar. RLS: autor + amigos aceites.</li>
+  <li><strong>Stats:</strong> apenas nº de publicações (+ badge amigos/casal).</li>
+  <li><strong>Partilha:</strong> Web Share API / clipboard.</li>
+</ul>
+
+<h3>O que está em falta ❌</h3>
+<ul>
+  <li>Publicar <strong>qualquer tipo de media</strong>: imagens (multi), vídeo, áudio, documentos/ficheiros.</li>
+  <li>Capa/banner personalizada; campos de perfil (site, localização, "membro desde").</li>
+  <li>Tabs de conteúdo (tudo numa lista única); grelha de media; visualizador (lightbox).</li>
+  <li>Post fixado, edição de post (com marca "editado"), contagem de amigos e de gostos recebidos.</li>
+  <li>Ligações clicáveis na bio/posts.</li>
+</ul>
+</div>
+
+<!-- ================================================================ -->
+<h2><span class="num">2.</span> Estudo das plataformas</h2>
+<p class="muted">Anatomia dos perfis das quatro referências e o que cada uma ensina para o nosso caso
+(app íntima, mobile-first, entre amigos).</p>
+
+<div class="grid2">
+  <div class="card platform">
+    <h3>🐦 Twitter / X</h3>
+    <ul>
+      <li><strong>Banner 3:1</strong> + avatar a cavalo na capa (já imitamos o layout).</li>
+      <li>Linha meta: 📍 localização · 🔗 site · 📅 "Joined Mês Ano".</li>
+      <li>Stats inline: following / followers.</li>
+      <li>Tabs: <em>Posts · Replies · Media · Likes</em>.</li>
+      <li><strong>Post fixado</strong> no topo; grelha de imagens 1–4 com cantos partilhados; badge "edited".</li>
+    </ul>
+    <p class="muted">Lição: o modelo base do nosso perfil já é este — falta a media grid 1–4, o pin, a linha meta e as tabs.</p>
+  </div>
+  <div class="card platform">
+    <h3>📸 Instagram</h3>
+    <ul>
+      <li>Stats em tripla: <em>posts · followers · following</em> por cima da bio.</li>
+      <li><strong>Grelha 3×N de media</strong> como vista principal; ícone ▶ sobre vídeos e 🖼 sobre carrosséis.</li>
+      <li>Carrossel multi-imagem num post; lightbox a ecrã inteiro.</li>
+      <li>Link na bio como campo de primeira classe.</li>
+    </ul>
+    <p class="muted">Lição: a tab "Media" em grelha quadrada é a forma mais rápida de rever memórias visuais — perfeita para um casal.</p>
+  </div>
+  <div class="card platform">
+    <h3>▶️ YouTube</h3>
+    <ul>
+      <li>Banner largo + avatar + handle + descrição curta com "mais".</li>
+      <li>Tabs por tipo de conteúdo (Videos, Shorts, Playlists, About).</li>
+      <li>Secção "About": descrição longa, links, data de adesão, contagens.</li>
+      <li>Player inline com poster antes de reproduzir.</li>
+    </ul>
+    <p class="muted">Lição: vídeo merece player nativo inline (poster + controls), não um link; "membro desde" dá história ao perfil.</p>
+  </div>
+  <div class="card platform">
+    <h3>🎵 TikTok</h3>
+    <ul>
+      <li>Stats em tripla: following · followers · <strong>likes recebidos</strong> (soma de todos os gostos).</li>
+      <li>Grelha vertical de vídeos com pré-visualização; posts fixados marcados "Pinned".</li>
+      <li>Perfil extremamente mobile-first, ações grandes.</li>
+    </ul>
+    <p class="muted">Lição: "likes recebidos" é uma métrica calorosa e gamificada — encaixa no espírito do Presuntinho. Pin também aqui.</p>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<h2><span class="num">3.</span> Gap analysis</h2>
+<div class="tablewrap card"><table>
+  <tr><th>Funcionalidade</th><th>X</th><th>IG</th><th>YT</th><th>TT</th><th>Presuntinho hoje</th><th>Plano</th></tr>
+  <tr><td>Banner/capa personalizada</td><td>✔</td><td>—</td><td>✔</td><td>—</td><td class="no">gradiente fixo</td><td><span class="tag in">v2</span> upload de capa (1500×500 webp)</td></tr>
+  <tr><td>Bio + campos (site, local, desde)</td><td>✔</td><td>✔</td><td>✔</td><td>✔</td><td class="part">só bio</td><td><span class="tag in">v2</span> website, localização, "desde"</td></tr>
+  <tr><td>Posts com imagens (1–4)</td><td>✔</td><td>✔</td><td>—</td><td>✔</td><td class="no">só texto</td><td><span class="tag in">v2</span> grelha 1–4 estilo X</td></tr>
+  <tr><td>Posts com vídeo</td><td>✔</td><td>✔</td><td>✔</td><td>✔</td><td class="no">—</td><td><span class="tag in">v2</span> player inline (≤50 MB)</td></tr>
+  <tr><td>Posts com áudio / voz</td><td>✔</td><td>—</td><td>—</td><td>—</td><td class="no">—</td><td><span class="tag in">v2</span> player áudio (≤20 MB)</td></tr>
+  <tr><td>Posts com ficheiros (pdf, docs…)</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="no">—</td><td><span class="tag in">v2</span> cartão de ficheiro + download (≤20 MB)</td></tr>
+  <tr><td>Tabs de conteúdo</td><td>✔</td><td>✔</td><td>✔</td><td>✔</td><td class="no">lista única</td><td><span class="tag in">v2</span> Publicações · Media</td></tr>
+  <tr><td>Grelha de media (IG)</td><td>✔</td><td>✔</td><td>✔</td><td>✔</td><td class="no">—</td><td><span class="tag in">v2</span> grelha 3×N + lightbox</td></tr>
+  <tr><td>Lightbox / visualizador</td><td>✔</td><td>✔</td><td>✔</td><td>✔</td><td class="no">—</td><td><span class="tag in">v2</span> dialog c/ navegação ‹ ›</td></tr>
+  <tr><td>Post fixado</td><td>✔</td><td>✔</td><td>—</td><td>✔</td><td class="no">—</td><td><span class="tag in">v2</span> 1 pin por conta</td></tr>
+  <tr><td>Editar post (+ marca "editado")</td><td>✔</td><td>✔</td><td>✔</td><td>—</td><td class="no">—</td><td><span class="tag in">v2</span> editar texto próprio</td></tr>
+  <tr><td>Stats tripla (posts·amigos·likes)</td><td>✔</td><td>✔</td><td>✔</td><td>✔</td><td class="part">só posts</td><td><span class="tag in">v2</span> posts · amigos · ❤ recebidos</td></tr>
+  <tr><td>Links clicáveis no texto</td><td>✔</td><td>✔</td><td>✔</td><td>✔</td><td class="no">texto plano</td><td><span class="tag in">v2</span> auto-link seguro (https)</td></tr>
+  <tr><td>Stories / retweets / algoritmo / follows públicos</td><td>✔</td><td>✔</td><td>✔</td><td>✔</td><td class="no">—</td><td><span class="tag later">fora de âmbito</span> não faz sentido numa app para 2</td></tr>
+</table></div>
+
+<p class="muted">Decisão de âmbito: replicamos a <em>anatomia</em> das grandes redes, não a sua mecânica de audiência.
+A privacidade mantém-se: <strong>tudo continua visível apenas para o próprio + amigos aceites</strong>, imposto por RLS.</p>
+
+<!-- ================================================================ -->
+<h2><span class="num">4.</span> Especificação técnica</h2>
+
+<h3>4.1 Base de dados — migração <code>0017_profile_v2_media.sql</code></h3>
+<pre><code>-- accounts: campos de perfil novos
+alter table public.accounts add column if not exists cover_url text;
+alter table public.accounts add column if not exists website   text;
+alter table public.accounts add column if not exists location  text;
+
+-- posts: media (jsonb [] de anexos), pin único por autor, marca de edição
+alter table public.posts add column if not exists media jsonb not null default '[]'::jsonb;
+alter table public.posts add column if not exists pinned boolean not null default false;
+alter table public.posts add column if not exists edited_at timestamptz;
+-- body passa a poder ser vazio QUANDO há media
+alter table public.posts drop constraint posts_body_check;
+alter table public.posts add constraint posts_body_check check (
+  char_length(body) &lt;= 500 and (char_length(body) &gt; 0 or jsonb_array_length(media) &gt; 0)
+);
+create unique index posts_one_pin_per_author on public.posts (author) where pinned;
+
+-- bucket PRIVADO post-media/&lt;author-uuid&gt;/&lt;post-media-id&gt;
+-- leitura: can_see_posts(auth.uid(), pasta) → amigos aceites; escrita: só a própria pasta
+</code></pre>
+<p>Cada elemento de <code>posts.media</code>:
+<code>{ kind: 'image'|'video'|'audio'|'file', path, mime, name, size, width?, height? }</code> —
+o <code>path</code> aponta para o bucket privado; o cliente pede <em>signed URLs</em> em lote (TTL 1 h), como o chat já faz.</p>
+
+<h3>4.2 Storage</h3>
+<div class="tablewrap"><table>
+  <tr><th>Tipo</th><th>Tratamento no cliente</th><th>Limite</th></tr>
+  <tr><td>🖼 Imagem (até 4/post)</td><td>redimensionar p/ máx. 1600 px + webp q0.85 (canvas)</td><td>~ sempre &lt; 1 MB depois da compressão</td></tr>
+  <tr><td>🎬 Vídeo (1/post)</td><td>upload direto (sem transcode no browser)</td><td>50 MB</td></tr>
+  <tr><td>🎙 Áudio (1/post)</td><td>upload direto</td><td>20 MB</td></tr>
+  <tr><td>📎 Ficheiro (até 4/post)</td><td>upload direto, nome+tamanho preservados</td><td>20 MB</td></tr>
+  <tr><td>🖼 Capa do perfil</td><td>redimensionar p/ 1500×500 webp → bucket público <code>avatars/&lt;uid&gt;/cover.webp</code></td><td>—</td></tr>
+</table></div>
+
+<h3>4.3 Camada cliente — <code>src/lib/social/posts.ts</code></h3>
+<ul>
+  <li><code>createPost(body, files)</code> — valida combinações (imagens ⊕ 1 vídeo ⊕ 1 áudio ⊕ ficheiros), comprime, faz upload e insere.</li>
+  <li><code>resolveMediaUrls(posts)</code> — <code>createSignedUrls</code> em lote com cache em memória.</li>
+  <li><code>setPinned(post, on)</code> — desafixa o anterior (índice único garante 1).</li>
+  <li><code>updatePost(id, body)</code> — grava <code>edited_at</code>.</li>
+  <li><code>countFriends()</code>, <code>countLikesReceived(authorId)</code> — para a stats tripla.</li>
+  <li><code>linkify(text)</code> — só <code>https://</code>, escapado, para bio e posts.</li>
+</ul>
+
+<h3>4.4 UI — <code>/u</code> (perfil)</h3>
+<div class="wire">┌──────────────────────────────────────┐
+│ ███ CAPA (foto ou gradiente) ███████ │
+│        ⌾ avatar                      │
+│  Nome apelido           [✏ Editar]   │
+│  @handle                             │
+│  Bio com links clicáveis             │
+│  📍 Lisboa · 🔗 site.pt · 📅 desde 2026 │
+│ ┌─────────┬─────────┬──────────────┐ │
+│ │ 12      │ 3       │ 47           │ │
+│ │ Posts   │ Amigos  │ ❤ Recebidos  │ │
+│ └─────────┴─────────┴──────────────┘ │
+│ [➕ Amigo] [💞 Casal] [💬 Mensagem]   │
+│ ── Tabs ──────────────────────────── │
+│ │📣 Publicações│ 🖼 Media │          │
+│ ── Composer (se for o próprio) ───── │
+│ │ O que estás a pensar? 🐷         │ │
+│ │ [🖼][🎬][🎙][📎]      0/500 [Publicar]│
+│ │ ▸ pré-visualizações com ✕        │ │
+│ ── Post fixado 📌 ─────────────────── │
+│ ── Posts (texto+media grid 1-4,      │
+│    vídeo player, áudio, ficheiros,   │
+│    ❤ 💬, menu ⋯: 📌 fixar ✏ editar 🗑)│
+└──────────────────────────────────────┘</div>
+<ul>
+  <li><strong>Tab Media:</strong> grelha 3×N (estilo Instagram) com todas as imagens/vídeos dos posts; toque → lightbox.</li>
+  <li><strong>Lightbox:</strong> <code>&lt;dialog&gt;</code> a ecrã inteiro, navegação ‹ ›, fecha com Esc/toque; vídeo reproduz dentro.</li>
+  <li><strong>Grelha de imagens no post:</strong> 1 = full width; 2 = 2 colunas; 3 = 1 grande + 2; 4 = 2×2 (padrão X).</li>
+  <li>Acessibilidade: botões ≥44 px, <code>aria-label</code> em ícones, focus rings, <code>aria-pressed</code> nos likes (já existente).</li>
+</ul>
+
+<h3>4.5 UI — <code>/conta</code> (editor)</h3>
+<ul>
+  <li>Upload de <strong>capa</strong> com pré-visualização (proporção 3:1).</li>
+  <li>Campos novos: <strong>🔗 Website</strong> (validação https) e <strong>📍 Localização</strong> (texto livre, 60 chars).</li>
+</ul>
+
+<h3>4.6 i18n</h3>
+<p>Todas as strings novas entram como <code>$t('key', { default })</code> e são adicionadas às <strong>5</strong> línguas
+(<code>pt-PT</code>, <code>en</code>, <code>fr</code>, <code>ar</code>, <code>tn</code>) com paridade exata de chaves;
+<code>ar</code> herda o RTL global e <code>tn</code> fica em escrita latina.</p>
+
+<!-- ================================================================ -->
+<h2><span class="num">5.</span> Plano de execução</h2>
+<div class="card">
+<ul class="check">
+  <li><strong>Migração 0017</strong> — colunas accounts/posts, índice de pin, bucket <code>post-media</code> + RLS; aplicar no Supabase.</li>
+  <li><strong>posts.ts</strong> — tipos de media, uploads (compressão de imagem), signed URLs em lote, pin, edição, contagens, linkify (+ testes unitários das regras puras).</li>
+  <li><strong>avatar.ts</strong> — <code>uploadCover()</code> (1500×500 webp, bucket público).</li>
+  <li><strong>/u</strong> — capa, linha meta, stats tripla, tabs, composer com anexos e pré-visualizações, grelha 1–4, players, cartões de ficheiro, lightbox, pin, editar.</li>
+  <li><strong>/conta</strong> — capa + website + localização no editor.</li>
+  <li><strong>i18n ×5</strong> — todas as chaves novas.</li>
+  <li><strong>Gates</strong> — <code>npm run check</code> (0 erros/0 avisos), <code>check:i18n</code>, <code>scan:i18n</code>, <code>npm test</code>, <code>npm run build</code>.</li>
+  <li><strong>Entrega</strong> — commit, push, PR draft.</li>
+</ul>
+</div>
+
+<h2><span class="num">6.</span> Riscos e decisões</h2>
+<div class="card">
+<ul>
+  <li><strong>Privacidade da media:</strong> bucket <em>privado</em> + RLS <code>can_see_posts</code> na pasta do autor; URLs assinados de curta duração. Nada de bucket público para conteúdo de amigos.</li>
+  <li><strong>Sem transcode de vídeo no browser:</strong> aceitamos o ficheiro tal como vem (mp4/webm/mov) com limite de 50 MB — igual ao compromisso do chat.</li>
+  <li><strong>Migração aditiva:</strong> só <code>add column</code>/novo índice/novo bucket — zero impacto nos dados existentes; o novo <code>check</code> do body é mais permissivo que o antigo (posts antigos continuam válidos).</li>
+  <li><strong>Compatibilidade:</strong> clientes antigos ignoram <code>media</code> (leem só <code>body</code>); posts sem texto aparecem vazios até atualizarem — aceitável numa app de 2 utilizadores.</li>
+  <li><strong>Órfãos no storage:</strong> apagar post apaga a linha; os objetos ficam órfãos (sem acesso além do autor). Limpeza best-effort no cliente ao apagar.</li>
+</ul>
+</div>
+
+<footer>Plano gerado a 19/07/2026 · Presuntinho 🐷 · docs/plano-perfil-v2.html</footer>
+</div>
+</body>
+</html>

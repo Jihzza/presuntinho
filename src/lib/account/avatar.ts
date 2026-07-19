@@ -28,6 +28,53 @@ async function toSquareWebp(file: Blob, size = 512): Promise<Blob> {
   }
 }
 
+/** Recorta ao centro para 3:1 (estilo banner do Twitter) e reduz para
+ *  1500×500 webp — a capa do perfil. */
+async function toCoverWebp(file: Blob, width = 1500, height = 500): Promise<Blob> {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise<HTMLImageElement>((res, rej) => {
+      const i = new Image();
+      i.onload = () => res(i);
+      i.onerror = () => rej(new Error('decode'));
+      i.src = url;
+    });
+    const target = width / height;
+    let sw = img.naturalWidth;
+    let sh = Math.round(sw / target);
+    if (sh > img.naturalHeight) {
+      sh = img.naturalHeight;
+      sw = Math.round(sh * target);
+    }
+    const sx = (img.naturalWidth - sw) / 2;
+    const sy = (img.naturalHeight - sh) / 2;
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.min(width, sw);
+    canvas.height = Math.round(canvas.width / target);
+    canvas.getContext('2d')?.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise<Blob | null>((res) => canvas.toBlob(res, 'image/webp', 0.85));
+    if (!blob) throw new Error('encode');
+    return blob;
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+/** Envia a foto de capa e devolve o URL público (com ?v= para furar caches). */
+export async function uploadCover(file: Blob): Promise<string> {
+  const me = await getAuthUser();
+  if (!me) throw new Error('not signed in');
+  if (!file.type.startsWith('image/')) throw new Error('not an image');
+  const webp = await toCoverWebp(file);
+  const path = `${me.id}/cover.webp`;
+  const { error } = await getSupabaseClient()
+    .storage.from('avatars')
+    .upload(path, webp, { contentType: 'image/webp', upsert: true });
+  if (error) throw error;
+  const { data } = getSupabaseClient().storage.from('avatars').getPublicUrl(path);
+  return `${data.publicUrl}?v=${Date.now()}`;
+}
+
 /** Envia a foto e devolve o URL público (com ?v= para furar caches). */
 export async function uploadAvatar(file: Blob): Promise<string> {
   const me = await getAuthUser();

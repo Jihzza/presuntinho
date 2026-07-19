@@ -24,7 +24,7 @@
     updateMyAccount,
     searchAccounts
   } from '$lib/account/auth';
-  import { uploadAvatar } from '$lib/account/avatar';
+  import { uploadAvatar, uploadCover } from '$lib/account/avatar';
   import Avatar from '$lib/components/Avatar.svelte';
   import { accountState, startAccountSync, refreshAccount } from '$lib/account/account-store.svelte';
   import { signOutEverywhere } from '$lib/account/session-bridge';
@@ -51,15 +51,20 @@
   let newEmail = $state('');
   let newPassword = $state('');
 
-  // ── Editor do perfil (nome, emoji, bio, foto) ──
+  // ── Editor do perfil (nome, emoji, bio, foto, capa, site, local) ──
   let profName = $state('');
   let profEmoji = $state('');
   let profBio = $state('');
+  let profWebsite = $state('');
+  let profLocation = $state('');
   let profSaving = $state(false);
   let profSeeded = false;
   let avatarInput: HTMLInputElement | null = $state(null);
   let pendingAvatar = $state<File | null>(null);
   let avatarPreview = $state<string | null>(null);
+  let coverInput: HTMLInputElement | null = $state(null);
+  let pendingCover = $state<File | null>(null);
+  let coverPreview = $state<string | null>(null);
   const EMOJI_PICKS = ['🙂', '🐷', '🌸', '🦊', '🐱', '🌙', '⭐', '❤️', '⚽', '🎮', '🎧', '📚'];
 
   // Semeia o formulário quando a conta carrega (uma vez — edições não são pisadas).
@@ -70,6 +75,8 @@
     profName = a.display_name ?? '';
     profEmoji = a.emoji ?? '';
     profBio = a.bio ?? '';
+    profWebsite = a.website ?? '';
+    profLocation = a.location ?? '';
   });
 
   function onAvatarChosen(e: Event): void {
@@ -85,23 +92,55 @@
     avatarPreview = URL.createObjectURL(file);
   }
 
+  function onCoverChosen(e: Event): void {
+    const file = (e.target as HTMLInputElement).files?.[0] ?? null;
+    if (coverInput) coverInput.value = '';
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showToast($t('conta.profile.not_image', { default: 'Escolhe uma imagem (jpg, png, webp…).' }), 2600, 'error');
+      return;
+    }
+    pendingCover = file;
+    if (coverPreview) URL.revokeObjectURL(coverPreview);
+    coverPreview = URL.createObjectURL(file);
+  }
+
+  /** "site.pt" → "https://site.pt"; http força https; vazio fica vazio. */
+  function normalizeWebsite(raw: string): string {
+    const v = raw.trim();
+    if (!v) return '';
+    if (/^https:\/\//i.test(v)) return v;
+    if (/^http:\/\//i.test(v)) return v.replace(/^http:\/\//i, 'https://');
+    return `https://${v}`;
+  }
+
   async function saveProfile(): Promise<void> {
     if (profSaving || !accountState.account) return;
     profSaving = true;
     try {
       let avatar_url: string | undefined;
       if (pendingAvatar) avatar_url = await uploadAvatar(pendingAvatar);
+      let cover_url: string | undefined;
+      if (pendingCover) cover_url = await uploadCover(pendingCover);
       await updateMyAccount({
         display_name: profName.trim() || null,
         emoji: profEmoji.trim() || null,
         bio: profBio.trim() || null,
-        ...(avatar_url ? { avatar_url } : {})
+        website: normalizeWebsite(profWebsite) || null,
+        location: profLocation.trim() || null,
+        ...(avatar_url ? { avatar_url } : {}),
+        ...(cover_url ? { cover_url } : {})
       });
       await refreshAccount();
       pendingAvatar = null;
       if (avatarPreview) {
         URL.revokeObjectURL(avatarPreview);
         avatarPreview = null;
+      }
+      pendingCover = null;
+      if (coverPreview) {
+        URL.revokeObjectURL(coverPreview);
+        coverPreview = null;
       }
       showToast($t('conta.profile.saved', { default: 'Perfil guardado! ✅' }), 2400);
     } catch (e) {
@@ -419,6 +458,20 @@
     <div class="card">
       <h2>{$t('conta.profile.title', { default: 'O meu perfil' })}</h2>
       <p class="sub-note">{$t('conta.profile.sub', { default: 'É isto que os teus amigos veem no teu perfil.' })}</p>
+      <!-- Capa 3:1 estilo banner do Twitter, clicável para trocar -->
+      <div class="cover-edit">
+        {#if coverPreview}
+          <img class="cover-preview" src={coverPreview} alt="" />
+        {:else if accountState.account.cover_url}
+          <img class="cover-preview" src={accountState.account.cover_url} alt="" />
+        {:else}
+          <div class="cover-preview cover-empty" aria-hidden="true"></div>
+        {/if}
+        <input type="file" bind:this={coverInput} accept="image/*" hidden onchange={onCoverChosen} />
+        <button type="button" class="mini cover-btn" onclick={() => coverInput?.click()}>
+          🖼 {$t('conta.profile.change_cover', { default: 'Mudar capa' })}
+        </button>
+      </div>
       <div class="avatar-row">
         {#if avatarPreview}
           <img class="avatar-preview" src={avatarPreview} alt="" />
@@ -445,6 +498,14 @@
       <label>
         <span>{$t('conta.profile.bio', { default: 'Bio' })}</span>
         <textarea bind:value={profBio} maxlength="160" rows="2" placeholder={$t('conta.profile.bio_ph', { default: 'Uma frase sobre ti…' })}></textarea>
+      </label>
+      <label>
+        <span>🔗 {$t('conta.profile.website', { default: 'Website' })}</span>
+        <input type="url" bind:value={profWebsite} maxlength="120" placeholder={$t('conta.profile.website_ph', { default: 'https://o-teu-site.pt' })} />
+      </label>
+      <label>
+        <span>📍 {$t('conta.profile.location', { default: 'Localização' })}</span>
+        <input type="text" bind:value={profLocation} maxlength="60" placeholder={$t('conta.profile.location_ph', { default: 'Lisboa, Portugal' })} />
       </label>
       <button type="button" class="cta" onclick={() => void saveProfile()} disabled={profSaving}>
         {profSaving ? $t('common.saving', { default: 'A guardar…' }) : $t('conta.profile.save', { default: 'Guardar perfil' })}
@@ -507,6 +568,15 @@
   textarea { resize: vertical; }
   input:focus-visible, textarea:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent); }
   .sub-note { margin: -.35rem 0 .1rem; color: var(--txt3); font-size: .82rem; }
+  .cover-edit { position: relative; }
+  .cover-preview { display: block; width: 100%; aspect-ratio: 3 / 1; object-fit: cover; border-radius: var(--radius-md, .75rem); border: 1px solid var(--border); }
+  .cover-empty {
+    background:
+      radial-gradient(circle at 16% 30%, color-mix(in srgb, var(--accent) 45%, transparent), transparent 42%),
+      radial-gradient(circle at 84% 12%, color-mix(in srgb, #a78bfa 40%, transparent), transparent 40%),
+      linear-gradient(135deg, color-mix(in srgb, var(--accent) 30%, var(--bg-elev)), var(--card));
+  }
+  .cover-btn { position: absolute; right: .5rem; bottom: .5rem; }
   .avatar-row { display: flex; align-items: center; gap: .9rem; }
   .avatar-preview { width: 72px; height: 72px; border-radius: 999px; object-fit: cover; border: 2px solid var(--accent); }
   .emoji-row { display: flex; flex-wrap: wrap; gap: .35rem; }
