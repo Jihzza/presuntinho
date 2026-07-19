@@ -43,3 +43,6 @@ client-acquisition-pipeline-*
 saikan-investor-proposal-*/
 scripts/serve-cap.mjs
 scripts/gateway-monitor.mjs
+
+# Zips temporários do deploy via Netlify MCP (artefactos de upload, não são fonte)
+deploy-*.zip
